@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+  <table-filter match-name="TIIVS_ANEXO_SOLICITUD"/>
+  <table-filter match-name="TIIVS_APODERDANTE"/>
+  <table-filter match-name="TIIVS_ESTUDIO"/>
+  <table-filter match-name="TIIVS_GRUPO"/>
+  <table-filter match-name="TIIVS_HIST_SOLICITUD"/>
+  <table-filter match-name="TIIVS_MIEMBRO"/>
+  <table-filter match-name="TIIVS_MULTITABLA"/>
+  <table-filter match-name="TIIVS_NIVEL"/>
+  <table-filter match-name="TIIVS_OFICINA"/>
+  <table-filter match-name="TIIVS_OFICINA1"/>
+  <table-filter match-name="TIIVS_OPERACION_BANCARIA"/>
+  <table-filter match-name="TIIVS_PODERDANTE"/>
+  <table-filter match-name="TIIVS_SOLICITUD"/>
+  <table-filter match-name="TIIVS_SOLICITUD_OPERBAN"/>
+  <table-filter match-name="TIIVS_TAREA"/>
+  <table-filter match-name="TIIVS_TAREA_GRUPO"/>
+  <table-filter match-name="TIIVS_TERRITORIO"/>
+  <table-filter match-name="TIIVS_TIPO_DOCUMENTO"/>
+  <table-filter match-name="TIIVS_TIPO_SERVICIO"/>
+</hibernate-reverse-engineering>

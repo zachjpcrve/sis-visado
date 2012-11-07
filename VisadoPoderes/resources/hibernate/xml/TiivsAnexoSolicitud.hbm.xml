@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 07/11/2012 02:39:40 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsAnexoSolicitud" table="TIIVS_ANEXO_SOLICITUD">
+        <composite-id name="id" class="com.hildebrando.visado.modelo.TiivsAnexoSolicitudId">
+            <key-property name="codSoli" type="string">
+                <column name="COD_SOLI" length="7" />
+            </key-property>
+            <key-property name="codDoc" type="string">
+                <column name="COD_DOC" length="7" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="tiivsTipoDocumento" class="com.hildebrando.visado.modelo.TiivsTipoDocumento" update="false" insert="false" fetch="select">
+            <column name="COD_DOC" length="7" not-null="true" />
+        </many-to-one>
+        <property name="aliasArchivo" type="string">
+            <column name="ALIAS_ARCHIVO" length="50" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

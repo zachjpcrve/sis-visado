@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<import resource="classpath:/conf/applicationContext-Config.xml" />
+
+	<bean id="mappingResourcesList"
+		class="org.springframework.beans.factory.config.ListFactoryBean">
+		<property name="sourceList">
+			<list>
+				<value>hibernate/xml/TiivsAnexoSolicitud.hbm.xml</value>
+				<value>hibernate/xml/TiivsApoderdante.hbm.xml</value>
+				<value>hibernate/xml/TiivsEstudio.hbm.xml</value>
+				<value>hibernate/xml/TiivsGrupo.hbm.xml</value>
+				<value>hibernate/xml/TiivsHistSolicitud.hbm.xml</value>
+				<value>hibernate/xml/TiivsMiembro.hbm.xml</value>
+				<value>hibernate/xml/TiivsMultitabla.hbm.xml</value>
+				<value>hibernate/xml/TiivsNivel.hbm.xml</value>
+				<value>hibernate/xml/TiivsOficina.hbm.xml</value>
+				<value>hibernate/xml/TiivsOficina1.hbm.xml</value>
+				<value>hibernate/xml/TiivsOperacionBancaria.hbm.xml</value>
+				<value>hibernate/xml/TiivsPoderdante.hbm.xml</value>
+				<value>hibernate/xml/TiivsSolicitud.hbm.xml</value>
+				<value>hibernate/xml/TiivsSolicitudOperban.hbm.xml</value>
+				<value>hibernate/xml/TiivsTarea.hbm.xml</value>
+				<value>hibernate/xml/TiivsTareaGrupo.hbm.xml</value>
+				<value>hibernate/xml/TiivsTerritorio.hbm.xml</value>
+				<value>hibernate/xml/TiivsTipoDocumento.hbm.xml</value>
+				<value>hibernate/xml/TiivsTipoServicio.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+
+
+</beans>

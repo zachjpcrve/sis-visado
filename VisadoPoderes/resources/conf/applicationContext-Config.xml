@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           				http://www.springframework.org/schema/context 
+           				http://www.springframework.org/schema/context/spring-context-3.0.xsd
+            			http://www.springframework.org/schema/security 
+            			http://www.springframework.org/schema/security/spring-security-3.0.xsd
+            			http://www.springframework.org/schema/aop 
+            			http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+            			http://www.springframework.org/schema/tx 
+            			http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<context:component-scan base-package="org.springannotations.web" />
+	
+	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+	<bean id="initLogging" name="initLogging"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+		autowire="byName">
+		<property name="staticMethod"
+			value="org.springframework.util.Log4jConfigurer.initLogging" />
+		<property name="arguments">
+			<list>
+				<value>classpath:properties/log4j.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="myDataSourceProperty" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:properties/jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transacctionManager"/> 
+
+<!-- 	<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate"> -->
+<!-- 		<property name="transactionManager" ref="transactionManager" /> -->
+<!-- 	</bean> -->
+
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- Usamos LocalSessionFactoryBean porque configuramos nuestros objetos de dominio persistentes utilizando
+	archivos de asignacion de XML de hibernate  -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="jndiDataSource" />
+		<property name="mappingResources" ref="mappingResourcesList" />
+		<property name="hibernateProperties">
+			<value>
+                hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
+                hibernate.show_sql=true             
+            </value>
+		</property>
+	</bean>
+
+	<bean id="jndiDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="${jdbc.jndi.visadopoderes}"></property>
+		<property name="lookupOnStartup" value="false"></property>
+		<property name="cache" value="true"></property>
+		<property name="proxyInterface" value="javax.sql.DataSource"></property>
+	</bean>
+	
+	<!-- <bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobFactory">
+          <bean class="org.springframework.scheduling.quartz.SpringBeanJobFactory"/>
+        </property>
+		<property name="dataSource" ref="jndiDataSource" />
+		<property name="transactionManager" ref="transactionManager" />
+	    <property name="overwriteExistingJobs" value="true" /> 
+        <property name="configLocation" value="classpath:properties/quartz.properties" />
+		<property name="applicationContextSchedulerContextKey" value="applicationContext" />
+        <property name="waitForJobsToCompleteOnShutdown" value="true" />
+		<property name="autoStartup" value="true" />
+		<property name="quartzProperties">
+			<props>
+			<prop key="org.quartz.jobStore.selectWithLockSQL">SELECT * FROM {0}LOCKS UPDLOCK WHERE LOCK_NAME = ?</prop>
+			</props>
+		</property>
+		
+	</bean> -->
+	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+	destroy-method="close">
+	<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+	<property name="url" value="jdbc:oracle:thin:@10.172.0.8:1521:dbdesa01" />
+	<property name="username" value="gesleg" />
+	<property name="password" value="gesleg" />
+	</bean> --> 
+
+<!-- 	<bean id="defaultLobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true" />-->
+
+</beans>
