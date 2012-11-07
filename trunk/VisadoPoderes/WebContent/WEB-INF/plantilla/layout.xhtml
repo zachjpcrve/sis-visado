@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<h:head>
+
+	<title><ui:insert name="titulo">
+			<h:outputText value="#{msjs.titulo_defecto}" />
+		</ui:insert></title>
+
+
+
+</h:head>
+<h:body>
+	<div id="container">
+
+		<div id="header">
+
+			<div id="logo">
+				<h:graphicImage library="images" name="bbva.gif"></h:graphicImage>
+            </div>
+
+			<div id="titulo">
+				<h:graphicImage library="images" name="titulo.gif"></h:graphicImage>
+			</div>
+
+			<div id="banner"></div>
+
+			<div class="clear"></div>
+
+		</div>
+
+		<div id="menu">
+			<ui:insert name="menu">
+
+				<ui:include src="menuRight.xhtml" />
+
+			</ui:insert>
+
+		</div>
+
+
+		<div id="contenido">
+			<ui:insert name="contenido">
+
+			</ui:insert>
+		</div>
+
+		<div id="footer">
+			<ui:insert name="pie">
+				<ui:include src="pie.xhtml" />
+			</ui:insert>
+		</div>
+
+	</div>
+
+</h:body>
+
+</html>
