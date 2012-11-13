@@ -12,7 +12,7 @@
 			<h:outputText value="#{msjs.titulo_defecto}" />
 		</ui:insert></title>
 
-
+<h:outputStylesheet library="css" name="visado.css" />
 
 </h:head>
 <h:body>
@@ -34,23 +34,21 @@
 
 		</div>
 
-		<div id="menu">
+		<div id="menu"  >
 			<ui:insert name="menu">
 
 				<ui:include src="menuRight.xhtml" />
 
 			</ui:insert>
-
 		</div>
 
-
-		<div id="contenido">
-			<ui:insert name="contenido">
+		<div id="contenido"  align="right" style="top: 500px; padding-top: 0px; margin-top: 5px;">
+			<ui:insert name="contenido"  >
 
 			</ui:insert>
 		</div>
 
-		<div id="footer">
+			<div id="footer">
 			<ui:insert name="pie">
 				<ui:include src="pie.xhtml" />
 			</ui:insert>
