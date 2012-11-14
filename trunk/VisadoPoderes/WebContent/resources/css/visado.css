@@ -5,9 +5,19 @@
 	font-size:9px;
 	color:#002a5c;	
 }
+.ui-state-default a, .ui-state-default a:link{
+	color:white !important;
+}
+.ui-widget-header .ui-state-default{
+	color: black !important;
+	background: white;
+	
+	font-size:11px;
+}
 
-
-
+.ui-menuitem-link .ui-menuitem-text{
+	color: black !important;
+}
 body {
 	font: 62.5% "Trebuchet MS", sans-serif;
 	font-size: 11px;
@@ -112,7 +122,8 @@ h1,h2,h3,h4,h5,h6 {
 #contenido {
 	height: auto;
 	overflow: hidden;
-	padding: 0 15px 15px 15px;
+	
+	/*padding: 0 15px 15px 15px;*/
 }
 
 #footer {
@@ -129,6 +140,7 @@ h1,h2,h3,h4,h5,h6 {
 
 #menu {
 	padding: 0 7px 15px 7px;
+	float: left;
 }
 
 .ui-menu {
@@ -158,12 +170,11 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 a.ui-state-hover span.ui-menuitem-text {
-	color: #00AACC;
-	-----0070A3
+	color: #0070A3;
 }
 
 .ui-menu-child  .ui-menuitem-text {
-	color: #00AACC;
+	color: #362B36;
 }
 
 table.anchoGrilla {
@@ -377,29 +388,50 @@ h2 {
 /*
 * inputs 
 */
+
 .ui-inputfield {
 	color: #cdcdcd;
-	font-weight: bold;
+    font-weight: bold;
 }
 
-.verdeOscuro {
-	background: green;
-	color: white;
+
+/*
+* Color ROJO de fila del datatable para actividades procesales vencidas
+*/
+
+.rojo{
+   background-color:red;
+   background-image:none;
 }
 
-.rojo {
-	background: red;
-	color: white;
+
+/*
+* Color NARANJA de fila del datatable para actividades procesales proximas a vencer
+*/
+
+.naranja{
+   background-color:orange;
+   background-image:none;
 }
 
-.amarillo {
-	background: yellow;
-	color: black;
+/*
+* Color AMARILLO de fila del datatable para indicar advertencia de que las actividades procesales
+  ha transcurrido mas de la mitad del tiempoo
+*/
+
+.amarillo{
+   background-color:yellow;
+   background-image:none;
 }
 
-.naranja {
-	background: orange;
-	color: white;
+/*
+* Color VERDE de fila del datatable para actividades procesales vencidas que recien inician
+*/
+
+.verde{
+   background-color: #6CE26C !important;;
+   background-image:none  #6CE26C !important;
+   color: black !important;;
 }
 
 .centered {
@@ -407,37 +439,6 @@ h2 {
 }
 
 
-.colorRowWhite {
-	color: white;
-}
-
-.colorRowBlack {
-	color: black;
-}
-
-.eventoVerde, .eventoVerde .fc-event-skin, .eventoVerde a {
-	background-color: green;
-	color: white;
-	border-color: greenyellow;
-}
-
-.eventoAmarillo, .eventoAmarillo .fc-event-skin, .eventoAmarillo a {
-	background-color: yellow;
-	color: black;
-	border-color: yellow;
-}
-
-.eventoNaranja, .eventoNaranja .fc-event-skin, .eventoNaranja a {
-	background-color: orange;
-	color: white;
-	border-color: orange;
-}
-
-.eventoRojo, .eventoRojo .fc-event-skin, .eventoRojo a {
-	background-color: red;
-	color: white;
-	border-color: red;
-}
 
 
 
