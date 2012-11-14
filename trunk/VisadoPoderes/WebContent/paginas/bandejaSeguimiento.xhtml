@@ -1,0 +1,353 @@
+<!DOCTYPE html PUBLIC "-//W3C//Dtd XHTML 1.0 transitional//EN" "http://www.w3.org/tr/xhtml1/Dtd/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+
+		<p:tabMenu activeIndex="0"  style="width:950px;margin-top: 0px; "   >
+			<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml" icon="ui-icon-star" />
+			<p:menuitem value="Instrucciones" url="/faces/paginas/instrucciones.xhtml" icon="ui-icon-star" />
+		</p:tabMenu>
+		<h:form id="frmMnt">
+		<table border="0">
+			<tbody>
+				<tr>
+					<td class="styleLegend2">
+						<fieldset>
+							<legend class="letraLightBlue10">Bandeja</legend>
+
+							<table border="0" >
+								<tbody>
+									<tr>
+										<td class="styleLegend2" >
+											<fieldset>
+												<p:separator/>
+												<table border="0" >
+													<tbody>
+														<tr>
+															<td>
+																	<h:outputText styleClass="outputText" id="txtCodOfic"
+																	value="Codigo Oficina: " />
+															</td>
+															<td>
+																	<p:selectOneMenu
+																	styleClass="selectOneMenu" id="menu1"
+																	style="background-color: Window; 
+																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
+																	disabled="false">
+																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	</p:selectOneMenu>
+															</td>
+															
+															<td >
+																	<h:outputText styleClass="outputText" id="textOficina" value="Oficina:" />
+															</td>
+															<td >
+																	<p:selectOneMenu
+																	styleClass="selectOneMenu" id="menu2"
+																	style="background-color: Window; 
+																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
+																	disabled="false">
+																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	</p:selectOneMenu>
+															</td>
+															
+															<td >
+																<h:outputText styleClass="outputText" id="textTerr" value="Territorio:" />
+															</td>
+															<td>
+																	<p:selectOneMenu
+																	styleClass="selectOneMenu" id="menu3"
+																	style="background-color: Window; 
+																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
+																	disabled="false">
+																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	</p:selectOneMenu>
+															</td>										
+														</tr>	
+														<tr>
+															<td >
+																<h:outputText styleClass="outputText" id="txtCodOficina" value="Codigo Oficina:" />
+															</td>
+															<td >
+																<h:inputText styleClass="inputText"
+																id="text11" value=""
+																disabled="false" readonly="true"/>
+															</td>																
+															<td >
+																<h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" />
+															</td>
+															<td >
+																<h:inputText styleClass="inputText"
+																id="text12" value=""
+																disabled="false" readonly="true"/>
+															</td>
+															<td >
+																<h:outputText styleClass="outputText" id="txtTipoSol" value="Tipo de Solicitud:" />
+															</td>
+															<td >
+																<p:selectOneMenu
+																	styleClass="selectOneMenu" id="menu11"
+																	style="background-color: Window; 
+																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
+																	disabled="false">
+																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	</p:selectOneMenu>
+															</td>
+														</tr>
+														<tr>
+															<td >
+																<h:outputText styleClass="outputText" id="txtPoder" value="Poderdante:" />
+															</td>
+															<td >
+																<h:inputText styleClass="inputText"
+																id="text14" value=""
+																disabled="false" readonly="true"/>
+															</td>																
+															<td >
+																<h:outputText styleClass="outputText" id="txtApod" value="Apoderado:" />
+															</td>
+															<td >
+																<h:inputText styleClass="inputText"
+																id="text15" value=""
+																disabled="false" readonly="true"/>
+															</td>
+															<td >
+																<h:outputText styleClass="outputText" id="txtOpBan" value="Operacion Bancaria:" />
+															</td>
+															<td >
+																<p:selectOneMenu
+																	styleClass="selectOneMenu" id="menu4"
+																	style="background-color: Window; 
+																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
+																	disabled="false">
+																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	</p:selectOneMenu>
+															</td>
+														</tr>
+														<tr>
+															<td >
+																<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI Poderdante:" />
+															</td>
+															<td >
+																<h:inputText styleClass="inputText" id="text17" value="" disabled="false" readonly="true"/>
+															</td>																
+															<td >
+																<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI Apoderado:" />
+															</td>
+															<td >
+																<h:inputText styleClass="inputText" id="text18" value="" disabled="false" readonly="true"/>
+															</td>
+															<td >
+																<h:outputText styleClass="outputText" id="txtImporte" value="Importe:" />
+															</td>
+															<td >
+																<p:selectOneMenu
+																	styleClass="selectOneMenu" id="menu5"
+																	style="background-color: Window; 
+																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
+																	disabled="false">
+																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	</p:selectOneMenu>
+															</td>
+														</tr>
+														<tr>
+															<td >
+																<h:outputText styleClass="outputText" id="txtCod" value="Codigo:" />
+															</td>
+															<td >
+																<h:inputText styleClass="inputText" id="text100" value="" disabled="false" readonly="true"/>
+															</td>																
+															<td >
+																<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio:" />
+															</td>
+															<td >
+																<p:selectOneMenu
+																	styleClass="selectOneMenu" id="menu6"
+																	style="background-color: Window; 
+																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
+																	disabled="false">
+																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	</p:selectOneMenu>
+															</td>
+															<td >
+																<h:outputText styleClass="outputText" id="txtEstado" value="Estado:" />
+															</td>
+															<td >
+																<p:selectOneMenu
+																	styleClass="selectOneMenu" id="menu7"
+																	style="background-color: Window; 
+																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
+																	disabled="false">
+																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	</p:selectOneMenu>
+															</td>
+														</tr>
+														<tr>
+															<td >
+																<h:outputText styleClass="outputText" id="txtTipoFecha" value="Tipo Fecha:" />
+															</td>
+															<td >
+																<p:selectOneMenu
+																	styleClass="selectOneMenu" id="menu8"
+																	style="background-color: Window; 
+																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
+																	disabled="false">
+																		<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+																	</p:selectOneMenu>
+															</td>																
+															<td >
+																<h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" />
+															</td>
+															<td >
+																<p:calendar  id="calFecIni"
+																pattern="dd/MM/yyyy" 
+																label="Fecha de Fin" showOn="button" maxlength="10" size="15"/>
+															</td>
+															<td >
+																<h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin" />
+															</td>
+															<td >
+																<p:calendar  id="calFecFin"
+																pattern="dd/MM/yyyy" 
+																label="Fecha de Fin" showOn="button" maxlength="10" size="12"/>
+															</td>
+														</tr>
+														<tr>
+															<td >
+																<h:outputText styleClass="outputText" id="txtNivel" value="Nivel:" />
+															</td>
+															<td >
+																<p:selectOneMenu
+																	styleClass="selectOneMenu" id="menu9"
+																	style="background-color: Window; 
+																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
+																	disabled="false">
+																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	</p:selectOneMenu>
+															</td>
+															<td >
+																<h:outputText styleClass="outputText" id="txtEstNivel" value="Estados del Nivel:" />
+															</td>
+															<td >
+																<p:selectOneMenu
+																	styleClass="selectOneMenu" id="menu10"
+																	style="background-color: Window; 
+																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
+																	disabled="false">
+																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	</p:selectOneMenu>
+															</td>
+															<td >
+																<h:outputText styleClass="outputText" id="txtReclamo" value="Reclamo:" />
+																
+															</td>
+															
+															<td >
+																<p:selectBooleanCheckbox />  
+																<p:spacer width="20"/>
+																<h:outputText styleClass="outputText" id="txtDelegados" value="Delegados" />
+																<p:spacer width="20"/>
+																<p:selectBooleanCheckbox />  
+															</td>
+														</tr>
+														<tr></tr>
+														<tr></tr>
+														<tr></tr>
+														<tr></tr>
+														<tr></tr>
+														<tr></tr>
+														<tr></tr>
+														<tr>
+															<td align="center">
+																<p:commandButton value="Nuevo" ajax="false"/>
+																<p:spacer width="15"/>
+																<p:commandButton value="Buscar" ajax="false"/>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</fieldset>
+										</td>
+									</tr>	
+								</tbody>
+							</table>							
+						</fieldset>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<p:panel header="Resultados" id="panelRes">
+			<p:dataTable  var="tbl" rows="20"
+				emptyMessage="No hay resultados en la bandeja"
+				paginatorPosition="bottom" 
+				paginator="true"
+				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+				rowsPerPageTemplate="5,10,15"
+				editable="true" >
+
+				<p:column headerText="Codigo">
+					
+				</p:column>
+				
+				<p:column headerText="Cod. Oficina">
+					
+				</p:column>
+				
+				<p:column headerText="Oficina">
+					
+				</p:column>
+				
+				<p:column headerText="Poderdante">
+					
+				</p:column>
+
+				<p:column headerText="Tipo Operacion">
+					
+				</p:column>
+				
+				<p:column headerText="Importe">
+					
+				</p:column>
+				
+				<p:column headerText="Moneda">
+					
+				</p:column>
+				
+				<p:column headerText="Fecha Respuesta">
+					
+				</p:column>
+				
+				<p:column headerText="Fecha Envio">
+					
+				</p:column>
+				
+				<p:column headerText="Fecha Estado">
+					
+				</p:column>
+				
+				<p:column headerText="Estado">
+					
+				</p:column>
+				
+				<p:column headerText="Estudio">
+					
+				</p:column>
+				
+				<p:column headerText="Nivel">
+					
+				</p:column>
+		  </p:dataTable>
+		</p:panel>	
+		
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+</html>
