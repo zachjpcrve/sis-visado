@@ -246,7 +246,6 @@
 																<h:outputText styleClass="outputText" id="txtReclamo" value="Reclamo:" />
 																
 															</td>
-															
 															<td >
 																<p:selectBooleanCheckbox />  
 																<p:spacer width="20"/>
@@ -275,16 +274,18 @@
 										</td>
 									</tr>	
 								</tbody>
-							</table>							
+							</table>
 						</fieldset>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 		
+		<h:outputLabel value="#{solicitudMB.textoTotalResultados}"/>
+				
 		<p:panel header="Resultados" id="panelRes">
 			<p:dataTable  var="tbl" rows="20"
-				emptyMessage="No hay resultados en la bandeja"
+				emptyMessage=""
 				paginatorPosition="bottom" 
 				paginator="true"
 				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
@@ -292,35 +293,35 @@
 				editable="true" >
 
 				<p:column headerText="Codigo">
-					
+					<h:outputText value="000461" />
 				</p:column>
 				
 				<p:column headerText="Cod. Oficina">
-					
+					<h:outputText value="0057"/>	
 				</p:column>
 				
 				<p:column headerText="Oficina">
-					
+					<h:outputText value="PROCESOS MASIVOS DE DESEMBOLSOS"/>	
 				</p:column>
 				
 				<p:column headerText="Poderdante">
-					
+					<h:outputText value="DNI: 4397658 - Perez Gutierrez José"/>		
 				</p:column>
 
 				<p:column headerText="Tipo Operacion">
-					
+					<h:outputText value="Pago chequeSS"/>					
 				</p:column>
 				
 				<p:column headerText="Importe">
-					
+					<h:outputText value="1555"/>	
 				</p:column>
 				
 				<p:column headerText="Moneda">
-					
+					<h:outputText value="PEN"/>
 				</p:column>
 				
 				<p:column headerText="Fecha Respuesta">
-					
+						
 				</p:column>
 				
 				<p:column headerText="Fecha Envio">
@@ -328,19 +329,19 @@
 				</p:column>
 				
 				<p:column headerText="Fecha Estado">
-					
+					<h:outputText value="2012-04-16 12:15:53"/>	
 				</p:column>
 				
 				<p:column headerText="Estado">
-					
+					<h:outputText value="REGISTRADO"/>	
 				</p:column>
 				
 				<p:column headerText="Estudio">
-					
+						
 				</p:column>
 				
 				<p:column headerText="Nivel">
-					
+					<h:outputText value="N1"/>	
 				</p:column>
 		   </p:dataTable>
 		</p:panel>	
