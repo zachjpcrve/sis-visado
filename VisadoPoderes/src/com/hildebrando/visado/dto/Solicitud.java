@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 public class Solicitud {
 	private String item;
 	private String descEstado;
@@ -57,7 +56,6 @@ public class Solicitud {
 	private String desMoneda;
 	private String monedaAbr;
 	private String fechaVencimiento;
-	
 	private boolean chekDelegado;
 	private boolean chekNivel;
 	private boolean chekReclamoRevision;
@@ -66,7 +64,6 @@ public class Solicitud {
 	private String tipoFechaRespuesta;
 	private String codNivel;
 	private String codEstadoNivel;
-	
 	private Date fechaInicio;
 	private Date fechaFin;
 	
@@ -615,7 +612,5 @@ public class Solicitud {
 
 	public void setImporteSoles(Double importeSoles) {
 		this.importeSoles = importeSoles;
-	}
-
-	
+	}	
 }
