@@ -34,12 +34,10 @@
 																	value="Codigo Oficina: " />
 															</td>
 															<td>
-																	<p:selectOneMenu
-																	styleClass="selectOneMenu" id="menu1"
-																	style="background-color: Window; 
-																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
-																	disabled="false">
-																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	<p:selectOneMenu value="#{solicitudMB.idCodOfi}" id="somCodOfi">
+																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																		<f:selectItems value="#{solicitudMB.lstOficina}" var="lOf"
+																			itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}" />
 																	</p:selectOneMenu>
 															</td>
 															
@@ -47,12 +45,10 @@
 																	<h:outputText styleClass="outputText" id="textOficina" value="Oficina:" />
 															</td>
 															<td >
-																	<p:selectOneMenu
-																	styleClass="selectOneMenu" id="menu2"
-																	style="background-color: Window; 
-																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
-																	disabled="false">
-																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	<p:selectOneMenu value="#{solicitudMB.idCodOfi1}" id="somOfi">
+																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																		<f:selectItems value="#{solicitudMB.lstOficina}" var="of"
+																			itemValue="#{of.codOfi}" itemLabel="#{of.desOfi}" />
 																	</p:selectOneMenu>
 															</td>
 															
@@ -60,12 +56,10 @@
 																<h:outputText styleClass="outputText" id="textTerr" value="Territorio:" />
 															</td>
 															<td>
-																	<p:selectOneMenu
-																	styleClass="selectOneMenu" id="menu3"
-																	style="background-color: Window; 
-																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
-																	disabled="false">
-																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
+																	<p:selectOneMenu value="#{solicitudMB.idTerr}" id="somTerr">
+																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																		<f:selectItems value="#{solicitudMB.lstTerritorio}" var="lTerr"
+																			itemValue="#{lTerr.codTer}" itemLabel="#{lTerr.desTer}" />
 																	</p:selectOneMenu>
 															</td>										
 														</tr>	
@@ -90,13 +84,11 @@
 																<h:outputText styleClass="outputText" id="txtTipoSol" value="Tipo de Solicitud:" />
 															</td>
 															<td >
-																<p:selectOneMenu
-																	styleClass="selectOneMenu" id="menu11"
-																	style="background-color: Window; 
-																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
-																	disabled="false">
-																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
-																	</p:selectOneMenu>
+																<p:selectOneMenu value="#{solicitudMB.idTipoSol}" id="somTipoSol">
+																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																	<f:selectItems value="#{solicitudMB.lstTipoSolicitud}" var="tipoSol"
+																		itemValue="#{tipoSol.codOper}" itemLabel="#{tipoSol.desOper}" />
+																</p:selectOneMenu>
 															</td>
 														</tr>
 														<tr>
@@ -120,13 +112,11 @@
 																<h:outputText styleClass="outputText" id="txtOpBan" value="Operacion Bancaria:" />
 															</td>
 															<td >
-																<p:selectOneMenu
-																	styleClass="selectOneMenu" id="menu4"
-																	style="background-color: Window; 
-																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
-																	disabled="false">
-																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
-																	</p:selectOneMenu>
+																<p:selectOneMenu value="#{solicitudMB.idOpeBan}" id="somOpeBan">
+																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																	<f:selectItems value="#{solicitudMB.lstOpeBancaria}" var="opeBan"
+																		itemValue="#{opeBan.codOperBan}" itemLabel="#{opeBan.desOperBan}" />
+																</p:selectOneMenu>
 															</td>
 														</tr>
 														<tr>
@@ -146,13 +136,11 @@
 																<h:outputText styleClass="outputText" id="txtImporte" value="Importe:" />
 															</td>
 															<td >
-																<p:selectOneMenu
-																	styleClass="selectOneMenu" id="menu5"
-																	style="background-color: Window; 
-																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
-																	disabled="false">
-																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
-																	</p:selectOneMenu>
+																<p:selectOneMenu value="#{solicitudMB.idImporte}" id="somImporte">
+																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																	<f:selectItems value="#{solicitudMB.lstRangosImporte}" var="imp"
+																		itemValue="#{imp.codigoRango}" itemLabel="#{imp.descripcion}" />
+																</p:selectOneMenu>
 															</td>
 														</tr>
 														<tr>
@@ -166,25 +154,21 @@
 																<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio:" />
 															</td>
 															<td >
-																<p:selectOneMenu
-																	styleClass="selectOneMenu" id="menu6"
-																	style="background-color: Window; 
-																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
-																	disabled="false">
-																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
-																	</p:selectOneMenu>
+																<p:selectOneMenu value="#{solicitudMB.idEstudio}" id="somEstudio">
+																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																	<f:selectItems value="#{solicitudMB.lstEstudio}" var="est"
+																		itemValue="#{est.codEstudio}" itemLabel="#{est.desEstudio}" />
+																</p:selectOneMenu>
 															</td>
 															<td >
 																<h:outputText styleClass="outputText" id="txtEstado" value="Estado:" />
 															</td>
 															<td >
-																<p:selectOneMenu
-																	styleClass="selectOneMenu" id="menu7"
-																	style="background-color: Window; 
-																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
-																	disabled="false">
-																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
-																	</p:selectOneMenu>
+																<p:selectOneMenu value="#{solicitudMB.idEstado}" id="somEstado">
+																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																	<f:selectItems value="#{solicitudMB.lstEstado}" var="esta"
+																		itemValue="#{esta.codEstado}" itemLabel="#{esta.descripcion}" />
+																</p:selectOneMenu>
 															</td>
 														</tr>
 														<tr>
@@ -192,13 +176,11 @@
 																<h:outputText styleClass="outputText" id="txtTipoFecha" value="Tipo Fecha:" />
 															</td>
 															<td >
-																<p:selectOneMenu
-																	styleClass="selectOneMenu" id="menu8"
-																	style="background-color: Window; 
-																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
-																	disabled="false">
-																		<f:selectItem itemLabel="--Seleccione--" itemValue="" />
-																	</p:selectOneMenu>
+																<p:selectOneMenu value="#{solicitudMB.idTiposFecha}" id="somTiposFecha">
+																	<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+																	<f:selectItems value="#{solicitudMB.lstTiposFecha}" var="tipoFec"
+																		itemValue="#{tipoFec.codigoTipoFecha}" itemLabel="#{tipoFec.descripcion}" />
+																</p:selectOneMenu>
 															</td>																
 															<td >
 																<h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" />
@@ -222,25 +204,21 @@
 																<h:outputText styleClass="outputText" id="txtNivel" value="Nivel:" />
 															</td>
 															<td >
-																<p:selectOneMenu
-																	styleClass="selectOneMenu" id="menu9"
-																	style="background-color: Window; 
-																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
-																	disabled="false">
-																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
-																	</p:selectOneMenu>
+																<p:selectOneMenu value="#{solicitudMB.idNivel}" id="somNivel">
+																	<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+																	<f:selectItems value="#{solicitudMB.lstNivel}" var="niv"
+																		itemValue="#{niv.codNiv}" itemLabel="#{niv.desNiv}" />
+																</p:selectOneMenu>
 															</td>
 															<td >
 																<h:outputText styleClass="outputText" id="txtEstNivel" value="Estados del Nivel:" />
 															</td>
 															<td >
-																<p:selectOneMenu
-																	styleClass="selectOneMenu" id="menu10"
-																	style="background-color: Window; 
-																	font-variant: normal; font-weight: bold; border-color: black; border-style: dotted"
-																	disabled="false">
-																		<f:selectItem itemLabel="-TODOS-" itemValue="" />
-																	</p:selectOneMenu>
+																<p:selectOneMenu value="#{solicitudMB.idEstNivel}" id="somEstNivel">
+																	<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+																	<f:selectItems value="#{solicitudMB.lstEstadoNivel}" var="estNiv"
+																		itemValue="#{estNiv.codigoEstadoNivel}" itemLabel="#{estNiv.descripcion}" />
+																</p:selectOneMenu>
 															</td>
 															<td >
 																<h:outputText styleClass="outputText" id="txtReclamo" value="Reclamo:" />
@@ -262,11 +240,8 @@
 														<tr></tr>
 														<tr></tr>
 														<tr>
-															<td align="center">
-																<p:commandButton value="Nuevo" ajax="false"/>
-																<p:spacer width="15"/>
-																<p:commandButton value="Buscar" ajax="false"/>
-															</td>
+															<td><p:commandButton value="Nuevo" ajax="false"/></td>
+															<td><p:commandButton value="Buscar" ajax="false"/></td>
 														</tr>
 													</tbody>
 												</table>
