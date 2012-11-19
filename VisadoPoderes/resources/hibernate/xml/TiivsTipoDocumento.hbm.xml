@@ -8,7 +8,7 @@
             <column name="COD_DOC" length="7" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="tiivsTipoServicio" class="com.hildebrando.visado.modelo.TiivsTipoServicio" fetch="select">
+        <many-to-one name="tiivsTipoServicio" class="com.hildebrando.visado.modelo.TiivsTipoServicio" fetch="select" lazy="false">
             <column name="COD_OPER" length="7" not-null="true" />
         </many-to-one>
         <property name="desDoc" type="string">
@@ -20,7 +20,7 @@
         <property name="obligatorio" type="char">
             <column name="OBLIGATORIO" length="1" not-null="true" />
         </property>
-        <set name="tiivsAnexoSolicituds" table="TIIVS_ANEXO_SOLICITUD" inverse="true" lazy="true" fetch="select">
+        <set name="tiivsAnexoSolicituds" table="TIIVS_ANEXO_SOLICITUD" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="COD_DOC" length="7" not-null="true" />
             </key>
