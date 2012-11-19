@@ -38,6 +38,8 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private Timestamp fechaRespuesta;
 	private Set tiivsApoderdantes = new HashSet(0);
 	private Set tiivsPoderdantes = new HashSet(0);
+	private String desMoneda;
+	private String estudio;
 
 	public TiivsSolicitud() {
 	}
@@ -46,7 +48,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 			TiivsOficina1 tiivsOficina1, String poderante, String tipDocPoder,
 			String numDocPoder, String apoderado, String tipDocApoder,
 			String numDocApoder, String estado, Timestamp fecha,
-			String nomSolicitante, String regUsuario, String nomUsuario) {
+			String nomSolicitante, String regUsuario, String nomUsuario, String desMoneda) {
 		this.codSoli = codSoli;
 		this.tiivsTipoServicio = tiivsTipoServicio;
 		this.tiivsOficina1 = tiivsOficina1;
@@ -61,6 +63,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.nomSolicitante = nomSolicitante;
 		this.regUsuario = regUsuario;
 		this.nomUsuario = nomUsuario;
+		this.desMoneda=desMoneda;
 	}
 
 	public TiivsSolicitud(String codSoli, TiivsTipoServicio tiivsTipoServicio,
@@ -300,4 +303,19 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.tiivsPoderdantes = tiivsPoderdantes;
 	}
 
+	public String getDesMoneda() {
+		return desMoneda;
+	}
+
+	public void setDesMoneda(String desMoneda) {
+		this.desMoneda = desMoneda;
+	}
+
+	public String getEstudio() {
+		return estudio;
+	}
+
+	public void setEstudio(String estudio) {
+		this.estudio = estudio;
+	}
 }
