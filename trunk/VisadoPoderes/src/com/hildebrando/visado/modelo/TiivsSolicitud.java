@@ -4,6 +4,7 @@ package com.hildebrando.visado.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,18 +24,18 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private String tipDocApoder;
 	private String numDocApoder;
 	private String estado;
-	private Serializable fecha;
+	private Timestamp fecha;
 	private String nomSolicitante;
 	private String regAbogado;
 	private String obs;
 	private String regUsuario;
 	private String nomUsuario;
 	private BigDecimal importe;
-	private Serializable fechaEnvio;
-	private Serializable fechaEstado;
+	private Timestamp fechaEnvio;
+	private Timestamp fechaEstado;
 	private String operacionesBancarias;
 	private String moneda;
-	private Serializable fechaRespuesta;
+	private Timestamp fechaRespuesta;
 	private Set tiivsApoderdantes = new HashSet(0);
 	private Set tiivsPoderdantes = new HashSet(0);
 
@@ -44,7 +45,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 	public TiivsSolicitud(String codSoli, TiivsTipoServicio tiivsTipoServicio,
 			TiivsOficina1 tiivsOficina1, String poderante, String tipDocPoder,
 			String numDocPoder, String apoderado, String tipDocApoder,
-			String numDocApoder, String estado, Serializable fecha,
+			String numDocApoder, String estado, Timestamp fecha,
 			String nomSolicitante, String regUsuario, String nomUsuario) {
 		this.codSoli = codSoli;
 		this.tiivsTipoServicio = tiivsTipoServicio;
@@ -66,11 +67,11 @@ public class TiivsSolicitud implements java.io.Serializable {
 			TiivsOficina1 tiivsOficina1, String poderante, String tipDocPoder,
 			String numDocPoder, String codCentral, String apoderado,
 			String tipDocApoder, String numDocApoder, String estado,
-			Serializable fecha, String nomSolicitante, String regAbogado,
+			Timestamp fecha, String nomSolicitante, String regAbogado,
 			String obs, String regUsuario, String nomUsuario,
-			BigDecimal importe, Serializable fechaEnvio,
-			Serializable fechaEstado, String operacionesBancarias,
-			String moneda, Serializable fechaRespuesta, Set tiivsApoderdantes,
+			BigDecimal importe, Timestamp fechaEnvio,
+			Timestamp fechaEstado, String operacionesBancarias,
+			String moneda, Timestamp fechaRespuesta, Set tiivsApoderdantes,
 			Set tiivsPoderdantes) {
 		this.codSoli = codSoli;
 		this.tiivsTipoServicio = tiivsTipoServicio;
@@ -191,7 +192,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		return this.fecha;
 	}
 
-	public void setFecha(Serializable fecha) {
+	public void setFecha(Timestamp fecha) {
 		this.fecha = fecha;
 	}
 
@@ -247,7 +248,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		return this.fechaEnvio;
 	}
 
-	public void setFechaEnvio(Serializable fechaEnvio) {
+	public void setFechaEnvio(Timestamp fechaEnvio) {
 		this.fechaEnvio = fechaEnvio;
 	}
 
@@ -255,7 +256,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		return this.fechaEstado;
 	}
 
-	public void setFechaEstado(Serializable fechaEstado) {
+	public void setFechaEstado(Timestamp fechaEstado) {
 		this.fechaEstado = fechaEstado;
 	}
 
@@ -279,7 +280,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		return this.fechaRespuesta;
 	}
 
-	public void setFechaRespuesta(Serializable fechaRespuesta) {
+	public void setFechaRespuesta(Timestamp fechaRespuesta) {
 		this.fechaRespuesta = fechaRespuesta;
 	}
 

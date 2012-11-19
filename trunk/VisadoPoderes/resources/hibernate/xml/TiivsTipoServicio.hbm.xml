@@ -14,13 +14,13 @@
         <property name="activo" type="char">
             <column name="ACTIVO" length="1" not-null="true" />
         </property>
-        <set name="tiivsTipoDocumentos" table="TIIVS_TIPO_DOCUMENTO" inverse="true" lazy="true" fetch="select">
+        <set name="tiivsTipoDocumentos" table="TIIVS_TIPO_DOCUMENTO" inverse="true" lazy="false" fetch="select" >
             <key>
                 <column name="COD_OPER" length="7" not-null="true" />
             </key>
             <one-to-many class="com.hildebrando.visado.modelo.TiivsTipoDocumento" />
         </set>
-        <set name="tiivsSolicituds" table="TIIVS_SOLICITUD" inverse="true" lazy="true" fetch="select">
+        <set name="tiivsSolicituds" table="TIIVS_SOLICITUD" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="COD_OPER" length="7" not-null="true" />
             </key>

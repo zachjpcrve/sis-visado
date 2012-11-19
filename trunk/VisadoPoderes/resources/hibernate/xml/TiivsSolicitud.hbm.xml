@@ -8,10 +8,10 @@
             <column name="COD_SOLI" length="7" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="tiivsTipoServicio" class="com.hildebrando.visado.modelo.TiivsTipoServicio" fetch="select">
+        <many-to-one name="tiivsTipoServicio" class="com.hildebrando.visado.modelo.TiivsTipoServicio" fetch="select" lazy="false">
             <column name="COD_OPER" length="7" not-null="true" />
         </many-to-one>
-        <many-to-one name="tiivsOficina1" class="com.hildebrando.visado.modelo.TiivsOficina1" fetch="select">
+        <many-to-one name="tiivsOficina1" class="com.hildebrando.visado.modelo.TiivsOficina1" fetch="select" lazy="false">
             <column name="COD_OFI" length="8" not-null="true" />
         </many-to-one>
         <property name="poderante" type="string">
@@ -38,7 +38,7 @@
         <property name="estado" type="string">
             <column name="ESTADO" length="7" not-null="true" />
         </property>
-        <property name="fecha" type="serializable">
+        <property name="fecha" type="java.sql.Timestamp">
             <column name="FECHA" not-null="true" />
         </property>
         <property name="nomSolicitante" type="string">
@@ -59,10 +59,10 @@
         <property name="importe" type="big_decimal">
             <column name="IMPORTE" precision="12" />
         </property>
-        <property name="fechaEnvio" type="serializable">
+        <property name="fechaEnvio" type="java.sql.Timestamp">
             <column name="FECHA_ENVIO" />
         </property>
-        <property name="fechaEstado" type="serializable">
+        <property name="fechaEstado" type="java.sql.Timestamp">
             <column name="FECHA_ESTADO" />
         </property>
         <property name="operacionesBancarias" type="string">
@@ -71,16 +71,16 @@
         <property name="moneda" type="string">
             <column name="MONEDA" length="7" />
         </property>
-        <property name="fechaRespuesta" type="serializable">
+        <property name="fechaRespuesta" type="java.sql.Timestamp">
             <column name="FECHA_RESPUESTA" />
         </property>
-        <set name="tiivsApoderdantes" table="TIIVS_APODERDANTE" inverse="true" lazy="true" fetch="select">
+        <set name="tiivsApoderdantes" table="TIIVS_APODERDANTE" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="COD_SOLI" length="7" />
             </key>
             <one-to-many class="com.hildebrando.visado.modelo.TiivsApoderdante" />
         </set>
-        <set name="tiivsPoderdantes" table="TIIVS_PODERDANTE" inverse="true" lazy="true" fetch="select">
+        <set name="tiivsPoderdantes" table="TIIVS_PODERDANTE" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="COD_SOLI" length="7" />
             </key>
