@@ -47,7 +47,7 @@
 															<td >
 																	<p:selectOneMenu value="#{solicitudMB.idCodOfi1}" id="somOfi">
 																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
-																		<f:selectItems value="#{solicitudMB.lstOficina}" var="of"
+																		<f:selectItems value="#{solicitudMB.lstOficina1}" var="of"
 																			itemValue="#{of.codOfi}" itemLabel="#{of.desOfi}" />
 																	</p:selectOneMenu>
 															</td>
@@ -97,8 +97,7 @@
 															</td>
 															<td >
 																<h:inputText styleClass="inputText"
-																id="text14" value=""
-																disabled="false" readonly="true"/>
+																id="text14" value="" disabled="false" maxlength="60"/>
 															</td>																
 															<td >
 																<h:outputText styleClass="outputText" id="txtApod" value="Apoderado:" />
@@ -115,7 +114,7 @@
 																<p:selectOneMenu value="#{solicitudMB.idOpeBan}" id="somOpeBan">
 																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
 																	<f:selectItems value="#{solicitudMB.lstOpeBancaria}" var="opeBan"
-																		itemValue="#{opeBan.codOperBan}" itemLabel="#{opeBan.desOperBan}" />
+																		itemValue="#{opeBan.desOperBan}" itemLabel="#{opeBan.desOperBan}" />
 																</p:selectOneMenu>
 															</td>
 														</tr>
@@ -148,7 +147,7 @@
 																<h:outputText styleClass="outputText" id="txtCod" value="Codigo:" />
 															</td>
 															<td >
-																<h:inputText styleClass="inputText" id="text100" value="" disabled="false" readonly="true"/>
+																<h:inputText styleClass="inputText" id="text100" value="#{solicitudMB.codSolicitud}" />
 															</td>																
 															<td >
 																<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio:" />
@@ -222,7 +221,6 @@
 															</td>
 															<td >
 																<h:outputText styleClass="outputText" id="txtReclamo" value="Reclamo:" />
-																
 															</td>
 															<td >
 																<p:selectBooleanCheckbox />  
@@ -240,8 +238,14 @@
 														<tr></tr>
 														<tr></tr>
 														<tr>
-															<td><p:commandButton value="Nuevo" ajax="false"/></td>
-															<td><p:commandButton value="Buscar" ajax="false"/></td>
+															<td>
+																<p:commandButton value="Nuevo" ajax="false"/>
+															</td>
+															<td>
+																<p:commandButton value="Buscar" icon="ui-icon-search" 
+																	actionListener="#{solicitudMB.buscarSolicitudes}" 
+																	update="panelRes" ajax="false"/>
+															</td>
 														</tr>
 													</tbody>
 												</table>
@@ -259,65 +263,65 @@
 		<h:outputLabel value="#{solicitudMB.textoTotalResultados}"/>
 				
 		<p:panel header="Resultados" id="panelRes">
-			<p:dataTable  var="tbl" rows="20"
-				emptyMessage=""
-				paginatorPosition="bottom" 
-				paginator="true"
-				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-				rowsPerPageTemplate="5,10,15"
-				editable="true" >
+			<p:dataTable value="#{solicitudMB.solicitudes}" var="tbl" rows="5"
+					paginatorPosition="bottom" 
+					paginator="true"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+					rowsPerPageTemplate="5,10,15"
+					emptyMessage="">
 
 				<p:column headerText="Codigo">
-					<h:outputText value="000461" />
+					<h:outputText value="#{tbl.codSoli}" />
 				</p:column>
 				
 				<p:column headerText="Cod. Oficina">
-					<h:outputText value="0057"/>	
+					<h:outputText value="#{tbl.tiivsOficina1.codOfi}"/>	
 				</p:column>
 				
 				<p:column headerText="Oficina">
-					<h:outputText value="PROCESOS MASIVOS DE DESEMBOLSOS"/>	
+					<h:outputText value="#{tbl.tiivsOficina1.desOfi}"/>	
 				</p:column>
 				
 				<p:column headerText="Poderdante">
-					<h:outputText value="DNI: 4397658 - Perez Gutierrez José"/>		
+					<h:outputText value="#{tbl.tiivsApoderdantes}"/>		
 				</p:column>
 
 				<p:column headerText="Tipo Operacion">
-					<h:outputText value="Pago chequeSS"/>					
+					<h:outputText value="#{tbl.operacionesBancarias}"/>					
 				</p:column>
 				
 				<p:column headerText="Importe">
-					<h:outputText value="1555"/>	
+					<h:outputText value="#{tbl.importe}"/>	
 				</p:column>
 				
 				<p:column headerText="Moneda">
-					<h:outputText value="PEN"/>
+					<h:outputText value="#{tbl.desMoneda}"/>
 				</p:column>
 				
 				<p:column headerText="Fecha Respuesta">
-						
+					<h:outputText value="#{tbl.fechaRespuesta}"/>	
 				</p:column>
 				
 				<p:column headerText="Fecha Envio">
-					
+					<h:outputText value="#{tbl.fechaEnvio}"/>	
 				</p:column>
 				
 				<p:column headerText="Fecha Estado">
-					<h:outputText value="2012-04-16 12:15:53"/>	
+					<h:outputText value="#{tbl.fechaEstado}"/>
 				</p:column>
 				
 				<p:column headerText="Estado">
-					<h:outputText value="REGISTRADO"/>	
+					<h:outputText value="#{tbl.estado}"/>	
 				</p:column>
 				
 				<p:column headerText="Estudio">
-						
+					<h:outputText value="#{tbl.estudio}"/>	
 				</p:column>
 				
 				<p:column headerText="Nivel">
-					<h:outputText value="N1"/>	
+					<h:outputText value=""/>	
 				</p:column>
+				
 		   </p:dataTable>
 		</p:panel>	
 		
@@ -327,8 +331,7 @@
 					<p:commandButton value="Exportar" ajax="false"/>
 					<p:spacer height="15"/>
 				</td>
-			</tr>		
-		
+			</tr>	
 		</table>
 		
 		</h:form>

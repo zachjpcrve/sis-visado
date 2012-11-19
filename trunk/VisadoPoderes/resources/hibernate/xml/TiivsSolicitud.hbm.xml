@@ -86,5 +86,6 @@
             </key>
             <one-to-many class="com.hildebrando.visado.modelo.TiivsPoderdante" />
         </set>
+    
     </class>
 </hibernate-mapping>
