@@ -1,9 +1,21 @@
 @CHARSET "ISO-8859-1";
+.ui-widget-header ui-corner-all{
+background-color: #254077 !important;
+background-image :url("/VisadoPoderes/faces/javax.faces.resource/images/ui-bg_highlight-soft_100_deedf7_1x100.png?ln=primefaces-cupertino")
+}
+.fielset {
+	 font-family: Verdana, sans-serif;
+	font-size:10px;
+/* 	color:#002a5C; */
+    color:#254077;
+	font-weight:bold;
+}
 
 .outputText {
 	font-family: Verdana, sans-serif;
 	font-size:9px;
-	color:#002a5c;	
+	color:#254077;
+/* 	font-weight:bold; */
 }
 .ui-state-default a, .ui-state-default a:link{
 	color:white !important;
@@ -144,7 +156,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .ui-menu {
-	background: #00AACC;
+	background: #BED6F8;
 	/*background: #00529B
 		url("/showcase-labs/javax.faces.resource/images/ui-bg_highlight-hard_80_c4c4c4_1x100.png.jsf?ln=primefaces-aristo")
 		top repeat-x;
