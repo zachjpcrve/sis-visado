@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//Dtd XHTML 1.0 transitional//EN" "http://www.w3.org/tr/xhtml1/Dtd/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+<h:panelGrid columns="5">
+<p:tabMenu activeIndex="0" style="width:700px;">
+	<p:menuitem value="Solicitud" url="/faces/paginas/detalleSolicitudEstadoEnviado.xhtml" icon="ui-icon-star" />
+	<p:menuitem value="Instrucciones" url="/faces/paginas/instrucciones.xhtml" icon="ui-icon-star" />
+	
+</p:tabMenu>
+
+<p:toolbar>  
+    <p:toolbarGroup align="rigth">  
+    <p:commandButton value="Salir" id="btnSalir3" icon="ui-icon-document"/>
+    </p:toolbarGroup>  
+  </p:toolbar>
+</h:panelGrid>
+
+<table border="0" width="780">
+	<tbody>
+	<tr>
+		<td class="styleLegend2" width="783">
+
+			<table border="0" >
+				<tbody>
+					<tr>
+						<td class="styleLegend2" width="103">
+						<fieldset style="width:1000px;color:#002A5C;font-weight:bold">
+							<h:outputText title="Información General" value="Información General" styleClass="outputText"  />
+							<p:separator />
+								<table border="0">
+									<tbody>
+									    <tr>
+										  <td>  <h:outputText styleClass="outputText" id="txtCodNumSol" value="Nro Solicitud:" /></td>
+										  <td>  <h:outputText  id="text1" style="width:100px;" value="12345668"
+																	disabled="false" readonly="true" /></td>
+											
+										  <td> <h:outputText styleClass="outputText" id="text3" value="Estado:" /></td>
+										  <td> <h:outputText  id="txtEstado"
+																	style="width:100px;"
+																	value="Reservado"/></td>
+														
+										  <td><h:outputText styleClass="outputText" id="outOficina" value="Oficina:" /></td>
+										  <td><h:outputText  id="txtOficina"
+																	style="width:100px;"
+																	value="456-San Isidro"/></td>
+									
+															
+										  <td><h:outputText  id="txtTerritorio"
+																	style="width:100px;"
+																	value="Territorio Norte"/></td>
+									</tr>
+									<tr>
+										 <td><h:outputText styleClass="outputText" id="outNroVaucher"
+																	value="Nro Vaucher *" /></td>
+										 <td> <h:outputText  id="txtNroVaucher"
+																	style="width:100px;"
+																	value="12314566656"
+																	readonly="true" /></td>
+													
+													
+										<td><h:outputText styleClass="outputText" id="outComision"
+																	value="Comision" /></td>
+										<td><h:outputText  id="txtComision"
+																	style="width:100px;"
+																	value="$ 150.00"
+																	readonly="true" /></td>
+													
+													
+										<td><h:outputText styleClass="outputText" id="outImpTotal" value="Importe Total" /> </td>
+										<td><h:outputText  id="txtImpTotal"
+																	style="width:100px;"
+																	value=" $550.50" /></td>
+													
+												</tr>
+
+												</tbody>
+											</table>
+										</fieldset></td>
+								</tr>
+								<tr>
+									<td class="styleLegend2" width="783">
+										<fieldset style="width:1000px;" class="outputText"> 
+											<h:outputText title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
+												          value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" />
+											<p:separator />
+											<table border="0" width="672">
+												<tbody>
+													<tr>
+													
+													<h:panelGrid columns="1" >
+											
+															<p:dataTable  var="tbl" rows="20"
+															emptyMessage="No hay resultados en la bandeja"
+															paginatorPosition="bottom" 
+															paginator="true"
+															paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+															rowsPerPageTemplate="5,10,15"
+															editable="true" >
+
+															<p:column headerText="Codigo Central">
+															</p:column>
+															<p:column headerText="Cliente / No Cliente">
+															</p:column>
+															<p:column headerText="Tipo de Registro">
+															</p:column>
+															<p:column headerText="Clasificación">
+															</p:column>
+															<p:column headerText="Nro Celular">
+															</p:column>
+															<p:column headerText="E-Mail">
+															</p:column>
+															
+															</p:dataTable>
+												
+														</h:panelGrid>
+													</tr>
+					</tbody>
+				</table>
+			</fieldset></td>
+			</tr>
+			<tr>
+				<td class="styleLegend2" width="683">
+					<fieldset style="width:1000px;">
+						<h:outputText title="Documentos por Tipo de Solicitud" 
+									  value="Documentos por Tipo de Solicitud" />
+							<p:separator />
+						<table border="0">
+							<tbody>
+								
+								<tr>
+									<td colspan="5">
+									
+											<p:dataTable  var="tblDocumentos" rows="20"
+															emptyMessage="No hay resultados en la bandeja"
+															paginatorPosition="bottom" 
+															paginator="true"
+															paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+															rowsPerPageTemplate="5,10,15"
+															editable="true" 
+															style="width:100%">
+
+															<p:column headerText="Item">
+															</p:column>
+															<p:column headerText="Documento" style="width:400px;">
+															</p:column>
+															<p:column headerText="Obligación">
+															</p:column>
+															<p:column headerText="Editar">
+															</p:column>
+															<p:column headerText="Eliminar">
+															</p:column>
+															</p:dataTable>
+														
+													</td>
+													</tr>
+												</tbody>
+											</table>
+										
+										</fieldset></td>
+								</tr>
+
+								<tr>
+									<td class="styleLegend2" width="683">
+										<fieldset style="width:1000px;" class="outputText">
+											<h:outputText title="Operaciones Bancarias"
+												value="Operaciones Bancarias">
+											</h:outputText>
+											<p:separator />
+											
+								<table border="0">
+								
+                                <tr>
+									<td colspan="5">
+											<p:dataTable  var="tblOperaciones" rows="20"
+															emptyMessage="No hay resultados en la bandeja"
+															paginatorPosition="bottom" 
+															paginator="true"
+															paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+															rowsPerPageTemplate="5,10,15"
+															editable="true" >
+
+															<p:column headerText="Item">
+															</p:column>
+															<p:column headerText="Operación Bancaria" style="width:400px;">
+															</p:column>
+															<p:column headerText="Moneda">
+															</p:column>
+															<p:column headerText="Importe">
+															</p:column>
+															<p:column headerText="Tipo de Cambio">
+															</p:column>
+															<p:column headerText="Importe en Soles">
+															</p:column>
+														
+															</p:dataTable>
+													</td>
+									</tr>
+                               
+
+								
+                                </table>
+                                </fieldset>
+                                </td>
+                                </tr>
+								
+
+							
+							</tbody>
+						</table></td>
+				</tr>
+			</tbody>
+		</table>
+		
+<p:dialog id="modalBusqueda" header="Busqueda Cliente/No Cliente" widgetVar="dlgModalBusqueda" modal="true" height="300">  
+ 
+    	<p:dataTable  var="tblOperaciones" rows="20"
+			emptyMessage="No hay resultados en la bandeja"
+			paginatorPosition="bottom" 
+			paginator="true"
+			paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+			rowsPerPageTemplate="5,10,15"
+			editable="true" >
+
+			<p:column headerText="Codigo Central">
+			</p:column>
+			<p:column headerText="Tipo de DOI" >
+			</p:column>
+			<p:column headerText="Nro de DOI" >
+			</p:column>
+			<p:column headerText="Nombre">
+			</p:column>
+			</p:dataTable>
+			<p:commandButton value="Agregar" id="btnAgregarBusqueda" />
+</p:dialog>
+
+	</ui:define>
+</ui:composition>
+
+</html>
