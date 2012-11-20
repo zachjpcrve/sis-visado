@@ -1,7 +1,6 @@
 package com.hildebrando.visado.mb;
 
 import java.awt.event.ActionEvent;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +9,11 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
+import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.hildebrando.visado.dto.Estado;
@@ -29,7 +30,6 @@ import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
-import com.hildebrando.visado.modelo.TiivsTipoDocumento;
 import com.hildebrando.visado.modelo.TiivsTipoServicio;
 
 @ManagedBean(name = "solicitudMB")
@@ -90,15 +90,15 @@ public class SolicitudMB
 		lstMoneda = new ArrayList<Moneda>();
 		cargarMultitabla();		
 		//Carga combo Rango Importes
-		cargarCombosBandejaSeguimiento("T07");
+		cargarCombosBandejaSeguimiento(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES);
 		//Carga combo Estados
-		cargarCombosBandejaSeguimiento("T02");
+		cargarCombosBandejaSeguimiento(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS);
 		//Carga combo Estados Nivel
-		cargarCombosBandejaSeguimiento("T09");
+		cargarCombosBandejaSeguimiento(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS_NIVEL);
 		//Carga combo Tipos de Fecha
-		cargarCombosBandejaSeguimiento("T10");
+		cargarCombosBandejaSeguimiento(ConstantesVisado.CODIGO_MULTITABLA_TIPOS_FECHA);
 		//Carga lista de monedas
-		cargarCombosBandejaSeguimiento("T08");
+		cargarCombosBandejaSeguimiento(ConstantesVisado.CODIGO_MULTITABLA_MONEDA);
 		cargarMiembros();
 		//LLena la grilla de solicitudes
 		cargarSolicitudes();
@@ -113,18 +113,23 @@ public class SolicitudMB
 		}
 	}
 	
-	public void buscarSolicitudes(ActionEvent e)
+	//Descripcion: Metodo que se encarga de buscar las solicitudes de acuerdo a los filtros seleccionados.
+	//@Autor: Cesar La Rosa
+	//@Version: 1.0
+	//@param: -
+	public void busquedaSolicitudes()
 	{
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol= Busqueda.forClass(TiivsSolicitud.class);
 		
-		if (getCodSolicitud().compareTo("")==0)
+		if (getCodSolicitud().compareTo("")!=0)
 		{
 			filtroSol.add(Restrictions.eq("codSoli", getCodSolicitud()));
 		}
 		
-		if (getIdCodOfi().compareTo("")==0)
+		if (getIdCodOfi().compareTo("")!=0)
 		{
+			System.out.println("Buscando por codigo oficina: " + getIdCodOfi());
 			filtroSol.createAlias("tiivsOficina1", "ofic");
 			filtroSol.add(Restrictions.eq("ofic.codOfi", getIdCodOfi()));
 		}
@@ -135,33 +140,33 @@ public class SolicitudMB
 			filtroSol.add(Restrictions.eq("ofic.codOfi", getIdCodOfi1()));
 		}
 		
-		if (getIdOpeBan().compareTo("")==0)
+		if (getIdOpeBan().compareTo("")!=0)
 		{
 			filtroSol.add(Restrictions.eq("operacionesBancarias", getIdOpeBan()));
 		}
 		
-		if (getIdImporte().compareTo("")==0)
+		if (getIdImporte().compareTo("")!=0)
 		{
-			if (getIdImporte().equals("0001"))
+			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA))
 			{
-				filtroSol.add(Restrictions.le("importe", 50));
+				filtroSol.add(Restrictions.le("importe", ConstantesVisado.VALOR_RANGO_CINCUENTA));
 			}
 			
-			if (getIdImporte().equals("0002"))
+			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE))
 			{
-				filtroSol.add(Restrictions.gt("importe", 50));
-				filtroSol.add(Restrictions.le("importe", 120));
+				filtroSol.add(Restrictions.gt("importe", ConstantesVisado.VALOR_RANGO_CINCUENTA));
+				filtroSol.add(Restrictions.le("importe", ConstantesVisado.VALOR_RANGO_CIENTO_VEINTE));
 			}
 			
-			if (getIdImporte().equals("0003"))
+			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA))
 			{
-				filtroSol.add(Restrictions.gt("importe", 120));
-				filtroSol.add(Restrictions.le("importe", 250));
+				filtroSol.add(Restrictions.gt("importe", ConstantesVisado.VALOR_RANGO_CIENTO_VEINTE));
+				filtroSol.add(Restrictions.le("importe", ConstantesVisado.VALOR_RANGO_DOSCIENTOS_CINCUENTA));
 			}
 			
-			if (getIdImporte().equals("0004"))
+			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA))
 			{
-				filtroSol.add(Restrictions.gt("importe", 250));
+				filtroSol.add(Restrictions.gt("importe", ConstantesVisado.VALOR_RANGO_DOSCIENTOS_CINCUENTA));
 			}
 		}
 		
@@ -172,6 +177,10 @@ public class SolicitudMB
 		}
 	}
 	
+	//Descripcion: Metodo que se encarga de cargar las solicitudes en la grilla
+	//@Autor: Cesar La Rosa
+	//@Version: 1.0
+	//@param: -
 	public void cargarSolicitudes()
 	{
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -215,7 +224,186 @@ public class SolicitudMB
 			logger.debug("Error al buscar registros de la tabla miembro");
 		}
 	}
+	
+	//Descripcion: Metodo que se encarga de cargar los datos que se encuentran en la multitabla. Este metodo se llamara en el constructor 
+	//			   de la clase para que este disponible al inicio.
+	//@Autor: Cesar La Rosa
+	//@Version: 1.0
+	//@param: -
+	public void cargarMultitabla()
+	{
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+				
+		try {
+			lstMultitabla = multiDAO.buscarDinamico(filtroMultitabla);
+		} catch (Exception e) {
+			logger.debug("Error al cargar el listado de multitablas");
+		}
+	}
+	
+	public TiivsOficina1 buscarOficinaPorCodigo(ValueChangeEvent e) {
+		logger.debug("Buscando oficina por codigo: " + e.getNewValue());
+		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
+		filtroOfic.add(Restrictions.eq("codOfi", e.getNewValue()));
+		TiivsOficina1 tmpOfic = new TiivsOficina1();
+		
+		try {
+			lstOficina1 = ofiDAO.buscarDinamico(filtroOfic);
+		} catch (Exception exp) {
+			logger.debug("No se pudo encontrar el nombre de la oficina");
+		}
 
+		/*for (TiivsOficina1 of : lstOficina) {
+			if (lstOficina.size() == 1) {
+				tmpOfic.setCodOfi(of.getCodOfi());
+				tmpOfic.setDesOfi(of.getDesOfi());
+			}
+		}*/
+		
+		return tmpOfic;
+	}
+	
+	//Descripcion: Metodo que se encarga de cargar los combos que se mostraran en la pantalla de Bandeja de solicitudes 
+	//			   de acuerdo a la lista de la multitabla previamente cargada.
+	//@Autor: Cesar La Rosa
+	//@Version: 1.0
+	//@param: -
+	public void cargarCombosBandejaSeguimiento(String codigo)
+	{
+		logger.debug("Buscando valores en multitabla con codigo: " + codigo);
+		lstRangosImporte.clear();
+		lstEstado.clear();
+		lstEstadoNivel.clear();
+		lstTiposFecha.clear();
+		lstEstudio.clear();
+		lstNivel.clear();
+		lstOpeBancaria.clear();
+		lstTipoSolicitud.clear();
+		lstTerritorio.clear();
+		lstOficina.clear();
+		
+		for (TiivsMultitabla res: lstMultitabla)
+ 		{
+			//Carga combo importes
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES))
+			{
+				RangosImporte tmpRangos = new RangosImporte();
+				tmpRangos.setCodigoRango(res.getId().getCodElem());
+				tmpRangos.setDescripcion(res.getValor1());
+				lstRangosImporte.add(tmpRangos);
+				
+				logger.debug("Tamanio lista de importes: " + lstRangosImporte.size());
+			}
+			
+			//Carga combo estados
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS))
+			{
+				Estado tmpEstado = new Estado();
+				tmpEstado.setCodEstado(res.getId().getCodElem());
+				tmpEstado.setDescripcion(res.getValor1());
+				lstEstado.add(tmpEstado);
+				
+				logger.debug("Tamanio lista de estados: " + lstEstado.size());
+			}
+			
+			//Carga combo estados Nivel
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS_NIVEL))
+			{
+				EstadosNivel tmpEstadoNivel = new EstadosNivel();
+				tmpEstadoNivel.setCodigoEstadoNivel(res.getId().getCodElem());
+				tmpEstadoNivel.setDescripcion(res.getValor1());
+				lstEstadoNivel.add(tmpEstadoNivel);
+				
+				logger.debug("Tamanio lista de estados nivel: " + lstEstadoNivel.size());
+			}
+			
+			//Carga combo Tipos de fecha
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPOS_FECHA))
+			{
+				TiposFecha tmpTiposFecha = new TiposFecha();
+				tmpTiposFecha.setCodigoTipoFecha(res.getId().getCodElem());
+				tmpTiposFecha.setDescripcion(res.getValor1());
+				lstTiposFecha.add(tmpTiposFecha);
+				
+				logger.debug("Tamanio lista de tipos de fecha: " + lstTiposFecha.size());
+			}
+			
+			//Carga lista de monedas
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_MONEDA))
+			{
+				Moneda tmpMoneda = new Moneda();
+				tmpMoneda.setCodMoneda(res.getId().getCodElem());
+				tmpMoneda.setDesMoneda(res.getValor1());
+				lstMoneda.add(tmpMoneda);
+				
+				logger.debug("Tamanio lista de monedas: " + lstMoneda.size());
+			}
+		}
+		
+		//Carga combo de Estudios
+		GenericDao<TiivsEstudio, Object> estudioDAO = (GenericDao<TiivsEstudio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroEstudio = Busqueda.forClass(TiivsEstudio.class);
+		
+		try {
+			lstEstudio = estudioDAO.buscarDinamico(filtroEstudio);
+		} catch (Exception e) {
+			logger.debug("Error al cargar el listado de estudios");
+		}
+		
+		//Carga combo de Nivel
+		GenericDao<TiivsNivel, Object> nivelDAO = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroNivel = Busqueda.forClass(TiivsNivel.class);
+		
+		try {
+			lstNivel = nivelDAO.buscarDinamico(filtroNivel);
+		} catch (Exception e) {
+			logger.debug("Error al cargar el listado de niveles");
+		}
+		
+		//Carga combo de Operacion Bancaria
+		GenericDao<TiivsOperacionBancaria, Object> openBanDAO = (GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroOpenBan = Busqueda.forClass(TiivsOperacionBancaria.class);
+		
+		try {
+			lstOpeBancaria = openBanDAO.buscarDinamico(filtroOpenBan);
+		} catch (Exception e) {
+			logger.debug("Error al cargar el listado de operaciones bancarias");
+		}
+		
+		//Carga combo de Tipo de Solicitud
+		GenericDao<TiivsTipoServicio, Object> tipoSolDAO = (GenericDao<TiivsTipoServicio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroTipoSol = Busqueda.forClass(TiivsTipoServicio.class);
+		
+		try {
+			lstTipoSolicitud = tipoSolDAO.buscarDinamico(filtroTipoSol);
+		} catch (Exception e) {
+			logger.debug("Error al cargar el listado de tipos de solicitudes");
+		}
+		
+		//Carga combo de Territorio
+		GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroTerr = Busqueda.forClass(TiivsTerritorio.class);
+		
+		try {
+			lstTerritorio = terrDAO.buscarDinamico(filtroTerr);
+		} catch (Exception e) {
+			logger.debug("Error al cargar el listado de territorios");
+		}
+		
+		//Carga combo de Oficinas
+		GenericDao<TiivsOficina1, Object> oficDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroOfi = Busqueda.forClass(TiivsOficina1.class);
+		filtroOfi.addOrder(Order.asc("codOfi"));
+		try {
+			lstOficina = oficDAO.buscarDinamico(filtroOfi);
+			lstOficina1=oficDAO.buscarDinamico(filtroOfi);
+		} catch (Exception e) {
+			logger.debug("Error al cargar el listado de oficinas");
+		}
+	}
+	
 	public Solicitud getSolicitudModificar() 
 	{
 		return solicitudModificar;
@@ -479,174 +667,4 @@ public class SolicitudMB
 	public void setLstMiembros(List<TiivsMiembro> lstMiembros) {
 		this.lstMiembros = lstMiembros;
 	}
-
-	public void cargarMultitabla()
-	{
-		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
-				
-		try {
-			lstMultitabla = multiDAO.buscarDinamico(filtroMultitabla);
-		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de multitablas");
-		}
-	}
-	
-	public TiivsOficina1 buscarOficinaPorCodigo(ValueChangeEvent e) {
-		logger.debug("Buscando oficina por codigo: " + e.getNewValue());
-		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
-		filtroOfic.add(Restrictions.eq("codOfi", e.getNewValue()));
-		TiivsOficina1 tmpOfic = new TiivsOficina1();
-		
-		try {
-			lstOficina1 = ofiDAO.buscarDinamico(filtroOfic);
-		} catch (Exception exp) {
-			logger.debug("No se pudo encontrar el nombre de la oficina");
-		}
-
-		/*for (TiivsOficina1 of : lstOficina) {
-			if (lstOficina.size() == 1) {
-				tmpOfic.setCodOfi(of.getCodOfi());
-				tmpOfic.setDesOfi(of.getDesOfi());
-			}
-		}*/
-		
-		return tmpOfic;
-	}
-	
-	public void cargarCombosBandejaSeguimiento(String codigo)
-	{
-		logger.debug("Buscando valores en multitabla con codigo: " + codigo);
-		lstRangosImporte.clear();
-		lstEstado.clear();
-		lstEstadoNivel.clear();
-		lstTiposFecha.clear();
-		lstEstudio.clear();
-		lstNivel.clear();
-		lstOpeBancaria.clear();
-		lstTipoSolicitud.clear();
-		lstTerritorio.clear();
-		lstOficina.clear();
-		
-		for (TiivsMultitabla res: lstMultitabla)
- 		{
-			//Carga combo importes
-			if (res.getId().getCodMult().equalsIgnoreCase("T07"))
-			{
-				RangosImporte tmpRangos = new RangosImporte();
-				tmpRangos.setCodigoRango(res.getId().getCodElem());
-				tmpRangos.setDescripcion(res.getValor1());
-				lstRangosImporte.add(tmpRangos);
-				
-				logger.debug("Tamanio lista de importes: " + lstRangosImporte.size());
-			}
-			
-			//Carga combo estados
-			if (res.getId().getCodMult().equalsIgnoreCase("T02"))
-			{
-				Estado tmpEstado = new Estado();
-				tmpEstado.setCodEstado(res.getId().getCodElem());
-				tmpEstado.setDescripcion(res.getValor1());
-				lstEstado.add(tmpEstado);
-				
-				logger.debug("Tamanio lista de estados: " + lstEstado.size());
-			}
-			
-			//Carga combo estados Nivel
-			if (res.getId().getCodMult().equalsIgnoreCase("T09"))
-			{
-				EstadosNivel tmpEstadoNivel = new EstadosNivel();
-				tmpEstadoNivel.setCodigoEstadoNivel(res.getId().getCodElem());
-				tmpEstadoNivel.setDescripcion(res.getValor1());
-				lstEstadoNivel.add(tmpEstadoNivel);
-				
-				logger.debug("Tamanio lista de estados nivel: " + lstEstadoNivel.size());
-			}
-			
-			//Carga combo Tipos de fecha
-			if (res.getId().getCodMult().equalsIgnoreCase("T10"))
-			{
-				TiposFecha tmpTiposFecha = new TiposFecha();
-				tmpTiposFecha.setCodigoTipoFecha(res.getId().getCodElem());
-				tmpTiposFecha.setDescripcion(res.getValor1());
-				lstTiposFecha.add(tmpTiposFecha);
-				
-				logger.debug("Tamanio lista de tipos de fecha: " + lstTiposFecha.size());
-			}
-			
-			//Carga lista de monedas
-			if (res.getId().getCodMult().equalsIgnoreCase("T08"))
-			{
-				Moneda tmpMoneda = new Moneda();
-				tmpMoneda.setCodMoneda(res.getId().getCodElem());
-				tmpMoneda.setDesMoneda(res.getValor1());
-				lstMoneda.add(tmpMoneda);
-				
-				logger.debug("Tamanio lista de monedas: " + lstMoneda.size());
-			}
-		}
-		
-		//Carga combo de Estudios
-		GenericDao<TiivsEstudio, Object> estudioDAO = (GenericDao<TiivsEstudio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroEstudio = Busqueda.forClass(TiivsEstudio.class);
-		
-		try {
-			lstEstudio = estudioDAO.buscarDinamico(filtroEstudio);
-		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de estudios");
-		}
-		
-		//Carga combo de Nivel
-		GenericDao<TiivsNivel, Object> nivelDAO = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroNivel = Busqueda.forClass(TiivsNivel.class);
-		
-		try {
-			lstNivel = nivelDAO.buscarDinamico(filtroNivel);
-		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de niveles");
-		}
-		
-		//Carga combo de Operacion Bancaria
-		GenericDao<TiivsOperacionBancaria, Object> openBanDAO = (GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroOpenBan = Busqueda.forClass(TiivsOperacionBancaria.class);
-		
-		try {
-			lstOpeBancaria = openBanDAO.buscarDinamico(filtroOpenBan);
-		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de operaciones bancarias");
-		}
-		
-		//Carga combo de Tipo de Solicitud
-		GenericDao<TiivsTipoServicio, Object> tipoSolDAO = (GenericDao<TiivsTipoServicio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroTipoSol = Busqueda.forClass(TiivsTipoServicio.class);
-		
-		try {
-			lstTipoSolicitud = tipoSolDAO.buscarDinamico(filtroTipoSol);
-		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de tipos de solicitudes");
-		}
-		
-		//Carga combo de Territorio
-		GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroTerr = Busqueda.forClass(TiivsTerritorio.class);
-		
-		try {
-			lstTerritorio = terrDAO.buscarDinamico(filtroTerr);
-		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de territorios");
-		}
-		
-		//Carga combo de Oficinas
-		GenericDao<TiivsOficina1, Object> oficDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroOfi = Busqueda.forClass(TiivsOficina1.class);
-		
-		try {
-			lstOficina = oficDAO.buscarDinamico(filtroOfi);
-			lstOficina1=oficDAO.buscarDinamico(filtroOfi);
-		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de oficinas");
-		}
-	}
-	
 }
