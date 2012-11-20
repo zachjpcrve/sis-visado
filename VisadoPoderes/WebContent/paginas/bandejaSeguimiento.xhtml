@@ -34,10 +34,8 @@
 																	value="Codigo Oficina: " />
 															</td>
 															<td>
-																	<p:selectOneMenu value="#{solicitudMB.idCodOfi}" id="somCodOfi" 
-																		valueChangeListener="#{solicitudMB.buscarOficinaPorCodigo}" 
-																		immediate="true" onchange="this">
-																			<p:ajax update="@form"/>			
+																	<p:selectOneMenu value="#{solicitudMB.idCodOfi}" id="somCodOfi" />
+																		
 																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
 																		<f:selectItems value="#{solicitudMB.lstOficina}" var="lOf"
 																			itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}" />
@@ -73,7 +71,7 @@
 															<td >
 																<h:inputText styleClass="inputText"
 																id="text11" value=""
-																disabled="false" readonly="true"/>
+																disabled="false" />
 															</td>																
 															<td >
 																<h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" />
@@ -81,7 +79,7 @@
 															<td >
 																<h:inputText styleClass="inputText"
 																id="text12" value=""
-																disabled="false" readonly="true"/>
+																disabled="false" />
 															</td>
 															<td >
 																<h:outputText styleClass="outputText" id="txtTipoSol" value="Tipo de Solicitud:" />
@@ -108,7 +106,7 @@
 															<td >
 																<h:inputText styleClass="inputText"
 																id="text15" value=""
-																disabled="false" readonly="true"/>
+																disabled="false" />
 															</td>
 															<td >
 																<h:outputText styleClass="outputText" id="txtOpBan" value="Operacion Bancaria:" />
@@ -126,13 +124,13 @@
 																<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI Poderdante:" />
 															</td>
 															<td >
-																<h:inputText styleClass="inputText" id="text17" value="" disabled="false" readonly="true"/>
+																<h:inputText styleClass="inputText" id="text17" value="" disabled="false" />
 															</td>																
 															<td >
 																<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI Apoderado:" />
 															</td>
 															<td >
-																<h:inputText styleClass="inputText" id="text18" value="" disabled="false" readonly="true"/>
+																<h:inputText styleClass="inputText" id="text18" value="" disabled="false"/>
 															</td>
 															<td >
 																<h:outputText styleClass="outputText" id="txtImporte" value="Importe:" />
