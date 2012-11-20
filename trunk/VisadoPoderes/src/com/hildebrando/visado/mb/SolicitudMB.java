@@ -21,6 +21,7 @@ import com.hildebrando.visado.dto.EstadosNivel;
 import com.hildebrando.visado.dto.Moneda;
 import com.hildebrando.visado.dto.RangosImporte;
 import com.hildebrando.visado.dto.Solicitud;
+import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.dto.TiposFecha;
 import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsMiembro;
@@ -55,6 +56,7 @@ public class SolicitudMB
 	private List<TiivsOficina1> lstOficina1;
 	private List<Moneda> lstMoneda;
 	private List<TiivsMiembro> lstMiembros;
+	private List<TipoDocumento> lstTipoDocumentos;
 	private String idCodOfi;
 	private String idCodOfi1;
 	private String idTerr;
@@ -88,6 +90,7 @@ public class SolicitudMB
 		lstOficina=new ArrayList<TiivsOficina1>();
 		lstOficina1=new ArrayList<TiivsOficina1>();
 		lstMoneda = new ArrayList<Moneda>();
+		lstTipoDocumentos= new ArrayList<TipoDocumento>();
 		cargarMultitabla();		
 		//Carga combo Rango Importes
 		cargarCombosBandejaSeguimiento(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES);
@@ -185,6 +188,7 @@ public class SolicitudMB
 	{
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol= Busqueda.forClass(TiivsSolicitud.class);
+		String nomTipoDoc="";
 		
 		try {
 			solicitudes =  solicDAO.buscarDinamico(filtroSol);
@@ -202,12 +206,30 @@ public class SolicitudMB
 					tmpSol.setDesMoneda(lstMoneda.get(0).getDesMoneda());
 				}
 			}
+			
 			if (tmpSol.getRegAbogado()!=null)
 			{
 				if (tmpSol.getRegAbogado().equals(lstMiembros.get(0).getCodMiembro()))
 				{
 					tmpSol.setEstudio(lstMiembros.get(0).getEstudio());
 				}
+			}
+			
+			if (tmpSol.getNumDocPoder()!=null)
+			{
+				if (tmpSol.getNumDocPoder().equals(lstTipoDocumentos.get(0).getCodTipoDoc()))
+				{
+					nomTipoDoc=lstTipoDocumentos.get(0).getDescripcion();
+				}
+			}
+			
+			if (nomTipoDoc.compareTo("")==0)
+			{
+				tmpSol.setTxtPoderdante(tmpSol.getPoderante());
+			}
+			else
+			{
+				tmpSol.setTxtPoderdante("DNI:" + nomTipoDoc + " - " + tmpSol.getPoderante());
 			}
 		}
 	}
@@ -244,24 +266,24 @@ public class SolicitudMB
 	
 	public TiivsOficina1 buscarOficinaPorCodigo(ValueChangeEvent e) {
 		logger.debug("Buscando oficina por codigo: " + e.getNewValue());
+		System.out.println("Buscando oficina por codigo: " + e.getNewValue());
 		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
 		filtroOfic.add(Restrictions.eq("codOfi", e.getNewValue()));
 		TiivsOficina1 tmpOfic = new TiivsOficina1();
+		List<TiivsOficina1> lstTmp = new ArrayList<TiivsOficina1>();
 		
 		try {
-			lstOficina1 = ofiDAO.buscarDinamico(filtroOfic);
+			lstTmp = ofiDAO.buscarDinamico(filtroOfic);
 		} catch (Exception exp) {
 			logger.debug("No se pudo encontrar el nombre de la oficina");
 		}
 
-		/*for (TiivsOficina1 of : lstOficina) {
-			if (lstOficina.size() == 1) {
-				tmpOfic.setCodOfi(of.getCodOfi());
-				tmpOfic.setDesOfi(of.getDesOfi());
-			}
-		}*/
-		
+		if (lstTmp.size()==1)
+		{
+			tmpOfic.setCodOfi(lstTmp.get(0).getCodOfi());
+			tmpOfic.setDesOfi(lstTmp.get(0).getDesOfi());
+		}
 		return tmpOfic;
 	}
 	
@@ -339,6 +361,17 @@ public class SolicitudMB
 				lstMoneda.add(tmpMoneda);
 				
 				logger.debug("Tamanio lista de monedas: " + lstMoneda.size());
+			}
+			
+			//Carga combo Tipos de documento
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC))
+			{
+				TipoDocumento tmpTipoDoc = new TipoDocumento();
+				tmpTipoDoc.setCodTipoDoc(res.getId().getCodElem());
+				tmpTipoDoc.setDescripcion(res.getValor1());
+				lstTipoDocumentos.add(tmpTipoDoc);
+				
+				logger.debug("Tamanio lista de tipos de documento: " + lstTipoDocumentos.size());
 			}
 		}
 		
@@ -666,5 +699,13 @@ public class SolicitudMB
 
 	public void setLstMiembros(List<TiivsMiembro> lstMiembros) {
 		this.lstMiembros = lstMiembros;
+	}
+
+	public List<TipoDocumento> getLstTipoDocumentos() {
+		return lstTipoDocumentos;
+	}
+
+	public void setLstTipoDocumentos(List<TipoDocumento> lstTipoDocumentos) {
+		this.lstTipoDocumentos = lstTipoDocumentos;
 	}
 }

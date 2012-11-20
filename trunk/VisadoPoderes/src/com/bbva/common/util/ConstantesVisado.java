@@ -13,4 +13,5 @@ public class ConstantesVisado {
 	public static final java.lang.String CODIGO_MULTITABLA_ESTADOS_NIVEL = "T09";
 	public static final java.lang.String CODIGO_MULTITABLA_TIPOS_FECHA = "T10";
 	public static final java.lang.String CODIGO_MULTITABLA_MONEDA = "T08";
+	public static final java.lang.String CODIGO_MULTITABLA_TIPO_DOC = "T04";
 }
