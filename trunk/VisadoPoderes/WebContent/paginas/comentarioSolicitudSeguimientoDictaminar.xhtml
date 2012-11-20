@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+
+<p:tabMenu activeIndex="0" style="width:410px;">
+	<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml" icon="ui-icon-star" />
+	<p:menuitem value="Comentario" url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
+	<p:menuitem value="Instrucciones" url="/faces/paginas/instrucciones.xhtml" icon="ui-icon-star" />
+	<p:menuitem value="Detalle Solicitud" url="/faces/paginas/detalleSolicitudEstadoEnviado.xhtml" icon="ui-icon-star" />
+	<p:menuitem value="Bandeja Seguimiento" url="/faces/paginas/bandejaSeguimiento.xhtml" icon="ui-icon-star" />
+    <p:menuitem value="Dictaminar" url="/faces/paginas/comentarioSolicitudSeguimientoDictaminar.xhtml" icon="ui-icon-star" />
+</p:tabMenu>
+		
+		
+		<h:form id="form">
+		<h:panelGrid columns="2">
+		<h:panelGrid columns="1">
+			<p:editor id="editor" value="#{editorMB.value}" width="600" />
+
+			<h:panelGrid columns="2" style="margin-top:10px">
+				<p:commandButton id="submitButton" value="Submit" update="display"
+					oncomplete="dlg.show()" icon="ui-icon-disk" />
+				<p:commandButton id="clearButton" type="button" value="Clear"
+					onclick="editor.clear()" icon="ui-icon-close" />
+			</h:panelGrid>
+
+			<p:dialog header="Content" widgetVar="dlg" showEffect="fade"
+				hideEffect="fade" modal="true">
+				<h:outputText id="display" value="#{editorMB.value}" escape="false" />
+			</p:dialog>
+</h:panelGrid>
+
+<h:panelGrid columns="1">
+<table>
+<tr>
+				<td class="styleLegend2" width="683">
+					<fieldset style="width:1000px;">
+						<h:outputText title="Seguimiento" value="Seguimiento" />
+							<p:separator />
+						<table border="0">
+							<tbody>
+								<tr>
+									<td colspan="5">
+											<p:dataTable  var="tblDocumentos" rows="20"
+															emptyMessage="No hay resultados en la bandeja"
+															paginatorPosition="bottom" 
+															paginator="true"
+															paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+															rowsPerPageTemplate="5,10,15"
+															editable="true" >
+
+															<p:column headerText="Estado">
+															</p:column>
+															<p:column headerText="Nivel" style="width:400px;">
+															</p:column>
+															<p:column headerText="Fecha">
+															</p:column>
+															<p:column headerText="Usuario">
+															</p:column>
+															<p:column headerText="Obs">
+															</p:column>
+															</p:dataTable>
+													</td>
+													</tr>
+												</tbody>
+											</table>
+										
+										</fieldset></td>
+								</tr>
+			<tr>
+				<td class="styleLegend2" width="683">
+					<fieldset style="width:1000px;">
+						<h:outputText title="Acción" value="Acción" />
+							<p:separator />
+						<table border="0">
+							<tbody>
+								<tr>
+									<td colspan="5">
+									<h:outputText value="Evaluar Nivel" id="outEvaluarNivel" styleClass="outputText"/>		
+									</td>
+									<td colspan="5">
+									<p:selectOneMenu styleClass="selectOneMenu"
+										id="cboNivel" 
+										value="#{solicitudMB.solicitudModificar.codOper}"
+										immediate="true" onchange="this.form.submit()"
+											disabled="false">
+										<f:selectItem itemLabel="Nivel 1" itemValue=""></f:selectItem>
+                                         </p:selectOneMenu>	
+									</td>
+								</tr>
+								<tr><td></td>
+								    <td><p:commandButton id="btnAceptar"  /></td>
+								</tr>
+							</tbody>
+						</table>	
+					</fieldset></td>
+			</tr>
+			
+				<tr>
+				<td class="styleLegend2" width="683">
+					<fieldset style="width:1000px;">
+						<h:outputText title="Documentos" value="Documentos" />
+							<p:separator />
+						<table border="0">
+							<tbody>
+								<tr>
+									<td colspan="5">
+									<p:commandLink value="Solicitud de Visado"/>
+									<p:commandLink value="Carta de Respuesta"/>
+									<p:commandLink value="Solicitud de Revisión"/>
+									<p:commandLink value="Carta de Impodecedencia"/>		
+									</td>
+									
+								</tr>
+								
+							</tbody>
+						</table>	
+					</fieldset></td>
+			</tr>
+</table>
+
+</h:panelGrid>
+</h:panelGrid>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>
+
+</html>
