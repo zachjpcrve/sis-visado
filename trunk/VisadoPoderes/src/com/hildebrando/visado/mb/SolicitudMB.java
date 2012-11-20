@@ -192,7 +192,7 @@ public class SolicitudMB
 		
 		try {
 			solicitudes =  solicDAO.buscarDinamico(filtroSol);
-			System.out.println("Tamanio inicial de solicitudes: " + solicitudes.size());
+			//System.out.println("Tamanio inicial de solicitudes: " + solicitudes.size());
 		} catch (Exception ex) {
 			logger.debug("Error al buscar las solicitudes");
 		}
