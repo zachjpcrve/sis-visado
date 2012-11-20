@@ -40,6 +40,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private Set tiivsPoderdantes = new HashSet(0);
 	private String desMoneda;
 	private String estudio;
+	private String txtPoderdante;
 
 	public TiivsSolicitud() {
 	}
@@ -317,5 +318,13 @@ public class TiivsSolicitud implements java.io.Serializable {
 
 	public void setEstudio(String estudio) {
 		this.estudio = estudio;
+	}
+
+	public String getTxtPoderdante() {
+		return txtPoderdante;
+	}
+
+	public void setTxtPoderdante(String txtPoderdante) {
+		this.txtPoderdante = txtPoderdante;
 	}
 }

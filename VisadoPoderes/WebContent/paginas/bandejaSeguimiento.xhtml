@@ -34,7 +34,10 @@
 																	value="Codigo Oficina: " />
 															</td>
 															<td>
-																	<p:selectOneMenu value="#{solicitudMB.idCodOfi}" id="somCodOfi">
+																	<p:selectOneMenu value="#{solicitudMB.idCodOfi}" id="somCodOfi" 
+																		valueChangeListener="#{solicitudMB.buscarOficinaPorCodigo}" 
+																		immediate="true" onchange="this">
+																			<p:ajax update="@form"/>			
 																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
 																		<f:selectItems value="#{solicitudMB.lstOficina}" var="lOf"
 																			itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}" />
@@ -264,63 +267,63 @@
 				
 		<p:panel header="Resultados" id="panelRes">
 			<p:dataTable value="#{solicitudMB.solicitudes}" var="tbl" rows="5"
-					paginatorPosition="bottom" 
+					paginatorPosition="bottom"
 					paginator="true"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 					rowsPerPageTemplate="5,10,15"
 					emptyMessage="">
 
-				<p:column headerText="Codigo">
-					<h:outputText value="#{tbl.codSoli}" />
-				</p:column>
-				
-				<p:column headerText="Cod. Oficina">
-					<h:outputText value="#{tbl.tiivsOficina1.codOfi}"/>	
-				</p:column>
-				
-				<p:column headerText="Oficina">
-					<h:outputText value="#{tbl.tiivsOficina1.desOfi}"/>	
-				</p:column>
-				
-				<p:column headerText="Poderdante">
-					<h:outputText value="#{tbl.tiivsApoderdantes}"/>		
-				</p:column>
-
-				<p:column headerText="Tipo Operacion">
-					<h:outputText value="#{tbl.operacionesBancarias}"/>					
-				</p:column>
-				
-				<p:column headerText="Importe">
-					<h:outputText value="#{tbl.importe}"/>	
-				</p:column>
-				
-				<p:column headerText="Moneda">
-					<h:outputText value="#{tbl.desMoneda}"/>
-				</p:column>
-				
-				<p:column headerText="Fecha Respuesta">
-					<h:outputText value="#{tbl.fechaRespuesta}"/>	
-				</p:column>
-				
-				<p:column headerText="Fecha Envio">
-					<h:outputText value="#{tbl.fechaEnvio}"/>	
-				</p:column>
-				
-				<p:column headerText="Fecha Estado">
-					<h:outputText value="#{tbl.fechaEstado}"/>
-				</p:column>
-				
-				<p:column headerText="Estado">
-					<h:outputText value="#{tbl.estado}"/>	
-				</p:column>
-				
-				<p:column headerText="Estudio">
-					<h:outputText value="#{tbl.estudio}"/>	
-				</p:column>
-				
-				<p:column headerText="Nivel">
-					<h:outputText value=""/>	
-				</p:column>
+					<p:column headerText="Codigo">
+						<h:outputText value="#{tbl.codSoli}" />
+					</p:column>
+					
+					<p:column headerText="Cod. Oficina">
+						<h:outputText value="#{tbl.tiivsOficina1.codOfi}"/>	
+					</p:column>
+					
+					<p:column headerText="Oficina">
+						<h:outputText value="#{tbl.tiivsOficina1.desOfi}"/>	
+					</p:column>
+					
+					<p:column headerText="Poderdante">
+						<h:outputText value="#{tbl.txtPoderdante}"/>		
+					</p:column>
+	
+					<p:column headerText="Tipo Operacion">
+						<h:outputText value="#{tbl.operacionesBancarias}"/>					
+					</p:column>
+					
+					<p:column headerText="Importe">
+						<h:outputText value="#{tbl.importe}"/>	
+					</p:column>
+					
+					<p:column headerText="Moneda">
+						<h:outputText value="#{tbl.desMoneda}"/>
+					</p:column>
+					
+					<p:column headerText="Fecha Respuesta">
+						<h:outputText value="#{tbl.fechaRespuesta}"/>	
+					</p:column>
+					
+					<p:column headerText="Fecha Envio">
+						<h:outputText value="#{tbl.fechaEnvio}"/>	
+					</p:column>
+					
+					<p:column headerText="Fecha Estado">
+						<h:outputText value="#{tbl.fechaEstado}"/>
+					</p:column>
+					
+					<p:column headerText="Estado">
+						<h:outputText value="#{tbl.estado}"/>	
+					</p:column>
+					
+					<p:column headerText="Estudio">
+						<h:outputText value="#{tbl.estudio}"/>	
+					</p:column>
+					
+					<p:column headerText="Nivel">
+						<h:outputText value=""/>	
+					</p:column>
 				
 		   </p:dataTable>
 		</p:panel>	
