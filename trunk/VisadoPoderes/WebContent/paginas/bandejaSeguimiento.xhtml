@@ -34,14 +34,12 @@
 																	value="Codigo Oficina: " />
 															</td>
 															<td>
-																	<p:selectOneMenu value="#{solicitudMB.idCodOfi}" id="somCodOfi" />
-																		
+																	<p:selectOneMenu value="#{solicitudMB.idCodOfi}" id="somCodOfi" >
 																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
 																		<f:selectItems value="#{solicitudMB.lstOficina}" var="lOf"
 																			itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}" />
 																	</p:selectOneMenu>
 															</td>
-															
 															<td >
 																	<h:outputText styleClass="outputText" id="textOficina" value="Oficina:" />
 															</td>
@@ -52,7 +50,6 @@
 																			itemValue="#{of.codOfi}" itemLabel="#{of.desOfi}" />
 																	</p:selectOneMenu>
 															</td>
-															
 															<td >
 																<h:outputText styleClass="outputText" id="textTerr" value="Territorio:" />
 															</td>
@@ -70,15 +67,15 @@
 															</td>
 															<td >
 																<h:inputText styleClass="inputText"
-																id="text11" value=""
-																disabled="false" />
+																id="text11" value="#{solicitudMB.txtCodOfi}"
+																disabled="false" maxlength="5"/>
 															</td>																
 															<td >
 																<h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" />
 															</td>
 															<td >
 																<h:inputText styleClass="inputText"
-																id="text12" value=""
+																id="text12" value="#{solicitudMB.txtNomOfi}"
 																disabled="false" />
 															</td>
 															<td >
@@ -98,15 +95,14 @@
 															</td>
 															<td >
 																<h:inputText styleClass="inputText"
-																id="text14" value="" disabled="false" maxlength="60"/>
+																id="text14" value="#{solicitudMB.txtNomPoderdante}" disabled="false" maxlength="60"/>
 															</td>																
 															<td >
 																<h:outputText styleClass="outputText" id="txtApod" value="Apoderado:" />
 															</td>
 															<td >
 																<h:inputText styleClass="inputText"
-																id="text15" value=""
-																disabled="false" />
+																id="text15" value="#{solicitudMB.txtNomApoderado}" disabled="false" maxlength="60"/>
 															</td>
 															<td >
 																<h:outputText styleClass="outputText" id="txtOpBan" value="Operacion Bancaria:" />
@@ -124,13 +120,13 @@
 																<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI Poderdante:" />
 															</td>
 															<td >
-																<h:inputText styleClass="inputText" id="text17" value="" disabled="false" />
+																<h:inputText styleClass="inputText" id="text17" value="#{solicitudMB.nroDOIPoderdante}" disabled="false" />
 															</td>																
 															<td >
 																<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI Apoderado:" />
 															</td>
 															<td >
-																<h:inputText styleClass="inputText" id="text18" value="" disabled="false"/>
+																<h:inputText styleClass="inputText" id="text18" value="#{solicitudMB.nroDOIApoderado}" disabled="false"/>
 															</td>
 															<td >
 																<h:outputText styleClass="outputText" id="txtImporte" value="Importe:" />
@@ -148,7 +144,7 @@
 																<h:outputText styleClass="outputText" id="txtCod" value="Codigo:" />
 															</td>
 															<td >
-																<h:inputText styleClass="inputText" id="text100" value="#{solicitudMB.codSolicitud}" />
+																<h:inputText styleClass="inputText" id="text100" value="#{solicitudMB.codSolicitud}" maxlength="15" />
 															</td>																
 															<td >
 																<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio:" />
@@ -176,26 +172,30 @@
 																<h:outputText styleClass="outputText" id="txtTipoFecha" value="Tipo Fecha:" />
 															</td>
 															<td >
-																<p:selectOneMenu value="#{solicitudMB.idTiposFecha}" id="somTiposFecha">
+																<p:selectOneMenu value="#{solicitudMB.idTiposFecha}" id="somTiposFecha" 
+																	valueChangeListener="#{solicitudMB.habilitarFechas}" 
+																	immediate="true" onchange="this" >
+																	<p:ajax update="@form"/>
+																	
 																	<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 																	<f:selectItems value="#{solicitudMB.lstTiposFecha}" var="tipoFec"
 																		itemValue="#{tipoFec.codigoTipoFecha}" itemLabel="#{tipoFec.descripcion}" />
 																</p:selectOneMenu>
-															</td>																
+															</td>
 															<td >
 																<h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" />
 															</td>
 															<td >
-																<p:calendar  id="calFecIni"
-																pattern="dd/MM/yyyy" 
+																<p:calendar  id="calFecIni" disabled="#{solicitudMB.noMostrarFechas}"
+																pattern="dd/MM/yyyy" value="#{solicitudMB.fechaInicio}"
 																label="Fecha de Fin" showOn="button" maxlength="10" size="15"/>
 															</td>
 															<td >
 																<h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin" />
 															</td>
 															<td >
-																<p:calendar  id="calFecFin"
-																pattern="dd/MM/yyyy" 
+																<p:calendar  id="calFecFin" disabled="#{solicitudMB.noMostrarFechas}"
+																pattern="dd/MM/yyyy" value="#{solicitudMB.fechaFin}"
 																label="Fecha de Fin" showOn="button" maxlength="10" size="12"/>
 															</td>
 														</tr>
@@ -263,7 +263,7 @@
 		
 		<h:outputLabel value="#{solicitudMB.textoTotalResultados}"/>
 				
-		<p:panel header="Resultados" id="panelRes">
+		<p:panel header="Resultados" id="panelRes" >
 			<p:dataTable value="#{solicitudMB.solicitudes}" var="tbl" rows="5"
 					paginatorPosition="bottom"
 					paginator="true"
@@ -285,6 +285,10 @@
 					
 					<p:column headerText="Poderdante">
 						<h:outputText value="#{tbl.txtPoderdante}"/>		
+					</p:column>
+					
+					<p:column headerText="Apoderado">
+						<h:outputText value="#{tbl.txtApoderado}"/>		
 					</p:column>
 	
 					<p:column headerText="Tipo Operacion">

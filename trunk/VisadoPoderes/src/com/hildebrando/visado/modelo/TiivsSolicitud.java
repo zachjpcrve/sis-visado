@@ -41,6 +41,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private String desMoneda;
 	private String estudio;
 	private String txtPoderdante;
+	private String txtApoderado;
 
 	public TiivsSolicitud() {
 	}
@@ -326,5 +327,13 @@ public class TiivsSolicitud implements java.io.Serializable {
 
 	public void setTxtPoderdante(String txtPoderdante) {
 		this.txtPoderdante = txtPoderdante;
+	}
+
+	public String getTxtApoderado() {
+		return txtApoderado;
+	}
+
+	public void setTxtApoderado(String txtApoderado) {
+		this.txtApoderado = txtApoderado;
 	}
 }
