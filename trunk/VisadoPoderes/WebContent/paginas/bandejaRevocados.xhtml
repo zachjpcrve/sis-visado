@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido"> 
+			
+		<h:form>
+
+			<table>
+			<tr><td>
+			<fieldset>
+				<legend class="fielset">Bandeja de Revocados</legend>
+				<h:panelGrid columns="4" id="gridLabels" style="width: 800px">
+					<h:outputLabel value="Tipo de Búsqueda:" />
+					<p:selectOneMenu id="cboTipoBusqueda">
+						<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+						<f:selectItem itemLabel="Apoderado" itemValue="" />
+						<f:selectItem itemLabel="Poderdante" itemValue="" />
+					</p:selectOneMenu>
+					<h:outputLabel value="Código Central:" />
+					<h:inputText styleClass="inputText" value="" disabled="false" />
+
+					<h:outputLabel value="Tipo de DOI:" />
+					<p:selectOneMenu id="cboTipoDoi">
+						<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+					</p:selectOneMenu>
+					<h:outputLabel value="Nro. de DOI:" />
+					<h:inputText styleClass="inputText" value="" disabled="false" />
+
+					<h:outputLabel value="Apellido Paterno:" />
+					<h:inputText styleClass="inputText" value="" disabled="false" />
+					<h:outputLabel value="Apellido Materno:" />
+					<h:inputText styleClass="inputText" value="" disabled="false" />
+
+					<h:outputLabel value="Primer Nombre:" />
+					<h:inputText styleClass="inputText" value="" disabled="false" />
+					<h:outputLabel value="Segundo Nombre:" />
+					<h:inputText styleClass="inputText" value="" disabled="false" />
+
+					<h:outputLabel value="Fecha Inicio:" />
+					<p:calendar id="calFecfIN" pattern="dd/MM/yyyy"
+						label="Fecha de Inicio:" showOn="button" maxlength="10" size="15">
+					</p:calendar>
+
+
+					<h:outputLabel value="Fecha Fin:" />
+					<p:calendar id="calFecFin" pattern="dd/MM/yyyy"
+						label="Fecha de Fin:" showOn="button" maxlength="10" size="15">
+					</p:calendar>
+
+					<h:outputLabel value="Estado:" />
+					<p:selectOneMenu id="cboEstado">
+						<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</fieldset>
+			</td></tr>
+			</table>
+
+			<h:panelGrid columns="3" id="gridButtons" style="width: 800px">
+				<h:outputLabel value="Total de registros: 45 Registros" />
+				<h:panelGrid columns="2">					
+					<p:commandButton value="Nuevo" ajax="false" action="#{revocadosMB.reset}" />
+					<p:commandButton value="Buscar" icon="ui-icon-search" />
+				</h:panelGrid>
+				<p:spacer width="50" height="10" />
+			</h:panelGrid>
+
+			<h:panelGrid>
+				<p:dataTable paginator="true" rows="10" paginatorPosition="bottom">
+					<p:column headerText="Tipo DOI">
+						<!-- <h:outputText value="#{row.colum}" /> -->
+					</p:column>
+					<p:column headerText="Nro. DOI">
+					</p:column>
+					<p:column headerText="Apoderado">
+					</p:column>
+					<p:column headerText="Código Central">
+					</p:column>
+					<p:column headerText="Tipo DOI">
+					</p:column>
+					<p:column headerText="Poderdante">
+					</p:column>
+					<p:column headerText="Estado">
+					</p:column>
+					<p:column headerText="Fecha de Reg">
+					</p:column>
+					<p:column headerText="Usuario de Reg">
+					</p:column>
+					<p:column headerText="Acción">
+					</p:column>
+				</p:dataTable>				
+				<f:facet name="footer">
+					<h:panelGroup style="display:block; text-align:right">
+						<p:commandButton value="Exportar" icon="ui-icon-disk" />						
+					</h:panelGroup>
+				</f:facet>
+			</h:panelGrid>
+
+		</h:form>
+					
+	
+	</ui:define>
+	<br />
+</ui:composition>
+
+</html>
