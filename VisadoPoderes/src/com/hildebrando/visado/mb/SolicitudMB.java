@@ -11,6 +11,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -104,19 +105,19 @@ public class SolicitudMB
 		lstTipoDocumentos= new ArrayList<TipoDocumento>();
 		cargarMultitabla();		
 		//Carga combo Rango Importes
-		cargarCombosBandejaSeguimiento(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES);
+		cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES);
 		//Carga combo Estados
-		cargarCombosBandejaSeguimiento(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS);
+		cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS);
 		//Carga combo Estados Nivel
-		cargarCombosBandejaSeguimiento(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS_NIVEL);
+		cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS_NIVEL);
 		//Carga combo Tipos de Fecha
-		cargarCombosBandejaSeguimiento(ConstantesVisado.CODIGO_MULTITABLA_TIPOS_FECHA);
+		cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPOS_FECHA);
 		//Carga lista de monedas
-		cargarCombosBandejaSeguimiento(ConstantesVisado.CODIGO_MULTITABLA_MONEDA);
+		cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_MONEDA);
 		cargarMiembros();
 		//LLena la grilla de solicitudes
 		cargarSolicitudes();
-		
+		cargaCombosNoMultitabla();
 		if (solicitudes.size()==0)
 		{
 			setearTextoTotalResultados("No se encontraron coincidencias con los criterios ingresados",solicitudes.size());
@@ -506,7 +507,7 @@ public class SolicitudMB
 	//@Autor: Cesar La Rosa
 	//@Version: 1.0
 	//@param: -
-	public void cargarCombosBandejaSeguimiento(String codigo)
+	public void cargarCombosMultitabla(String codigo)
 	{
 		logger.debug("Buscando valores en multitabla con codigo: " + codigo);
 		lstRangosImporte.clear();
@@ -588,7 +589,10 @@ public class SolicitudMB
 				logger.debug("Tamanio lista de tipos de documento: " + lstTipoDocumentos.size());
 			}
 		}
-		
+	}
+	
+	public void cargaCombosNoMultitabla()
+	{
 		//Carga combo de Estudios
 		GenericDao<TiivsEstudio, Object> estudioDAO = (GenericDao<TiivsEstudio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroEstudio = Busqueda.forClass(TiivsEstudio.class);
@@ -620,14 +624,17 @@ public class SolicitudMB
 		}
 		
 		//Carga combo de Tipo de Solicitud
-		GenericDao<TiivsTipoServicio, Object> tipoSolDAO = (GenericDao<TiivsTipoServicio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroTipoSol = Busqueda.forClass(TiivsTipoServicio.class);
+		String hql = "select distinct tsol.cod_oper, ts.des_oper,ts.activo " +
+				" from tiivs_tipo_servicio ts inner join tiivs_solicitud tsol on ts.cod_oper=tsol.cod_oper";
 		
-		try {
-			lstTipoSolicitud = tipoSolDAO.buscarDinamico(filtroTipoSol);
-		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de tipos de solicitudes");
-		}
+		System.out.println("Query Busqueda: " + hql);
+		
+		logger.debug("Query Tipo Solicitud: " + hql);
+
+		Query query = SpringInit.devolverSession().createSQLQuery(hql)
+				.addEntity(TiivsTipoServicio.class);
+		
+		lstTipoSolicitud = query.list();		
 		
 		//Carga combo de Territorio
 		GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
