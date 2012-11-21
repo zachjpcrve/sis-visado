@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+
+		<h:form>
+
+			<table>
+				<tr>
+					<td>
+						<fieldset>
+						
+								<legend class="fielset">Revocados</legend>
+								<p:spacer width="0" height="30" />
+								<h:outputLabel class="fielset" value="Datos del Apoderado (Revocado):" />
+								
+								<h:panelGrid columns="4" id="gridLabels1" style="width: 800px">
+									<h:outputLabel value="*Tipo de DOI:" />
+									<p:selectOneMenu id="cboTipoDOI">
+										<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+									</p:selectOneMenu>
+									<h:outputLabel value="*Nro. de DOI:" />
+									<h:inputText styleClass="inputText" value="" disabled="false" />
+
+									<h:outputLabel value="*Apellido Paterno:" />
+									<h:inputText styleClass="inputText" value="" disabled="false" />
+									<h:outputLabel value="*Apellido Materno:" />
+									<h:inputText styleClass="inputText" value="" disabled="false" />
+
+									<h:outputLabel value="*Primer Nombre:" />
+									<h:inputText styleClass="inputText" value="" disabled="false" />
+									<h:outputLabel value="*Segundo Nombre:" />
+									<h:inputText styleClass="inputText" value="" disabled="false" />
+
+									<h:outputLabel value="*Estado:" />
+									<p:selectOneMenu id="cboEstado">
+										<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+									</p:selectOneMenu>
+								</h:panelGrid>
+
+								<p:spacer width="0" height="30" />
+								<h:outputLabel class="fielset" value="Datos del Poderdante:" />
+							
+								<h:panelGrid columns="4" id="gridLabels2" style="width: 800px">
+									<h:outputLabel value="Cliente:" />
+									<h:selectBooleanCheckbox id="isCLiente" />
+									<h:outputLabel value="*Código Central:" />
+									<h:inputText styleClass="inputText" value="" disabled="false" />
+
+									<h:outputLabel value="*Tipo de DOI:" />
+									<p:selectOneMenu id="cboTipoDoiPoderdante">
+										<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+									</p:selectOneMenu>
+									<h:outputLabel value="*Nro. de DOI:" />
+									<h:inputText styleClass="inputText" value="" disabled="false" />
+
+									<h:outputLabel value="*Apellido Paterno:" />
+									<h:inputText styleClass="inputText" value="" disabled="false" />
+									<h:outputLabel value="*Apellido Materno:" />
+									<h:inputText styleClass="inputText" value="" disabled="false" />
+
+									<h:outputLabel value="*Primer Nombre:" />
+									<h:inputText styleClass="inputText" value="" disabled="false" />
+									<h:outputLabel value="*Segundo Nombre:" />
+									<h:inputText styleClass="inputText" value="" disabled="false" />
+								</h:panelGrid>								
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h:panelGroup style="display:block; text-align:right">
+							<p:commandButton value="Aceptar" icon="ui-icon-disk" />
+						</h:panelGroup>
+					</td>
+				</tr>
+			</table>
+		</h:form>
+
+
+	</ui:define>
+	<br />
+</ui:composition>
+
+</html>
