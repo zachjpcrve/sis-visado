@@ -237,7 +237,9 @@ public class SolicitudMB
 		//Filtro por estado
 		if (getIdEstado().compareTo("")!=0)
 		{
-			filtroSol.add(Restrictions.eq("estado", getIdEstado()));
+			String codEstado=getIdEstado().trim();
+			System.out.println("Filtro estado: " + codEstado);
+			filtroSol.add(Restrictions.eq("estado", codEstado));
 		}
 		
 		//Filtro por numero de documento de poderdante
@@ -281,9 +283,10 @@ public class SolicitudMB
 		//Filtro por territorio
 		if (getIdTerr().compareTo("")!=0)
 		{
-			System.out.println("Buscando territorio: " + getIdTerr());
+			String codTerr=getIdTerr().trim();
+			System.out.println("Buscando territorio: " + codTerr);
 			filtroSol.createAlias("tiivsOficina1", "ofic");
-			filtroSol.add(Restrictions.eq("ofic.codTerr", getIdTerr().trim()));
+			filtroSol.add(Restrictions.eq("ofic.codTerr", codTerr));
 		}
 				
 		try {
