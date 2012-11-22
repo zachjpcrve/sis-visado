@@ -149,8 +149,7 @@ public class SolicitudMB
 	{
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol= Busqueda.forClass(TiivsSolicitud.class);
-		String nomTipoDocPoder="";
-		String nomTipoDocApod="";
+		
 		solicitudes = new ArrayList<TiivsSolicitud>();
 		
 		//Filtro por codigo de solicitud
@@ -303,91 +302,16 @@ public class SolicitudMB
 		else
 		{
 			setearTextoTotalResultados("Total de registros: "+ solicitudes.size() + " registros",solicitudes.size());
-			
-			for (TiivsSolicitud tmpSol: solicitudes)
-			{
-				//Se setea la descripcion de la columna moneda
-				if (tmpSol.getMoneda()!=null)
-				{
-					tmpSol.setDesMoneda(buscarDescripcionMoneda(tmpSol.getMoneda()));
-				}
-				
-				//Se setea la columna estudio
-				if (tmpSol.getRegAbogado()!=null)
-				{
-					tmpSol.setEstudio(buscarDescripcionEstudio(tmpSol.getRegAbogado()));
-				}
-				
-				//Se obtiene la descripcion del documento del Poderdante
-				if (tmpSol.getNumDocPoder()!=null)
-				{
-					if (tmpSol.getTipDocPoder().equalsIgnoreCase(lstTipoDocumentos.get(0).getCodTipoDoc()))
-					{
-						nomTipoDocPoder=lstTipoDocumentos.get(0).getDescripcion();
-					}
-				}
-				
-				//Seteo de la columna Poderdante
-				if (nomTipoDocPoder.compareTo("")==0)
-				{
-					tmpSol.setTxtPoderdante(tmpSol.getPoderante());
-				}
-				else
-				{
-					tmpSol.setTxtPoderdante(nomTipoDocPoder + ": " + tmpSol.getNumDocPoder() + " - " + tmpSol.getPoderante());
-				}
-				
-				//Se obtiene la descripcion del documento del Apoderado
-				if (tmpSol.getNumDocApoder()!=null)
-				{
-					if (tmpSol.getTipDocApoder().equalsIgnoreCase(lstTipoDocumentos.get(0).getCodTipoDoc()))
-					{
-						nomTipoDocApod=lstTipoDocumentos.get(0).getDescripcion();
-					}
-				}
-				
-				//Seteo de la columna Apoderado
-				if (nomTipoDocApod.compareTo("")==0)
-				{
-					tmpSol.setTxtApoderado(tmpSol.getApoderado());
-				}
-				else
-				{
-					tmpSol.setTxtApoderado(nomTipoDocApod + ": " + tmpSol.getNumDocApoder() + " - " + tmpSol.getApoderado());
-				}
-				
-				//Se obtiene y setea la descripcion del Estado en la grilla
-				if (tmpSol.getEstado()!=null)
-				{
-					if (tmpSol.getEstado().trim().equalsIgnoreCase(lstEstado.get(0).getCodEstado()))
-					{
-						tmpSol.setTxtEstado(lstEstado.get(0).getDescripcion());
-					}
-				}
-			}
+			actualizarDatosGrilla();
 		}
 		
 		
 	}
 	
-	//Descripcion: Metodo que se encarga de cargar las solicitudes en la grilla
-	//@Autor: Cesar La Rosa
-	//@Version: 1.0
-	//@param: -
-	public void cargarSolicitudes()
+	private void actualizarDatosGrilla()
 	{
-		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroSol= Busqueda.forClass(TiivsSolicitud.class);
 		String nomTipoDocPoder="";
 		String nomTipoDocApod="";
-		String nomEstado="";
-		
-		try {
-			solicitudes =  solicDAO.buscarDinamico(filtroSol);
-			//System.out.println("Tamanio inicial de solicitudes: " + solicitudes.size());
-		} catch (Exception ex) {
-			logger.debug("Error al buscar las solicitudes");
-		}
 		
 		for (TiivsSolicitud tmpSol: solicitudes)
 		{
@@ -450,6 +374,25 @@ public class SolicitudMB
 				}
 			}
 		}
+	}
+	
+	//Descripcion: Metodo que se encarga de cargar las solicitudes en la grilla
+	//@Autor: Cesar La Rosa
+	//@Version: 1.0
+	//@param: -
+	public void cargarSolicitudes()
+	{
+		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroSol= Busqueda.forClass(TiivsSolicitud.class);
+				
+		try {
+			solicitudes =  solicDAO.buscarDinamico(filtroSol);
+			//System.out.println("Tamanio inicial de solicitudes: " + solicitudes.size());
+		} catch (Exception ex) {
+			logger.debug("Error al buscar las solicitudes");
+		}
+		
+		actualizarDatosGrilla();
 	}
 	
 	public String buscarDescripcionMoneda(String codMoneda)
