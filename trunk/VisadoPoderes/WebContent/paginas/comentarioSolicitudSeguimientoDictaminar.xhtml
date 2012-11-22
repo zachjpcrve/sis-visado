@@ -8,20 +8,18 @@
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
 
-<p:tabMenu activeIndex="0" style="width:410px;">
+<p:tabMenu activeIndex="0" style="width:910px;">
 	<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml" icon="ui-icon-star" />
-	<p:menuitem value="Comentario" url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
-	<p:menuitem value="Instrucciones" url="/faces/paginas/instrucciones.xhtml" icon="ui-icon-star" />
-	<p:menuitem value="Detalle Solicitud" url="/faces/paginas/detalleSolicitudEstadoEnviado.xhtml" icon="ui-icon-star" />
-	<p:menuitem value="Bandeja Seguimiento" url="/faces/paginas/bandejaSeguimiento.xhtml" icon="ui-icon-star" />
-    <p:menuitem value="Dictaminar" url="/faces/paginas/comentarioSolicitudSeguimientoDictaminar.xhtml" icon="ui-icon-star" />
+	<p:menuitem value="Instrucciones" url="/faces/paginas/comentarioSolicitudSeguimientoDictaminar.xhtml" icon="ui-icon-star" />
 </p:tabMenu>
 		
 		
 		<h:form id="form">
-		<h:panelGrid columns="2">
-		<h:panelGrid columns="1">
-			<p:editor id="editor" value="#{editorMB.value}" width="600" />
+		<table>
+		<tr>
+		<td>
+		
+		<p:editor id="editor" value="#{editorMB.value}" width="400" />
 
 			<h:panelGrid columns="2" style="margin-top:10px">
 				<p:commandButton id="submitButton" value="Submit" update="display"
@@ -34,13 +32,15 @@
 				hideEffect="fade" modal="true">
 				<h:outputText id="display" value="#{editorMB.value}" escape="false" />
 			</p:dialog>
-</h:panelGrid>
-
-<h:panelGrid columns="1">
-<table>
+		
+		</td>
+		<td>
+		
+		
+		<table>
 <tr>
-				<td class="styleLegend2" width="683">
-					<fieldset style="width:1000px;">
+				<td class="styleLegend2" width="483">
+					<fieldset style="width:500px;">
 						<h:outputText title="Seguimiento" value="Seguimiento" />
 							<p:separator />
 						<table border="0">
@@ -56,6 +56,7 @@
 															editable="true" >
 
 															<p:column headerText="Estado">
+															<p:outputLabel value="Registrado"></p:outputLabel>
 															</p:column>
 															<p:column headerText="Nivel" style="width:400px;">
 															</p:column>
@@ -64,6 +65,7 @@
 															<p:column headerText="Usuario">
 															</p:column>
 															<p:column headerText="Obs">
+															<p:graphicImage value="/resources/images/bullet_red.jpg"></p:graphicImage>
 															</p:column>
 															</p:dataTable>
 													</td>
@@ -74,8 +76,8 @@
 										</fieldset></td>
 								</tr>
 			<tr>
-				<td class="styleLegend2" width="683">
-					<fieldset style="width:1000px;">
+				<td class="styleLegend2" width="483">
+					<fieldset style="width:500px;">
 						<h:outputText title="Acción" value="Acción" />
 							<p:separator />
 						<table border="0">
@@ -95,7 +97,7 @@
 									</td>
 								</tr>
 								<tr><td></td>
-								    <td><p:commandButton id="btnAceptar"  /></td>
+								    <td><p:commandButton id="btnAceptar" value="Aceptar" /></td>
 								</tr>
 							</tbody>
 						</table>	
@@ -103,17 +105,17 @@
 			</tr>
 			
 				<tr>
-				<td class="styleLegend2" width="683">
-					<fieldset style="width:1000px;">
+				<td class="styleLegend2" width="483">
+					<fieldset style="width:500px;">
 						<h:outputText title="Documentos" value="Documentos" />
 							<p:separator />
 						<table border="0">
 							<tbody>
 								<tr>
 									<td colspan="5">
-									<p:commandLink value="Solicitud de Visado"/>
-									<p:commandLink value="Carta de Respuesta"/>
-									<p:commandLink value="Solicitud de Revisión"/>
+									<p:commandLink value="Solicitud de Visado"/><br></br>
+									<p:commandLink value="Carta de Respuesta"/><br></br>
+									<p:commandLink value="Solicitud de Revisión"/><br></br>
 									<p:commandLink value="Carta de Impodecedencia"/>		
 									</td>
 									
@@ -124,9 +126,14 @@
 					</fieldset></td>
 			</tr>
 </table>
+		
+		
+		
+		</td>
+		</tr>
+		</table>
+		
 
-</h:panelGrid>
-</h:panelGrid>
 		</h:form>
 
 
