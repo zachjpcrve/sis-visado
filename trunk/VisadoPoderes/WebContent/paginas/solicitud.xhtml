@@ -80,7 +80,7 @@
 												<tr>
 												     <td>
 														 <h:outputText styleClass="outputText" id="outNroVaucher"
-																	value="Nro Vaucher *" /></td>
+																	value="Nro Voucher *" /></td>
 													<td> <h:inputText styleClass="inputText" id="txtNroVaucher"
 																	style="width:100px;"
 																	value="#{ solicitudRegMB.solicitudModificar.desOfi}"
@@ -237,7 +237,7 @@
 												<tr><td  align="center" ><p:spacer/> </td></tr>
 												<tr>
 													<td  align="center" width="1000px" colspan="18"> 
-															<p:dataTable  var="tbl" rows="20"
+															<p:dataTable  var="s" rows="20" value="#{solicitudRegMB.lstClientes}"
 															emptyMessage="No hay resultados en la bandeja"
 															paginatorPosition="bottom" 
 															paginator="true"
@@ -246,20 +246,28 @@
 															editable="true" >
 
 															<p:column headerText="Codigo Central">
+															<h:outputText value="#{s.codigo_central}"/>
 															</p:column>
 															<p:column headerText="Cliente / No Cliente">
+															<h:outputText value="#{s.cliente}"/>
 															</p:column>
 															<p:column headerText="Tipo de Registro">
-															</p:column>
+																<h:outputText value="#{s.tipo_registro}" />
+																</p:column>
 															<p:column headerText="Clasificación">
+															<h:outputText value="#{s.clasificacion}"/>
 															</p:column>
 															<p:column headerText="Nro Celular">
+															<h:outputText value="#{s.nro_celular}"/>
 															</p:column>
 															<p:column headerText="E-Mail">
+															<h:outputText value="#{s.e_mail}"/>
 															</p:column>
 															<p:column headerText="Editar">
+															<p:graphicImage value="/resources/images/editar.jpg"/>
 															</p:column>
 															<p:column headerText="Eliminar">
+															<p:graphicImage value="/resources/images/eliminar.jpg"/>
 															</p:column>
 															</p:dataTable>
 														
@@ -309,7 +317,7 @@
 										</tr>
 								<tr>
 									<td width="1000px;" colspan="11">
-											<p:dataTable  var="tblDocumentos" rows="20"
+											<p:dataTable  var="s" rows="20"  value="#{solicitudRegMB.lstdocumentos}"
 															emptyMessage="No hay resultados en la bandeja"
 															paginatorPosition="bottom" 
 															paginator="true"
@@ -318,14 +326,19 @@
 															editable="true" >
 
 															<p:column headerText="Item">
+															<h:outputText value="#{s.item}" />
 															</p:column>
 															<p:column headerText="Documento" style="width:400px;">
+															<h:outputText value="#{s.documento}" />
 															</p:column>
 															<p:column headerText="Obligación">
+															<h:outputText value="#{s.obligacion}" />
 															</p:column>
 															<p:column headerText="Editar">
+															<p:graphicImage value="/resources/images/editar.jpg"/>
 															</p:column>
 															<p:column headerText="Eliminar">
+															<p:graphicImage value="/resources/images/eliminar.jpg"/>
 															</p:column>
 															</p:dataTable>
 													
@@ -392,7 +405,7 @@
                                 <tr>
 									<td  align="center" width="1000px" colspan="11"> 
 									
-											<p:dataTable  var="tblOperaciones" rows="20"
+											<p:dataTable  var="o" rows="20" value="#{solicitudRegMB.lstOperaciones}"
 															emptyMessage="No hay resultados en la bandeja"
 															paginatorPosition="bottom" 
 															paginator="true"
@@ -401,21 +414,28 @@
 															editable="true" >
 
 															<p:column headerText="Item">
-															<h:outputText value="123"></h:outputText>
+															<h:outputText value="#{o.item}"></h:outputText>
 															</p:column>
 															<p:column headerText="Operación Bancaria" style="width:400px;">
+															<h:outputText value="#{o.operacion_bancaria}"></h:outputText>
 															</p:column>
 															<p:column headerText="Moneda">
+															<h:outputText value="#{o.moneda}"/>
 															</p:column>
 															<p:column headerText="Importe">
+															<h:outputText value="#{o.importe}"/>
 															</p:column>
 															<p:column headerText="Tipo de Cambio">
+															<h:outputText value="#{o.tipo_cambio}"/>
 															</p:column>
 															<p:column headerText="Importe en Soles">
+															<h:outputText value="#{o.importe_soles}"/>
 															</p:column>
 															<p:column headerText="Editar">
+															<p:graphicImage value="/resources/images/editar.jpg"/>
 															</p:column>
 															<p:column headerText="Eliminar">
+															<p:graphicImage value="/resources/images/eliminar.jpg"/>
 															</p:column>
 															</p:dataTable>
 													
