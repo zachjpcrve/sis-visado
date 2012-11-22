@@ -13,340 +13,340 @@
 			<p:menuitem value="Instrucciones" url="/faces/paginas/instrucciones.xhtml" icon="ui-icon-star" />
 		</p:tabMenu>
 		<h:form id="frmMnt">
-		<table border="0">
-			<tbody>
-				<tr>
-					<td class="styleLegend2">
-						<fieldset>
-							<legend class="letraLightBlue10">Bandeja</legend>
-
-							<table border="0" >
-								<tbody>
-									<tr>
-										<td class="styleLegend2" >
-											<fieldset>
-												<p:separator/>
-												<table border="0" >
-													<tbody>
-														<tr>
-															<td>
-																	<h:outputText styleClass="outputText" id="txtCodOfic"
-																	value="Codigo Oficina: " />
-															</td>
-															<td>
-																	<p:selectOneMenu value="#{solicitudMB.idCodOfi}" id="somCodOfi" >
-																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
-																		<f:selectItems value="#{solicitudMB.lstOficina}" var="lOf"
-																			itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}" />
-																	</p:selectOneMenu>
-															</td>
-															<td >
-																	<h:outputText styleClass="outputText" id="textOficina" value="Oficina:" />
-															</td>
-															<td >
-																	<p:selectOneMenu value="#{solicitudMB.idCodOfi1}" id="somOfi">
-																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
-																		<f:selectItems value="#{solicitudMB.lstOficina1}" var="of"
-																			itemValue="#{of.codOfi}" itemLabel="#{of.desOfi}" />
-																	</p:selectOneMenu>
-															</td>
-															<td >
-																<h:outputText styleClass="outputText" id="textTerr" value="Territorio:" />
-															</td>
-															<td>
-																	<p:selectOneMenu value="#{solicitudMB.idTerr}" id="somTerr">
-																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
-																		<f:selectItems value="#{solicitudMB.lstTerritorio}" var="lTerr"
-																			itemValue="#{lTerr.codTer}" itemLabel="#{lTerr.desTer}" />
-																	</p:selectOneMenu>
-															</td>										
-														</tr>	
-														<tr>
-															<td >
-																<h:outputText styleClass="outputText" id="txtCodOficina" value="Codigo Oficina:" />
-															</td>
-															<td >
-																<h:inputText styleClass="inputText"
-																id="text11" value="#{solicitudMB.txtCodOfi}"
-																disabled="false" maxlength="5"/>
-															</td>																
-															<td >
-																<h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" />
-															</td>
-															<td >
-																<h:inputText styleClass="inputText"
-																id="text12" value="#{solicitudMB.txtNomOfi}"
-																disabled="false" />
-															</td>
-															<td >
-																<h:outputText styleClass="outputText" id="txtTipoSol" value="Tipo de Solicitud:" />
-															</td>
-															<td >
-																<p:selectOneMenu value="#{solicitudMB.idTipoSol}" id="somTipoSol">
-																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
-																	<f:selectItems value="#{solicitudMB.lstTipoSolicitud}" var="tipoSol"
-																		itemValue="#{tipoSol.codOper}" itemLabel="#{tipoSol.desOper}" />
-																</p:selectOneMenu>
-															</td>
-														</tr>
-														<tr>
-															<td >
-																<h:outputText styleClass="outputText" id="txtPoder" value="Poderdante:" />
-															</td>
-															<td >
-																<h:inputText styleClass="inputText"
-																id="text14" value="#{solicitudMB.txtNomPoderdante}" disabled="false" maxlength="60"/>
-															</td>																
-															<td >
-																<h:outputText styleClass="outputText" id="txtApod" value="Apoderado:" />
-															</td>
-															<td >
-																<h:inputText styleClass="inputText"
-																id="text15" value="#{solicitudMB.txtNomApoderado}" disabled="false" maxlength="60"/>
-															</td>
-															<td >
-																<h:outputText styleClass="outputText" id="txtOpBan" value="Operacion Bancaria:" />
-															</td>
-															<td >
-																<p:selectOneMenu value="#{solicitudMB.idOpeBan}" id="somOpeBan">
-																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
-																	<f:selectItems value="#{solicitudMB.lstOpeBancaria}" var="opeBan"
-																		itemValue="#{opeBan.desOperBan}" itemLabel="#{opeBan.desOperBan}" />
-																</p:selectOneMenu>
-															</td>
-														</tr>
-														<tr>
-															<td >
-																<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI Poderdante:" />
-															</td>
-															<td >
-																<h:inputText styleClass="inputText" id="text17" maxlength="18" value="#{solicitudMB.nroDOIPoderdante}" disabled="false" />
-															</td>																
-															<td >
-																<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI Apoderado:" />
-															</td>
-															<td >
-																<h:inputText styleClass="inputText" id="text18" maxlength="18" value="#{solicitudMB.nroDOIApoderado}" disabled="false"/>
-															</td>
-															<td >
-																<h:outputText styleClass="outputText" id="txtImporte" value="Importe:" />
-															</td>
-															<td >
-																<p:selectOneMenu value="#{solicitudMB.idImporte}" id="somImporte">
-																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
-																	<f:selectItems value="#{solicitudMB.lstRangosImporte}" var="imp"
-																		itemValue="#{imp.codigoRango}" itemLabel="#{imp.descripcion}" />
-																</p:selectOneMenu>
-															</td>
-														</tr>
-														<tr>
-															<td >
-																<h:outputText styleClass="outputText" id="txtCod" value="Codigo:" />
-															</td>
-															<td >
-																<h:inputText styleClass="inputText" id="text100" value="#{solicitudMB.codSolicitud}" maxlength="15" />
-															</td>																
-															<td >
-																<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio:" />
-															</td>
-															<td >
-																<p:selectOneMenu value="#{solicitudMB.idEstudio}" id="somEstudio">
-																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
-																	<f:selectItems value="#{solicitudMB.lstEstudio}" var="est"
-																		itemValue="#{est.codEstudio}" itemLabel="#{est.desEstudio}" />
-																</p:selectOneMenu>
-															</td>
-															<td >
-																<h:outputText styleClass="outputText" id="txtEstado" value="Estado:" />
-															</td>
-															<td >
-																<p:selectOneMenu value="#{solicitudMB.idEstado}" id="somEstado">
-																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
-																	<f:selectItems value="#{solicitudMB.lstEstado}" var="esta"
-																		itemValue="#{esta.codEstado}" itemLabel="#{esta.descripcion}" />
-																</p:selectOneMenu>
-															</td>
-														</tr>
-														<tr>
-															<td >
-																<h:outputText styleClass="outputText" id="txtTipoFecha" value="Tipo Fecha:" />
-															</td>
-															<td >
-																<p:selectOneMenu value="#{solicitudMB.idTiposFecha}" id="somTiposFecha" 
-																	valueChangeListener="#{solicitudMB.habilitarFechas}" 
-																	immediate="true" onchange="this" >
-																	<p:ajax update="@form"/>
-																	
-																	<f:selectItem itemLabel="--Seleccione--" itemValue="" />
-																	<f:selectItems value="#{solicitudMB.lstTiposFecha}" var="tipoFec"
-																		itemValue="#{tipoFec.codigoTipoFecha}" itemLabel="#{tipoFec.descripcion}" />
-																</p:selectOneMenu>
-															</td>
-															<td >
-																<h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" />
-															</td>
-															<td >
-																<p:calendar  id="calFecIni" disabled="#{solicitudMB.noMostrarFechas}"
-																pattern="dd/MM/yyyy" value="#{solicitudMB.fechaInicio}"
-																label="Fecha de Fin" showOn="button" maxlength="10" size="15"/>
-															</td>
-															<td >
-																<h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin" />
-															</td>
-															<td >
-																<p:calendar  id="calFecFin" disabled="#{solicitudMB.noMostrarFechas}"
-																pattern="dd/MM/yyyy" value="#{solicitudMB.fechaFin}"
-																label="Fecha de Fin" showOn="button" maxlength="10" size="12"/>
-															</td>
-														</tr>
-														<tr>
-															<td >
-																<h:outputText styleClass="outputText" id="txtNivel" value="Nivel:" />
-															</td>
-															<td >
-																<p:selectOneMenu value="#{solicitudMB.idNivel}" id="somNivel">
-																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
-																	<f:selectItems value="#{solicitudMB.lstNivel}" var="niv"
-																		itemValue="#{niv.codNiv}" itemLabel="#{niv.desNiv}" />
-																</p:selectOneMenu>
-															</td>
-															<td >
-																<h:outputText styleClass="outputText" id="txtEstNivel" value="Estados del Nivel:" />
-															</td>
-															<td >
-																<p:selectOneMenu value="#{solicitudMB.idEstNivel}" id="somEstNivel">
-																	<f:selectItem itemLabel="--TODOS--" itemValue="" />
-																	<f:selectItems value="#{solicitudMB.lstEstadoNivel}" var="estNiv"
-																		itemValue="#{estNiv.codigoEstadoNivel}" itemLabel="#{estNiv.descripcion}" />
-																</p:selectOneMenu>
-															</td>
-															<td >
-																<h:outputText styleClass="outputText" id="txtReclamo" value="Reclamo:" />
-															</td>
-															<td >
-																<p:selectBooleanCheckbox />  
-																<p:spacer width="20"/>
-																<h:outputText styleClass="outputText" id="txtDelegados" value="Delegados" />
-																<p:spacer width="20"/>
-																<p:selectBooleanCheckbox />  
-															</td>
-														</tr>
-														<tr></tr>
-														<tr></tr>
-														<tr></tr>
-														<tr></tr>
-														<tr></tr>
-														<tr></tr>
-														<tr></tr>
-														<tr>
-															<td>
-																<p:commandButton value="Nuevo" ajax="false"/>
-															</td>
-															<td>
-																<p:commandButton value="Buscar" icon="ui-icon-search" 
-																	actionListener="#{solicitudMB.busquedaSolicitudes}" 
-																	update="panelRes" ajax="false"/>
-															</td>
-														</tr>
-													</tbody>
-												</table>
-											</fieldset>
-										</td>
-									</tr>	
-								</tbody>
-							</table>
-						</fieldset>
-					</td>
-				</tr>
-			</tbody>
-		</table>
 		
-		<h:outputLabel value="#{solicitudMB.textoTotalResultados}"/>
-		
-		<table border="0">	
-			<tbody>
-			<tr>	
-				<td>
-					<p:panel header="Resultados" id="panelRes" >
-						<p:dataTable value="#{solicitudMB.solicitudes}" var="tbl" rows="5"
-								paginatorPosition="bottom" scrollable="true" scrollWidth="950"  scrollHeight="300"
-								paginator="true"
-								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-								rowsPerPageTemplate="5,10,15"
-								emptyMessage="">
+			<table border="0">
+				<tbody>
+					<tr>
+						<td class="styleLegend2">
+							<fieldset>
+								<legend class="letraLightBlue10">Bandeja</legend>
+	
+								<table border="0" >
+									<tbody>
+										<tr>
+											<td class="styleLegend2" >
+												<fieldset>
+													<p:separator/>
+													<table border="0" >
+														<tbody>
+															<tr>
+																<td>
+																		<h:outputText styleClass="outputText" id="txtCodOfic"
+																		value="Codigo Oficina: " />
+																</td>
+																<td>
+																		<p:selectOneMenu value="#{solicitudMB.idCodOfi}" id="somCodOfi" >
+																			<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																			<f:selectItems value="#{solicitudMB.lstOficina}" var="lOf"
+																				itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}" />
+																		</p:selectOneMenu>
+																</td>
+																<td >
+																		<h:outputText styleClass="outputText" id="textOficina" value="Oficina:" />
+																</td>
+																<td >
+																		<p:selectOneMenu value="#{solicitudMB.idCodOfi1}" id="somOfi">
+																			<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																			<f:selectItems value="#{solicitudMB.lstOficina1}" var="of"
+																				itemValue="#{of.codOfi}" itemLabel="#{of.desOfi}" />
+																		</p:selectOneMenu>
+																</td>
+																<td >
+																	<h:outputText styleClass="outputText" id="textTerr" value="Territorio:" />
+																</td>
+																<td>
+																		<p:selectOneMenu value="#{solicitudMB.idTerr}" id="somTerr">
+																			<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																			<f:selectItems value="#{solicitudMB.lstTerritorio}" var="lTerr"
+																				itemValue="#{lTerr.codTer}" itemLabel="#{lTerr.desTer}" />
+																		</p:selectOneMenu>
+																</td>										
+															</tr>	
+															<tr>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtCodOficina" value="Codigo Oficina:" />
+																</td>
+																<td >
+																	<h:inputText styleClass="inputText"
+																	id="text11" value="#{solicitudMB.txtCodOfi}"
+																	disabled="false" maxlength="5"/>
+																</td>																
+																<td >
+																	<h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" />
+																</td>
+																<td >
+																	<h:inputText styleClass="inputText"
+																	id="text12" value="#{solicitudMB.txtNomOfi}"
+																	disabled="false" />
+																</td>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtTipoSol" value="Tipo de Solicitud:" />
+																</td>
+																<td >
+																	<p:selectOneMenu value="#{solicitudMB.idTipoSol}" id="somTipoSol">
+																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																		<f:selectItems value="#{solicitudMB.lstTipoSolicitud}" var="tipoSol"
+																			itemValue="#{tipoSol.codOper}" itemLabel="#{tipoSol.desOper}" />
+																	</p:selectOneMenu>
+																</td>
+															</tr>
+															<tr>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtPoder" value="Poderdante:" />
+																</td>
+																<td >
+																	<h:inputText styleClass="inputText"
+																	id="text14" value="#{solicitudMB.txtNomPoderdante}" disabled="false" maxlength="60"/>
+																</td>																
+																<td >
+																	<h:outputText styleClass="outputText" id="txtApod" value="Apoderado:" />
+																</td>
+																<td >
+																	<h:inputText styleClass="inputText"
+																	id="text15" value="#{solicitudMB.txtNomApoderado}" disabled="false" maxlength="60"/>
+																</td>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtOpBan" value="Operacion Bancaria:" />
+																</td>
+																<td >
+																	<p:selectOneMenu value="#{solicitudMB.idOpeBan}" id="somOpeBan">
+																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																		<f:selectItems value="#{solicitudMB.lstOpeBancaria}" var="opeBan"
+																			itemValue="#{opeBan.desOperBan}" itemLabel="#{opeBan.desOperBan}" />
+																	</p:selectOneMenu>
+																</td>
+															</tr>
+															<tr>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI Poderdante:" />
+																</td>
+																<td >
+																	<h:inputText styleClass="inputText" id="text17" maxlength="18" value="#{solicitudMB.nroDOIPoderdante}" disabled="false" />
+																</td>																
+																<td >
+																	<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI Apoderado:" />
+																</td>
+																<td >
+																	<h:inputText styleClass="inputText" id="text18" maxlength="18" value="#{solicitudMB.nroDOIApoderado}" disabled="false"/>
+																</td>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtImporte" value="Importe:" />
+																</td>
+																<td >
+																	<p:selectOneMenu value="#{solicitudMB.idImporte}" id="somImporte">
+																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																		<f:selectItems value="#{solicitudMB.lstRangosImporte}" var="imp"
+																			itemValue="#{imp.codigoRango}" itemLabel="#{imp.descripcion}" />
+																	</p:selectOneMenu>
+																</td>
+															</tr>
+															<tr>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtCod" value="Codigo:" />
+																</td>
+																<td >
+																	<h:inputText styleClass="inputText" id="text100" value="#{solicitudMB.codSolicitud}" maxlength="15" />
+																</td>																
+																<td >
+																	<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio:" />
+																</td>
+																<td >
+																	<p:selectOneMenu value="#{solicitudMB.idEstudio}" id="somEstudio">
+																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																		<f:selectItems value="#{solicitudMB.lstEstudio}" var="est"
+																			itemValue="#{est.codEstudio}" itemLabel="#{est.desEstudio}" />
+																	</p:selectOneMenu>
+																</td>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtEstado" value="Estado:" />
+																</td>
+																<td >
+																	<p:selectOneMenu value="#{solicitudMB.idEstado}" id="somEstado">
+																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																		<f:selectItems value="#{solicitudMB.lstEstado}" var="esta"
+																			itemValue="#{esta.codEstado}" itemLabel="#{esta.descripcion}" />
+																	</p:selectOneMenu>
+																</td>
+															</tr>
+															<tr>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtTipoFecha" value="Tipo Fecha:" />
+																</td>
+																<td >
+																	<p:selectOneMenu value="#{solicitudMB.idTiposFecha}" id="somTiposFecha" 
+																		valueChangeListener="#{solicitudMB.habilitarFechas}" 
+																		immediate="true" onchange="this" >
+																		<p:ajax update="@form"/>
+																		
+																		<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+																		<f:selectItems value="#{solicitudMB.lstTiposFecha}" var="tipoFec"
+																			itemValue="#{tipoFec.codigoTipoFecha}" itemLabel="#{tipoFec.descripcion}" />
+																	</p:selectOneMenu>
+																</td>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" />
+																</td>
+																<td >
+																	<p:calendar  id="calFecIni" disabled="#{solicitudMB.noMostrarFechas}"
+																	pattern="dd/MM/yyyy" value="#{solicitudMB.fechaInicio}"
+																	label="Fecha de Fin" showOn="button" maxlength="10" size="15"/>
+																</td>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin" />
+																</td>
+																<td >
+																	<p:calendar  id="calFecFin" disabled="#{solicitudMB.noMostrarFechas}"
+																	pattern="dd/MM/yyyy" value="#{solicitudMB.fechaFin}"
+																	label="Fecha de Fin" showOn="button" maxlength="10" size="12"/>
+																</td>
+															</tr>
+															<tr>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtNivel" value="Nivel:" />
+																</td>
+																<td >
+																	<p:selectOneMenu value="#{solicitudMB.idNivel}" id="somNivel">
+																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																		<f:selectItems value="#{solicitudMB.lstNivel}" var="niv"
+																			itemValue="#{niv.codNiv}" itemLabel="#{niv.desNiv}" />
+																	</p:selectOneMenu>
+																</td>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtEstNivel" value="Estados del Nivel:" />
+																</td>
+																<td >
+																	<p:selectOneMenu value="#{solicitudMB.idEstNivel}" id="somEstNivel">
+																		<f:selectItem itemLabel="--TODOS--" itemValue="" />
+																		<f:selectItems value="#{solicitudMB.lstEstadoNivel}" var="estNiv"
+																			itemValue="#{estNiv.codigoEstadoNivel}" itemLabel="#{estNiv.descripcion}" />
+																	</p:selectOneMenu>
+																</td>
+																<td >
+																	<h:outputText styleClass="outputText" id="txtReclamo" value="Reclamo:" />
+																</td>
+																<td >
+																	<p:selectBooleanCheckbox />  
+																	<p:spacer width="20"/>
+																	<h:outputText styleClass="outputText" id="txtDelegados" value="Delegados" />
+																	<p:spacer width="20"/>
+																	<p:selectBooleanCheckbox />  
+																</td>
+															</tr>
+															<tr></tr>
+															<tr></tr>
+															<tr></tr>
+															<tr></tr>
+															<tr></tr>
+															<tr></tr>
+															<tr></tr>
+															<tr>
+																<td>
+																	<p:commandButton value="Nuevo" ajax="false"/>
+																</td>
+																<td>
+																	<p:commandButton value="Buscar" icon="ui-icon-search" 
+																		actionListener="#{solicitudMB.busquedaSolicitudes}" 
+																		update="panelRes" ajax="false"/>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</fieldset>
+											</td>
+										</tr>	
+									</tbody>
+								</table>
+							</fieldset>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 			
-								<p:column headerText="Codigo">
-                                       <p:commandLink value="#{tbl.codSoli}" action="#{solicitudRegMB.redirectDetalleSolicitud}" ajax="false">
-                                       		<f:param value="#{tbl.codSoli}" id="prm_codSoli" name="prm_codSoli"></f:param>
-                                       </p:commandLink>
-                                </p:column>
-								
-								<p:column headerText="Cod. Oficina" width="60">
-									<h:outputText value="#{tbl.tiivsOficina1.codOfi}"/>	
-								</p:column>
-								
-								<p:column headerText="Oficina" width="130">
-									<h:outputText value="#{tbl.tiivsOficina1.desOfi}"/>	
-								</p:column>
-								
-								<p:column headerText="Poderdante" width="100">
-									<h:outputText value="#{tbl.txtPoderdante}"/>		
-								</p:column>
-								
-								<p:column headerText="Apoderado" width="100">
-									<h:outputText value="#{tbl.txtApoderado}"/>		
-								</p:column>
+			<h:outputLabel value="#{solicitudMB.textoTotalResultados}"/>
+			
+			<table border="0">	
+				<tbody>
+				<tr>	
+					<td>
+						<p:panel header="Resultados" id="panelRes" >
+							<p:dataTable value="#{solicitudMB.solicitudes}" var="tbl" rows="5"
+									paginatorPosition="bottom" scrollable="true" scrollWidth="950"  scrollHeight="300"
+									paginator="true"
+									paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+									rowsPerPageTemplate="5,10,15"
+									emptyMessage="">
 				
-								<p:column headerText="Tipo Operacion" width="100">
-									<h:outputText value="#{tbl.operacionesBancarias}"/>					
-								</p:column>
-								
-								<p:column headerText="Importe" width="70">
-									<h:outputText value="#{tbl.importe}"/>	
-								</p:column>
-								
-								<p:column headerText="Moneda" width="40">
-									<h:outputText value="#{tbl.desMoneda}"/>
-								</p:column>
-								
-								<p:column headerText="Fecha Respuesta" width="100">
-									<h:outputText value="#{tbl.fechaRespuesta}"/>	
-								</p:column>
-								
-								<p:column headerText="Fecha Envio"  width="70">
-									<h:outputText value="#{tbl.fechaEnvio}"/>	
-								</p:column>
-								
-								<p:column headerText="Fecha Estado"  width="70">
-									<h:outputText value="#{tbl.fechaEstado}"/>
-								</p:column>
-								
-								<p:column headerText="Estado" width="50">
-									<h:outputText value="#{tbl.txtEstado}"/>	
-								</p:column>
-								
-								<p:column headerText="Estudio"  width="75">
-									<h:outputText value="#{tbl.estudio}"/>	
-								</p:column>
-								
-								<p:column headerText="Nivel"  width="50">
-									<h:outputText value=""/>	
-								</p:column>
-							
-					   </p:dataTable>
-				   </p:panel>	
-			   </td>
-			</tr>
-		  </tbody>
-		</table>
-		<table border="0">
-			<tr>
-				<td >
-					<p:commandButton value="Exportar" ajax="false"/>
+									<p:column headerText="Codigo" width="60">
+	                                       <p:commandLink value="#{tbl.codSoli}" action="#{solicitudRegMB.redirectDetalleSolicitud}" ajax="false">
+	                                       		<f:param value="#{tbl.codSoli}" id="prm_codSoli" name="prm_codSoli"></f:param>
+	                                       </p:commandLink>
+	                                </p:column>
+									
+									<p:column headerText="Cod. Oficina" width="65">
+										<h:outputText value="#{tbl.tiivsOficina1.codOfi}"/>	
+									</p:column>
+									
+									<p:column headerText="Oficina" width="130">
+										<h:outputText value="#{tbl.tiivsOficina1.desOfi}"/>	
+									</p:column>
+									
+									<p:column headerText="Poderdante" width="100">
+										<h:outputText value="#{tbl.txtPoderdante}"/>		
+									</p:column>
+									
+									<p:column headerText="Apoderado" width="100">
+										<h:outputText value="#{tbl.txtApoderado}"/>		
+									</p:column>
 					
-				</td>
-			</tr>	
-		</table>
+									<p:column headerText="Tipo Operacion" width="100">
+										<h:outputText value="#{tbl.operacionesBancarias}"/>					
+									</p:column>
+									
+									<p:column headerText="Importe" width="70">
+										<h:outputText value="#{tbl.importe}"/>	
+									</p:column>
+									
+									<p:column headerText="Moneda" width="40">
+										<h:outputText value="#{tbl.desMoneda}"/>
+									</p:column>
+									
+									<p:column headerText="Fecha Respuesta" width="100">
+										<h:outputText value="#{tbl.fechaRespuesta}"/>	
+									</p:column>
+									
+									<p:column headerText="Fecha Envio"  width="70">
+										<h:outputText value="#{tbl.fechaEnvio}"/>	
+									</p:column>
+									
+									<p:column headerText="Fecha Estado"  width="70">
+										<h:outputText value="#{tbl.fechaEstado}"/>
+									</p:column>
+									
+									<p:column headerText="Estado" width="50">
+										<h:outputText value="#{tbl.txtEstado}"/>	
+									</p:column>
+									
+									<p:column headerText="Estudio"  width="75">
+										<h:outputText value="#{tbl.estudio}"/>	
+									</p:column>
+									
+									<p:column headerText="Nivel"  width="50">
+										<h:outputText value=""/>	
+									</p:column>
+						   </p:dataTable>
+					   </p:panel>	
+				   </td>
+				</tr>
+			  </tbody>
+			</table>
+			
+			<table border="0">
+				<tr>
+					<td >
+						<p:commandButton value="Exportar" ajax="false"/>
+					</td>
+				</tr>	
+			</table>	
 		
 		</h:form>
 
