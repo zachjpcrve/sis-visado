@@ -21,10 +21,13 @@
   </p:menu>-->
   
   <p:tieredMenu style="width:140px"> 
-  		<p:menuitem icon="ui-icon-pencil" value="Registros" url="/faces/paginas/solicitud.xhtml"></p:menuitem>
+  		<p:submenu label="Registros" icon="ui-icon-pencil">
+      		<p:menuitem icon="ui-icon-pencil" value="Solicitud Visado" url="/faces/paginas/solicitud.xhtml"></p:menuitem>
+      		<p:menuitem icon="ui-icon-pencil" value="Revocados" url="/faces/paginas/registrarRevocado.xhtml"></p:menuitem>
+  		</p:submenu>
   		<p:submenu label="Consultas" icon="ui-icon-pencil">
   			<p:menuitem icon="ui-icon-pencil" value="Bandeja de Seguimniento" url="/faces/paginas/bandejaSeguimiento.xhtml"></p:menuitem>
-	    	<p:menuitem icon="ui-icon-pencil" value="Revocados" ></p:menuitem>
+	    	<p:menuitem icon="ui-icon-pencil" value="Bandeja de Revocados" url="/faces/paginas/bandejaRevocados.xhtml"></p:menuitem>
   		</p:submenu>
   		<p:menuitem icon="ui-icon-pencil" value="Reportes" url="/faces/paginas/reportes.xhtml"></p:menuitem>
 	    <p:menuitem icon="ui-icon-pencil" value="Mantenimiento" url="/faces/paginas/mantenimientos.xhtml"></p:menuitem>
