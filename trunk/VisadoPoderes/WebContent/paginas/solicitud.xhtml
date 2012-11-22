@@ -11,7 +11,7 @@
 
 <p:tabMenu activeIndex="0" style="width:550px;">
 	<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml" icon="ui-icon-star" />
-	<p:menuitem value="Comentario" url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
+	<p:menuitem value="Instrucciones" url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
 	<!-- <p:menuitem value="Instrucciones" url="/faces/paginas/instrucciones.xhtml" icon="ui-icon-star" />
 	<p:menuitem value="Detalle Solicitud" url="/faces/paginas/detalleSolicitudEstadoEnviado.xhtml" icon="ui-icon-star" />
 	<p:menuitem value="Bandeja Seguimiento" url="/faces/paginas/bandejaSeguimiento.xhtml" icon="ui-icon-star" />
@@ -152,10 +152,9 @@
 																	value="Tipo DOI/Código Central" showEffect="slide" /></td>
 														
 														<td><h:outputText styleClass="outputText" id="outDoi" value="DOI:" /></td>
-														<td><h:outputText id="outDoitxt"/></td>
+														<td><h:inputText id="inpDoitxt" style="width: 50px;"/></td>
 														<td><p:graphicImage value="/resources/images/pregunta.jpg" id="toolcboDoi" /></td>
-														<td><p:tooltip for="toolcboDoi" value="Documento Obligatorio de Identidad"
-																	showEffect="slide" /></td>
+														<td><p:tooltip for="toolcboDoi" value="Documento Obligatorio de Identidad" showEffect="slide" /></td>
 															
 														<td>
 																<p:commandButton value="Buscar" id="btnBuscar" onclick="dlgModalBusqueda.show();" />
@@ -229,8 +228,8 @@
 													<td><p:tooltip for="tooltxtCelular" value="Celular"
 																	showEffect="slide" /></td>
 													<td width="50px"><h:panelGrid columns="2">
-														<p:commandButton id="btnAgregar" value="Agregar" style="padding-left:0em !important;width:5px;"/>
-													   <p:commandButton id="btnLimpiar" value="Limpiar" style="padding-left:0.1em !important;width:5px;"/>
+														<p:commandButton id="btnAgregar" value="Agregar" style="padding-left:0em !important;"/>
+													    <p:commandButton id="btnLimpiar" value="Limpiar" style="padding-left:0.1em !important;"/>
 													</h:panelGrid>
 													</td>
 													
