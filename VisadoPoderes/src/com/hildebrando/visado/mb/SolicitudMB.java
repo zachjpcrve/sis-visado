@@ -287,11 +287,14 @@ public class SolicitudMB
 			filtroSol.createAlias("tiivsOficina1", "ofic");
 			filtroSol.add(Restrictions.eq("ofic.codTerr", codTerr));
 		}
-				
-		try {
+		
+		//Buscar solicitudes de acuerdo a criterios seleccionados
+		try
+		{
 			solicitudes =  solicDAO.buscarDinamico(filtroSol);
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		}
+		catch (Exception ex)
+		{
 			logger.debug("Error al buscar las solicitudes");
 		}
 		
@@ -304,8 +307,6 @@ public class SolicitudMB
 			setearTextoTotalResultados("Total de registros: "+ solicitudes.size() + " registros",solicitudes.size());
 			actualizarDatosGrilla();
 		}
-		
-		
 	}
 	
 	private void actualizarDatosGrilla()
