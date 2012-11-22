@@ -9,7 +9,7 @@
 	<ui:define name="contenido">
 
 		<p:tabMenu activeIndex="0"  style="width:950px;margin-top: 0px; "   >
-			<p:menuitem value="Bandeja Seguimiento" url="/faces/paginas/bandejaSeguimiento.xhtml" icon="ui-icon-star" />
+			<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml" icon="ui-icon-star" />
 			<p:menuitem value="Instrucciones" url="/faces/paginas/instrucciones.xhtml" icon="ui-icon-star" />
 		</p:tabMenu>
 		<h:form id="frmMnt">
@@ -262,88 +262,81 @@
 		</table>
 		
 		<h:outputLabel value="#{solicitudMB.textoTotalResultados}"/>
-		
-		<table border="0">	
-			<tbody>
-			<tr>	
-				<td>
-					<p:panel header="Resultados" id="panelRes" >
-						<p:dataTable value="#{solicitudMB.solicitudes}" var="tbl" rows="5"
-								paginatorPosition="bottom" scrollable="true" scrollWidth="950"  scrollHeight="300"
-								paginator="true"
-								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-								rowsPerPageTemplate="5,10,15"
-								emptyMessage="">
-			
-								<p:column headerText="Codigo">
-                                       <p:commandLink value="#{tbl.codSoli}" action="#{solicitudRegMB.redirectDetalleSolicitud}" ajax="false">
-                                       		<f:param value="#{tbl.codSoli}" id="prm_codSoli" name="prm_codSoli"></f:param>
-                                       </p:commandLink>
-                                </p:column>
-								
-								<p:column headerText="Cod. Oficina" width="60">
-									<h:outputText value="#{tbl.tiivsOficina1.codOfi}"/>	
-								</p:column>
-								
-								<p:column headerText="Oficina" width="130">
-									<h:outputText value="#{tbl.tiivsOficina1.desOfi}"/>	
-								</p:column>
-								
-								<p:column headerText="Poderdante" width="100">
-									<h:outputText value="#{tbl.txtPoderdante}"/>		
-								</p:column>
-								
-								<p:column headerText="Apoderado" width="100">
-									<h:outputText value="#{tbl.txtApoderado}"/>		
-								</p:column>
 				
-								<p:column headerText="Tipo Operacion" width="100">
-									<h:outputText value="#{tbl.operacionesBancarias}"/>					
-								</p:column>
-								
-								<p:column headerText="Importe" width="70">
-									<h:outputText value="#{tbl.importe}"/>	
-								</p:column>
-								
-								<p:column headerText="Moneda" width="40">
-									<h:outputText value="#{tbl.desMoneda}"/>
-								</p:column>
-								
-								<p:column headerText="Fecha Respuesta" width="100">
-									<h:outputText value="#{tbl.fechaRespuesta}"/>	
-								</p:column>
-								
-								<p:column headerText="Fecha Envio"  width="70">
-									<h:outputText value="#{tbl.fechaEnvio}"/>	
-								</p:column>
-								
-								<p:column headerText="Fecha Estado"  width="70">
-									<h:outputText value="#{tbl.fechaEstado}"/>
-								</p:column>
-								
-								<p:column headerText="Estado" width="50">
-									<h:outputText value="#{tbl.txtEstado}"/>	
-								</p:column>
-								
-								<p:column headerText="Estudio"  width="75">
-									<h:outputText value="#{tbl.estudio}"/>	
-								</p:column>
-								
-								<p:column headerText="Nivel"  width="50">
-									<h:outputText value=""/>	
-								</p:column>
-							
-					   </p:dataTable>
-				   </p:panel>	
-			   </td>
-			</tr>
-		  </tbody>
-		</table>
+		<p:panel header="Resultados" id="panelRes" >
+			<p:dataTable value="#{solicitudMB.solicitudes}" var="tbl" rows="5"
+					paginatorPosition="bottom"
+					paginator="true"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+					rowsPerPageTemplate="5,10,15"
+					emptyMessage="">
+
+					<p:column headerText="Codigo">
+                                       <p:commandLink value="#{tbl.codSoli}" action="#{solicitudRegMB.redirectDetalleSolicitud}" ajax="false">
+                                       <f:param value="#{tbl.codSoli}" id="prm_codSoli" name="prm_codSoli"></f:param>
+                                       </p:commandLink>
+                     </p:column>
+					
+					<p:column headerText="Cod. Oficina">
+						<h:outputText value="#{tbl.tiivsOficina1.codOfi}"/>	
+					</p:column>
+					
+					<p:column headerText="Oficina">
+						<h:outputText value="#{tbl.tiivsOficina1.desOfi}"/>	
+					</p:column>
+					
+					<p:column headerText="Poderdante">
+						<h:outputText value="#{tbl.txtPoderdante}"/>		
+					</p:column>
+					
+					<p:column headerText="Apoderado">
+						<h:outputText value="#{tbl.txtApoderado}"/>		
+					</p:column>
+	
+					<p:column headerText="Tipo Operacion">
+						<h:outputText value="#{tbl.operacionesBancarias}"/>					
+					</p:column>
+					
+					<p:column headerText="Importe">
+						<h:outputText value="#{tbl.importe}"/>	
+					</p:column>
+					
+					<p:column headerText="Moneda">
+						<h:outputText value="#{tbl.desMoneda}"/>
+					</p:column>
+					
+					<p:column headerText="Fecha Respuesta">
+						<h:outputText value="#{tbl.fechaRespuesta}"/>	
+					</p:column>
+					
+					<p:column headerText="Fecha Envio">
+						<h:outputText value="#{tbl.fechaEnvio}"/>	
+					</p:column>
+					
+					<p:column headerText="Fecha Estado">
+						<h:outputText value="#{tbl.fechaEstado}"/>
+					</p:column>
+					
+					<p:column headerText="Estado">
+						<h:outputText value="#{tbl.estado}"/>	
+					</p:column>
+					
+					<p:column headerText="Estudio">
+						<h:outputText value="#{tbl.estudio}"/>	
+					</p:column>
+					
+					<p:column headerText="Nivel">
+						<h:outputText value=""/>	
+					</p:column>
+				
+		   </p:dataTable>
+		</p:panel>	
+		
 		<table border="0">
 			<tr>
-				<td >
+				<td align="right">
 					<p:commandButton value="Exportar" ajax="false"/>
-					
+					<p:spacer height="15"/>
 				</td>
 			</tr>	
 		</table>
