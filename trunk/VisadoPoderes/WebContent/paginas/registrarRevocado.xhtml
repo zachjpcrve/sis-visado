@@ -15,70 +15,79 @@
 				<tr>
 					<td>
 						<fieldset>
-						
-								<legend class="fielset">Revocados</legend>
-								<p:spacer width="0" height="30" />
-								<h:outputLabel class="fielset" value="Datos del Apoderado (Revocado):" />
-								
-								<h:panelGrid columns="4" id="gridLabels1" style="width: 800px">
-									<h:outputLabel value="*Tipo de DOI:" />
-									<p:selectOneMenu id="cboTipoDOI">
-										<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-									</p:selectOneMenu>
-									<h:outputLabel value="*Nro. de DOI:" />
-									<h:inputText styleClass="inputText" value="" disabled="false" />
 
-									<h:outputLabel value="*Apellido Paterno:" />
-									<h:inputText styleClass="inputText" value="" disabled="false" />
-									<h:outputLabel value="*Apellido Materno:" />
-									<h:inputText styleClass="inputText" value="" disabled="false" />
+							<legend class="fielset">Revocados</legend>
+							<p:spacer width="0" height="30" />
+							<h:outputLabel class="fielset"
+								value="Datos del Apoderado (Revocado):" />
 
-									<h:outputLabel value="*Primer Nombre:" />
-									<h:inputText styleClass="inputText" value="" disabled="false" />
-									<h:outputLabel value="*Segundo Nombre:" />
-									<h:inputText styleClass="inputText" value="" disabled="false" />
+							<h:panelGrid columns="4" id="gridLabels1" style="width: 800px">
+								<h:outputLabel value="*Tipo de DOI:" />
+								<p:selectOneMenu id="cboTipoDOI">
+									<f:selectItem itemLabel="DNI" itemValue="" />
+									<f:selectItem itemLabel="C. EXTRANJ" itemValue="" />
+									<f:selectItem itemLabel="PASAPORTE" itemValue="" />
+									<f:selectItem itemLabel="OTROS" itemValue="" />
+									<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+								</p:selectOneMenu>
+								<h:outputLabel value="*Nro. de DOI:" />
+								<h:inputText styleClass="inputText" value="" disabled="false" maxlength="13" />
 
-									<h:outputLabel value="*Estado:" />
-									<p:selectOneMenu id="cboEstado">
-										<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-									</p:selectOneMenu>
-								</h:panelGrid>
+								<h:outputLabel value="*Apellido Paterno:" />
+								<h:inputText styleClass="inputText" value="" disabled="false" maxlength="30" />
+								<h:outputLabel value="*Apellido Materno:" />
+								<h:inputText styleClass="inputText" value="" disabled="false" maxlength="30" />
 
-								<p:spacer width="0" height="30" />
-								<h:outputLabel class="fielset" value="Datos del Poderdante:" />
-							
-								<h:panelGrid columns="4" id="gridLabels2" style="width: 800px">
-									<h:outputLabel value="Cliente:" />
-									<h:selectBooleanCheckbox id="isCLiente" />
-									<h:outputLabel value="*Código Central:" />
-									<h:inputText styleClass="inputText" value="" disabled="false" />
+								<h:outputLabel value="*Primer Nombre:" />
+								<h:inputText styleClass="inputText" value="" disabled="false" maxlength="30"/>
+								<h:outputLabel value="*Segundo Nombre:" />
+								<h:inputText styleClass="inputText" value="" disabled="false" maxlength="30" />
 
-									<h:outputLabel value="*Tipo de DOI:" />
-									<p:selectOneMenu id="cboTipoDoiPoderdante">
-										<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-									</p:selectOneMenu>
-									<h:outputLabel value="*Nro. de DOI:" />
-									<h:inputText styleClass="inputText" value="" disabled="false" />
+								<h:outputLabel value="*Estado:" />
+								<p:selectOneMenu id="cboEstado">
+									<f:selectItem itemLabel="Activo" itemValue="" />
+									<f:selectItem itemLabel="Inactivo" itemValue="" />
+									<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+								</p:selectOneMenu>
+							</h:panelGrid>
 
-									<h:outputLabel value="*Apellido Paterno:" />
-									<h:inputText styleClass="inputText" value="" disabled="false" />
-									<h:outputLabel value="*Apellido Materno:" />
-									<h:inputText styleClass="inputText" value="" disabled="false" />
+							<p:spacer width="0" height="30" />
+							<h:outputLabel class="fielset" value="Datos del Poderdante:" />
 
-									<h:outputLabel value="*Primer Nombre:" />
-									<h:inputText styleClass="inputText" value="" disabled="false" />
-									<h:outputLabel value="*Segundo Nombre:" />
-									<h:inputText styleClass="inputText" value="" disabled="false" />
-								</h:panelGrid>								
+							<h:panelGrid columns="4" id="gridLabels2" style="width: 800px">
+								<h:outputLabel value="Cliente:" />
+								<h:selectBooleanCheckbox id="isCLiente" />
+								<h:outputLabel value="*Código Central:" />
+								<h:inputText styleClass="inputText" value="" disabled="true" maxlength="13" />
+
+								<h:outputLabel value="*Tipo de DOI:" />
+								<p:selectOneMenu id="cboTipoDoiPoderdante">
+									<f:selectItem itemLabel="DNI" itemValue="" />
+									<f:selectItem itemLabel="C. EXTRANJ" itemValue="" />
+									<f:selectItem itemLabel="PASAPORTE" itemValue="" />
+									<f:selectItem itemLabel="OTROS" itemValue="" />
+									<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+								</p:selectOneMenu>
+								<h:outputLabel value="*Nro. de DOI:" />
+								<h:inputText styleClass="inputText" value="" disabled="false" maxlength="13" />
+
+								<h:outputLabel value="*Apellido Paterno:" />
+								<h:inputText styleClass="inputText" value="" disabled="false" maxlength="30"/>
+								<h:outputLabel value="*Apellido Materno:" />
+								<h:inputText styleClass="inputText" value="" disabled="false" maxlength="30" />
+
+								<h:outputLabel value="*Primer Nombre:" />
+								<h:inputText styleClass="inputText" value="" disabled="false" maxlength="30"/>
+								<h:outputLabel value="*Segundo Nombre:" />
+								<h:inputText styleClass="inputText" value="" disabled="false" maxlength="30"/>
+							</h:panelGrid>
 						</fieldset>
 					</td>
 				</tr>
 				<tr>
-					<td>
-						<h:panelGroup style="display:block; text-align:right">
-							<p:commandButton value="Aceptar" icon="ui-icon-disk" />
-						</h:panelGroup>
-					</td>
+					<td><h:panelGroup style="display:block; text-align:right">
+							<p:commandButton value="Aceptar" ajax="false" icon="ui-icon-disk" action="#{revocadosMB.guardar}" />
+						</h:panelGroup></td>
 				</tr>
 			</table>
 		</h:form>

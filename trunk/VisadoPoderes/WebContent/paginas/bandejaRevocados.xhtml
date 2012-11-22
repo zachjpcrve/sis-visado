@@ -80,15 +80,13 @@
 				</tr>
 			</table>
 
-			<h:panelGrid columns="3" id="gridButtons" style="width: 800px">
+			<h:panelGrid columns="2" id="gridButtons" style="width: 800px">
 				<h:outputLabel
 					value="Total de registros: #{revocadosMB.nroRegistros} Registros" />
-				<h:panelGrid columns="3">
+				<h:panelGrid columns="2">
 					<p:commandButton value="Nuevo" action="#{revocadosMB.reset}"
 						ajax="false" />
 					<p:commandButton value="Buscar" action="#{revocadosMB.buscar}"
-						ajax="false" icon="ui-icon-search" />
-					<p:commandButton value="Limpiar" action="#{revocadosMB.limpiar}"
 						ajax="false" />
 				</h:panelGrid>
 				<p:spacer width="50" height="10" />
@@ -125,14 +123,15 @@
 						<h:outputText value="#{revocado.codigoRegistro}" />
 					</p:column>
 					<p:column headerText="Acción">
-						 <p:commandButton id="selectButton" icon="ui-icon-pencil" title="Editar">  
-			                  
+						 <p:commandButton id="selectButton" action="#{revocadosMB.editar}"
+						 	 icon="ui-icon-pencil" title="Editar">  			                  
 			            </p:commandButton>  
 					</p:column>
 				</p:dataTable>
 				<f:facet name="footer">
 					<h:panelGroup style="display:block; text-align:right">
-						<p:commandButton value="Exportar" icon="ui-icon-disk" />
+						<p:commandButton value="Exportar" action="#{revocadosMB.editar}"
+						icon="ui-icon-disk" />
 					</h:panelGroup>
 				</f:facet>
 			</h:panelGrid>
