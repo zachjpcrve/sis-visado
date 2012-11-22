@@ -151,6 +151,7 @@ public class SolicitudMB
 		Busqueda filtroSol= Busqueda.forClass(TiivsSolicitud.class);
 		String nomTipoDocPoder="";
 		String nomTipoDocApod="";
+		solicitudes = new ArrayList<TiivsSolicitud>();
 		
 		//Filtro por codigo de solicitud
 		if (getCodSolicitud().compareTo("")!=0)
@@ -282,7 +283,7 @@ public class SolicitudMB
 		{
 			System.out.println("Buscando territorio: " + getIdTerr());
 			filtroSol.createAlias("tiivsOficina1", "ofic");
-			filtroSol.add(Restrictions.eq("ofic.codTerr", getIdTerr()));
+			filtroSol.add(Restrictions.eq("ofic.codTerr", getIdTerr().trim()));
 		}
 				
 		try {
@@ -302,26 +303,22 @@ public class SolicitudMB
 			
 			for (TiivsSolicitud tmpSol: solicitudes)
 			{
+				//Se setea la descripcion de la columna moneda
 				if (tmpSol.getMoneda()!=null)
 				{
-					if (tmpSol.getMoneda().equalsIgnoreCase(lstMoneda.get(0).getCodMoneda()))
-					{
-						tmpSol.setDesMoneda(lstMoneda.get(0).getDesMoneda());
-					}
+					tmpSol.setDesMoneda(buscarDescripcionMoneda(tmpSol.getMoneda()));
 				}
 				
+				//Se setea la columna estudio
 				if (tmpSol.getRegAbogado()!=null)
 				{
-					if (tmpSol.getRegAbogado().equals(lstMiembros.get(0).getCodMiembro()))
-					{
-						tmpSol.setEstudio(lstMiembros.get(0).getEstudio());
-					}
+					tmpSol.setEstudio(buscarDescripcionEstudio(tmpSol.getRegAbogado()));
 				}
 				
 				//Se obtiene la descripcion del documento del Poderdante
 				if (tmpSol.getNumDocPoder()!=null)
 				{
-					if (tmpSol.getTipDocPoder().equals(lstTipoDocumentos.get(0).getCodTipoDoc()))
+					if (tmpSol.getTipDocPoder().equalsIgnoreCase(lstTipoDocumentos.get(0).getCodTipoDoc()))
 					{
 						nomTipoDocPoder=lstTipoDocumentos.get(0).getDescripcion();
 					}
@@ -340,7 +337,7 @@ public class SolicitudMB
 				//Se obtiene la descripcion del documento del Apoderado
 				if (tmpSol.getNumDocApoder()!=null)
 				{
-					if (tmpSol.getTipDocApoder().equals(lstTipoDocumentos.get(0).getCodTipoDoc()))
+					if (tmpSol.getTipDocApoder().equalsIgnoreCase(lstTipoDocumentos.get(0).getCodTipoDoc()))
 					{
 						nomTipoDocApod=lstTipoDocumentos.get(0).getDescripcion();
 					}
@@ -359,7 +356,7 @@ public class SolicitudMB
 				//Se obtiene y setea la descripcion del Estado en la grilla
 				if (tmpSol.getEstado()!=null)
 				{
-					if (tmpSol.getEstado().equals(lstEstado.get(0).getCodEstado()))
+					if (tmpSol.getEstado().trim().equalsIgnoreCase(lstEstado.get(0).getCodEstado()))
 					{
 						tmpSol.setTxtEstado(lstEstado.get(0).getDescripcion());
 					}
@@ -391,26 +388,22 @@ public class SolicitudMB
 		
 		for (TiivsSolicitud tmpSol: solicitudes)
 		{
+			//Se setea la descripcion de la columna moneda
 			if (tmpSol.getMoneda()!=null)
 			{
-				if (tmpSol.getMoneda().equalsIgnoreCase(lstMoneda.get(0).getCodMoneda()))
-				{
-					tmpSol.setDesMoneda(lstMoneda.get(0).getDesMoneda());
-				}
+				tmpSol.setDesMoneda(buscarDescripcionMoneda(tmpSol.getMoneda()));
 			}
 			
+			//Se setea la columna estudio
 			if (tmpSol.getRegAbogado()!=null)
 			{
-				if (tmpSol.getRegAbogado().equals(lstMiembros.get(0).getCodMiembro()))
-				{
-					tmpSol.setEstudio(lstMiembros.get(0).getEstudio());
-				}
+				tmpSol.setEstudio(buscarDescripcionEstudio(tmpSol.getRegAbogado()));
 			}
 			
 			//Se obtiene la descripcion del documento del Poderdante
 			if (tmpSol.getNumDocPoder()!=null)
 			{
-				if (tmpSol.getTipDocPoder().equals(lstTipoDocumentos.get(0).getCodTipoDoc()))
+				if (tmpSol.getTipDocPoder().equalsIgnoreCase(lstTipoDocumentos.get(0).getCodTipoDoc()))
 				{
 					nomTipoDocPoder=lstTipoDocumentos.get(0).getDescripcion();
 				}
@@ -429,7 +422,7 @@ public class SolicitudMB
 			//Se obtiene la descripcion del documento del Apoderado
 			if (tmpSol.getNumDocApoder()!=null)
 			{
-				if (tmpSol.getTipDocApoder().equals(lstTipoDocumentos.get(0).getCodTipoDoc()))
+				if (tmpSol.getTipDocApoder().equalsIgnoreCase(lstTipoDocumentos.get(0).getCodTipoDoc()))
 				{
 					nomTipoDocApod=lstTipoDocumentos.get(0).getDescripcion();
 				}
@@ -454,6 +447,34 @@ public class SolicitudMB
 				}
 			}
 		}
+	}
+	
+	public String buscarDescripcionMoneda(String codMoneda)
+	{
+		String descripcion="";
+		for (Moneda tmpMoneda: lstMoneda)
+		{
+			if (tmpMoneda.getCodMoneda().equalsIgnoreCase(codMoneda))
+			{
+				descripcion = tmpMoneda.getDesMoneda();
+				break;
+			}
+		}
+		return descripcion;
+	}
+	
+	public String buscarDescripcionEstudio(String codEstudio)
+	{
+		String descripcion="";
+		for (TiivsMiembro tmpMiembros: lstMiembros)
+		{
+			if (tmpMiembros.getCodMiembro().equalsIgnoreCase(codEstudio))
+			{
+				descripcion = tmpMiembros.getDescripcion();
+				break;
+			}
+		}
+		return descripcion;
 	}
 	
 	public void cargarMiembros()
