@@ -37,7 +37,7 @@
 			<table border="0" >
 				<tbody>
 					<tr>
-						<td class="styleLegend2" width="103">
+						<td class="styleLegend2" width="203">
 						<fieldset style="width:1000px;" class="fielset">
 							<h:outputText title="Información General" value="Información General" styleClass="outputText" />
 							<p:separator />
@@ -45,7 +45,7 @@
 									<tbody>
 									    <tr>
 										  <td>  <h:outputText styleClass="outputText" id="txtCodNumSol" value="Nro Solicitud:" /></td>
-										  <td>  <h:inputText styleClass="inputText" id="text1" style="width:100px;" value="#{solicitudMB.solicitudModificar.codSoli}"
+										  <td>  <h:inputText styleClass="inputText" id="text1" style="width:100px;" value="#{ solicitudRegMB.solicitudModificar.codSoli}"
 																	disabled="false" readonly="true" /></td>
 										  <td> 	<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtCodNumSol" /></td>
 										  <td>	<p:tooltip for="tooltxtCodNumSol" value="Nro Solicitud" showEffect="slide" /></td>
@@ -53,7 +53,7 @@
 										  <td> <h:outputText styleClass="outputText" id="text3" value="Estado:" /></td>
 										  <td> <h:inputText styleClass="inputText" id="txtEstado"
 																	style="width:100px;"
-																	value="#{solicitudMB.solicitudModificar.descEstado}"
+																	value="#{ solicitudRegMB.solicitudModificar.descEstado}"
 																	disabled="false" readonly="true"/></td>
 										<td><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtEstado" /></td>
 										<td><p:tooltip for="tooltxtEstado" value="Estado solicitud" showEffect="slide" /></td>
@@ -62,6 +62,7 @@
 													<h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
 												<td><p:selectOneMenu id="cboOficina">
 																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+																	<f:selectItems value="#{solicitudMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.desOfi}" />
 													</p:selectOneMenu></td>
 												<td><p:graphicImage value="/resources/images/pregunta.jpg"
 																	id="toolcboOficina" /></td>
@@ -69,7 +70,7 @@
 															
 										         <td><h:inputText styleClass="inputText" id="txtTerritorio"
 																	style="width:100px;"
-																	value="#{solicitudMB.solicitudModificar.desOfi}"
+																	value="#{ solicitudRegMB.solicitudModificar.desOfi}"
 																	readonly="true" /></td>
 											     <td><p:graphicImage value="/resources/images/pregunta.jpg"
 																	id="tooltxtTerritorio" /></td>
@@ -82,7 +83,7 @@
 																	value="Nro Vaucher *" /></td>
 													<td> <h:inputText styleClass="inputText" id="txtNroVaucher"
 																	style="width:100px;"
-																	value="#{solicitudMB.solicitudModificar.desOfi}"
+																	value="#{ solicitudRegMB.solicitudModificar.desOfi}"
 																	readonly="true" /></td>
 													<td><p:graphicImage value="/resources/images/pregunta.jpg"
 																	id="tooltxtNroVaucher" /></td>
@@ -93,7 +94,7 @@
 																	value="Comision" /></td>
 													<td><h:inputText styleClass="inputText" id="txtComision"
 																	style="width:100px;"
-																	value="#{solicitudMB.solicitudModificar.desOfi}"
+																	value="#{ solicitudRegMB.solicitudModificar.desOfi}"
 																	readonly="true" /></td>
 													<td><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtComision" /></td>
 													<td><p:tooltip for="tooltxtComision" value="Comision" showEffect="slide" /></td>
@@ -101,7 +102,7 @@
 													<td><h:outputText styleClass="outputText" id="outImpTotal" value="Importe Total" /> </td>
 													<td><h:inputText styleClass="inputText" id="txtImpTotal"
 																	style="width:100px;"
-																	value="#{solicitudMB.solicitudModificar.strImporte}"
+																	value="#{ solicitudRegMB.solicitudModificar.strImporte}"
 																	disabled="false" readonly="true" /></td>
 													<td><p:graphicImage value="/resources/images/pregunta.jpg"
 																	id="tooltxtImpTotal" /></td>
@@ -116,128 +117,122 @@
 								<tr>
 									<td class="styleLegend2" width="783">
 										<fieldset style="width:1000px;" class="fielset">
-											<h:outputText title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
-												          value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" />
+										<table >
+										<tr>
+											 <td style="width:380px;"><h:outputText title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"  value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" /></td>
+											 <td></td>
+											 <td></td>
+											 <td></td>
+											 <td style="width:50px;"></td>
+											 <td style="width:50px;"><h:outputText styleClass="outputText" id="outCodCentral" value="Código Central:" /></td>
+											 <td ><p:graphicImage value="/resources/images/pregunta.jpg"	id="tooltxtCodCentral" /></td>
+			                                 <td><p:tooltip for="tooltxtCodCentral" value="Código Central" showEffect="slide" /></td>
+			                                 <td style="width:100px;"><h:outputText styleClass="outputText" id="outTipoDoiRes" value="DOI:" /></td>
+			                                 <td  style="width:100px;"><h:outputText styleClass="outputText" id="outNombres" value="Nombres:" /></td>
+			                                 <td><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtNombres" /></td>
+											 <td><p:tooltip for="tooltxtNombres" value="Nombre" showEffect="slide" /></td>
+											 <td style="width:100px;"><h:outputText styleClass="outputText" id="outApPaterno" value="Ap.Paterno:" /></td>
+											 <td style="width:100px;margin-left: 20px;"><h:outputText styleClass="outputText" id="outApMaterno" value="Ap.Materno:" /></td>
+										</tr>  
+			                               </table>
 											<p:separator styleClass="fielset" />
 											<table border="0" width="672">
 												<tbody>
 													<tr>
-														<h:panelGrid columns="6">
-															<h:panelGrid columns="3">
-																<h:outputText styleClass="outputText" id="outTipoDoi"
-																	value="T DOI/C Central*:" />
-																<p:selectOneMenu id="cboTipoDoi">
+														<td style="width:250px;margin-left: 100px;"><h:outputText styleClass="outputText" id="outTipoDoi" style="width:350px;"
+																	value="T DOI/C Central*:" /></td>
+														<td><p:selectOneMenu id="cboTipoDoi">
 																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-																</p:selectOneMenu>
-																<p:graphicImage value="/resources/images/pregunta.jpg"
-																	id="toolcboTipoDoi" />
-																<p:tooltip for="toolcboTipoDoi"
-																	value="Tipo DOI/Código Central" showEffect="slide" />
-															</h:panelGrid>
-															<h:panelGrid columns="3">
-																<h:outputText styleClass="outputText" id="outDoi"
-																	value="DOI:" />
-																<p:selectOneMenu id="cboDoi">
-																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-																</p:selectOneMenu>
-																<p:graphicImage value="/resources/images/pregunta.jpg"
-																	id="toolcboDoi" />
-																<p:tooltip for="toolcboDoi"
-																	value="Documento Obligatorio de Identidad"
-																	showEffect="slide" />
-															</h:panelGrid>
-															<h:panelGrid columns="1">
-																<p:commandButton value="Buscar" id="btnBuscar" onclick="dlgModalBusqueda.show();" />
-															</h:panelGrid>
-															<h:panelGrid columns="3">
-																<h:outputText styleClass="outputText" id="outCodCentral"
-																	value="Código Central:" />
-																<h:inputText styleClass="inputText" id="txtCodCentral"
-																	style="width:50px;"
-																	value="#{solicitudMB.solicitudModificar.strImporte}" />
-																<p:graphicImage value="/resources/images/pregunta.jpg"
-																	id="tooltxtCodCentral" />
-																<p:tooltip for="tooltxtCodCentral"
-																	value="Código Central" showEffect="slide" />
-															</h:panelGrid>
-															<h:panelGrid columns="2">
-																<h:outputText styleClass="outputText" id="outTipoDoiRes"
-																	value="DOI:" />
-																<h:inputText styleClass="inputText" id="txtDoiRes"
-																	style="width:50px;"
-																	value="#{solicitudMB.solicitudModificar.strImporte}" />
-															</h:panelGrid>
-															<h:panelGrid columns="3">
-																<h:outputText styleClass="outputText" id="outNombres"
-																	value="Nombres:" />
-																<h:inputText styleClass="inputText" id="txtNombres"
-																	style="width:100px;"
-																	value="#{solicitudMB.solicitudModificar.poderante}" />
-																<p:graphicImage value="/resources/images/pregunta.jpg"
-																	id="tooltxtNombres" />
-																<p:tooltip for="tooltxtNombres" value="Nombre Completo"
-																	showEffect="slide" />
-															</h:panelGrid>
-														</h:panelGrid>
-
-														<h:panelGrid columns="7">
-															<h:panelGrid columns="3">
-																<h:outputText styleClass="outputText" id="outTipoReg"
-																	value="T Registro*:" />
-																<p:selectOneMenu id="cboTipoReg">
-																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-																</p:selectOneMenu>
-																<p:graphicImage value="/resources/images/pregunta.jpg"
-																	id="toolcboTipoReg" />
-																<p:tooltip for="toolcboTipoReg" value="Tipo de Registro"
-																	showEffect="slide" />
-															</h:panelGrid>
-															<h:panelGrid columns="5">
-																<h:outputText styleClass="outputText"
-																	id="outClasificacion" value="Clasificacion*:" />
-																<p:selectOneMenu id="cboClasificacion">
-																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-																</p:selectOneMenu>
-																<p:graphicImage value="/resources/images/pregunta.jpg"
-																	id="toolcboClasificacion" />
-																<p:tooltip for="toolcboClasificacion"
-																	value="Clasificación" showEffect="slide" />
-																<h:inputText styleClass="inputText" id="txtClasiSelect"
-																	style="width:50px;"
-																	value="#{solicitudMB.solicitudModificar.poderante}" />
-															</h:panelGrid>
-															<h:panelGrid columns="3">
-																<h:outputText styleClass="outputText" id="outEmail"
-																	value="Email :" />
-																<h:inputText styleClass="inputText" id="txtEmail"
-																	style="width:100px;"
-																	value="#{solicitudMB.solicitudModificar.poderante}" />
-																<p:graphicImage value="/resources/images/pregunta.jpg"
-																	id="tooltxtEmail" />
-																<p:tooltip for="tooltxtEmail" value="Email"
-																	showEffect="slide" />
-															</h:panelGrid>
-															<h:panelGrid columns="3">
-																<h:outputText styleClass="outputText" id="outCelular"
-																	value="Celular:" />
-																<h:inputText styleClass="inputText" id="txtCelular"
-																	style="width:100px;"
-																	value="#{solicitudMB.solicitudModificar.poderante}" />
-																<p:graphicImage value="/resources/images/pregunta.jpg"
-																	id="tooltxtCelular" />
-																<p:tooltip for="tooltxtCelular" value="Celular"
-																	showEffect="slide" />
-															</h:panelGrid>
-															<h:panelGrid columns="2">
-																<p:commandButton id="btnAgregar" value="Agregar" />
-																<p:commandButton id="btnLimpiar" value="Limpiar" />
-															</h:panelGrid>
-															
-															
-														</h:panelGrid>
+																</p:selectOneMenu></td>
+														<td><p:graphicImage value="/resources/images/pregunta.jpg"
+																	id="toolcboTipoDoi" /></td>
+														<td><p:tooltip for="toolcboTipoDoi"
+																	value="Tipo DOI/Código Central" showEffect="slide" /></td>
 														
-													<h:panelGrid columns="1" >
-													<fieldset >
+														<td><h:outputText styleClass="outputText" id="outDoi" value="DOI:" /></td>
+														<td> <p:selectOneMenu id="cboDoi">
+																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+																</p:selectOneMenu></td>
+														<td><p:graphicImage value="/resources/images/pregunta.jpg" id="toolcboDoi" /></td>
+														<td><p:tooltip for="toolcboDoi" value="Documento Obligatorio de Identidad"
+																	showEffect="slide" /></td>
+															
+														<td>
+																<p:commandButton value="Buscar" id="btnBuscar" onclick="dlgModalBusqueda.show();" />
+														</td>
+														
+														<td><h:inputText styleClass="inputText" id="txtCodCentral"
+																	style="width:50px;"
+																	value="#{ solicitudRegMB.solicitudModificar.strImporte}" /></td>
+														<td width="100px" colspan="2">  <h:inputText styleClass="inputText" id="txtDoiRes"
+																	style="width:100px;"
+																	value="#{ solicitudRegMB.solicitudModificar.strImporte}" /></td>
+																
+														<td colspan="2">		<h:inputText styleClass="inputText" id="txtNombres"
+																	style="width:100px;"
+																	value="#{ solicitudRegMB.solicitudModificar.poderante}" /></td>
+														<td colspan="3">		<h:inputText styleClass="inputText" id="txtApellidoPaterno"
+																	style="width:100px;"
+																	value="#{ solicitudRegMB.solicitudModificar.poderante}" /></td>
+														<td colspan="2">		<h:inputText styleClass="inputText" id="txtApellidoMaterno"
+																	style="width:100px;"
+																	value="#{ solicitudRegMB.solicitudModificar.poderante}" /></td>
+													</tr>
+													<tr>
+
+													<td>
+																<h:outputText styleClass="outputText" id="outTipoReg"
+																	value="T Registro*:" /></td>
+													<td>			<p:selectOneMenu id="cboTipoReg">
+																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+																</p:selectOneMenu></td>
+													<td><p:graphicImage value="/resources/images/pregunta.jpg"
+																	id="toolcboTipoReg" /></td>
+													<td><p:tooltip for="toolcboTipoReg" value="Tipo de Registro"
+																	showEffect="slide" /></td>
+														
+													<td>
+																<h:outputText styleClass="outputText"
+																	id="outClasificacion" value="Clasificacion*:" /></td>
+													<td><p:selectOneMenu id="cboClasificacion">
+																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+																</p:selectOneMenu></td>
+													<td><p:graphicImage value="/resources/images/pregunta.jpg"
+																	id="toolcboClasificacion" /></td>
+													<td>			<p:tooltip for="toolcboClasificacion"
+																	value="Clasificación" showEffect="slide" /></td>
+													<td><h:inputText styleClass="inputText" id="txtClasiSelect"
+																	style="width:50px;"
+																	value="#{ solicitudRegMB.solicitudModificar.poderante}" /></td>
+													<td>
+																<h:outputText styleClass="outputText" id="outEmail"
+																	value="Email :" /></td>
+													<td><h:inputText styleClass="inputText" id="txtEmail"
+																	style="width:100px;"
+																	value="#{ solicitudRegMB.solicitudModificar.poderante}" /></td>
+													<td><p:graphicImage value="/resources/images/pregunta.jpg"
+																	id="tooltxtEmail" /></td>
+													<td><p:tooltip for="tooltxtEmail" value="Email"
+																	showEffect="slide" /></td>
+													<td><h:outputText styleClass="outputText" id="outCelular"
+																	value="Celular:" /></td>
+													<td><h:inputText styleClass="inputText" id="txtCelular"
+																	style="width:100px;"
+																	value="#{ solicitudRegMB.solicitudModificar.poderante}" /></td>
+													<td><p:graphicImage value="/resources/images/pregunta.jpg"
+																	id="tooltxtCelular" /></td>
+													<td><p:tooltip for="tooltxtCelular" value="Celular"
+																	showEffect="slide" /></td>
+													<td width="50px"><h:panelGrid columns="2">
+														<p:commandButton id="btnAgregar" value="Agregar" style="padding-left:0em !important;"/>
+													   <p:commandButton id="btnLimpiar" value="Limpiar" style="padding-left:0.1em !important;"/>
+													</h:panelGrid>
+													</td>
+													
+												</tr>
+												<tr><td  align="center" ><p:spacer/> </td></tr>
+												<tr>
+													<td  align="center" width="1000px" colspan="18"> 
 															<p:dataTable  var="tbl" rows="20"
 															emptyMessage="No hay resultados en la bandeja"
 															paginatorPosition="bottom" 
@@ -263,8 +258,8 @@
 															<p:column headerText="Eliminar">
 															</p:column>
 															</p:dataTable>
-														</fieldset>
-														</h:panelGrid>
+														
+														</td>
 													</tr>
 					</tbody>
 				</table>
@@ -284,10 +279,12 @@
 									</td>
 									<td><p:selectOneMenu styleClass="selectOneMenu"
 										id="cboTipoSolicitud" 
-										value="#{solicitudMB.solicitudModificar.codOper}"
+										value="#{ solicitudRegMB.solicitudModificar.codOper}"
 										immediate="true" onchange="this.form.submit()"
 											disabled="false">
 										<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
+										<f:selectItems value="#{solicitudMB.lstTipoSolicitud}" var="tipoSol"
+													itemValue="#{tipoSol.codOper}" itemLabel="#{tipoSol.desOper}" />
                                          </p:selectOneMenu>
 									</td>
 										<td> <p:commandButton  id="btnEscaner" value="Escaner"/></td>
@@ -296,7 +293,7 @@
 										<td><h:outputText styleClass="outputText" id="text19" value="Documentos:"></h:outputText></td>
 										<td><p:selectOneListbox styleClass="selectOneListbox"
 																rendered="false"
-																value="#{solicitudMB.solicitudModificar.codOper}"
+																value="#{ solicitudRegMB.solicitudModificar.codOper}"
 																id="listbox1" size="1">
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 											</p:selectOneListbox>
@@ -307,8 +304,7 @@
 										<td> <p:commandButton  id="btnAceptar" value="Aceptar" /></td>
 										</tr>
 								<tr>
-									<td colspan="5">
-										<fieldset>
+									<td width="1000px;" colspan="11">
 											<p:dataTable  var="tblDocumentos" rows="20"
 															emptyMessage="No hay resultados en la bandeja"
 															paginatorPosition="bottom" 
@@ -328,7 +324,7 @@
 															<p:column headerText="Eliminar">
 															</p:column>
 															</p:dataTable>
-														</fieldset>
+													
 													</td>
 													</tr>
 												</tbody>
@@ -352,10 +348,12 @@
 									</td>
 									<td><p:selectOneMenu styleClass="selectOneMenu"
 										id="cboTipoOperacion" 
-										value="#{solicitudMB.solicitudModificar.codOper}"
+										value="#{ solicitudRegMB.solicitudModificar.codOper}"
 										immediate="true" onchange="this.form.submit()"
 											disabled="false">
 										<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
+										<f:selectItems value="#{solicitudMB.lstOpeBancaria}" var="opeBan"
+																		itemValue="#{opeBan.desOperBan}" itemLabel="#{opeBan.desOperBan}" />
                                          </p:selectOneMenu>
 									</td>
 									<td><h:outputText styleClass="outputText" id="outTipoMoneda"
@@ -363,7 +361,7 @@
 									</td>
 									<td><p:selectOneMenu styleClass="selectOneMenu"
 										id="cboMoneda" 
-										value="#{solicitudMB.solicitudModificar.codOper}"
+										value="#{solicitudRegMB.solicitudModificar.codOper}"
 										immediate="true" onchange="this.form.submit()" disabled="false">
 										<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
                                          </p:selectOneMenu>
@@ -385,8 +383,8 @@
 									<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria"/></td>
                                 </tr>
                                 <tr>
-									<td colspan="5">
-										<fieldset>
+									<td  align="center" width="1000px" colspan="11"> 
+									
 											<p:dataTable  var="tblOperaciones" rows="20"
 															emptyMessage="No hay resultados en la bandeja"
 															paginatorPosition="bottom" 
@@ -396,6 +394,7 @@
 															editable="true" >
 
 															<p:column headerText="Item">
+															<h:outputText value="123"></h:outputText>
 															</p:column>
 															<p:column headerText="Operación Bancaria" style="width:400px;">
 															</p:column>
@@ -412,7 +411,7 @@
 															<p:column headerText="Eliminar">
 															</p:column>
 															</p:dataTable>
-														</fieldset>
+													
 													</td>
 									</tr>
                                
