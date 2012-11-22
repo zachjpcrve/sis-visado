@@ -8,7 +8,7 @@
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
 <h:panelGrid columns="5">
-<p:tabMenu activeIndex="0" style="width:700px;">
+<p:tabMenu activeIndex="0" style="width:900px;">
 	<p:menuitem value="Solicitud" url="/faces/paginas/detalleSolicitudEstadoEnviado.xhtml" icon="ui-icon-star" />
 	<p:menuitem value="Instrucciones" url="/faces/paginas/instrucciones.xhtml" icon="ui-icon-star" />
 	
@@ -30,50 +30,50 @@
 				<tbody>
 					<tr>
 						<td class="styleLegend2" width="103">
-						<fieldset style="width:1000px;color:#002A5C;font-weight:bold">
+						<fieldset style="width:1000px;" class="fieldset">
 							<h:outputText title="Información General" value="Información General" styleClass="outputText"  />
 							<p:separator />
 								<table border="0">
 									<tbody>
 									    <tr>
-										  <td>  <h:outputText styleClass="outputText" id="txtCodNumSol" value="Nro Solicitud:" /></td>
-										  <td>  <h:outputText  id="text1" style="width:100px;" value="12345668"
+										  <td width="100">  <h:outputText styleClass="outputText" id="txtCodNumSol" value="Nro Solicitud:" /></td>
+										  <td width="150">  <h:outputText  id="text1" style="width:100px;" value="12345668"
 																	disabled="false" readonly="true" /></td>
 											
-										  <td> <h:outputText styleClass="outputText" id="text3" value="Estado:" /></td>
-										  <td> <h:outputText  id="txtEstado"
+										  <td width="100"> <h:outputText styleClass="outputText" id="text3" value="Estado:" /></td>
+										  <td width="150"> <h:outputText  id="txtEstado"
 																	style="width:100px;"
 																	value="Reservado"/></td>
 														
-										  <td><h:outputText styleClass="outputText" id="outOficina" value="Oficina:" /></td>
-										  <td><h:outputText  id="txtOficina"
+										  <td width="100"><h:outputText styleClass="outputText" id="outOficina" value="Oficina:" /></td>
+										  <td width="150"><h:outputText  id="txtOficina"
 																	style="width:100px;"
 																	value="456-San Isidro"/></td>
 									
 															
-										  <td><h:outputText  id="txtTerritorio"
+										  <td width="100"><h:outputText  id="txtTerritorio"
 																	style="width:100px;"
 																	value="Territorio Norte"/></td>
 									</tr>
 									<tr>
-										 <td><h:outputText styleClass="outputText" id="outNroVaucher"
+										 <td width="100"><h:outputText styleClass="outputText" id="outNroVaucher"
 																	value="Nro Vaucher *" /></td>
-										 <td> <h:outputText  id="txtNroVaucher"
+										 <td width="150"> <h:outputText  id="txtNroVaucher"
 																	style="width:100px;"
 																	value="12314566656"
 																	readonly="true" /></td>
 													
 													
-										<td><h:outputText styleClass="outputText" id="outComision"
+										<td width="100"><h:outputText styleClass="outputText" id="outComision"
 																	value="Comision" /></td>
-										<td><h:outputText  id="txtComision"
+										<td width="150"><h:outputText  id="txtComision"
 																	style="width:100px;"
 																	value="$ 150.00"
 																	readonly="true" /></td>
 													
 													
-										<td><h:outputText styleClass="outputText" id="outImpTotal" value="Importe Total" /> </td>
-										<td><h:outputText  id="txtImpTotal"
+										<td width="100"><h:outputText styleClass="outputText" id="outImpTotal" value="Importe Total" /> </td>
+										<td width="150"><h:outputText  id="txtImpTotal"
 																	style="width:100px;"
 																	value=" $550.50" /></td>
 													
@@ -85,7 +85,7 @@
 								</tr>
 								<tr>
 									<td class="styleLegend2" width="783">
-										<fieldset style="width:1000px;" class="outputText"> 
+										<fieldset style="width:1000px;" class="fieldset"> 
 											<h:outputText title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
 												          value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" />
 											<p:separator />
@@ -126,7 +126,7 @@
 			</tr>
 			<tr>
 				<td class="styleLegend2" width="683">
-					<fieldset style="width:1000px;">
+					<fieldset style="width:1000px;" class="fieldset">
 						<h:outputText title="Documentos por Tipo de Solicitud" 
 									  value="Documentos por Tipo de Solicitud" />
 							<p:separator />
@@ -134,7 +134,7 @@
 							<tbody>
 								
 								<tr>
-									<td colspan="5">
+									<td  align="center" width="1000px" colspan="11"> 
 									
 											<p:dataTable  var="tblDocumentos" rows="20"
 															emptyMessage="No hay resultados en la bandeja"
@@ -167,7 +167,7 @@
 
 								<tr>
 									<td class="styleLegend2" width="683">
-										<fieldset style="width:1000px;" class="outputText">
+										<fieldset style="width:1000px;" class="fieldset">
 											<h:outputText title="Operaciones Bancarias"
 												value="Operaciones Bancarias">
 											</h:outputText>
@@ -176,7 +176,7 @@
 								<table border="0">
 								
                                 <tr>
-									<td colspan="5">
+									<td  align="center" width="1000px" colspan="11"> 
 											<p:dataTable  var="tblOperaciones" rows="20"
 															emptyMessage="No hay resultados en la bandeja"
 															paginatorPosition="bottom" 
@@ -216,28 +216,7 @@
 				</tr>
 			</tbody>
 		</table>
-		
-<p:dialog id="modalBusqueda" header="Busqueda Cliente/No Cliente" widgetVar="dlgModalBusqueda" modal="true" height="300">  
- 
-    	<p:dataTable  var="tblOperaciones" rows="20"
-			emptyMessage="No hay resultados en la bandeja"
-			paginatorPosition="bottom" 
-			paginator="true"
-			paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-			rowsPerPageTemplate="5,10,15"
-			editable="true" >
 
-			<p:column headerText="Codigo Central">
-			</p:column>
-			<p:column headerText="Tipo de DOI" >
-			</p:column>
-			<p:column headerText="Nro de DOI" >
-			</p:column>
-			<p:column headerText="Nombre">
-			</p:column>
-			</p:dataTable>
-			<p:commandButton value="Agregar" id="btnAgregarBusqueda" />
-</p:dialog>
 
 	</ui:define>
 </ui:composition>
