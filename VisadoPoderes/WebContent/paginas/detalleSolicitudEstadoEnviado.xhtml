@@ -10,7 +10,7 @@
 <h:panelGrid columns="5">
 <p:tabMenu activeIndex="0" style="width:900px;">
 	<p:menuitem value="Solicitud" url="/faces/paginas/detalleSolicitudEstadoEnviado.xhtml" icon="ui-icon-star" />
-	<p:menuitem value="Instrucciones" url="/faces/paginas/instrucciones.xhtml" icon="ui-icon-star" />
+	<p:menuitem value="Instrucciones" url="/faces/paginas/comentarioSolicitudSeguimientoDictaminar.xhtml" icon="ui-icon-star" />
 	
 </p:tabMenu>
 
@@ -41,9 +41,7 @@
 																	disabled="false" readonly="true" /></td>
 											
 										  <td width="100"> <h:outputText styleClass="outputText" id="text3" value="Estado:" /></td>
-										  <td width="150"> <h:outputText  id="txtEstado"
-																	style="width:100px;"
-																	value="Reservado"/></td>
+										  <td width="150"> <h:outputText  id="txtEstado" style="width:100px;" 	value="Reservado"/></td>
 														
 										  <td width="100"><h:outputText styleClass="outputText" id="outOficina" value="Oficina:" /></td>
 										  <td width="150"><h:outputText  id="txtOficina"
@@ -86,14 +84,14 @@
 								<tr>
 									<td class="styleLegend2" width="783">
 										<fieldset style="width:1000px;" class="fieldset"> 
-											<h:outputText title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
+											<h:outputText title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" styleClass="outputText" 
 												          value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" />
 											<p:separator />
-											<table border="0" width="672">
+											<table border="0"  >
 												<tbody>
 													<tr>
+													<td  align="center" width="1000px" colspan="11"> 
 													
-													<h:panelGrid columns="1" >
 											
 															<p:dataTable  var="tbl" rows="20"
 															emptyMessage="No hay resultados en la bandeja"
@@ -117,8 +115,7 @@
 															</p:column>
 															
 															</p:dataTable>
-												
-														</h:panelGrid>
+												</td>
 													</tr>
 					</tbody>
 				</table>
@@ -127,7 +124,7 @@
 			<tr>
 				<td class="styleLegend2" width="683">
 					<fieldset style="width:1000px;" class="fieldset">
-						<h:outputText title="Documentos por Tipo de Solicitud" 
+						<h:outputText title="Documentos por Tipo de Solicitud" styleClass="outputText" 
 									  value="Documentos por Tipo de Solicitud" />
 							<p:separator />
 						<table border="0">
@@ -168,7 +165,7 @@
 								<tr>
 									<td class="styleLegend2" width="683">
 										<fieldset style="width:1000px;" class="fieldset">
-											<h:outputText title="Operaciones Bancarias"
+											<h:outputText title="Operaciones Bancarias" styleClass="outputText" 
 												value="Operaciones Bancarias">
 											</h:outputText>
 											<p:separator />
