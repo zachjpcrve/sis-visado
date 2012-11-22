@@ -42,6 +42,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private String estudio;
 	private String txtPoderdante;
 	private String txtApoderado;
+	private String txtEstado;
 
 	public TiivsSolicitud() {
 	}
@@ -336,4 +337,13 @@ public class TiivsSolicitud implements java.io.Serializable {
 	public void setTxtApoderado(String txtApoderado) {
 		this.txtApoderado = txtApoderado;
 	}
+
+	public String getTxtEstado() {
+		return txtEstado;
+	}
+
+	public void setTxtEstado(String txtEstado) {
+		this.txtEstado = txtEstado;
+	}
+	
 }

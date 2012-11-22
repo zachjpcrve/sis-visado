@@ -355,6 +355,15 @@ public class SolicitudMB
 				{
 					tmpSol.setTxtApoderado(nomTipoDocApod + ": " + tmpSol.getNumDocApoder() + " - " + tmpSol.getApoderado());
 				}
+				
+				//Se obtiene y setea la descripcion del Estado en la grilla
+				if (tmpSol.getEstado()!=null)
+				{
+					if (tmpSol.getEstado().equals(lstEstado.get(0).getCodEstado()))
+					{
+						tmpSol.setTxtEstado(lstEstado.get(0).getDescripcion());
+					}
+				}
 			}
 		}
 		
@@ -371,6 +380,7 @@ public class SolicitudMB
 		Busqueda filtroSol= Busqueda.forClass(TiivsSolicitud.class);
 		String nomTipoDocPoder="";
 		String nomTipoDocApod="";
+		String nomEstado="";
 		
 		try {
 			solicitudes =  solicDAO.buscarDinamico(filtroSol);
@@ -433,6 +443,15 @@ public class SolicitudMB
 			else
 			{
 				tmpSol.setTxtApoderado(nomTipoDocApod + ": " + tmpSol.getNumDocApoder() + " - " + tmpSol.getApoderado());
+			}
+			
+			//Se obtiene y setea la descripcion del Estado en la grilla
+			if (tmpSol.getEstado()!=null)
+			{
+				if (tmpSol.getEstado().trim().equalsIgnoreCase(lstEstado.get(0).getCodEstado()))
+				{
+					tmpSol.setTxtEstado(lstEstado.get(0).getDescripcion());
+				}
 			}
 		}
 	}
