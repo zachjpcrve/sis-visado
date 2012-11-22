@@ -47,7 +47,7 @@
 							<tbody>
 								<tr>
 									<td colspan="5">
-											<p:dataTable  var="tblDocumentos" rows="20"
+											<p:dataTable  var="d" rows="20" value="#{solicitudRegMB.lstSeguimiento}"
 															emptyMessage="No hay resultados en la bandeja"
 															paginatorPosition="bottom" 
 															paginator="true"
@@ -56,16 +56,19 @@
 															editable="true" >
 
 															<p:column headerText="Estado">
-															<p:outputLabel value="Registrado"></p:outputLabel>
+															<h:outputText value="#{d.estado}"/>
 															</p:column>
 															<p:column headerText="Nivel" style="width:400px;">
+															<h:outputText value="#{d.nivel}"/>
 															</p:column>
 															<p:column headerText="Fecha">
+															<h:outputText value="#{d.fecha}"/>
 															</p:column>
 															<p:column headerText="Usuario">
+															<h:outputText value="#{d.usuario}"/>
 															</p:column>
 															<p:column headerText="Obs">
-															<p:graphicImage value="/resources/images/bullet_red.jpg"></p:graphicImage>
+															<p:graphicImage value="/resources/images/lupita.jpg"></p:graphicImage>
 															</p:column>
 															</p:dataTable>
 													</td>
