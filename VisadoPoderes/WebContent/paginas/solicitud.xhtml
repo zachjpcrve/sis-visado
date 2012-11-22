@@ -143,6 +143,8 @@
 																	value="T DOI/C Central*:" /></td>
 														<td><p:selectOneMenu id="cboTipoDoi">
 																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+																	<f:selectItem itemLabel="DNI" itemValue="1" />
+																	<f:selectItem itemLabel="Pasaporte" itemValue="2" />
 																</p:selectOneMenu></td>
 														<td><p:graphicImage value="/resources/images/pregunta.jpg"
 																	id="toolcboTipoDoi" /></td>
@@ -150,9 +152,7 @@
 																	value="Tipo DOI/Código Central" showEffect="slide" /></td>
 														
 														<td><h:outputText styleClass="outputText" id="outDoi" value="DOI:" /></td>
-														<td> <p:selectOneMenu id="cboDoi">
-																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-																</p:selectOneMenu></td>
+														<td><h:outputText id="outDoitxt"/></td>
 														<td><p:graphicImage value="/resources/images/pregunta.jpg" id="toolcboDoi" /></td>
 														<td><p:tooltip for="toolcboDoi" value="Documento Obligatorio de Identidad"
 																	showEffect="slide" /></td>
@@ -185,6 +185,8 @@
 																	value="T Registro*:" /></td>
 													<td>			<p:selectOneMenu id="cboTipoReg">
 																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+																	<f:selectItem itemLabel="APODERADO" itemValue="1" />
+																	<f:selectItem itemLabel="PODERDANTE" itemValue="2" />
 																</p:selectOneMenu></td>
 													<td><p:graphicImage value="/resources/images/pregunta.jpg"
 																	id="toolcboTipoReg" /></td>
@@ -196,6 +198,9 @@
 																	id="outClasificacion" value="Clasificacion*:" /></td>
 													<td><p:selectOneMenu id="cboClasificacion">
 																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+																	<f:selectItem itemLabel="FALLECIDO" itemValue="1" />
+																	<f:selectItem itemLabel="INTERDECTO" itemValue="2" />
+																	<f:selectItem itemLabel="MENOR" itemValue="2" />
 																</p:selectOneMenu></td>
 													<td><p:graphicImage value="/resources/images/pregunta.jpg"
 																	id="toolcboClasificacion" /></td>
@@ -224,8 +229,8 @@
 													<td><p:tooltip for="tooltxtCelular" value="Celular"
 																	showEffect="slide" /></td>
 													<td width="50px"><h:panelGrid columns="2">
-														<p:commandButton id="btnAgregar" value="Agregar" style="padding-left:0em !important;"/>
-													   <p:commandButton id="btnLimpiar" value="Limpiar" style="padding-left:0.1em !important;"/>
+														<p:commandButton id="btnAgregar" value="Agregar" style="padding-left:0em !important;width:5px;"/>
+													   <p:commandButton id="btnLimpiar" value="Limpiar" style="padding-left:0.1em !important;width:5px;"/>
 													</h:panelGrid>
 													</td>
 													
@@ -364,6 +369,9 @@
 										value="#{solicitudRegMB.solicitudModificar.codOper}"
 										immediate="true" onchange="this.form.submit()" disabled="false">
 										<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
+										<f:selectItem itemLabel="SOLES" itemValue="1" />
+										<f:selectItem itemLabel="DOLARES" itemValue="2" />
+										<f:selectItem itemLabel="EUROS" itemValue="3" />
                                          </p:selectOneMenu>
 									</td>
 									<td><h:outputText styleClass="outputText" id="outImporte"
