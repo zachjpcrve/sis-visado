@@ -53,7 +53,6 @@ public class SeguridadMB {
             String codigoUsuario = sCodUsuarioBBVA;                                
              usuarioIILD = con.recuperarUsuario(codigoUsuario);	
     
-    logger.info("IIVP: " +"--autenticación-IIVS----------"  +usuarioIILD.getApellido1());
 		
 		//PARTE ESPACIO
 		if(password!=null){
@@ -76,7 +75,7 @@ public class SeguridadMB {
 		if(usuarioIILD==null){
 			logger.info("IIVP : Usuario es nulo");
 			request.getSession(true).setAttribute("strMensaje","Usuario no Encontrado");
-			response.sendRedirect("./sinAcceso.faces");
+			response.sendRedirect("./sinAcceso.jsp");
 		}else{
 			System.out.println("Codcargo: "+usuarioIILD.getCargo().getCodigo());
 			System.out.println("Codofi: "+usuarioIILD.getBancoOficina().getCodigo());
