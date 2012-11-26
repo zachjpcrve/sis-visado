@@ -17,4 +17,11 @@ public class ConstantesVisado {
 	public static final java.lang.String TIPO_FECHA_ENVIO="0001";
 	public static final java.lang.String TIPO_FECHA_RPTA="0002";
 	public static final java.lang.String SIMBOLO_PORCENTAJE="%";
+	/*SAMIRA*/
+	public static final String COD_GRUPO_ADM= "0000003";	
+	public static final String COD_GRUPO_JRD= "0000002";
+	public static final String COD_GRUPO_OFI= "0000001";
+	public static final String DES_GRUPO_ADM= "SERVICIOS JURIDICOS";	
+	public static final String DES_GRUPO_JRD= "ABOGADO";
+	public static final String DES_GRUPO_OFI= "OFICINA";
 }
