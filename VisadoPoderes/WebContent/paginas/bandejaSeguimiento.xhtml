@@ -8,7 +8,7 @@
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
 
-		<p:tabMenu activeIndex="0"  style="width:950px;margin-top: 0px; "   >
+		<p:tabMenu activeIndex="0"  style="width:1005px;margin-top: 0px; "   >
 			<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml" icon="ui-icon-star" />
 			<p:menuitem value="Instrucciones" url="/faces/paginas/instrucciones.xhtml" icon="ui-icon-star" />
 		</p:tabMenu>
@@ -97,10 +97,10 @@
 							<h:outputText styleClass="outputText" id="txtTipoOpe" value="T. de Operacion" />
 						</td>
 						<td >
-							<p:selectOneMenu value="#{solicitudMB.idTipoSol}" id="somTipoOpe">
-								<f:selectItem itemLabel="--TODOS--" itemValue="" />
-								<f:selectItems value="#{solicitudMB.lstTipoSolicitud}" var="tipoSol"
-									itemValue="#{tipoSol.codOper}" itemLabel="#{tipoSol.desOper}" />
+							<p:selectOneMenu value="#{solicitudMB.idOpeBan}" id="somTipoOpe" style="width:200px;">
+								<f:selectItem itemLabel="--Todos--" itemValue="" />
+								<f:selectItems value="#{solicitudMB.lstOpeBancaria}" var="tipoOpe"
+									itemValue="#{tipoOpe.codOperBan}" itemLabel="#{tipoOpe.desOperBan}" />
 							</p:selectOneMenu>
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTOperacion" /></td>
@@ -230,7 +230,7 @@
 						</td>
 						<td >
 							<p:selectOneMenu value="#{solicitudMB.idNivel}" id="somNivel">
-								<f:selectItem itemLabel="--TODOS--" itemValue="" />
+								<f:selectItem itemLabel="--Todos--" itemValue="" />
 								<f:selectItems value="#{solicitudMB.lstNivel}" var="niv"
 									itemValue="#{niv.codNiv}" itemLabel="#{niv.desNiv}" />
 							</p:selectOneMenu>
@@ -242,7 +242,7 @@
 						</td>
 						<td >
 							<p:selectOneMenu value="#{solicitudMB.idEstNivel}" id="somEstNivel">
-								<f:selectItem itemLabel="--TODOS--" itemValue="" />
+								<f:selectItem itemLabel="--Todos--" itemValue="" />
 								<f:selectItems value="#{solicitudMB.lstEstadoNivel}" var="estNiv"
 									itemValue="#{estNiv.codigoEstadoNivel}" itemLabel="#{estNiv.descripcion}" />
 							</p:selectOneMenu>
@@ -254,7 +254,7 @@
 						</td>
 						<td >
 							<p:selectOneMenu value="#{solicitudMB.idEstudio}" id="somEstudio">
-								<f:selectItem itemLabel="--TODOS--" itemValue="" />
+								<f:selectItem itemLabel="--Todos--" itemValue="" />
 								<f:selectItems value="#{solicitudMB.lstEstudio}" var="est"
 									itemValue="#{est.codEstudio}" itemLabel="#{est.desEstudio}" />
 							</p:selectOneMenu>
