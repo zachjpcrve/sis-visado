@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+<title>Seguridad</title>
+</h:head>
+<h:body>
+	<h:form id="frmLogin" name="frmLogin">
+		<p:messages id="mensajes" showDetail="false" />
+		<h:panelGrid columns="3">
+			<h:outputLabel value="Usuario" for="regemp" />
+			<h:inputText id="regemp" value="#{seguridadMB.sCodUsuarioBBVA}"
+				required="true" requiredMessage="Ingrese un usuario por favor"
+				validatorMessage="Minimo 2 caracteres">
+				<f:validateLength minimum="2" />
+			</h:inputText>
+			<h:inputText id="bs" value="#{seguridadMB.password}">
+			</h:inputText>
+		</h:panelGrid>
+		<p:commandButton value="Iniciar sesión" ajax="false"
+			action="#{seguridadMB.iniciarSession}" update="frmLogin"/>
+	</h:form>
+
+</h:body>
+</html>
