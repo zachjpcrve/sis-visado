@@ -24,4 +24,36 @@ public class ConstantesVisado {
 	public static final String DES_GRUPO_ADM= "SERVICIOS JURIDICOS";	
 	public static final String DES_GRUPO_JRD= "ABOGADO";
 	public static final String DES_GRUPO_OFI= "OFICINA";
+	
+	public static final String TOOLTIP_TIPO_FECHA_ENVIO="-Fecha de envio";
+	public static final String TOOLTIP_TIPO_FECHA_RPTA="-Fecha de respuesta";
+	
+	public static final String MSG_TOTAL_SIN_REGISTROS="No se encontraron coincidencias con los criterios ingresados";
+	public static final String MSG_TOTAL_REGISTROS="Total de registros: ";
+	public static final String MSG_REGISTROS=" registros.";
+	public static final String MSG_REGISTRO=" registro.";
+	public static final String MSG_TODOS="--Todos--";
+	
+	public static final String NOM_TBL_OFICINA="tiivsOficina1";
+	public static final String ALIAS_TBL_OFICINA="ofic";
+	public static final String CAMPO_COD_SOLICITUD="codSoli";
+	public static final String CAMPO_COD_OFICINA_ALIAS="ofic.codOfi";
+	public static final String CAMPO_NOM_OFICINA_ALIAS="ofic.desOfi";
+	public static final String CAMPO_COD_TERR_ALIAS="ofic.codTerr";
+	public static final String CAMPO_OPE_BANCARIAS="operacionesBancarias";
+	public static final String CAMPO_IMPORTE="importe";
+	public static final String CAMPO_PODERDANTE="poderante";
+	public static final String CAMPO_APODERADO="apoderado";
+	public static final String CAMPO_NUMDOC_PODERDANTE="numDocPoder";
+	public static final String CAMPO_NUMDOC_APODERADO="numDocApoder";
+	public static final String CAMPO_ESTUDIO="regAbogado";
+	public static final String CAMPO_FECHA_ENVIO="fechaEnvio";
+	public static final String CAMPO_FECHA_RPTA="fechaRespuesta";
+	public static final String CAMPO_COD_OFICINA="codOfi";
+	
+	public static final String NOM_TBL_TIPO_SERVICIO="tiivsTipoServicio";
+	public static final String ALIAS_TBL_TIPO_SERVICIO="tipoSer";
+	public static final String CAMPO_COD_OPE_ALIAS="tipoServ.codOper";
+	
+	public static final String CAMPO_COD_TERRITORIO="codTer";
 }
