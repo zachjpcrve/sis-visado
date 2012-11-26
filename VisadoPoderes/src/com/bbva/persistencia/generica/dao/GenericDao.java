@@ -21,5 +21,6 @@ public interface GenericDao<K, T> {
 	@SuppressWarnings("unchecked")
 	public abstract K buscarById(Class clazz, Serializable id) throws Exception;
 
+	public  List<K> buscarSQLNativo(String sql) throws Exception;
 	
 }
