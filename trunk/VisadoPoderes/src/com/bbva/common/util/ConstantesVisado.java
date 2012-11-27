@@ -63,4 +63,9 @@ public class ConstantesVisado {
 	public static final String CAMPO_ESTADO_ACEPTADO="ACEPTADO";
 	public static final String CAMPO_ESTADO_RECHAZADO="RECHAZADO";
 	public static final String CAMPO_ESTADO_VERIFICACION_A="En Verificación A";
+		
+	//ASIG AUTOMATICA
+	public static final java.lang.String CODIGO_ESTADO_ENVIADO="0007";
+	public static final java.lang.String CODIGO_TABLA_HORA_CORTE="T06";
+	public static final java.lang.String CODIGO_CAMPO_HORA_CORTE="0002";
 }
