@@ -47,11 +47,9 @@
 						
 						<td ><h:outputText styleClass="outputText" id="txtTipoSol" value="T. de Solicitud" /></td>
 						<td >
-							<p:selectOneMenu value="#{solicitudMB.idTipoSol}" id="somTipoSol">
-								<f:selectItem itemLabel="--Todos--" itemValue="" />
-								<f:selectItems value="#{solicitudMB.lstTipoSolicitud}" var="tipoSol"
-									itemValue="#{tipoSol.codOper}" itemLabel="#{tipoSol.desOper}" />
-							</p:selectOneMenu>
+							<p:selectCheckboxMenu label="--Todos--" value="#{solicitudMB.lstTipoSolicitud}">  
+						        <f:selectItems value="#{solicitudMB.tiposSolicitud}" />  
+						    </p:selectCheckboxMenu>  
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTSolicitud" /></td>
 						<p:tooltip for="tooltxtTSolicitud" value="Tipo de Solicitud" showEffect="fade" hideEffect="fade" />  
@@ -229,11 +227,9 @@
 							<h:outputText styleClass="outputText" id="txtNivel" value="Nivel" />
 						</td>
 						<td >
-							<p:selectOneMenu value="#{solicitudMB.idNivel}" id="somNivel">
-								<f:selectItem itemLabel="--Todos--" itemValue="" />
-								<f:selectItems value="#{solicitudMB.lstNivel}" var="niv"
-									itemValue="#{niv.codNiv}" itemLabel="#{niv.desNiv}" />
-							</p:selectOneMenu>
+							<p:selectCheckboxMenu label="--Todos--" value="#{solicitudMB.lstNivelSelected}">  
+						        <f:selectItems value="#{solicitudMB.niveles}" />  
+						    </p:selectCheckboxMenu>  
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolNivel" /></td>	
 						<p:tooltip for="toolNivel" value="Nivel" showEffect="fade" hideEffect="fade" />	
@@ -283,7 +279,7 @@
 							<h:outputText styleClass="outputText" id="txtEnRev" value="En revision" />
 						</td>
 						<td >
-							<p:selectBooleanCheckbox id="bEnRevision" />  
+							<p:selectBooleanCheckbox id="bEnRevision" value="#{solicitudMB.conRevision}"/>  
 						</td>
 						<td >
 							<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEnRev" />
@@ -294,7 +290,7 @@
 							<h:outputText styleClass="outputText" id="txtDel" value="Delegados" />
 						</td>
 						<td>
-							<p:selectBooleanCheckbox id="bDelegados" />  
+							<p:selectBooleanCheckbox id="bDelegados" value="#{solicitudMB.conDelegados}" />  
 						</td>
 						<td >
 							<p:graphicImage value="/resources/images/pregunta.jpg" id="toolDele" />
@@ -305,7 +301,7 @@
 							<h:outputText styleClass="outputText" id="txtExo" value="Exonerados" />
 						</td>
 						<td>
-							<p:selectBooleanCheckbox id="bExonerados" />  
+							<p:selectBooleanCheckbox id="bExonerados" value="#{solicitudMB.conExonerados}"/>  
 						</td>
 						<td >
 							<p:graphicImage value="/resources/images/pregunta.jpg" id="toolExo" />

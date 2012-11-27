@@ -1,22 +1,21 @@
 package com.hildebrando.visado.mb;
 
-import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.view.facelets.FaceletContext;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.jca.cci.CciOperationNotSupportedException;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -55,8 +54,10 @@ public class SolicitudMB
 	private List<TiposFecha> lstTiposFecha;
 	private List<TiivsEstudio> lstEstudio;
 	private List<TiivsNivel> lstNivel;
+	private List<TiivsNivel> lstNivelSelected;
 	private List<TiivsOperacionBancaria> lstOpeBancaria;
 	private List<TiivsTipoServicio> lstTipoSolicitud;
+	private List<TiivsTipoServicio> lstTipoSolicitudSelected;
 	private List<TiivsTerritorio> lstTerritorio;
 	private List<TiivsOficina1> lstOficina;
 	private List<TiivsOficina1> lstOficina1;
@@ -89,6 +90,11 @@ public class SolicitudMB
 	private String txtNomOficina;
 	private String txtNomTerritorio;
 	private String txtCodOficina;
+	private Boolean conRevision;
+	private Boolean conDelegados;
+	private Boolean conExonerados;
+	private Map<String,String> niveles;
+	private Map<String,String> tiposSolicitud;
 	
 	public static Logger logger = Logger.getLogger(SolicitudMB.class);
 	
@@ -122,6 +128,8 @@ public class SolicitudMB
 		//Carga lista de monedas
 		cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_MONEDA);
 		cargarMiembros();
+		niveles=new HashMap<String, String>();
+		tiposSolicitud=new HashMap<String, String>();
 		//LLena la grilla de solicitudes
 		cargarSolicitudes();
 		cargaCombosNoMultitabla();
@@ -143,6 +151,7 @@ public class SolicitudMB
 		setTxtNomOficina(ConstantesVisado.MSG_TODOS);
 		setTxtNomTerritorio(ConstantesVisado.MSG_TODOS);
 		setTxtCodOficina(ConstantesVisado.MSG_TODOS);
+		
 	}
 	
 	private void setearTextoTotalResultados(String cadena, int total)
@@ -168,33 +177,21 @@ public class SolicitudMB
 		
 		solicitudes = new ArrayList<TiivsSolicitud>();
 		
-		//Filtro por codigo de solicitud
+		//1. Filtro por codigo de solicitud
 		if (getCodSolicitud().compareTo("")!=0)
 		{
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, getCodSolicitud()));
 		}
 		
-		//Filtro por combo de codigos de oficina
-		if (getIdCodOfi().compareTo("")!=0)
+		//2. Filtro por estado
+		if (getIdEstado().compareTo("")!=0)
 		{
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA, ConstantesVisado.ALIAS_TBL_OFICINA);
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, getIdCodOfi()));
+			String codEstado=getIdEstado().trim();
+			//System.out.println("Filtro estado: " + codEstado);
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO, codEstado));
 		}
 		
-		//Filtro por combo de oficinas
-		if (getIdCodOfi1().compareTo("")!=0)
-		{
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA, ConstantesVisado.ALIAS_TBL_OFICINA);
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, getIdCodOfi1()));
-		}
-		
-		//Filtro por operacion bancaria
-		if (getIdOpeBan().compareTo("")!=0)
-		{
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_OPE_BANCARIAS, getIdOpeBan()));
-		}
-		
-		//Filtro por importe
+		//3. Filtro por importe
 		if (getIdImporte().compareTo("")!=0)
 		{
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA))
@@ -220,14 +217,48 @@ public class SolicitudMB
 			}
 		}
 		
-		//Filtro por codigo de oficina
+		//4. Filtro por tipo de solicitud
+		if (getIdTipoSol().compareTo("")!=0)
+		{
+			filtroSol.createAlias(ConstantesVisado.NOM_TBL_TIPO_SERVICIO, ConstantesVisado.ALIAS_TBL_TIPO_SERVICIO);
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OPE_ALIAS, getIdTipoSol()));
+		}
+		
+		//5. Filtro por tipo de fecha
+		if (getIdTiposFecha().compareTo("")!=0)
+		{
+			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_ENVIO)) // Es fecha de envio
+			{
+				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_ENVIO, getFechaInicio(),getFechaFin()));
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO, buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_ENVIADO)));
+			}
+			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_RPTA)) //Sino es fecha de respuesta
+			{
+				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_RPTA, getFechaInicio(),getFechaFin()));
+				
+				Collection<String> tmpEstados=null;
+				tmpEstados.add(buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_ACEPTADO));
+				tmpEstados.add(buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_RECHAZADO));
+				tmpEstados.add(buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_A));
+				
+				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO, tmpEstados));
+			}
+		}
+		
+		//6. Filtro por operacion bancaria
+		if (getIdOpeBan().compareTo("")!=0)
+		{
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_OPE_BANCARIAS, getIdOpeBan()));
+		}
+		
+		//7. Filtro por codigo de oficina
 		if (getTxtCodOfi().compareTo("")!=0)
 		{
 			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA, ConstantesVisado.ALIAS_TBL_OFICINA);
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, getTxtCodOfi()));
 		}
 		
-		//Filtro por nombre de oficina
+		//8. Filtro por nombre de oficina
 		if (getTxtNomOfi().compareTo("")!=0)
 		{
 			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA, ConstantesVisado.ALIAS_TBL_OFICINA);
@@ -235,67 +266,65 @@ public class SolicitudMB
 			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
 		}
 		
-		//Filtro por nombre de poderdante
-		if (getTxtNomPoderdante().compareTo("")!=0)
+		//9. Filtro por combo de codigos de oficina
+		if (getIdCodOfi().compareTo("")!=0)
 		{
-			String filtroNuevo=ConstantesVisado.SIMBOLO_PORCENTAJE + getTxtNomPoderdante().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
-			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_PODERDANTE, filtroNuevo));
+			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA, ConstantesVisado.ALIAS_TBL_OFICINA);
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, getIdCodOfi()));
 		}
 		
-		//Filtro por nombre de apoderado
-		if (getTxtNomApoderado().compareTo("")!=0)
+		//10. Filtro por combo de oficinas
+		if (getIdCodOfi1().compareTo("")!=0)
 		{
-			String filtroNuevo=ConstantesVisado.SIMBOLO_PORCENTAJE + getTxtNomApoderado().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
-			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_APODERADO, filtroNuevo));
+			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA, ConstantesVisado.ALIAS_TBL_OFICINA);
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, getIdCodOfi1()));
 		}
 		
-		//Filtro por estado
-		if (getIdEstado().compareTo("")!=0)
-		{
-			String codEstado=getIdEstado().trim();
-			//System.out.println("Filtro estado: " + codEstado);
-			filtroSol.add(Restrictions.eq("estado", codEstado));
-		}
-		
-		//Filtro por numero de documento de poderdante
-		if (getNroDOIPoderdante().compareTo("")!=0)
-		{
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_NUMDOC_PODERDANTE, getNroDOIPoderdante()));
-		}
-		
-		//Filtro por numero de documento de apoderado
+		//11. Filtro por numero de documento de apoderado
 		if (getNroDOIApoderado().compareTo("")!=0)
 		{
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_NUMDOC_APODERADO, getNroDOIApoderado()));
 		}
 		
-		//Filtro por estudio
+		//12. Filtro por nombre de apoderado
+		if (getTxtNomApoderado().compareTo("")!=0)
+		{
+			String filtroNuevo=ConstantesVisado.SIMBOLO_PORCENTAJE + getTxtNomApoderado().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
+			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_APODERADO, filtroNuevo));
+		}		
+		
+		//13. Filtro por numero de documento de poderdante
+		if (getNroDOIPoderdante().compareTo("")!=0)
+		{
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_NUMDOC_PODERDANTE, getNroDOIPoderdante()));
+		}
+		
+		//14. Filtro por nombre de poderdante
+		if (getTxtNomPoderdante().compareTo("")!=0)
+		{
+			String filtroNuevo=ConstantesVisado.SIMBOLO_PORCENTAJE + getTxtNomPoderdante().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
+			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_PODERDANTE, filtroNuevo));
+		}	
+		
+		//15. Filtro por nivel
+		if (getIdNivel().compareTo("")!=0)
+		{
+			
+		}
+		
+		//16. Filtro por estado de nivel
+		if (getIdEstNivel().compareTo("")!=0)
+		{
+			
+		}
+		
+		//17. Filtro por estudio
 		if (getIdEstudio().compareTo("")!=0)
 		{
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTUDIO, getIdEstudio()));
 		}
-		
-		//Filtro por tipo de fecha
-		if (getIdTiposFecha().compareTo("")!=0)
-		{
-			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_ENVIO)) // Es fecha de envio
-			{
-				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_ENVIO, getFechaInicio(),getFechaFin()));
-			}
-			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_RPTA)) //Sino es fecha de respuesta
-			{
-				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_RPTA, getFechaInicio(),getFechaFin()));
-			}
-		}
-		
-		//Filtro por tipo de solicitud
-		if (getIdTipoSol().compareTo("")!=0)
-		{
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_TIPO_SERVICIO, ConstantesVisado.ALIAS_TBL_TIPO_SERVICIO);
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OPE_ALIAS, getIdTipoSol()));
-		}
-		
-		//Filtro por territorio
+				
+		//18. Filtro por territorio
 		if (getIdTerr().compareTo("")!=0)
 		{
 			String codTerr=getIdTerr().trim();
@@ -303,6 +332,15 @@ public class SolicitudMB
 			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA, ConstantesVisado.ALIAS_TBL_OFICINA);
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_TERR_ALIAS, codTerr));
 		}
+		
+		//19. Filtrar solicitudes con revision
+		
+		
+		//20. Filtrar solicitudes que se hayan delegado
+		
+		
+		//21. Filtrar solicitudes que se hayan exonerado
+		
 		
 		//Buscar solicitudes de acuerdo a criterios seleccionados
 		try
@@ -323,6 +361,22 @@ public class SolicitudMB
 			setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS+ solicitudes.size() + ConstantesVisado.MSG_REGISTROS,solicitudes.size());
 			actualizarDatosGrilla();
 		}
+	}
+	
+	public String buscarCodigoEstado(String estado)
+	{
+		int i=0;
+		String codigo="";
+		for (;i<=lstEstado.size();i++)
+		{
+			if (lstEstado.get(i).getDescripcion().equalsIgnoreCase(estado))
+			{
+				codigo=lstEstado.get(i).getCodEstado();
+				break;
+			}
+		}
+		
+		return codigo;
 	}
 	
 	private void actualizarDatosGrilla()
@@ -802,14 +856,22 @@ public class SolicitudMB
 			logger.debug("Error al cargar el listado de estudios");
 		}
 		
-		//Carga combo de Nivel
+		//Carga combo Nivel
 		GenericDao<TiivsNivel, Object> nivelDAO = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroNivel = Busqueda.forClass(TiivsNivel.class);
 		
 		try {
 			lstNivel = nivelDAO.buscarDinamico(filtroNivel);
+			
 		} catch (Exception e) {
 			logger.debug("Error al cargar el listado de niveles");
+		}
+		
+		int j=0;
+		
+		for (;j<=lstNivel.size()-1;j++)
+		{
+			niveles.put(lstNivel.get(j).getDesNiv(),lstNivel.get(j).getCodNiv());
 		}
 		
 		//Carga combo de Operacion Bancaria
@@ -833,7 +895,13 @@ public class SolicitudMB
 		Query query = SpringInit.devolverSession().createSQLQuery(hql)
 				.addEntity(TiivsTipoServicio.class);
 		
-		lstTipoSolicitud = query.list();		
+		lstTipoSolicitud = query.list();	
+		
+		int w=0;
+		for (;w<=lstTipoSolicitud.size()-1;w++)
+		{
+			tiposSolicitud.put(lstTipoSolicitud.get(w).getDesOper(),lstTipoSolicitud.get(w).getCodOper());
+		}
 		
 		//Carga combo de Territorio
 		GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -1232,4 +1300,53 @@ public class SolicitudMB
 	public void setTxtCodOficina(String txtCodOficina) {
 		this.txtCodOficina = txtCodOficina;
 	}
+
+	public Boolean getConRevision() {
+		return conRevision;
+	}
+
+	public void setConRevision(Boolean conRevision) {
+		this.conRevision = conRevision;
+	}
+
+	public Boolean getConDelegados() {
+		return conDelegados;
+	}
+
+	public void setConDelegados(Boolean conDelegados) {
+		this.conDelegados = conDelegados;
+	}
+
+	public Boolean getConExonerados() {
+		return conExonerados;
+	}
+
+	public void setConExonerados(Boolean conExonerados) {
+		this.conExonerados = conExonerados;
+	}
+
+	public List<TiivsNivel> getLstNivelSelected() {
+		return lstNivelSelected;
+	}
+
+	public void setLstNivelSelected(List<TiivsNivel> lstNivelSelected) {
+		this.lstNivelSelected = lstNivelSelected;
+	}
+
+	public Map<String, String> getNiveles() {
+		return niveles;
+	}
+
+	public List<TiivsTipoServicio> getLstTipoSolicitudSelected() {
+		return lstTipoSolicitudSelected;
+	}
+
+	public void setLstTipoSolicitudSelected(
+			List<TiivsTipoServicio> lstTipoSolicitudSelected) {
+		this.lstTipoSolicitudSelected = lstTipoSolicitudSelected;
+	}
+
+	public Map<String, String> getTiposSolicitud() {
+		return tiposSolicitud;
+	}  
 }

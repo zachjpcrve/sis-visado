@@ -51,6 +51,7 @@ public class ConstantesVisado {
 	public static final String CAMPO_FECHA_ENVIO="fechaEnvio";
 	public static final String CAMPO_FECHA_RPTA="fechaRespuesta";
 	public static final String CAMPO_COD_OFICINA="codOfi";
+	public static final String CAMPO_ESTADO="estado";
 	
 	public static final String NOM_TBL_TIPO_SERVICIO="tiivsTipoServicio";
 	public static final String ALIAS_TBL_TIPO_SERVICIO="tipoSer";
@@ -58,4 +59,8 @@ public class ConstantesVisado {
 	
 	public static final String CAMPO_COD_TERRITORIO="codTer";
 	public static final String ETIQUETA_COD_CENTRAL="Cod Central: ";
+	public static final String CAMPO_ESTADO_ENVIADO="ENVIADOSSJJ";
+	public static final String CAMPO_ESTADO_ACEPTADO="ACEPTADO";
+	public static final String CAMPO_ESTADO_RECHAZADO="RECHAZADO";
+	public static final String CAMPO_ESTADO_VERIFICACION_A="En Verificación A";
 }
