@@ -40,6 +40,7 @@ public class ConstantesVisado {
 	public static final String CAMPO_COD_OFICINA_ALIAS="ofic.codOfi";
 	public static final String CAMPO_NOM_OFICINA_ALIAS="ofic.desOfi";
 	public static final String CAMPO_COD_TERR_ALIAS="ofic.codTerr";
+	public static final String CAMPO_COD_TERR_NO_ALIAS="codTerr";
 	public static final String CAMPO_OPE_BANCARIAS="operacionesBancarias";
 	public static final String CAMPO_IMPORTE="importe";
 	public static final String CAMPO_PODERDANTE="poderante";
@@ -56,4 +57,5 @@ public class ConstantesVisado {
 	public static final String CAMPO_COD_OPE_ALIAS="tipoServ.codOper";
 	
 	public static final String CAMPO_COD_TERRITORIO="codTer";
+	public static final String ETIQUETA_COD_CENTRAL="Cod Central: ";
 }

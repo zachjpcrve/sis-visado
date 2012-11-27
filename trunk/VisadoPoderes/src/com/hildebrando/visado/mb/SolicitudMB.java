@@ -360,7 +360,21 @@ public class SolicitudMB
 			}
 			else
 			{
-				tmpSol.setTxtPoderdante(nomTipoDocPoder + ": " + tmpSol.getNumDocPoder() + " - " + tmpSol.getPoderante());
+				if (tmpSol.getCodCentral()!=null)
+				{
+					if (tmpSol.getCodCentral().compareTo("")==0)
+					{
+						tmpSol.setTxtPoderdante(nomTipoDocPoder + ": " + tmpSol.getNumDocPoder() + " - " + tmpSol.getPoderante());
+					}
+					else
+					{
+						tmpSol.setTxtPoderdante(ConstantesVisado.ETIQUETA_COD_CENTRAL+ tmpSol.getCodCentral()+": "+nomTipoDocPoder + ": " + tmpSol.getNumDocPoder() + " - " + tmpSol.getPoderante());
+					}
+				}
+				else
+				{
+					tmpSol.setTxtPoderdante(nomTipoDocPoder + ": " + tmpSol.getNumDocPoder() + " - " + tmpSol.getPoderante());
+				}
 			}
 			
 			//Se obtiene la descripcion del documento del Apoderado
@@ -379,7 +393,21 @@ public class SolicitudMB
 			}
 			else
 			{
-				tmpSol.setTxtApoderado(nomTipoDocApod + ": " + tmpSol.getNumDocApoder() + " - " + tmpSol.getApoderado());
+				if (tmpSol.getCodCentral()!=null)
+				{
+					if (tmpSol.getCodCentral().compareTo("")==0)
+					{
+						tmpSol.setTxtApoderado(nomTipoDocApod + ": " + tmpSol.getNumDocApoder() + " - " + tmpSol.getApoderado());
+					}
+					else
+					{
+						tmpSol.setTxtApoderado(ConstantesVisado.ETIQUETA_COD_CENTRAL+ tmpSol.getCodCentral()+": "+nomTipoDocApod + ": " + tmpSol.getNumDocApoder() + " - " + tmpSol.getApoderado());
+					}
+				}
+				else
+				{
+					tmpSol.setTxtApoderado(nomTipoDocApod + ": " + tmpSol.getNumDocApoder() + " - " + tmpSol.getApoderado());
+				}
 			}
 			
 			//Se obtiene y setea la descripcion del Estado en la grilla
@@ -515,6 +543,62 @@ public class SolicitudMB
 		{
 			setTxtCodOficina(lstTmp.get(0).getCodOfi());
 			setTxtNomTerritorio(buscarDesTerritorio(lstTmp.get(0).getCodTerr()));
+		}
+	}
+	
+	public void buscarOficinaPorTerritorio(ValueChangeEvent e) 
+	{
+		if (e.getNewValue()!=null)
+		{
+			logger.debug("Buscando oficina por territorio: " + e.getNewValue());
+			System.out.println("Buscando oficina por territorio: " + e.getNewValue());
+			
+			GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
+			filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_TERR_NO_ALIAS, e.getNewValue()));
+			
+			List<TiivsOficina1> lstTmp = new ArrayList<TiivsOficina1>();
+			
+			try 
+			{
+				lstTmp = ofiDAO.buscarDinamico(filtroOfic);
+				lstOficina=ofiDAO.buscarDinamico(filtroOfic);
+				lstOficina1=ofiDAO.buscarDinamico(filtroOfic);
+				
+			} catch (Exception exp) {
+				logger.debug("No se pudo encontrar la oficina");
+			}
+	
+			if (lstTmp.size()==1)
+			{
+				setTxtCodOficina(lstTmp.get(0).getCodOfi());
+				setTxtNomOficina(lstTmp.get(0).getDesOfi());
+			}
+		}
+		else
+		{
+			//Carga combo de Territorio
+			GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroTerr = Busqueda.forClass(TiivsTerritorio.class);
+			
+			try {
+				lstTerritorio = terrDAO.buscarDinamico(filtroTerr);
+			} catch (Exception e1) {
+				logger.debug("Error al cargar el listado de territorios");
+			}
+			
+			//Cargar combos de oficina
+			GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
+			
+			try 
+			{
+				lstOficina=ofiDAO.buscarDinamico(filtroOfic);
+				lstOficina1=ofiDAO.buscarDinamico(filtroOfic);
+				
+			} catch (Exception exp) {
+				logger.debug("No se pudo encontrar la oficina");
+			}			
 		}
 	}
 	

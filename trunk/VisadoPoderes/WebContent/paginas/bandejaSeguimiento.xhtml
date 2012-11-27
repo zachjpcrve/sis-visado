@@ -170,7 +170,7 @@
 							<h:outputText styleClass="outputText" id="textOficina" value="Oficina" />
 						</td>
 						<td >
-							<p:selectOneMenu value="#{solicitudMB.idCodOfi1}" id="somOfi" 
+							<p:selectOneMenu value="#{solicitudMB.idCodOfi1}" id="somOfi" style="width:200px;"
 									valueChangeListener="#{solicitudMB.buscarOficinaPorNombre}" 
 									onchange="this">
 									<p:ajax update=":frm"/>		
@@ -265,10 +265,14 @@
 							<h:outputText styleClass="outputText" id="textTerr" value="Territorio:" />
 						</td>
 						<td>
-							<p:selectOneMenu value="#{solicitudMB.idTerr}" id="somTerr" >
+							<p:selectOneMenu value="#{solicitudMB.idTerr}" id="somTerr" 
+									valueChangeListener="#{solicitudMB.buscarOficinaPorTerritorio}" 
+									onchange="this">
+									<p:ajax update=":frm"/>		
+								
 								<f:selectItem itemLabel="#{solicitudMB.txtNomTerritorio}" itemValue="" />
 								<f:selectItems value="#{solicitudMB.lstTerritorio}" var="lTerr"
-									itemValue="#{lTerr.codTer}" itemLabel="#{lTerr.desTer}" />
+									itemValue="#{lTerr.codTer}" itemLabel="#{lTerr.codTer}-#{lTerr.desTer}" />
 							</p:selectOneMenu>
 						</td>		
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolTerr" /></td>	
@@ -310,6 +314,21 @@
 					</tr>
 				</tbody>			
 			</table>
+			
+			<p:spacer height="20"/>
+			
+			<table border="0">
+				<tr>
+					<td>
+						<p:commandButton value="Buscar" icon="ui-icon-search" 
+							actionListener="#{solicitudMB.busquedaSolicitudes}" 
+							update="panelRes" ajax="false"/>
+					</td>
+					<td>
+						<p:commandButton value="Exportar" ajax="false"/>
+					</td>
+				</tr>	
+			</table>	
 			
 			<p:spacer height="20"/>
 			
@@ -390,13 +409,7 @@
 			  </tbody>
 			</table>
 			
-			<table border="0">
-				<tr>
-					<td >
-						<p:commandButton value="Exportar" ajax="false"/>
-					</td>
-				</tr>	
-			</table>	
+			
 		
 		</h:form>
 
