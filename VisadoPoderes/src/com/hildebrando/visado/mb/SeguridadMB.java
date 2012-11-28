@@ -125,7 +125,7 @@ public class SeguridadMB {
 					request.getSession(true).setAttribute("DES_GRUPO", ConstantesVisado.DES_GRUPO_OFI);
                   }
 			}
-        	
+        	request.getSession(true).setAttribute("USUARIO_SESION", usuarioIILD);
         	
         	if(ListaMiembros.size()>0){      		
         
