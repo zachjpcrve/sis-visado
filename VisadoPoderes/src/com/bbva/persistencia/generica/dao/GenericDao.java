@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.util.List;
 
+import com.hildebrando.visado.dto.MiembroDto;
+
 public interface GenericDao<K, T> {
 	
 	public abstract Connection getConnection() throws Exception;
@@ -21,6 +23,4 @@ public interface GenericDao<K, T> {
 	@SuppressWarnings("unchecked")
 	public abstract K buscarById(Class clazz, Serializable id) throws Exception;
 
-	public  List<K> buscarSQLNativo(String sql) throws Exception;
-	
 }
