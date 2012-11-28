@@ -3,15 +3,10 @@ package com.bbva.persistencia.generica.dao.impl;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-
 import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -87,34 +82,7 @@ public abstract class GenericDaoImpl<K, T extends Serializable>
 		
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public  List<K> buscarSQLNativo(final String sql) throws Exception{
-		/*Session sesion=getHibernateTemplate().getSessionFactory().getCurrentSession();
-	return 	(ArrayList<K>) sesion.createSQLQuery(sql);*/
-		List ResultList = (List)getHibernateTemplate().execute(
-				new HibernateCallback() {
-				public Object doInHibernate(Session session) throws HibernateException {
-				SQLQuery sq =session.createSQLQuery(sql);
-				/*sq.addScalar("TEST_TABLE_ID", Hibernate.INTEGER);
-				sq.addScalar("NAME", Hibernate.STRING);
-				sq.addScalar("TEST_DATE", Hibernate.DATE);*/
-				return sq.list();
-				}});
-
-				if(ResultList.size()>0){
-					System.out.println("ResultList.size "+ResultList.size());
-				for(int i=0;i<=ResultList.size();i++){
-				Object[] row = (Object[]) ResultList.get(i);
-				int id = (Integer)row[0];
-				String name = (String)row[1];
-				Date date = (Date)row[2];
-				}
-	}
-				return ResultList;
-				
-				
-				
-	}
+	
 }
 
 
