@@ -30,6 +30,7 @@
 				<value>hibernate/xml/TiivsTerritorio.hbm.xml</value>
 				<value>hibernate/xml/TiivsTipoDocumento.hbm.xml</value>
 				<value>hibernate/xml/TiivsTipoServicio.hbm.xml</value>
+<!-- 				<value>hibernate/xml/Ldapperu2.hbm.xml</value> -->
 			</list>
 		</property>
 	</bean>
