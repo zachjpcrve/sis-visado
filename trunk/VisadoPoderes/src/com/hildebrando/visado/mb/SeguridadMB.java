@@ -16,6 +16,7 @@ import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
+import com.bbva.persistencia.generica.dao.SeguridadDao;
 import com.grupobbva.bc.per.tele.ldap.conexion.Conexion;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.grupobbva.bc.per.tele.seguridad.ServiciosSeguridadBbva;
@@ -30,7 +31,7 @@ public class SeguridadMB {
 	public static Logger logger = Logger.getLogger(SeguridadMB.class);
 	HttpServletRequest request;
 	HttpServletResponse response;
-	private String sCodUsuarioBBVA="P008471";
+	private String sCodUsuarioBBVA="P015740";
 	private String password="iivs";
 	
 	public SeguridadMB() {
@@ -99,33 +100,27 @@ public class SeguridadMB {
 			request.getSession(true).setAttribute("TAREA_MODIFICAR_SOLICITUD", null);
 			request.getSession(true).setAttribute("TAREA_REGISTRO_SOLICITUDES", null);		
 			
-			 GenericDao<MiembroDto, Object> miembroService = (GenericDao<MiembroDto, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			 String sql ="select M.COD_MIEMBRO, M.DESCRIPCION, M.CRITERIO, M.COD_GRUPO, MT.VALOR1 AS DES_CRITERIO, M.ESTUDIO" +
-			 		" from IIVS.TIIVS_MIEMBRO M " +
-			 		" left join IIVS.TIIVS_MULTITABLA MT on M.CRITERIO = MT.COD_MULT || MT.COD_ELEM " +
-			 		" where (trim(m.cod_miembro) = '"+usuarioIILD.getUID().trim()+"' and trim(m.criterio) = 'T030001') " +
-			 		" OR (trim(m.cod_miembro)= '"+usuarioIILD.getCargo().getCodigo().trim()+"' and trim(m.criterio) = 'T030002') " +
-			 		" OR (trim(m.cod_miembro)= '"+usuarioIILD.getBancoOficina().getCodigo().trim()+"' and trim(m.criterio) = 'T030003')"	;
-		System.out.println("SQL : "+sql);
-			 List<MiembroDto> ListaMiembros= miembroService.buscarSQLNativo(sql);
+			SeguridadDao<MiembroDto, Object> miembroService = (SeguridadDao<MiembroDto, Object>) SpringInit.getApplicationContext().getBean("miembroEspDao");
+
+			 List<MiembroDto> ListaMiembros= miembroService.buscarMiembroSql(usuarioIILD);
 				
         	System.out.println(" ***************** ListaMiembros **************" +ListaMiembros.size());
         	for (Iterator iterator = ListaMiembros.iterator(); iterator.hasNext();) {
-        		TiivsMiembro object = (TiivsMiembro) iterator.next();
-				System.out.println("Grupo: " + object.getTiivsGrupo().getCodGrupo()+", criterio: "+ object.getCriterio()+", miembro: "+object.getCodMiembro() );
-		    	       logger.info("Grupo: " + object.getTiivsGrupo().getCodGrupo()+", criterio: "+ object.getCriterio()+", miembro: "+object.getCodMiembro() );
-				if (ConstantesVisado.COD_GRUPO_ADM.equals(object.getTiivsGrupo().getCodGrupo())){
-					System.out.println(object.getDescripcion());
+        		MiembroDto object = (MiembroDto) iterator.next();
+				System.out.println("Grupo: " + object.getCOD_GRUPO()+", criterio: "+ object.getCRITERIO()+", miembro: "+object.getCOD_MIEMBRO() );
+		    	       logger.info("Grupo: " + object.getCOD_GRUPO()+", criterio: "+ object.getCRITERIO()+", miembro: "+object.getCOD_MIEMBRO() );
+				if (ConstantesVisado.COD_GRUPO_ADM.equals(object.getCOD_GRUPO())){
+					System.out.println(object.getDESCRIPCION());
 					request.getSession(true).setAttribute("GRUPO_ADM", ConstantesVisado.COD_GRUPO_ADM);
 					request.getSession(true).setAttribute("DES_GRUPO", ConstantesVisado.DES_GRUPO_ADM);
                 }else 
-				if (ConstantesVisado.COD_GRUPO_JRD.equals(object.getTiivsGrupo().getCodGrupo())){
-					System.out.println(object.getDescripcion());
+				if (ConstantesVisado.COD_GRUPO_JRD.equals(object.getCOD_GRUPO())){
+					System.out.println(object.getDESCRIPCION());
 					request.getSession(true).setAttribute("GRUPO_JRD", ConstantesVisado.COD_GRUPO_JRD);	
 					request.getSession(true).setAttribute("DES_GRUPO", ConstantesVisado.DES_GRUPO_JRD);
                 }else
-				if (ConstantesVisado.COD_GRUPO_OFI.equals(object.getTiivsGrupo().getCodGrupo())){
-					System.out.println(object.getDescripcion());
+				if (ConstantesVisado.COD_GRUPO_OFI.equals(object.getCOD_GRUPO())){
+					System.out.println(object.getDESCRIPCION());
 					request.getSession(true).setAttribute("GRUPO_OFI", ConstantesVisado.COD_GRUPO_OFI);
 					request.getSession(true).setAttribute("DES_GRUPO", ConstantesVisado.DES_GRUPO_OFI);
                   }
