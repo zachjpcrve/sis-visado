@@ -14,8 +14,10 @@
 	<bean id="genericDao" class="com.bbva.persistencia.generica.dao.GenericDao" abstract="true">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-
+	<bean id="seguridadDao" class="com.bbva.persistencia.generica.dao.SeguridadDao" abstract="true">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
 	<bean id="genericoDao" class="com.bbva.persistencia.generica.dao.GenericoEspecificoDao" parent="genericDao"/>
-	
+	<bean id="miembroEspDao"  class="com.bbva.persistencia.generica.dao.SeguridadEspecificoDao" parent="seguridadDao"/>
 
 </beans>
