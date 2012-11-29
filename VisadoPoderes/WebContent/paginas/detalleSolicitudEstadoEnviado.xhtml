@@ -37,21 +37,21 @@
 									<tbody>
 									    <tr>
 										  <td width="100">  <h:outputText styleClass="outputText" id="txtCodNumSol" value="Nro Solicitud:" /></td>
-										  <td width="150">  <h:outputText  id="text1" style="width:100px;" value="12345668"
+										  <td width="150">  <h:outputText  id="text1" style="width:100px;" value="#{solDetMB.solicitud.codSoli}"
 																	disabled="false" readonly="true" /></td>
 											
 										  <td width="100"> <h:outputText styleClass="outputText" id="text3" value="Estado:" /></td>
-										  <td width="150"> <h:outputText  id="txtEstado" style="width:100px;" 	value="Reservado"/></td>
+										  <td width="150"> <h:outputText  id="txtEstado" style="width:100px;" 	value="#{solDetMB.estado.valor1}"/></td>
 														
 										  <td width="100"><h:outputText styleClass="outputText" id="outOficina" value="Oficina:" /></td>
 										  <td width="150"><h:outputText  id="txtOficina"
 																	style="width:100px;"
-																	value="456-San Isidro"/></td>
+																	value="#{solDetMB.solicitud.tiivsOficina1.codOfi} - #{solDetMB.solicitud.tiivsOficina1.desOfi}"/></td>
 									
 															
-										  <td width="100"><h:outputText  id="txtTerritorio"
-																	style="width:100px;"
-																	value="Territorio Norte"/></td>
+										  <td width="250"><h:outputText  id="txtTerritorio"
+																	style="width:250px;"
+																	value="#{solDetMB.territorio.codTer} #{solDetMB.territorio.desTer}"/></td>
 									</tr>
 									<tr>
 										 <td width="100"><h:outputText styleClass="outputText" id="outNroVaucher"
@@ -70,10 +70,12 @@
 																	readonly="true" /></td>
 													
 													
-										<td width="100"><h:outputText styleClass="outputText" id="outImpTotal" value="Importe Total" /> </td>
+										<td width="100"><h:outputText styleClass="outputText" id="outImpTotal" value="Importe Total:" /> </td>
 										<td width="150"><h:outputText  id="txtImpTotal"
 																	style="width:100px;"
-																	value=" $550.50" /></td>
+																	value="${solDetMB.solicitud.importe}">
+																		<f:convertNumber pattern="#0.00" />
+																	</h:outputText></td>
 													
 												</tr>
 

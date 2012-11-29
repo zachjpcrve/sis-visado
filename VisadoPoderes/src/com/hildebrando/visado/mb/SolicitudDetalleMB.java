@@ -2,9 +2,11 @@ package com.hildebrando.visado.mb;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
@@ -13,80 +15,129 @@ import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
-import com.hildebrando.visado.dto.ApoderadoDTO;
-import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
-import com.hildebrando.visado.dto.OperacionBancariaDTO;
-import com.hildebrando.visado.dto.SeguimientoDTO;
-import com.hildebrando.visado.dto.Solicitud;
-import com.hildebrando.visado.modelo.TiivsGrupo;
-import com.hildebrando.visado.modelo.TiivsMiembro;
+import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
+import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
+import com.hildebrando.visado.modelo.TiivsTerritorio;
 
-@ManagedBean(name = "solicitudRegMB")
+@ManagedBean(name = "solDetMB")
 @SessionScoped
 public class SolicitudDetalleMB {
-	private Solicitud solicitudModificar;
+	
 	private List<TiivsMultitabla> lstMultitabla;
-	private List<ApoderadoDTO> lstClientes;
-	private List<OperacionBancariaDTO> lstOperaciones;
-	private List<DocumentoTipoSolicitudDTO> lstdocumentos;
-	private List<SeguimientoDTO> lstSeguimiento;
-	
-	private TiivsSolicitud solicitud = null;
-	
+	private List<TiivsAnexoSolicitud> lstAnexos;
+	private TiivsSolicitud solicitud;
+	private TiivsMultitabla moneda;
+	private TiivsMultitabla estado;
+	private TiivsTerritorio territorio;
+		
+
 	public static Logger logger = Logger.getLogger(SolicitudDetalleMB.class);
 	
 	public SolicitudDetalleMB() 
 	{
-		solicitudModificar = new Solicitud();
-		listarDataMaqueteado();		
-		
+		cargarMultitabla();
 	}
-	public void listarDataMaqueteado(){
-		lstClientes=new ArrayList<ApoderadoDTO>();
-		lstOperaciones=new ArrayList<OperacionBancariaDTO>();
-		lstdocumentos=new ArrayList<DocumentoTipoSolicitudDTO>();
-		lstSeguimiento=new ArrayList<SeguimientoDTO>();
-		lstClientes.add(new ApoderadoDTO("123456", "DNI:43863696 Samira Benazar", "Apoderado", "Beneficiario", "555555555", "samiray.yas@gmail.com"));
-		lstClientes.add(new ApoderadoDTO("789654", "DNI:82553665 Diego Clemente", "Poderdante", "Fallecido", "8926358858","diemgo_clemente@hotmail.com"));
-		lstOperaciones.add(new OperacionBancariaDTO("001", "DNI:43863696 Samira Benazar", "PEN", "500.00", "0", "500.00"));
-		lstOperaciones.add(new OperacionBancariaDTO("001", "DNI:43863696 Diego Clemente", "DOL", "300.00", "3.50", "1050.00"));
-	    lstdocumentos.add(new DocumentoTipoSolicitudDTO("001", "Copia de DNI", "Yes"));
-	    lstdocumentos.add(new DocumentoTipoSolicitudDTO("001", "Copia Literal", "Nou"));
-	    lstSeguimiento.add(new SeguimientoDTO("Registrado", "Nivel 01", "22/11/2012", "P025245 :Samira Benazar", "observacion"));
-	    lstSeguimiento.add(new SeguimientoDTO("Enviado", " ", "22/11/2012", "P025245 :Diego Clemente", "observacion"));
-
-	}
+	
 	public String redirectDetalleSolicitud(){
 		logger.info(" **** redirectDetalleSolicitud ***");
-		String codSolicitud = "0000181";
-		obtenerDetalleSolicitud(codSolicitud);
+		FacesContext context = FacesContext.getCurrentInstance();  
+		Map requestMap = context.getExternalContext().getRequestParameterMap();  
+		String codSolicitud = (String)requestMap.get("prm_codSoli");  		
+		obtenerDatosSolicitud(codSolicitud);
 		return "/faces/paginas/detalleSolicitudEstadoEnviado.xhtml";
 	}
 	
-	private void obtenerDetalleSolicitud(String codSolicitud) {
+	private void obtenerDatosSolicitud(String codSolicitud) {	
+		//solicitudDTO = new SolicitudDTO(codSolicitud);
+		// Obtención de solicitud
 		
-		GenericDao<TiivsSolicitud, Object> solicitudDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsSolicitud.class);					
-		filtro.add(Restrictions.eq("codSoli", codSolicitud));
-		List<TiivsSolicitud> lstSolicitudes= new ArrayList<TiivsSolicitud>();				
+		obtenerDetallesolicitud(codSolicitud);
+				
+		if (solicitud != null) {
+			moneda = getRowFromMultitabla(
+					ConstantesVisado.CODIGO_MULTITABLA_MONEDA,
+					solicitud.getMoneda());
+
+			estado = getRowFromMultitabla(
+					ConstantesVisado.CODIGO_MULTITABLA_ESTADOS,
+					solicitud.getEstado());
+
+			obtenerTerritorio(solicitud.getTiivsOficina1().getCodTerr());
+			
+			obtenerListadoAnexos(solicitud.getCodSoli());
+						
+			System.out.println("Estado:" + estado.getValor1());
+			System.out.println("moneda:" + moneda.getValor3());
+			System.out.println("territorio:" + territorio.getCodTer());
+			System.out.println("Cantidad Anexos:" + lstAnexos.size());
+
+		} else {
+			System.out.println("Solictud nula");
+		}
+	}
+		
+	
+	private void obtenerListadoAnexos(String codSoli) {
+		GenericDao<TiivsAnexoSolicitud, Object> anexosDAO = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsAnexoSolicitud.class);
+		filtro.add(Restrictions.eq("id.codSoli", codSoli));
 		try {
-			lstSolicitudes = solicitudDAO.buscarDinamico(filtro);
-			if(lstSolicitudes.size()>0){
-				this.solicitud = lstSolicitudes.get(0);
-			}
+			lstAnexos = anexosDAO.buscarDinamico(filtro);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		if(lstAnexos!=null){
+			System.out.println("Se han cargado anexos:"+lstAnexos.size());
+		}
 	}
-	public TiivsSolicitud getSolicitud() {
-		return solicitud;
+
+	private void obtenerTerritorio(String codTerr) {
+		GenericDao<TiivsTerritorio, Object> territorioDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		try {
+			territorio = territorioDAO.buscarById(TiivsTerritorio.class,
+					codTerr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	public void setSolicitud(TiivsSolicitud solicitud) {
-		this.solicitud = solicitud;
+
+	private void obtenerDetallesolicitud(String codSolicitud) {
+		GenericDao<TiivsSolicitud, Object> solicitudDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		try {
+			solicitud = solicitudDAO.buscarById(TiivsSolicitud.class,
+					codSolicitud);
+			System.out.println("codigo:" + solicitud.getCodSoli());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
+
+	private TiivsMultitabla getRowFromMultitabla(String codigoMultitablaMoneda,
+			String codigoCampo) {
+		// TODO Apéndice de método generado automáticamente
+		// Obtención de moneda
+		TiivsMultitabla resultMultiTabla = null;
+		GenericDao<TiivsMultitabla, Object> multiTablaDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+
+		try {
+			TiivsMultitablaId tablaId = new TiivsMultitablaId(
+					codigoMultitablaMoneda, codigoCampo);			
+			resultMultiTabla = multiTablaDAO.buscarById(TiivsMultitabla.class,
+					tablaId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return resultMultiTabla;
+	}
+
 	public void cargarMultitabla()
 	{
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -98,71 +149,46 @@ public class SolicitudDetalleMB {
 			logger.debug("Error al cargar el listado de multitablas");
 		}
 	}
-	
 
-	//Descripcion: Metodo que se encarga de cargar los combos que se mostraran en la pantalla de Registro de solicitudes 
-	//			   de acuerdo a la lista de la multitabla previamente cargada.
-	//@Autor: Samira Benazar
-	//@Version: 1.0
-	//@param: -
-	public void cargarCombosFormularioRegistro(String codigo){
-		logger.debug("Buscando valores en multitabla con codigo: " + codigo);
-		
-		
-		}
-
-	public Solicitud getSolicitudModificar() {
-		return solicitudModificar;
+	public TiivsSolicitud getSolicitud() {
+		return solicitud;
 	}
 
-	public void setSolicitudModificar(Solicitud solicitudModificar) {
-		this.solicitudModificar = solicitudModificar;
+	public void setSolicitud(TiivsSolicitud solicitud) {
+		this.solicitud = solicitud;
 	}
 
-	public List<TiivsMultitabla> getLstMultitabla() {
-		return lstMultitabla;
+	public TiivsMultitabla getMoneda() {
+		return moneda;
 	}
 
-	public void setLstMultitabla(List<TiivsMultitabla> lstMultitabla) {
-		this.lstMultitabla = lstMultitabla;
+	public void setMoneda(TiivsMultitabla moneda) {
+		this.moneda = moneda;
 	}
 
-	public List<ApoderadoDTO> getLstClientes() {
-		return lstClientes;
+	public TiivsMultitabla getEstado() {
+		return estado;
 	}
 
-	public void setLstClientes(List<ApoderadoDTO> lstClientes) {
-		this.lstClientes = lstClientes;
+	public void setEstado(TiivsMultitabla estado) {
+		this.estado = estado;
 	}
 
-	public List<OperacionBancariaDTO> getLstOperaciones() {
-		return lstOperaciones;
+	public TiivsTerritorio getTerritorio() {
+		return territorio;
 	}
 
-	public void setLstOperaciones(List<OperacionBancariaDTO> lstOperaciones) {
-		this.lstOperaciones = lstOperaciones;
+	public void setTerritorio(TiivsTerritorio territorio) {
+		this.territorio = territorio;
 	}
 
-	public List<DocumentoTipoSolicitudDTO> getLstdocumentos() {
-		return lstdocumentos;
+	public List<TiivsAnexoSolicitud> getLstAnexos() {
+		return lstAnexos;
 	}
 
-	public void setLstdocumentos(List<DocumentoTipoSolicitudDTO> lstdocumentos) {
-		this.lstdocumentos = lstdocumentos;
+	public void setLstAnexos(List<TiivsAnexoSolicitud> lstAnexos) {
+		this.lstAnexos = lstAnexos;
 	}
-
-	public List<SeguimientoDTO> getLstSeguimiento() {
-		return lstSeguimiento;
-	}
-
-	public void setLstSeguimiento(List<SeguimientoDTO> lstSeguimiento) {
-		this.lstSeguimiento = lstSeguimiento;
-	}
-		
-	
-	
-	
 
 	
-
 }

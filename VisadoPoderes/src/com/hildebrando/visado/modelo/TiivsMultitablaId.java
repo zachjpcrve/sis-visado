@@ -14,8 +14,8 @@ public class TiivsMultitablaId implements java.io.Serializable {
 	}
 
 	public TiivsMultitablaId(String codMult, String codElem) {
-		this.codMult = codMult;
-		this.codElem = codElem;
+		this.codMult = codMult.trim();
+		this.codElem = codElem.trim();
 	}
 
 	public String getCodMult() {
@@ -23,7 +23,7 @@ public class TiivsMultitablaId implements java.io.Serializable {
 	}
 
 	public void setCodMult(String codMult) {
-		this.codMult = codMult;
+		this.codMult = codMult.trim();
 	}
 
 	public String getCodElem() {
@@ -31,7 +31,7 @@ public class TiivsMultitablaId implements java.io.Serializable {
 	}
 
 	public void setCodElem(String codElem) {
-		this.codElem = codElem;
+		this.codElem = codElem.trim();
 	}
 
 	public boolean equals(Object other) {
