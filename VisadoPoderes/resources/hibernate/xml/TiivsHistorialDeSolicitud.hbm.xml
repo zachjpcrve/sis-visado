@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/11/2012 05:34:52 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsHistorialDeSolicitud" table="HISTORIALDESOLICITUD">
+        <id name="ROWID" type="java.lang.Long">
+            <column name="ROWID" />
+            <generator class="assigned" />
+        </id>
+        <property name="codSolicitud" type="java.lang.String">
+            <column name="CODSOLICITUD" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="ESTADO" />
+        </property>
+    </class>
+</hibernate-mapping>

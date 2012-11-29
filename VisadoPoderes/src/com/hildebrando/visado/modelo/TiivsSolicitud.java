@@ -43,6 +43,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private String txtPoderdante;
 	private String txtApoderado;
 	private String txtEstado;
+	private String txtNivel;
 
 	public TiivsSolicitud() {
 	}
@@ -345,5 +346,12 @@ public class TiivsSolicitud implements java.io.Serializable {
 	public void setTxtEstado(String txtEstado) {
 		this.txtEstado = txtEstado;
 	}
-	
+
+	public String getTxtNivel() {
+		return txtNivel;
+	}
+
+	public void setTxtNivel(String txtNivel) {
+		this.txtNivel = txtNivel;
+	}
 }
