@@ -25,11 +25,9 @@
 						
 						<td ><h:outputText styleClass="outputText" id="txtEstado" value="Estado" /></td>
 						<td >
-							<p:selectOneMenu value="#{solicitudMB.idEstado}" id="somEstado">
-								<f:selectItem itemLabel="--Todos--" itemValue="" />
-								<f:selectItems value="#{solicitudMB.lstEstado}" var="esta"
-									itemValue="#{esta.codEstado}" itemLabel="#{esta.descripcion}" />
-							</p:selectOneMenu>
+							<p:selectCheckboxMenu label="--Todos--" value="#{solicitudMB.lstEstadoSelected}" panelStyle="width:220px;" style="width:180px;">  
+						        <f:selectItems value="#{solicitudMB.estados}"/>  
+						    </p:selectCheckboxMenu>  
 						</td>	
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtEstado" /></td>
 						<p:tooltip for="tooltxtEstado" value="Estado de la solicitud" showEffect="fade" hideEffect="fade" /> 
@@ -47,9 +45,9 @@
 						
 						<td ><h:outputText styleClass="outputText" id="txtTipoSol" value="T. de Solicitud" /></td>
 						<td >
-							<p:selectCheckboxMenu label="--Todos--" value="#{solicitudMB.lstTipoSolicitud}">  
+							<p:selectCheckboxMenu label="--Todos--" value="#{solicitudMB.lstTipoSolicitudSelected}" panelStyle="width:220px;" style="width:180px;">  
 						        <f:selectItems value="#{solicitudMB.tiposSolicitud}" />  
-						    </p:selectCheckboxMenu>  
+						    </p:selectCheckboxMenu>
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTSolicitud" /></td>
 						<p:tooltip for="tooltxtTSolicitud" value="Tipo de Solicitud" showEffect="fade" hideEffect="fade" />  
@@ -95,7 +93,7 @@
 							<h:outputText styleClass="outputText" id="txtTipoOpe" value="T. de Operacion" />
 						</td>
 						<td >
-							<p:selectOneMenu value="#{solicitudMB.idOpeBan}" id="somTipoOpe" style="width:200px;">
+							<p:selectOneMenu value="#{solicitudMB.idOpeBan}" id="somTipoOpe" style="width:180px;">
 								<f:selectItem itemLabel="--Todos--" itemValue="" />
 								<f:selectItems value="#{solicitudMB.lstOpeBancaria}" var="tipoOpe"
 									itemValue="#{tipoOpe.codOperBan}" itemLabel="#{tipoOpe.desOperBan}" />
@@ -117,14 +115,8 @@
 							<h:outputText styleClass="outputText" id="txtCodOficina" value="Cod. Oficina:" />
 						</td>
 						<td>
-							<!--  <h:inputText styleClass="inputText" id="text11" value="#{solicitudMB.txtCodOfi}" disabled="false" maxlength="5" size="5"/>
-							-->
-							<p:autoComplete id="acCodOFina" value="#{solicitudMB.txtCodOfi}"
-								completeMethod="#{solicitudMB.completeCodOficina}" var="ofic"
-								converter="oficinaConverter"
-								itemLabel="#{ofic.codOfi}" itemValue="#{ofic}"
-								size="5" maxlength="5">
-							</p:autoComplete>
+							<p:autoComplete id="acCodOFina" value="#{solicitudMB.txtCodOfi}"   
+                   			 	completeMethod="#{solicitudMB.completeCodOficina}" size="5" maxlength="5"/> 
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtCodOfic" /></td>		
 						<p:tooltip for="tooltxtCodOfic" value="Codigo de Oficina" showEffect="fade" hideEffect="fade" /> 		
@@ -133,15 +125,8 @@
 							<h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" />
 						</td>
 						<td >
-							<!--  <h:inputText styleClass="inputText" id="text12" value="#{solicitudMB.txtNomOfi}" disabled="false" maxlength="60" size="20"/>
-							-->
-							<p:autoComplete id="acNomOFina" value="#{solicitudMB.txtNomOfi}"
-								completeMethod="#{solicitudMB.completeNomOficina}" var="ofic1"
-								converter="oficinaConverter"
-								itemLabel="#{ofic1.desOfi}" itemValue="#{ofic1}"
-								maxlength="60" size="20">
-							</p:autoComplete>
-							
+							<p:autoComplete id="acNomOFina" value="#{solicitudMB.txtNomOfi}"   
+                   			 completeMethod="#{solicitudMB.completeNomOficina}"/> 							
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtNomOfic" /></td>
 						<p:tooltip for="tooltxtNomOfic" value="Oficina" showEffect="fade" hideEffect="fade" /> 
@@ -150,7 +135,6 @@
 							<h:outputText styleClass="outputText" id="txtCodOfic" value="Cod. Oficina: " />
 						</td>
 						<td>
-							<h:inputText value="#{solicitudMB.txtNomOficina}" id="tmpNomOficina" rendered="false"/>
 							<p:selectOneMenu value="#{solicitudMB.idCodOfi}" id="somCodOfi" 
 									valueChangeListener="#{solicitudMB.buscarOficinaPorCodigo}" 
 									onchange="this">
@@ -217,7 +201,7 @@
 						</td>
 						<td >
 							<h:inputText styleClass="inputText"
-							id="text14" value="#{solicitudMB.txtNomPoderdante}" disabled="false" maxlength="60" size="33"/>
+							id="text14" value="#{solicitudMB.txtNomPoderdante}" disabled="false" maxlength="60" size="28"/>
 						</td>	
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolPoderdante" /></td>	
 						<p:tooltip for="toolPoderdante" value="Poderdante" showEffect="fade" hideEffect="fade" />			
@@ -237,11 +221,9 @@
 							<h:outputText styleClass="outputText" id="txtEstNivel" value="Estados del Nivel:" />
 						</td>
 						<td >
-							<p:selectOneMenu value="#{solicitudMB.idEstNivel}" id="somEstNivel">
-								<f:selectItem itemLabel="--Todos--" itemValue="" />
-								<f:selectItems value="#{solicitudMB.lstEstadoNivel}" var="estNiv"
-									itemValue="#{estNiv.codigoEstadoNivel}" itemLabel="#{estNiv.descripcion}" />
-							</p:selectOneMenu>
+							<p:selectCheckboxMenu label="--Todos--" value="#{solicitudMB.lstEstadoNivelSelected}" panelStyle="width:100px;" style="width:140px;">  
+						        <f:selectItems value="#{solicitudMB.estadosNivel}"/>  
+						    </p:selectCheckboxMenu> 
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstNivel" /></td>	
 						<p:tooltip for="toolEstNivel" value="Estados del Nivel" showEffect="fade" hideEffect="fade" />	
@@ -249,11 +231,9 @@
 							<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio" />
 						</td>
 						<td >
-							<p:selectOneMenu value="#{solicitudMB.idEstudio}" id="somEstudio">
-								<f:selectItem itemLabel="--Todos--" itemValue="" />
-								<f:selectItems value="#{solicitudMB.lstEstudio}" var="est"
-									itemValue="#{est.codEstudio}" itemLabel="#{est.desEstudio}" />
-							</p:selectOneMenu>
+							<p:selectCheckboxMenu label="--Todos--" value="#{solicitudMB.lstEstudioSelected}" panelStyle="width:120px;" style="width:140px;">  
+						        <f:selectItems value="#{solicitudMB.estudios}" />  
+						    </p:selectCheckboxMenu>  
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstudio" /></td>	
 						<p:tooltip for="toolEstudio" value="Estudio" showEffect="fade" hideEffect="fade" />
@@ -321,7 +301,7 @@
 							update="panelRes" ajax="false"/>
 					</td>
 					<td>
-						<p:commandButton value="Exportar" ajax="false"/>
+						<p:commandButton value="Exportar" ajax="false" disabled="#{solicitudMB.noHabilitarExportar}"/>
 					</td>
 				</tr>	
 			</table>	
@@ -343,7 +323,7 @@
 									emptyMessage="">
 				
 									<p:column headerText="Solicitud" width="55">
-	                                       <p:commandLink value="#{tbl.codSoli}" action="#{solDetMB.redirectDetalleSolicitud}" ajax="false">
+--	                                       <p:commandLink value="#{tbl.codSoli}" action="#{solicitudRegMB.redirectDetalleSolicitud}" ajax="false">
 	                                       		<f:param value="#{tbl.codSoli}" id="prm_codSoli" name="prm_codSoli"></f:param>
 	                                       </p:commandLink>
 	                                </p:column>
@@ -357,7 +337,7 @@
 									</p:column>
 									
 									<p:column headerText="Importe Total" width="73">
-										<h:outputText value="#{tbl.importe}"/>	
+										<h:outputText value="#{tbl.importe}" style=""/>	
 									</p:column>
 									
 									<p:column headerText="Poderdante" width="100">
@@ -377,7 +357,7 @@
 									</p:column>
 									
 									<p:column headerText="Nivel"  width="50">
-										<h:outputText value=""/>	
+										<h:outputText value="#{tbl.txtNivel}"/>	
 									</p:column>
 									
 									<p:column headerText="F. Envio"  width="73">
