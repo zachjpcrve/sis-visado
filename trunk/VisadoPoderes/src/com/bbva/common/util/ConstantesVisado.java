@@ -69,4 +69,21 @@ public class ConstantesVisado {
 	public static final java.lang.String CODIGO_TABLA_HORA_CORTE="T06";
 	public static final java.lang.String CODIGO_CAMPO_HORA_CORTE="0002";
 	public static final java.lang.String CODIGO_GRUPO_ABOGADOS="0000002";
+	
+	public static final String CAMPO_ESTADO_VERIFICACION_B="En Verificación B";
+	public static final String CAMPO_ESTADO_EN_REVISION="En Revisión";
+	
+	public static final String CAMPO_RANGO_INICIO = "rangoInicio";
+	public static final String CAMPO_RANGO_FIN = "rangoFin";
+	public static final String CAMPO_MONEDA= "moneda";
+	public static final String CAMPO_SOLES_TBL_MONEDA="PEN NUEVO SOL PERUANO";
+	public static final String CAMPO_DOLARES_TBL_MONEDA="USD  D¿AR USA";
+	public static final String CAMPO_EUROS_TBL_MONEDA ="EUR EURO";
+	public static final String CAMPO_SOLES = "soles";
+	public static final String CAMPO_DOLARES = "dolares";
+	public static final String CAMPO_EUROS = "euros";
+	public static final String CAMPO_NIVEL1 = "N1";
+	public static final String CAMPO_NIVEL2 = "N2";
+	public static final String CAMPO_NIVEL3 = "N3";
+	public static final String CAMPO_NIVEL4 = "N4";
 }
