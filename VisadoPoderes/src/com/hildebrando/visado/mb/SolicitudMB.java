@@ -2,6 +2,7 @@ package com.hildebrando.visado.mb;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,6 +40,13 @@ import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
 import com.hildebrando.visado.modelo.TiivsTipoServicio;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+
 @ManagedBean(name = "solicitudMB")
 @SessionScoped
 public class SolicitudMB 
@@ -59,6 +67,7 @@ public class SolicitudMB
 	private List<String> lstEstudioSelected;
 	private List<TiivsNivel> lstNivel;
 	private List<String> lstNivelSelected;
+	private List<String> lstSolicitudesSelected;
 	private List<TiivsOperacionBancaria> lstOpeBancaria;
 	private List<TiivsTipoServicio> lstTipoSolicitud;
 	private List<TiivsHistorialDeSolicitud> lstHistorial;
@@ -104,6 +113,7 @@ public class SolicitudMB
 	private Map<String,String> estadosNivel;
 	private Map<String,String> estudios;
 	private Boolean noHabilitarExportar;
+	private String nombreArchivoExcel;
 	
 	public static Logger logger = Logger.getLogger(SolicitudMB.class);
 	
@@ -130,6 +140,7 @@ public class SolicitudMB
 		estados = new HashMap<String, String>();
 		estadosNivel = new HashMap<String, String>();
 		estudios = new HashMap<String, String>();
+		lstSolicitudesSelected=new ArrayList<String>();
 				
 		cargarMultitabla();		
 		//Carga combo Rango Importes
@@ -168,6 +179,7 @@ public class SolicitudMB
 		setTxtNomOficina(ConstantesVisado.MSG_TODOS);
 		setTxtNomTerritorio(ConstantesVisado.MSG_TODOS);
 		setTxtCodOficina(ConstantesVisado.MSG_TODOS);
+		generarNombreArchivo();
 		
 	}
 	
@@ -192,7 +204,7 @@ public class SolicitudMB
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol= Busqueda.forClass(TiivsSolicitud.class);
 		
-		solicitudes = new ArrayList<TiivsSolicitud>();
+		//solicitudes = new ArrayList<TiivsSolicitud>();
 		
 		//1. Filtro por codigo de solicitud
 		if (getCodSolicitud().compareTo("")!=0)
@@ -352,6 +364,17 @@ public class SolicitudMB
 		{
 			System.out.println("Entro 15");
 			
+			for (TiivsSolicitud sol: solicitudes)
+			{
+				if (sol.getTxtNivel()!=null && sol.getTxtNivel().length()>0) 
+				{
+					if (lstNivelSelected.get(0).indexOf(sol.getTxtNivel())!=-1)
+					 {
+						 lstSolicitudesSelected.add(sol.getCodSoli());
+					 }
+				}
+			}
+			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudesSelected));
 		}
 		
 		//16. Filtro por estado de nivel
@@ -499,6 +522,21 @@ public class SolicitudMB
 				}
 			}
 			
+			//Se obtiene la moneda y se coloca las iniciales en la columna Importe Total
+			if (tmpSol.getMoneda()!=null)
+			{
+				String moneda = buscarAbrevMoneda(tmpSol.getMoneda());
+				tmpSol.setTxtImporte(moneda.concat(ConstantesVisado.DOS_PUNTOS).concat(String.valueOf(tmpSol.getImporte())));
+			}
+			else
+			{
+				if (tmpSol.getImporte()!=null)
+				{
+					tmpSol.setTxtImporte(String.valueOf(tmpSol.getImporte()));
+				}
+			}
+			
+			
 			//Seteo de la columna Poderdante
 			if (nomTipoDocPoder.compareTo("")==0)
 			{
@@ -510,16 +548,16 @@ public class SolicitudMB
 				{
 					if (tmpSol.getCodCentral().compareTo("")==0)
 					{
-						tmpSol.setTxtPoderdante(nomTipoDocPoder + ": " + tmpSol.getNumDocPoder() + " - " + tmpSol.getPoderante());
+						tmpSol.setTxtPoderdante(nomTipoDocPoder + ConstantesVisado.DOS_PUNTOS + tmpSol.getNumDocPoder() + ConstantesVisado.GUION + tmpSol.getPoderante());
 					}
 					else
 					{
-						tmpSol.setTxtPoderdante(ConstantesVisado.ETIQUETA_COD_CENTRAL+ tmpSol.getCodCentral()+": "+nomTipoDocPoder + ": " + tmpSol.getNumDocPoder() + " - " + tmpSol.getPoderante());
+						tmpSol.setTxtPoderdante(ConstantesVisado.ETIQUETA_COD_CENTRAL+ tmpSol.getCodCentral()+ConstantesVisado.DOS_PUNTOS+nomTipoDocPoder + ConstantesVisado.DOS_PUNTOS + tmpSol.getNumDocPoder() + ConstantesVisado.GUION + tmpSol.getPoderante());
 					}
 				}
 				else
 				{
-					tmpSol.setTxtPoderdante(nomTipoDocPoder + ": " + tmpSol.getNumDocPoder() + " - " + tmpSol.getPoderante());
+					tmpSol.setTxtPoderdante(nomTipoDocPoder + ConstantesVisado.DOS_PUNTOS + tmpSol.getNumDocPoder() + ConstantesVisado.GUION + tmpSol.getPoderante());
 				}
 			}
 			
@@ -543,16 +581,16 @@ public class SolicitudMB
 				{
 					if (tmpSol.getCodCentral().compareTo("")==0)
 					{
-						tmpSol.setTxtApoderado(nomTipoDocApod + ": " + tmpSol.getNumDocApoder() + " - " + tmpSol.getApoderado());
+						tmpSol.setTxtApoderado(nomTipoDocApod + ConstantesVisado.DOS_PUNTOS + tmpSol.getNumDocApoder() + ConstantesVisado.GUION + tmpSol.getApoderado());
 					}
 					else
 					{
-						tmpSol.setTxtApoderado(ConstantesVisado.ETIQUETA_COD_CENTRAL+ tmpSol.getCodCentral()+": "+nomTipoDocApod + ": " + tmpSol.getNumDocApoder() + " - " + tmpSol.getApoderado());
+						tmpSol.setTxtApoderado(ConstantesVisado.ETIQUETA_COD_CENTRAL+ tmpSol.getCodCentral()+ConstantesVisado.DOS_PUNTOS+nomTipoDocApod + ConstantesVisado.DOS_PUNTOS + tmpSol.getNumDocApoder() + ConstantesVisado.GUION + tmpSol.getApoderado());
 					}
 				}
 				else
 				{
-					tmpSol.setTxtApoderado(nomTipoDocApod + ": " + tmpSol.getNumDocApoder() + " - " + tmpSol.getApoderado());
+					tmpSol.setTxtApoderado(nomTipoDocApod + ConstantesVisado.DOS_PUNTOS + tmpSol.getNumDocApoder() + ConstantesVisado.GUION + tmpSol.getApoderado());
 				}
 			}
 			
@@ -571,42 +609,20 @@ public class SolicitudMB
 				if (lstNivel.size()>0)
 				{
 					String txtNivelTMP=""; 
-					GenericDao<TiivsNivel, Object> busqNivDAO = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-					Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
-					List<TiivsNivel> tmpNivel=new ArrayList<TiivsNivel>();
-					//filtro.add(Restrictions.gt(ConstantesVisado.CAMPO_RANGO_INICIO, tmpSol.getImporte()));
-					//filtro.add(Restrictions.le(ConstantesVisado.CAMPO_RANGO_FIN, tmpSol.getImporte()));
+					String descripcion = buscarDescMoneda(tmpSol.getMoneda());
+					System.out.println("Moneda encontrada: "  + descripcion);
 					
-					if (tmpSol.getMoneda()!=null)
+					for (TiivsNivel tmp: lstNivel)
 					{
-						String descripcion = buscarDescMoneda(tmpSol.getMoneda());
-						System.out.println("Moneda encontrada: "  + descripcion);
-						if (descripcion.compareTo("")!=0)
+						if (tmp.getMoneda().equalsIgnoreCase(descripcion))
 						{
-							filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_MONEDA, descripcion.toUpperCase()));
-						}
-					}
-						
-					try {
-						tmpNivel=busqNivDAO.buscarDinamico(filtro);
-					} catch (Exception e) {
-						e.printStackTrace();
-						logger.debug("Error al buscar los niveles de la solicitud");
-					}	
-					
-					if (tmpNivel.size()>0)
-					{
-						System.out.println("Entro");
-						for (TiivsNivel tmp: tmpNivel)
-						{
-							System.out.println("Comenzo el recorrido");
 							if (tmp.getDesNiv().equalsIgnoreCase(ConstantesVisado.CAMPO_NIVEL1))
 							{
 								BigDecimal importeTMP = tmpSol.getImporte();
 								BigDecimal rangoIni   = BigDecimal.valueOf(tmp.getRangoInicio());
 								BigDecimal rangoFin   = BigDecimal.valueOf(tmp.getRangoFin());
 								
-								if (importeTMP.compareTo(rangoIni)>0 && importeTMP.compareTo(rangoFin)<=0)
+								if (importeTMP.compareTo(rangoIni)>=0 && importeTMP.compareTo(rangoFin)<=0)
 								{
 									txtNivelTMP += ConstantesVisado.CAMPO_NIVEL1;
 								}
@@ -618,7 +634,7 @@ public class SolicitudMB
 								BigDecimal rangoIni   = BigDecimal.valueOf(tmp.getRangoInicio());
 								BigDecimal rangoFin   = BigDecimal.valueOf(tmp.getRangoFin());
 								
-								if (importeTMP.compareTo(rangoIni)>0 && importeTMP.compareTo(rangoFin)<=0)
+								if (importeTMP.compareTo(rangoIni)>=0 && importeTMP.compareTo(rangoFin)<=0)
 								{
 									if (txtNivelTMP.length()>0)
 									{
@@ -637,7 +653,7 @@ public class SolicitudMB
 								BigDecimal rangoIni   = BigDecimal.valueOf(tmp.getRangoInicio());
 								BigDecimal rangoFin   = BigDecimal.valueOf(tmp.getRangoFin());
 								
-								if (importeTMP.compareTo(rangoIni)>0 && importeTMP.compareTo(rangoFin)<=0)
+								if (importeTMP.compareTo(rangoIni)>=0 && importeTMP.compareTo(rangoFin)<=0)
 								{
 									if (txtNivelTMP.length()>0)
 									{
@@ -650,14 +666,16 @@ public class SolicitudMB
 								}
 							}
 						}
-						tmpSol.setTxtNivel(txtNivelTMP);
+						
 					}
-					else
-					{
-						txtNivelTMP+=ConstantesVisado.CAMPO_NIVEL4;
-						tmpSol.setTxtNivel(txtNivelTMP);
-					}
-				}	
+					tmpSol.setTxtNivel(txtNivelTMP);
+					//}
+					//else
+					//{
+						/*txtNivelTMP+=ConstantesVisado.CAMPO_NIVEL4;
+						tmpSol.setTxtNivel(txtNivelTMP);*/
+					//}
+				}
 				else
 				{
 					System.out.println("No se pudo obtener los rangos de los niveles para la solicitud. Verificar base de datos!!");
@@ -666,6 +684,41 @@ public class SolicitudMB
 			else
 			{
 				System.out.println("No se pudo determinar importe valido. Verificar registro de solicitud!!");
+			}
+		}
+	}
+	
+	public void generarNombreArchivo() 
+	{
+		java.util.Date date = new java.util.Date(); 
+		java.text.SimpleDateFormat sdf=new java.text.SimpleDateFormat("dd/MM/yyyy");
+		String fecha = sdf.format(date);
+		String nuevaFecha = fecha.substring(0,2)+""+fecha.substring(3,5)+""+fecha.substring(6,fecha.length());
+		
+		System.out.println("Fecha parseada: " + nuevaFecha);
+		
+		setNombreArchivoExcel("Solicitudes_Visado " + nuevaFecha + "_XXXX");
+	}
+	
+	public void exportarExcel(Object document) 
+	{
+		HSSFWorkbook wb = (HSSFWorkbook) document;
+		HSSFSheet sheet = wb.getSheetAt(0);
+		CellStyle style = wb.createCellStyle();
+		style.setFillBackgroundColor(IndexedColors.AQUA.getIndex());
+		
+		int i=9;
+		for (Row row : sheet) 
+		{
+			
+			
+			
+			
+			row.setRowNum(i++);
+			for (Cell cell : row) 
+			{
+				cell.setCellValue(cell.getStringCellValue().toUpperCase());
+				cell.setCellStyle(style);
 			}
 		}
 	}
@@ -690,6 +743,38 @@ public class SolicitudMB
 				else if (lstMoneda.get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_EUROS_TBL_MONEDA))
 				{
 					descripcion=ConstantesVisado.CAMPO_EUROS;
+				}
+				else
+				{
+					descripcion=lstMoneda.get(i).getDesMoneda();
+				}
+				break;
+			}
+		}
+		
+		return descripcion;
+	}
+	
+	public String buscarAbrevMoneda(String codigo)
+	{
+		int i=0;
+		String descripcion="";
+		
+		for (;i<=lstMoneda.size()-1;i++)
+		{
+			if (lstMoneda.get(i).getCodMoneda().equalsIgnoreCase(codigo))
+			{
+				if (lstMoneda.get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_SOLES_TBL_MONEDA))
+				{
+					descripcion=ConstantesVisado.CAMPO_ABREV_SOLES;
+				}
+				else if (lstMoneda.get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_DOLARES_TBL_MONEDA))
+				{
+					descripcion=ConstantesVisado.CAMPO_ABREV_DOLARES;
+				}
+				else if (lstMoneda.get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_EUROS_TBL_MONEDA))
+				{
+					descripcion=ConstantesVisado.CAMPO_ABREV_EUROS;
 				}
 				else
 				{
@@ -1108,7 +1193,7 @@ public class SolicitudMB
 		{
 			if (tmp.compareTo(lstNivel.get(w).getDesNiv())!=0)
 			{
-				niveles.put(lstNivel.get(w).getDesNiv(),lstNivel.get(w).getCodNiv());
+				niveles.put(lstNivel.get(w).getDesNiv(),lstNivel.get(w).getDesNiv());
 				tmp=lstNivel.get(w).getCodNiv();
 			}
 		}
@@ -1657,5 +1742,20 @@ public class SolicitudMB
 	public void setLstHistorial(List<TiivsHistorialDeSolicitud> lstHistorial) {
 		this.lstHistorial = lstHistorial;
 	}
-	
+
+	public List<String> getLstSolicitudesSelected() {
+		return lstSolicitudesSelected;
+	}
+
+	public void setLstSolicitudesSelected(List<String> lstSolicitudesSelected) {
+		this.lstSolicitudesSelected = lstSolicitudesSelected;
+	}
+
+	public String getNombreArchivoExcel() {
+		return nombreArchivoExcel;
+	}
+
+	public void setNombreArchivoExcel(String nombreArchivoExcel) {
+		this.nombreArchivoExcel = nombreArchivoExcel;
+	}
 }
