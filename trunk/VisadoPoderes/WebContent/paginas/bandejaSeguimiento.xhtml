@@ -301,7 +301,9 @@
 							update="panelRes" ajax="false"/>
 					</td>
 					<td>
-						<p:commandButton value="Exportar" ajax="false" disabled="#{solicitudMB.noHabilitarExportar}"/>
+						<p:commandButton value="Exportar" ajax="false" disabled="#{solicitudMB.noHabilitarExportar}">
+							<p:dataExporter type="xls" postProcessor="#{solicitudMB.exportarExcel}" target="datosSol" fileName="#{solicitudMB.nombreArchivoExcel}" />
+						</p:commandButton>
 					</td>
 				</tr>	
 			</table>	
@@ -315,7 +317,7 @@
 				<tr>	
 					<td>
 						<p:panel header="Resultados" id="panelRes" >
-							<p:dataTable value="#{solicitudMB.solicitudes}" var="tbl" rows="5"
+							<p:dataTable value="#{solicitudMB.solicitudes}" var="tbl" rows="5" id="datosSol"
 									paginatorPosition="bottom" scrollable="true" scrollWidth="950"  scrollHeight="300"
 									paginator="true"
 									paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
@@ -337,7 +339,7 @@
 									</p:column>
 									
 									<p:column headerText="Importe Total" width="73">
-										<h:outputText value="#{tbl.importe}" style=""/>	
+										<h:outputText value="#{tbl.txtImporte}"/>	
 									</p:column>
 									
 									<p:column headerText="Poderdante" width="100">

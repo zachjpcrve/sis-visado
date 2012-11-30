@@ -44,7 +44,8 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private String txtApoderado;
 	private String txtEstado;
 	private String txtNivel;
-
+	private String txtImporte;
+	
 	public TiivsSolicitud() {
 	}
 
@@ -353,5 +354,13 @@ public class TiivsSolicitud implements java.io.Serializable {
 
 	public void setTxtNivel(String txtNivel) {
 		this.txtNivel = txtNivel;
+	}
+
+	public String getTxtImporte() {
+		return txtImporte;
+	}
+
+	public void setTxtImporte(String txtImporte) {
+		this.txtImporte = txtImporte;
 	}
 }
