@@ -196,7 +196,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Serializable getFecha() {
+	public Timestamp getFecha() {
 		return this.fecha;
 	}
 
@@ -252,7 +252,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.importe = importe;
 	}
 
-	public Serializable getFechaEnvio() {
+	public Timestamp getFechaEnvio() {
 		return this.fechaEnvio;
 	}
 
@@ -260,7 +260,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.fechaEnvio = fechaEnvio;
 	}
 
-	public Serializable getFechaEstado() {
+	public Timestamp getFechaEstado() {
 		return this.fechaEstado;
 	}
 
@@ -284,7 +284,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.moneda = moneda;
 	}
 
-	public Serializable getFechaRespuesta() {
+	public Timestamp getFechaRespuesta() {
 		return this.fechaRespuesta;
 	}
 
