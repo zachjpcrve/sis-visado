@@ -301,9 +301,8 @@
 							update="panelRes" ajax="false"/>
 					</td>
 					<td>
-						<p:commandButton value="Exportar" ajax="false" disabled="#{solicitudMB.noHabilitarExportar}">
-							<p:dataExporter type="xls" postProcessor="#{solicitudMB.exportarExcel}" target="datosSol" fileName="#{solicitudMB.nombreArchivoExcel}" />
-						</p:commandButton>
+						<p:commandButton value="Exportar Excel" disabled="#{solicitudMB.noHabilitarExportar}"
+							actionListener="#{solicitudMB.exportarExcelPOI}"/>
 					</td>
 				</tr>	
 			</table>	
@@ -324,57 +323,93 @@
 									rowsPerPageTemplate="5,10,15"
 									emptyMessage="">
 				
-									<p:column headerText="Solicitud" width="55">
---	                                       <p:commandLink value="#{tbl.codSoli}" action="#{solicitudRegMB.redirectDetalleSolicitud}" ajax="false">
+									<p:column width="55">
+										   <f:facet name="header">  
+									         <h:outputText value="Solicitud" />  
+									       </f:facet>  
+	                                       <p:commandLink value="#{tbl.codSoli}" action="#{solicitudRegMB.redirectDetalleSolicitud}" ajax="false">
 	                                       		<f:param value="#{tbl.codSoli}" id="prm_codSoli" name="prm_codSoli"></f:param>
 	                                       </p:commandLink>
 	                                </p:column>
 									
-									<p:column headerText="Of." width="35">
+									<p:column width="35">
+										 <f:facet name="header">  
+									         <h:outputText value="Of." />  
+									       </f:facet>  
 										<h:outputText value="#{tbl.tiivsOficina1.codOfi}"/>	
 									</p:column>
 									
-									<p:column headerText="Estado" width="50">
+									<p:column width="50">
+									 	<f:facet name="header">  
+									         <h:outputText value="Estado" />  
+									    </f:facet>  
 										<h:outputText value="#{tbl.txtEstado}"/>	
 									</p:column>
 									
-									<p:column headerText="Importe Total" width="73">
+									<p:column width="73">
+										<f:facet name="header">  
+									         <h:outputText value="Importe Total" />  
+									    </f:facet> 
 										<h:outputText value="#{tbl.txtImporte}"/>	
 									</p:column>
 									
-									<p:column headerText="Poderdante" width="100">
+									<p:column width="100">
+										<f:facet name="header">  
+									         <h:outputText value="Poderdante" />  
+									    </f:facet> 
 										<h:outputText value="#{tbl.txtPoderdante}"/>		
 									</p:column>
 									
-									<p:column headerText="Apoderado" width="100">
+									<p:column width="100">
+										<f:facet name="header">  
+									         <h:outputText value="Apoderado" />  
+									    </f:facet> 
 										<h:outputText value="#{tbl.txtApoderado}"/>		
 									</p:column>
 									
-									<p:column headerText="Tipo Operacion" width="100">
+									<p:column width="100">
+										<f:facet name="header">  
+									         <h:outputText value="T. Operacion" />  
+									    </f:facet>
 										<h:outputText value="#{tbl.operacionesBancarias}"/>					
 									</p:column>
 									
-									<p:column headerText="Estudio"  width="75">
+									<p:column width="75">
+										<f:facet name="header">  
+									         <h:outputText value="Estudio" />  
+									    </f:facet>
 										<h:outputText value="#{tbl.estudio}"/>	
 									</p:column>
 									
-									<p:column headerText="Nivel"  width="50">
+									<p:column width="50">
+										<f:facet name="header">  
+									         <h:outputText value="Nivel" />  
+									    </f:facet>
 										<h:outputText value="#{tbl.txtNivel}"/>	
 									</p:column>
 									
-									<p:column headerText="F. Envio"  width="73">
+									<p:column width="73">
+										<f:facet name="header">  
+									         <h:outputText value="F. Envio" />  
+									    </f:facet>
 										<h:outputText value="#{tbl.fechaEnvio}"/>	
 									</p:column>
 									
-									<p:column headerText="Fecha Rpta" width="55">
+									<p:column width="55">
+										<f:facet name="header">  
+									         <h:outputText value="Fecha Rpta" />  
+									    </f:facet>
 										<h:outputText value="#{tbl.fechaRespuesta}"/>	
 									</p:column>
 									
-									<p:column headerText="Fecha Estado"  width="73">
+									<p:column width="73">
+										<f:facet name="header">  
+									         <h:outputText value="Fecha Estado" />  
+									    </f:facet>
 										<h:outputText value="#{tbl.fechaEstado}"/>
 									</p:column>
 									
-									<p:column headerText="Seguimiento" width="65">
+									<p:column headerText="Seguimiento" width="65" exportable="false">
 										 <p:commandButton icon="ui-icon-document" update=":frm">
 					                       
 					                     </p:commandButton>
