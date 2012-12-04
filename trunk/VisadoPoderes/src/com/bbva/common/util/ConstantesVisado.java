@@ -92,6 +92,9 @@ public class ConstantesVisado {
 	
 	public static final String DOS_PUNTOS = ": ";
 	public static final String GUION = " - ";
+	public static final String TRES_CEROS = "000";
+	public static final String DOS_CEROS = "00";
+	public static final String CERO = "0";
 	
 	//Constantes para archivo Excel
 	public static final String TITULO_CABECERA_EXCEL ="CONSULTA DE SOLICITUDES DE VISADO";
@@ -117,4 +120,20 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_FILTRO_BUS_TERRITORIO="Territorio";
 	public static final String ETIQUETA_FILTRO_BUS_GENERADOR="Generador:";
 	public static final String ETIQUETA_FILTRO_BUS_FECHA_HORA = "Fecha y Hora:";
+	public static final String ETIQUETA_COLUMNA_ITEM = "Item";
+	public static final String ETIQUETA_COLUMNA_NRO_SOLICITUD = "Nro Solicitud";
+	public static final String ETIQUETA_COLUMNA_COD_OFICINA = "Cod Oficina";
+	public static final String ETIQUETA_COLUMNA_OFICINA = "Oficina";
+	public static final String ETIQUETA_COLUMNA_TERRITORIO = "Territorio";
+	public static final String ETIQUETA_COLUMNA_ESTADO = "Estado";
+	public static final String ETIQUETA_COLUMNA_IMPORTE = "Importe";
+	public static final String ETIQUETA_COLUMNA_PODERDANTE = "Poderdante";
+	public static final String ETIQUETA_COLUMNA_APODERADO = "Apoderado";
+	public static final String ETIQUETA_COLUMNA_TIPO_SOL = "Tipo de Solicitud";
+	public static final String ETIQUETA_COLUMNA_TIPO_OPE = "Tipo de Operacion";
+	public static final String ETIQUETA_COLUMNA_ESTUDIO = "Estudio";
+	public static final String ETIQUETA_COLUMNA_NIVEL = "Nivel";
+	public static final String ETIQUETA_COLUMNA_FECHA_ENVIO = "Fecha de Envio";
+	public static final String ETIQUETA_COLUMNA_FECHA_RPTA = "Fecha de Respuesta";
+	public static final String ETIQUETA_COLUMNA_FECHA_ESTADO = "Fecha de Estado";
 }
