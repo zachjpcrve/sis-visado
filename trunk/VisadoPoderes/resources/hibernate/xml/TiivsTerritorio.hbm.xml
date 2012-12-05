@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsTerritorio" table="TIIVS_TERRITORIO" >
+        <id name="codTer" type="string">
+            <column name="COD_TER" length="8" />
+            <generator class="assigned" />
+        </id>
+        <property name="desTer" type="string">
+            <column name="DES_TER" length="45" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
