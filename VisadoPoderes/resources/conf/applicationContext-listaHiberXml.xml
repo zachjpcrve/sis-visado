@@ -11,25 +11,26 @@
 		class="org.springframework.beans.factory.config.ListFactoryBean">
 		<property name="sourceList">
 			<list>
-				<value>hibernate/xml/TiivsAnexoSolicitud.hbm.xml</value>
-				<value>hibernate/xml/TiivsApoderdante.hbm.xml</value>
 				<value>hibernate/xml/TiivsEstudio.hbm.xml</value>
-				<value>hibernate/xml/TiivsGrupo.hbm.xml</value>
-				<value>hibernate/xml/TiivsHistSolicitud.hbm.xml</value>
-				<value>hibernate/xml/TiivsMiembro.hbm.xml</value>
-				<value>hibernate/xml/TiivsMultitabla.hbm.xml</value>
-				<value>hibernate/xml/TiivsNivel.hbm.xml</value>
-				<value>hibernate/xml/TiivsOficina.hbm.xml</value>
-				<value>hibernate/xml/TiivsOficina1.hbm.xml</value>
-				<value>hibernate/xml/TiivsOperacionBancaria.hbm.xml</value>
-				<value>hibernate/xml/TiivsPoderdante.hbm.xml</value>
 				<value>hibernate/xml/TiivsSolicitud.hbm.xml</value>
-				<value>hibernate/xml/TiivsSolicitudOperban.hbm.xml</value>
+				<value>hibernate/xml/TiivsHistSolicitud.hbm.xml</value>
+				<value>hibernate/xml/TiivsNivel.hbm.xml</value>
 				<value>hibernate/xml/TiivsTarea.hbm.xml</value>
-				<value>hibernate/xml/TiivsTareaGrupo.hbm.xml</value>
 				<value>hibernate/xml/TiivsTerritorio.hbm.xml</value>
-				<value>hibernate/xml/TiivsTipoDocumento.hbm.xml</value>
-				<value>hibernate/xml/TiivsTipoServicio.hbm.xml</value>
+				<value>hibernate/xml/TiivsTipoSolicitud.hbm.xml</value>
+				<value>hibernate/xml/TiivsTipoSolicDocumento.hbm.xml</value>
+				<value>hibernate/xml/TiivsMultitabla.hbm.xml</value>
+				<value>hibernate/xml/TiivsPersona.hbm.xml</value>
+				<value>hibernate/xml/TiivsAnexoSolicitud.hbm.xml</value>
+				<value>hibernate/xml/TiivsSolicitudAgrupacion.hbm.xml</value>
+				<value>hibernate/xml/Historialdesolicitud.hbm.xml</value>
+				<value>hibernate/xml/TiivsMiembro.hbm.xml</value>
+				<value>hibernate/xml/TiivsSolicitudOperban.hbm.xml</value>
+				<value>hibernate/xml/TiivsOficina1.hbm.xml</value>
+				<value>hibernate/xml/TiivsAgrupacionPersona.hbm.xml</value>
+				<value>hibernate/xml/TiivsOperacionBancaria.hbm.xml</value>
+				<value>hibernate/xml/TiivsGrupo.hbm.xml</value>
+				<value>hibernate/xml/TiivsSolicitudEstadoNivel.hbm.xml</value>
 <!-- 				<value>hibernate/xml/Ldapperu2.hbm.xml</value> -->
 			</list>
 		</property>
