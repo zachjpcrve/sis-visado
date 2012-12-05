@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsTipoSolicDocumento" table="TIIVS_TIPO_SOLIC_DOCUMENTO" >
+        <id name="codDoc" type="string">
+            <column name="COD_DOC" length="7" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="tiivsTipoSolicitud" class="com.hildebrando.visado.modelo.TiivsTipoSolicitud" fetch="select">
+            <column name="COD_TIPO_SOLIC" length="7" not-null="true" />
+        </many-to-one>
+        <property name="desDoc" type="string">
+            <column name="DES_DOC" length="300" not-null="true" />
+        </property>
+        <property name="activo" type="char">
+            <column name="ACTIVO" length="1" not-null="true" />
+        </property>
+        <property name="obligatorio" type="char">
+            <column name="OBLIGATORIO" length="1" not-null="true" />
+        </property>
+        <set name="tiivsAnexoSolicituds" table="TIIVS_ANEXO_SOLICITUD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COD_DOC" length="7" not-null="true" />
+            </key>
+            <one-to-many class="com.hildebrando.visado.modelo.TiivsAnexoSolicitud" />
+        </set>
+    </class>
+</hibernate-mapping>
