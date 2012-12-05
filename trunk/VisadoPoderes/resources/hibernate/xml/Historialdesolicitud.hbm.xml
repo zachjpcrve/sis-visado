@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.Historialdesolicitud" table="HISTORIALDESOLICITUD">
+        <composite-id name="id" class="com.hildebrando.visado.modelo.HistorialdesolicitudId">
+            <key-property name="rowId" type="big_decimal">
+                <column name="ROW_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="codSoli" type="string">
+                <column name="COD_SOLI" length="7" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="7" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>
