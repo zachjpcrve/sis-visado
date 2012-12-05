@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsAgrupacionPersona" table="TIIVS_AGRUPACION_PERSONA">
+        <composite-id name="id" class="com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId">
+            <key-property name="codSoli" type="string">
+                <column name="COD_SOLI" length="7" />
+            </key-property>
+            <key-property name="codAgrup" type="big_decimal">
+                <column name="COD_AGRUP" precision="22" scale="0" />
+            </key-property>
+            <key-property name="codPer" type="big_decimal">
+                <column name="COD_PER" precision="22" scale="0" />
+            </key-property>
+            <key-property name="tipPartic" type="big_decimal">
+                <column name="TIP_PARTIC" precision="22" scale="0" />
+            </key-property>
+            <key-property name="clasifPer" type="string">
+                <column name="CLASIF_PER" length="20" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="tiivsSolicitudAgrupacion" class="com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion" update="false" insert="false" fetch="select">
+            <column name="COD_SOLI" length="7" />
+            <column name="COD_AGRUP" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="tiivsPersona" class="com.hildebrando.visado.modelo.TiivsPersona" update="false" insert="false" fetch="select">
+            <column name="COD_PER" precision="22" scale="0" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>
