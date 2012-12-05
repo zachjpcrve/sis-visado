@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 07/11/2012 02:39:40 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 05/12/2012 10:05:07 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.hildebrando.visado.modelo.TiivsTipoDocumento" table="TIIVS_TIPO_DOCUMENTO">
+    <class name="com.hildebrando.visado.modelo.TiivsTipoSolicDocumento" table="TIIVS_TIPO_SOLIC_DOCUMENTO">
         <id name="codDoc" type="string">
             <column name="COD_DOC" length="7" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="tiivsTipoServicio" class="com.hildebrando.visado.modelo.TiivsTipoServicio" fetch="select" lazy="false">
-            <column name="COD_OPER" length="7" not-null="true" />
+        <many-to-one name="tiivsTipoSolicitud" class="com.hildebrando.visado.modelo.TiivsTipoSolicitud" fetch="select">
+            <column name="COD_TIPO_SOLIC" length="7" not-null="true" />
         </many-to-one>
         <property name="desDoc" type="string">
             <column name="DES_DOC" length="300" not-null="true" />
@@ -20,7 +20,7 @@
         <property name="obligatorio" type="char">
             <column name="OBLIGATORIO" length="1" not-null="true" />
         </property>
-        <set name="tiivsAnexoSolicituds" table="TIIVS_ANEXO_SOLICITUD" inverse="true" lazy="false" fetch="select">
+        <set name="tiivsAnexoSolicituds" table="TIIVS_ANEXO_SOLICITUD" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="COD_DOC" length="7" not-null="true" />
             </key>
