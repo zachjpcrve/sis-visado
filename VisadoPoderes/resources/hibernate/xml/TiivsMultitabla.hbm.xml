@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsMultitabla" table="TIIVS_MULTITABLA" >
+        <composite-id name="id" class="com.hildebrando.visado.modelo.TiivsMultitablaId">
+            <key-property name="codMult" type="string">
+                <column name="COD_MULT" length="3" />
+            </key-property>
+            <key-property name="codElem" type="string">
+                <column name="COD_ELEM" length="4" />
+            </key-property>
+        </composite-id>
+        <property name="valor1" type="string">
+            <column name="VALOR1" length="100" />
+        </property>
+        <property name="valor2" type="string">
+            <column name="VALOR2" length="100" />
+        </property>
+        <property name="valor3" type="string">
+            <column name="VALOR3" length="100" />
+        </property>
+        <property name="valor4" type="string">
+            <column name="VALOR4" length="100" />
+        </property>
+        <property name="valor5" type="string">
+            <column name="VALOR5" length="100" />
+        </property>
+        <property name="valor6" type="string">
+            <column name="VALOR6" length="100" />
+        </property>
+        <property name="valor7" type="string">
+            <column name="VALOR7" length="100" />
+        </property>
+    </class>
+</hibernate-mapping>
