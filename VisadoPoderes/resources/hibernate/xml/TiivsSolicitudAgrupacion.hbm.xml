@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion" table="TIIVS_SOLICITUD_AGRUPACION" >
+        <composite-id name="id" class="com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId">
+            <key-property name="codSoli" type="string">
+                <column name="COD_SOLI" length="7" />
+            </key-property>
+            <key-property name="numGrupo" type="int">
+                <column name="NUM_GRUPO" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="tiivsSolicitud" class="com.hildebrando.visado.modelo.TiivsSolicitud" update="false" insert="false" fetch="select">
+            <column name="COD_SOLI" length="7" not-null="true" />
+        </many-to-one>
+        <property name="activo" type="string">
+            <column name="ACTIVO" length="1" />
+        </property>
+        <set name="tiivsAgrupacionPersonas" table="TIIVS_AGRUPACION_PERSONA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COD_SOLI" length="7" />
+                <column name="COD_AGRUP" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.hildebrando.visado.modelo.TiivsAgrupacionPersona" />
+        </set>
+    </class>
+</hibernate-mapping>
