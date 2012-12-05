@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsSolicitudEstadoNivel" table="TIIVS_SOLICITUD_ESTADO_NIVEL" >
+        <composite-id name="id" class="com.hildebrando.visado.modelo.TiivsSolicitudEstadoNivelId">
+            <key-property name="codSol" type="string">
+                <column name="COD_SOL" length="7" />
+            </key-property>
+            <key-property name="codNivel" type="string">
+                <column name="COD_NIVEL" length="4" />
+            </key-property>
+            <key-property name="codEstado" type="string">
+                <column name="COD_ESTADO" length="4" />
+            </key-property>
+            <key-property name="codUsuario" type="string">
+                <column name="COD_USUARIO" length="10" />
+            </key-property>
+            <key-property name="tipo" type="string">
+                <column name="TIPO" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>
