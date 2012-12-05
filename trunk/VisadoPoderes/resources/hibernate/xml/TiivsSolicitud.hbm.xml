@@ -1,48 +1,27 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 07/11/2012 02:39:40 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 05/12/2012 10:05:07 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsSolicitud" table="TIIVS_SOLICITUD">
         <id name="codSoli" type="string">
             <column name="COD_SOLI" length="7" />
-            <generator class="assigned" />
+            <generator class="foreign">
+                <param name="property">tiivsSolicitud</param>
+            </generator>
         </id>
-        <many-to-one name="tiivsTipoServicio" class="com.hildebrando.visado.modelo.TiivsTipoServicio" fetch="select" lazy="false">
-            <column name="COD_OPER" length="7" not-null="true" />
-        </many-to-one>
-        <many-to-one name="tiivsOficina1" class="com.hildebrando.visado.modelo.TiivsOficina1" fetch="select" lazy="false">
+        <many-to-one name="tiivsOficina1" class="com.hildebrando.visado.modelo.TiivsOficina1" fetch="select">
             <column name="COD_OFI" length="8" not-null="true" />
         </many-to-one>
-        <property name="poderante" type="string">
-            <column name="PODERANTE" length="75" not-null="true" />
-        </property>
-        <property name="tipDocPoder" type="string">
-            <column name="TIP_DOC_PODER" length="7" not-null="true" />
-        </property>
-        <property name="numDocPoder" type="string">
-            <column name="NUM_DOC_PODER" length="11" not-null="true" />
-        </property>
-        <property name="codCentral" type="string">
-            <column name="COD_CENTRAL" length="8" />
-        </property>
-        <property name="apoderado" type="string">
-            <column name="APODERADO" length="75" not-null="true" />
-        </property>
-        <property name="tipDocApoder" type="string">
-            <column name="TIP_DOC_APODER" length="7" not-null="true" />
-        </property>
-        <property name="numDocApoder" type="string">
-            <column name="NUM_DOC_APODER" length="11" not-null="true" />
-        </property>
+        <one-to-one name="tiivsSolicitud" class="com.hildebrando.visado.modelo.TiivsSolicitud" constrained="true"></one-to-one>
         <property name="estado" type="string">
             <column name="ESTADO" length="7" not-null="true" />
         </property>
-        <property name="fecha" type="java.sql.Timestamp">
+        <property name="fecha" type="serializable">
             <column name="FECHA" not-null="true" />
         </property>
-        <property name="nomSolicitante" type="string">
-            <column name="NOM_SOLICITANTE" length="75" not-null="true" />
+        <property name="codTipoSolic" type="string">
+            <column name="COD_TIPO_SOLIC" length="7" not-null="true" />
         </property>
         <property name="regAbogado" type="string">
             <column name="REG_ABOGADO" length="7" />
@@ -59,33 +38,36 @@
         <property name="importe" type="big_decimal">
             <column name="IMPORTE" precision="12" />
         </property>
-        <property name="fechaEnvio" type="java.sql.Timestamp">
+        <property name="fechaEnvio" type="serializable">
             <column name="FECHA_ENVIO" />
         </property>
-        <property name="fechaEstado" type="java.sql.Timestamp">
+        <property name="fechaEstado" type="serializable">
             <column name="FECHA_ESTADO" />
-        </property>
-        <property name="operacionesBancarias" type="string">
-            <column name="OPERACIONES_BANCARIAS" length="200" />
         </property>
         <property name="moneda" type="string">
             <column name="MONEDA" length="7" />
         </property>
-        <property name="fechaRespuesta" type="java.sql.Timestamp">
+        <property name="fechaRespuesta" type="serializable">
             <column name="FECHA_RESPUESTA" />
         </property>
-        <set name="tiivsApoderdantes" table="TIIVS_APODERDANTE" inverse="true" lazy="false" fetch="select">
+        <property name="comision" type="big_decimal">
+            <column name="COMISION" precision="22" scale="0" />
+        </property>
+        <property name="nroVoucher" type="string">
+            <column name="NRO_VOUCHER" length="12" />
+        </property>
+        <one-to-one name="tiivsSolicitud" class="com.hildebrando.visado.modelo.TiivsSolicitud"></one-to-one>
+        <set name="tiivsAgrupacionPersonas" table="TIIVS_AGRUPACION_PERSONA" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="COD_SOLI" length="7" />
             </key>
-            <one-to-many class="com.hildebrando.visado.modelo.TiivsApoderdante" />
+            <one-to-many class="com.hildebrando.visado.modelo.TiivsAgrupacionPersona" />
         </set>
-        <set name="tiivsPoderdantes" table="TIIVS_PODERDANTE" inverse="true" lazy="false" fetch="select">
+        <set name="tiivsSolicitudAgrupacions" table="TIIVS_SOLICITUD_AGRUPACION" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="COD_SOLI" length="7" />
             </key>
-            <one-to-many class="com.hildebrando.visado.modelo.TiivsPoderdante" />
+            <one-to-many class="com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion" />
         </set>
-    
     </class>
 </hibernate-mapping>

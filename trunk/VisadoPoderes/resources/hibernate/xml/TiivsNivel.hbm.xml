@@ -1,42 +1,18 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 07/11/2012 02:39:40 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 05/12/2012 10:05:07 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsNivel" table="TIIVS_NIVEL">
-        <id name="ID" type="long">
-            <column name="ID" length="8" />
+        <id name="codNiv" type="string">
+            <column name="COD_NIV" length="4" />
             <generator class="assigned" />
         </id>
-        <property name="codNiv" type="string">
-            <column name="COD_NIV" length="4" />
-        </property>
         <property name="desNiv" type="string">
             <column name="DES_NIV" length="45" />
         </property>
-        <property name="estado" type="int">
+        <property name="estado" type="string">
             <column name="ESTADO" length="1" />
-        </property>
-        <property name="rangoInicio" type="int">
-            <column name="RANGO_INICIO" length="8" />
-        </property>
-        <property name="rangoFin" type="int">
-            <column name="RANGO_FIN" length="8" />
-        </property>
-        <property name="moneda" type="string">
-            <column name="MONEDA" length="100" />
-        </property>
-        <property name="fechaReg" type="date">
-            <column name="FECHA_REG"/>
-        </property>
-        <property name="usuarioReg" type="string">
-            <column name="USUARIO_REG" length="50" />
-        </property>
-        <property name="fechaAct" type="date">
-            <column name="FECHA_ACT"/>
-        </property>
-        <property name="usuarioAct" type="string">
-            <column name="USUARIO_ACT" length="50" />
         </property>
     </class>
 </hibernate-mapping>

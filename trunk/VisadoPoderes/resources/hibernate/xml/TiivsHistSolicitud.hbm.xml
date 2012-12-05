@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 07/11/2012 02:39:40 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 05/12/2012 10:05:07 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsHistSolicitud" table="TIIVS_HIST_SOLICITUD">
         <composite-id name="id" class="com.hildebrando.visado.modelo.TiivsHistSolicitudId">
