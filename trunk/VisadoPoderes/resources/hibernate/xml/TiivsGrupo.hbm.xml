@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsGrupo" table="TIIVS_GRUPO">
+        <id name="codGrupo" type="string">
+            <column name="COD_GRUPO" length="7" />
+            <generator class="assigned" />
+        </id>
+        <property name="desGrupo" type="string">
+            <column name="DES_GRUPO" length="50" not-null="true" />
+        </property>
+        <set name="tiivsTareas" table="TIIVS_TAREA_GRUPO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COD_GRUPO" length="7" not-null="true" />
+            </key>
+            <many-to-many entity-name="com.hildebrando.visado.modelo.TiivsTarea">
+                <column name="COD_TAREA" length="7" not-null="true" />
+            </many-to-many>
+        </set>
+        <set name="tiivsMiembros" table="TIIVS_MIEMBRO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COD_GRUPO" length="7" />
+            </key>
+            <one-to-many class="com.hildebrando.visado.modelo.TiivsMiembro" />
+        </set>
+    </class>
+</hibernate-mapping>
