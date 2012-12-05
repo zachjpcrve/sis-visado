@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/12/2012 05:43:58 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.Ldapperu2" table="LDAPPERU2">
+        <composite-id name="id" class="com.hildebrando.visado.modelo.Ldapperu2Id">
+            <key-property name="registrou" type="string">
+                <column name="REGISTROU" length="7" />
+            </key-property>
+            <key-property name="registrop" type="string">
+                <column name="REGISTROP" length="7" />
+            </key-property>
+            <key-property name="codpais" type="string">
+                <column name="CODPAIS" length="4" />
+            </key-property>
+            <key-property name="despais" type="string">
+                <column name="DESPAIS" length="45" />
+            </key-property>
+            <key-property name="codemp" type="string">
+                <column name="CODEMP" length="4" />
+            </key-property>
+            <key-property name="desemp" type="string">
+                <column name="DESEMP" length="45" />
+            </key-property>
+            <key-property name="nummat" type="string">
+                <column name="NUMMAT" length="7" />
+            </key-property>
+            <key-property name="codusu" type="string">
+                <column name="CODUSU" length="7" />
+            </key-property>
+            <key-property name="nombre" type="string">
+                <column name="NOMBRE" length="25" />
+            </key-property>
+            <key-property name="apepat" type="string">
+                <column name="APEPAT" length="25" />
+            </key-property>
+            <key-property name="apemat" type="string">
+                <column name="APEMAT" length="25" />
+            </key-property>
+            <key-property name="sexo" type="string">
+                <column name="SEXO" length="1" />
+            </key-property>
+            <key-property name="fecnac" type="string">
+                <column name="FECNAC" length="10" />
+            </key-property>
+            <key-property name="tipdoc" type="string">
+                <column name="TIPDOC" length="1" />
+            </key-property>
+            <key-property name="numdoc" type="string">
+                <column name="NUMDOC" length="9" />
+            </key-property>
+            <key-property name="telefono1" type="string">
+                <column name="TELEFONO1" length="9" />
+            </key-property>
+            <key-property name="telefono2" type="string">
+                <column name="TELEFONO2" length="9" />
+            </key-property>
+            <key-property name="corelec" type="string">
+                <column name="CORELEC" length="45" />
+            </key-property>
+            <key-property name="codcargo" type="string">
+                <column name="CODCARGO" length="4" />
+            </key-property>
+            <key-property name="nomcargo" type="string">
+                <column name="NOMCARGO" length="45" />
+            </key-property>
+            <key-property name="codempant" type="string">
+                <column name="CODEMPANT" length="4" />
+            </key-property>
+            <key-property name="codofi" type="string">
+                <column name="CODOFI" length="4" />
+            </key-property>
+            <key-property name="desofi" type="string">
+                <column name="DESOFI" length="45" />
+            </key-property>
+            <key-property name="tipofi" type="string">
+                <column name="TIPOFI" length="1" />
+            </key-property>
+            <key-property name="gesper" type="string">
+                <column name="GESPER" length="7" />
+            </key-property>
+            <key-property name="fecing" type="string">
+                <column name="FECING" length="10" />
+            </key-property>
+            <key-property name="nrohijos" type="java.lang.Byte">
+                <column name="NROHIJOS" precision="2" scale="0" />
+            </key-property>
+            <key-property name="codger" type="string">
+                <column name="CODGER" length="8" />
+            </key-property>
+            <key-property name="nomger" type="string">
+                <column name="NOMGER" length="18" />
+            </key-property>
+            <key-property name="telofi1" type="string">
+                <column name="TELOFI1" length="18" />
+            </key-property>
+            <key-property name="telofi2" type="string">
+                <column name="TELOFI2" length="18" />
+            </key-property>
+            <key-property name="carblan" type="string">
+                <column name="CARBLAN" length="15" />
+            </key-property>
+            <key-property name="proinf" type="string">
+                <column name="PROINF" length="1" />
+            </key-property>
+            <key-property name="codusujefe" type="string">
+                <column name="CODUSUJEFE" length="7" />
+            </key-property>
+            <key-property name="coduniorg" type="string">
+                <column name="CODUNIORG" length="8" />
+            </key-property>
+            <key-property name="desuniorg" type="string">
+                <column name="DESUNIORG" length="45" />
+            </key-property>
+            <key-property name="codnivel1" type="string">
+                <column name="CODNIVEL1" length="8" />
+            </key-property>
+            <key-property name="desnivel1" type="string">
+                <column name="DESNIVEL1" length="45" />
+            </key-property>
+            <key-property name="codnivel2" type="string">
+                <column name="CODNIVEL2" length="8" />
+            </key-property>
+            <key-property name="desnivel2" type="string">
+                <column name="DESNIVEL2" length="45" />
+            </key-property>
+            <key-property name="codnivel3" type="string">
+                <column name="CODNIVEL3" length="8" />
+            </key-property>
+            <key-property name="desnivel3" type="string">
+                <column name="DESNIVEL3" length="45" />
+            </key-property>
+            <key-property name="codnivel4" type="string">
+                <column name="CODNIVEL4" length="8" />
+            </key-property>
+            <key-property name="desnivel4" type="string">
+                <column name="DESNIVEL4" length="45" />
+            </key-property>
+            <key-property name="codnivel5" type="string">
+                <column name="CODNIVEL5" length="8" />
+            </key-property>
+            <key-property name="desnivel5" type="string">
+                <column name="DESNIVEL5" length="45" />
+            </key-property>
+            <key-property name="codnivel6" type="string">
+                <column name="CODNIVEL6" length="8" />
+            </key-property>
+            <key-property name="desnivel6" type="string">
+                <column name="DESNIVEL6" length="45" />
+            </key-property>
+            <key-property name="codnivel7" type="string">
+                <column name="CODNIVEL7" length="8" />
+            </key-property>
+            <key-property name="desnivel7" type="string">
+                <column name="DESNIVEL7" length="45" />
+            </key-property>
+            <key-property name="codnivel8" type="string">
+                <column name="CODNIVEL8" length="8" />
+            </key-property>
+            <key-property name="desnivel8" type="string">
+                <column name="DESNIVEL8" length="45" />
+            </key-property>
+            <key-property name="codnivel9" type="string">
+                <column name="CODNIVEL9" length="8" />
+            </key-property>
+            <key-property name="desnivel9" type="string">
+                <column name="DESNIVEL9" length="45" />
+            </key-property>
+            <key-property name="codnivel10" type="string">
+                <column name="CODNIVEL10" length="8" />
+            </key-property>
+            <key-property name="desnivel10" type="string">
+                <column name="DESNIVEL10" length="45" />
+            </key-property>
+            <key-property name="usofut1" type="string">
+                <column name="USOFUT1" length="30" />
+            </key-property>
+            <key-property name="usofut2" type="string">
+                <column name="USOFUT2" length="30" />
+            </key-property>
+            <key-property name="usofut3" type="string">
+                <column name="USOFUT3" length="30" />
+            </key-property>
+            <key-property name="usofut4" type="string">
+                <column name="USOFUT4" length="30" />
+            </key-property>
+            <key-property name="usofut5" type="string">
+                <column name="USOFUT5" length="30" />
+            </key-property>
+            <key-property name="usofut6" type="string">
+                <column name="USOFUT6" length="30" />
+            </key-property>
+            <key-property name="usofut7" type="string">
+                <column name="USOFUT7" length="30" />
+            </key-property>
+            <key-property name="usofut8" type="string">
+                <column name="USOFUT8" length="30" />
+            </key-property>
+            <key-property name="usofut9" type="string">
+                <column name="USOFUT9" length="30" />
+            </key-property>
+            <key-property name="usofut10" type="string">
+                <column name="USOFUT10" length="30" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>
