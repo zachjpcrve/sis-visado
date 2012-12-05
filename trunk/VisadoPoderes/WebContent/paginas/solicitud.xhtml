@@ -45,7 +45,7 @@
 									<tbody>
 									    <tr>
 										  <td>  <h:outputText styleClass="outputText" id="txtCodNumSol" value="Nro Solicitud:" /></td>
-										  <td>  <h:inputText styleClass="inputText" id="text1" style="width:100px;" value="#{ solicitudRegMB.solicitudModificar.codSoli}"
+										  <td>  <h:inputText styleClass="inputText" id="text1" style="width:100px;" value="#{ solicitudRegMB.solicitudRegistrar.codSoli}"
 																	disabled="false" readonly="true" /></td>
 										  <td> 	<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtCodNumSol" /></td>
 										  <td>	<p:tooltip for="tooltxtCodNumSol" value="Nro Solicitud" showEffect="slide" /></td>
@@ -53,13 +53,12 @@
 										  <td> <h:outputText styleClass="outputText" id="text3" value="Estado:" /></td>
 										  <td> <h:inputText styleClass="inputText" id="txtEstado"
 																	style="width:100px;"
-																	value="#{ solicitudRegMB.solicitudModificar.descEstado}"
+																	value="#{ solicitudRegMB.solicitudRegistrar.descEstado}"
 																	disabled="false" readonly="true"/></td>
 										<td><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtEstado" /></td>
 										<td><p:tooltip for="tooltxtEstado" value="Estado solicitud" showEffect="slide" /></td>
 														
-												<td>
-													<h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
+												<td><h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
 												<td><p:selectOneMenu id="cboOficina">
 																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 																	<f:selectItems value="#{solicitudMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.desOfi}" />
@@ -70,7 +69,7 @@
 															
 										         <td><h:inputText styleClass="inputText" id="txtTerritorio"
 																	style="width:100px;"
-																	value="#{ solicitudRegMB.solicitudModificar.desOfi}"
+																	value="#{ solicitudRegMB.solicitudRegistrar.desOfi}"
 																	readonly="true" /></td>
 											     <td><p:graphicImage value="/resources/images/pregunta.jpg"
 																	id="tooltxtTerritorio" /></td>
@@ -83,7 +82,7 @@
 																	value="Nro Voucher *" /></td>
 													<td> <h:inputText styleClass="inputText" id="txtNroVaucher"
 																	style="width:100px;"
-																	value="#{ solicitudRegMB.solicitudModificar.desOfi}"
+																	value="#{ solicitudRegMB.solicitudRegistrar.desOfi}"
 																	readonly="true" /></td>
 													<td><p:graphicImage value="/resources/images/pregunta.jpg"
 																	id="tooltxtNroVaucher" /></td>
@@ -94,7 +93,7 @@
 																	value="Comision" /></td>
 													<td><h:inputText styleClass="inputText" id="txtComision"
 																	style="width:100px;"
-																	value="#{ solicitudRegMB.solicitudModificar.desOfi}"
+																	value="#{ solicitudRegMB.solicitudRegistrar.desOfi}"
 																	readonly="true" /></td>
 													<td><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtComision" /></td>
 													<td><p:tooltip for="tooltxtComision" value="Comision" showEffect="slide" /></td>
@@ -102,7 +101,7 @@
 													<td><h:outputText styleClass="outputText" id="outImpTotal" value="Importe Total" /> </td>
 													<td><h:inputText styleClass="inputText" id="txtImpTotal"
 																	style="width:100px;"
-																	value="#{ solicitudRegMB.solicitudModificar.strImporte}"
+																	value="#{ solicitudRegMB.solicitudRegistrar.strImporte}"
 																	disabled="false" readonly="true" /></td>
 													<td><p:graphicImage value="/resources/images/pregunta.jpg"
 																	id="tooltxtImpTotal" /></td>
@@ -162,20 +161,20 @@
 														
 														<td><h:inputText styleClass="inputText" id="txtCodCentral"
 																	style="width:50px;"
-																	value="#{ solicitudRegMB.solicitudModificar.strImporte}" /></td>
+																	value="#{ solicitudRegMB.solicitudRegistrar.strImporte}" /></td>
 														<td width="100px" colspan="2">  <h:inputText styleClass="inputText" id="txtDoiRes"
 																	style="width:100px;"
-																	value="#{ solicitudRegMB.solicitudModificar.strImporte}" /></td>
+																	value="#{ solicitudRegMB.solicitudRegistrar.strImporte}" /></td>
 																
 														<td colspan="2">		<h:inputText styleClass="inputText" id="txtNombres"
 																	style="width:100px;"
-																	value="#{ solicitudRegMB.solicitudModificar.poderante}" /></td>
+																	value="#{ solicitudRegMB.solicitudRegistrar.poderante}" /></td>
 														<td colspan="3">		<h:inputText styleClass="inputText" id="txtApellidoPaterno"
 																	style="width:100px;"
-																	value="#{ solicitudRegMB.solicitudModificar.poderante}" /></td>
+																	value="#{ solicitudRegMB.solicitudRegistrar.poderante}" /></td>
 														<td colspan="2">		<h:inputText styleClass="inputText" id="txtApellidoMaterno"
 																	style="width:100px;"
-																	value="#{ solicitudRegMB.solicitudModificar.poderante}" /></td>
+																	value="#{ solicitudRegMB.solicitudRegistrar.poderante}" /></td>
 													</tr>
 													<tr>
 
@@ -207,13 +206,13 @@
 																	value="Clasificación" showEffect="slide" /></td>
 													<td><h:inputText styleClass="inputText" id="txtClasiSelect"
 																	style="width:50px;"
-																	value="#{ solicitudRegMB.solicitudModificar.poderante}" /></td>
+																	value="#{ solicitudRegMB.solicitudRegistrar.poderante}" /></td>
 													<td>
 																<h:outputText styleClass="outputText" id="outEmail"
 																	value="Email :" /></td>
 													<td><h:inputText styleClass="inputText" id="txtEmail"
 																	style="width:100px;"
-																	value="#{ solicitudRegMB.solicitudModificar.poderante}" /></td>
+																	value="#{ solicitudRegMB.solicitudRegistrar.poderante}" /></td>
 													<td><p:graphicImage value="/resources/images/pregunta.jpg"
 																	id="tooltxtEmail" /></td>
 													<td><p:tooltip for="tooltxtEmail" value="Email"
@@ -222,7 +221,7 @@
 																	value="Celular:" /></td>
 													<td><h:inputText styleClass="inputText" id="txtCelular"
 																	style="width:100px;"
-																	value="#{ solicitudRegMB.solicitudModificar.poderante}" /></td>
+																	value="#{ solicitudRegMB.solicitudRegistrar.poderante}" /></td>
 													<td><p:graphicImage value="/resources/images/pregunta.jpg"
 																	id="tooltxtCelular" /></td>
 													<td><p:tooltip for="tooltxtCelular" value="Celular"
@@ -291,7 +290,7 @@
 									</td>
 									<td><p:selectOneMenu styleClass="selectOneMenu"
 										id="cboTipoSolicitud" 
-										value="#{ solicitudRegMB.solicitudModificar.codOper}"
+										value="#{ solicitudRegMB.solicitudRegistrar.codOper}"
 										immediate="true" onchange="this.form.submit()"
 											disabled="false">
 										<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
@@ -305,7 +304,7 @@
 										<td><h:outputText styleClass="outputText" id="text19" value="Documentos:"></h:outputText></td>
 										<td><p:selectOneListbox styleClass="selectOneListbox"
 																rendered="false"
-																value="#{ solicitudRegMB.solicitudModificar.codOper}"
+																value="#{ solicitudRegMB.solicitudRegistrar.codOper}"
 																id="listbox1" size="1">
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 											</p:selectOneListbox>
@@ -365,7 +364,7 @@
 									</td>
 									<td><p:selectOneMenu styleClass="selectOneMenu"
 										id="cboTipoOperacion" 
-										value="#{ solicitudRegMB.solicitudModificar.codOper}"
+										value="#{ solicitudRegMB.solicitudRegistrar.codOper}"
 										immediate="true" onchange="this.form.submit()"
 											disabled="false">
 										<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
@@ -378,7 +377,7 @@
 									</td>
 									<td><p:selectOneMenu styleClass="selectOneMenu"
 										id="cboMoneda" 
-										value="#{solicitudRegMB.solicitudModificar.codOper}"
+										value="#{solicitudRegMB.solicitudRegistrar.codOper}"
 										immediate="true" onchange="this.form.submit()" disabled="false">
 										<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 										<f:selectItem itemLabel="SOLES" itemValue="1" />
