@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsHistSolicitud" table="TIIVS_HIST_SOLICITUD">
+        <composite-id name="id" class="com.hildebrando.visado.modelo.TiivsHistSolicitudId">
+            <key-property name="codSoli" type="string">
+                <column name="COD_SOLI" length="7" />
+            </key-property>
+            <key-property name="movimiento" type="string">
+                <column name="MOVIMIENTO" length="3" />
+            </key-property>
+        </composite-id>
+        <property name="fecha" type="serializable">
+            <column name="FECHA" not-null="true" />
+        </property>
+        <property name="regUsuario" type="string">
+            <column name="REG_USUARIO" length="7" not-null="true" />
+        </property>
+        <property name="nomUsuario" type="string">
+            <column name="NOM_USUARIO" length="75" not-null="true" />
+        </property>
+        <property name="obs" type="string">
+            <column name="OBS" length="1000" />
+        </property>
+        <property name="regAbogado" type="string">
+            <column name="REG_ABOGADO" length="7" />
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="7" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
