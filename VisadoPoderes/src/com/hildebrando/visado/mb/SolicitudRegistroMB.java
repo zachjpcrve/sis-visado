@@ -1,6 +1,5 @@
 package com.hildebrando.visado.mb;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Restrictions;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.persistencia.generica.dao.Busqueda;
@@ -21,7 +21,6 @@ import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
 import com.hildebrando.visado.dto.OperacionBancariaDTO;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.Solicitud;
-import com.hildebrando.visado.dto.UsuarioLDAP2;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
@@ -32,11 +31,11 @@ import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
-import com.ibm.ws.batch.xJCL.beans.returnCodeExpression;
 
 @ManagedBean(name = "solicitudRegMB")
 @SessionScoped
 public class SolicitudRegistroMB {
+	
 	private Solicitud solicitudRegistrar;
 	private List<TiivsMultitabla> lstMultitabla;
 	private List<ApoderadoDTO> lstClientes;
@@ -47,7 +46,9 @@ public class SolicitudRegistroMB {
 	private List<TiivsOperacionBancaria> lstTiivsOperacionBancaria;
 	
 
-	private TiivsPersona objTiivsPersona;
+	private TiivsPersona objTiivsPersonaBusqueda;
+	private TiivsPersona objTiivsPersonaResultado;
+	private List<TiivsPersona> lstTiivsPersona;
 	
 	
 	public static Logger logger = Logger.getLogger(SolicitudRegistroMB.class);
@@ -55,11 +56,61 @@ public class SolicitudRegistroMB {
 	public SolicitudRegistroMB() 
 	{
 		solicitudRegistrar = new Solicitud();
+		lstTiivsPersona=new ArrayList<TiivsPersona>();
+		objTiivsPersonaBusqueda=new TiivsPersona();
+		objTiivsPersonaResultado=new TiivsPersona();
 		inicializarValores();
-		listarDataMaqueteado();
+	//	listarDataMaqueteado();
 		instanciarSolicitudRegistro();
 		
 	}
+	
+	public List<TiivsPersona> buscarPersona(){
+		try {
+			
+	
+		if(this.buscarPersonaLocal().size()==0){
+			if(this.buscarPersonaReniec().size()==0){
+				lstTiivsPersona=new ArrayList<TiivsPersona>();
+				lstTiivsPersona=this.buscarPersonaReniec();
+			}else{
+				Utilitarios.mensajeInfo("INFO", "No se encontro resultados para la busqueda.");
+			}
+		}else{
+			return lstTiivsPersona;
+		}
+		
+		} catch (Exception e) {
+			Utilitarios.mensajeError("ERROR", e.getMessage());
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List<TiivsPersona> buscarPersonaReniec() throws Exception{
+		       lstTiivsPersona=new ArrayList<TiivsPersona>();
+		return lstTiivsPersona;
+	}
+	public List<TiivsPersona> buscarPersonaLocal() throws Exception{
+		  GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+	        Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
+	      
+	        if(objTiivsPersonaBusqueda.getCodCen()==null&&objTiivsPersonaBusqueda.getTipDoi()!=null&&objTiivsPersonaBusqueda.getNumDoi()!=null){
+	        	Utilitarios.mensajeInfo("INFO", "Ingrese al menos un criterio de busqueda");
+	        }else{
+	        	  if(objTiivsPersonaBusqueda.getTipDoi()!=null && objTiivsPersonaBusqueda.getNumDoi()!=null){
+		                 filtro.add(Restrictions.eq("tipDoi", objTiivsPersonaBusqueda.getTipDoi()));
+		                 filtro.add(Restrictions.eq("numDoi", objTiivsPersonaBusqueda.getNumDoi()));
+		        }
+		        if(objTiivsPersonaBusqueda.getCodCen()!=null){
+		        	     filtro.add(Restrictions.eq("codCen", objTiivsPersonaBusqueda.getCodCen()));
+		        }
+	        }
+	        lstTiivsPersona=service.buscarDinamico(filtro);
+			return lstTiivsPersona;
+	}
+	
+	
 	public void listarDataMaqueteado(){
 		
 		lstClientes=new ArrayList<ApoderadoDTO>();
@@ -102,7 +153,7 @@ public class SolicitudRegistroMB {
 	}
 	public TiivsAgrupacionPersona agregarAgrupacionPersona(){
 		TiivsAgrupacionPersona objTiivsAgrupacionPersona=new TiivsAgrupacionPersona();
-		objTiivsAgrupacionPersona.setTiivsPersona(objTiivsPersona);
+		objTiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
 		return objTiivsAgrupacionPersona;
 	}
   public Set<TiivsAgrupacionPersona> agregarAgrupacion(int iNumeroAgrupacion){
@@ -112,10 +163,10 @@ public class SolicitudRegistroMB {
 	  TiivsAgrupacionPersonaId  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersonaId();
 	  tiivsAgrupacionPersonaId.setNumGrupo(iNumeroAgrupacion);
 	  tiivsAgrupacionPersonaId.setCodSoli("");
-	  tiivsAgrupacionPersonaId.setCodPer(objTiivsPersona.getCodPer());
+	  tiivsAgrupacionPersonaId.setCodPer(objTiivsPersonaResultado.getCodPer());
 	  tiivsAgrupacionPersonaId.setClasifPer("CLASIFICACION0");
 	  tiivsAgrupacionPersonaId.setTipPartic("TIPO PARTICIPA");
-	  tiivsAgrupacionPersona.setTiivsPersona(objTiivsPersona);
+	  tiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
 	  tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
 	  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
 	 return lstTiivsAgrupacionPersonas;
@@ -267,6 +318,27 @@ public class SolicitudRegistroMB {
 	}
 	public void setSolicitudRegistrar(Solicitud solicitudRegistrar) {
 		this.solicitudRegistrar = solicitudRegistrar;
+	}
+	
+	public TiivsPersona getObjTiivsPersonaBusqueda() {
+		return objTiivsPersonaBusqueda;
+	}
+
+	public void setObjTiivsPersonaBusqueda(TiivsPersona objTiivsPersonaBusqueda) {
+		this.objTiivsPersonaBusqueda = objTiivsPersonaBusqueda;
+	}
+
+	public TiivsPersona getObjTiivsPersonaResultado() {
+		return objTiivsPersonaResultado;
+	}
+	public void setObjTiivsPersonaResultado(TiivsPersona objTiivsPersonaResultado) {
+		this.objTiivsPersonaResultado = objTiivsPersonaResultado;
+	}
+	public List<TiivsPersona> getLstTiivsPersona() {
+		return lstTiivsPersona;
+	}
+	public void setLstTiivsPersona(List<TiivsPersona> lstTiivsPersona) {
+		this.lstTiivsPersona = lstTiivsPersona;
 	}
 		
 	

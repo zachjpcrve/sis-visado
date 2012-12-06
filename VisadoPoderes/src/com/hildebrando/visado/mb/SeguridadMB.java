@@ -18,10 +18,12 @@ import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SeguridadDao;
 import com.grupobbva.bc.per.tele.ldap.conexion.Conexion;
+import com.grupobbva.bc.per.tele.ldap.conexion.__Conexion2;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.grupobbva.bc.per.tele.seguridad.ServiciosSeguridadBbva;
 import com.hildebrando.visado.dto.MiembroDto;
 import com.hildebrando.visado.modelo.Ldapperu2;
+import com.hildebrando.visado.modelo.Ldapperu2Id;
 import com.hildebrando.visado.modelo.TiivsMiembro;
 
 
@@ -32,6 +34,8 @@ public class SeguridadMB {
 	HttpServletRequest request;
 	HttpServletResponse response;
 	private String sCodUsuarioBBVA="P015740";
+	//private String sCodUsuarioBBVA="P017433";
+	
 	private String password="iivs";
 	
 	public SeguridadMB() {
@@ -41,6 +45,7 @@ public class SeguridadMB {
 	logger.trace("Entra al Metodo");				
 	ServiciosSeguridadBbva objSeguridad;
 	IILDPeUsuario usuarioIILD = null;
+	//Ldapperu2 usuarioIILD = new Ldapperu2();;
     request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
     response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
    
@@ -49,13 +54,12 @@ public class SeguridadMB {
     String reg = sCodUsuarioBBVA;
     logger.info("************************** reg *************** "+ reg);
     try {
-  //  GenericDao<Ldapperu2, Object> usuService = (GenericDao<Ldapperu2, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-    Conexion con = new Conexion();
+        	__Conexion2 con = new __Conexion2();
             String codigoUsuario = sCodUsuarioBBVA;                                
-             usuarioIILD = con.recuperarUsuario(codigoUsuario);	
-    
-		
-		//PARTE ESPACIO
+            usuarioIILD = con.recuperarUsuario(codigoUsuario);	
+
+           
+		//PARTE ESPACIOsc
 		if(password!=null){
 			logger.info("IIVP : Desarrollo = true");
     		reg = reg.toUpperCase();
@@ -81,9 +85,12 @@ public class SeguridadMB {
 			System.out.println("Codcargo: "+usuarioIILD.getCargo().getCodigo());
 			System.out.println("Codofi: "+usuarioIILD.getBancoOficina().getCodigo());
 			System.out.println("Codusu: "+usuarioIILD.getUID());
-		 
-		/*	
-        	request.getSession(true).setAttribute("USUARIO_SESION", usuario);
+			/*
+			System.out.println("Codcargo: "+usuarioIILD.getId().getCodcargo());
+			System.out.println("Codofi: "+usuarioIILD.getId().getCodofi());
+			System.out.println("Codusu: "+usuarioIILD.getId().getCodusu());
+		*/	
+        /*	request.getSession(true).setAttribute("USUARIO_SESION", usuario);
         	request.getSession(true).setAttribute("nombreUsuario", usuario.getNombre());
         	request.getSession(true).setAttribute("codigoUsuario", usuario.getCodusu());
        */
@@ -129,7 +136,7 @@ public class SeguridadMB {
         	
         	if(ListaMiembros.size()>0){      		
         
-            response.sendRedirect("./paginas/bienvenido.xhtml");
+            response.sendRedirect("./bienvenido.xhtml");
         	}else{
             	request.getSession().setAttribute("strMensaje","Usuario no se encuentra registrado en el sistema.");
             response.sendRedirect("./sinAcceso.jsp");
