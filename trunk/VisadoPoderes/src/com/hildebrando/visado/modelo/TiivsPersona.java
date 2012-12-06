@@ -19,7 +19,13 @@ public class TiivsPersona implements java.io.Serializable {
 	private String apeMat;
 	private String numCel;
 	private String email;
-	private Set tiivsAgrupacionPersonas = new HashSet(0);
+	
+	//Datos del Bean /*SAMIRA*/
+	private String tipPartic;
+	private String clasifPer;
+	private String clasifPerOtro;
+	
+	private Set<TiivsAgrupacionPersona> tiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
 
 	public TiivsPersona() {
 	}
@@ -30,7 +36,7 @@ public class TiivsPersona implements java.io.Serializable {
 
 	public TiivsPersona(int codPer, String codCen, String tipDoi,
 			String numDoi, String nombre, String apePat, String apeMat,
-			String numCel, String email, Set tiivsAgrupacionPersonas) {
+			String numCel, String email, Set<TiivsAgrupacionPersona> tiivsAgrupacionPersonas) {
 		this.codPer = codPer;
 		this.codCen = codCen;
 		this.tipDoi = tipDoi;
@@ -115,12 +121,38 @@ public class TiivsPersona implements java.io.Serializable {
 		this.email = email;
 	}
 
-	public Set getTiivsAgrupacionPersonas() {
+	public Set<TiivsAgrupacionPersona> getTiivsAgrupacionPersonas() {
 		return this.tiivsAgrupacionPersonas;
 	}
 
-	public void setTiivsAgrupacionPersonas(Set tiivsAgrupacionPersonas) {
+	public void setTiivsAgrupacionPersonas(Set<TiivsAgrupacionPersona> tiivsAgrupacionPersonas) {
 		this.tiivsAgrupacionPersonas = tiivsAgrupacionPersonas;
 	}
 
+	public String getTipPartic() {
+		return tipPartic;
+	}
+
+	public void setTipPartic(String tipPartic) {
+		this.tipPartic = tipPartic;
+	}
+
+	public String getClasifPer() {
+		return clasifPer;
+	}
+
+	public void setClasifPer(String clasifPer) {
+		this.clasifPer = clasifPer;
+	}
+
+	public String getClasifPerOtro() {
+		return clasifPerOtro;
+	}
+
+	public void setClasifPerOtro(String clasifPerOtro) {
+		this.clasifPerOtro = clasifPerOtro;
+	}
+
+	
+	
 }

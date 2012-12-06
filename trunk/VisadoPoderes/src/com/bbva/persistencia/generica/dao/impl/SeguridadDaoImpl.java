@@ -12,6 +12,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import com.bbva.persistencia.generica.dao.SeguridadDao;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.MiembroDto;
+import com.hildebrando.visado.modelo.Ldapperu2;
 
 
 public abstract class SeguridadDaoImpl<K, T extends Serializable> 
@@ -21,7 +22,8 @@ public abstract class SeguridadDaoImpl<K, T extends Serializable>
 		super();
 	}
 	
-
+	//public  List<MiembroDto> buscarMiembroSql(IILDPeUsuario usuarioIILD) throws Exception;
+	//public  List<MiembroDto> buscarMiembroSql(Ldapperu2 usuarioIILD) throws Exception;
 	@SuppressWarnings("unchecked")
 	public  List<MiembroDto> buscarMiembroSql(IILDPeUsuario usuarioIILD) throws Exception{
 		

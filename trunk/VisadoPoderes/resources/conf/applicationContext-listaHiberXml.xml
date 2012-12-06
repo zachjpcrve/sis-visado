@@ -31,7 +31,7 @@
 				<value>hibernate/xml/TiivsOperacionBancaria.hbm.xml</value>
 				<value>hibernate/xml/TiivsGrupo.hbm.xml</value>
 				<value>hibernate/xml/TiivsSolicitudEstadoNivel.hbm.xml</value>
-<!-- 				<value>hibernate/xml/Ldapperu2.hbm.xml</value> -->
+		        <value>hibernate/xml/Ldapperu2.hbm.xml</value> 
 			</list>
 		</property>
 	</bean>

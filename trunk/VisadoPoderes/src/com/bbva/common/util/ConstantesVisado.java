@@ -14,6 +14,10 @@ public class ConstantesVisado {
 	public static final java.lang.String CODIGO_MULTITABLA_TIPOS_FECHA = "T10";
 	public static final java.lang.String CODIGO_MULTITABLA_MONEDA = "T08";
 	public static final java.lang.String CODIGO_MULTITABLA_TIPO_DOC = "T04";
+	/*SAMIRA*/
+	public static final java.lang.String CODIGO_MULTITABLA_CLASIFICACION_PERSONA = "T13";
+	public static final java.lang.String CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA = "T12";
+	/* FIN SAMIRA*/
 	public static final java.lang.String TIPO_FECHA_ENVIO="0001";
 	public static final java.lang.String TIPO_FECHA_RPTA="0002";
 	public static final java.lang.String SIMBOLO_PORCENTAJE="%";
@@ -24,7 +28,7 @@ public class ConstantesVisado {
 	public static final String DES_GRUPO_ADM= "SERVICIOS JURIDICOS";	
 	public static final String DES_GRUPO_JRD= "ABOGADO";
 	public static final String DES_GRUPO_OFI= "OFICINA";
-	
+	/* FIN SAMIRA*/
 	public static final String TOOLTIP_TIPO_FECHA_ENVIO="-Fecha de envio";
 	public static final String TOOLTIP_TIPO_FECHA_RPTA="-Fecha de respuesta";
 	
