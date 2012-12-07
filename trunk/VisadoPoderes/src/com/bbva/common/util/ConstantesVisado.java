@@ -14,6 +14,19 @@ public class ConstantesVisado {
 	public static final java.lang.String CODIGO_MULTITABLA_TIPOS_FECHA = "T10";
 	public static final java.lang.String CODIGO_MULTITABLA_MONEDA = "T08";
 	public static final java.lang.String CODIGO_MULTITABLA_TIPO_DOC = "T04";
+	/*eramoz*/
+	public static final java.lang.String CODIGO_MULTITABLA_TIPO_PARTI = "T10"; //PODERDANTE|APODERADO	
+	public static final java.lang.String CODIGO_MULTITABLA_COMISION = "T11"; //COMISION	
+	public static final java.lang.String CODIGO_CAMPO_PODERDANTE = "0001"; //PODERDANTE
+	public static final java.lang.String CODIGO_CAMPO_COMISION_X = "0005"; //COMISION
+	public static final java.lang.String CODIGO_CAMPO_PERSONA_NATURAL = "0001"; //COMISION
+	public static final java.lang.String CODIGO_CAMPO_PERSONA_JURIDICA = "0002"; //COMISION
+	public static final java.lang.String CODIGO_CAMPO_FALLECIDO_MAYORA = "0003"; //COMISION
+	public static final java.lang.String CODIGO_CAMPO_FALLECIDO_MENORA = "0004"; //COMISION
+	public static final java.lang.String CODIGO_CAMPO_TIPODOI_RUC = "0005"; //COMISION
+	public static final java.lang.String TIPO_DOCUMENTO_RUC = "RUC"; //COMISION
+	public static final java.lang.String TIPO_CLASIFICACION_FALLECIDO="Fallecido";//COMISION
+	
 	/*SAMIRA*/
 	public static final java.lang.String CODIGO_MULTITABLA_CLASIFICACION_PERSONA = "T13";
 	public static final java.lang.String CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA = "T12";
@@ -56,6 +69,11 @@ public class ConstantesVisado {
 	public static final String CAMPO_FECHA_RPTA="fechaRespuesta";
 	public static final String CAMPO_COD_OFICINA="codOfi";
 	public static final String CAMPO_ESTADO="estado";
+	
+	/*eramoz*/
+	public static final String CAMPO_ID_CODIGO_SOLICITUD_ALIAS="id.codSoli";
+	public static final String CAMPO_ID_TIPO_PARTIC_ALIAS="id.tipPartic";
+	public static final String CAMPO_ID_ALIAS="id";
 	
 	public static final String NOM_TBL_TIPO_SERVICIO="tiivsTipoServicio";
 	public static final String ALIAS_TBL_TIPO_SERVICIO="tipoSer";
