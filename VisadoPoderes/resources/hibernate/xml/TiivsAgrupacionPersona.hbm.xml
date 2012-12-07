@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 05/12/2012 02:50:20 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.hildebrando.visado.modelo.TiivsAgrupacionPersona" table="TIIVS_AGRUPACION_PERSONA">
+    <class name="com.hildebrando.visado.modelo.TiivsAgrupacionPersona" table="TIIVS_AGRUPACION_PERSONA" lazy="false">
         <composite-id name="id" class="com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId">
             <key-property name="codSoli" type="string">
                 <column name="COD_SOLI" length="7" />
