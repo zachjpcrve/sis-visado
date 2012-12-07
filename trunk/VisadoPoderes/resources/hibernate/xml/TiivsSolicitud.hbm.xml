@@ -17,7 +17,7 @@
         <property name="estado" type="string">
             <column name="ESTADO" length="7" not-null="true" />
         </property>
-        <property name="fecha" type="serializable">
+        <property name="fecha" type="java.sql.Timestamp">
             <column name="FECHA" not-null="true" />
         </property>
         <property name="regAbogado" type="string">
@@ -35,16 +35,16 @@
         <property name="importe" type="big_decimal">
             <column name="IMPORTE" precision="12" />
         </property>
-        <property name="fechaEnvio" type="serializable">
+        <property name="fechaEnvio" type="java.sql.Timestamp">
             <column name="FECHA_ENVIO" />
         </property>
-        <property name="fechaEstado" type="serializable">
+        <property name="fechaEstado" type="java.sql.Timestamp">
             <column name="FECHA_ESTADO" />
         </property>
         <property name="moneda" type="string">
             <column name="MONEDA" length="7" />
         </property>
-        <property name="fechaRespuesta" type="serializable">
+        <property name="fechaRespuesta" type="java.sql.Timestamp">
             <column name="FECHA_RESPUESTA" />
         </property>
         <property name="comision" type="big_decimal">
