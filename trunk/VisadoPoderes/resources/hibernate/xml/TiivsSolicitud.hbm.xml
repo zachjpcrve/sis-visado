@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 10/12/2012 04:37:45 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.hildebrando.visado.modelo.TiivsSolicitud" table="TIIVS_SOLICITUD" >
+    <class name="com.hildebrando.visado.modelo.TiivsSolicitud" table="TIIVS_SOLICITUD">
         <id name="codSoli" type="string">
             <column name="COD_SOLI" length="7" />
             <generator class="assigned" />
         </id>
+        <many-to-one name="tiivsEstudio" class="com.hildebrando.visado.modelo.TiivsEstudio" fetch="select">
+            <column name="COD_ESTUDIO" length="7" />
+        </many-to-one>
         <many-to-one name="tiivsTipoSolicitud" class="com.hildebrando.visado.modelo.TiivsTipoSolicitud" fetch="select">
             <column name="COD_TIPO_SOLIC" length="7" not-null="true" />
         </many-to-one>
