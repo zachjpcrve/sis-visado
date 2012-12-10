@@ -1,6 +1,6 @@
 package com.hildebrando.visado.modelo;
 
-// Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1
+// Generated 10/12/2012 04:37:45 PM by Hibernate Tools 3.4.0.CR1
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,6 +14,7 @@ import java.util.Set;
 public class TiivsSolicitud implements java.io.Serializable {
 
 	private String codSoli;
+	private TiivsEstudio tiivsEstudio;
 	private TiivsTipoSolicitud tiivsTipoSolicitud;
 	private TiivsOficina1 tiivsOficina1;
 	private String estado;
@@ -47,7 +48,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.nomUsuario = nomUsuario;
 	}
 
-	public TiivsSolicitud(String codSoli,
+	public TiivsSolicitud(String codSoli, TiivsEstudio tiivsEstudio,
 			TiivsTipoSolicitud tiivsTipoSolicitud, TiivsOficina1 tiivsOficina1,
 			String estado, Timestamp fecha, String regAbogado, String obs,
 			String regUsuario, String nomUsuario, BigDecimal importe,
@@ -55,6 +56,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 			Timestamp fechaRespuesta, BigDecimal comision,
 			String nroVoucher, Set tiivsSolicitudAgrupacions) {
 		this.codSoli = codSoli;
+		this.tiivsEstudio = tiivsEstudio;
 		this.tiivsTipoSolicitud = tiivsTipoSolicitud;
 		this.tiivsOficina1 = tiivsOficina1;
 		this.estado = estado;
@@ -79,6 +81,14 @@ public class TiivsSolicitud implements java.io.Serializable {
 
 	public void setCodSoli(String codSoli) {
 		this.codSoli = codSoli;
+	}
+
+	public TiivsEstudio getTiivsEstudio() {
+		return this.tiivsEstudio;
+	}
+
+	public void setTiivsEstudio(TiivsEstudio tiivsEstudio) {
+		this.tiivsEstudio = tiivsEstudio;
 	}
 
 	public TiivsTipoSolicitud getTiivsTipoSolicitud() {
