@@ -1,7 +1,11 @@
 package com.hildebrando.visado.mb;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -23,6 +27,8 @@ import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
+import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
+import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 
 
 
@@ -40,23 +46,66 @@ public class RegistroUtilesMB {
 		System.out.println("Abogado Asignado:" + abogadoAsignado);
 	}
 	
+	
+    /**
+     * Metodo prueba
+     * */
 	public void calcularComision() {
-			
-		GenericDao<TiivsSolicitud, Object> solicitudDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsSolicitud.class);					
-		filtro.add(Restrictions.eq("codSoli", this.getNroSolicitud()));
-		List<TiivsSolicitud> lstSolicitud = new ArrayList<TiivsSolicitud>();				
+						
+//		GenericDao<TiivsSolicitud, Object> solicitudDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+//		Busqueda filtro = Busqueda.forClass(TiivsSolicitud.class);					
+//		filtro.add(Restrictions.eq("codSoli", this.getNroSolicitud()));
+//		List<TiivsSolicitud> lstSolicitud = new ArrayList<TiivsSolicitud>();				
+//		try {
+//			lstSolicitud = solicitudDAO.buscarDinamico(filtro);			
+//		} catch (Exception e) {
+//			
+//			e.printStackTrace();
+//		}
+//		if(lstSolicitud!=null && lstSolicitud.size()>0)
+//			resultado = this.calcularComision(lstSolicitud.get(0)).toString();
+//		else
+//			resultado = "No hay solicitud";
+		
+//		/******************pruebas  ***************************/
+		TiivsPersona persona = null;
+		GenericDao<TiivsPersona, Object> personaDAO = (GenericDao<TiivsPersona, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
+		filtro.add(Restrictions.eq("codPer", 1));
+		List<TiivsPersona> lstPersonas = new ArrayList<TiivsPersona>();
 		try {
-			lstSolicitud = solicitudDAO.buscarDinamico(filtro);			
+			lstPersonas = personaDAO.buscarDinamico(filtro);
+			persona = lstPersonas.get(0);
 		} catch (Exception e) {
-			
 			e.printStackTrace();
 		}
-		if(lstSolicitud!=null && lstSolicitud.size()>0)
-			resultado = this.calcularComision(lstSolicitud.get(0)).toString();
-		else
-			resultado = "No hay solicitud";
+
+		TiivsSolicitud solicitud = new TiivsSolicitud();
+		solicitud.setCodSoli("1234567");
+		solicitud.setImporte(new BigDecimal(40000));
+
+		TiivsSolicitudAgrupacion agrupacion = new TiivsSolicitudAgrupacion(
+				new TiivsSolicitudAgrupacionId(solicitud.getCodSoli(), 1),
+				solicitud);
+
+		TiivsAgrupacionPersona aPersona = new TiivsAgrupacionPersona(
+				new TiivsAgrupacionPersonaId(solicitud.getCodSoli(), agrupacion
+						.getId().getNumGrupo(), 1, "0001", "0002"), agrupacion,
+				persona);
+
+		List<TiivsAgrupacionPersona> lstAPersona = new ArrayList<TiivsAgrupacionPersona>();
+		lstAPersona.add(aPersona);	
+		Set<TiivsAgrupacionPersona> setAPersona = new HashSet<TiivsAgrupacionPersona>(lstAPersona);
+		agrupacion.setTiivsAgrupacionPersonas(setAPersona);
 		
+		List<TiivsSolicitudAgrupacion> lstAgrupacion = new ArrayList<TiivsSolicitudAgrupacion>();
+		lstAgrupacion.add(agrupacion);	
+		Set<TiivsSolicitudAgrupacion> setAgrupacion = new HashSet<TiivsSolicitudAgrupacion>(lstAgrupacion);
+		solicitud.setTiivsSolicitudAgrupacions(setAgrupacion);
+					
+		resultado = this.calcularComision(solicitud).toString();		
+		System.out.println("Fin metodo");
 	}
 
 	/**
@@ -99,7 +148,7 @@ public class RegistroUtilesMB {
 		
 		//Obtenemos el listado de poderdantes de una solicitud
 		List<TiivsAgrupacionPersona> lstPoderdantes;
-		lstPoderdantes = getPoderdantesFromSolicitud(solicitud);
+		lstPoderdantes = getPoderdantesFromSolicitud(solicitud);//From consulta sql		
 		
 				
 		if(lstPoderdantes!=null && lstPoderdantes.size()>0){
@@ -253,8 +302,6 @@ public class RegistroUtilesMB {
 		return sHoraCorte;
 	}	
 
-	
-
 	/**
 	  * Retorna el listado de poderdantes de una solicitud.
 	  * @param solicitud.
@@ -262,28 +309,41 @@ public class RegistroUtilesMB {
 	  */
 	private List<TiivsAgrupacionPersona> getPoderdantesFromSolicitud(
 			TiivsSolicitud solicitud) {
-		
-		List<TiivsAgrupacionPersona> lstPoderdantes;
-		
-		String codigoPoderdante = ConstantesVisado.CODIGO_CAMPO_PODERDANTE;
-		
-		GenericDao<TiivsAgrupacionPersona, Object> agruPersonaDAO = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsAgrupacionPersona.class);
-		filtro.add(Restrictions.eq(
-				ConstantesVisado.CAMPO_ID_CODIGO_SOLICITUD_ALIAS,
-				solicitud.getCodSoli()));
-		filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ID_TIPO_PARTIC_ALIAS,
-				codigoPoderdante));
-		try {
-			lstPoderdantes = new ArrayList<TiivsAgrupacionPersona>();
-			lstPoderdantes = agruPersonaDAO.buscarDinamico(filtro);
-		} catch (Exception e) {
-			lstPoderdantes = null;
-			e.printStackTrace();
+
+		List<TiivsAgrupacionPersona> lstPoderdantes = new ArrayList<TiivsAgrupacionPersona>();
+			
+		Set<TiivsSolicitudAgrupacion> setSolicitudAgrupacion;
+		setSolicitudAgrupacion = solicitud.getTiivsSolicitudAgrupacions();
+
+		Iterator itAgrupacion = setSolicitudAgrupacion.iterator();
+
+		while (itAgrupacion.hasNext()) {
+			TiivsSolicitudAgrupacion valueAgrupacion = (TiivsSolicitudAgrupacion) itAgrupacion
+					.next();
+//			System.out.println("Value :"
+//					+ valueAgrupacion.getId().getNumGrupo());
+			Set<TiivsAgrupacionPersona> setAgruPersona;
+			setAgruPersona = valueAgrupacion.getTiivsAgrupacionPersonas();
+			Iterator itAgruPersona = setAgruPersona.iterator();
+
+			while (itAgruPersona.hasNext()) {
+				TiivsAgrupacionPersona valueAgruPersona = (TiivsAgrupacionPersona) itAgruPersona
+						.next();
+//				System.out.println("Value2 :"
+//						+ valueAgruPersona.getId().getClasifPer());
+				if (valueAgruPersona
+						.getId()
+						.getTipPartic()
+						.equalsIgnoreCase(
+								ConstantesVisado.CODIGO_CAMPO_PODERDANTE)) {
+					lstPoderdantes.add(valueAgruPersona);
+				}
+			}
 		}
+
 		return lstPoderdantes;		
 	}	
+		
 
 	/**
 	  * Verifica si todas las personas son de tipo Juridaca.
@@ -298,14 +358,18 @@ public class RegistroUtilesMB {
 		int cont = 0;
 		for (TiivsAgrupacionPersona agruPersona : lstAgrupacionPersona) {
 			TiivsPersona persona = agruPersona.getTiivsPersona();
-			TiivsMultitabla multi = getRowFromMultitabla(
-					ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC,
-					persona.getTipDoi());
-			if (multi != null) {
-				if (multi.getValor1().equalsIgnoreCase(
-						ConstantesVisado.TIPO_DOCUMENTO_RUC)) {
-					cont++;
+			if(persona!=null){
+				TiivsMultitabla multi = getRowFromMultitabla(
+						ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC,
+						persona.getTipDoi());
+				if (multi != null) {
+					if (multi.getValor1().equalsIgnoreCase(
+							ConstantesVisado.TIPO_DOCUMENTO_RUC)) {
+						cont++;
+					}
 				}
+			} else {
+				System.out.println("Atributo persona nulo para la agrupacion:" + agruPersona.getId().getNumGrupo());
 			}
 		}
 		if (lstAgrupacionPersona.size() == cont) {
@@ -331,16 +395,21 @@ public class RegistroUtilesMB {
 		boolean bRet = false;
 
 		int cont = 0;
-		for (TiivsAgrupacionPersona agruPersona : lstAgrupacionPersona) {
-			String tipopersona = agruPersona.getTiivsPersona().getTipDoi();
-			TiivsMultitabla multi = getRowFromMultitabla(
-					ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC,
-					tipopersona);
-			if (multi != null) {
-				if (!multi.getValor1().equalsIgnoreCase(
-						ConstantesVisado.TIPO_DOCUMENTO_RUC)) {
-					cont++;
+		for (TiivsAgrupacionPersona agruPersona : lstAgrupacionPersona) {			
+			TiivsPersona persona = agruPersona.getTiivsPersona();
+			if(persona!=null){
+				String tipopersona = persona.getTipDoi();
+				TiivsMultitabla multi = getRowFromMultitabla(
+						ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC,
+						tipopersona);
+				if (multi != null) {
+					if (!multi.getValor1().equalsIgnoreCase(
+							ConstantesVisado.TIPO_DOCUMENTO_RUC)) {
+						cont++;
+					}
 				}
+			} else {
+				System.out.println("Atributo persona nulo para la agrupacion:" + agruPersona.getId().getNumGrupo());
 			}
 		}
 		if (lstAgrupacionPersona.size() == cont) {
