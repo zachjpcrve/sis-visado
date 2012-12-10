@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 10/12/2012 04:37:45 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsEstudio" table="TIIVS_ESTUDIO">
         <id name="codEstudio" type="string">
@@ -14,5 +14,11 @@
         <property name="activo" type="java.lang.Character">
             <column name="ACTIVO" length="1" />
         </property>
+        <set name="tiivsSolicituds" table="TIIVS_SOLICITUD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COD_ESTUDIO" length="7" />
+            </key>
+            <one-to-many class="com.hildebrando.visado.modelo.TiivsSolicitud" />
+        </set>
     </class>
 </hibernate-mapping>
