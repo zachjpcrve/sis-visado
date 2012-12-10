@@ -21,8 +21,7 @@ import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId;
-import com.hildebrando.visado.modelo.TiivsGrupo;
-import com.hildebrando.visado.modelo.TiivsMiembro;
+import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsPersona;
@@ -37,13 +36,18 @@ import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 public class RegistroUtilesMB {
 	
 	public static Logger logger = Logger.getLogger(RegistroUtilesMB.class);
-	private String nroSolicitud;
+	private String entrada;
 	private String resultado;
 	
-	public void asignarSolicitud() {
+	
+	/**
+     * Metodo prueba
+     * */
+	public void asignarEstudio() {
 		
-		String abogadoAsignado = getAbogadoPorSolicitudes();		
-		System.out.println("Abogado Asignado:" + abogadoAsignado);
+		String estudioAsignado = obtenerEstudioMenorCarga();
+		System.out.println("Estudio Asignado:" + estudioAsignado);
+		this.resultado = estudioAsignado;
 	}
 	
 	
@@ -52,22 +56,6 @@ public class RegistroUtilesMB {
      * */
 	public void calcularComision() {
 						
-//		GenericDao<TiivsSolicitud, Object> solicitudDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-//		Busqueda filtro = Busqueda.forClass(TiivsSolicitud.class);					
-//		filtro.add(Restrictions.eq("codSoli", this.getNroSolicitud()));
-//		List<TiivsSolicitud> lstSolicitud = new ArrayList<TiivsSolicitud>();				
-//		try {
-//			lstSolicitud = solicitudDAO.buscarDinamico(filtro);			
-//		} catch (Exception e) {
-//			
-//			e.printStackTrace();
-//		}
-//		if(lstSolicitud!=null && lstSolicitud.size()>0)
-//			resultado = this.calcularComision(lstSolicitud.get(0)).toString();
-//		else
-//			resultado = "No hay solicitud";
-		
-//		/******************pruebas  ***************************/
 		TiivsPersona persona = null;
 		GenericDao<TiivsPersona, Object> personaDAO = (GenericDao<TiivsPersona, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
@@ -108,20 +96,6 @@ public class RegistroUtilesMB {
 		System.out.println("Fin metodo");
 	}
 
-	/**
-	  * Asigna un abogado a una solicitud según carga de trabajo.
-	  * @param solicitud.
-	  * @return codigo de registro de un abogado
-	  */
-	public TiivsSolicitud asignarSolicitud(TiivsSolicitud solicitud) {
-		
-		String abogadoAsignado = getAbogadoPorSolicitudes();		
-		System.out.println("Abogado Asignado:" + abogadoAsignado);
-		solicitud.setRegAbogado(abogadoAsignado);
-		return solicitud;
-	}
-	
-	
 	
 	/**
 	  * Calcula la comisión final de una solicitud.
@@ -181,109 +155,74 @@ public class RegistroUtilesMB {
 	}
 
 
-	private String getAbogadoPorSolicitudes() {
+	/**
+	  * Obtiene el código de un Estudio de Abogado con la menor cantidad
+	  * de solicitudes asignadas
+	  * @return codigo de estudio de abogados
+	  */
+	public String obtenerEstudioMenorCarga() {
 					
 		String codigoEstado = ConstantesVisado.CODIGO_ESTADO_ENVIADO;		
 		String sHoraCorte = getHoraCorte();  //Para obtener hora de corte (parámetro de sistema)
 		String resultEstudio = null;
-		String resultAbogado = null;
 		
 		//Query para obtener estudio con menos solicitudes pendientes
-		String hql = " SELECT "+ 
+		String sql = " SELECT "+ 
 			 " EST.COD_ESTUDIO,"+
 			 " COUNT(SOL.COD_SOLI) NRO_SOLICITUDES" +
 			 " FROM TIIVS_SOLICITUD SOL" +
-			 " INNER JOIN TIIVS_MIEMBRO ABO ON SOL.REG_ABOGADO = ABO.COD_MIEMBRO" +
-			 " INNER JOIN TIIVS_ESTUDIO EST ON EST.COD_ESTUDIO = ABO.ESTUDIO" +
+			 " INNER JOIN TIIVS_ESTUDIO EST ON EST.COD_ESTUDIO = SOL.COD_ESTUDIO" +
 			 " WHERE" +
 			 " TRIM(SOL.ESTADO) = '"+ codigoEstado +"'" + 
 			 " AND EST.ACTIVO = 1" + 			 
-			 " AND (" +
-			 " EXTRACT(YEAR FROM SOL.FECHA) = EXTRACT(YEAR FROM SYSDATE) AND"+
-			 " EXTRACT(MONTH FROM SOL.FECHA) = EXTRACT(MONTH FROM SYSDATE) AND"+
-			 " EXTRACT(DAY FROM SOL.FECHA) = EXTRACT(DAY FROM SYSDATE) AND"+
-			 " EXTRACT(HOUR FROM SOL.FECHA) <= "+sHoraCorte+")"+		 
+			 " AND SOL.FECHA < " +			 
+			 " CAST((SYSDATE - (SYSDATE - TRUNC(SYSDATE)) + "+sHoraCorte+"/24) AS TIMESTAMP) "+		 
 			 " GROUP BY" +
 			 " EST.COD_ESTUDIO" +
-			 " ORDER BY NRO_SOLICITUDES ASC";
-		 
-		//System.out.println("SQL2 : "+hql);
+			 " ORDER BY NRO_SOLICITUDES ASC";		 
 		
 
 		try {			
-			Query query = SpringInit.devolverSession().createSQLQuery(hql);									
-			List<Object[]> lstEstudios = query.list();			
-			//System.out.println("Tamaño result:" + lstEstudios.size());	
+			Query query = SpringInit.devolverSession().createSQLQuery(sql);									
+			List<Object[]> lstEstudios = query.list();				
 			if(lstEstudios.size()>0){
 				resultEstudio = (String) lstEstudios.get(0)[0];
 			} else { //asignación automática
-				System.out.println("Estudios sin solicitudes pendientes");
-				System.out.println("Asignación aleatoria");
-				resultAbogado = getRandomAbogado();
+				logger.info("Estudios sin solicitudes pendientes - Se asignará aleatoriamente");
+				System.out.println("Estudios sin solicitudes pendientes - Se asignará aleatoriamente");
+				resultEstudio = getRandomEstudio();
 			}
 		} catch (Exception e) {
-			// TODO Bloque catch generado automáticamente
+			
 			e.printStackTrace();
 		}
-		
-		
-		
-		if(resultEstudio!=null){
 			
-			//Query para obtener abogado con menos solicitudes pendientes
-			hql = " SELECT "+   
-			  	" SOL.REG_ABOGADO,"+
-			  	" COUNT(SOL.COD_SOLI) NRO_SOLICITUDES"+
-			  	" FROM TIIVS_SOLICITUD SOL"+ 
-			  	" INNER JOIN TIIVS_MIEMBRO ABO ON SOL.REG_ABOGADO = ABO.COD_MIEMBRO"+
-			  	" WHERE"+
-			  	" TRIM(SOL.ESTADO) = '"+codigoEstado+"'"+ 
-			  	" AND TRIM(ABO.ESTUDIO) = '"+resultEstudio+"'"+
-			  	" AND (" +
-				" EXTRACT(YEAR FROM SOL.FECHA) = EXTRACT(YEAR FROM SYSDATE) AND"+
-				" EXTRACT(MONTH FROM SOL.FECHA) = EXTRACT(MONTH FROM SYSDATE) AND"+
-				" EXTRACT(DAY FROM SOL.FECHA) = EXTRACT(DAY FROM SYSDATE) AND"+
-				" EXTRACT(HOUR FROM SOL.FECHA) <= "+sHoraCorte+")"+		
-			  	" GROUP BY"+ 
-			  	" SOL.REG_ABOGADO"+
-			  	" ORDER BY NRO_SOLICITUDES ASC";
-			
-			try {			
-				Query query = SpringInit.devolverSession().createSQLQuery(hql);									
-				List<Object[]> lstEstudios = query.list();			
-				System.out.println("Tamaño result:" + lstEstudios.size());
-				if(lstEstudios.size()>0){
-					resultAbogado = (String) lstEstudios.get(0)[0];
-				}
-			} catch (Exception e) {
-				// TODO Bloque catch generado automáticamente
-				e.printStackTrace();
-			}
-		} 
-		
-		return resultAbogado;
+		return resultEstudio;
 		
 	}
 
-	private String getRandomAbogado() {
+	/**
+	 * Obtiene aleatriamente el código de estudio en estado activo
+	 * */
+	private String getRandomEstudio() {
 		
-		String regAbogado = null;
-		GenericDao<TiivsMiembro, Object> abogadoDAO = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsMiembro.class);			
-		TiivsGrupo grupoJuridico = new TiivsGrupo();
-		grupoJuridico.setCodGrupo(ConstantesVisado.COD_GRUPO_JRD);
-		filtro.add(Restrictions.eq("tiivsGrupo", grupoJuridico));
-		List<TiivsMiembro> lstAbogados= new ArrayList<TiivsMiembro>();				
+		String codEstudio = null;
+		GenericDao<TiivsEstudio, Object> estudioDAO = (GenericDao<TiivsEstudio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsEstudio.class);					
+		filtro.add(Restrictions.eq("activo", '1'));
+		List<TiivsEstudio> lstEstudios= new ArrayList<TiivsEstudio>();				
 		try {
-			lstAbogados = abogadoDAO.buscarDinamico(filtro);
-			regAbogado = lstAbogados.get( 0 + (int)(Math.random()*lstAbogados.size())).getCodMiembro();
+			lstEstudios = estudioDAO.buscarDinamico(filtro);
+			codEstudio = lstEstudios.get( 0 + (int)(Math.random()*lstEstudios.size())).getCodEstudio();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return regAbogado;
+		return codEstudio;
 	}
 
-	//Obtiene hora de corte de la BD
+	/**
+	 * Obtiene la hora de corte de MultiTabla
+	 * */
 	private String getHoraCorte() {
 		
 		String sHoraCorte = null;
@@ -320,8 +259,6 @@ public class RegistroUtilesMB {
 		while (itAgrupacion.hasNext()) {
 			TiivsSolicitudAgrupacion valueAgrupacion = (TiivsSolicitudAgrupacion) itAgrupacion
 					.next();
-//			System.out.println("Value :"
-//					+ valueAgrupacion.getId().getNumGrupo());
 			Set<TiivsAgrupacionPersona> setAgruPersona;
 			setAgruPersona = valueAgrupacion.getTiivsAgrupacionPersonas();
 			Iterator itAgruPersona = setAgruPersona.iterator();
@@ -329,8 +266,6 @@ public class RegistroUtilesMB {
 			while (itAgruPersona.hasNext()) {
 				TiivsAgrupacionPersona valueAgruPersona = (TiivsAgrupacionPersona) itAgruPersona
 						.next();
-//				System.out.println("Value2 :"
-//						+ valueAgruPersona.getId().getClasifPer());
 				if (valueAgruPersona
 						.getId()
 						.getTipPartic()
@@ -369,7 +304,8 @@ public class RegistroUtilesMB {
 					}
 				}
 			} else {
-				System.out.println("Atributo persona nulo para la agrupacion:" + agruPersona.getId().getNumGrupo());
+				System.out.println("Atributo persona nulo para la agrupacion:"
+						+ agruPersona.getId().getNumGrupo());
 			}
 		}
 		if (lstAgrupacionPersona.size() == cont) {
@@ -482,12 +418,12 @@ public class RegistroUtilesMB {
 		return resultMultiTabla;
 	}
 		
-	public String getNroSolicitud() {
-		return nroSolicitud;
+	public String getEntrada() {
+		return entrada;
 	}
 
-	public void setNroSolicitud(String nroSolicitud) {
-		this.nroSolicitud = nroSolicitud;
+	public void setEntrada(String entrada) {
+		this.entrada = entrada;
 	}
 	public String getResultado() {
 		return resultado;
