@@ -165,6 +165,14 @@ public class RegistroUtilesMB {
 		String codigoEstado = ConstantesVisado.CODIGO_ESTADO_ENVIADO;		
 		String sHoraCorte = getHoraCorte();  //Para obtener hora de corte (parámetro de sistema)
 		String resultEstudio = null;
+		String []aHora = null;
+		
+		try{			
+			aHora = sHoraCorte.split(":");
+		}catch(Exception e){
+			aHora = "00:00".split(":");
+		}
+		
 		
 		//Query para obtener estudio con menos solicitudes pendientes
 		String sql = " SELECT "+ 
@@ -176,10 +184,12 @@ public class RegistroUtilesMB {
 			 " TRIM(SOL.ESTADO) = '"+ codigoEstado +"'" + 
 			 " AND EST.ACTIVO = 1" + 			 
 			 " AND SOL.FECHA < " +			 
-			 " CAST((SYSDATE - (SYSDATE - TRUNC(SYSDATE)) + "+sHoraCorte+"/24) AS TIMESTAMP) "+		 
+			 " CAST((SYSDATE - (SYSDATE - TRUNC(SYSDATE)) + "+aHora[0]+"/24 + "+aHora[1]+"/1440) AS TIMESTAMP) "+		 
 			 " GROUP BY" +
 			 " EST.COD_ESTUDIO" +
-			 " ORDER BY NRO_SOLICITUDES ASC";		 
+			 " ORDER BY NRO_SOLICITUDES ASC";	
+		
+		System.out.println("Consulta:"+sql);
 		
 
 		try {			
