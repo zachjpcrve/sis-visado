@@ -137,13 +137,13 @@ public class Utilitarios {
 	public static void mensajeInfo(String titutlo, String mensaje) {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(
-				FacesMessage.SEVERITY_INFO, "Información", mensaje));
+				FacesMessage.SEVERITY_INFO, mensaje, mensaje));
 	}
 
 	public static void mensajeError(String titutlo, String mensaje) {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(
-				FacesMessage.SEVERITY_WARN, "Atención", mensaje));
+				FacesMessage.SEVERITY_WARN,mensaje ,"Atención"));
 	}
 
 	public static void putObjectInSession(String value, Object var) {
