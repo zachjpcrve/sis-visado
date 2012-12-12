@@ -1,6 +1,6 @@
 package com.hildebrando.visado.modelo;
 
-// Generated 10/12/2012 04:37:45 PM by Hibernate Tools 3.4.0.CR1
+// Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR1
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -30,6 +30,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private Timestamp fechaRespuesta;
 	private BigDecimal comision;
 	private String nroVoucher;
+	private Set tiivsSolicitudNivels = new HashSet(0);
 	private Set tiivsSolicitudAgrupacions = new HashSet(0);
 
 	public TiivsSolicitud() {
@@ -54,7 +55,8 @@ public class TiivsSolicitud implements java.io.Serializable {
 			String regUsuario, String nomUsuario, BigDecimal importe,
 			Timestamp fechaEnvio, Timestamp fechaEstado, String moneda,
 			Timestamp fechaRespuesta, BigDecimal comision,
-			String nroVoucher, Set tiivsSolicitudAgrupacions) {
+			String nroVoucher, Set tiivsSolicitudNivels,
+			Set tiivsSolicitudAgrupacions) {
 		this.codSoli = codSoli;
 		this.tiivsEstudio = tiivsEstudio;
 		this.tiivsTipoSolicitud = tiivsTipoSolicitud;
@@ -72,6 +74,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.fechaRespuesta = fechaRespuesta;
 		this.comision = comision;
 		this.nroVoucher = nroVoucher;
+		this.tiivsSolicitudNivels = tiivsSolicitudNivels;
 		this.tiivsSolicitudAgrupacions = tiivsSolicitudAgrupacions;
 	}
 
@@ -209,6 +212,14 @@ public class TiivsSolicitud implements java.io.Serializable {
 
 	public void setNroVoucher(String nroVoucher) {
 		this.nroVoucher = nroVoucher;
+	}
+
+	public Set getTiivsSolicitudNivels() {
+		return this.tiivsSolicitudNivels;
+	}
+
+	public void setTiivsSolicitudNivels(Set tiivsSolicitudNivels) {
+		this.tiivsSolicitudNivels = tiivsSolicitudNivels;
 	}
 
 	public Set getTiivsSolicitudAgrupacions() {
