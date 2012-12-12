@@ -19,11 +19,16 @@ public class TiivsPersona implements java.io.Serializable {
 	private String apeMat;
 	private String numCel;
 	private String email;
+
 	
 	//Datos del Bean /*SAMIRA*/
 	private String tipPartic;
 	private String clasifPer;
 	private String clasifPerOtro;
+	
+	private String sDesctipPartic;
+	private String sDescclasifPer;
+	private String sDesctipDoi;
 	
 	private Set<TiivsAgrupacionPersona> tiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
 
@@ -153,6 +158,30 @@ public class TiivsPersona implements java.io.Serializable {
 		this.clasifPerOtro = clasifPerOtro;
 	}
 
-	
+	public String getsDesctipPartic() {
+		return sDesctipPartic;
+	}
+
+	public void setsDesctipPartic(String sDesctipPartic) {
+		this.sDesctipPartic = sDesctipPartic;
+	}
+
+	public String getsDescclasifPer() {
+		return sDescclasifPer;
+	}
+
+	public void setsDescclasifPer(String sDescclasifPer) {
+		this.sDescclasifPer = sDescclasifPer;
+	}
+
+	public String getsDesctipDoi() {
+		return sDesctipDoi;
+	}
+
+	public void setsDesctipDoi(String sDesctipDoi) {
+		this.sDesctipDoi = sDesctipDoi;
+	}
+
+
 	
 }
