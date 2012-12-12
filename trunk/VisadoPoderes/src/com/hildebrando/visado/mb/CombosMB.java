@@ -19,6 +19,7 @@ import com.hildebrando.visado.dto.Estado;
 import com.hildebrando.visado.dto.EstadosNivel;
 import com.hildebrando.visado.dto.Moneda;
 import com.hildebrando.visado.dto.RangosImporte;
+import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.dto.TiposFecha;
 import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
@@ -45,6 +46,7 @@ public class CombosMB {
 	private List<TiivsTerritorio> lstTerritorio;
 	private List<TiivsOficina1> lstOficina;
 	private List<Moneda> lstMoneda;
+	private List<TipoDocumento> lstTipoDocumentos;
 	private Map<String, String> estados;
 	private Map<String, String> estadosNivel;
 	
@@ -53,6 +55,7 @@ public class CombosMB {
 	public CombosMB() {
 		lstMultitabla = new ArrayList<TiivsMultitabla>();
 		lstRangosImporte = new ArrayList<RangosImporte>();
+		lstTipoDocumentos=new ArrayList<TipoDocumento>();
 		lstEstado = new ArrayList<Estado>();
 		lstEstadoNivel = new ArrayList<EstadosNivel>();
 		lstTiposFecha = new ArrayList<TiposFecha>();
@@ -70,7 +73,15 @@ public class CombosMB {
 		cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
 	}
 	
-	// Descripcion: Metodo que se encarga de cargar los datos que se encuentran
+	public List<TipoDocumento> getLstTipoDocumentos() {
+		return lstTipoDocumentos;
+	}
+
+	public void setLstTipoDocumentos(List<TipoDocumento> lstTipoDocumentos) {
+		this.lstTipoDocumentos = lstTipoDocumentos;
+	}
+
+		// Descripcion: Metodo que se encarga de cargar los datos que se encuentran
 		// en la multitabla. Este metodo se llamara en el constructor
 		// de la clase para que este disponible al inicio.
 		// @Autor: Cesar La Rosa
@@ -190,7 +201,7 @@ public class CombosMB {
 					
 				}
 
-		/*		// Carga combo Tipos de documento
+			// Carga combo Tipos de documento
 				if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC)) {
 					TipoDocumento tmpTipoDoc = new TipoDocumento();
 					tmpTipoDoc.setCodTipoDoc(res.getId().getCodElem());
@@ -198,7 +209,7 @@ public class CombosMB {
 					lstTipoDocumentos.add(tmpTipoDoc);
 
 					logger.debug("Tamanio lista de tipos de documento: "+ lstTipoDocumentos.size());
-				}*/
+				}
 			}
 			
 			logger.debug("Tamanio lista de Clasificacion de Personas: "+ lstClasificacionPersona.size());
