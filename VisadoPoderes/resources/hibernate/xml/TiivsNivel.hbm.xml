@@ -1,18 +1,43 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.hildebrando.visado.modelo.TiivsNivel" table="TIIVS_NIVEL" >
-        <id name="codNiv" type="string">
-            <column name="COD_NIV" length="4" />
-            <generator class="assigned" />
-        </id>
-        <property name="desNiv" type="string">
-            <column name="DES_NIV" length="45" />
-        </property>
-        <property name="estado" type="string">
-            <column name="ESTADO" length="1" />
-        </property>
+    <class name="com.hildebrando.visado.modelo.TiivsNivel" table="TIIVS_NIVEL">
+        <composite-id name="id" class="com.hildebrando.visado.modelo.TiivsNivelId">
+            <key-property name="id" type="java.lang.Integer">
+                <column name="ID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codNiv" type="string">
+                <column name="COD_NIV" length="4" />
+            </key-property>
+            <key-property name="desNiv" type="string">
+                <column name="DES_NIV" length="45" />
+            </key-property>
+            <key-property name="rangoInicio" type="java.lang.Integer">
+                <column name="RANGO_INICIO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="rangoFin" type="java.lang.Integer">
+                <column name="RANGO_FIN" precision="8" scale="0" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="100" />
+            </key-property>
+            <key-property name="fechaReg" type="date">
+                <column name="FECHA_REG" length="7" />
+            </key-property>
+            <key-property name="usuarioReg" type="string">
+                <column name="USUARIO_REG" length="50" />
+            </key-property>
+            <key-property name="fechaAct" type="date">
+                <column name="FECHA_ACT" length="7" />
+            </key-property>
+            <key-property name="usuarioAct" type="string">
+                <column name="USUARIO_ACT" length="50" />
+            </key-property>
+            <key-property name="estado" type="big_decimal">
+                <column name="ESTADO" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
     </class>
 </hibernate-mapping>

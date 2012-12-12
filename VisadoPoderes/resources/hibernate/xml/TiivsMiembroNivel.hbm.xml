@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsMiembroNivel" table="TIIVS_MIEMBRO_NIVEL">
+        <id name="id" type="int">
+            <column name="ID" precision="8" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="tiivsMiembro" class="com.hildebrando.visado.modelo.TiivsMiembro" fetch="select">
+            <column name="COD_MIEMBRO" length="7" />
+        </many-to-one>
+        <property name="codNiv" type="string">
+            <column name="COD_NIV" length="4" />
+        </property>
+        <property name="grupo" type="java.lang.Integer">
+            <column name="GRUPO" precision="8" scale="0">
+                <comment>Nro grupo / nro combinacion</comment>
+            </column>
+        </property>
+        <property name="tipoRol" type="string">
+            <column name="TIPO_ROL" length="1">
+                <comment>Delegado (D) / Responsable (R)</comment>
+            </column>
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="4">
+                <comment>"activo", "inactivo", "pendiente"</comment>
+            </column>
+        </property>
+        <property name="usuarioRegistro" type="string">
+            <column name="USUARIO_REGISTRO" length="7" />
+        </property>
+        <property name="fechaRegistro" type="java.sql.Timestamp">
+            <column name="FECHA_REGISTRO" />
+        </property>
+        <property name="usuarioAct" type="string">
+            <column name="USUARIO_ACT" length="7" />
+        </property>
+        <property name="fechaAct" type="string">
+            <column name="FECHA_ACT" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>
