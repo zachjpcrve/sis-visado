@@ -1,6 +1,9 @@
 package com.bbva.common.util;
 
 public class ConstantesVisado {
+	public static final java.lang.String APODERADO="0002";
+	public static final java.lang.String PODERDANTE="0001";
+	
 	public static final java.lang.String ID_RANGO_IMPORTE_MENOR_CINCUENTA = "0001";
 	public static final java.lang.String ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE = "0002";
 	public static final java.lang.String ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA = "0003";
