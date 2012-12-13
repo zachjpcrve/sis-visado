@@ -30,6 +30,8 @@
 			</list>
 		</property>
 	</bean>
+	
+	
 
 	<bean id="myDataSourceProperty" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
@@ -69,7 +71,7 @@
 		<property name="proxyInterface" value="javax.sql.DataSource"></property>
 	</bean>
 	
-	<!-- <bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	<bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="jobFactory">
           <bean class="org.springframework.scheduling.quartz.SpringBeanJobFactory"/>
         </property>
@@ -86,7 +88,7 @@
 			</props>
 		</property>
 		
-	</bean> -->
+	</bean>
 	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 	destroy-method="close">
 	<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
