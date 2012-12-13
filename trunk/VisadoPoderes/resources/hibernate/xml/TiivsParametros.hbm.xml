@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 12/12/2012 10:14:03 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsParametros" table="TTIVS_PARAMETROS">
+        <id name="idParam" type="int">
+            <column name="ID_PARAM" />
+            <generator class="assigned" />
+        </id>
+        <property name="idEmpresa" type="int">
+            <column name="ID_EMPRESA" />
+        </property>
+        <property name="idSistema" type="int">
+            <column name="ID_SISTEMA" />
+        </property>
+        <property name="rutaLocal" type="java.lang.String">
+            <column name="RUTA_FICHEROS_LOCAL" />
+        </property>
+        <property name="server" type="java.lang.String">
+            <column name="SERVER" />
+        </property>
+        <property name="loginServer" type="java.lang.String">
+            <column name="LOGIN_SERVER" />
+        </property>
+        <property name="passServer" type="java.lang.String">
+            <column name="PASS_SERVER" />
+        </property>
+        <property name="carpetaRemota" type="java.lang.String">
+            <column name="CARPETA_REMOTA" />
+        </property>
+         <property name="urlAPP" type="java.lang.String">
+            <column name="URL_APP_SCAN" />
+        </property>
+         <property name="codUsuario" type="java.lang.String">
+            <column name="COD_USUARIO" />
+        </property>
+    </class>
+</hibernate-mapping>
