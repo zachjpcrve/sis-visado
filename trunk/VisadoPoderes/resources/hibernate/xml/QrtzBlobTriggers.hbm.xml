@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-jun-2012 10:20:16 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.QrtzBlobTriggers" table="QRTZ_BLOB_TRIGGERS">
+        <composite-id name="id" class="com.hildebrando.visado.modelo.QrtzBlobTriggersId">
+            <key-property name="triggerName" type="string">
+                <column name="TRIGGER_NAME" length="200" />
+            </key-property>
+            <key-property name="triggerGroup" type="string">
+                <column name="TRIGGER_GROUP" length="200" />
+            </key-property>
+        </composite-id>
+        <one-to-one name="qrtzTriggers" class="com.hildebrando.visado.modelo.QrtzTriggers" constrained="true"></one-to-one>
+        <property name="blobData" type="blob">
+            <column name="BLOB_DATA" />
+        </property>
+    </class>
+</hibernate-mapping>

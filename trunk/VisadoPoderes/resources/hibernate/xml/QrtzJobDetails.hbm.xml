@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-jun-2012 10:20:16 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.QrtzJobDetails" table="QRTZ_JOB_DETAILS">
+        <composite-id name="id" class="com.hildebrando.visado.modelo.QrtzJobDetailsId">
+            <key-property name="jobName" type="string">
+                <column name="JOB_NAME" length="200" />
+            </key-property>
+            <key-property name="jobGroup" type="string">
+                <column name="JOB_GROUP" length="200" />
+            </key-property>
+        </composite-id>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="250" />
+        </property>
+        <property name="jobClassName" type="string">
+            <column name="JOB_CLASS_NAME" length="250" not-null="true" />
+        </property>
+        <property name="isDurable" type="string">
+            <column name="IS_DURABLE" length="1" not-null="true" />
+        </property>
+        <property name="isVolatile" type="string">
+            <column name="IS_VOLATILE" length="1" not-null="true" />
+        </property>
+        <property name="isStateful" type="string">
+            <column name="IS_STATEFUL" length="1" not-null="true" />
+        </property>
+        <property name="requestsRecovery" type="string">
+            <column name="REQUESTS_RECOVERY" length="1" not-null="true" />
+        </property>
+        <property name="jobData" type="blob">
+            <column name="JOB_DATA" />
+        </property>
+        <set name="qrtzTriggerses" table="QRTZ_TRIGGERS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="JOB_NAME" length="200" not-null="true" />
+                <column name="JOB_GROUP" length="200" not-null="true" />
+            </key>
+            <one-to-many class="com.hildebrando.visado.modelo.QrtzTriggers" />
+        </set>
+        <set name="qrtzJobListenerses" table="QRTZ_JOB_LISTENERS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="JOB_NAME" length="200" not-null="true" />
+                <column name="JOB_GROUP" length="200" not-null="true" />
+            </key>
+            <one-to-many class="com.hildebrando.visado.modelo.QrtzJobListeners" />
+        </set>
+    </class>
+</hibernate-mapping>

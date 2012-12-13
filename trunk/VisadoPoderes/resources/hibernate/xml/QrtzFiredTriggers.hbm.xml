@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-jun-2012 10:20:16 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.QrtzFiredTriggers" table="QRTZ_FIRED_TRIGGERS">
+        <id name="entryId" type="string">
+            <column name="ENTRY_ID" length="95" />
+            <generator class="assigned" />
+        </id>
+        <property name="triggerName" type="string">
+            <column name="TRIGGER_NAME" length="200" not-null="true" />
+        </property>
+        <property name="triggerGroup" type="string">
+            <column name="TRIGGER_GROUP" length="200" not-null="true" />
+        </property>
+        <property name="isVolatile" type="string">
+            <column name="IS_VOLATILE" length="1" not-null="true" />
+        </property>
+        <property name="instanceName" type="string">
+            <column name="INSTANCE_NAME" length="200" not-null="true" />
+        </property>
+        <property name="firedTime" type="long">
+            <column name="FIRED_TIME" precision="13" scale="0" not-null="true" />
+        </property>
+        <property name="priority" type="long">
+            <column name="PRIORITY" precision="13" scale="0" not-null="true" />
+        </property>
+        <property name="state" type="string">
+            <column name="STATE" length="16" not-null="true" />
+        </property>
+        <property name="jobName" type="string">
+            <column name="JOB_NAME" length="200" />
+        </property>
+        <property name="jobGroup" type="string">
+            <column name="JOB_GROUP" length="200" />
+        </property>
+        <property name="isStateful" type="string">
+            <column name="IS_STATEFUL" length="1" />
+        </property>
+        <property name="requestsRecovery" type="string">
+            <column name="REQUESTS_RECOVERY" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>
