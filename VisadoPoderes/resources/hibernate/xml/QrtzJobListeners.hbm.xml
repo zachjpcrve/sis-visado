@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-jun-2012 10:20:16 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.QrtzJobListeners" table="QRTZ_JOB_LISTENERS">
+        <composite-id name="id" class="com.hildebrando.visado.modelo.QrtzJobListenersId">
+            <key-property name="jobName" type="string">
+                <column name="JOB_NAME" length="200" />
+            </key-property>
+            <key-property name="jobGroup" type="string">
+                <column name="JOB_GROUP" length="200" />
+            </key-property>
+            <key-property name="jobListener" type="string">
+                <column name="JOB_LISTENER" length="200" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="qrtzJobDetails" class="com.hildebrando.visado.modelo.QrtzJobDetails" update="false" insert="false" fetch="select">
+            <column name="JOB_NAME" length="200" not-null="true" />
+            <column name="JOB_GROUP" length="200" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

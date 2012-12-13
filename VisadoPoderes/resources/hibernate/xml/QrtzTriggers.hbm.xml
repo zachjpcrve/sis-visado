@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-jun-2012 10:20:16 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.QrtzTriggers" table="QRTZ_TRIGGERS">
+        <composite-id name="id" class="com.hildebrando.visado.modelo.QrtzTriggersId">
+            <key-property name="triggerName" type="string">
+                <column name="TRIGGER_NAME" length="200" />
+            </key-property>
+            <key-property name="triggerGroup" type="string">
+                <column name="TRIGGER_GROUP" length="200" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="qrtzJobDetails" class="com.hildebrando.visado.modelo.QrtzJobDetails" fetch="select">
+            <column name="JOB_NAME" length="200" not-null="true" />
+            <column name="JOB_GROUP" length="200" not-null="true" />
+        </many-to-one>
+        <property name="isVolatile" type="string">
+            <column name="IS_VOLATILE" length="1" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="250" />
+        </property>
+        <property name="nextFireTime" type="java.lang.Long">
+            <column name="NEXT_FIRE_TIME" precision="13" scale="0" />
+        </property>
+        <property name="prevFireTime" type="java.lang.Long">
+            <column name="PREV_FIRE_TIME" precision="13" scale="0" />
+        </property>
+        <property name="priority" type="java.lang.Long">
+            <column name="PRIORITY" precision="13" scale="0" />
+        </property>
+        <property name="triggerState" type="string">
+            <column name="TRIGGER_STATE" length="16" not-null="true" />
+        </property>
+        <property name="triggerType" type="string">
+            <column name="TRIGGER_TYPE" length="8" not-null="true" />
+        </property>
+        <property name="startTime" type="long">
+            <column name="START_TIME" precision="13" scale="0" not-null="true" />
+        </property>
+        <property name="endTime" type="java.lang.Long">
+            <column name="END_TIME" precision="13" scale="0" />
+        </property>
+        <property name="calendarName" type="string">
+            <column name="CALENDAR_NAME" length="200" />
+        </property>
+        <property name="misfireInstr" type="java.lang.Byte">
+            <column name="MISFIRE_INSTR" precision="2" scale="0" />
+        </property>
+        <property name="jobData" type="blob">
+            <column name="JOB_DATA" />
+        </property>
+<!--         <one-to-one name="qrtzSimpleTriggers" class="com.hildebrando.visado.modelo.QrtzSimpleTriggers"></one-to-one>
+        <one-to-one name="qrtzBlobTriggers" class="com.hildebrando.visado.modelo.QrtzBlobTriggers"></one-to-one>
+        <one-to-one name="qrtzCronTriggers" class="com.hildebrando.visado.modelo.QrtzCronTriggers"></one-to-one>  -->
+        <set name="qrtzTriggerListenerses" table="QRTZ_TRIGGER_LISTENERS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TRIGGER_NAME" length="200" not-null="true" />
+                <column name="TRIGGER_GROUP" length="200" not-null="true" />
+            </key>
+            <one-to-many class="com.hildebrando.visado.modelo.QrtzTriggerListeners" />
+        </set>
+        
+    </class>
+</hibernate-mapping>

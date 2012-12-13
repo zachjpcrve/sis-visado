@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-jun-2012 10:20:16 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.QrtzLocks" table="QRTZ_LOCKS">
+        <id name="lockName" type="string">
+            <column name="LOCK_NAME" length="40" />
+            <generator class="assigned" />
+        </id>
+    </class>
+</hibernate-mapping>

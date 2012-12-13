@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-jun-2012 10:20:16 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.QrtzTriggerListeners" table="QRTZ_TRIGGER_LISTENERS">
+        <composite-id name="id" class="com.hildebrando.visado.modelo.QrtzTriggerListenersId">
+            <key-property name="triggerName" type="string">
+                <column name="TRIGGER_NAME" length="200" />
+            </key-property>
+            <key-property name="triggerGroup" type="string">
+                <column name="TRIGGER_GROUP" length="200" />
+            </key-property>
+            <key-property name="triggerListener" type="string">
+                <column name="TRIGGER_LISTENER" length="200" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="qrtzTriggers" class="com.hildebrando.visado.modelo.QrtzTriggers" update="false" insert="false" fetch="select">
+            <column name="TRIGGER_NAME" length="200" not-null="true" />
+            <column name="TRIGGER_GROUP" length="200" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>
