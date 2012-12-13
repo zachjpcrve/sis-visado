@@ -19,6 +19,7 @@
 			        <value>hibernate/xml/TiivsTerritorio.hbm.xml</value>
 			        <value>hibernate/xml/TiivsTipoSolicitud.hbm.xml</value>
 			        <value>hibernate/xml/TiivsTipoSolicDocumento.hbm.xml</value>
+			        <value>hibernate/xml/TiivsParametros.hbm.xml</value>
 			        <value>hibernate/xml/TiivsMultitabla.hbm.xml</value>
 			        <value>hibernate/xml/TiivsPersona.hbm.xml</value>			        
 			        <value>hibernate/xml/TiivsAnexoSolicitud.hbm.xml</value>
