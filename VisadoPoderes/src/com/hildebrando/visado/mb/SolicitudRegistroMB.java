@@ -5,13 +5,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
+import org.primefaces.event.FileUploadEvent;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -21,6 +25,7 @@ import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Persona;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
+import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.converter.PersonaDataModal;
@@ -36,6 +41,8 @@ import com.hildebrando.visado.dto.UsuarioLDAP2;
 import com.hildebrando.visado.modelo.Ldapperu2;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId;
+import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
+import com.hildebrando.visado.modelo.TiivsAnexoSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
@@ -43,12 +50,19 @@ import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
+import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
+import com.hildebrando.visado.modelo.TiivsSolicitudOperbanId;
+import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
 import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
 
 @ManagedBean(name = "solicitudRegMB")
 @SessionScoped
 public class SolicitudRegistroMB {
 	
+	@ManagedProperty(value = "#{combosMB}")
+	private CombosMB combosMB;
+	private TiivsSolicitudOperban objSolicBancaria;
+	private TiivsSolicitud solicitudRegistrarT;
 	private Solicitud solicitudRegistrar;
 	private List<TiivsMultitabla> lstMultitabla;
 	private List<ApoderadoDTO> lstClientes;
@@ -62,23 +76,27 @@ public class SolicitudRegistroMB {
 	private TiivsPersona objTiivsPersonaSeleccionado;
 	private Set<TiivsAgrupacionPersona> lstTiivsAgrupacionPersonas;
 	private List<AgrupacionSimpleDto>  lstAgrupacionSimpleDto;
+	private List<TiivsAnexoSolicitud> lstAnexoSolicitud;
 	private PersonaDataModal personaDataModal;
-	
+	private String iTipoSolicitud="";
+	//private TiivsTipoSolicDocumento objDocumentoXSolicitud ;
+	private String sCodDocumento;
+
 	private int numGrupo=0;
 	
-	@ManagedProperty(value = "#{combosMB}")
-	private CombosMB combosMB;
+	
 
 	private List<TiivsPersona> lstTiivsPersona;
 	private List<TiivsPersona> lstTiivsPersonaResultado;
-	
+	private List<TiivsTipoSolicDocumento> lstTipoSolicitudDocumentos;
+	private List<TiivsTipoSolicDocumento> lstDocumentosXTipoSolTemp;
 	boolean bBooleanPopup =false;
 	
 	
 	public static Logger logger = Logger.getLogger(SolicitudRegistroMB.class);
 	
 	public SolicitudRegistroMB() 
-	{
+	{   
 		solicitudRegistrar = new Solicitud();
 		lstTiivsPersona=new ArrayList<TiivsPersona>();
 		lstTiivsPersonaResultado=new ArrayList<TiivsPersona>();
@@ -88,10 +106,39 @@ public class SolicitudRegistroMB {
 		objTiivsPersonaSeleccionado=new TiivsPersona();
 		lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
 		lstAgrupacionSimpleDto=new ArrayList<AgrupacionSimpleDto>();
-		inicializarValores();
+		lstTipoSolicitudDocumentos=new ArrayList<TiivsTipoSolicDocumento>();
+		solicitudRegistrarT=new TiivsSolicitud();
+		solicitudRegistrarT.setTiivsOficina1(new TiivsOficina1());
+		lstDocumentosXTipoSolTemp=new ArrayList<TiivsTipoSolicDocumento>();
+		lstAnexoSolicitud=new ArrayList<TiivsAnexoSolicitud>();
+		//objDocumentoXSolicitud=new TiivsTipoSolicDocumento();
+		lstdocumentos=new ArrayList<DocumentoTipoSolicitudDTO>();
+		objSolicBancaria=new TiivsSolicitudOperban();
+		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
 		instanciarSolicitudRegistro();
 		
 	}
+	
+	public void handleFileUpload(FileUploadEvent event) {  
+        FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");  
+        FacesContext.getCurrentInstance().addMessage(null, msg);  
+    }  
+	
+	public void listarDocumentosXSolicitud(ValueChangeEvent e){
+	System.out.println("ValuechanceEvent :  " +e.getNewValue());
+	GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+	Busqueda filtroTipoSolcDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);
+	filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic", (String)e.getNewValue()));
+	try {
+		lstDocumentosXTipoSolTemp= genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
+		lstTipoSolicitudDocumentos = this.lstDocumentosXTipoSolTemp;
+		logger.info(" e.getNewValue()  "+(String)e.getNewValue()+"  lstTipoSolicitudDocumentos.size : " +lstTipoSolicitudDocumentos.size());
+	} catch (Exception ex) {
+		logger.info("Error al cargar el listado de documentos por tipo de soliciitud");
+		ex.printStackTrace();
+	}
+	}
+
 	public void obtenerPersonaSeleccionada(){
 		System.out.println(objTiivsPersonaSeleccionado.getCodPer());
 		this.objTiivsPersonaResultado=this.objTiivsPersonaSeleccionado;
@@ -166,8 +213,8 @@ public class SolicitudRegistroMB {
 		return lstTiivsPersona;
 	}
 	public List<TiivsPersona> buscarPersonaLocal() throws Exception{
-		  List<TiivsPersona>  lstTiivsPersona=new ArrayList<TiivsPersona>();
-		  GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		    List<TiivsPersona>  lstTiivsPersona=new ArrayList<TiivsPersona>();
+	        GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 	        Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
 	      
 	        if((objTiivsPersonaBusqueda.getCodCen()==null||objTiivsPersonaBusqueda.getCodCen().equals(""))
@@ -224,40 +271,21 @@ public class SolicitudRegistroMB {
 		return lstPersona;
 		
 	}
-	public void listarDataMaqueteado(){
-		
-		lstClientes=new ArrayList<ApoderadoDTO>();
-		lstOperaciones=new ArrayList<OperacionBancariaDTO>();
-		lstdocumentos=new ArrayList<DocumentoTipoSolicitudDTO>();
-		lstSeguimiento=new ArrayList<SeguimientoDTO>();
-		lstClientes.add(new ApoderadoDTO("123456", "DNI:43863696 Samira Benazar", "Apoderado", "Beneficiario", "555555555", "samiray.yas@gmail.com"));
-		lstClientes.add(new ApoderadoDTO("789654", "DNI:82553665 Diego Clemente", "Poderdante", "Fallecido", "8926358858","diemgo_clemente@hotmail.com"));
-		lstOperaciones.add(new OperacionBancariaDTO("001", "DNI:43863696 Samira Benazar", "PEN", "500.00", "0", "500.00"));
-		lstOperaciones.add(new OperacionBancariaDTO("001", "DNI:43863696 Diego Clemente", "DOL", "300.00", "3.50", "1050.00"));
-	    lstdocumentos.add(new DocumentoTipoSolicitudDTO("001", "Copia de DNI", "Yes"));
-	    lstdocumentos.add(new DocumentoTipoSolicitudDTO("001", "Copia Literal", "Nou"));
-	    lstSeguimiento.add(new SeguimientoDTO("Registrado", "Nivel 01", "22/11/2012", "P025245 :Samira Benazar", "observacion"));
-	    lstSeguimiento.add(new SeguimientoDTO("Enviado", " ", "22/11/2012", "P025245 :Diego Clemente", "observacion"));
 
-	}
+	
 	public String redirectDetalleSolicitud(){
 		logger.info(" **** redirectDetalleSolicitud ***");
 		return "/faces/paginas/detalleSolicitudEstadoEnviado.xhtml";
 	}
 	
 	
-	public void inicializarValores(){
-		System.out.println(" **********************inicializarValores *********************");
-		IILDPeUsuario usuario=(IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
-		logger.info("usuario en session? --> "+usuario.getNombre());
-		System.out.println("usuario en session? --> "+usuario.getNombre());
-	}
+	
 	public Set<TiivsSolicitudAgrupacion> agregarSolicitudArupacion(){
 		  int iNumGrupo=0;
 		  Set<TiivsSolicitudAgrupacion> lstSolicitudArupacion=new HashSet<TiivsSolicitudAgrupacion>();
 		  TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion=new TiivsSolicitudAgrupacion();
 		  TiivsSolicitudAgrupacionId tiivsSolicitudAgrupacionId=new TiivsSolicitudAgrupacionId();
-		  tiivsSolicitudAgrupacionId.setCodSoli("");
+		  tiivsSolicitudAgrupacionId.setCodSoli(solicitudRegistrarT.getCodSoli());
 		  tiivsSolicitudAgrupacionId.setNumGrupo(iNumGrupo+1);
 		  tiivsSolicitudAgrupacion.setId(tiivsSolicitudAgrupacionId);
 		  tiivsSolicitudAgrupacion.setActivo("1");
@@ -369,7 +397,7 @@ public class SolicitudRegistroMB {
 		  tiivsAgrupacionPersona =new TiivsAgrupacionPersona();
 		  TiivsAgrupacionPersonaId  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersonaId();
 		  tiivsAgrupacionPersonaId.setNumGrupo(numGrupo);
-		  tiivsAgrupacionPersonaId.setCodSoli("XXXXXXXX");
+		  tiivsAgrupacionPersonaId.setCodSoli(solicitudRegistrarT.getCodSoli());
 		  tiivsAgrupacionPersonaId.setCodPer(objTiivsPersonaResultado.getCodPer());
 		  tiivsAgrupacionPersonaId.setClasifPer(objTiivsPersonaResultado.getClasifPer());
 		  tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado.getTipPartic());
@@ -389,7 +417,9 @@ public class SolicitudRegistroMB {
 	  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 	 System.out.println("tamanio de lstTiivsAgrupacionPersonas "+lstTiivsAgrupacionPersonas.size());
  }
-	public void instanciarSolicitudRegistro(){
+  
+
+	public void instanciarSolicitudRegistro() {
 		logger.info("********************** instanciarSolicitudRegistro *********************");
 		Set<TiivsAgrupacionPersona> lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
 		TiivsSolicitud objSolicitudRegistro=new TiivsSolicitud();
@@ -400,67 +430,103 @@ public class SolicitudRegistroMB {
 		String grupoOfi = (String)Utilitarios.getObjectInSession("GRUPO_OFI");
 		
 		logger.info("********grupoAdm ****** "+grupoAdm +"  ******* grupoOfi ******** " +grupoOfi);
-		if (grupoAdm == null && grupoOfi!= null) {
-			UsuarioLDAP2 usuario = (UsuarioLDAP2) Utilitarios.getObjectInSession("USUARIO_SESION");
-			System.out.println("CodOfi: "+usuario.getCodofi().trim());
-			System.out.println("DesOfi: "+usuario.getDesofi().trim());
-		}
-	}
-	
-/*	public String btnNuevoAction() {
-		try {
+		//if (grupoAdm == null && grupoOfi!= null) {
+		    IILDPeUsuario  usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
+		    logger.info("usuario en session? --> "+usuario.getNombre());
+			System.out.println("CodOfi: "+usuario.getBancoOficina().getCodigo().trim());
+			System.out.println("DesOfi: "+usuario.getBancoOficina().getDescripcion().trim());
 			
-			logger.info("---btnNuevoAction---");
-			String grupoAdm = (String)Utilitarios.getObjectInSession("GRUPO_ADM");
-			String grupoOfi = (String)Utilitarios.getObjectInSession("GRUPO_OFI");
-			this.solicitudModificar=new Solicitud();
-		    //TiivsSolicitud solicitud = new TiivsSolicitud();
-			lstClientes=new ArrayList<ApoderadoDTO>();
-			lstOperaciones=new ArrayList<OperacionBancariaDTO>();
-			lstdocumentos=new ArrayList<DocumentoTipoSolicitudDTO>();
-			lstdocumentosOpcional=new ArrayList<DocumentoTipoSolicitudDTO>();
 			
-			if (grupoAdm == null && grupoOfi!= null) {
-				
-				UsuarioLDAP2 usuario = (UsuarioLDAP2) Utilitarios.getObjectInSession("USUARIO_SESION");
-				System.out.println("CodOfi: "+usuario.getCodofi().trim());
-				System.out.println("DesOfi: "+usuario.getDesofi().trim());
-				
-				TiivsOficina1 oficina=new TiivsOficina1();
-				oficina.setCodOfi(usuario.getCodofi());
-				GenericDao<TiivsOficina1, Object> genericDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-				//Busqueda filtro = Busqueda.forClass(TiivsOficina1.class);
-				List<TiivsOficina1> lstOficina1=(List<TiivsOficina1>) genericDAO.buscarById(TiivsOficina1.class, usuario.getCodofi());
-				ArrayList listaOfi=(ArrayList) this.getSolicitudModel().getOficina1Service().selectDynamicWhere(oficina);
-				if(listaOfi!=null)
-				{
-					oficina=(Oficina1) listaOfi.get(0);
-					System.out.println("CodOfi: "+oficina.getCodOfi().trim());
-					System.out.println("DesOfi: "+oficina.getDesOfi().trim());
-					this.getSolicitudModel().getSolicitudRegistrar().setCodOfi(oficina.getCodOfi());				
-					this.getSolicitudModel().getSolicitudRegistrar().setDesOfi(oficina.getDesOfi().trim());
+			TiivsOficina1 oficina=new TiivsOficina1();
+			oficina.setCodOfi(usuario.getBancoOficina().getCodigo());
+			
+			 List<TiivsOficina1> lstOficinas1=new ArrayList<TiivsOficina1>();
+			 combosMB=new CombosMB();
+			 lstOficinas1 =combosMB.getLstOficina();
+			 
+			if(lstOficinas1!=null && lstOficinas1.size()!=0){
+			for (TiivsOficina1 o : lstOficinas1) {
+				if(usuario.getBancoOficina().getCodigo().equals(o.getCodOfi())){
+					this.solicitudRegistrarT.setTiivsOficina1(o);
 				}
-			}		
-			
-			String codSoli=this.getSolicitudModel().getSolicitudService().selectNextPK();
-			System.out.println("codSoli: "+codSoli);
-			if (codSoli==null) {
-				this.getSolicitudModel().getSolicitudRegistrar().setCodSoli("0000001");	
-			}else
-			this.getSolicitudModel().getSolicitudRegistrar().setCodSoli(codSoli);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(e.getMessage(),e);
-			return null;
-		}
-			this.getSolicitudModel().setLblError_Text("");
-			this.getSolicitudModel().setLblInfo_Text("");
-			logger.trace("--nuevo--");
-			System.out.println("--nuevo--");
-			return "nuevo";
+			}
+			}
+			 SolicitudDao<TiivsPersona, Object> service = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+			 try {
+				String sCodigoSol=service.obtenerPKNuevaSolicitud();
+				logger.info(" sCodigoSol " + sCodigoSol);
+				this.solicitudRegistrarT.setCodSoli(sCodigoSol);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			 this.solicitudRegistrarT.setEstado("1");
+			 this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_REGISTRADO);
+		
+		//}		
+		
 	}
-	*/
+	public void actualizarListaDocumentosXTipo(){
+		logger.info("****************************** actualizarListaDocumentosXTipo *********************************");
+		
+		for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
+			if(s.getCodDoc().equals(sCodDocumento)){
+				//this.lstTipoSolicitudDocumentos.remove(s);
+			}
+		}
+	}
+	public boolean validarTotalDocumentos(){
+		boolean result=false;
+		String sMensaje="";
+		for (TiivsTipoSolicDocumento x : this.lstTipoSolicitudDocumentos) {
+			for (TiivsAnexoSolicitud a : lstAnexoSolicitud) {
+				if(x.getObligatorio()==ConstantesVisado.DOCUMENTO_OBLIGATORIO && x.getCodDoc().equals(a.getId().getCodDoc())){
+					result=true;
+				}else{
+					sMensaje="Faltan Ingresar Documentos Obligatorios.";
+					Utilitarios.mensajeInfo("INFO", sMensaje);
+					break;
+				}
+			}
+		}
+		return result;
+	}
+	public boolean ValidarDocumentosDuplicados(){
+		boolean result=true;
+		String sMensaje="";
+		for (TiivsAnexoSolicitud a : this.lstAnexoSolicitud) {
+			if(a.getId().getCodDoc().equals(sCodDocumento)){
+				result=false;
+				sMensaje="Documento ya se encuentra en la lista de Documentos";
+				Utilitarios.mensajeInfo("INFO ", sMensaje);
+			}
+		}
+		return result;
+	}
+	public void agrearDocumentosXTipoSolicitud(){
+		logger.info(" ************************** agrearDocumentosXTipoSolicitud  ****************************** ");
+		logger.info("iTipoSolicitud  : " +iTipoSolicitud);
+		logger.info("scodDocumento :  " +sCodDocumento);
+		logger.info("lstAnexoSolicitud.size() :  " +lstAnexoSolicitud.size());
+		if(this.ValidarDocumentosDuplicados()){
+        TiivsAnexoSolicitud objAnexo =new TiivsAnexoSolicitud();
+        String aliasArchivo="";
+        aliasArchivo=this.solicitudRegistrarT.getCodSoli()+"_"+sCodDocumento;
+        logger.info("aliasArchivo *** " +aliasArchivo);
+        objAnexo.setId(new TiivsAnexoSolicitudId(this.solicitudRegistrarT.getCodSoli(), sCodDocumento));
+        objAnexo.setAliasArchivo(aliasArchivo);
+		lstAnexoSolicitud.add(objAnexo);
+		//this.actualizarListaDocumentosXTipo();
+		
+		for (TiivsTipoSolicDocumento e : lstDocumentosXTipoSolTemp) {
+			if(e.getCodDoc().equals(sCodDocumento)){
+				lstdocumentos.add(new DocumentoTipoSolicitudDTO(e.getCodDoc(), e.getDesDoc(), e.getObligatorio()+""));	
+			}
+		}
+		
+		}
+		
+	}
+
  
 
 	
@@ -602,6 +668,53 @@ public class SolicitudRegistroMB {
 	public void setLstAgrupacionSimpleDto(
 			List<AgrupacionSimpleDto> lstAgrupacionSimpleDto) {
 		this.lstAgrupacionSimpleDto = lstAgrupacionSimpleDto;
+	}
+	public String getiTipoSolicitud() {
+		return iTipoSolicitud;
+	}
+	public void setiTipoSolicitud(String iTipoSolicitud) {
+		this.iTipoSolicitud = iTipoSolicitud;
+	}
+	public List<TiivsTipoSolicDocumento> getLstTipoSolicitudDocumentos() {
+		return lstTipoSolicitudDocumentos;
+	}
+	public void setLstTipoSolicitudDocumentos(
+			List<TiivsTipoSolicDocumento> lstTipoSolicitudDocumentos) {
+		this.lstTipoSolicitudDocumentos = lstTipoSolicitudDocumentos;
+	}
+
+	public List<TiivsAnexoSolicitud> getLstAnexoSolicitud() {
+		return lstAnexoSolicitud;
+	}
+
+	public void setLstAnexoSolicitud(List<TiivsAnexoSolicitud> lstAnexoSolicitud) {
+		this.lstAnexoSolicitud = lstAnexoSolicitud;
+	}
+
+	public TiivsSolicitud getSolicitudRegistrarT() {
+		return solicitudRegistrarT;
+	}
+
+	public void setSolicitudRegistrarT(TiivsSolicitud solicitudRegistrarT) {
+		this.solicitudRegistrarT = solicitudRegistrarT;
+	}
+
+	
+
+	public String getsCodDocumento() {
+		return sCodDocumento;
+	}
+
+	public void setsCodDocumento(String sCodDocumento) {
+		this.sCodDocumento = sCodDocumento;
+	}
+
+	public TiivsSolicitudOperban getObjSolicBancaria() {
+		return objSolicBancaria;
+	}
+
+	public void setObjSolicBancaria(TiivsSolicitudOperban objSolicBancaria) {
+		this.objSolicBancaria = objSolicBancaria;
 	}
 	
 
