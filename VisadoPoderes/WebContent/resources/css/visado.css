@@ -15,7 +15,7 @@ background-image :url("/VisadoPoderes/faces/javax.faces.resource/images/ui-bg_hi
 	font-family: Verdana, sans-serif;
 	font-size:9px;
 	color:#254077;
-	padding-left: 500px;
+	/*padding-left: 500px;*/
 /* 	font-weight:bold; */
 }
 .ui-state-default a, .ui-state-default a:link{
