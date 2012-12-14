@@ -6,6 +6,8 @@ import org.quartz.JobExecutionException;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.general.service.ConfigBean;
+import com.bbva.persistencia.generica.dao.SeguridadDao;
+import com.hildebrando.visado.dto.MiembroDto;
 import com.hildebrando.visado.mb.JobsMB;
 
 public class QuartzJob_Feriados implements Job 
@@ -14,6 +16,6 @@ public class QuartzJob_Feriados implements Job
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		JobsMB job = new JobsMB();
-		job.cargarFeriados();
+		job.cargarFeriados();		
 	}
 }

@@ -99,4 +99,8 @@
 
 <!-- 	<bean id="defaultLobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true" />-->
 
+	<bean id="tablaGeneralServiceLocator"  class="com.bbva.general.service.TablaGeneralServiceLocator" >		 
+		 <property	name="tablaGeneralEndpointAddress" value="${tablaGeneral.urlWS}" /> 
+	</bean>
+
 </beans>
