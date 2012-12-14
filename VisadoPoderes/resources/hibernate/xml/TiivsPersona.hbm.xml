@@ -32,6 +32,12 @@
         <property name="email" type="string">
             <column name="EMAIL" length="50" />
         </property>
+        <property name="usuarioRegistro" type="string">
+            <column name="USUARIO_REGISTRO" length="7" />                
+        </property>
+        <property name="fechaRegistro" type="java.sql.Timestamp">
+            <column name="FECHA_REGISTRO" />
+        </property>
         <set name="tiivsAgrupacionPersonas" table="TIIVS_AGRUPACION_PERSONA" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="COD_PER" precision="22" scale="0" />
