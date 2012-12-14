@@ -9,6 +9,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.dialect.function.NvlFunction;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -27,6 +31,8 @@ import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
+import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
+import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
 
 //@Autor Samira Benazar
 @ManagedBean(name = "combosMB")
@@ -52,6 +58,10 @@ public class CombosMB {
 	
 	private List<ComboDto> lstClasificacionPersona;
 	private List<ComboDto> lstTipoRegistroPersona;
+
+	private List<TiivsTipoSolicitud> lstTipoSolicitud;
+	
+	
 	public CombosMB() {
 		lstMultitabla = new ArrayList<TiivsMultitabla>();
 		lstRangosImporte = new ArrayList<RangosImporte>();
@@ -69,8 +79,11 @@ public class CombosMB {
 		estadosNivel = new HashMap<String, String>();
 		lstClasificacionPersona=new ArrayList<ComboDto>();
 		lstTipoRegistroPersona=new ArrayList<ComboDto>();
+		lstTipoSolicitud=new ArrayList<TiivsTipoSolicitud>();
+		
 		cargarMultitabla();
 		cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
+		cargarCombosNoMultitabla();
 	}
 	
 	public List<TipoDocumento> getLstTipoDocumentos() {
@@ -222,6 +235,61 @@ public class CombosMB {
 			logger.debug("Tamanio lista de monedas: " + lstMoneda.size());
 
 		}
+		
+		
+		public void cargarCombosNoMultitabla(){
+			// Carga combo de Operacion Bancaria
+			GenericDao<TiivsOperacionBancaria, Object> openBanDAO = (GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroOpenBan = Busqueda.forClass(TiivsOperacionBancaria.class);
+           try {
+				lstOpeBancaria = openBanDAO.buscarDinamico(filtroOpenBan);
+				logger.info("lstOpeBancaria size " + lstOpeBancaria.size());
+			} catch (Exception e) {
+				logger.debug("Error al cargar el listado de operaciones bancarias");
+			}
+
+			GenericDao<TiivsTipoSolicitud, Object> genTipoSolcDAO = (GenericDao<TiivsTipoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroTipoSolc = Busqueda.forClass(TiivsTipoSolicitud.class);
+
+			try {
+				lstTipoSolicitud = genTipoSolcDAO.buscarDinamico(filtroTipoSolc);
+				logger.info(" lstTipoSolicitud.size() " +lstTipoSolicitud.size());
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.info("Error al cargar el listado de tipos de solicitud ");
+			}
+			
+			
+			// Carga combo de Territorio
+			GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroTerr = Busqueda.forClass(TiivsTerritorio.class);
+
+			try {
+				lstTerritorio = terrDAO.buscarDinamico(filtroTerr);
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.info("Error al cargar el listado de territorios");
+			}
+
+			// Carga combo de Oficinas
+			GenericDao<TiivsOficina1, Object> oficDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroOfi = Busqueda.forClass(TiivsOficina1.class);
+			filtroOfi.add(Restrictions.isNotNull("codTerr"));
+			filtroOfi.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_OFICINA));
+			try {
+				lstOficina = oficDAO.buscarDinamico(filtroOfi);
+				logger.info("TAMANIOO DE LA LSTOFICIN EN EL COMBOMB " +lstOficina.size());
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.info("Error al cargar el listado de oficinas");
+			}
+			
+			
+			
+		
+		}
+
+		
 
 
 		public List<TiivsMultitabla> getLstMultitabla() {
@@ -371,6 +439,16 @@ public class CombosMB {
 
 		public void setLstTipoRegistroPersona(List<ComboDto> lstTipoRegistroPersona) {
 			this.lstTipoRegistroPersona = lstTipoRegistroPersona;
+		}
+
+		
+
+		public List<TiivsTipoSolicitud> getLstTipoSolicitud() {
+			return lstTipoSolicitud;
+		}
+
+		public void setLstTipoSolicitud(List<TiivsTipoSolicitud> lstTipoSolicitud) {
+			this.lstTipoSolicitud = lstTipoSolicitud;
 		}
 
 		
