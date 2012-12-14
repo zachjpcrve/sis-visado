@@ -30,6 +30,10 @@ public DocumentoTipoSolicitudDTO(String item, String documento,
 	this.documento = documento;
 	this.obligacion = obligacion;
 }
+public DocumentoTipoSolicitudDTO() {
+	super();
+	
+}
 
 
 
