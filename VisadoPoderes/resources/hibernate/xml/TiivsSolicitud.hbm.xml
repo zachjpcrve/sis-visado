@@ -20,7 +20,7 @@
         <property name="estado" type="string">
             <column name="ESTADO" length="7" not-null="true" />
         </property>
-        <property name="fecha" type="serializable">
+        <property name="fecha" type="java.sql.Timestamp">
             <column name="FECHA" not-null="true" />
         </property>
         <property name="regAbogado" type="string">
