@@ -11,7 +11,7 @@
         <property name="desOperBan" type="string">
             <column name="DES_OPER_BAN" length="50" />
         </property>
-        <property name="activo" type="java.lang.Character">
+        <property name="activo" type="java.lang.String">
             <column name="ACTIVO" length="1" />
         </property>
         <set name="tiivsSolicitudOperbans" table="TIIVS_SOLICITUD_OPERBAN" inverse="true" lazy="true" fetch="select">
