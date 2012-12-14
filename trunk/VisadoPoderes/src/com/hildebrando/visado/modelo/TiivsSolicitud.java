@@ -2,7 +2,6 @@ package com.hildebrando.visado.modelo;
 
 // Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR1
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -118,7 +117,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Serializable getFecha() {
+	public Timestamp getFecha() {
 		return this.fecha;
 	}
 
@@ -166,7 +165,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.importe = importe;
 	}
 
-	public Serializable getFechaEnvio() {
+	public Timestamp getFechaEnvio() {
 		return this.fechaEnvio;
 	}
 
@@ -174,7 +173,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.fechaEnvio = fechaEnvio;
 	}
 
-	public Serializable getFechaEstado() {
+	public Timestamp getFechaEstado() {
 		return this.fechaEstado;
 	}
 
@@ -190,7 +189,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.moneda = moneda;
 	}
 
-	public Serializable getFechaRespuesta() {
+	public Timestamp getFechaRespuesta() {
 		return this.fechaRespuesta;
 	}
 
