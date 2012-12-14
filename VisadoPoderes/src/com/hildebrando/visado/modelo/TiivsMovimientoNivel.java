@@ -2,7 +2,6 @@ package com.hildebrando.visado.modelo;
 
 // Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR1
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -75,7 +74,7 @@ public class TiivsMovimientoNivel implements java.io.Serializable {
 		this.usuarioRegistro = usuarioRegistro;
 	}
 
-	public Serializable getFechaRegistro() {
+	public Timestamp getFechaRegistro() {
 		return this.fechaRegistro;
 	}
 

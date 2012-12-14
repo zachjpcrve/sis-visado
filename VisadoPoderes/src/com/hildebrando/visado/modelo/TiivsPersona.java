@@ -2,6 +2,7 @@ package com.hildebrando.visado.modelo;
 
 // Generated 05/12/2012 02:50:20 PM by Hibernate Tools 3.4.0.CR1
 
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +20,8 @@ public class TiivsPersona implements java.io.Serializable {
 	private String apeMat;
 	private String numCel;
 	private String email;
+	private String usuarioRegistro;
+	private Timestamp fechaRegistro;
 
 	
 	//Datos del Bean /*SAMIRA*/
@@ -41,7 +44,8 @@ public class TiivsPersona implements java.io.Serializable {
 
 	public TiivsPersona(int codPer, String codCen, String tipDoi,
 			String numDoi, String nombre, String apePat, String apeMat,
-			String numCel, String email, Set<TiivsAgrupacionPersona> tiivsAgrupacionPersonas) {
+			String numCel, String email, String usuarioRegistro,
+			Timestamp fechaRegistro, Set<TiivsAgrupacionPersona> tiivsAgrupacionPersonas) {
 		this.codPer = codPer;
 		this.codCen = codCen;
 		this.tipDoi = tipDoi;
@@ -51,6 +55,8 @@ public class TiivsPersona implements java.io.Serializable {
 		this.apeMat = apeMat;
 		this.numCel = numCel;
 		this.email = email;
+		this.usuarioRegistro = usuarioRegistro;
+		this.fechaRegistro = fechaRegistro;
 		this.tiivsAgrupacionPersonas = tiivsAgrupacionPersonas;
 	}
 
@@ -124,6 +130,22 @@ public class TiivsPersona implements java.io.Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public String getUsuarioRegistro() {
+		return this.usuarioRegistro;
+	}
+
+	public void setUsuarioRegistro(String usuarioRegistro) {
+		this.usuarioRegistro = usuarioRegistro;
+	}
+
+	public Timestamp getFechaRegistro() {
+		return this.fechaRegistro;
+	}
+
+	public void setFechaRegistro(Timestamp fechaRegistro) {
+		this.fechaRegistro = fechaRegistro;
 	}
 
 	public Set<TiivsAgrupacionPersona> getTiivsAgrupacionPersonas() {

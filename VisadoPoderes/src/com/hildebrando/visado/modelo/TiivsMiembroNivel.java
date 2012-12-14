@@ -2,7 +2,6 @@ package com.hildebrando.visado.modelo;
 
 // Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR1
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -19,7 +18,7 @@ public class TiivsMiembroNivel implements java.io.Serializable {
 	private String usuarioRegistro;
 	private Timestamp fechaRegistro;
 	private String usuarioAct;
-	private String fechaAct;
+	private Timestamp fechaAct;
 
 	public TiivsMiembroNivel() {
 	}
@@ -31,7 +30,7 @@ public class TiivsMiembroNivel implements java.io.Serializable {
 	public TiivsMiembroNivel(int id, TiivsMiembro tiivsMiembro, String codNiv,
 			Integer grupo, String tipoRol, String estado,
 			String usuarioRegistro, Timestamp fechaRegistro,
-			String usuarioAct, String fechaAct) {
+			String usuarioAct, Timestamp fechaAct) {
 		this.id = id;
 		this.tiivsMiembro = tiivsMiembro;
 		this.codNiv = codNiv;
@@ -100,7 +99,7 @@ public class TiivsMiembroNivel implements java.io.Serializable {
 		this.usuarioRegistro = usuarioRegistro;
 	}
 
-	public Serializable getFechaRegistro() {
+	public Timestamp getFechaRegistro() {
 		return this.fechaRegistro;
 	}
 
@@ -116,11 +115,11 @@ public class TiivsMiembroNivel implements java.io.Serializable {
 		this.usuarioAct = usuarioAct;
 	}
 
-	public String getFechaAct() {
+	public Timestamp getFechaAct() {
 		return this.fechaAct;
 	}
 
-	public void setFechaAct(String fechaAct) {
+	public void setFechaAct(Timestamp fechaAct) {
 		this.fechaAct = fechaAct;
 	}
 
