@@ -15,10 +15,7 @@
 					icon="ui-icon-star" />
 				<p:menuitem value="Instrucciones"
 					url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
-				<!-- <p:menuitem value="Instrucciones" url="/faces/paginas/instrucciones.xhtml" icon="ui-icon-star" />
-	<p:menuitem value="Detalle Solicitud" url="/faces/paginas/detalleSolicitudEstadoEnviado.xhtml" icon="ui-icon-star" />
-	<p:menuitem value="Bandeja Seguimiento" url="/faces/paginas/bandejaSeguimiento.xhtml" icon="ui-icon-star" />
-    <p:menuitem value="Dictaminar" url="/faces/paginas/comentarioSolicitudSeguimientoDictaminar.xhtml" icon="ui-icon-star" /> -->
+			
 			</p:tabMenu>
 
 			<p:toolbar>
@@ -49,7 +46,7 @@
 							<tbody>
 								<tr>
 									<td class="styleLegend2" width="203">
-										<fieldset style="width: 95%;" class="fielset">
+										<fieldset style="width: 105%;" class="fielset">
 											<h:outputText title="Información General"
 												value="Información General" styleClass="outputText" />
 											<p:separator />
@@ -60,7 +57,7 @@
 																id="txtCodNumSol" value="Nro Solicitud:" /></td>
 														<td><h:inputText styleClass="inputText" id="text1"
 																style="width:100px;"
-																value="#{solicitudRegMB.solicitudRegistrar.codSoli}"
+																value="#{solicitudRegMB.solicitudRegistrarT.codSoli}"
 																disabled="false" readonly="true" /></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
@@ -72,7 +69,7 @@
 																value="Estado:" /></td>
 														<td><h:inputText styleClass="inputText"
 																id="txtEstado" style="width:100px;"
-																value="#{solicitudRegMB.solicitudRegistrar.descEstado}"
+																value="#{solicitudRegMB.solicitudRegistrarT.descEstado}"
 																disabled="false" readonly="true" /></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
@@ -82,9 +79,9 @@
 
 														<td><h:outputText styleClass="outputText"
 																id="txtOficina" value="Oficina:" /></td>
-														<td><p:selectOneMenu id="cboOficina">
+														<td><p:selectOneMenu id="cboOficina" value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}"> 
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-																<!-- <f:selectItems value="#{solicitudMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.desOfi}" /> -->
+																 <f:selectItems value="#{combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.codTerr})" /> 
 															</p:selectOneMenu></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
@@ -92,23 +89,14 @@
 														<td><p:tooltip for="toolcboOficina" value="Oficina"
 																showEffect="slide" /></td>
 
-														<td><h:inputText styleClass="inputText"
-																id="txtTerritorio" style="width:100px;"
-																value="#{ solicitudRegMB.solicitudRegistrar.desOfi}"
-																readonly="true" /></td>
-														<td><p:graphicImage
-																value="/resources/images/pregunta.jpg"
-																id="tooltxtTerritorio" /></td>
-														<td><p:tooltip for="tooltxtTerritorio"
-																value="Territorio" showEffect="slide" /></td>
 													</tr>
 													<tr>
 														<td><h:outputText styleClass="outputText"
 																id="outNroVaucher" value="Nro Voucher *" /></td>
 														<td><h:inputText styleClass="inputText"
 																id="txtNroVaucher" style="width:100px;"
-																value="#{ solicitudRegMB.solicitudRegistrar.desOfi}"
-																readonly="true" /></td>
+																value="#{solicitudRegMB.solicitudRegistrarT.nroVoucher}"
+																readonly="false" /></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
 																id="tooltxtNroVaucher" /></td>
@@ -119,7 +107,7 @@
 																id="outComision" value="Comision" /></td>
 														<td><h:inputText styleClass="inputText"
 																id="txtComision" style="width:100px;"
-																value="#{ solicitudRegMB.solicitudRegistrar.desOfi}"
+																value="#{solicitudRegMB.solicitudRegistrarT.comision}"
 																readonly="true" /></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
@@ -131,7 +119,7 @@
 																id="outImpTotal" value="Importe Total" /></td>
 														<td><h:inputText styleClass="inputText"
 																id="txtImpTotal" style="width:100px;"
-																value="#{ solicitudRegMB.solicitudRegistrar.strImporte}"
+																value="#{solicitudRegMB.solicitudRegistrarT.importe}"
 																disabled="false" readonly="true" /></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
@@ -147,7 +135,7 @@
 								</tr>
 								<tr>
 									<td class="styleLegend2" width="783">
-										<fieldset style="width: 95%;" class="fielset">
+										<fieldset style="width: 105%;" class="fielset">
 											<table>
 												<tr>
 													<td style="width: 380px;"><h:outputText
@@ -238,7 +226,7 @@
 								</tr>
 								<tr>
 									<td class="styleLegend2" width="683">
-										<fieldset style="width: 95%" class="fielset">
+										<fieldset style="width: 105%" class="fielset">
 											<h:outputText title="Documentos por Tipo de Solicitud"
 												value="Documentos por Tipo de Solicitud" />
 											<p:separator styleClass="fielset" />
@@ -250,32 +238,44 @@
 														</td>
 														<td><p:selectOneMenu styleClass="selectOneMenu"
 																id="cboTipoSolicitud"
-																value="#{ solicitudRegMB.solicitudRegistrar.codOper}"
-																immediate="true" onchange="this.form.submit()"
+																value="#{solicitudRegMB.iTipoSolicitud}"
+																immediate="true" 
+																valueChangeListener="#{solicitudRegMB.listarDocumentosXSolicitud}"
 																disabled="false">
+																<p:ajax update="listDocumentosXTipoSoli" event="change"></p:ajax>
 																<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
-																<!-- 	<f:selectItems value="#{solicitudMB.lstTipoSolicitud}" var="tipoSol"
-													itemValue="#{tipoSol.codOper}" itemLabel="#{tipoSol.desOper}" />-->
+																<f:selectItems value="#{combosMB.lstTipoSolicitud}" var="lOf" itemValue="#{lOf.codTipSolic}" itemLabel="#{lOf.desTipServicio}" />
+										
 															</p:selectOneMenu></td>
 														<td><p:commandButton id="btnEscaner" value="Escaner" /></td>
 													</tr>
 													<tr>
 														<td><h:outputText styleClass="outputText" id="text19"
 																value="Documentos:"></h:outputText></td>
-														<td><p:selectOneListbox styleClass="selectOneListbox"
-																rendered="false"
-																value="#{ solicitudRegMB.solicitudRegistrar.codOper}"
-																id="listbox1" size="1">
+														<td><p:selectOneMenu   styleClass="selectOneListbox" style="width:100%" value="#{solicitudRegMB.sCodDocumento}"
+																id="listDocumentosXTipoSoli" size="1">
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-															</p:selectOneListbox></td>
+																<f:selectItems value="#{solicitudRegMB.lstTipoSolicitudDocumentos}" var="lOf" itemValue="#{lOf.codDoc}" itemLabel="#{lOf.desDoc}" />
+											               </p:selectOneMenu></td>
+															   <td>
+										                    <h:form enctype="multipart/form-data">  
+                                                               <p:fileUpload fileUploadListener="#{solicitudRegMB.handleFileUpload}"  
+                                                                mode="simple"  
+                                                                update="messages"  
+                                                                 auto="false"  
+                                                                 sizeLimit="100000"   
+                                                                 allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>  
+  
+                                                                <p:growl id="messages" showDetail="true"/>  
+                                                                 </h:form>  
+										                    </td>
 
-														<td><h:outputText styleClass="outputText"
-																id="outExaminar" value="Examinar"></h:outputText></td>
-														<td><h:inputText value=""></h:inputText></td>
-														<td><p:commandButton id="btnAceptar" value="Aceptar" /></td>
+														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro"
+														action="#{solicitudRegMB.agrearDocumentosXTipoSolicitud}" /></td>
 													</tr>
 													<tr>
-														<td width="95%" colspan="11"><p:dataTable var="s"
+														<td width="95%" colspan="11">
+														<p:dataTable var="s" id="tblDocumentos"
 																rows="20" value="#{solicitudRegMB.lstdocumentos}"
 																emptyMessage="No hay resultados en la bandeja"
 																paginatorPosition="bottom" paginator="true"
@@ -308,7 +308,7 @@
 
 								<tr>
 									<td class="styleLegend2" width="683">
-										<fieldset style="width: 95%;" class="fielset">
+										<fieldset style="width: 105%;" class="fielset">
 											<h:outputText title="Operaciones Bancarias"
 												value="Operaciones Bancarias">
 											</h:outputText>
@@ -321,30 +321,30 @@
 															title="Tipo de Operación"></h:outputText></td>
 													<td><p:selectOneMenu styleClass="selectOneMenu"
 															id="cboTipoOperacion"
-															value="#{ solicitudRegMB.solicitudRegistrar.codOper}"
-															immediate="true" onchange="this.form.submit()"
+															value="#{solicitudRegMB.objSolicBancaria.id.codOperBan}"
+															immediate="true" 
 															disabled="false">
 															<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
-															<!-- <f:selectItems value="#{solicitudMB.lstOpeBancaria}" var="opeBan"
-																		itemValue="#{opeBan.desOperBan}" itemLabel="#{opeBan.desOperBan}" /> -->
+															<f:selectItems value="#{combosMB.lstOpeBancaria}" var="opeBan"
+																		itemValue="#{opeBan.desOperBan}" itemLabel="#{opeBan.desOperBan}" /> 
 														</p:selectOneMenu></td>
 													<td><h:outputText styleClass="outputText"
 															id="outTipoMoneda" value="Moneda" title="Moneda"></h:outputText>
 													</td>
 													<td><p:selectOneMenu styleClass="selectOneMenu"
 															id="cboMoneda"
-															value="#{solicitudRegMB.solicitudRegistrar.codOper}"
-															immediate="true" onchange="this.form.submit()"
+															value="#{solicitudRegMB.objSolicBancaria.moneda}"
+															immediate="true" 
 															disabled="false">
 															<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
-															<f:selectItem itemLabel="SOLES" itemValue="1" />
-															<f:selectItem itemLabel="DOLARES" itemValue="2" />
-															<f:selectItem itemLabel="EUROS" itemValue="3" />
-														</p:selectOneMenu></td>
+															<f:selectItems value="#{combosMB.lstMoneda}" var="varo"
+																		itemValue="#{varo.codMoneda}" itemLabel="#{varo.desMoneda}" /> 
+															
+															</p:selectOneMenu></td>
 													<td><h:outputText styleClass="outputText"
 															id="outImporte" value="Importe:" title="Importe"></h:outputText>
 													</td>
-													<td><h:inputText /></td>
+													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importe}"/></td>
 												</tr>
 												<tr>
 													<td><h:outputText styleClass="outputText"
@@ -354,11 +354,9 @@
 													<td><h:outputText styleClass="outputText"
 															id="outImporteSoles" value="Importe en Soles"
 															title="Importe en Soles"></h:outputText></td>
-													<td><h:inputText /></td>
-													<td><p:commandButton value="Agregar"
-															id="btnAgregarOpeBancaria" /></td>
-													<td><p:commandButton value="Limpiar"
-															id="btnLimpiarOpeBancaria" /></td>
+													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.tipoCambio}"/></td>
+													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" /></td>
+													<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria" /></td>
 												</tr>
 												<tr>
 													<td align="center" width="95%" colspan="11"><p:dataTable
@@ -413,6 +411,8 @@
 			</tbody>
 		</table>
 		</h:form>
+		
+		
 <h:form id="formBusqueda">
 		<p:dialog id="modalBusqueda" header="Busqueda Cliente/No Cliente" visible="#{solicitudRegMB.bBooleanPopup}"
 			widgetVar="dlgModalBusqueda" modal="true" height="300" >
