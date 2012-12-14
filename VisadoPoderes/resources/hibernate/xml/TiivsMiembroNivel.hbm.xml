@@ -38,8 +38,8 @@
         <property name="usuarioAct" type="string">
             <column name="USUARIO_ACT" length="7" />
         </property>
-        <property name="fechaAct" type="string">
-            <column name="FECHA_ACT" length="7" />
+        <property name="fechaAct" type="java.sql.Timestamp">
+            <column name="FECHA_ACT" />
         </property>
     </class>
 </hibernate-mapping>
