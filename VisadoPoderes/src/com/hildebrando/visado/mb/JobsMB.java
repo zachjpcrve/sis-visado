@@ -17,6 +17,7 @@ import org.hibernate.criterion.Expression;
 import org.omg.PortableInterceptor.USER_EXCEPTION;
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.general.entities.Feriado;
+import com.bbva.general.service.ConfigBean;
 import com.bbva.general.service.TablaGeneral;
 import com.bbva.general.service.TablaGeneralServiceLocator;
 import com.bbva.persistencia.generica.dao.Busqueda;
@@ -195,8 +196,9 @@ public class JobsMB {
 		TablaGeneral tbGeneralWS = null;
 		try {
 			
-			TablaGeneralServiceLocator tablaGeneralServiceLocator = new TablaGeneralServiceLocator();			
-			
+			TablaGeneralServiceLocator tablaGeneralServiceLocator = (TablaGeneralServiceLocator) SpringInit
+					.getApplicationContext().getBean(
+							"tablaGeneralServiceLocator");
 			tbGeneralWS = tablaGeneralServiceLocator.getTablaGeneral();
 		} catch (ServiceException e) {
 			e.printStackTrace();
