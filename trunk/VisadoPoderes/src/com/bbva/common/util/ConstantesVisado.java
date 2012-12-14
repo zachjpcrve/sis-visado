@@ -164,4 +164,13 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_COLUMNA_FECHA_ENVIO = "Fecha de Envio";
 	public static final String ETIQUETA_COLUMNA_FECHA_RPTA = "Fecha de Respuesta";
 	public static final String ETIQUETA_COLUMNA_FECHA_ESTADO = "Fecha de Estado";
+	
+	static public class ESTADOS {
+		public static final String ESTADO_REGISTRADO = "Registrado";
+	}
+	
+		public static final int DOCUMENTO_OBLIGATORIO = 1;
+	
+	
 }
+
