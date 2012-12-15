@@ -23,9 +23,9 @@ import com.hildebrando.visado.dto.Escaneado;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.ftp.ClienteFTP;
 import com.hildebrando.visado.modelo.TiivsParametros;
-import com.hildebrando.visado.modelo.TiivsTipoDocumento;
+//import com.hildebrando.visado.modelo.TiivsTipoDocumento;
 
-@ManagedBean(name = "solicitudMB")
+@ManagedBean(name = "pdfviewerMB")
 @SessionScoped
 public class PDFViewerMB {
 	
@@ -176,46 +176,77 @@ public class PDFViewerMB {
 	
 	public void cargarPDFRemoto()
 	{
-		String dirServer="";
+		String urlServer="";
 		String dirLocal="";
 		String server="";
 		String loginServer="";
 		String passServer="";
+		String tipoArchivo="o";
+		String carpetaRemota="";
+		String rutaArchivoLocal="C:" + File.separator+"instaladores"+File.separator;
 		//String codUsuario="P014773";
 		
 		//String dirPDF = "ftp://hilde:$i$tema$2012@10.172.0.4/VISADO/PDF/";
 		
-		if (lstParametros!=null) 
+		if (tipoArchivo.equalsIgnoreCase("o"))
 		{
-			System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
-			
-			for (TiivsParametros tmp: lstParametros)
+			if (lstParametros!=null) 
 			{
-				dirServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+ConstantesVisado.SLASH+ConstantesVisado.SLASH+
-							  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
-							  tmp.getPassServer()+ConstantesVisado.ARROBA+
-							  tmp.getServer()+ConstantesVisado.SLASH+tmp.getCarpetaRemota();
-					
-				dirLocal=tmp.getRutaLocal();
-				server=tmp.getServer();
-				loginServer=tmp.getLoginServer();
-				passServer=tmp.getPassServer();			
+				System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
+				
+				for (TiivsParametros tmp: lstParametros)
+				{
+					urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
+								  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
+								  tmp.getPassServer()+ConstantesVisado.ARROBA+
+								  File.separator+tmp.getCarpetaRemota();
+						
+					server=tmp.getServer();
+					loginServer=tmp.getLoginServer();
+					passServer=tmp.getPassServer();	
+					carpetaRemota=tmp.getCarpetaRemota();
+				}
+				
+				//util.downloadFile("compartido", dirLocal,dirServer);
 			}
-			
-			//util.downloadFile("compartido", dirLocal,dirServer);
+			dirLocal=rutaArchivoLocal;
+		}
+		else
+		{
+			if (lstParametros!=null) 
+			{
+				System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
+				
+				for (TiivsParametros tmp: lstParametros)
+				{
+					urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
+								  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
+								  tmp.getPassServer()+ConstantesVisado.ARROBA+
+								  File.separator+tmp.getCarpetaRemota();
+						
+					dirLocal=tmp.getRutaLocal();
+					server=tmp.getServer();
+					loginServer=tmp.getLoginServer();
+					passServer=tmp.getPassServer();	
+					carpetaRemota=tmp.getCarpetaRemota();
+				}
+				
+				//util.downloadFile("compartido", dirLocal,dirServer);
+			}
 		}
 		
 		System.out.println("Parametros leidos de BD");
-		System.out.println("Dir Server: " + dirServer);
+		System.out.println("Dir Server: " + urlServer);
 		System.out.println("Dir Local: " + dirLocal);
 		System.out.println("Server: " + server);
 		System.out.println("Login Server:_" + loginServer);
 		System.out.println("Pass Server: " + passServer);
+		System.out.println("Carpeta Remota: " + carpetaRemota);
 		
 				
 		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
 		try {
-			cliente.setDirectorio("VISADO/PDF");
+			cliente.setDirectorio(carpetaRemota);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -236,7 +267,8 @@ public class PDFViewerMB {
 			
 			for (int i = 0; i < lista.length; i++) 
 			{
-				String codDocumento = buscarTipoDocByNombre(lista[i].getName());
+				//String codDocumento = buscarTipoDocByNombre(lista[i].getName());
+				String codDocumento="";
 				cliente.upLoadFiles(lista[i].getName(),dirLocal);
 				if (codDocumento.isEmpty())
 				{
@@ -268,7 +300,7 @@ public class PDFViewerMB {
 					tmp.setNomArchivo(listaTMP.get(ind).toString());
 					System.out.println("Ruta archivo " + ind  + ": " + tmp.getNomArchivo());
 					tmp.setFormato("Blanco y Negro");
-					tmp.setRutaArchivoLarga(dirServer+tmp.getNomArchivo());
+					tmp.setRutaArchivoLarga(urlServer+tmp.getNomArchivo());
 					
 					lstPDFEscaneados.add(tmp);
 				}
@@ -276,7 +308,7 @@ public class PDFViewerMB {
 		}
 	}
 	
-	public String buscarTipoDocByNombre(String archivo)
+	/*public String buscarTipoDocByNombre(String archivo)
 	{
 		String sinExtesion = archivo.substring(0, archivo.indexOf("."));
 		String resultado="";
@@ -304,7 +336,7 @@ public class PDFViewerMB {
 		}
 		
 		return resultado;
-	}
+	}*/
 	
 	public void showPDF()
 	{
