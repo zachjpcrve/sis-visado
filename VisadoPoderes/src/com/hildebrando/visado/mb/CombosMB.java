@@ -118,7 +118,7 @@ public class CombosMB {
 		// @Version: 1.0
 		// @param: -
 		public void cargarCombosMultitabla(String codigo) {
-			logger.info("Buscando valores en multitabla con codigo: " + codigo);
+			logger.debug("Buscando valores en multitabla con codigo: " + codigo);
 			lstRangosImporte.clear();
 			lstEstado.clear();
 			lstEstadoNivel.clear();
@@ -226,7 +226,7 @@ public class CombosMB {
 			}
 			
 			logger.debug("Tamanio lista de Clasificacion de Personas: "+ lstClasificacionPersona.size());
-			logger.info("Tamanio lista de Tipo de Registro de Personas: "+ lstTipoRegistroPersona.size());
+			logger.debug("Tamanio lista de Tipo de Registro de Personas: "+ lstTipoRegistroPersona.size());
 			logger.debug("Tamanio lista de importes: "+ lstRangosImporte.size());
 			logger.debug("Tamanio lista de estados: " + lstEstado.size());
 			logger.debug("Tamanio lista de estados nivel: "+ lstEstadoNivel.size());
@@ -243,7 +243,7 @@ public class CombosMB {
 			Busqueda filtroOpenBan = Busqueda.forClass(TiivsOperacionBancaria.class);
            try {
 				lstOpeBancaria = openBanDAO.buscarDinamico(filtroOpenBan);
-				logger.info("lstOpeBancaria size " + lstOpeBancaria.size());
+				logger.debug("lstOpeBancaria size " + lstOpeBancaria.size());
 			} catch (Exception e) {
 				logger.debug("Error al cargar el listado de operaciones bancarias");
 			}
@@ -253,10 +253,10 @@ public class CombosMB {
 
 			try {
 				lstTipoSolicitud = genTipoSolcDAO.buscarDinamico(filtroTipoSolc);
-				logger.info(" lstTipoSolicitud.size() " +lstTipoSolicitud.size());
+				logger.debug(" lstTipoSolicitud.size() " +lstTipoSolicitud.size());
 			} catch (Exception e) {
 				e.printStackTrace();
-				logger.info("Error al cargar el listado de tipos de solicitud ");
+				logger.debug("Error al cargar el listado de tipos de solicitud ");
 			}
 			
 			
@@ -268,7 +268,7 @@ public class CombosMB {
 				lstTerritorio = terrDAO.buscarDinamico(filtroTerr);
 			} catch (Exception e) {
 				e.printStackTrace();
-				logger.info("Error al cargar el listado de territorios");
+				logger.debug("Error al cargar el listado de territorios");
 			}
 
 			// Carga combo de Oficinas
@@ -278,10 +278,10 @@ public class CombosMB {
 			filtroOfi.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_OFICINA));
 			try {
 				lstOficina = oficDAO.buscarDinamico(filtroOfi);
-				logger.info("TAMANIOO DE LA LSTOFICIN EN EL COMBOMB " +lstOficina.size());
+				logger.debug("TAMANIOO DE LA LSTOFICIN EN EL COMBOMB " +lstOficina.size());
 			} catch (Exception e) {
 				e.printStackTrace();
-				logger.info("Error al cargar el listado de oficinas");
+				logger.debug("Error al cargar el listado de oficinas");
 			}
 			
 			
