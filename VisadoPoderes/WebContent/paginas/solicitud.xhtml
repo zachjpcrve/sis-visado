@@ -20,10 +20,10 @@
 
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">
-					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3"
-						icon="ui-icon-document" />
-					<p:commandButton value="Enviar" id="btnEnviar3"
-						icon="ui-icon-document" />
+					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"
+						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" update=":formSolicitudRegistro"/>
+					<p:commandButton value="Enviar" id="btnEnviar3" action="#{solicitudRegMB.registrarSolicitud}" update=":formSolicitudRegistro"
+						icon="ui-icon-document"  actionListener="#{solicitudRegMB.registrarSolicitudEnviado}"/>
 					<p:commandButton value="Imprimir" id="btnImprimir3"
 						icon="ui-icon-document" />
 					<p:commandButton value="Salir" id="btnSalir3"
@@ -34,8 +34,7 @@
 		</h:panelGrid>
 		
 	<h:form id="formSolicitudRegistro">
-	        <p:growl id="idGrowlSolicitudRegistro"></p:growl>
-			<p:messages id="idMsmSolicitudRegistro"></p:messages>
+	        <p:messages id="idGrowlSolicitudRegistro"></p:messages>
 
 		<table border="0" width="680">
 			<tbody>
@@ -93,10 +92,10 @@
 													<tr>
 														<td><h:outputText styleClass="outputText"
 																id="outNroVaucher" value="Nro Voucher *" /></td>
-														<td><h:inputText styleClass="inputText"
-																id="txtNroVaucher" style="width:100px;"
+														<td><h:inputText styleClass="inputText" minlength="11"
+																id="txtNroVaucher" style="width:100px;" maxlength="11" 
 																value="#{solicitudRegMB.solicitudRegistrarT.nroVoucher}"
-																readonly="false" /></td>
+																 /></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
 																id="tooltxtNroVaucher" /></td>
@@ -247,7 +246,7 @@
 																<f:selectItems value="#{combosMB.lstTipoSolicitud}" var="lOf" itemValue="#{lOf.codTipSolic}" itemLabel="#{lOf.desTipServicio}" />
 										
 															</p:selectOneMenu></td>
-														<td><p:commandButton id="btnEscaner" value="Escaner" /></td>
+														<td><p:commandButton id="btnEscaner" value="Escaner" action="#{solicitudRegMB.prepararURLEscaneo}"  ajax="false"/></td>
 													</tr>
 													<tr>
 														<td><h:outputText styleClass="outputText" id="text19"
@@ -266,7 +265,6 @@
                                                                  sizeLimit="100000"   
                                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>  
   
-                                                                <p:growl id="messages" showDetail="true"/>  
                                                                  </h:form>  
 										                    </td>
 
@@ -350,12 +348,13 @@
 													<td><h:outputText styleClass="outputText"
 															id="outImporteTipoCambio" value="Tipo Cambio"
 															title="Tipo Cambio"></h:outputText></td>
-													<td><h:inputText /></td>
+													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.tipoCambio}" /></td>
 													<td><h:outputText styleClass="outputText"
 															id="outImporteSoles" value="Importe en Soles"
 															title="Importe en Soles"></h:outputText></td>
-													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.tipoCambio}"/></td>
-													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" /></td>
+													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importeSoles}"/></td>
+													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solicitudRegMB.agrearOperacionBancaria}" 
+													  update=":formSolicitudRegistro"/></td>
 													<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria" /></td>
 												</tr>
 												<tr>
@@ -450,7 +449,6 @@
 			header="Busqueda Cliente/No Cliente" widgetVar="dlgRegistrarPersona"
 			modal="true" height="400" >
 	    <h:form id="formRegistrar">
-		<p:growl id="idGrowlModalPersona"></p:growl>
 			<p:messages id="idMsmModalPerona"></p:messages>
 			<table border="0" width="50px;">
 		
