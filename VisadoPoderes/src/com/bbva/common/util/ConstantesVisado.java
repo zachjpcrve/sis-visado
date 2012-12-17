@@ -168,6 +168,11 @@ public class ConstantesVisado {
 	static public class ESTADOS {
 		public static final String ESTADO_REGISTRADO = "Registrado";
 	}
+	static public class MONEDAS {
+		public static final String COD_SOLES = "0001";
+		public static final String COD_DOLAR = "0002";
+		public static final String COD_EUROS = "0003";
+	}
 	
 		public static final int DOCUMENTO_OBLIGATORIO = 1;
 	
