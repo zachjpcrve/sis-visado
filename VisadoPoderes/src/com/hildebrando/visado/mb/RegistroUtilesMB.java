@@ -1,7 +1,12 @@
 package com.hildebrando.visado.mb;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -22,6 +27,7 @@ import com.bbva.persistencia.generica.dao.GenericDao;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId;
 import com.hildebrando.visado.modelo.TiivsEstudio;
+import com.hildebrando.visado.modelo.TiivsFeriado;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsPersona;
@@ -39,9 +45,9 @@ public class RegistroUtilesMB {
 	private String entrada;
 	private String resultado;
 	
-	
+	/************************METODOS DE PRUEBA***************************/
 	/**
-     * Metodo prueba
+     * Metodo prueba asignacion de estudio
      * */
 	public void asignarEstudio() {
 		
@@ -52,7 +58,7 @@ public class RegistroUtilesMB {
 	
 	
     /**
-     * Metodo prueba
+     * Metodo prueba calculo de comision
      * */
 	public void calcularComision() {
 						
@@ -96,6 +102,90 @@ public class RegistroUtilesMB {
 		System.out.println("Fin metodo");
 	}
 
+	
+	/**
+     * Metodo prueba obtener fecha respuesta
+     * */
+	public void obtenFechaRespuesta() {			
+//		System.out.println("Fecha:" + this.entrada);		
+//		try {
+//			DateFormat formatter ; 
+//			Date date ; 
+//			formatter = new SimpleDateFormat("dd/MM/yy");
+//			date = (Date)formatter.parse(this.entrada);
+//			Calendar cal=Calendar.getInstance();
+//			cal.setTime(date);		
+//			System.out.println("Fecha a evaluar:" + cal.getTime());	
+//			Date fecharesp = obtenSiguienteFechaHabil(cal);
+//			this.resultado = fecharesp.toString();
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}		
+		this.resultado = obtenerFechaRespuesta().toString();
+	}
+	
+	/************************FIN METODOS DE PRUEBA***************************/
+	
+	
+
+
+	/**
+	  * Obtiene el código de un Estudio de Abogado con la menor cantidad
+	  * de solicitudes asignadas
+	  * @return codigo de estudio de abogados
+	  */
+	public String obtenerEstudioMenorCarga() {
+					
+		String codigoEstado = ConstantesVisado.CODIGO_ESTADO_ENVIADO;		
+		String sHoraCorte = getHoraCorte();  //Para obtener hora de corte (parámetro de sistema)
+		String resultEstudio = null;
+		String []aHora = null;
+		
+		try{			
+			aHora = sHoraCorte.split(":");
+		}catch(Exception e){
+			aHora = "00:00".split(":");
+		}
+		
+		
+		//Query para obtener estudio con menos solicitudes pendientes
+		String sql = " SELECT "+ 
+			 " EST.COD_ESTUDIO,"+
+			 " COUNT(SOL.COD_SOLI) NRO_SOLICITUDES" +
+			 " FROM TIIVS_SOLICITUD SOL" +
+			 " INNER JOIN TIIVS_ESTUDIO EST ON EST.COD_ESTUDIO = SOL.COD_ESTUDIO" +
+			 " WHERE" +
+			 " TRIM(SOL.ESTADO) = '"+ codigoEstado +"'" + 
+			 " AND EST.ACTIVO = 1" + 			 
+			 " AND SOL.FECHA < " +			 
+			 " CAST((SYSDATE - (SYSDATE - TRUNC(SYSDATE)) + "+aHora[0]+"/24 + "+aHora[1]+"/1440) AS TIMESTAMP) "+		 
+			 " GROUP BY" +
+			 " EST.COD_ESTUDIO" +
+			 " ORDER BY NRO_SOLICITUDES ASC";	
+		
+		System.out.println("Consulta:"+sql);
+		
+
+		try {			
+			Query query = SpringInit.devolverSession().createSQLQuery(sql);									
+			List<Object[]> lstEstudios = query.list();				
+			if(lstEstudios.size()>0){
+				resultEstudio = (String) lstEstudios.get(0)[0];
+			} else { //asignación automática
+				logger.info("Estudios sin solicitudes pendientes - Se asignará aleatoriamente");
+				System.out.println("Estudios sin solicitudes pendientes - Se asignará aleatoriamente");
+				resultEstudio = getRandomEstudio();
+			}
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+			
+		return resultEstudio;
+		
+	}
+	
+	
 	
 	/**
 	  * Calcula la comisión final de una solicitud.
@@ -155,81 +245,47 @@ public class RegistroUtilesMB {
 	}
 
 
+	
 	/**
-	  * Obtiene el código de un Estudio de Abogado con la menor cantidad
-	  * de solicitudes asignadas
-	  * @return codigo de estudio de abogados
-	  */
-	public String obtenerEstudioMenorCarga() {
-					
-		String codigoEstado = ConstantesVisado.CODIGO_ESTADO_ENVIADO;		
-		String sHoraCorte = getHoraCorte();  //Para obtener hora de corte (parámetro de sistema)
-		String resultEstudio = null;
-		String []aHora = null;
+	 * Obtiene la fecha de respuesta de una solicitud - P026 CU02 [RN018]
+	 * @return fecha de respuesta
+	 * */
+	public Date obtenerFechaRespuesta(){
 		
+		Date fechaRetorno;
+		String sHoraCorte = getHoraCorte();  //Para obtener hora de corte (parámetro de sistema)		
+		String []aHora = null;		
 		try{			
 			aHora = sHoraCorte.split(":");
 		}catch(Exception e){
 			aHora = "00:00".split(":");
 		}
+		int iHoraCorte  =Integer.valueOf(aHora[0] + aHora[1]);
 		
+		//Hora actual
+		Calendar fechaActual = Calendar.getInstance();	
+		int iHoraActual = Integer.valueOf(String.valueOf(fechaActual
+				.get(Calendar.HOUR_OF_DAY))
+				+ String.valueOf(fechaActual.get(Calendar.MINUTE)));		
 		
-		//Query para obtener estudio con menos solicitudes pendientes
-		String sql = " SELECT "+ 
-			 " EST.COD_ESTUDIO,"+
-			 " COUNT(SOL.COD_SOLI) NRO_SOLICITUDES" +
-			 " FROM TIIVS_SOLICITUD SOL" +
-			 " INNER JOIN TIIVS_ESTUDIO EST ON EST.COD_ESTUDIO = SOL.COD_ESTUDIO" +
-			 " WHERE" +
-			 " TRIM(SOL.ESTADO) = '"+ codigoEstado +"'" + 
-			 " AND EST.ACTIVO = 1" + 			 
-			 " AND SOL.FECHA < " +			 
-			 " CAST((SYSDATE - (SYSDATE - TRUNC(SYSDATE)) + "+aHora[0]+"/24 + "+aHora[1]+"/1440) AS TIMESTAMP) "+		 
-			 " GROUP BY" +
-			 " EST.COD_ESTUDIO" +
-			 " ORDER BY NRO_SOLICITUDES ASC";	
-		
-		System.out.println("Consulta:"+sql);
-		
-
-		try {			
-			Query query = SpringInit.devolverSession().createSQLQuery(sql);									
-			List<Object[]> lstEstudios = query.list();				
-			if(lstEstudios.size()>0){
-				resultEstudio = (String) lstEstudios.get(0)[0];
-			} else { //asignación automática
-				logger.info("Estudios sin solicitudes pendientes - Se asignará aleatoriamente");
-				System.out.println("Estudios sin solicitudes pendientes - Se asignará aleatoriamente");
-				resultEstudio = getRandomEstudio();
-			}
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-		}
-			
-		return resultEstudio;
-		
+		System.out.println("Compara fecha:"+iHoraActual+"<"+iHoraCorte);
+		logger.info("Compara fecha:"+iHoraActual+"<"+iHoraCorte);
+		if(iHoraActual <= iHoraCorte ){ //Si hora actual es menor igual a la hora de corte	
+			logger.info("Hora es menor o igual que la fecha de corte");
+			fechaRetorno = fechaActual.getTime();	 //Retornamos la fecha actual
+		} else {
+			logger.info("Hora es mayor a la hora de corte, se obtendrá siguiente fecha");
+			fechaRetorno = obtenSiguienteDiaHabil(fechaActual);
+		}		
+		return fechaRetorno;
 	}
-
-	/**
-	 * Obtiene aleatriamente el código de estudio en estado activo
-	 * */
-	private String getRandomEstudio() {
-		
-		String codEstudio = null;
-		GenericDao<TiivsEstudio, Object> estudioDAO = (GenericDao<TiivsEstudio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsEstudio.class);					
-		filtro.add(Restrictions.eq("activo", '1'));
-		List<TiivsEstudio> lstEstudios= new ArrayList<TiivsEstudio>();				
-		try {
-			lstEstudios = estudioDAO.buscarDinamico(filtro);
-			codEstudio = lstEstudios.get( 0 + (int)(Math.random()*lstEstudios.size())).getCodEstudio();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return codEstudio;
-	}
-
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Obtiene la hora de corte de MultiTabla
 	 * */
@@ -250,7 +306,52 @@ public class RegistroUtilesMB {
 		}
 		return sHoraCorte;
 	}	
+	
+	
+	/**
+	 * Obtiene la fila de una tabla de la MultiTabla de acuerdo a los parámetros
+	 * @param Código de tabla
+	 * @param Código de campo de la tabla
+	 * @return TiivsMultitabla
+	 * */
+	public static TiivsMultitabla getRowFromMultitabla(String codigoMultitablaMoneda,
+			String codigoCampo) {
+		// TODO Apéndice de método generado automáticamente
+		TiivsMultitabla resultMultiTabla = null;
+		GenericDao<TiivsMultitabla, Object> multiTablaDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
 
+		try {
+			TiivsMultitablaId tablaId = new TiivsMultitablaId(
+					codigoMultitablaMoneda, codigoCampo);			
+			resultMultiTabla = multiTablaDAO.buscarById(TiivsMultitabla.class,
+					tablaId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultMultiTabla;
+	}
+
+	
+	/**
+	 * Obtiene aleatriamente el código de estudio en estado activo
+	 * */
+	private String getRandomEstudio() {
+		
+		String codEstudio = null;
+		GenericDao<TiivsEstudio, Object> estudioDAO = (GenericDao<TiivsEstudio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsEstudio.class);					
+		filtro.add(Restrictions.eq("activo", '1'));
+		List<TiivsEstudio> lstEstudios= new ArrayList<TiivsEstudio>();				
+		try {
+			lstEstudios = estudioDAO.buscarDinamico(filtro);
+			codEstudio = lstEstudios.get( 0 + (int)(Math.random()*lstEstudios.size())).getCodEstudio();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return codEstudio;
+	}
+	
 	/**
 	  * Retorna el listado de poderdantes de una solicitud.
 	  * @param solicitud.
@@ -289,7 +390,6 @@ public class RegistroUtilesMB {
 		return lstPoderdantes;		
 	}	
 		
-
 	/**
 	  * Verifica si todas las personas son de tipo Juridaca.
 	  * @param lista de personas.
@@ -390,6 +490,10 @@ public class RegistroUtilesMB {
 		return bRet;
 	}
 	
+	/**
+	 * Devuelve la comisión según el tipo de comisión
+	 * @param tipo de comisión 
+	 * */
 	private Double obtenerComision(String sTipoComision) {
 		TiivsMultitabla multi = getRowFromMultitabla(
 				ConstantesVisado.CODIGO_MULTITABLA_COMISION,
@@ -409,25 +513,52 @@ public class RegistroUtilesMB {
 		}
 		return comision;
 	}
-	
-	private TiivsMultitabla getRowFromMultitabla(String codigoMultitablaMoneda,
-			String codigoCampo) {
-		// TODO Apéndice de método generado automáticamente
-		TiivsMultitabla resultMultiTabla = null;
-		GenericDao<TiivsMultitabla, Object> multiTablaDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
-
+		
+	/**
+	  * Obtiene el siguiente día hábil considerando los feriados nacionales, 
+	  * sábados y domingos como días no hábiles.
+	  * @return Fecha Habil
+	  */
+	private Date obtenSiguienteDiaHabil(Calendar fecha) {
+		
+		Date fechaRetorno;	
+		
+		fecha.add(Calendar.DATE, 1); // sumamos 1 día a la fecha			
+		if(fecha.get(Calendar.DAY_OF_WEEK)==7){ //si es sabado sumamos 2 dias a la fecha
+			fecha.add(Calendar.DATE, 2);
+			logger.info("Fecha:'" + fecha + "' es Sábado se obtendrá el siguiente día hábil ");
+		}		
+		if(fecha.get(Calendar.DAY_OF_WEEK)==1){ //si es Domingo sumamos 1 dia a la fecha
+			fecha.add(Calendar.DATE, 1);
+			logger.info("Fecha:'" + fecha + "' es Domingo se obtendrá el siguiente día hábil ");
+			System.out.println("Domingo se agregara 1 día");
+		}
+				
+		//Buscamos si la fecha es feriado
+		GenericDao<TiivsFeriado, Object> feriadoDAO = (GenericDao<TiivsFeriado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsFeriado.class);				
+		filtro.add(Restrictions.eq("indicador", 'N'));
+		filtro.add(Restrictions.eq("fecha", fecha.getTime()));
+		
+		List<TiivsFeriado> lstFeriados= new ArrayList<TiivsFeriado>();				
 		try {
-			TiivsMultitablaId tablaId = new TiivsMultitablaId(
-					codigoMultitablaMoneda, codigoCampo);			
-			resultMultiTabla = multiTablaDAO.buscarById(TiivsMultitabla.class,
-					tablaId);
+			lstFeriados = feriadoDAO.buscarDinamico(filtro);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return resultMultiTabla;
-	}
+
 		
+		if(!lstFeriados.isEmpty()){ // Si la fecha es feriado 
+			logger.info("Fecha:'" + fecha + "' es Feriado se obtendrá el siguiente día hábil ");
+			fechaRetorno = obtenSiguienteDiaHabil(fecha);
+		} else {
+			fechaRetorno = fecha.getTime();
+		}		
+		return fechaRetorno;
+	}
+
+	
+	
 	public String getEntrada() {
 		return entrada;
 	}
