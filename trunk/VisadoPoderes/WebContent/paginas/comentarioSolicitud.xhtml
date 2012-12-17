@@ -8,24 +8,44 @@
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
 
-		<p:tabMenu activeIndex="0">
-			<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml"
-				icon="ui-icon-star" />
-			<p:menuitem value="Instrucciones" url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
+				<h:panelGrid columns="5">
+
+			<p:tabMenu activeIndex="0" style="width:350px;">
+				<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml"
+					icon="ui-icon-star" />
+				<p:menuitem value="Instrucciones"
+					url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
 			
-		</p:tabMenu>
+			</p:tabMenu>
+
+			<p:toolbar>
+				<p:toolbarGroup align="rigth">
+					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"
+						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" update=":formSolicitudRegistro"/>
+					<p:commandButton value="Enviar" id="btnEnviar3" action="#{solicitudRegMB.registrarSolicitud}" update=":formSolicitudRegistro"
+						icon="ui-icon-document"  actionListener="#{solicitudRegMB.registrarSolicitudEnviado}"/>
+					<p:commandButton value="Imprimir" id="btnImprimir3"
+						icon="ui-icon-document" />
+					<p:commandButton value="Salir" id="btnSalir3"
+						icon="ui-icon-document" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+		</h:panelGrid>
 		
 		
-		<h:form id="form">
-			<p:editor id="editor" value="#{editorMB.value}" width="600" />
+		
+		<h:form id="formSolicitudRegistro">
+	      <p:messages id="idGrowlSolicitudRegistro"></p:messages>
+			<p:editor id="editor" value="#{solicitudRegMB.solicitudRegistrarT.obs}" width="600" />
 
 			<h:panelGrid columns="2" style="margin-top:10px">
-				<p:commandButton id="submitButton" value="Submit" update="display"
-					oncomplete="dlg.show()" icon="ui-icon-disk" />
-				<p:commandButton id="clearButton" type="button" value="Clear"
+				<p:commandButton id="submitButton" value="Guardar" update="display" actionListener="#{solicitudRegMB.seterComentario}"
+					 icon="ui-icon-disk" />
+				<p:commandButton id="clearButton" type="button" value="Limpiar"
 					onclick="editor.clear()" icon="ui-icon-close" />
 			</h:panelGrid>
-
+<!-- oncomplete="dlg.show()" -->
 			<p:dialog header="Content" widgetVar="dlg" showEffect="fade"
 				hideEffect="fade" modal="true">
 				<h:outputText id="display" value="#{editorMB.value}"
