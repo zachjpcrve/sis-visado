@@ -11,11 +11,7 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
-
-		<h:commandButton id="btn" value="Print">
-		<p:printer target="output" />
-		</h:commandButton>
-		<h:outputText id="output" value="PrimeFaces Rocks!" />
+		
 		<h:panelGrid columns="2">
 			<p:tabMenu activeIndex="0" style="width:350px;">
 				<p:menuitem value="calculadora" url="/faces/paginas/calculadoraComision.xhtml"
