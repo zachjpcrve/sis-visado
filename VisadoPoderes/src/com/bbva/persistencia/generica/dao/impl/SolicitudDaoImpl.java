@@ -27,7 +27,7 @@ public abstract  class SolicitudDaoImpl <K, T extends Serializable>
 	public  String obtenerPKNuevaSolicitud() throws Exception{
 		
 		final String  sql ="select LPAD(MAX(COD_SOLI+1),7,'0') from TIIVS_SOLICITUD";
-        System.out.println("SQL : "+sql);
+       // System.out.println("SQL : "+sql);
 		
 		String codigoSol="";
 		List ResultList = (List)getHibernateTemplate().execute(new HibernateCallback() {
@@ -37,7 +37,6 @@ public abstract  class SolicitudDaoImpl <K, T extends Serializable>
 				}});
 
 				if(ResultList.size()>0){
-				System.out.println("ResultList.size "+ResultList.size());
 				for(int i=0;i<=ResultList.size()-1;i++){
 					codigoSol=  (String) ResultList.get(i);
 				
