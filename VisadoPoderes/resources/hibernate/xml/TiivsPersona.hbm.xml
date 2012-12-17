@@ -6,7 +6,9 @@
     <class name="com.hildebrando.visado.modelo.TiivsPersona" table="TIIVS_PERSONA" lazy="false">
         <id name="codPer" type="int">
             <column name="COD_PER" precision="8" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence" >
+            <param name="sequence">SEQ_PERSONA</param>
+            </generator>
         </id>
         <property name="codCen" type="string">
             <column name="COD_CEN" length="7" />
@@ -38,7 +40,7 @@
         <property name="fechaRegistro" type="java.sql.Timestamp">
             <column name="FECHA_REGISTRO" />
         </property>
-        <set name="tiivsAgrupacionPersonas" table="TIIVS_AGRUPACION_PERSONA" inverse="true" lazy="false" fetch="select">
+        <set name="tiivsAgrupacionPersonas" table="TIIVS_AGRUPACION_PERSONA" cascade="all" inverse="false" lazy="false" fetch="select">
             <key>
                 <column name="COD_PER" precision="22" scale="0" />
             </key>
