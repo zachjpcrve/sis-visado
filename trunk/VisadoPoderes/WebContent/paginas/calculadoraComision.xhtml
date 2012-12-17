@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<head>
+<script src="jquery.js" type="text/javascript"></script>
+<script src="jquery.maskedinput.js" type="text/javascript"></script>
+</head>
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+
+		<h:commandButton id="btn" value="Print">
+		<p:printer target="output" />
+		</h:commandButton>
+		<h:outputText id="output" value="PrimeFaces Rocks!" />
+		<h:panelGrid columns="2">
+			<p:tabMenu activeIndex="0" style="width:350px;">
+				<p:menuitem value="calculadora" url="/faces/paginas/calculadoraComision.xhtml"
+					icon="ui-icon-star" />			
+			</p:tabMenu>
+	
+			<p:toolbar>
+				<p:toolbarGroup align="rigth">				
+					<p:commandButton value="Imprimir" id="btnImprimir3"
+						onclick="window.print();return false;"
+						icon="ui-icon-document">
+						
+					</p:commandButton>
+					<p:commandButton value="Salir" id="btnSalir3"
+						icon="ui-icon-document" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			
+			
+		</h:panelGrid>
+
+
+		<h:form id="formPrincipal">
+
+			<h:panelGrid id = "panelPrincipal" columns="1">
+			<center><h3>CALCULADORA DE COMISION</h3></center>
+			
+
+			<h:panelGrid columns="4">
+				<p:spacer width="50" height="10" />
+
+				<h:outputText>Si</h:outputText>
+
+				<h:outputText>No</h:outputText>
+
+				<p:spacer width="50" height="10" />
+
+
+
+				<h:outputText
+					value="1. Por lo menos un poderdante es de tipo Fallecido" />
+
+				<p:selectBooleanCheckbox id="checkItem11"
+					value="#{calculadoraMB.item11}">
+					<p:ajax
+						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
+						listener="#{calculadoraMB.calcularComision}" />
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox id="checkItem12"
+					value="#{calculadoraMB.noItem11}">
+					<p:ajax
+						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
+						listener="#{calculadoraMB.calcularComision}" />
+				</p:selectBooleanCheckbox>
+
+				<p:graphicImage value="/resources/images/pregunta.jpg"
+					id="questionItem1" />
+
+
+
+
+
+				<h:outputText
+					value="2. Monto global de las operaciones es mayor a #{calculadoraMB.importeLimite}" />
+
+				<p:selectBooleanCheckbox id="checkItem21"
+					value="#{calculadoraMB.item21}" disabled="#{!calculadoraMB.item11}">
+					<p:ajax
+						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
+						listener="#{calculadoraMB.calcularComision}" />
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox id="checkItem22"
+					value="#{calculadoraMB.noItem21}"
+					disabled="#{!calculadoraMB.item11}">
+					<p:ajax
+						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
+						listener="#{calculadoraMB.calcularComision}" />
+				</p:selectBooleanCheckbox>
+
+				<p:graphicImage value="/resources/images/pregunta.jpg"
+					id="questionItem2" />
+
+
+
+
+				<h:outputText value="3. El poderdante es persona natural" />
+
+				<p:selectBooleanCheckbox id="checkItem31"
+					value="#{calculadoraMB.item31}" disabled="#{calculadoraMB.item11}">
+					<p:ajax
+						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
+						listener="#{calculadoraMB.calcularComision}" />
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox id="checkItem32"
+					value="#{calculadoraMB.noItem31}"
+					disabled="#{calculadoraMB.item11}">
+					<p:ajax
+						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
+						listener="#{calculadoraMB.calcularComision}" />
+				</p:selectBooleanCheckbox>
+
+				<p:graphicImage value="/resources/images/pregunta.jpg"
+					id="questionItem3" />
+
+
+
+
+				<h:outputText value="4. El poderdante es persona juridica" />
+
+				<p:selectBooleanCheckbox id="checkItem41"
+					value="#{calculadoraMB.item41}"
+					disabled="#{calculadoraMB.item11||calculadoraMB.item31}">
+					<p:ajax
+						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
+						listener="#{calculadoraMB.calcularComision}" />
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox id="checkItem42"
+					value="#{calculadoraMB.noItem41}"
+					disabled="#{calculadoraMB.item11||calculadoraMB.item31}">
+					<p:ajax
+						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
+						listener="#{calculadoraMB.calcularComision}" />
+				</p:selectBooleanCheckbox>
+
+				<p:graphicImage value="/resources/images/pregunta.jpg"
+					id="questionItem4" />
+
+
+			</h:panelGrid>
+
+			<p:spacer width="10" height="30" />
+
+			<h:panelGrid columns="4">
+
+				<h:outputText>Ud. debe pagar:</h:outputText>
+
+				<p:spacer width="100" height="10" />
+
+				<h:inputText id="textResultado" styleClass="inputText"
+					maxlength="10" value="#{calculadoraMB.resultado}" disabled="false" />
+
+				<p:graphicImage value="/resources/images/pregunta.jpg"
+					id="questionResultado" />
+
+			</h:panelGrid>
+
+			<p:spacer width="10" height="30" />
+
+			</h:panelGrid>
+
+		</h:form>
+
+	</ui:define>
+	<br />
+</ui:composition>
+
+</html>
