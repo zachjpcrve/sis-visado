@@ -1,6 +1,9 @@
 package com.hildebrando.visado.mb;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +14,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
-import javax.xml.rpc.ServiceException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
@@ -19,7 +21,6 @@ import org.primefaces.event.FileUploadEvent;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
-import com.bbva.consulta.reniec.ObtenerPersonaReniecService;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Persona;
@@ -43,9 +44,11 @@ import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitudId;
+import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
+import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
@@ -61,7 +64,13 @@ public class SolicitudRegistroMB {
 	
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
+	@ManagedProperty(value = "#{pdfViewerMB}")
+	private PDFViewerMB pdfViewerMB;
+	
+	@ManagedProperty(value = "#{registroUtilesMB}")
+	RegistroUtilesMB objRegistroUtilesMB;
 	private TiivsSolicitudOperban objSolicBancaria;
+	private List<TiivsSolicitudOperban> lstSolicBancarias;
 	private TiivsSolicitud solicitudRegistrarT;
 	private Solicitud solicitudRegistrar;
 	private List<TiivsMultitabla> lstMultitabla;
@@ -75,22 +84,22 @@ public class SolicitudRegistroMB {
 	private TiivsPersona objTiivsPersonaResultado;
 	private TiivsPersona objTiivsPersonaSeleccionado;
 	private Set<TiivsAgrupacionPersona> lstTiivsAgrupacionPersonas;
+	private Set<TiivsSolicitudAgrupacion> lstTiivsSolicitudAgrupacion;
 	private List<AgrupacionSimpleDto>  lstAgrupacionSimpleDto;
 	private List<TiivsAnexoSolicitud> lstAnexoSolicitud;
 	private PersonaDataModal personaDataModal;
 	private String iTipoSolicitud="";
 	//private TiivsTipoSolicDocumento objDocumentoXSolicitud ;
 	private String sCodDocumento;
-
+	private IILDPeUsuario  usuario;
 	private int numGrupo=0;
-	
-	
-
 	private List<TiivsPersona> lstTiivsPersona;
 	private List<TiivsPersona> lstTiivsPersonaResultado;
 	private List<TiivsTipoSolicDocumento> lstTipoSolicitudDocumentos;
 	private List<TiivsTipoSolicDocumento> lstDocumentosXTipoSolTemp;
 	boolean bBooleanPopup =false;
+	
+	private String sEstadoSolicitud="";
 	
 	
 	public static Logger logger = Logger.getLogger(SolicitudRegistroMB.class);
@@ -107,15 +116,16 @@ public class SolicitudRegistroMB {
 		lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
 		lstAgrupacionSimpleDto=new ArrayList<AgrupacionSimpleDto>();
 		lstTipoSolicitudDocumentos=new ArrayList<TiivsTipoSolicDocumento>();
-		solicitudRegistrarT=new TiivsSolicitud();
-		solicitudRegistrarT.setTiivsOficina1(new TiivsOficina1());
+		
 		lstDocumentosXTipoSolTemp=new ArrayList<TiivsTipoSolicDocumento>();
 		lstAnexoSolicitud=new ArrayList<TiivsAnexoSolicitud>();
-		//objDocumentoXSolicitud=new TiivsTipoSolicDocumento();
 		lstdocumentos=new ArrayList<DocumentoTipoSolicitudDTO>();
 		objSolicBancaria=new TiivsSolicitudOperban();
 		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
-		instanciarSolicitudRegistro();
+		lstSolicBancarias=new ArrayList<TiivsSolicitudOperban>();
+		lstOperaciones=new ArrayList<OperacionBancariaDTO>();
+		 usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
+		this.instanciarSolicitudRegistro();
 		
 	}
 	
@@ -280,22 +290,24 @@ public class SolicitudRegistroMB {
 	
 	
 	
-	public Set<TiivsSolicitudAgrupacion> agregarSolicitudArupacion(){
-		  int iNumGrupo=0;
+	public Set<TiivsSolicitudAgrupacion> agregarSolicitudArupacion(int iNumGrupo){
+		  
 		  Set<TiivsSolicitudAgrupacion> lstSolicitudArupacion=new HashSet<TiivsSolicitudAgrupacion>();
 		  TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion=new TiivsSolicitudAgrupacion();
 		  TiivsSolicitudAgrupacionId tiivsSolicitudAgrupacionId=new TiivsSolicitudAgrupacionId();
 		  tiivsSolicitudAgrupacionId.setCodSoli(solicitudRegistrarT.getCodSoli());
-		  tiivsSolicitudAgrupacionId.setNumGrupo(iNumGrupo+1);
+		  tiivsSolicitudAgrupacionId.setNumGrupo(iNumGrupo);
 		  tiivsSolicitudAgrupacion.setId(tiivsSolicitudAgrupacionId);
+		  tiivsSolicitudAgrupacion.setTiivsAgrupacionPersonas(lstTiivsAgrupacionPersonas);
 		  tiivsSolicitudAgrupacion.setActivo("1");
+		  
 		  lstSolicitudArupacion.add(tiivsSolicitudAgrupacion);
 		  return lstSolicitudArupacion;
 	}
-	public void  agregarAgrupacionPersona(TiivsPersona objTiivsPersonaResultado ){
+    public void  agregarAgrupacionPersona(TiivsPersona objTiivsPersonaResultado ){
 	TiivsAgrupacionPersona objTiivsAgrupacionPersona=new TiivsAgrupacionPersona();
 	objTiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
-	objTiivsAgrupacionPersona.setId(new TiivsAgrupacionPersonaId(null, numGrupo, objTiivsPersonaResultado.getCodPer(), objTiivsPersonaResultado.getTipPartic(), objTiivsPersonaResultado.getClasifPer()));
+	objTiivsAgrupacionPersona.setId(new TiivsAgrupacionPersonaId(this.solicitudRegistrarT.getCodSoli(), numGrupo, objTiivsPersonaResultado.getCodPer(), objTiivsPersonaResultado.getTipPartic(), objTiivsPersonaResultado.getClasifPer()));
 	}
 	public void agregarPersona(){
 		logger.info("****************** agregarPersona ********************");
@@ -360,6 +372,16 @@ public class SolicitudRegistroMB {
 		boolean bResult=true;
 		String sMensaje="";
 		System.out.println("objTiivsPersonaResultado.getClasifPer() "+objTiivsPersonaResultado.getClasifPer());
+		if(objTiivsPersonaResultado.getTipDoi().equals("")){
+			 sMensaje="Seleccione el Tipo de Documento";
+			 bResult=false;
+			 Utilitarios.mensajeInfo("INFO", sMensaje);
+		}
+		if(objTiivsPersonaResultado.getNumDoi().equals("")){
+			 sMensaje="Ingrese el Número de Doi";
+			 bResult=false;
+			 Utilitarios.mensajeInfo("INFO", sMensaje);
+		}
 		if(objTiivsPersonaResultado.getClasifPer()==null||objTiivsPersonaResultado.getClasifPer().equals("")){
 			sMensaje="Ingrese el Tipo de Clasificación";
 			 bResult=false;
@@ -394,6 +416,7 @@ public class SolicitudRegistroMB {
 		  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.APODERADO)){
 			  lstApoderdantes.add(objTiivsPersonaResultado);
 		  }
+		  System.out.println("objTiivsPersonaResultado.getCodPer() : "+objTiivsPersonaResultado.getCodPer());
 		  tiivsAgrupacionPersona =new TiivsAgrupacionPersona();
 		  TiivsAgrupacionPersonaId  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersonaId();
 		  tiivsAgrupacionPersonaId.setNumGrupo(numGrupo);
@@ -405,36 +428,41 @@ public class SolicitudRegistroMB {
 		  tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
 		  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
 		 
+		 
 	}  
 	  System.out.println("lstPoderdantes " +lstPoderdantes.size());
 	  System.out.println("lstApoderdantes " +lstApoderdantes.size());
 	  AgrupacionSimpleDto agrupacionSimpleDto =new AgrupacionSimpleDto();
-	   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId("xxxxx", numGrupo));
+	   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), numGrupo));
 	   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
 	   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
 	   agrupacionSimpleDto.setsEstado("Activo");
 	   agrupacionSimpleDto.setiEstado(1);
 	  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+	  solicitudRegistrarT.setTiivsSolicitudAgrupacions(this.agregarSolicitudArupacion(numGrupo));
+	  this.llamarComision();
 	 System.out.println("tamanio de lstTiivsAgrupacionPersonas "+lstTiivsAgrupacionPersonas.size());
  }
   
 
 	public void instanciarSolicitudRegistro() {
 		logger.info("********************** instanciarSolicitudRegistro *********************");
-		Set<TiivsAgrupacionPersona> lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
-		TiivsSolicitud objSolicitudRegistro=new TiivsSolicitud();
-		objSolicitudRegistro.setTiivsSolicitudAgrupacions(lstTiivsAgrupacionPersonas);
-		objSolicitudRegistro.setTiivsOficina1(new TiivsOficina1());
-		objSolicitudRegistro.setTiivsTipoSolicitud(new TiivsTipoSolicitud());
+		sEstadoSolicitud="BORRADOR";
+		 lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
+		 lstTiivsSolicitudAgrupacion=new HashSet<TiivsSolicitudAgrupacion>();
+		 solicitudRegistrarT=new TiivsSolicitud();
+		 solicitudRegistrarT.setTiivsSolicitudAgrupacions(lstTiivsSolicitudAgrupacion);
+		 solicitudRegistrarT.setTiivsOficina1(new TiivsOficina1());
+		 solicitudRegistrarT.setTiivsTipoSolicitud(new TiivsTipoSolicitud());
 		String grupoAdm = (String)Utilitarios.getObjectInSession("GRUPO_ADM");
 		String grupoOfi = (String)Utilitarios.getObjectInSession("GRUPO_OFI");
 		
-		logger.info("********grupoAdm ****** "+grupoAdm +"  ******* grupoOfi ******** " +grupoOfi);
+		logger.debug("********grupoAdm ****** "+grupoAdm +"  ******* grupoOfi ******** " +grupoOfi);
 		//if (grupoAdm == null && grupoOfi!= null) {
 		    IILDPeUsuario  usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
-		    logger.info("usuario en session? --> "+usuario.getNombre());
-			System.out.println("CodOfi: "+usuario.getBancoOficina().getCodigo().trim());
-			System.out.println("DesOfi: "+usuario.getBancoOficina().getDescripcion().trim());
+		    logger.debug("usuario en session? --> "+usuario.getNombre());
+		    logger.debug("CodOfi: "+usuario.getBancoOficina().getCodigo().trim());
+		    logger.debug("DesOfi: "+usuario.getBancoOficina().getDescripcion().trim());
 			
 			
 			TiivsOficina1 oficina=new TiivsOficina1();
@@ -448,19 +476,39 @@ public class SolicitudRegistroMB {
 			for (TiivsOficina1 o : lstOficinas1) {
 				if(usuario.getBancoOficina().getCodigo().equals(o.getCodOfi())){
 					this.solicitudRegistrarT.setTiivsOficina1(o);
+				}else{
+					this.solicitudRegistrarT.setTiivsOficina1(new TiivsOficina1());
 				}
 			}
 			}
 			 SolicitudDao<TiivsPersona, Object> service = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 			 try {
 				String sCodigoSol=service.obtenerPKNuevaSolicitud();
-				logger.info(" sCodigoSol " + sCodigoSol);
+				logger.debug(" sCodigoSol " + sCodigoSol);
 				this.solicitudRegistrarT.setCodSoli(sCodigoSol);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			 this.solicitudRegistrarT.setEstado("1");
 			 this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_REGISTRADO);
+			 
+				lstTiivsPersonaResultado=new ArrayList<TiivsPersona>();
+				personaDataModal=new PersonaDataModal(lstTiivsPersonaResultado);
+				objTiivsPersonaBusqueda=new TiivsPersona();
+				objTiivsPersonaResultado=new TiivsPersona();
+				objTiivsPersonaSeleccionado=new TiivsPersona();
+				lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
+				lstAgrupacionSimpleDto=new ArrayList<AgrupacionSimpleDto>();
+				lstTipoSolicitudDocumentos=new ArrayList<TiivsTipoSolicDocumento>();
+				
+				lstDocumentosXTipoSolTemp=new ArrayList<TiivsTipoSolicDocumento>();
+				lstAnexoSolicitud=new ArrayList<TiivsAnexoSolicitud>();
+				lstdocumentos=new ArrayList<DocumentoTipoSolicitudDTO>();
+				objSolicBancaria=new TiivsSolicitudOperban();
+				objSolicBancaria.setTipoCambio(0);
+				objSolicBancaria.setId(new TiivsSolicitudOperbanId());
+				lstSolicBancarias=new ArrayList<TiivsSolicitudOperban>();
+				iTipoSolicitud="";
 		
 		//}		
 		
@@ -523,13 +571,221 @@ public class SolicitudRegistroMB {
 			}
 		}
 		
+		for (TiivsTipoSolicitud x : combosMB.getLstTipoSolicitud()) {
+			if(x.getCodTipSolic().equals(iTipoSolicitud)){
+				solicitudRegistrarT.setTiivsTipoSolicitud(x);
+			}
+		}
+		
+		}
+	//	solicitudRegistrarT.getTiivsTipoSolicitud().setTiivsTipoSolicDocumentos(tiivsTipoSolicDocumentos);
+		
+	}
+  public boolean validarOperacionBancaria(){
+	  boolean result=true;
+	  String sMensaje="";
+	  if(objSolicBancaria.getId().getCodOperBan().equals("")){
+		  sMensaje="Ingrese un tipo de Operacion";
+		  Utilitarios.mensajeInfo("", sMensaje);
+		  result=false;
+	  }
+	  if(objSolicBancaria.getMoneda().equals("")){
+		  sMensaje="Seleccione una moneda";
+		  Utilitarios.mensajeInfo("", sMensaje);
+		  result=false;
+	  }
+	  if(!objSolicBancaria.getMoneda().equals("")&&!objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)
+			  &&objSolicBancaria.getTipoCambio()==0){
+		  sMensaje="Ingrese el Tipo de Cambio";
+		  Utilitarios.mensajeInfo("", sMensaje);
+		  result=false;
+	  }
+	  if(objSolicBancaria.getImporte()==0){
+		  sMensaje="Ingrese el Importe";
+		  Utilitarios.mensajeInfo("", sMensaje);
+		  result=false;
+	  }
+	  return result;
+  }
+  int icontSoles=0, icontDolares=0, icontEuros=0; double valorSoles_C=0,  valorSolesD=0,valorSolesE=0, valorEuro=0, valorDolar=0, valorFinal=0;
+	public void agrearOperacionBancaria(){
+		logger.info(" ************************** agrearOperacionBancaria  ****************************** ");
+		double valor=0 ;
+		if(this.validarOperacionBancaria()){
+			if(objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+				valorSoles_C+=objSolicBancaria.getImporte();	
+				icontSoles++;
+			}
+			if(objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+				valor=objSolicBancaria.getTipoCambio()*objSolicBancaria.getImporte();
+				valorSolesD+=valor;
+				valorDolar+=objSolicBancaria.getImporte();
+				objSolicBancaria.setImporteSoles(valor);
+				icontDolares++;
+			}
+			if(objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+				valor=objSolicBancaria.getTipoCambio()*objSolicBancaria.getImporte();
+				valorSolesE+=valor;
+				valorEuro+=objSolicBancaria.getImporte();
+				objSolicBancaria.setImporteSoles(valor);
+				icontEuros++;
+			}
+	
+          if(icontDolares==0&&icontEuros==0&&icontSoles>0){
+        	  valorFinal=valorSoles_C;
+        	  this.solicitudRegistrarT.setImporte(valorFinal);
+          }
+          if(icontDolares>0&&icontEuros==0&&icontSoles==0){
+        	  valorFinal=valorDolar;
+        	  this.solicitudRegistrarT.setImporte(valorFinal);
+          }
+          if(icontDolares==0&&icontEuros>0&&icontSoles==0){
+        	  valorFinal=valorEuro;
+        	  this.solicitudRegistrarT.setImporte(valorFinal);
+          }
+          if(icontDolares>0&&icontEuros>0&&icontSoles>=0){
+        	  valorFinal=valorSoles_C+valorSolesD+valorSolesE;
+        	  this.solicitudRegistrarT.setImporte(valorFinal);
+          }
+          this.lstSolicBancarias.add(objSolicBancaria);
+          
+          this.llamarComision();
+          
+
 		}
 		
 	}
-
- 
-
+	public void seterComentario(){
+		logger.info("**************************** Setear Comentario ****************************");
+		System.out.println("Comentario : " +this.solicitudRegistrarT.getObs());
+	}
+	public void llamarComision(){
+		logger.info("************************** llamar Comusion *****************************");
+		this.solicitudRegistrarT.setComision(objRegistroUtilesMB.calcularComision(this.solicitudRegistrarT));
+		logger.info("Importe : " +this.solicitudRegistrarT.getComision());
+	}
 	
+	@SuppressWarnings("unused")
+	public void registrarSolicitud(){
+		String mensaje="";
+		logger.info("*********************** registrarSolicitud ************************");
+		
+		 GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+	       try {
+	    	   this.solicitudRegistrarT.setFecha(new Date());
+			   
+			   logger.info("usuario.getUID() " +usuario.getUID());
+			   this.solicitudRegistrarT.setRegUsuario(usuario.getUID());
+			   this.solicitudRegistrarT.setNomUsuario(usuario.getNombre());
+			   logger.info("tiivsOficina1.codOfi ::::::: "+this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+			   for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
+				if(tiivsOficina1.getCodOfi().equals(this.solicitudRegistrarT.getTiivsOficina1().getCodOfi())){
+					this.solicitudRegistrarT.setTiivsOficina1(tiivsOficina1);
+				}
+			}
+			   
+			  System.out.println("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : "+solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
+			  if(this.validarRegistroSolicitud()){
+				  if(!this.sEstadoSolicitud.equals("BORRADOR")){
+					  this.enviarSolicitudSSJJ();  
+		        	}
+			  TiivsSolicitud objResultado= service.insertar(this.solicitudRegistrarT);
+			  if(objResultado.getCodSoli()!=""||objResultado!=null){ 
+				  mensaje="Se registro correctamente la Solicitud con codigo : "+objResultado.getCodSoli();
+				 Utilitarios.mensajeInfo("INFO", mensaje);
+			  }else{
+				  mensaje="Error al generar la Solicitud ";
+				 Utilitarios.mensajeInfo("INFO", mensaje);
+				 }
+			  
+			  System.out.println("objResultado.getCodSoli(); "+objResultado.getCodSoli());
+			  System.out.println("objResultado.getTiivsSolicitudAgrupacions() "+objResultado.getTiivsSolicitudAgrupacions().size());
+			  
+			  instanciarSolicitudRegistro();
+			  }
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		
+	}
+	
+	public void enviarSolicitudSSJJ(){
+		Timestamp time = new Timestamp(objRegistroUtilesMB.obtenerFechaRespuesta().getTime());
+		System.out.println("time : " +time);
+		String sCodigoEstudio=objRegistroUtilesMB.obtenerEstudioMenorCarga();
+		System.out.println(" sCodigoEstudio +  "+sCodigoEstudio);
+		for (TiivsEstudio x : combosMB.getLstEstudio()) {
+			if(x.getCodEstudio().equals(sCodigoEstudio)){
+				this.solicitudRegistrarT.setTiivsEstudio(x);
+			}
+		}
+		this.solicitudRegistrarT.setEstado(ConstantesVisado.CODIGO_ESTADO_ENVIADO);
+		this.solicitudRegistrarT.setFechaRespuesta(time);
+		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date().getTime()));
+	}
+	
+	public void registrarSolicitudBorrador(){
+		sEstadoSolicitud="BORRADOR";
+	}
+	public void registrarSolicitudEnviado(){
+		sEstadoSolicitud="ENVIADO";
+	}
+
+	public boolean validarRegistroSolicitud(){
+		boolean retorno=true;
+		String mensaje="";
+		if(solicitudRegistrarT.getTiivsOficina1()==null){
+			//solicitudRegistrarT.getTiivsOficina1().getCodOfi().equals(""))
+
+			mensaje="Ingrese la Oficina";
+			retorno=false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		if(solicitudRegistrarT.getNroVoucher()==null||solicitudRegistrarT.getNroVoucher().equals("")){
+			mensaje="Ingrese el Nro Voucher";
+			retorno=false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}else if(solicitudRegistrarT.getNroVoucher().length()<11){
+			mensaje="Ingrese Nro Voucher correcto de 11 digitos";
+			retorno=false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		if(solicitudRegistrarT.getTiivsSolicitudAgrupacions().size()==0){
+			mensaje="Ingrese la sección Apoderado y Poderdante";
+			retorno=false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		if(solicitudRegistrarT.getTiivsTipoSolicitud()==(null)){
+			mensaje="Seleccione el Tipo de Solicitud ";
+			retorno=false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		if(this.lstAnexoSolicitud.size()==0){
+			mensaje="Ingrese los documentos Obligatorios";
+			retorno=false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+	/*	if(this.lstOperaciones.size()==0){
+			mensaje="Ingrese al menos una Operación Bancaria";
+			retorno=false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}*/
+		return retorno;
+	}
+	
+	public String prepararURLEscaneo(){
+		
+		String cadFinal="";
+		
+		for (TiivsParametros tmp: pdfViewerMB.getLstParametros()){
+			cadFinal=tmp.getUrlAPP()+"?"+"idEmpresa="+tmp.getIdEmpresa()+"&"+"idSistema="+tmp.getIdSistema()+"&"+"txtLogin="+usuario.getUID();
+		}
+		
+		System.out.println("URL: " + cadFinal);
+		
+		return cadFinal;
+	}
 
 	public List<TiivsMultitabla> getLstMultitabla() {
 		return lstMultitabla;
@@ -715,6 +971,39 @@ public class SolicitudRegistroMB {
 
 	public void setObjSolicBancaria(TiivsSolicitudOperban objSolicBancaria) {
 		this.objSolicBancaria = objSolicBancaria;
+	}
+
+	public List<TiivsSolicitudOperban> getLstSolicBancarias() {
+		return lstSolicBancarias;
+	}
+
+	public void setLstSolicBancarias(List<TiivsSolicitudOperban> lstSolicBancarias) {
+		this.lstSolicBancarias = lstSolicBancarias;
+	}
+
+	public PDFViewerMB getPdfViewerMB() {
+		return pdfViewerMB;
+	}
+
+	public void setPdfViewerMB(PDFViewerMB pdfViewerMB) {
+		this.pdfViewerMB = pdfViewerMB;
+	}
+
+	public Set<TiivsSolicitudAgrupacion> getLstTiivsSolicitudAgrupacion() {
+		return lstTiivsSolicitudAgrupacion;
+	}
+
+	public void setLstTiivsSolicitudAgrupacion(
+			Set<TiivsSolicitudAgrupacion> lstTiivsSolicitudAgrupacion) {
+		this.lstTiivsSolicitudAgrupacion = lstTiivsSolicitudAgrupacion;
+	}
+
+	public RegistroUtilesMB getObjRegistroUtilesMB() {
+		return objRegistroUtilesMB;
+	}
+
+	public void setObjRegistroUtilesMB(RegistroUtilesMB objRegistroUtilesMB) {
+		this.objRegistroUtilesMB = objRegistroUtilesMB;
 	}
 	
 
