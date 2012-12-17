@@ -35,7 +35,7 @@
         <property name="nomUsuario" type="string">
             <column name="NOM_USUARIO" length="75" not-null="true" />
         </property>
-        <property name="importe" type="big_decimal">
+        <property name="importe" type="double">
             <column name="IMPORTE" precision="12" />
         </property>
         <property name="fechaEnvio" type="java.sql.Timestamp">
@@ -50,19 +50,19 @@
         <property name="fechaRespuesta" type="java.sql.Timestamp">
             <column name="FECHA_RESPUESTA" />
         </property>
-        <property name="comision" type="big_decimal">
+        <property name="comision" type="double">
             <column name="COMISION" precision="22" scale="0" />
         </property>
         <property name="nroVoucher" type="string">
             <column name="NRO_VOUCHER" length="12" />
         </property>
-        <set name="tiivsSolicitudNivels" table="TIIVS_SOLICITUD_NIVEL" inverse="true" lazy="true" fetch="select">
+        <set name="tiivsSolicitudNivels" table="TIIVS_SOLICITUD_NIVEL" inverse="true" lazy="true" fetch="select" >
             <key>
                 <column name="COD_SOLI" length="7" not-null="true" />
             </key>
             <one-to-many class="com.hildebrando.visado.modelo.TiivsSolicitudNivel" />
         </set>
-        <set name="tiivsSolicitudAgrupacions" table="TIIVS_SOLICITUD_AGRUPACION" inverse="true" lazy="true" fetch="select">
+        <set name="tiivsSolicitudAgrupacions" table="TIIVS_SOLICITUD_AGRUPACION" inverse="true" lazy="true"   fetch="select"  >
             <key>
                 <column name="COD_SOLI" length="7" not-null="true" />
             </key>
