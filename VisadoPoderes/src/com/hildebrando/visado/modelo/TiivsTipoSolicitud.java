@@ -13,8 +13,8 @@ public class TiivsTipoSolicitud implements java.io.Serializable {
 	private String codTipSolic;
 	private String desTipServicio;
 	private char activo;
-	private Set tiivsSolicituds = new HashSet(0);
-	private Set tiivsTipoSolicDocumentos = new HashSet(0);
+	private Set<TiivsSolicitud> tiivsSolicituds = new HashSet<TiivsSolicitud>();
+	private Set<TiivsTipoSolicDocumento> tiivsTipoSolicDocumentos = new HashSet<TiivsTipoSolicDocumento>();
 
 	public TiivsTipoSolicitud() {
 	}
@@ -59,20 +59,22 @@ public class TiivsTipoSolicitud implements java.io.Serializable {
 		this.activo = activo;
 	}
 
-	public Set getTiivsSolicituds() {
-		return this.tiivsSolicituds;
+	public Set<TiivsSolicitud> getTiivsSolicituds() {
+		return tiivsSolicituds;
 	}
 
-	public void setTiivsSolicituds(Set tiivsSolicituds) {
+	public void setTiivsSolicituds(Set<TiivsSolicitud> tiivsSolicituds) {
 		this.tiivsSolicituds = tiivsSolicituds;
 	}
 
-	public Set getTiivsTipoSolicDocumentos() {
-		return this.tiivsTipoSolicDocumentos;
+	public Set<TiivsTipoSolicDocumento> getTiivsTipoSolicDocumentos() {
+		return tiivsTipoSolicDocumentos;
 	}
 
-	public void setTiivsTipoSolicDocumentos(Set tiivsTipoSolicDocumentos) {
+	public void setTiivsTipoSolicDocumentos(
+			Set<TiivsTipoSolicDocumento> tiivsTipoSolicDocumentos) {
 		this.tiivsTipoSolicDocumentos = tiivsTipoSolicDocumentos;
 	}
 
+	
 }
