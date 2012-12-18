@@ -10,6 +10,7 @@ public class TiivsSolicitudOperban implements java.io.Serializable {
 	private TiivsOperacionBancaria tiivsOperacionBancaria;
 	private double importe;
 	private String moneda;
+	private String sDescMoneda;
 	private double tipoCambio;
 	private double importeSoles;
 
@@ -87,6 +88,14 @@ public class TiivsSolicitudOperban implements java.io.Serializable {
 
 	public void setsItem(String sItem) {
 		this.sItem = sItem;
+	}
+
+	public String getsDescMoneda() {
+		return sDescMoneda;
+	}
+
+	public void setsDescMoneda(String sDescMoneda) {
+		this.sDescMoneda = sDescMoneda;
 	}
 
 }
