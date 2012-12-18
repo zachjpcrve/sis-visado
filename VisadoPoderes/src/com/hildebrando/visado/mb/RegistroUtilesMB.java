@@ -77,7 +77,7 @@ public class RegistroUtilesMB {
 
 		TiivsSolicitud solicitud = new TiivsSolicitud();
 		solicitud.setCodSoli("1234567");
-		solicitud.setImporte(new BigDecimal(40000));
+		solicitud.setImporte(40000);
 
 		TiivsSolicitudAgrupacion agrupacion = new TiivsSolicitudAgrupacion(
 				new TiivsSolicitudAgrupacionId(solicitud.getCodSoli(), 1),
@@ -217,7 +217,7 @@ public class RegistroUtilesMB {
 				
 		if(lstPoderdantes!=null && lstPoderdantes.size()>0){
 			if (existeFallecido(lstPoderdantes)) {
-				if (solicitud.getImporte().doubleValue() > dMontoLimite) {
+				if (solicitud.getImporte() > dMontoLimite) {
 					sTipoComision = ConstantesVisado.CODIGO_CAMPO_FALLECIDO_MAYORA;
 				} else {
 					sTipoComision = ConstantesVisado.CODIGO_CAMPO_FALLECIDO_MENORA;
