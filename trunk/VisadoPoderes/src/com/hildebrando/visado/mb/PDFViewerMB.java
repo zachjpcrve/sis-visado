@@ -23,9 +23,11 @@ import com.hildebrando.visado.dto.Escaneado;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.ftp.ClienteFTP;
 import com.hildebrando.visado.modelo.TiivsParametros;
-//import com.hildebrando.visado.modelo.TiivsTipoDocumento;
+import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
 
-@ManagedBean(name = "pdfviewerMB")
+
+@ManagedBean(name = "pdfViewerMB")
+
 @SessionScoped
 public class PDFViewerMB {
 	
@@ -174,21 +176,21 @@ public class PDFViewerMB {
 		System.out.println("Tamanio lista PDF: " + lstPDFEscaneados.size());
 	}
 	
-	public void cargarPDFRemoto()
+	public Boolean cargarPDFRemoto(String sTipoArchivo,String dirLocal)
 	{
+		boolean cargaExitosa=true;
 		String urlServer="";
-		String dirLocal="";
 		String server="";
 		String loginServer="";
 		String passServer="";
-		String tipoArchivo="o";
 		String carpetaRemota="";
 		String rutaArchivoLocal="C:" + File.separator+"instaladores"+File.separator;
+		
 		//String codUsuario="P014773";
 		
 		//String dirPDF = "ftp://hilde:$i$tema$2012@10.172.0.4/VISADO/PDF/";
 		
-		if (tipoArchivo.equalsIgnoreCase("o"))
+		if (sTipoArchivo.equalsIgnoreCase("o"))
 		{
 			if (lstParametros!=null) 
 			{
@@ -305,7 +307,12 @@ public class PDFViewerMB {
 					lstPDFEscaneados.add(tmp);
 				}
 			}
+			else
+			{
+				cargaExitosa=false;
+			}
 		}
+		return cargaExitosa;
 	}
 	
 	/*public String buscarTipoDocByNombre(String archivo)
@@ -315,11 +322,11 @@ public class PDFViewerMB {
 		
 		System.out.println("Documento a evaluar: " + sinExtesion);
 		
-		GenericDao<TiivsTipoDocumento, Object> tipoDocDAO = (GenericDao<TiivsTipoDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroTipoDoc = Busqueda.forClass(TiivsTipoDocumento.class);
+		GenericDao<TiivsTipoSolicDocumento, Object> tipoDocDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroTipoDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);
 		filtroTipoDoc.add(Restrictions.eq("desDoc", sinExtesion));
 		
-		List<TiivsTipoDocumento> lstTmp= new ArrayList<TiivsTipoDocumento>();
+		List<TiivsTipoSolicDocumento> lstTmp= new ArrayList<TiivsTipoSolicDocumento>();
 		
 		try {
 			lstTmp = tipoDocDAO.buscarDinamico(filtroTipoDoc);
