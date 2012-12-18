@@ -17,6 +17,7 @@ import javax.faces.event.ValueChangeEvent;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -106,7 +107,15 @@ public class SolicitudRegistroMB {
 	private int indexUpdateAgrupacionSimpleDto=0;
 	private int indexUpdateSolicDocumentos=0;
 	public static Logger logger = Logger.getLogger(SolicitudRegistroMB.class);
-	
+	private UploadedFile file;  
+	  
+    public UploadedFile getFile() {  
+        return file;  
+    }  
+  
+    public void setFile(UploadedFile file) {  
+        this.file = file;  
+    }  
 	public SolicitudRegistroMB() 
 	{   
 		solicitudRegistrar = new Solicitud();
@@ -133,7 +142,7 @@ public class SolicitudRegistroMB {
 		
 	}
 	
-	public void handleFileUpload(FileUploadEvent event) {  
+/*	public void handleFileUpload(FileUploadEvent event) {  
         FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");  
         FacesContext.getCurrentInstance().addMessage(null, msg);  
         System.out.println(event.getComponent());
@@ -141,6 +150,20 @@ public class SolicitudRegistroMB {
         
         System.out.println(event.getComponent().getId());
     }  
+*/
+	 public void upload() {  
+	        if(file != null) {  
+	            FacesMessage msg = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");  
+	            FacesContext.getCurrentInstance().addMessage(null, msg);  
+	            System.out.println("file : "+file.getFileName());
+	        }  
+	      //if (pdfViewerMB.cargarPDFRemoto("o"))
+			{
+			//	logger.info("pdfViewerMB.cargarPDFRemoto(:  " +pdfViewerMB.cargarPDFRemoto("o"));
+			}
+	    }  
+	
+	
 	
 	public void listarDocumentosXSolicitud(ValueChangeEvent e){
 	System.out.println("ValuechanceEvent :  " +e.getNewValue());
@@ -599,7 +622,11 @@ public class SolicitudRegistroMB {
 		
 		for (TiivsTipoSolicDocumento e : lstDocumentosXTipoSolTemp) {
 			if(e.getCodDoc().equals(sCodDocumento)){
-				lstdocumentos.add(new DocumentoTipoSolicitudDTO(e.getCodDoc(), e.getDesDoc(), e.getObligatorio()+""));	
+				if(e.getObligatorio()=='1'){
+					lstdocumentos.add(new DocumentoTipoSolicitudDTO(e.getCodDoc(), e.getDesDoc(), true+""));	
+				}else{
+					lstdocumentos.add(new DocumentoTipoSolicitudDTO(e.getCodDoc(), e.getDesDoc(), false+""));	
+				}
 			}
 		}
 		
@@ -845,6 +872,7 @@ public class SolicitudRegistroMB {
 		this.lstAgrupacionSimpleDto.remove(this.objAgrupacionSimpleDtoCapturado);
 		//this.lstTiivsAgrupacionPersonas.remove(this.objAgrupacionSimpleDtoCapturado.getId().)
 		this.llamarComision();
+		this.objAgrupacionSimpleDtoCapturado=new AgrupacionSimpleDto();
 	}
 	public void editarOperacionBancaria(){
 		for (int i = 0; i < this.lstSolicBancarias.size(); i++) {
@@ -854,7 +882,18 @@ public class SolicitudRegistroMB {
 		}
 		this.objSolicBancaria=this.objSolicitudOperacionCapturado;
 		this.flagUpdateOperacionSolic=true;
-		
+	}
+	public void editarAgrupacionSimpleDto(){
+		for (int i = 0; i < this.lstAgrupacionSimpleDto.size(); i++) {
+			if(objAgrupacionSimpleDtoCapturado.equals(this.lstAgrupacionSimpleDto.get(i))){
+				indexUpdateAgrupacionSimpleDto=i;
+			}
+		}
+		this.lstTiivsPersona  =new ArrayList<TiivsPersona>();
+		/*for (TiivsPersona f : this.objAgrupacionSimpleDtoCapturado.getLstApoderdantes()) {
+			lstTiivsPersona.	
+		}*/
+		this.flagUpdateOperacionSolcAgrupac=true;
 	}
 	public void llamarComision(){
 		logger.info("************************** llamar Comusion *****************************");
@@ -1004,12 +1043,7 @@ public class SolicitudRegistroMB {
 		return cadFinal;
 	}
 	
-	public void upload(){
-		//if (pdfViewerMB.cargarPDFRemoto("o"))
-		{
-		//	logger.info("pdfViewerMB.cargarPDFRemoto(:  " +pdfViewerMB.cargarPDFRemoto("o"));
-		}
-	}
+	
 
 	public List<TiivsMultitabla> getLstMultitabla() {
 		return lstMultitabla;
