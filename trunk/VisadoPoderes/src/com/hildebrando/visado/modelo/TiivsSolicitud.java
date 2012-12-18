@@ -1,9 +1,8 @@
 package com.hildebrando.visado.modelo;
 
-// Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR1
-
-import java.math.BigDecimal;
+// Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,20 +16,23 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private TiivsTipoSolicitud tiivsTipoSolicitud;
 	private TiivsOficina1 tiivsOficina1;
 	private String estado;
-	private Timestamp fecha;
+    private String descEstado;
+	private Date fecha;
 	private String regAbogado;
 	private String obs;
 	private String regUsuario;
 	private String nomUsuario;
-	private BigDecimal importe;
+	private double importe;
 	private Timestamp fechaEnvio;
 	private Timestamp fechaEstado;
 	private String moneda;
+
 	private Timestamp fechaRespuesta;
-	private BigDecimal comision;
+
+	private double comision;
 	private String nroVoucher;
 	private Set tiivsSolicitudNivels = new HashSet(0);
-	private Set tiivsSolicitudAgrupacions = new HashSet(0);
+	private Set<TiivsSolicitudAgrupacion> tiivsSolicitudAgrupacions = new HashSet<TiivsSolicitudAgrupacion>();
 
 	public TiivsSolicitud() {
 	}
@@ -51,9 +53,9 @@ public class TiivsSolicitud implements java.io.Serializable {
 	public TiivsSolicitud(String codSoli, TiivsEstudio tiivsEstudio,
 			TiivsTipoSolicitud tiivsTipoSolicitud, TiivsOficina1 tiivsOficina1,
 			String estado, Timestamp fecha, String regAbogado, String obs,
-			String regUsuario, String nomUsuario, BigDecimal importe,
+			String regUsuario, String nomUsuario, double importe,
 			Timestamp fechaEnvio, Timestamp fechaEstado, String moneda,
-			Timestamp fechaRespuesta, BigDecimal comision,
+			Timestamp fechaRespuesta, double comision,
 			String nroVoucher, Set tiivsSolicitudNivels,
 			Set tiivsSolicitudAgrupacions) {
 		this.codSoli = codSoli;
@@ -117,11 +119,13 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Timestamp getFecha() {
+
+	public Date getFecha() {
 		return this.fecha;
 	}
 
-	public void setFecha(Timestamp fecha) {
+	public void setFecha(Date fecha) {
+
 		this.fecha = fecha;
 	}
 
@@ -157,13 +161,14 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.nomUsuario = nomUsuario;
 	}
 
-	public BigDecimal getImporte() {
+	public double getImporte() {
 		return this.importe;
 	}
 
-	public void setImporte(BigDecimal importe) {
+	public void setImporte(double importe) {
 		this.importe = importe;
 	}
+
 
 	public Timestamp getFechaEnvio() {
 		return this.fechaEnvio;
@@ -189,6 +194,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.moneda = moneda;
 	}
 
+
 	public Timestamp getFechaRespuesta() {
 		return this.fechaRespuesta;
 	}
@@ -197,11 +203,11 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.fechaRespuesta = fechaRespuesta;
 	}
 
-	public BigDecimal getComision() {
+	public double getComision() {
 		return this.comision;
 	}
 
-	public void setComision(BigDecimal comision) {
+	public void setComision(double comision) {
 		this.comision = comision;
 	}
 
@@ -221,12 +227,22 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.tiivsSolicitudNivels = tiivsSolicitudNivels;
 	}
 
-	public Set getTiivsSolicitudAgrupacions() {
-		return this.tiivsSolicitudAgrupacions;
+	
+	public Set<TiivsSolicitudAgrupacion> getTiivsSolicitudAgrupacions() {
+		return tiivsSolicitudAgrupacions;
 	}
 
-	public void setTiivsSolicitudAgrupacions(Set tiivsSolicitudAgrupacions) {
+	public void setTiivsSolicitudAgrupacions(
+			Set<TiivsSolicitudAgrupacion> tiivsSolicitudAgrupacions) {
 		this.tiivsSolicitudAgrupacions = tiivsSolicitudAgrupacions;
+	}
+
+	public String getDescEstado() {
+		return descEstado;
+	}
+
+	public void setDescEstado(String descEstado) {
+		this.descEstado = descEstado;
 	}
 
 }
