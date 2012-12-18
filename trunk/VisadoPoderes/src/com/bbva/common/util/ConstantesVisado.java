@@ -172,6 +172,9 @@ public class ConstantesVisado {
 		public static final String COD_SOLES = "0001";
 		public static final String COD_DOLAR = "0002";
 		public static final String COD_EUROS = "0003";
+		public static final String SOLES = "SOLES";
+		public static final String DOLARES = "DOLARES";
+		public static final String EUROS = "EUROS";
 	}
 	
 		public static final int DOCUMENTO_OBLIGATORIO = 1;
