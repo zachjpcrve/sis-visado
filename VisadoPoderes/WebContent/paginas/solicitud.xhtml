@@ -204,9 +204,8 @@
 															</td>
 															<td><h:outputText value="#{s.sEstado}"/></td>
 															
-															<td><p:graphicImage value="/resources/images/lupita.jpg" />
+															<td>
 															<p:commandButton icon="ui-icon-search" id="VrA"
-																			 action="#{solicitudRegMB.eliminarArupacion}" 
 																			 update=":formSolicitudRegistro" >
 																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
 																							  value="#{s}" for="VrA">
@@ -214,11 +213,10 @@
 															</p:commandButton>
 															
 															</td>
-															<td><p:commandButton icon="ui-icon-pencil" id="delA"
-																			 action="#{solicitudRegMB.eliminarArupacion}" 
+															<td><p:commandButton icon="ui-icon-pencil" id="editA"
 																			 update=":formSolicitudRegistro" >
 																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
-																							  value="#{s}" for="delA">
+																							  value="#{s}" for="editA">
 																</f:setPropertyActionListener>
 															</p:commandButton>
 															</td>
@@ -281,8 +279,8 @@
 															   <td>
 										                    <h:form enctype="multipart/form-data">  
 										                    <h:message for="idfileUpload" ></h:message>
-                                                               <p:fileUpload fileUploadListener="#{solicitudRegMB.handleFileUpload}"  id="idfileUpload"
-                                                                mode="simple"
+                                                               <p:fileUpload value="#{solicitudRegMB.file}"  id="idfileUpload"
+                                                                mode="simple" 
                                                                 update="idfileUpload"  
                                                                  auto="false"  
                                                                  sizeLimit="100000"   
@@ -291,8 +289,8 @@
                                                                  </h:form>  
 										                    </td>
 
-														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro"
-														action="#{solicitudRegMB.agrearDocumentosXTipoSolicitud}" /></td>
+														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro" ajax="false"
+														action="#{solicitudRegMB.agrearDocumentosXTipoSolicitud}" actionListener="#{solicitudRegMB.upload}" /></td>
 													</tr>
 													<tr>
 														<td width="95%" colspan="11">
@@ -310,7 +308,7 @@
 																	<h:outputText value="#{s.documento}" />
 																</p:column>
 																<p:column headerText="Obligación">
-																	<h:outputText value="#{s.obligacion}" />
+																<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>
 																</p:column>
 																<p:column headerText="Editar">
 																	<p:graphicImage value="/resources/images/editar.jpg" />
