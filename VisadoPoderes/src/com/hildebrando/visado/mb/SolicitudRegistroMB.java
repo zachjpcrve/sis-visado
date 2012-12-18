@@ -648,6 +648,7 @@ public class SolicitudRegistroMB {
         	  valorFinal=valorSoles_C+valorSolesD+valorSolesE;
         	  this.solicitudRegistrarT.setImporte(valorFinal);
           }
+         // objSolicBancaria.setsItem("".);
           this.lstSolicBancarias.add(objSolicBancaria);
           
           this.llamarComision();
