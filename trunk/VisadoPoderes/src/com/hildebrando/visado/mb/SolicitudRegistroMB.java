@@ -613,7 +613,8 @@ public class SolicitudRegistroMB {
 		double valor=0 ;
 		if(this.validarOperacionBancaria()){
 			if(objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
-				valorSoles_C+=objSolicBancaria.getImporte();	
+				valorSoles_C+=objSolicBancaria.getImporte();
+				objSolicBancaria.setImporteSoles(objSolicBancaria.getImporteSoles());
 				icontSoles++;
 			}
 			if(objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
@@ -654,6 +655,10 @@ public class SolicitudRegistroMB {
 
 		}
 		
+	}
+	public void limpiarListaSolicitudesBancarias(){
+		logger.info("**************************** limpiarListaSolicitudesBancarias ****************************");
+		this.lstSolicBancarias=new ArrayList<TiivsSolicitudOperban>();
 	}
 	public void seterComentario(){
 		logger.info("**************************** Setear Comentario ****************************");
@@ -766,11 +771,11 @@ public class SolicitudRegistroMB {
 			retorno=false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
-	/*	if(this.lstOperaciones.size()==0){
+	if(this.lstOperaciones.size()==0){
 			mensaje="Ingrese al menos una Operación Bancaria";
 			retorno=false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
-		}*/
+		}
 		return retorno;
 	}
 	
