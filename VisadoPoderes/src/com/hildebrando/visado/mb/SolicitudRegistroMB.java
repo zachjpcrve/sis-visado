@@ -196,6 +196,24 @@ public class SolicitudRegistroMB {
 		}
 	}
 	
+	public void limpiarCriteriosBusqueda()
+	{
+		objTiivsPersonaBusqueda.setCodCen("");
+		objTiivsPersonaBusqueda.setTipDoi("");
+		objTiivsPersonaBusqueda.setNumDoi("");
+		objTiivsPersonaResultado.setTipDoi("");
+		objTiivsPersonaResultado.setNumDoi("");
+		objTiivsPersonaBusqueda.setCodCen("");
+		objTiivsPersonaResultado.setApePat("");
+		objTiivsPersonaResultado.setApeMat("");
+		objTiivsPersonaResultado.setNombre("");
+		objTiivsPersonaResultado.setTipPartic("");
+		objTiivsPersonaResultado.setClasifPer("");
+		objTiivsPersonaResultado.setClasifPerOtro("");
+		objTiivsPersonaResultado.setEmail("");
+		objTiivsPersonaResultado.setNumCel("");	
+	}
+	
 	public List<TiivsPersona> buscarPersonaReniec() throws Exception{
 		    List<TiivsPersona>  lstTiivsPersona=new ArrayList<TiivsPersona>();
 		       BResult resultado = null;
@@ -238,17 +256,22 @@ public class SolicitudRegistroMB {
 		                 filtro.add(Restrictions.eq("tipDoi", objTiivsPersonaBusqueda.getTipDoi()));
 		                 filtro.add(Restrictions.eq("numDoi", objTiivsPersonaBusqueda.getNumDoi()));
 		        }
-		        if(objTiivsPersonaBusqueda.getCodCen()!=null){
+		        if(objTiivsPersonaBusqueda.getCodCen()!=null && objTiivsPersonaBusqueda.getCodCen().compareTo("")!=0){
 		        	     filtro.add(Restrictions.eq("codCen", objTiivsPersonaBusqueda.getCodCen()));
 		        }
-		       // lstTiivsPersona=service.buscarDinamico(filtro);
-		        lstTiivsPersona =this.manipularDataPruebaPopup(objTiivsPersonaBusqueda.getNumDoi());
+		       lstTiivsPersona=service.buscarDinamico(filtro);
+		        //lstTiivsPersona =this.manipularDataPruebaPopup(objTiivsPersonaBusqueda.getNumDoi());
 			    for (TiivsPersona tiivsPersona : lstTiivsPersona) {
 				    for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
 						if(tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())){
 							tiivsPersona.setsDesctipDoi(p.getDescripcion());
 						}
 					}
+			    }
+			    
+			    if (lstTiivsPersona.size()==0)
+			    {
+			    	Utilitarios.mensajeInfo("INFO", "No se han encontrado resultados para los criterios de busqueda seleccionados");
 			    }
 	        }
 	        
@@ -772,7 +795,7 @@ public class SolicitudRegistroMB {
 			retorno=false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
-	if(this.lstOperaciones.size()==0){
+		if(this.lstOperaciones.size()==0){
 			mensaje="Ingrese al menos una Operación Bancaria";
 			retorno=false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
