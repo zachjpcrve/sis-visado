@@ -20,10 +20,10 @@
 
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">
-					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"
-						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" update=":formSolicitudRegistro"/>
-					<p:commandButton value="Enviar" id="btnEnviar3" action="#{solicitudRegMB.registrarSolicitud}" update=":formSolicitudRegistro"
-						icon="ui-icon-document"  actionListener="#{solicitudRegMB.registrarSolicitudEnviado}"/>
+					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro"
+						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"/>
+					<p:commandButton value="Enviar" id="btnEnviar3"  action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudEnviado}"
+						icon="ui-icon-document" update=":formSolicitudRegistro"/>
 					<p:commandButton value="Imprimir" id="btnImprimir3"
 						icon="ui-icon-document" />
 					<p:commandButton value="Salir" id="btnSalir3"
@@ -34,7 +34,7 @@
 		</h:panelGrid>
 		
 	<h:form id="formSolicitudRegistro">
-	        <p:messages id="idGrowlSolicitudRegistro"></p:messages>
+			<p:messages id="idMsmSolicitudRegistro"></p:messages>
 
 		<table border="0" width="680">
 			<tbody>
@@ -92,10 +92,10 @@
 													<tr>
 														<td><h:outputText styleClass="outputText"
 																id="outNroVaucher" value="Nro Voucher *" /></td>
-														<td><h:inputText styleClass="inputText" minlength="11"
-																id="txtNroVaucher" style="width:100px;" maxlength="11" 
+														<td><h:inputText styleClass="inputText"
+																id="txtNroVaucher" style="width:100px;"
 																value="#{solicitudRegMB.solicitudRegistrarT.nroVoucher}"
-																 /></td>
+																readonly="false" /></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
 																id="tooltxtNroVaucher" /></td>
@@ -204,9 +204,31 @@
 															</td>
 															<td><h:outputText value="#{s.sEstado}"/></td>
 															
-															<td><p:graphicImage value="/resources/images/lupita.jpg" /></td>
-															<td><p:graphicImage value="/resources/images/editar.jpg" /></td>
-															<td><p:graphicImage value="/resources/images/eliminar.jpg" /></td>
+															<td><p:graphicImage value="/resources/images/lupita.jpg" />
+															<p:commandButton icon="ui-icon-search" id="VrA"
+																			 action="#{solicitudRegMB.eliminarArupacion}" 
+																			 update=":formSolicitudRegistro" >
+																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
+																							  value="#{s}" for="VrA">
+																</f:setPropertyActionListener>
+															</p:commandButton>
+															
+															</td>
+															<td><p:commandButton icon="ui-icon-pencil" id="delA"
+																			 action="#{solicitudRegMB.eliminarArupacion}" 
+																			 update=":formSolicitudRegistro" >
+																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
+																							  value="#{s}" for="delA">
+																</f:setPropertyActionListener>
+															</p:commandButton>
+															</td>
+															<td><p:commandButton icon="ui-icon-trash" id="delA"
+																			 action="#{solicitudRegMB.eliminarArupacion}" 
+																			 update=":formSolicitudRegistro" >
+																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
+																							  value="#{s}" for="delA">
+																</f:setPropertyActionListener>
+															</p:commandButton></td>
 														</tr>
 														</c:forEach>
 														
@@ -246,7 +268,7 @@
 																<f:selectItems value="#{combosMB.lstTipoSolicitud}" var="lOf" itemValue="#{lOf.codTipSolic}" itemLabel="#{lOf.desTipServicio}" />
 										
 															</p:selectOneMenu></td>
-														<td><p:commandButton id="btnEscaner" value="Escaner" action="#{solicitudRegMB.prepararURLEscaneo}"  ajax="false"/></td>
+														<td><p:commandButton id="btnEscaner" value="Escaner" /></td>
 													</tr>
 													<tr>
 														<td><h:outputText styleClass="outputText" id="text19"
@@ -258,9 +280,10 @@
 											               </p:selectOneMenu></td>
 															   <td>
 										                    <h:form enctype="multipart/form-data">  
-                                                               <p:fileUpload fileUploadListener="#{solicitudRegMB.handleFileUpload}"  
-                                                                mode="simple"  
-                                                                update="messages"  
+										                    <h:message for="idfileUpload" ></h:message>
+                                                               <p:fileUpload fileUploadListener="#{solicitudRegMB.handleFileUpload}"  id="idfileUpload"
+                                                                mode="simple"
+                                                                update="idfileUpload"  
                                                                  auto="false"  
                                                                  sizeLimit="100000"   
                                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>  
@@ -324,7 +347,7 @@
 															disabled="false">
 															<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 															<f:selectItems value="#{combosMB.lstOpeBancaria}" var="opeBan"
-																		itemValue="#{opeBan.desOperBan}" itemLabel="#{opeBan.desOperBan}" /> 
+																		itemValue="#{opeBan.codOperBan}" itemLabel="#{opeBan.desOperBan}" /> 
 														</p:selectOneMenu></td>
 													<td><h:outputText styleClass="outputText"
 															id="outTipoMoneda" value="Moneda" title="Moneda"></h:outputText>
@@ -348,48 +371,59 @@
 													<td><h:outputText styleClass="outputText"
 															id="outImporteTipoCambio" value="Tipo Cambio"
 															title="Tipo Cambio"></h:outputText></td>
-													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.tipoCambio}" /></td>
+													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.tipoCambio}"/></td>
 													<td><h:outputText styleClass="outputText"
 															id="outImporteSoles" value="Importe en Soles"
 															title="Importe en Soles"></h:outputText></td>
 													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importeSoles}"/></td>
-													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solicitudRegMB.agrearOperacionBancaria}" 
-													  update=":formSolicitudRegistro"/></td>
-													<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria" /></td>
+													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solicitudRegMB.agrearOperacionBancaria}" update=":formSolicitudRegistro"/></td>
+													<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria"  action="#{solicitudRegMB.limpiarListaSolicitudesBancarias}" update=":formSolicitudRegistro" /></td>
 												</tr>
 												<tr>
 													<td align="center" width="95%" colspan="11"><p:dataTable
 															var="o" rows="20"
-															value="#{solicitudRegMB.lstOperaciones}"
+															value="#{solicitudRegMB.lstSolicBancarias}"
 															emptyMessage="No hay resultados en la bandeja"
 															paginatorPosition="bottom" paginator="true"
 															paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 															rowsPerPageTemplate="5,10,15" editable="true">
 
 															<p:column headerText="Item">
-																<h:outputText value="#{o.item}"></h:outputText>
+																<h:outputText value="#{o.sItem}"></h:outputText>
 															</p:column>
 															<p:column headerText="Operación Bancaria"
 																style="width:400px;">
-																<h:outputText value="#{o.operacion_bancaria}"></h:outputText>
+																<h:outputText value="#{o.tiivsOperacionBancaria.desOperBan}"></h:outputText>
 															</p:column>
 															<p:column headerText="Moneda">
-																<h:outputText value="#{o.moneda}" />
+																<h:outputText value="#{o.sDescMoneda}" />
 															</p:column>
 															<p:column headerText="Importe">
 																<h:outputText value="#{o.importe}" />
 															</p:column>
 															<p:column headerText="Tipo de Cambio">
-																<h:outputText value="#{o.tipo_cambio}" />
+																<h:outputText value="#{o.tipoCambio}" />
 															</p:column>
 															<p:column headerText="Importe en Soles">
-																<h:outputText value="#{o.importe_soles}" />
+																<h:outputText value="#{o.importeSoles}" />
 															</p:column>
 															<p:column headerText="Editar">
-																<p:graphicImage value="/resources/images/editar.jpg" />
+															<p:commandButton icon="ui-icon-pencil" id="ed"
+																			 action="#{solicitudRegMB.editarOperacionBancaria}" 
+																			 update=":formSolicitudRegistro" >
+																<f:setPropertyActionListener target="#{solicitudRegMB.objSolicitudOperacionCapturado}"
+																							  value="#{o}" for="ed">
+																</f:setPropertyActionListener>
+															</p:commandButton>
 															</p:column>
 															<p:column headerText="Eliminar">
-																<p:graphicImage value="/resources/images/eliminar.jpg" />
+															<p:commandButton icon="ui-icon-trash" id="del"
+																			 action="#{solicitudRegMB.eliminarOperacionBancaria}" 
+																			 update=":formSolicitudRegistro" >
+																<f:setPropertyActionListener target="#{solicitudRegMB.objSolicitudOperacionCapturado}"
+																							  value="#{o}" for="del">
+																</f:setPropertyActionListener>
+															</p:commandButton>
 															</p:column>
 														</p:dataTable></td>
 												</tr>
