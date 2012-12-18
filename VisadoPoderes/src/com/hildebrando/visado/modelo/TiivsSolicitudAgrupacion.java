@@ -13,7 +13,7 @@ public class TiivsSolicitudAgrupacion implements java.io.Serializable {
 	private TiivsSolicitudAgrupacionId id;
 	private TiivsSolicitud tiivsSolicitud;
 	private String activo;
-	private Set tiivsAgrupacionPersonas = new HashSet(0);
+	private Set<TiivsAgrupacionPersona> tiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
 
 	public TiivsSolicitudAgrupacion() {
 	}
@@ -57,12 +57,14 @@ public class TiivsSolicitudAgrupacion implements java.io.Serializable {
 		this.activo = activo;
 	}
 
-	public Set getTiivsAgrupacionPersonas() {
-		return this.tiivsAgrupacionPersonas;
+	public Set<TiivsAgrupacionPersona> getTiivsAgrupacionPersonas() {
+		return tiivsAgrupacionPersonas;
 	}
 
-	public void setTiivsAgrupacionPersonas(Set tiivsAgrupacionPersonas) {
+	public void setTiivsAgrupacionPersonas(
+			Set<TiivsAgrupacionPersona> tiivsAgrupacionPersonas) {
 		this.tiivsAgrupacionPersonas = tiivsAgrupacionPersonas;
 	}
+
 
 }
