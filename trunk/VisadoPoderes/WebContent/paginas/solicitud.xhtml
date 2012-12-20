@@ -206,8 +206,8 @@
 															<td><h:outputText value="#{s.sEstado}"/></td>
 															
 															<td>
-															<p:commandButton icon="ui-icon-search" id="VrX"
-																			 update=":formSolicitudRegistro" >
+															<p:commandButton icon="ui-icon-search" id="VrX" onclick="dlgVerPersona.show();" 
+																			 update=":formVerPersona" action="#{solicitudRegMB.verAgrupacion}">
 																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
 																							  value="#{s}" for="VrX">
 																</f:setPropertyActionListener>
@@ -701,6 +701,67 @@
         <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
                   
     </p:confirmDialog> 
+    
+    
+    
+    
+    	<p:dialog id="modalVerPersona"
+			header="Busqueda Cliente/No Cliente" widgetVar="dlgVerPersona"
+			modal="true" height="400" >
+	    <h:form id="formVerPersona">
+			<table border="0" width="50px;">
+		
+				<tbody>
+					<tr>
+						<td style="width:25%;"><h:outputText
+								title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
+								value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" /></td>
+					</tr>
+				</tbody>
+			</table>
+			<p:separator styleClass="fielset"  />
+			<table border="0" width="100px;" id="tableRegistrar">
+				<tbody>
+
+					<tr>
+					<td align="center"><h:outputText value="Estado :"></h:outputText> </td>
+						<td align="center"><h:outputText value="#{solicitudRegMB.objSolicitudOperacionCapturado.sEstado}"></h:outputText> </td>
+					</tr>
+					<tr>
+						<td align="center" width="45%" colspan="22"><p:dataTable
+								var="s" rows="20" value="#{solicitudRegMB.objSolicitudOperacionCapturado.lstTiivsPersona}"
+								emptyMessage="No hay resultados en la bandeja"
+								paginatorPosition="bottom" paginator="true"
+								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+								rowsPerPageTemplate="5,10,15" editable="true">
+
+								<p:column headerText="Codigo Central">
+									<h:outputText value="#{s.sDesctipDoi} : #{s.numDoi}" />
+								</p:column>
+								<p:column headerText="Cliente / No Cliente">
+									<h:outputText value="#{s.codCen} #{s.nombre} #{s.apePat} #{s.apeMat}" />
+								</p:column>
+								<p:column headerText="Tipo de Registro">
+									<h:outputText value="#{s.sDesctipPartic}" />
+								</p:column>
+								<p:column headerText="Clasificación">
+									<h:outputText value="#{s.sDescclasifPer}" />
+								</p:column>
+								<p:column headerText="Nro Celular">
+									<h:outputText value="#{s.numCel}" />
+								</p:column>
+								<p:column headerText="E-Mail">
+									<h:outputText value="#{s.email}" />
+								</p:column>
+								
+							</p:dataTable></td>
+					</tr>
+				
+
+				</tbody>
+			</table>
+		</h:form>
+		</p:dialog>
 	
 	</ui:define>
 </ui:composition>
