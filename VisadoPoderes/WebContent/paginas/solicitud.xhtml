@@ -22,8 +22,8 @@
 				<p:toolbarGroup align="rigth">
 					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro"
 						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"/>
-					<p:commandButton value="Enviar" id="btnEnviar3"  action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudEnviado}"
-						icon="ui-icon-document" update=":formSolicitudRegistro"/>
+					<p:commandButton value="Enviar" id="btnEnviar3"  
+						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>
 					<p:commandButton value="Imprimir" id="btnImprimir3"
 						icon="ui-icon-document" />
 					<p:commandButton value="Salir" id="btnSalir3"
@@ -82,7 +82,7 @@
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 																 <f:selectItems value="#{combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.codTerr})" /> 
 															</p:selectOneMenu></td>
-														<td><p:message for="cboOficina" showDetail="Seleccione una Oficina"/>
+														<td><p:message for="cboOficina" />
 														<p:graphicImage
 																value="/resources/images/pregunta.jpg"
 																id="toolcboOficina" /></td>
@@ -439,6 +439,10 @@
 				</tr>
 			</tbody>
 		</table>
+		
+		
+	
+		
 		</h:form>
 		
 		
@@ -688,6 +692,15 @@
 		</h:form>
 		</p:dialog>
 		
+	
+	 	<p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"  
+                header="Confirmación" severity="alert" widgetVar="confirmation">  
+                  
+        <p:commandButton id="confirm" value="Si" update=":formSolicitudRegistro" oncomplete="confirmation.hide()"  
+                    action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />  
+        <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
+                  
+    </p:confirmDialog> 
 	
 	</ui:define>
 </ui:composition>
