@@ -33,7 +33,7 @@
 
 		</h:panelGrid>
 		
-	<h:form id="formSolicitudRegistro">
+	<h:form id="formSolicitudRegistro" enctype="multipart/form-data">
 			<p:messages id="idMsmSolicitudRegistro"></p:messages>
 
 		<table border="0" width="680">
@@ -78,11 +78,12 @@
 
 														<td><h:outputText styleClass="outputText"
 																id="txtOficina" value="Oficina:" /></td>
-														<td><p:selectOneMenu id="cboOficina" value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}"> 
+														<td><p:selectOneMenu id="cboOficina" value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}" required="true" requiredMessage="Seleccione al menos una Oficina"> 
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 																 <f:selectItems value="#{combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.codTerr})" /> 
 															</p:selectOneMenu></td>
-														<td><p:graphicImage
+														<td><p:message for="cboOficina" showDetail="Seleccione una Oficina"/>
+														<p:graphicImage
 																value="/resources/images/pregunta.jpg"
 																id="toolcboOficina" /></td>
 														<td><p:tooltip for="toolcboOficina" value="Oficina"
@@ -92,11 +93,11 @@
 													<tr>
 														<td><h:outputText styleClass="outputText"
 																id="outNroVaucher" value="Nro Voucher *" /></td>
-														<td><h:inputText styleClass="inputText"
+														<td><h:inputText styleClass="inputText" required="true" requiredMessage="Ingrese el Nro Voucher"
 																id="txtNroVaucher" style="width:100px;"
 																value="#{solicitudRegMB.solicitudRegistrarT.nroVoucher}"
-																readonly="false" /></td>
-														<td><p:graphicImage
+																 /></td>
+														<td><p:message for="txtNroVaucher"></p:message><p:graphicImage
 																value="/resources/images/pregunta.jpg"
 																id="tooltxtNroVaucher" /></td>
 														<td><p:tooltip for="tooltxtNroVaucher"
@@ -205,10 +206,10 @@
 															<td><h:outputText value="#{s.sEstado}"/></td>
 															
 															<td>
-															<p:commandButton icon="ui-icon-search" id="VrA"
+															<p:commandButton icon="ui-icon-search" id="VrX"
 																			 update=":formSolicitudRegistro" >
 																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
-																							  value="#{s}" for="VrA">
+																							  value="#{s}" for="VrX">
 																</f:setPropertyActionListener>
 															</p:commandButton>
 															
@@ -276,9 +277,7 @@
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 																<f:selectItems value="#{solicitudRegMB.lstTipoSolicitudDocumentos}" var="lOf" itemValue="#{lOf.codDoc}" itemLabel="#{lOf.desDoc}" />
 											               </p:selectOneMenu></td>
-															   <td>
-										                    <h:form enctype="multipart/form-data">  
-										                    <h:message for="idfileUpload" ></h:message>
+															   <td> 
                                                                <p:fileUpload value="#{solicitudRegMB.file}"  id="idfileUpload"
                                                                 mode="simple" 
                                                                 update="idfileUpload"  
@@ -286,7 +285,6 @@
                                                                  sizeLimit="100000"   
                                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>  
   
-                                                                 </h:form>  
 										                    </td>
 
 														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro" ajax="false"
