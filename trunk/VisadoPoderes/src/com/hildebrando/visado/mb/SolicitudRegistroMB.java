@@ -492,6 +492,7 @@ public class SolicitudRegistroMB {
 	   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
 	   agrupacionSimpleDto.setsEstado("Activo");
 	   agrupacionSimpleDto.setiEstado(1);
+	   agrupacionSimpleDto.setLstPersonas(this.lstTiivsPersona);
 	  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 	  solicitudRegistrarT.setTiivsSolicitudAgrupacions(this.agregarSolicitudArupacion(numGrupo));
 	  this.llamarComision();
@@ -873,6 +874,12 @@ public class SolicitudRegistroMB {
 		//this.lstTiivsAgrupacionPersonas.remove(this.objAgrupacionSimpleDtoCapturado.getId().)
 		this.llamarComision();
 		this.objAgrupacionSimpleDtoCapturado=new AgrupacionSimpleDto();
+	}
+	public void verAgrupacion(){
+		logger.info("********************** verAgrupacion *********************************** ");
+		
+		System.out.println("Tamanio de la lista de Personas : " +this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
+		
 	}
 	public void editarOperacionBancaria(){
 		for (int i = 0; i < this.lstSolicBancarias.size(); i++) {
