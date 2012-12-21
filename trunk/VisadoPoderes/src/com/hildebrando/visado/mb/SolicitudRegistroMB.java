@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
@@ -170,14 +171,21 @@ public class SolicitudRegistroMB {
 	GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 	Busqueda filtroTipoSolcDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);
 	filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic", (String)e.getNewValue()));
+	filtroTipoSolcDoc.addOrder(Order.desc("obligatorio"));
 	try {
 		lstDocumentosXTipoSolTemp= genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
 		lstTipoSolicitudDocumentos = this.lstDocumentosXTipoSolTemp;
+		limpiarListadoDocumentos();		
 		logger.info(" e.getNewValue()  "+(String)e.getNewValue()+"  lstTipoSolicitudDocumentos.size : " +lstTipoSolicitudDocumentos.size());
 	} catch (Exception ex) {
 		logger.info("Error al cargar el listado de documentos por tipo de soliciitud");
 		ex.printStackTrace();
 	}
+	}
+	
+	public void limpiarListadoDocumentos(){
+		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
 	}
 
 	public void obtenerPersonaSeleccionada(){
@@ -569,14 +577,18 @@ public class SolicitudRegistroMB {
 		
 	}
 	public void actualizarListaDocumentosXTipo(){
-		logger.info("****************************** actualizarListaDocumentosXTipo *********************************");
-		
+		logger.info("****************************** actualizarListaDocumentosXTipo *********************************");	
+		if(sCodDocumento.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)){
+			lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%07d", lstdocumentos.size()+1), "Otros", "0"));
+			return;
+		}
 		for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
 			if(s.getCodDoc().equals(sCodDocumento)){
+				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getCodDoc(), s.getDesDoc(), s.getObligatorio()+""));//eramos
 				this.lstTipoSolicitudDocumentos.remove(s);
 				break;
 			}
-		}
+		}		
 	}
 	public boolean validarTotalDocumentos(){
 		boolean result=false;
@@ -596,9 +608,9 @@ public class SolicitudRegistroMB {
 	}
 	public boolean ValidarDocumentosDuplicados(){
 		boolean result=true;
-		String sMensaje="";
+		String sMensaje="";		
 		for (TiivsAnexoSolicitud a : this.lstAnexoSolicitud) {
-			if(a.getId().getCodDoc().equals(sCodDocumento)){
+			if(a.getId().getCodDoc().equals(sCodDocumento) && !sCodDocumento.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)){
 				result=false;
 				sMensaje="Documento ya se encuentra en la lista de Documentos";
 				Utilitarios.mensajeInfo("INFO ", sMensaje);
@@ -611,7 +623,7 @@ public class SolicitudRegistroMB {
 		logger.info("iTipoSolicitud  : " +iTipoSolicitud);
 		logger.info("scodDocumento :  " +sCodDocumento);
 		logger.info("lstAnexoSolicitud.size() :  " +lstAnexoSolicitud.size());
-		if(this.ValidarDocumentosDuplicados()){
+		if(this.ValidarDocumentosDuplicados() && !sCodDocumento.isEmpty()){
         TiivsAnexoSolicitud objAnexo =new TiivsAnexoSolicitud();
         String aliasArchivo="";
         aliasArchivo=this.solicitudRegistrarT.getCodSoli()+"_"+sCodDocumento;
@@ -619,8 +631,10 @@ public class SolicitudRegistroMB {
         objAnexo.setId(new TiivsAnexoSolicitudId(this.solicitudRegistrarT.getCodSoli(), sCodDocumento));
         objAnexo.setAliasArchivo(aliasArchivo);
 		lstAnexoSolicitud.add(objAnexo);
-		//this.actualizarListaDocumentosXTipo();
+		this.actualizarListaDocumentosXTipo();
 		
+		
+		System.out.println("agregando documento a la tabla - lstDocumentosXTipoSolTemp.size() " + lstDocumentosXTipoSolTemp.size());
 		for (TiivsTipoSolicDocumento e : lstDocumentosXTipoSolTemp) {
 			if(e.getCodDoc().equals(sCodDocumento)){
 				if(e.getObligatorio()=='1'){
@@ -710,7 +724,7 @@ public class SolicitudRegistroMB {
 				valorEuro+=objSolicBancaria.getImporte();
 				objSolicBancaria.setImporteSoles(valor);
 				icontEuros++;
-				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
+//				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
 			}
 	
           if(icontDolares==0&&icontEuros==0&&icontSoles>0){
@@ -775,7 +789,7 @@ public class SolicitudRegistroMB {
     				valorEuro+=objSolicBancaria.getImporte();
     				objSolicBancaria.setImporteSoles(valor);
     				icontEuros++;
-    				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
+//    				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
     			}
         
               if(icontDolares==0&&icontEuros==0&&icontSoles>0){
