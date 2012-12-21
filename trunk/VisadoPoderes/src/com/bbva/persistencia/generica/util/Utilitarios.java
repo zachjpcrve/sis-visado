@@ -39,6 +39,7 @@ public class Utilitarios {
 	      return strCodigoParametro;
 		}
 	
+
 	public static Timestamp getFechaActual() {
 
 		Date fecha = new Date();
