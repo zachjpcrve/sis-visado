@@ -572,6 +572,7 @@ public class SolicitudRegistroMB {
 				objSolicBancaria.setId(new TiivsSolicitudOperbanId());
 				lstSolicBancarias=new ArrayList<TiivsSolicitudOperban>();
 				iTipoSolicitud="";
+				lstTiivsPersona=new ArrayList<TiivsPersona>();
 		
 		//}		
 		
@@ -879,6 +880,7 @@ public class SolicitudRegistroMB {
       }
      
       objSolicitudOperacionCapturado=new TiivsSolicitudOperban();
+      this.flagUpdateOperacionSolic=false;
       this.llamarComision();
 	     
 	}
@@ -968,8 +970,12 @@ public class SolicitudRegistroMB {
 				  TiivsSolicitudOperban objResulOperaciones=serviceSoli.insertar(a);
 			   }
 			  if(objResultado.getCodSoli()!=""||objResultado!=null){ 
-				  mensaje="Se registro correctamente la Solicitud con codigo : "+objResultado.getCodSoli();
-				 Utilitarios.mensajeInfo("INFO", mensaje);
+				  if(this.sEstadoSolicitud.equals("BORRADOR")){
+					  mensaje="Se registro correctamente la Solicitud con codigo : "+objResultado.getCodSoli() +" en Borrador";
+						 Utilitarios.mensajeInfo("INFO", mensaje);
+				  }else{
+				  mensaje="Se envio a SSJJ correctamente la Solicitud con codigo : "+objResultado.getCodSoli();
+				 Utilitarios.mensajeInfo("INFO", mensaje);}
 			  }else{
 				  mensaje="Error al generar la Solicitud ";
 				 Utilitarios.mensajeInfo("INFO", mensaje);
