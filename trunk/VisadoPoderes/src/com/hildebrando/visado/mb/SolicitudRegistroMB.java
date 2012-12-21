@@ -467,17 +467,14 @@ public class SolicitudRegistroMB {
   public void agregarAgrupacion(){
 	  numGrupo=+1;
 	  logger.info("********************** agregarAgrupacion ********************* " +numGrupo);
-	  
 	  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 	  List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
 	  TiivsAgrupacionPersona tiivsAgrupacionPersona=null;
 	  for (TiivsPersona objTiivsPersonaResultado : lstTiivsPersona) {
 		  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
-			  lstPoderdantes.add(objTiivsPersonaResultado);
-		  }
+			  lstPoderdantes.add(objTiivsPersonaResultado);}
 		  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.APODERADO)){
-			  lstApoderdantes.add(objTiivsPersonaResultado);
-		  }
+			  lstApoderdantes.add(objTiivsPersonaResultado);}
 		  System.out.println("objTiivsPersonaResultado.getCodPer() : "+objTiivsPersonaResultado.getCodPer());
 		  tiivsAgrupacionPersona =new TiivsAgrupacionPersona();
 		  TiivsAgrupacionPersonaId  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersonaId();
@@ -489,8 +486,6 @@ public class SolicitudRegistroMB {
 		  tiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
 		  tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
 		  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
-		 
-		 
 	}  
 	  System.out.println("lstPoderdantes " +lstPoderdantes.size());
 	  System.out.println("lstApoderdantes " +lstApoderdantes.size());
@@ -887,7 +882,13 @@ public class SolicitudRegistroMB {
 	public void eliminarArupacion(){
 		logger.info("********************** eliminarArupacion *********************************** ");
 		this.lstAgrupacionSimpleDto.remove(this.objAgrupacionSimpleDtoCapturado);
-		//this.lstTiivsAgrupacionPersonas.remove(this.objAgrupacionSimpleDtoCapturado.getId().)
+		Set<TiivsSolicitudAgrupacion> lstSolicitudAgrupacion= (Set<TiivsSolicitudAgrupacion>) this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
+		for (TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion : lstSolicitudAgrupacion) {
+			if(tiivsSolicitudAgrupacion.getId().equals(this.objAgrupacionSimpleDtoCapturado.getId())){
+				lstSolicitudAgrupacion.remove(tiivsSolicitudAgrupacion);
+				break;
+			}
+		}
 		this.llamarComision();
 		this.objAgrupacionSimpleDtoCapturado=new AgrupacionSimpleDto();
 	}
@@ -909,6 +910,7 @@ public class SolicitudRegistroMB {
 		this.flagUpdateOperacionSolic=true;
 	}
 	public void editarAgrupacionSimpleDto(){
+		logger.info("************************** editarAgrupacionSimpleDto *****************************");
 		for (int i = 0; i < this.lstAgrupacionSimpleDto.size(); i++) {
 			if(objAgrupacionSimpleDtoCapturado.equals(this.lstAgrupacionSimpleDto.get(i))){
 				indexUpdateAgrupacionSimpleDto=i;
