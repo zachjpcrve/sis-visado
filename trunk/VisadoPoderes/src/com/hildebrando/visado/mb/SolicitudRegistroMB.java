@@ -893,6 +893,8 @@ public class SolicitudRegistroMB {
 		logger.info("********************** verAgrupacion *********************************** ");
 		
 		System.out.println("Tamanio de la lista de Personas : " +this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
+		System.out.println("this.objAgrupacionSimpleDtoCapturado.getsEstado()  "+this.objAgrupacionSimpleDtoCapturado.getsEstado());
+		
 		
 	}
 	public void editarOperacionBancaria(){
