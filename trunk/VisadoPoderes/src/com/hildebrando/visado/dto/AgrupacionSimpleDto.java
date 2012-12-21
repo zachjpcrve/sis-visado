@@ -11,6 +11,7 @@ public class AgrupacionSimpleDto {
 	private TiivsSolicitudAgrupacionId id;
 	private List<TiivsPersona> lstPoderdantes;
 	private List<TiivsPersona> lstApoderdantes;
+	private List<TiivsPersona>  lstPersonas;
 	private String sEstado;
 	private int iEstado;
 	
@@ -57,6 +58,12 @@ public class AgrupacionSimpleDto {
 	}
 	public void setiEstado(int iEstado) {
 		this.iEstado = iEstado;
+	}
+	public List<TiivsPersona> getLstPersonas() {
+		return lstPersonas;
+	}
+	public void setLstPersonas(List<TiivsPersona> lstPersonas) {
+		this.lstPersonas = lstPersonas;
 	}
 	
 }
