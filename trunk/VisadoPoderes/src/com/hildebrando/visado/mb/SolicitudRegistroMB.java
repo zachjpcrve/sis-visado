@@ -975,7 +975,7 @@ public class SolicitudRegistroMB {
 					b.setTiivsPersona(objPer);
 					System.out.println("objPer "+objPer.getCodPer());
 					serviceAgru.insertar(b);
-				  }
+				  } //samira
 			}*/
 			  for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
 				  System.out.println("a.getId().getCodOperBan() **** " +a.getId().getCodOperBan());
