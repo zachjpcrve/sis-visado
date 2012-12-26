@@ -692,7 +692,8 @@
 						<h:panelGrid columns="2">
 								<p:commandButton id="btnAgregar" value="Agregar" style="padding-left:0em !important;"
 								 action="#{solicitudRegMB.agregarPersona}"  update=":formRegistrar"/>
-								<p:commandButton id="btnLimpiar" value="Limpiar" style="padding-left:0.1em !important;" />
+								<p:commandButton id="btnLimpiar" value="Limpiar" style="padding-left:0.1em !important;"  
+								action="#{solicitudRegMB.limpiarCriteriosBusqueda}" update=":formRegistrar"/>
 							</h:panelGrid>
 						</td>
 
@@ -728,10 +729,22 @@
 									<h:outputText value="#{s.email}" />
 								</p:column>
 								<p:column headerText="Editar">
-									<p:graphicImage value="/resources/images/editar.jpg" />
+									<p:commandButton icon="ui-icon-pencil" id="ed"
+													 action="#{solicitudRegMB.editarPersona}" 
+													 update=":formRegistrar" >
+										<f:setPropertyActionListener target="#{solicitudRegMB.objTiivsPersonaCapturado}"
+																	  value="#{s}" for="ed">
+										</f:setPropertyActionListener>
+									</p:commandButton>
 								</p:column>
 								<p:column headerText="Eliminar">
-									<p:graphicImage value="/resources/images/eliminar.jpg" />
+									<p:commandButton icon="ui-icon-trash" id="del"
+													 action="#{solicitudRegMB.eliminarPersona}" 
+													 update=":formRegistrar" >
+										<f:setPropertyActionListener target="#{solicitudRegMB.objTiivsPersonaCapturado}"
+																	  value="#{s}" for="del">
+										</f:setPropertyActionListener>
+									</p:commandButton>
 								</p:column>
 							</p:dataTable></td>
 					</tr>

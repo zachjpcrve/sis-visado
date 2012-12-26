@@ -82,6 +82,7 @@ public class SolicitudRegistroMB {
 	private TiivsPersona objTiivsPersonaBusqueda;
 	private TiivsPersona objTiivsPersonaResultado;
 	private TiivsPersona objTiivsPersonaSeleccionado;
+	private TiivsPersona objTiivsPersonaCapturado;
 	private Set<TiivsAgrupacionPersona> lstTiivsAgrupacionPersonas;
 	private Set<TiivsSolicitudAgrupacion> lstTiivsSolicitudAgrupacion;
 	private List<AgrupacionSimpleDto>  lstAgrupacionSimpleDto;
@@ -100,6 +101,7 @@ public class SolicitudRegistroMB {
 	private boolean flagUpdateOperacionSolic=false;
 	private boolean flagUpdateOperacionSolcAgrupac=false;
 	private boolean flagUpdateOperacionSolcDocumen=false;
+	private boolean flagUpdatePersona=false;
 	private String sEstadoSolicitud="";
 	private TiivsSolicitudOperban objSolicitudOperacionCapturado;
 	private AgrupacionSimpleDto objAgrupacionSimpleDtoCapturado;
@@ -107,6 +109,7 @@ public class SolicitudRegistroMB {
 	private int indexUpdateOperacion=0;
 	private int indexUpdateAgrupacionSimpleDto=0;
 	private int indexUpdateSolicDocumentos=0;
+	private int indexUpdatePersona=0;  
 	public static Logger logger = Logger.getLogger(SolicitudRegistroMB.class);
 	private UploadedFile file;  
 	  
@@ -143,6 +146,14 @@ public class SolicitudRegistroMB {
 		
 	}
 	
+	public void eliminarPersona()
+	{
+		logger.info("**************************** eliminarPersona ****************************");
+		System.out.println(objTiivsPersonaCapturado.getCodPer());
+		lstTiivsPersona.remove(objTiivsPersonaCapturado);
+		objTiivsPersonaCapturado=new TiivsPersona();
+        this.flagUpdatePersona=false;
+	}
 /*	public void handleFileUpload(FileUploadEvent event) {  
         FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");  
         FacesContext.getCurrentInstance().addMessage(null, msg);  
@@ -279,42 +290,51 @@ public class SolicitudRegistroMB {
 		       }
 		return lstTiivsPersona;
 	}
+	
 	public List<TiivsPersona> buscarPersonaLocal() throws Exception{
-		    List<TiivsPersona>  lstTiivsPersona=new ArrayList<TiivsPersona>();
-	        GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-	        Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
-	      
-	        if((objTiivsPersonaBusqueda.getCodCen()==null||objTiivsPersonaBusqueda.getCodCen().equals(""))
-	         &&(objTiivsPersonaBusqueda.getTipDoi()==null||objTiivsPersonaBusqueda.getTipDoi().equals(""))
-	         &&(objTiivsPersonaBusqueda.getNumDoi()==null||objTiivsPersonaBusqueda.getNumDoi().equals(""))){
-	        	Utilitarios.mensajeInfo("INFO", "Ingrese al menos un criterio de busqueda");
-	        }else if(objTiivsPersonaBusqueda.getNumDoi()==null||objTiivsPersonaBusqueda.getNumDoi().equals("")){
-	        	Utilitarios.mensajeInfo("INFO", "Ingrese el Número de Doi");
-	        }else{
-	        	  if(objTiivsPersonaBusqueda.getTipDoi()!=null && objTiivsPersonaBusqueda.getNumDoi()!=null){
-		                 filtro.add(Restrictions.eq("tipDoi", objTiivsPersonaBusqueda.getTipDoi()));
-		                 filtro.add(Restrictions.eq("numDoi", objTiivsPersonaBusqueda.getNumDoi()));
-		        }
-		        if(objTiivsPersonaBusqueda.getCodCen()!=null && objTiivsPersonaBusqueda.getCodCen().compareTo("")!=0){
-		        	     filtro.add(Restrictions.eq("codCen", objTiivsPersonaBusqueda.getCodCen()));
-		        }
-		       lstTiivsPersona=service.buscarDinamico(filtro);
-		        //lstTiivsPersona =this.manipularDataPruebaPopup(objTiivsPersonaBusqueda.getNumDoi());
-			    for (TiivsPersona tiivsPersona : lstTiivsPersona) {
-				    for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
-						if(tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())){
-							tiivsPersona.setsDesctipDoi(p.getDescripcion());
-						}
-					}
-			    }
-			    
-			    if (lstTiivsPersona.size()==0)
-			    {
-			    	Utilitarios.mensajeInfo("INFO", "No se han encontrado resultados para los criterios de busqueda seleccionados");
-			    }
+		boolean busco = false;
+	    List<TiivsPersona>  lstTiivsPersona=new ArrayList<TiivsPersona>();
+        GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+        Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
+      
+        if((objTiivsPersonaBusqueda.getCodCen()==null||objTiivsPersonaBusqueda.getCodCen().equals(""))
+         &&(objTiivsPersonaBusqueda.getTipDoi()==null||objTiivsPersonaBusqueda.getTipDoi().equals(""))
+         &&(objTiivsPersonaBusqueda.getNumDoi()==null||objTiivsPersonaBusqueda.getNumDoi().equals(""))){
+        	Utilitarios.mensajeInfo("INFO", "Ingrese al menos un criterio de busqueda");
+        	
+        }else if(objTiivsPersonaBusqueda.getNumDoi()==null||objTiivsPersonaBusqueda.getNumDoi().equals("")){
+        	Utilitarios.mensajeInfo("INFO", "Ingrese el Número de Doi");
+        }else if(objTiivsPersonaBusqueda.getTipDoi()==null||objTiivsPersonaBusqueda.getTipDoi().equals("")){
+        	Utilitarios.mensajeInfo("INFO", "Ingrese el Tipo de Doi");
+        }else{
+        	  if(objTiivsPersonaBusqueda.getTipDoi()!=null && objTiivsPersonaBusqueda.getNumDoi()!=null && 
+        	     objTiivsPersonaBusqueda.getTipDoi().compareTo("")!=0 && objTiivsPersonaBusqueda.getNumDoi().compareTo("")!=0)
+        	  {
+	                 filtro.add(Restrictions.eq("tipDoi", objTiivsPersonaBusqueda.getTipDoi()));
+	                 filtro.add(Restrictions.eq("numDoi", objTiivsPersonaBusqueda.getNumDoi()));
+	                 busco=true;
+	          }
+	        if(objTiivsPersonaBusqueda.getCodCen()!=null && objTiivsPersonaBusqueda.getCodCen().compareTo("")!=0){
+	        	     filtro.add(Restrictions.eq("codCen", objTiivsPersonaBusqueda.getCodCen()));
+	        	     busco=true;
 	        }
-	        
-			return lstTiivsPersona;
+	       lstTiivsPersona=service.buscarDinamico(filtro);
+	        //lstTiivsPersona =this.manipularDataPruebaPopup(objTiivsPersonaBusqueda.getNumDoi());
+		    for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+			    for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+					if(tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())){
+						tiivsPersona.setsDesctipDoi(p.getDescripcion());
+					}
+				}
+		    }
+		    
+		    if (lstTiivsPersona.size()==0 && busco)
+		    {
+		    	Utilitarios.mensajeInfo("INFO", "No se han encontrado resultados para los criterios de busqueda seleccionados");
+		    }
+        }
+        
+		return lstTiivsPersona;
 	}
 
 	public List<TiivsPersona> manipularDataPruebaPopup(String numDoi){
@@ -369,15 +389,18 @@ public class SolicitudRegistroMB {
 		  System.out.println("TAMANIO DE LA SOLICI AGRUPA "+lstSolicitudArupacion.size());
 		  return lstSolicitudArupacion;
 	}
-    public void  agregarAgrupacionPersona(TiivsPersona objTiivsPersonaResultado ){
+    
+	public void  agregarAgrupacionPersona(TiivsPersona objTiivsPersonaResultado ){
 	TiivsAgrupacionPersona objTiivsAgrupacionPersona=new TiivsAgrupacionPersona();
 	objTiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
 	objTiivsAgrupacionPersona.setId(new TiivsAgrupacionPersonaId(this.solicitudRegistrarT.getCodSoli(), numGrupo, objTiivsPersonaResultado.getCodPer(), objTiivsPersonaResultado.getTipPartic(), objTiivsPersonaResultado.getClasifPer()));
 	}
-	public void agregarPersona(){
+    
+    public void agregarPersona(){
 		logger.info("****************** agregarPersona ********************");
 		if(validarPersona()){
 			if(validarRegistroDuplicado()){
+				
 		      for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
 					if(objTiivsPersonaResultado.getTipDoi().equals(p.getCodTipoDoc())){
 						objTiivsPersonaResultado.setsDesctipDoi(p.getDescripcion());
@@ -397,6 +420,7 @@ public class SolicitudRegistroMB {
 					}
 				}
 			  
+			  if(!flagUpdatePersona){
 		      lstTiivsPersona.add(objTiivsPersonaResultado);
 		      objTiivsPersonaResultado=new TiivsPersona();
 		      objTiivsPersonaBusqueda=new TiivsPersona();
@@ -404,12 +428,25 @@ public class SolicitudRegistroMB {
 		      lstTiivsPersonaResultado=new ArrayList<TiivsPersona>();
 		      personaDataModal=new PersonaDataModal(lstTiivsPersonaResultado);
 			  }
+			  else{
+					//update
+				  	System.out.println("Index Update: " + indexUpdatePersona);
+				  
+					 this.lstTiivsPersona.set(indexUpdatePersona, objTiivsPersonaCapturado);
+					 personaDataModal=new PersonaDataModal(lstTiivsPersonaResultado);
+					 objTiivsPersonaResultado=new TiivsPersona();
+				      objTiivsPersonaBusqueda=new TiivsPersona();
+				      objTiivsPersonaSeleccionado=new TiivsPersona();
+				      flagUpdatePersona=false;
+				}
+			}
+			
 		}
 		//return objTiivsPersonaBusqueda;
 	
 	}
 
-	public boolean validarRegistroDuplicado(){
+    public boolean validarRegistroDuplicado(){
 		logger.info("******************************* validarRegistroDuplicado ******************************* " +objTiivsPersonaResultado.getNumDoi());
 		boolean bResult=true;
 		String sMensaje="";
@@ -423,6 +460,7 @@ public class SolicitudRegistroMB {
 					objTiivsPersonaResultado.setsDesctipPartic(c.getDescripcion());
 				}
 			}
+		if(!flagUpdatePersona){
 		for (TiivsPersona p : lstTiivsPersona) {
 			if(objTiivsPersonaResultado.getNumDoi().equals(p.getNumDoi())){
 				 bResult=false;
@@ -430,8 +468,24 @@ public class SolicitudRegistroMB {
 				 Utilitarios.mensajeInfo("INFO", sMensaje);
 			}
 		}
+		}
 		return bResult;
 	}
+    
+    public void editarPersona()
+	{
+		for (int i = 0; i < this.lstTiivsPersona.size(); i++) 
+		{
+			if(objTiivsPersonaCapturado.equals(this.lstTiivsPersona.get(i)))
+			{
+				indexUpdatePersona=i;
+			}
+		}
+		
+		this.objTiivsPersonaResultado=this.objTiivsPersonaCapturado;
+		this.flagUpdatePersona=true;
+	}
+    
 	public boolean validarPersona(){
 		logger.info("******************************* validarPersona ******************************* " +objTiivsPersonaResultado.getTipPartic());
 		boolean bResult=true;
@@ -462,6 +516,19 @@ public class SolicitudRegistroMB {
 			sMensaje="Ingrese la descipcion Tipo de Participacion";
 			 bResult=false;
 			 Utilitarios.mensajeInfo("INFO", sMensaje);
+		}
+		else if(!flagUpdatePersona)
+		{
+			  for (TiivsPersona x : lstTiivsPersona) 
+			  {
+				  	if(x.getCodPer() == objTiivsPersonaResultado.getCodPer())
+					{
+						 sMensaje="Persona ya registrada, Ingrese otros datos de persona. ";
+						  Utilitarios.mensajeInfo("", sMensaje);
+						  bResult=false;
+						break;
+					}
+			  }
 		}
 		
 		return bResult;
@@ -1333,6 +1400,21 @@ public class SolicitudRegistroMB {
 			TiivsTipoSolicDocumento objDocumentoXSolicitudCapturado) {
 		this.objDocumentoXSolicitudCapturado = objDocumentoXSolicitudCapturado;
 	}
-	
+
+	public TiivsPersona getObjTiivsPersonaCapturado() {
+		return objTiivsPersonaCapturado;
+	}
+
+	public void setObjTiivsPersonaCapturado(TiivsPersona objTiivsPersonaCapturado) {
+		this.objTiivsPersonaCapturado = objTiivsPersonaCapturado;
+	}
+
+	public int getIndexUpdatePersona() {
+		return indexUpdatePersona;
+	}
+
+	public void setIndexUpdatePersona(int indexUpdatePersona) {
+		this.indexUpdatePersona = indexUpdatePersona;
+	}
 
 }
