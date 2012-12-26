@@ -475,6 +475,7 @@ public class SolicitudRegistroMB {
     
     public void editarPersona()
 	{
+    	logger.info("***************************** editarPersona ************************************ ");
 		for (int i = 0; i < this.lstTiivsPersona.size(); i++) 
 		{
 			if(objTiivsPersonaCapturado.equals(this.lstTiivsPersona.get(i)))
@@ -560,6 +561,7 @@ public class SolicitudRegistroMB {
 		  tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado.getTipPartic());
 		  tiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
 		  tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
+		  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
 		  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
 	}  
 	  System.out.println("lstPoderdantes " +lstPoderdantes.size());
@@ -968,13 +970,14 @@ public class SolicitudRegistroMB {
 		System.out.println("Tamanio de la lista Solicitud Agrupacion : " +lstSolicitudAgrupacion.size());
 		for (TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion : lstSolicitudAgrupacion) {
 			if(tiivsSolicitudAgrupacion.getId().equals(this.objAgrupacionSimpleDtoCapturado.getId())){
+				System.out.println("NANANANANANA");
 				lstSolicitudAgrupacion.remove(tiivsSolicitudAgrupacion);
 				break;
 			}
 		}
 		numGrupo--;
 
-		//lstTiivsAgrupacionPersonas.remove( ) 
+		//lstTiivsAgrupacionPersonas.remove(objAgrupacionSimpleDtoCapturado.g) 
 		System.out.println("Tamanio de la lista Solicitud Agrupacion : " +lstSolicitudAgrupacion.size());
 		this.llamarComision();
 		this.objAgrupacionSimpleDtoCapturado=new AgrupacionSimpleDto();
