@@ -93,8 +93,8 @@
 													<tr>
 														<td><h:outputText styleClass="outputText"
 																id="outNroVaucher" value="Nro Voucher *" /></td>
-														<td><h:inputText styleClass="inputText" required="true" requiredMessage="Ingrese el Nro Voucher"
-																id="txtNroVaucher" style="width:100px;"
+														<td><h:inputText styleClass="inputText" immediate="false" required="true" requiredMessage="Ingrese el Nro Voucher"
+																id="txtNroVaucher" style="width:100px;" 
 																value="#{solicitudRegMB.solicitudRegistrarT.nroVoucher}"
 																 /></td>
 														<td><p:message for="txtNroVaucher"></p:message><p:graphicImage
@@ -206,7 +206,7 @@
 															<td><h:outputText value="#{s.sEstado}"/></td>
 															
 															<td>
-															<p:commandButton icon="ui-icon-search" id="VrX" 
+															<p:commandButton icon="ui-icon-search" 
 																			 update=":formSolicitudRegistro:modalVerPersona" action="#{solicitudRegMB.verAgrupacion}"
 																			 oncomplete ="dlgVerPersona.show()" >
 																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
@@ -215,18 +215,18 @@
 															</p:commandButton>
 															
 															</td>
-															<td><p:commandButton icon="ui-icon-pencil" id="editA"
+															<td><p:commandButton icon="ui-icon-pencil" 
 																			 update=":formSolicitudRegistro" >
 																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
-																							  value="#{s}" for="editA">
+																							  value="#{s}">
 																</f:setPropertyActionListener>
 															</p:commandButton>
 															</td>
-															<td><p:commandButton icon="ui-icon-trash" id="delA"
+															<td><p:commandButton icon="ui-icon-trash" 
 																			 action="#{solicitudRegMB.eliminarArupacion}" 
 																			 update=":formSolicitudRegistro" >
 																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
-																							  value="#{s}" for="delA">
+																							  value="#{s}" >
 																</f:setPropertyActionListener>
 															</p:commandButton></td>
 														</tr>
@@ -369,11 +369,11 @@
 													<td><h:outputText styleClass="outputText"
 															id="outImporteTipoCambio" value="Tipo Cambio"
 															title="Tipo Cambio"></h:outputText></td>
-													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.tipoCambio}"/></td>
+													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.tipoCambio}" /></td>
 													<td><h:outputText styleClass="outputText"
 															id="outImporteSoles" value="Importe en Soles"
 															title="Importe en Soles"></h:outputText></td>
-													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importeSoles}"/></td>
+													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importeSoles}" readonly="true"/></td>
 													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solicitudRegMB.agrearOperacionBancaria}" update=":formSolicitudRegistro"/></td>
 													<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria"  action="#{solicitudRegMB.limpiarListaSolicitudesBancarias}" update=":formSolicitudRegistro" /></td>
 												</tr>
