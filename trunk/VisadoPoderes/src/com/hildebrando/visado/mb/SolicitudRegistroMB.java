@@ -389,12 +389,13 @@ public class SolicitudRegistroMB {
 		  System.out.println("TAMANIO DE LA SOLICI AGRUPA "+lstSolicitudArupacion.size());
 		  return lstSolicitudArupacion;
 	}
+
     
-	public void  agregarAgrupacionPersona(TiivsPersona objTiivsPersonaResultado ){
+	/*public void  agregarAgrupacionPersona(TiivsPersona objTiivsPersonaResultado ){
 	TiivsAgrupacionPersona objTiivsAgrupacionPersona=new TiivsAgrupacionPersona();
 	objTiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
 	objTiivsAgrupacionPersona.setId(new TiivsAgrupacionPersonaId(this.solicitudRegistrarT.getCodSoli(), numGrupo, objTiivsPersonaResultado.getCodPer(), objTiivsPersonaResultado.getTipPartic(), objTiivsPersonaResultado.getClasifPer()));
-	}
+	}*/
     
     public void agregarPersona(){
 		logger.info("****************** agregarPersona ********************");
@@ -534,7 +535,11 @@ public class SolicitudRegistroMB {
 		return bResult;
 		
 	}
-  public void agregarAgrupacion(){
+  public void agregarActionListenerAgrupacion(){
+	  logger.info("********************** agregarActionListenerAgrupacion ********************* " );
+	  lstTiivsPersona=new ArrayList<TiivsPersona>();
+  }
+	public void agregarAgrupacion(){
 	  numGrupo=numGrupo+1;
 	  logger.info("********************** agregarAgrupacion ********************* " +numGrupo);
 	  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
@@ -568,7 +573,7 @@ public class SolicitudRegistroMB {
 	   agrupacionSimpleDto.setLstPersonas(this.lstTiivsPersona);
 	  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 	  solicitudRegistrarT.setTiivsSolicitudAgrupacions(this.agregarSolicitudArupacion(numGrupo));
-
+	  lstTiivsPersona=new ArrayList<TiivsPersona>();
 		System.out.println("Tamanio de la lista Solicitud Agrupacion : " +solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
 	  this.llamarComision();
 	 System.out.println("tamanio de lstTiivsAgrupacionPersonas "+lstTiivsAgrupacionPersonas.size());
@@ -967,6 +972,9 @@ public class SolicitudRegistroMB {
 				break;
 			}
 		}
+		numGrupo--;
+
+		//lstTiivsAgrupacionPersonas.remove( ) 
 		System.out.println("Tamanio de la lista Solicitud Agrupacion : " +lstSolicitudAgrupacion.size());
 		this.llamarComision();
 		this.objAgrupacionSimpleDtoCapturado=new AgrupacionSimpleDto();
@@ -974,10 +982,9 @@ public class SolicitudRegistroMB {
 	public void verAgrupacion(){
 		logger.info("********************** verAgrupacion *********************************** ");
 		
-		System.out.println("Tamanio de la lista de Personas : " +this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
-		System.out.println("this.objAgrupacionSimpleDtoCapturado.getsEstado()  "+this.objAgrupacionSimpleDtoCapturado.getsEstado());
-		
-		
+		System.out.println("this.objAgrupacionSimpleDtoCapturado  "+this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
+		System.out.println("this.objAgrupacionSimpleDtoCapturado  "+this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
+		System.out.println("this.objAgrupacionSimpleDtoCapturado  "+this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
 	}
 	public void editarOperacionBancaria(){
 		for (int i = 0; i < this.lstSolicBancarias.size(); i++) {
