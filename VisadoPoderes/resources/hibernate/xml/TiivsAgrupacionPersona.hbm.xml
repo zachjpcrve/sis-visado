@@ -21,11 +21,11 @@
                 <column name="CLASIF_PER" length="4" />
             </key-property>
         </composite-id>
-        <many-to-one name="tiivsSolicitudAgrupacion" class="com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion" update="false" insert="false" fetch="select">
+        <many-to-one name="tiivsSolicitudAgrupacion" class="com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion"  update="false" insert="false" fetch="select">
             <column name="COD_SOLI" length="7" />
             <column name="NUM_GRUPO" precision="8" scale="0" />
         </many-to-one>
-        <many-to-one name="tiivsPersona" class="com.hildebrando.visado.modelo.TiivsPersona" update="false" insert="false" fetch="select">
+        <many-to-one name="tiivsPersona" class="com.hildebrando.visado.modelo.TiivsPersona"   update="false" insert="false" fetch="select">
             <column name="COD_PER" precision="8" scale="0" />
         </many-to-one>
     </class>
