@@ -353,8 +353,10 @@ public class SolicitudRegistroMB {
 	
 	
 	public Set<TiivsSolicitudAgrupacion> agregarSolicitudArupacion(int iNumGrupo){
-		  
+		  logger.info("iNumGrupo : " +iNumGrupo);
+		 
 		  Set<TiivsSolicitudAgrupacion> lstSolicitudArupacion=new HashSet<TiivsSolicitudAgrupacion>();
+		  lstSolicitudArupacion= this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
 		  TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion=new TiivsSolicitudAgrupacion();
 		  TiivsSolicitudAgrupacionId tiivsSolicitudAgrupacionId=new TiivsSolicitudAgrupacionId();
 		  tiivsSolicitudAgrupacionId.setCodSoli(solicitudRegistrarT.getCodSoli());
@@ -364,6 +366,7 @@ public class SolicitudRegistroMB {
 		  tiivsSolicitudAgrupacion.setActivo("1");
 		  
 		  lstSolicitudArupacion.add(tiivsSolicitudAgrupacion);
+		  System.out.println("TAMANIO DE LA SOLICI AGRUPA "+lstSolicitudArupacion.size());
 		  return lstSolicitudArupacion;
 	}
     public void  agregarAgrupacionPersona(TiivsPersona objTiivsPersonaResultado ){
@@ -465,7 +468,7 @@ public class SolicitudRegistroMB {
 		
 	}
   public void agregarAgrupacion(){
-	  numGrupo=+1;
+	  numGrupo=numGrupo+1;
 	  logger.info("********************** agregarAgrupacion ********************* " +numGrupo);
 	  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 	  List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
@@ -498,6 +501,8 @@ public class SolicitudRegistroMB {
 	   agrupacionSimpleDto.setLstPersonas(this.lstTiivsPersona);
 	  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 	  solicitudRegistrarT.setTiivsSolicitudAgrupacions(this.agregarSolicitudArupacion(numGrupo));
+
+		System.out.println("Tamanio de la lista Solicitud Agrupacion : " +solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
 	  this.llamarComision();
 	 System.out.println("tamanio de lstTiivsAgrupacionPersonas "+lstTiivsAgrupacionPersonas.size());
  }
@@ -716,11 +721,12 @@ public class SolicitudRegistroMB {
 			}
 			if(objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
 				valor=objSolicBancaria.getTipoCambio()*objSolicBancaria.getImporte();
-				valorSolesE+=valor;
+				valorSolesE=valorSolesE+valor;
 				valorEuro+=objSolicBancaria.getImporte();
 				objSolicBancaria.setImporteSoles(valor);
 				icontEuros++;
-//				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
+				System.out.println("tamanio de euros : " +icontEuros);
+				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
 			}
 	
           if(icontDolares==0&&icontEuros==0&&icontSoles>0){
@@ -738,7 +744,7 @@ public class SolicitudRegistroMB {
           if(icontDolares>0&&icontEuros>0&&icontSoles==0
         		  ||icontDolares>0&&icontEuros==0&&icontSoles>0
         		  ||icontDolares==0&&icontEuros>0&&icontSoles>0
-        		  ||icontDolares==0&&icontEuros==0&&icontSoles==0){
+        		  ||icontDolares>0&&icontEuros>0&&icontSoles>0){
         	  valorFinal=valorSoles_C+valorSolesD+valorSolesE;
         	  this.solicitudRegistrarT.setImporte(valorFinal);
           }
@@ -785,7 +791,7 @@ public class SolicitudRegistroMB {
     				valorEuro+=objSolicBancaria.getImporte();
     				objSolicBancaria.setImporteSoles(valor);
     				icontEuros++;
-//    				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
+    				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
     			}
         
               if(icontDolares==0&&icontEuros==0&&icontSoles>0){
@@ -803,7 +809,8 @@ public class SolicitudRegistroMB {
               if(icontDolares>0&&icontEuros>0&&icontSoles==0
             		  ||icontDolares>0&&icontEuros==0&&icontSoles>0
             		  ||icontDolares==0&&icontEuros>0&&icontSoles>0
-            		  ||icontDolares==0&&icontEuros==0&&icontSoles==0){
+            		  ||icontDolares==0&&icontEuros>0&&icontSoles>0
+            		  ||icontDolares>0&&icontEuros>0&&icontSoles>0){
             	  valorFinal=valorSoles_C+valorSolesD+valorSolesE;
             	  this.solicitudRegistrarT.setImporte(valorFinal);
               }
@@ -869,6 +876,7 @@ public class SolicitudRegistroMB {
       if(icontDolares>0&&icontEuros>0&&icontSoles==0
     		  ||icontDolares>0&&icontEuros==0&&icontSoles>0
     		  ||icontDolares==0&&icontEuros>0&&icontSoles>0
+    		  ||icontDolares>0&&icontEuros>0&&icontSoles>0
     		  ||icontDolares==0&&icontEuros==0&&icontSoles==0){
     	  valorFinal=valorSoles_C+valorSolesD+valorSolesE;
     	  this.solicitudRegistrarT.setImporte(valorFinal);
@@ -881,14 +889,18 @@ public class SolicitudRegistroMB {
 	}
 	public void eliminarArupacion(){
 		logger.info("********************** eliminarArupacion *********************************** ");
+		
 		this.lstAgrupacionSimpleDto.remove(this.objAgrupacionSimpleDtoCapturado);
 		Set<TiivsSolicitudAgrupacion> lstSolicitudAgrupacion= (Set<TiivsSolicitudAgrupacion>) this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
+
+		System.out.println("Tamanio de la lista Solicitud Agrupacion : " +lstSolicitudAgrupacion.size());
 		for (TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion : lstSolicitudAgrupacion) {
 			if(tiivsSolicitudAgrupacion.getId().equals(this.objAgrupacionSimpleDtoCapturado.getId())){
 				lstSolicitudAgrupacion.remove(tiivsSolicitudAgrupacion);
 				break;
 			}
 		}
+		System.out.println("Tamanio de la lista Solicitud Agrupacion : " +lstSolicitudAgrupacion.size());
 		this.llamarComision();
 		this.objAgrupacionSimpleDtoCapturado=new AgrupacionSimpleDto();
 	}
