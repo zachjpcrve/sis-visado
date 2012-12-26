@@ -21,6 +21,11 @@ public abstract class GenericDaoImpl<K, T extends Serializable>
 	public GenericDaoImpl() {
 		super();
 	}
+	public Session obtenerSession(){
+		    Session hibernateSession = null;
+			hibernateSession = (Session) getHibernateTemplate().getSessionFactory().getCurrentSession();
+			return hibernateSession;
+	}
 	
 	public Connection getConnection() throws Exception {
 		Connection cnx = null;
