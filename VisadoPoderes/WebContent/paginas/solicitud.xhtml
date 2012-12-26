@@ -93,7 +93,7 @@
 													<tr>
 														<td><h:outputText styleClass="outputText"
 																id="outNroVaucher" value="Nro Voucher *" /></td>
-														<td><h:inputText styleClass="inputText" immediate="false" required="true" requiredMessage="Ingrese el Nro Voucher"
+														<td><h:inputText styleClass="inputText" immediate="false"  required="true" requiredMessage="Ingrese el Nro Voucher"
 																id="txtNroVaucher" style="width:100px;" 
 																value="#{solicitudRegMB.solicitudRegistrarT.nroVoucher}"
 																 /></td>
@@ -145,7 +145,7 @@
 													<td></td>
 													<td></td>
 													<td style="width: 50px;"></td>
-													<td><p:commandButton value="Add" onclick="dlgRegistrarPersona.show();"/></td>
+													<td><p:commandButton value="+" actionListener="#{solicitudRegMB.agregarActionListenerAgrupacion}" oncomplete="dlgRegistrarPersona.show();"/></td>
 												</tr>
 											</table>
 											<p:separator styleClass="fielset" />
@@ -207,8 +207,8 @@
 															
 															<td>
 															<p:commandButton icon="ui-icon-search" 
-																			 update=":formSolicitudRegistro:modalVerPersona" action="#{solicitudRegMB.verAgrupacion}"
-																			 oncomplete ="dlgVerPersona.show()" >
+																			 update=":formSolicitudRegistro:modalVerPersona,:formSolicitudRegistro:idMsmSolicitudRegistro" action="#{solicitudRegMB.verAgrupacion}"
+																			 oncomplete ="dlgVerPersona.show()"  >
 																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
 																							  value="#{s}">
 																</f:setPropertyActionListener>
@@ -750,7 +750,7 @@
 					</tr>
 					<tr><td>
 					<p:commandButton id="btnAgregarPersonaAgrupacion" action="#{solicitudRegMB.agregarAgrupacion}"
-					 value="Agregar Agrupacion" icon="ui-icon-search" onclick="dlgRegistrarPersona.hide()" update=":formSolicitudRegistro">
+					 value="Agregar Agrupacion" icon="ui-icon-search" onclick="dlgRegistrarPersona.hide()" update=":formRegistrar,:formSolicitudRegistro">
 					
 					</p:commandButton>
 					</td>
