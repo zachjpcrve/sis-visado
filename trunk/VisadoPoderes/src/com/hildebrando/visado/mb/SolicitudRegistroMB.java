@@ -165,8 +165,9 @@ public class SolicitudRegistroMB {
         System.out.println(event.getComponent().getId());
     }  
 */
-	 public void upload() {  
-	        if(file != null) {  
+	public void uploadUnicoPDF() 
+	 {  
+	       /* if(file != null) {  
 	            FacesMessage msg = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");  
 	            FacesContext.getCurrentInstance().addMessage(null, msg);  
 	            System.out.println("file : "+file.getFileName());
@@ -174,8 +175,21 @@ public class SolicitudRegistroMB {
 	      //if (pdfViewerMB.cargarPDFRemoto("o"))
 			{
 			//	logger.info("pdfViewerMB.cargarPDFRemoto(:  " +pdfViewerMB.cargarPDFRemoto("o"));
+			}*/
+		 for(DocumentoTipoSolicitudDTO doc : lstdocumentos)
+		 {
+			if(doc.getItem().equals(sCodDocumento))
+			{
+				String ruta = pdfViewerMB.cargarUnicoPDF(doc.getAlias());
+				doc.setRutaDoc(ruta);
 			}
-	    }  
+		 }
+	 } 
+	 
+	 public void uploadPDFMasivo()
+	 {
+		 
+	 }
 	
 	
 	
