@@ -263,7 +263,8 @@
 																immediate="true" 
 																valueChangeListener="#{solicitudRegMB.listarDocumentosXSolicitud}"
 																disabled="false">
-																<p:ajax update=":formSolicitudRegistro" event="change"></p:ajax>
+																<p:ajax update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos" 
+																event="change"></p:ajax>
 																<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 																<f:selectItems value="#{combosMB.lstTipoSolicitud}" var="lOf" itemValue="#{lOf.codTipSolic}" itemLabel="#{lOf.desTipServicio}" />
 										
@@ -289,7 +290,7 @@
   
 										                    </td>
 
-														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro" ajax="false"
+														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro" ajax="true"
 														action="#{solicitudRegMB.agrearDocumentosXTipoSolicitud}" actionListener="#{solicitudRegMB.upload}" /></td>
 													</tr>
 													<tr>
@@ -307,14 +308,20 @@
 																<p:column headerText="Documento" style="width:400px;">
 																	<h:outputText value="#{s.documento}" />
 																</p:column>
-																<p:column headerText="Obligación">
-																<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>
+																<p:column headerText="Obligatorio">
+																	<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>																	
 																</p:column>
-																<p:column headerText="Editar">
-																	<p:graphicImage value="/resources/images/editar.jpg" />
+																<p:column headerText="Archivo">
+																	<h:outputText value="#{s.archivo}" />
 																</p:column>
-																<p:column headerText="Eliminar">
-																	<p:graphicImage value="/resources/images/eliminar.jpg" />
+																<p:column headerText="Eliminar">																	
+																	<p:commandLink action="#{solicitudRegMB.quitarDocumentosXTipoSolicitud}" update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos">
+																		<p:graphicImage value="/resources/images/eliminar.jpg" />																		
+																		<f:setPropertyActionListener
+																			target="#{solicitudRegMB.selectedDocumento}" value="#{s}"
+																			for="del">
+																		</f:setPropertyActionListener>
+																	</p:commandLink>																	
 																</p:column>
 															</p:dataTable></td>
 													</tr>
