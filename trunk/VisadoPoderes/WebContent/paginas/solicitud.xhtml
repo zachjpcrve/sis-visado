@@ -281,17 +281,18 @@
 																<f:selectItem itemLabel="Otros" itemValue="Otros" />
 											               </p:selectOneMenu></td>
 															   <td> 
+															   
                                                                <p:fileUpload value="#{solicitudRegMB.file}"  id="idfileUpload"
                                                                 mode="simple" 
                                                                 update="idfileUpload"  
                                                                  auto="false"  
                                                                  sizeLimit="100000"   
-                                                                 allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>  
+                                                                 allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/"/>  
   
 										                    </td>
 
-														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro" ajax="true"
-														action="#{solicitudRegMB.agrearDocumentosXTipoSolicitud}" actionListener="#{solicitudRegMB.upload}" /></td>
+														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro" ajax="false"
+														action="#{solicitudRegMB.agrearDocumentosXTipoSolicitud}"  /></td>
 													</tr>
 													<tr>
 														<td width="95%" colspan="11">
@@ -311,17 +312,23 @@
 																<p:column headerText="Obligatorio">
 																	<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>																	
 																</p:column>
-																<p:column headerText="Archivo" width="400">
-																	<iframe src="#{s.rutaDoc}"/>
+																<p:column headerText="Archivo" >																																																			
+																	<p:commandLink>
+																		<h:outputText>#{s.alias}</h:outputText>
+																	</p:commandLink>																	
 																</p:column>
-																<p:column headerText="Eliminar">																	
-																	<p:commandLink action="#{solicitudRegMB.quitarDocumentosXTipoSolicitud}" update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos">
-																		<p:graphicImage value="/resources/images/eliminar.jpg" />																		
-																		<f:setPropertyActionListener
+																<p:column headerText="Eliminar">
+																 	<p:commandButton 
+																 		action="#{solicitudRegMB.quitarDocumentosXTipoSolicitud}" 
+																 		update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos" 
+																 		id="iconOnly" icon="ui-icon-circle-close"
+																 		disabled="#{s.alias.isEmpty()?true:false}">
+																 		<f:setPropertyActionListener
 																			target="#{solicitudRegMB.selectedDocumento}" value="#{s}"
 																			for="del">
-																		</f:setPropertyActionListener>
-																	</p:commandLink>																	
+																		</f:setPropertyActionListener>	
+																 	</p:commandButton> 																																	
+																																	
 																</p:column>
 															</p:dataTable></td>
 													</tr>
