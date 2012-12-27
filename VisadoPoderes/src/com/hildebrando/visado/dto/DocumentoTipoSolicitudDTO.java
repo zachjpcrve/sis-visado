@@ -4,13 +4,16 @@ public class DocumentoTipoSolicitudDTO {
 private String item;
 private String documento;
 private String obligacion;
+private String alias;
 private boolean bobligacion;
 
-public DocumentoTipoSolicitudDTO(String item, String documento,String obligacion) {
+public DocumentoTipoSolicitudDTO(String item, String documento,String obligacion, String alias) {
 	super();
 	this.item = item;
 	this.documento = documento;
 	this.obligacion = obligacion;
+	this.alias = alias;
+	this.bobligacion = Boolean.valueOf(obligacion);
 }
 public DocumentoTipoSolicitudDTO() {
 	super();
@@ -40,6 +43,12 @@ public boolean isBobligacion() {
 }
 public void setBobligacion(boolean bobligacion) {
 	this.bobligacion = bobligacion;
+}
+public String getAlias() {
+	return alias;
+}
+public void setAlias(String alias) {
+	this.alias = alias;
 }
 
 
