@@ -176,6 +176,118 @@ public class PDFViewerMB {
 		System.out.println("Tamanio lista PDF: " + lstPDFEscaneados.size());
 	}
 	
+	public String cargarUnicoPDF(final String nombreArchivo)
+	{
+		String urlServer="";
+		String server="";
+		String loginServer="";
+		String passServer="";
+		String carpetaRemota="";
+		String dirLocal="";
+		String rutaResultante="";
+		
+		//String codUsuario="P014773";
+		
+		//String dirPDF = "ftp://hilde:$i$tema$2012@10.172.0.4/VISADO/PDF/";
+		
+		if (lstParametros!=null) 
+		{
+			System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
+			
+			for (TiivsParametros tmp: lstParametros)
+			{
+				urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
+							  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
+							  tmp.getPassServer()+ConstantesVisado.ARROBA+
+							  File.separator+tmp.getCarpetaRemota();
+					
+				dirLocal=tmp.getRutaLocal();
+				server=tmp.getServer();
+				loginServer=tmp.getLoginServer();
+				passServer=tmp.getPassServer();	
+				carpetaRemota=tmp.getCarpetaRemota();
+			}
+		}		
+		
+				
+		System.out.println("Parametros leidos de BD");
+		System.out.println("Dir Server: " + urlServer);
+		System.out.println("Dir Local: " + dirLocal);
+		System.out.println("Server: " + server);
+		System.out.println("Login Server:_" + loginServer);
+		System.out.println("Pass Server: " + passServer);
+		System.out.println("Carpeta Remota: " + carpetaRemota);
+		
+				
+		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
+		try {
+			cliente.setDirectorio(carpetaRemota);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		if (cliente!=null)
+		{
+			//Transferir archivos PDF de la carpeta local al Servidor
+			File Listfile = new File(dirLocal);
+			FilenameFilter filterPDF = new FilenameFilter() 
+			{
+		      public boolean accept(File dir, String name) 
+		      {
+		        return name.endsWith(nombreArchivo);
+		      }
+		    };
+			 
+			File[] lista = Listfile.listFiles(filterPDF);
+			
+			for (int i = 0; i < lista.length; i++) 
+			{
+				//String codDocumento = buscarTipoDocByNombre(lista[i].getName());
+				String codDocumento="";
+				cliente.upLoadFiles(lista[i].getName(),dirLocal);
+				if (codDocumento.isEmpty())
+				{
+					cliente.renombrarArchivo(getValCodSolicitud()+"-"+"00"+(i+1)+".pdf", lista[i].getName());
+				}
+				else
+				{
+					cliente.renombrarArchivo(getValCodSolicitud()+"-"+codDocumento+".pdf", lista[i].getName());
+				}
+				
+			}
+			
+			//Leer ficheros PDF para mostrarlos en la grilla
+			List listaTMP=new ArrayList<String>();
+			try {
+				listaTMP = cliente.listar();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if (listaTMP !=null)
+			{
+				/*int ind=0;
+				for (; ind<=listaTMP.size()-1;ind++)
+				{
+					Escaneado tmp=new Escaneado();
+					
+					tmp.setDocumento("Copia "+ ind);
+					tmp.setNomArchivo(listaTMP.get(ind).toString());
+					System.out.println("Ruta archivo " + ind  + ": " + tmp.getNomArchivo());
+					tmp.setFormato("Blanco y Negro");
+					tmp.setRutaArchivoLarga(urlServer+tmp.getNomArchivo());
+					
+					lstPDFEscaneados.add(tmp);
+				}*/
+				rutaResultante=urlServer+nombreArchivo;
+			}
+			
+		}
+		
+		
+		return rutaResultante;
+	}
+	
 	public Boolean cargarPDFRemoto(String sTipoArchivo,String dirLocal)
 	{
 		boolean cargaExitosa=true;
