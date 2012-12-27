@@ -92,6 +92,7 @@ public class SolicitudRegistroMB {
 //
 	private String sCodDocumento;
 	private DocumentoTipoSolicitudDTO selectedDocumento;
+	private String urlServer = "";
 	
 	private IILDPeUsuario  usuario;
 	private int numGrupo=0;
@@ -146,8 +147,14 @@ public class SolicitudRegistroMB {
 		 usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		this.instanciarSolicitudRegistro();
 		
+		urlServer = new PDFViewerMB().obtenerURLRemota();
+		
+		
+		
 	}
+
 	
+
 	public void eliminarPersona()
 	{
 		logger.info("**************************** eliminarPersona ****************************");
@@ -167,23 +174,24 @@ public class SolicitudRegistroMB {
 */
 	public void uploadUnicoPDF() 
 	 {  
-	       /* if(file != null) {  
+		
+	       if(file != null) {
+	    	    System.out.println("file : " + file.getFileName());
 	            FacesMessage msg = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");  
 	            FacesContext.getCurrentInstance().addMessage(null, msg);  
 	            System.out.println("file : "+file.getFileName());
+	            
+	            
+				String aliasArchivo="";
+				String extension = file.getFileName().substring(file.getFileName().lastIndexOf("."));
+		        aliasArchivo=this.solicitudRegistrarT.getCodSoli()+"_"+sCodDocumento + extension ;
+		        
+		        System.out.println("aliasArchivo : "+aliasArchivo);
+				System.out.println("file.getFileName() : "+file.getFileName());
+				String ruta = pdfViewerMB.cargarUnicoPDF(aliasArchivo,file.getFileName());
+	            
 	        }  
-	      //if (pdfViewerMB.cargarPDFRemoto("o"))
-			{
-			//	logger.info("pdfViewerMB.cargarPDFRemoto(:  " +pdfViewerMB.cargarPDFRemoto("o"));
-			}*/
-		 for(DocumentoTipoSolicitudDTO doc : lstdocumentos)
-		 {
-			if(doc.getItem().equals(sCodDocumento))
-			{
-				String ruta = pdfViewerMB.cargarUnicoPDF(doc.getAlias());
-				doc.setRutaDoc(ruta);
-			}
-		 }
+			
 	 } 
 	 
 	 public void uploadPDFMasivo()
@@ -228,7 +236,6 @@ public class SolicitudRegistroMB {
 		}
 		
 		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
-		
 	}
 
 	public void obtenerPersonaSeleccionada(){
@@ -744,29 +751,20 @@ public class SolicitudRegistroMB {
 		System.out.println(" ************************** agrearDocumentosXTipoSolicitud  ****************************** ");
 		System.out.println("iTipoSolicitud  : " +iTipoSolicitud);
 		System.out.println("scodDocumento :  " +sCodDocumento);
-		System.out.println("lstAnexoSolicitud.size() :  " +lstAnexoSolicitud.size());
+		System.out.println("lstAnexoSolicitud.size() :  " +lstAnexoSolicitud.size());				
+		
 		if(this.ValidarDocumentosDuplicados() && ! (sCodDocumento == null) && !(sCodDocumento.isEmpty())){
 		System.out.println("Documentos validados.....");
         TiivsAnexoSolicitud objAnexo =new TiivsAnexoSolicitud();
         String aliasArchivo="";
         aliasArchivo=this.solicitudRegistrarT.getCodSoli()+"_"+sCodDocumento;
+        uploadUnicoPDF(); //eramos
         logger.info("aliasArchivo *** " +aliasArchivo);
         objAnexo.setId(new TiivsAnexoSolicitudId(this.solicitudRegistrarT.getCodSoli(), sCodDocumento));
         objAnexo.setAliasArchivo(aliasArchivo);
 		lstAnexoSolicitud.add(objAnexo);
 		this.actualizarListaDocumentosXTipo();
 		
-		
-//		System.out.println("agregando documento a la tabla - lstDocumentosXTipoSolTemp.size() " + lstDocumentosXTipoSolTemp.size());
-//		for (TiivsTipoSolicDocumento e : lstDocumentosXTipoSolTemp) {
-//			if(e.getCodDoc().equals(sCodDocumento)){
-//				if(e.getObligatorio()=='1'){
-//					lstdocumentos.add(new DocumentoTipoSolicitudDTO(e.getCodDoc(), e.getDesDoc(), true+"",e.getCodDoc()+".pdf"));	
-//				}else{
-//					lstdocumentos.add(new DocumentoTipoSolicitudDTO(e.getCodDoc(), e.getDesDoc(), false+"",e.getCodDoc()+".pdf"));//eramos	
-//				}
-//			}
-//		}
 		
 		for (TiivsTipoSolicitud x : combosMB.getLstTipoSolicitud()) {
 			if(x.getCodTipSolic().equals(iTipoSolicitud)){
@@ -803,11 +801,14 @@ public class SolicitudRegistroMB {
 					
 		
 		//listado checkbox
+		int i = 0;
 		for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {			
-			if(s.getCodDoc().equals(selectedDocumento.getItem())){															
-				this.lstTipoSolicitudDocumentos.add(s);
+			if(s.getCodDoc().equals(selectedDocumento.getItem())){				
+//				this.lstTipoSolicitudDocumentos.add(s);
+				this.lstTipoSolicitudDocumentos.add(i, s);
 				break;
 			}
+			i++;
 		}	
 		
 		//listado documentos
@@ -1530,6 +1531,14 @@ public class SolicitudRegistroMB {
 
 	public void setIndexUpdatePersona(int indexUpdatePersona) {
 		this.indexUpdatePersona = indexUpdatePersona;
+	}
+	
+	public String getUrlServer() {
+		return urlServer;
+	}
+
+	public void setUrlServer(String urlServer) {
+		this.urlServer = urlServer;
 	}
 
 }
