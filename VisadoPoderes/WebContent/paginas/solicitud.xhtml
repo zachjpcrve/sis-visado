@@ -311,8 +311,8 @@
 																<p:column headerText="Obligatorio">
 																	<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>																	
 																</p:column>
-																<p:column headerText="Archivo">
-																	<h:outputText value="#{s.archivo}" />
+																<p:column headerText="Archivo" width="400">
+																	<iframe src="#{s.rutaDoc}"/>
 																</p:column>
 																<p:column headerText="Eliminar">																	
 																	<p:commandLink action="#{solicitudRegMB.quitarDocumentosXTipoSolicitud}" update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos">
