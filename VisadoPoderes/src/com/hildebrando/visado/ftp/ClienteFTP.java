@@ -93,10 +93,38 @@ public class ClienteFTP
         }
 	}
 	
+	public void upLoadOneFiles(String file,String ruta)
+	{
+		FileInputStream fis =null;
+		System.out.println("Ruta: " + ruta);
+		try 
+		{
+			fis = new FileInputStream(ruta);
+			ftpCliente.setFileType(FTP.BINARY_FILE_TYPE);
+			ftpCliente.setFileTransferMode(FTP.BINARY_FILE_TYPE);			
+			ftpCliente.storeFile(file, fis);
+			
+		} catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try 
+            {
+                if (fis != null) 
+                {
+                    fis.close();
+                }
+//               ftpCliente.disconnect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+	}
+	
 	public void renombrarArchivo(String nuevoNombre, String antiguoNombre)
 	{
 		try {
 			ftpCliente.rename(antiguoNombre, nuevoNombre);
+			ftpCliente.disconnect();
 		} catch (IOException e) {
             e.printStackTrace();
         }
