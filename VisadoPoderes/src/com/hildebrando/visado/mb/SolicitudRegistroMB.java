@@ -204,11 +204,19 @@ public class SolicitudRegistroMB {
 					.substring(getFile().getFileName().lastIndexOf(".")));
 			ubicacionTemporal2 = fichTemp.getAbsolutePath();
 			
+			
+			
+			logger.debug("ubicacion temporal " + ubicacionTemporal2);
+			canalSalida = new FileOutputStream(fichTemp);
+			canalSalida.write(fileBytes);
+			
+			
 			String extension = fichTemp.getName().substring(fichTemp.getName().lastIndexOf("."));
 			aliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_" 	+ sCodDocumento + extension;
 
 			System.out.println("aliasArchivo : " + aliasArchivo);
 			System.out.println("file.getFileName() : " + fichTemp.getName());
+			System.out.println("file.getFileName() : " + ubicacionTemporal2);
 			String ruta = pdfViewerMB.cargarUnicoPDF(aliasArchivo,	ubicacionTemporal2);
 			
 			if (ruta.compareTo("")!=0)
@@ -220,9 +228,6 @@ public class SolicitudRegistroMB {
 				System.out.println("no subio");
 			}
 			
-			logger.debug("ubicacion temporal " + ubicacionTemporal2);
-			canalSalida = new FileOutputStream(fichTemp);
-			canalSalida.write(fileBytes);
 			canalSalida.flush();
 
 		} catch (IOException e) {
@@ -873,8 +878,7 @@ public class SolicitudRegistroMB {
 		logger.info("iTipoSolicitud  : " + iTipoSolicitud);
 		logger.info("scodDocumento :  " + sCodDocumento);
 		logger.info("lstAnexoSolicitud.size() :  " + lstAnexoSolicitud.size());
-		System.out
-				.println(" ************************** agrearDocumentosXTipoSolicitud  ****************************** ");
+		System.out.println(" ************************** agrearDocumentosXTipoSolicitud  ****************************** ");
 		System.out.println("iTipoSolicitud  : " + iTipoSolicitud);
 		System.out.println("scodDocumento :  " + sCodDocumento);
 		System.out.println("lstAnexoSolicitud.size() :  "
