@@ -1,5 +1,6 @@
 package com.bbva.common.util;
 
+
 public class ConstantesVisado {
 	public static final java.lang.String APODERADO="0002";
 	public static final java.lang.String PODERDANTE="0001";
@@ -167,7 +168,40 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_COLUMNA_FECHA_ESTADO = "Fecha de Estado";
 	
 	static public class ESTADOS {
-		public static final String ESTADO_REGISTRADO = "Registrado";
+		
+		
+		public static final String ESTADO_COD_REGISTRADO_T02="0001";					
+		public static final String ESTADO_COD_RESERVADO_T02="0002";					
+		public static final String ESTADO_COD_ACEPTADO_T02="0003";				
+		public static final String ESTADO_COD_RECHAZADO_T02="0004";				
+		public static final String ESTADO_COD_ENVIADOSSJJ_T02="0007";					
+		public static final String ESTADO_COD_VENCIDO_T02="0008";					
+		public static final String ESTADO_COD_EN_VERIFICACION_A_T02="0009";					
+		public static final String ESTADO_COD_EN_VERIFICACION_B_T02="0010";						
+		public static final String ESTADO_COD_PROCEDENTE_T02="0012";						
+		public static final String ESTADO_COD_IMPROCEDENTE_T02="0013";						
+		public static final String ESTADO_COD_PRE_EJECUTADO_T02="0014";						
+		public static final String ESTADO_COD_EJECUTADO_T02="0015";					
+		public static final String ESTADO_COD_REVOCADO_T02="0016";						
+		public static final String ESTADO_COD_EN_REVISION_T02="0017";			
+		
+		
+		
+		public static final String ESTADO_REGISTRADO_T02="Registrado";					
+		public static final String ESTADO_RESERVADO_T02="Reservado";					
+		public static final String ESTADO_ACEPTADO_T02="Aceptado";				
+		public static final String ESTADO_RECHAZADO_T02="Rechazado";				
+		public static final String ESTADO_ENVIADOSSJJ_T02="Enviado a SSJJ";					
+		public static final String ESTADO_VENCIDO_T02="Vencido";					
+		public static final String ESTADO_EN_VERIFICACION_A_T02="En Verificación A";					
+		public static final String ESTADO_EN_VERIFICACION_B_T02="En Verificación B";						
+		public static final String ESTADO_PROCEDENTE_T02="Procedente";						
+		public static final String ESTADO_IMPROCEDENTE_T02="Improcedente";						
+		public static final String ESTADO_PRE_EJECUTADO_T02="Pre Ejecutado";						
+		public static final String ESTADO_EJECUTADO_T02="Ejecutado";					
+		public static final String ESTADO_REVOCADO_T02="Revocado";						
+		public static final String ESTADO_EN_REVISION_T02="En revisión";	
+		
 	}
 	static public class MONEDAS {
 		public static final String COD_SOLES = "0001";
@@ -176,6 +210,9 @@ public class ConstantesVisado {
 		public static final String SOLES = "SOLES";
 		public static final String DOLARES = "DOLARES";
 		public static final String EUROS = "EUROS";
+		public static final String PREFIJO_SOLES = "“PEN S/.”";
+		public static final String PREFIJO_DOLAR = "“USD $/.”";
+		public static final String PREFIJO_EURO = "“EUR /.”";
 	}
 	
 		public static final int DOCUMENTO_OBLIGATORIO = 1;
