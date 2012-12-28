@@ -26,7 +26,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private Timestamp fechaEnvio;
 	private Timestamp fechaEstado;
 	private String moneda;
-
+    private String sImporteMoneda;
 	private Timestamp fechaRespuesta;
 
 	private double comision;
@@ -243,6 +243,14 @@ public class TiivsSolicitud implements java.io.Serializable {
 
 	public void setDescEstado(String descEstado) {
 		this.descEstado = descEstado;
+	}
+
+	public String getsImporteMoneda() {
+		return sImporteMoneda;
+	}
+
+	public void setsImporteMoneda(String sImporteMoneda) {
+		this.sImporteMoneda = sImporteMoneda;
 	}
 
 }
