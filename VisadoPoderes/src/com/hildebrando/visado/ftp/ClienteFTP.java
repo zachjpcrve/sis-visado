@@ -75,6 +75,7 @@ public class ClienteFTP
 			fis = new FileInputStream(ruta+file);
 			ftpCliente.setFileType(FTP.BINARY_FILE_TYPE);
 			ftpCliente.setFileTransferMode(FTP.BINARY_FILE_TYPE);
+			ftpCliente.enterLocalPassiveMode();
 			ftpCliente.storeFile(file, fis);
 			
 		} catch (IOException e) {
@@ -101,7 +102,8 @@ public class ClienteFTP
 		{
 			fis = new FileInputStream(ruta);
 			ftpCliente.setFileType(FTP.BINARY_FILE_TYPE);
-			ftpCliente.setFileTransferMode(FTP.BINARY_FILE_TYPE);			
+			ftpCliente.setBufferSize(4096);
+			ftpCliente.setFileTransferMode(FTP.BINARY_FILE_TYPE);
 			ftpCliente.storeFile(file, fis);
 			
 		} catch (IOException e) {
@@ -128,5 +130,36 @@ public class ClienteFTP
 		} catch (IOException e) {
             e.printStackTrace();
         }
+	}
+
+	public void deleteFiles(List<String> aliasArchivos) {
+		
+		try {
+			System.out.println("Numero de ficheros a eliminar:"+aliasArchivos.size());
+			for(String archivo : aliasArchivos){
+				System.out.println("Eliminando fichero:" + archivo);
+				ftpCliente.deleteFile(archivo);
+			}
+			ftpCliente.disconnect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void renombrarArchivos(List<String> fromFicheros,
+			List<String> toFicheros) {
+		try {	
+			System.out.println("Numero de ficheros a renombrar:"+fromFicheros.size());
+			for(int i=0;i<fromFicheros.size();i++){
+				String fromFichero = fromFicheros.get(i);
+				String toFichero = toFicheros.get(i);
+				System.out.println("Renombrando fichero:" + fromFichero + " a " + toFichero);
+				ftpCliente.rename(fromFichero, toFichero);
+			}
+			ftpCliente.disconnect();
+		} catch (IOException e) {
+            e.printStackTrace();
+        }
+		
 	}
 }
