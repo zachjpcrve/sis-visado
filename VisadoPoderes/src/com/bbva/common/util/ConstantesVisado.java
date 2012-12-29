@@ -31,6 +31,7 @@ public class ConstantesVisado {
 	public static final java.lang.String TIPO_DOCUMENTO_RUC = "RUC"; //COMISION
 	public static final java.lang.String TIPO_CLASIFICACION_FALLECIDO="Fallecido";//COMISION
 	public static final java.lang.String VALOR_TIPO_DOCUMENTO_OTROS="Otros";
+	public static final java.lang.String PREFIJO_OTROS="O";
 	
 	/*SAMIRA*/
 	public static final java.lang.String CODIGO_MULTITABLA_CLASIFICACION_PERSONA = "T13";
