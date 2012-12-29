@@ -5,17 +5,20 @@ public class DocumentoTipoSolicitudDTO {
 	private String documento;
 	private String obligacion;
 	private String alias;
+	private String aliasLabel;
 	private boolean bobligacion;
 	private String rutaDoc;
 
 	public DocumentoTipoSolicitudDTO(String item, String documento,
-			String obligacion, String alias) {
+			String obligacion, String alias, String aliasLabel) {
 		super();
 		this.item = item;
 		this.documento = documento;
 		this.obligacion = obligacion;
 		this.alias = alias;
 		this.bobligacion = Boolean.valueOf(obligacion);
+		this.aliasLabel = aliasLabel;
+		
 	}
 
 	public DocumentoTipoSolicitudDTO() {
@@ -69,4 +72,13 @@ public class DocumentoTipoSolicitudDTO {
 	public void setRutaDoc(String rutaDoc) {
 		this.rutaDoc = rutaDoc;
 	}
+
+	public String getAliasLabel() {
+		return aliasLabel;
+	}
+
+	public void setAliasLabel(String aliasLabel) {
+		this.aliasLabel = aliasLabel;
+	}
+	
 }
