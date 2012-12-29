@@ -15,7 +15,7 @@ public class TiivsTipoSolicDocumento implements java.io.Serializable {
 	private String desDoc;
 	private char activo;
 	private char obligatorio;
-	private Set tiivsAnexoSolicituds = new HashSet(0);
+//	private Set tiivsAnexoSolicituds = new HashSet(0);
 
 	public TiivsTipoSolicDocumento() {
 	}
@@ -30,7 +30,7 @@ public class TiivsTipoSolicDocumento implements java.io.Serializable {
 		this.obligatorio = obligatorio;
 	}
 
-	public TiivsTipoSolicDocumento(String codDoc,
+	/*public TiivsTipoSolicDocumento(String codDoc,
 			TiivsTipoSolicitud tiivsTipoSolicitud, String desDoc, char activo,
 			char obligatorio, Set tiivsAnexoSolicituds) {
 		this.codDoc = codDoc;
@@ -39,7 +39,7 @@ public class TiivsTipoSolicDocumento implements java.io.Serializable {
 		this.activo = activo;
 		this.obligatorio = obligatorio;
 		this.tiivsAnexoSolicituds = tiivsAnexoSolicituds;
-	}
+	}*/
 
 	public String getCodDoc() {
 		return this.codDoc;
@@ -81,12 +81,12 @@ public class TiivsTipoSolicDocumento implements java.io.Serializable {
 		this.obligatorio = obligatorio;
 	}
 
-	public Set getTiivsAnexoSolicituds() {
+	/*public Set getTiivsAnexoSolicituds() {
 		return this.tiivsAnexoSolicituds;
 	}
 
 	public void setTiivsAnexoSolicituds(Set tiivsAnexoSolicituds) {
 		this.tiivsAnexoSolicituds = tiivsAnexoSolicituds;
-	}
+	}*/
 
 }
