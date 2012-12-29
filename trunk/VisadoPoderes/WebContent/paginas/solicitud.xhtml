@@ -6,6 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+
+		
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
 		<h:panelGrid columns="5">
@@ -32,10 +34,14 @@
 			</p:toolbar>
 
 		</h:panelGrid>
-		
+
+	<h:outputScript library="js" name="visado.js" target="head" />			
+  
 	<h:form id="formSolicitudRegistro" enctype="multipart/form-data">
 			<p:messages id="idMsmSolicitudRegistro"></p:messages>
-
+		
+		
+			
 		<table border="0" width="680">
 			<tbody>
 				<tr>
@@ -287,12 +293,13 @@
                                                                 update="idfileUpload"  
                                                                  auto="false"  
                                                                  sizeLimit="100000"   
-                                                                 allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/"/>  
+                                                                 allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|doc?x)$/"/>  
   
 										                    </td>
 
 														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro" ajax="false"
-														action="#{solicitudRegMB.agrearDocumentosXTipoSolicitud}"  /></td>
+														action="#{solicitudRegMB.agregarDocumentosXTipoSolicitud}"  /></td>
+														<td><p:commandButton id="btnRenombrar" value="Renombrar"  action="#{solicitudRegMB.renombrarArchivos}"  /></td>
 													</tr>
 													<tr>
 														<td width="95%" colspan="11">
@@ -312,10 +319,10 @@
 																<p:column headerText="Obligatorio">
 																	<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>																	
 																</p:column>
-																<p:column headerText="Archivo" >																																																			
-																	<p:commandLink>
-																		<h:outputText>#{s.alias}</h:outputText>
-																	</p:commandLink>																	
+																<p:column headerText="Archivo" >
+																	<h:outputLink onclick="window.open('#{solicitudRegMB.urlServer}#{s.alias}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
+																		<h:outputText value="#{s.aliasLabel}" /> 
+																	</h:outputLink>																																																																																																																																						
 																</p:column>
 																<p:column headerText="Eliminar">
 																 	<p:commandButton 
@@ -515,6 +522,8 @@
 		
 		</h:form>
 		
+		
+		 
 		
 <h:form id="formBusqueda">
 		<p:dialog id="modalBusqueda" header="Busqueda Cliente/No Cliente" visible="#{solicitudRegMB.bBooleanPopup}"
