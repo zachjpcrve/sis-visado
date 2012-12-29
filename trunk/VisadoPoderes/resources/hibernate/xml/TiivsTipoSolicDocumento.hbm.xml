@@ -19,12 +19,6 @@
         </property>
         <property name="obligatorio" type="char">
             <column name="OBLIGATORIO" length="1" not-null="true" />
-        </property>
-        <set name="tiivsAnexoSolicituds" table="TIIVS_ANEXO_SOLICITUD" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="COD_DOC" length="7" not-null="true" />
-            </key>
-            <one-to-many class="com.hildebrando.visado.modelo.TiivsAnexoSolicitud" />
-        </set>
+        </property>       
     </class>
 </hibernate-mapping>
