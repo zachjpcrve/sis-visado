@@ -72,10 +72,10 @@ public class PDFViewerMB {
 		
 		for (TiivsParametros tmp: lstParametros)
 		{
-			urlPDF=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
+			urlPDF=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+"//"+
 						  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
 						  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
-						  File.separator+tmp.getCarpetaRemota();
+						  "/"+tmp.getCarpetaRemota();
 		}
 		return urlPDF;
 	}
@@ -192,6 +192,71 @@ public class PDFViewerMB {
 		System.out.println("Tamanio lista PDF: " + lstPDFEscaneados.size());
 	}
 	
+	
+	public String cargarUnicoPDF(String ruta)
+	{
+		String urlServer="";
+		String server="";
+		String loginServer="";
+		String passServer="";
+		String carpetaRemota="";
+		String dirLocal="";
+		String rutaResultante="";
+		
+	
+		if (lstParametros!=null) 
+		{
+			System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
+			
+			for (TiivsParametros tmp: lstParametros)
+			{
+				urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
+							  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
+							  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
+							  File.separator+tmp.getCarpetaRemota();
+					
+				dirLocal=ruta;
+				server=tmp.getServer();
+				loginServer=tmp.getLoginServer();
+				passServer=tmp.getPassServer();	
+				carpetaRemota=tmp.getCarpetaRemota();
+			}
+		}		
+		
+				
+		System.out.println("Parametros leidos de BD");
+		System.out.println("Dir Server: " + urlServer);
+		System.out.println("Dir Local: " + dirLocal);
+		System.out.println("Server: " + server);
+		System.out.println("Login Server:_" + loginServer);
+		System.out.println("Pass Server: " + passServer);
+		System.out.println("Carpeta Remota: " + carpetaRemota);
+		
+				
+		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
+		try {
+			cliente.setDirectorio(carpetaRemota);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		if (cliente!=null)
+		{
+			
+			File Listfile = new File(dirLocal);
+
+
+			cliente.upLoadOneFiles(Listfile.getName(),dirLocal);
+//			cliente.renombrarArchivo(nombreArchivo, Listfile.getName()); 
+			
+			rutaResultante=urlServer+Listfile.getName();
+			
+		}
+		
+		
+		return rutaResultante;
+	}
+	
 	public String cargarUnicoPDF(final String nombreArchivo, String ruta)
 	{
 		String urlServer="";
@@ -256,7 +321,8 @@ public class PDFViewerMB {
 			 
 			//File[] lista = Listfile.listFiles(filterPDF);
 			cliente.upLoadOneFiles(Listfile.getName(),dirLocal);
-			cliente.renombrarArchivo(nombreArchivo, Listfile.getName());
+//			cliente.renombrarArchivo(nombreArchivo, Listfile.getName()); eramos
+			
 /*//			for (int i = 0; i < lista.length; i++) 
 //			{
 //				//String codDocumento = buscarTipoDocByNombre(lista[i].getName());
@@ -563,5 +629,137 @@ public class PDFViewerMB {
 
 	public void setAliasArchivo(String aliasArchivo) {
 		this.aliasArchivo = aliasArchivo;
+	}
+
+	public void eliminarArchivos(List<String> aliasArchivos) {
+		
+		
+		String urlServer="";
+		String server="";
+		String loginServer="";
+		String passServer="";
+		String carpetaRemota="";
+		String dirLocal="";
+		String rutaResultante="";
+		
+		//String codUsuario="P014773";
+		
+		//String dirPDF = "ftp://hilde:$i$tema$2012@10.172.0.4/VISADO/PDF/";
+		
+		if (lstParametros!=null) 
+		{
+			System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
+			
+			for (TiivsParametros tmp: lstParametros)
+			{
+				urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
+							  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
+							  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
+							  File.separator+tmp.getCarpetaRemota();
+					
+//				dirLocal=ruta;
+				server=tmp.getServer();
+				loginServer=tmp.getLoginServer();
+				passServer=tmp.getPassServer();	
+				carpetaRemota=tmp.getCarpetaRemota();
+			}
+		}		
+		
+				
+		System.out.println("Parametros leidos de BD");
+		System.out.println("Dir Server: " + urlServer);
+		System.out.println("Dir Local: " + dirLocal);
+		System.out.println("Server: " + server);
+		System.out.println("Login Server:_" + loginServer);
+		System.out.println("Pass Server: " + passServer);
+		System.out.println("Carpeta Remota: " + carpetaRemota);
+		
+		
+		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
+		try {
+			cliente.setDirectorio(carpetaRemota);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		if (cliente!=null)
+		{
+			
+//			File Listfile = new File(dirLocal);
+
+
+			cliente.deleteFiles(aliasArchivos);
+//			cliente.upLoadOneFiles(Listfile.getName(),dirLocal);
+//			cliente.renombrarArchivo(nombreArchivo, Listfile.getName()); 
+			
+//			rutaResultante=urlServer+Listfile.getName();
+			
+		}
+		
+	}
+
+	public void renombrarFiles(List<String> fromFicheros, List<String> toFicheros) {
+		String urlServer="";
+		String server="";
+		String loginServer="";
+		String passServer="";
+		String carpetaRemota="";
+		String dirLocal="";
+		String rutaResultante="";
+		
+		//String codUsuario="P014773";
+		
+		//String dirPDF = "ftp://hilde:$i$tema$2012@10.172.0.4/VISADO/PDF/";
+		
+		if (lstParametros!=null) 
+		{
+			System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
+			
+			for (TiivsParametros tmp: lstParametros)
+			{
+				urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
+							  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
+							  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
+							  File.separator+tmp.getCarpetaRemota();
+					
+//				dirLocal=ruta;
+				server=tmp.getServer();
+				loginServer=tmp.getLoginServer();
+				passServer=tmp.getPassServer();	
+				carpetaRemota=tmp.getCarpetaRemota();
+			}
+		}		
+		
+				
+		System.out.println("Parametros leidos de BD");
+		System.out.println("Dir Server: " + urlServer);
+		System.out.println("Dir Local: " + dirLocal);
+		System.out.println("Server: " + server);
+		System.out.println("Login Server:_" + loginServer);
+		System.out.println("Pass Server: " + passServer);
+		System.out.println("Carpeta Remota: " + carpetaRemota);
+		
+		
+		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
+		try {
+			cliente.setDirectorio(carpetaRemota);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		if (cliente!=null)
+		{
+			
+//			File Listfile = new File(dirLocal);
+
+
+//			cliente.deleteFiles(aliasArchivos);
+//			cliente.upLoadOneFiles(Listfile.getName(),dirLocal);
+			cliente.renombrarArchivos(fromFicheros, toFicheros); 
+			
+//			rutaResultante=urlServer+Listfile.getName();
+			
+		}
+		
 	}
 }
