@@ -280,14 +280,20 @@
 													<tr>
 														<td><h:outputText styleClass="outputText" id="text19"
 																value="Documentos:"></h:outputText></td>
-														<td><p:selectOneMenu   styleClass="selectOneListbox" style="width:100%" value="#{solicitudRegMB.sCodDocumento}"
-																id="listDocumentosXTipoSoli" size="1">
-																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-																<f:selectItems value="#{solicitudRegMB.lstTipoSolicitudDocumentos}" var="lOf" itemValue="#{lOf.codDoc}" itemLabel="#{lOf.desDoc.substring(0, lOf.desDoc.length() > 30 ? 30 : lOf.desDoc.length())}" />
-																<f:selectItem itemLabel="Otros" itemValue="Otros" />
+														<td><p:selectOneMenu   styleClass="selectOneListbox" style="width:100%" value="#{solicitudRegMB.selectedTipoDocumento}"
+																id="listDocumentosXTipoSoli" size="1" var="p" converter="tipoSolicitudDocumentoConverter" 																
+																filter="true" filterMatchMode="startswith">
+																<f:selectItem itemLabel="-Seleccione-" itemValue="" />																
+																<f:selectItems value="#{solicitudRegMB.lstTipoSolicitudDocumentos}" var="lOf" itemValue="#{lOf}" itemLabel="#{lOf.codDoc}" />
+																<p:column>  
+													                <p:graphicImage value="/resources/images/#{p.obligatorio == 49 ? 'oblig.png' : 'nooblig.png'}" width="20" height="20"/>  
+													            </p:column>  													  
+													            <p:column>  
+													                #{p.desDoc.substring(0, p.desDoc.length() > 30 ? 30 : p.desDoc.length())}
+													            </p:column>													            
+													            <f:selectItem itemLabel="Otros" itemValue="Otros" />															
 											               </p:selectOneMenu></td>
-															   <td> 
-															   
+															   <td> 															   
                                                                <p:fileUpload value="#{solicitudRegMB.file}"  id="idfileUpload"
                                                                 mode="simple" 
                                                                 update="idfileUpload"  
@@ -298,8 +304,8 @@
 										                    </td>
 
 														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro" ajax="false"
-														action="#{solicitudRegMB.agregarDocumentosXTipoSolicitud}"  /></td>
-														<td><p:commandButton id="btnRenombrar" value="Renombrar"  action="#{solicitudRegMB.renombrarArchivos}"  /></td>
+														action="#{solicitudRegMB.agregarDocumentosXTipoSolicitud}"/></td>
+														
 													</tr>
 													<tr>
 														<td width="95%" colspan="11">
@@ -331,7 +337,7 @@
 																 		id="iconOnly" icon="ui-icon-circle-close"
 																 		disabled="#{s.alias.isEmpty()?true:false}">
 																 		<f:setPropertyActionListener
-																			target="#{solicitudRegMB.selectedDocumento}" value="#{s}"
+																			target="#{solicitudRegMB.selectedDocumentoDTO}" value="#{s}"
 																			for="del">
 																		</f:setPropertyActionListener>	
 																 	</p:commandButton> 																																	
