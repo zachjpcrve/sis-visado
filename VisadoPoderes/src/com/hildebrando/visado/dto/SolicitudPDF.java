@@ -1,7 +1,11 @@
 package com.hildebrando.visado.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 public class SolicitudPDF implements Serializable 
 {
@@ -11,7 +15,13 @@ public class SolicitudPDF implements Serializable
 	private String comision;
 	private String oficina;
 	private String importe;
-		
+	private  JRDataSource PERSONADS;
+	private List<PersonaPDF> lstPersonas=new ArrayList<PersonaPDF>();	
+	
+	
+	public JRDataSource getPERSONADS() {
+		return new JRBeanCollectionDataSource(lstPersonas); 
+	}
 	public String getCodSoli() {
 		return codSoli;
 	}
@@ -47,5 +57,12 @@ public class SolicitudPDF implements Serializable
 	}
 	public void setImporte(String importe) {
 		this.importe = importe;
+	}
+	public List<PersonaPDF> getLstPersonas() {
+		return lstPersonas;
+	}
+
+	public void setLstPersonas(List<PersonaPDF> lstPersonas) {
+		this.lstPersonas = lstPersonas;
 	}
 }

@@ -1,6 +1,11 @@
 package com.hildebrando.visado.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 public class PersonaPDF implements Serializable 
 {
@@ -11,7 +16,8 @@ public class PersonaPDF implements Serializable
 	private String celular;
 	private String email;
 	private String estado;
-		
+
+	
 	public String getNumDOI() {
 		return numDOI;
 	}
@@ -54,4 +60,8 @@ public class PersonaPDF implements Serializable
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
+
+
+	
+	
 }
