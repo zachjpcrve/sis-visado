@@ -18,9 +18,30 @@
             			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
 
 	<context:component-scan base-package="org.springannotations.web" />
-	
+	<context:component-scan base-package="com.hildebrando.visado.controller"></context:component-scan>  
 	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
-
+	
+	<!-- <bean id="exampleReportPdf" class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView">
+	<property name="jdbcDataSource"><ref local="dataSource"/></property>
+	<property name="url">
+	<value>classpath:/jasper/SolVisado.jrxml</value>
+	</property>
+	<property name="subReportUrls">
+	<map>
+	<entry key="Apoderado">
+	<value>classpath:/jasper/Apoderado.jasper</value>
+	</entry>
+	</map>
+	</property>
+	</bean> -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+		<property name="basename"  value="/properties/jasper" />
+	</bean>  
+	
+	<!-- <bean id="viewResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+		<property name="basename" value="/properties/jasper" />
+	</bean>  -->
+	
 	<bean id="initLogging" name="initLogging"
 		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
 		autowire="byName">
