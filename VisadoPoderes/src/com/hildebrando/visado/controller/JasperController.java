@@ -8,6 +8,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRField;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
@@ -32,6 +34,7 @@ public class JasperController {
     @RequestMapping(value="/download/reportPDF.htm", method=RequestMethod.GET)
     public String generarReportePDF(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request) 
     {
+    	log.info("generarReportePDF : ");
     	/*List<Log4jdata> lista = new ArrayList<Log4jdata>();
         HttpSession session=request.getSession(true);
         
@@ -70,7 +73,7 @@ public class JasperController {
     	
 	    listPersonas.add(persona);
 	    listPersonas.add(persona2);
-	    	
+	    	cabecera.get(0).setLstPersonas(listPersonas);
     	/*//Cabecera del reporte
     	List<TiivsSolicitud> cabecera = new ArrayList<TiivsSolicitud>();
     	TiivsSolicitud tmp= new TiivsSolicitud();
@@ -216,12 +219,15 @@ public class JasperController {
         response.setHeader("Content-Disposition","attachment; filename=\"SolVisado.pdf\"");
 		
         JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
-        JRBeanCollectionDataSource objPer = new JRBeanCollectionDataSource(listPersonas, false);
+    
+        JRDataSource PERSONADS = new JRBeanCollectionDataSource(listPersonas, false);
+        
         //JRBeanCollectionDataSource objDoc = new JRBeanCollectionDataSource(listTiposDoc, false);
         //JRBeanCollectionDataSource objOpeBan = new JRBeanCollectionDataSource(listOpeBan, false);
         
         modelMap.put("dataKey", objCab);
-        modelMap.put("dataKey", objPer);
+      //  modelMap.put("PERSONADS", PERSONADS);
+       // modelMap.put("dataKey", PERSONADS);
         //modelMap.put("dataKey", objDoc);
         //modelMap.put("dataKey", objOpeBan);
 		//modelMap.put("dataKey", jrbeanobjeto);
