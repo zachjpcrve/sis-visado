@@ -169,35 +169,7 @@ public class SolicitudRegistroMB {
 		lstTiivsPersona.remove(objTiivsPersonaCapturado);
 		objTiivsPersonaCapturado = new TiivsPersona();
 		this.flagUpdatePersona = false;
-	}
-
-	/*
-	 * public void handleFileUpload(FileUploadEvent event) { FacesMessage msg =
-	 * new FacesMessage("Succesful", event.getFile().getFileName() +
-	 * " is uploaded."); FacesContext.getCurrentInstance().addMessage(null,
-	 * msg); System.out.println(event.getComponent());
-	 * System.out.println(event.getFile().getFileName());
-	 * 
-	 * System.out.println(event.getComponent().getId()); }
-	 */
-	public void uploadUnicoPDF() {
-
-		if (file != null) {
-			System.out.println("file : " + file.getFileName());
-			FacesMessage msg = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
-			System.out.println("file : " + file.getFileName());
-
-			String aliasArchivo = "";
-			String extension = file.getFileName().substring(file.getFileName().lastIndexOf("."));
-//			aliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_" 	+ sCodDocumento + extension;
-			aliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_" 	+ selectedTipoDocumento + extension;			
-
-			System.out.println("aliasArchivo : " + aliasArchivo);
-			System.out.println("file.getFileName() : " + file.getFileName());
-			String ruta = pdfViewerMB.cargarUnicoPDF(aliasArchivo,	file.getFileName());
-		}
-	}
+	}		
 
 	public boolean cargarUnicoPDF() {
 		
@@ -227,15 +199,13 @@ public class SolicitudRegistroMB {
 			String extension = fichTemp.getName().substring(fichTemp.getName().lastIndexOf("."));
 			this.aliasArchivo = this.aliasArchivo + extension; 
 
-			System.out.println("aliasArchivo : " + this.aliasArchivo);
-			System.out.println("file.getFileName() : " + fichTemp.getName());
-			System.out.println("file.getFileName() : " + ubicacionTemporal2);
-//			String ruta = pdfViewerMB.cargarUnicoPDF(this.aliasArchivo,	ubicacionTemporal2);
+//			System.out.println("aliasArchivo : " + this.aliasArchivo);
+//			System.out.println("file.getFileName() : " + fichTemp.getName());
+//			System.out.println("file.getFileName() : " + ubicacionTemporal2);
 			String ruta = pdfViewerMB.cargarUnicoPDF(ubicacionTemporal2);
 			
 			this.aliasArchivo = fichTemp.getName();
-			
-			
+						
 			if (ruta.compareTo("")!=0)
 			{
 				System.out.println("subio");
@@ -279,13 +249,9 @@ public class SolicitudRegistroMB {
 		filtroTipoSolcDoc.addOrder(Order.desc("obligatorio"));
 		try {
 			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO
-					.buscarDinamico(filtroTipoSolcDoc);
-			// ArrayList<TiivsTipoSolicDocumento> copia = ((ArrayList)
-			// lstDocumentosXTipoSolTemp);
+					.buscarDinamico(filtroTipoSolcDoc);			
 			lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstDocumentosXTipoSolTemp)
 					.clone();
-
-			// lstTipoSolicitudDocumentos = this.lstDocumentosXTipoSolTemp;
 
 			actualizarListadoDocumentos();
 
@@ -310,7 +276,7 @@ public class SolicitudRegistroMB {
 						s.getDesDoc(), true + "", "",""));
 			} else {
 				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getCodDoc(),
-						s.getDesDoc(), false + "", "",""));// eramos
+						s.getDesDoc(), false + "", "",""));
 			}
 		}
 
@@ -321,8 +287,6 @@ public class SolicitudRegistroMB {
 		for(TiivsAnexoSolicitud a : lstAnexoSolicitud){	
 			aliasFilesToDelete.add(a.getAliasArchivo());
 		}				
-//		pdfViewerMB.eliminarArchivos(aliasFilesToDelete);
-//		aliasFilesToDelete = new ArrayList<String>();
 	}
 
 	public void obtenerPersonaSeleccionada() {
@@ -838,8 +802,6 @@ public class SolicitudRegistroMB {
 
 	public void actualizarListaDocumentosXTipo() {
 		logger.info("****************************** actualizarListaDocumentosXTipo *********************************");
-//		if (sCodDocumento.contains(ConstantesVisado.PREFIJO_OTROS)) {		
-//		String codDocumento = selectedTipoDocumento.getCodDoc();
 		if (sCodDocumento.contains(ConstantesVisado.PREFIJO_OTROS)) {
 			String sAliasLabel = solicitudRegistrarT.getCodSoli()+"_"+sCodDocumento + aliasArchivo.substring(aliasArchivo.lastIndexOf("."));
 			DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO(sCodDocumento,ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS, false + "", this.aliasArchivo,sAliasLabel); 
@@ -914,23 +876,17 @@ public class SolicitudRegistroMB {
 
 		if (this.ValidarDocumentosDuplicados()) {
 												
-			String codigoDocumento="";
 			if (sCodDocumento.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
-				codigoDocumento = ConstantesVisado.PREFIJO_OTROS+String.format("%06d", lstdocumentos.size() + 1);
-				sCodDocumento = codigoDocumento;
+				sCodDocumento = ConstantesVisado.PREFIJO_OTROS+String.format("%06d", lstdocumentos.size() + 1);
 			} 
 			
 			this.aliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_" + sCodDocumento;
 						
-			logger.info("aliasArchivo *** " + this.aliasArchivo);
-			System.out.println("aliasArchivo *** " + this.aliasArchivo);
-			
+			logger.info("aliasArchivo *** " + this.aliasArchivo);			
 			if(!cargarUnicoPDF()){				
 				return;
 			}			
-			logger.info("aliasArchivo *** " + this.aliasArchivo);
-			System.out.println("aliasArchivo *** " + this.aliasArchivo);
-			
+			logger.info("aliasArchivo *** " + this.aliasArchivo);			
 			
 			TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
 			objAnexo.setId(new TiivsAnexoSolicitudId(this.solicitudRegistrarT.getCodSoli(), sCodDocumento));
@@ -950,20 +906,15 @@ public class SolicitudRegistroMB {
 	}
 
 	public void quitarDocumentosXTipoSolicitud() {
-		logger.info(" ************************** quitarDocumentosXTipoSolicitud  ****************************** ");
+		logger.info(" ************************** quitarDocumentosXTipoSolicitud()  ****************************** ");
 		logger.info("iTipoSolicitud  : " + iTipoSolicitud);
 		logger.info("lstAnexoSolicitud.size() :  " + lstAnexoSolicitud.size());
-		System.out
-				.println(" ************************** quitarDocumentosXTipoSolicitud  ****************************** ");
-		System.out.println("iTipoSolicitud  : " + iTipoSolicitud);
-		System.out.println("lstAnexoSolicitud.size() :  " + lstAnexoSolicitud.size());
-		System.out.println("selected documento :  item="+ this.selectedDocumentoDTO.getItem() + " documento=" + this.selectedDocumentoDTO.getDocumento() + " otros=" + this.selectedDocumentoDTO.getAlias());
-
+		logger.info("SelectedTipoDocumento : " + this.selectedDocumentoDTO.getItem());
+		
 		if (this.selectedDocumentoDTO.getAlias().isEmpty()) {
 			return;
 		}
-
-		// anexos
+		
 		for (TiivsAnexoSolicitud anexo : lstAnexoSolicitud) {
 			if (anexo.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {
 				lstAnexoSolicitud.remove(anexo);
@@ -972,7 +923,7 @@ public class SolicitudRegistroMB {
 			}
 		}
 
-		// listado checkbox
+		// Para el llenado del listado (listBox)
 		int i = 0;
 		for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
 			if (s.getCodDoc().equals(selectedDocumentoDTO.getItem())) {
@@ -994,11 +945,7 @@ public class SolicitudRegistroMB {
 				break;
 			}			
 		}
-
-		System.out.println(" ************************** quitarDocumentosXTipoSolicitud - result  ****************************** ");
-		System.out.println("lstAnexoSolicitud.size()  : " + lstAnexoSolicitud.size());
-		System.out.println("lstTipoSolicitudDocumentos.size() :  " + lstTipoSolicitudDocumentos.size());
-		System.out.println("selected lstdocumentos.size() :  " + lstdocumentos.size());
+		
 	}
 	
 
@@ -1529,6 +1476,29 @@ public class SolicitudRegistroMB {
 
 		return cadFinal;
 	}
+	
+	
+	public void renombrarArchivos(){
+		logger.info("************renombrarArchivos()*¨**************");
+		List<String> fromficheros = new ArrayList<String>();
+		List<String> toFricheros = new ArrayList<String>();	
+		
+		for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){
+			fromficheros.add(anexo.getAliasArchivo());
+			String extension = anexo.getAliasArchivo().substring(anexo.getAliasArchivo().lastIndexOf("."));
+			toFricheros.add(anexo.getId().getCodSoli()+"_"+anexo.getId().getCodDoc()+extension);
+			anexo.setAliasArchivo(anexo.getId().getCodSoli()+"_"+anexo.getId().getCodDoc()+extension);
+		}
+		pdfViewerMB.renombrarFiles(fromficheros,toFricheros);
+	}
+	
+	
+	public void eliminarArchivosTemporales() {	
+		logger.info("************eliminarArchivosTemporales()*¨**************");
+		logger.info("Archivos a eliminar:" + aliasFilesToDelete.size()); 
+		pdfViewerMB.eliminarArchivos(aliasFilesToDelete);
+		aliasFilesToDelete = new ArrayList<String>();		
+	}
 
 	public List<TiivsMultitabla> getLstMultitabla() {
 		return lstMultitabla;
@@ -1816,8 +1786,6 @@ public class SolicitudRegistroMB {
 		this.urlServer = urlServer;
 	}
 	
-	
-	
 	public TiivsTipoSolicDocumento getSelectedTipoDocumento() {
 		return selectedTipoDocumento;
 	}
@@ -1825,27 +1793,6 @@ public class SolicitudRegistroMB {
 	public void setSelectedTipoDocumento(
 			TiivsTipoSolicDocumento selectedTipoDocumento) {
 		this.selectedTipoDocumento = selectedTipoDocumento;
-	}
-
-	public void renombrarArchivos(){
-		List<String> fromficheros = new ArrayList<String>();
-		List<String> toFricheros = new ArrayList<String>();	
-		
-		for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){
-			fromficheros.add(anexo.getAliasArchivo());
-			String extension = anexo.getAliasArchivo().substring(anexo.getAliasArchivo().lastIndexOf("."));
-			toFricheros.add(anexo.getId().getCodSoli()+"_"+anexo.getId().getCodDoc()+extension);
-			anexo.setAliasArchivo(anexo.getId().getCodSoli()+"_"+anexo.getId().getCodDoc()+extension);
-		}
-		pdfViewerMB.renombrarFiles(fromficheros,toFricheros);
-	}
-	
-	
-	public void eliminarArchivosTemporales() {	
-		logger.info("*******eliminarArchivosTemporales()*¨**************");
-		logger.info("Archivos a eliminar:" + aliasFilesToDelete.size()); 
-		pdfViewerMB.eliminarArchivos(aliasFilesToDelete);
-		aliasFilesToDelete = new ArrayList<String>();		
-	}
+	}	
 
 }
