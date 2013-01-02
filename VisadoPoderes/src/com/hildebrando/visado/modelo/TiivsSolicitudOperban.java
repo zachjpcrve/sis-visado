@@ -8,11 +8,11 @@ public class TiivsSolicitudOperban implements java.io.Serializable {
     private String sItem;
 	private TiivsSolicitudOperbanId id;
 	private TiivsOperacionBancaria tiivsOperacionBancaria;
-	private double importe;
+	private Double importe;
 	private String moneda;
 	private String sDescMoneda;
-	private double tipoCambio;
-	private double importeSoles;
+	private Double tipoCambio;
+	private Double importeSoles;
 
 	public TiivsSolicitudOperban() {
 	}
@@ -24,8 +24,8 @@ public class TiivsSolicitudOperban implements java.io.Serializable {
 	}
 
 	public TiivsSolicitudOperban(TiivsSolicitudOperbanId id,
-			TiivsOperacionBancaria tiivsOperacionBancaria, double importe,
-			String moneda, double tipoCambio) {
+			TiivsOperacionBancaria tiivsOperacionBancaria, Double importe,
+			String moneda, Double tipoCambio) {
 		this.id = id;
 		this.tiivsOperacionBancaria = tiivsOperacionBancaria;
 		this.importe = importe;
@@ -50,11 +50,11 @@ public class TiivsSolicitudOperban implements java.io.Serializable {
 		this.tiivsOperacionBancaria = tiivsOperacionBancaria;
 	}
 
-	public double getImporte() {
+	public Double getImporte() {
 		return this.importe;
 	}
 
-	public void setImporte(double importe) {
+	public void setImporte(Double importe) {
 		this.importe = importe;
 	}
 
@@ -66,19 +66,19 @@ public class TiivsSolicitudOperban implements java.io.Serializable {
 		this.moneda = moneda;
 	}
 
-	public double getTipoCambio() {
+	public Double getTipoCambio() {
 		return this.tipoCambio;
 	}
 
-	public void setTipoCambio(double tipoCambio) {
+	public void setTipoCambio(Double tipoCambio) {
 		this.tipoCambio = tipoCambio;
 	}
 
-	public double getImporteSoles() {
+	public Double getImporteSoles() {
 		return importeSoles;
 	}
 
-	public void setImporteSoles(double importeSoles) {
+	public void setImporteSoles(Double importeSoles) {
 		this.importeSoles = importeSoles;
 	}
 
