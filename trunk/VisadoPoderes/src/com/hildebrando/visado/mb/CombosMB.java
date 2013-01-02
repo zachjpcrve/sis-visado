@@ -25,11 +25,13 @@ import com.hildebrando.visado.dto.Moneda;
 import com.hildebrando.visado.dto.RangosImporte;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.dto.TiposFecha;
+import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
+import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
 import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
 import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
@@ -53,14 +55,14 @@ public class CombosMB {
 	private List<TiivsOficina1> lstOficina;
 	private List<Moneda> lstMoneda;
 	private List<TipoDocumento> lstTipoDocumentos;
+	private List<TiivsAgrupacionPersona> lstTiposPersona;
+	private List<TiivsSolicitudOperban> lstSolOperBan;
 	private Map<String, String> estados;
 	private Map<String, String> estadosNivel;
-	
 	private List<ComboDto> lstClasificacionPersona;
 	private List<ComboDto> lstTipoRegistroPersona;
 
 	private List<TiivsTipoSolicitud> lstTipoSolicitud;
-	
 	
 	public CombosMB() {
 		lstMultitabla = new ArrayList<TiivsMultitabla>();
@@ -80,6 +82,7 @@ public class CombosMB {
 		lstClasificacionPersona=new ArrayList<ComboDto>();
 		lstTipoRegistroPersona=new ArrayList<ComboDto>();
 		lstTipoSolicitud=new ArrayList<TiivsTipoSolicitud>();
+		lstSolOperBan= new ArrayList<TiivsSolicitudOperban>();
 		
 		cargarMultitabla();
 		cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
@@ -94,371 +97,408 @@ public class CombosMB {
 		this.lstTipoDocumentos = lstTipoDocumentos;
 	}
 
-		// Descripcion: Metodo que se encarga de cargar los datos que se encuentran
-		// en la multitabla. Este metodo se llamara en el constructor
-		// de la clase para que este disponible al inicio.
-		// @Autor: Cesar La Rosa
-		// @Version: 1.0
-		// @param: -
-		public void cargarMultitabla() {
-			GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+	// Descripcion: Metodo que se encarga de cargar los datos que se encuentran
+	// en la multitabla. Este metodo se llamara en el constructor
+	// de la clase para que este disponible al inicio.
+	// @Autor: Cesar La Rosa
+	// @Version: 1.0
+	// @param: -
+	public void cargarMultitabla() {
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
 
-			try {
-				lstMultitabla = multiDAO.buscarDinamico(filtroMultitabla);
-			} catch (Exception e) {
-				logger.debug("Error al cargar el listado de multitablas");
-			}
+		try {
+			lstMultitabla = multiDAO.buscarDinamico(filtroMultitabla);
+		} catch (Exception e) {
+			logger.debug("Error al cargar el listado de multitablas");
 		}
+	}
 
 	// Descripcion: Metodo que se encarga de cargar los combos que se mostraran
-		// en la pantalla de Bandeja de solicitudes
-		// de acuerdo a la lista de la multitabla previamente cargada.
-		// @Autor: Cesar La Rosa
-		// @Version: 1.0
-		// @param: -
-		public void cargarCombosMultitabla(String codigo) {
-			logger.debug("Buscando valores en multitabla con codigo: " + codigo);
-			lstRangosImporte.clear();
-			lstEstado.clear();
-			lstEstadoNivel.clear();
-			lstTiposFecha.clear();
-			lstEstudio.clear();
-			lstNivel.clear();
-			lstOpeBancaria.clear();
-			lstTerritorio.clear();
-			lstOficina.clear();
-			lstClasificacionPersona.clear();
-			lstTipoRegistroPersona.clear();
+	// en la pantalla de Bandeja de solicitudes
+	// de acuerdo a la lista de la multitabla previamente cargada.
+	// @Autor: Cesar La Rosa
+	// @Version: 1.0
+	// @param: -
+	public void cargarCombosMultitabla(String codigo) {
+		logger.debug("Buscando valores en multitabla con codigo: " + codigo);
+		lstRangosImporte.clear();
+		lstEstado.clear();
+		lstEstadoNivel.clear();
+		lstTiposFecha.clear();
+		lstEstudio.clear();
+		lstNivel.clear();
+		lstOpeBancaria.clear();
+		lstTerritorio.clear();
+		lstOficina.clear();
+		lstClasificacionPersona.clear();
+		lstTipoRegistroPersona.clear();
 
-			for (TiivsMultitabla res : lstMultitabla) { 
-				//@Autor Samira
-				// Carga combo Clasificacion Persona
-				if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA)) {
-					ComboDto tmpComboClasi = new ComboDto();
-					tmpComboClasi.setKey(res.getId().getCodElem());
-					tmpComboClasi.setDescripcion(res.getValor1());
-					lstClasificacionPersona.add(tmpComboClasi);
-				}
+		for (TiivsMultitabla res : lstMultitabla) { 
+			//@Autor Samira
+			// Carga combo Clasificacion Persona
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA)) {
+				ComboDto tmpComboClasi = new ComboDto();
+				tmpComboClasi.setKey(res.getId().getCodElem());
+				tmpComboClasi.setDescripcion(res.getValor1());
+				lstClasificacionPersona.add(tmpComboClasi);
+			}
+			
+			//@Autor Samira
+			// Carga combo Tipo Registro Persona
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA)) {
+				ComboDto tmpCombo = new ComboDto();
+				tmpCombo.setKey(res.getId().getCodElem());
+				tmpCombo.setDescripcion(res.getValor1());
+				lstTipoRegistroPersona.add(tmpCombo);
+			}
+			
+			// Carga combo importes
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES)) {
+				RangosImporte tmpRangos = new RangosImporte();
+				tmpRangos.setCodigoRango(res.getId().getCodElem());
+				tmpRangos.setDescripcion(res.getValor1());
+				lstRangosImporte.add(tmpRangos);
+
 				
-				//@Autor Samira
-				// Carga combo Tipo Registro Persona
-				if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA)) {
-					ComboDto tmpCombo = new ComboDto();
-					tmpCombo.setKey(res.getId().getCodElem());
-					tmpCombo.setDescripcion(res.getValor1());
-					lstTipoRegistroPersona.add(tmpCombo);
+			}
+
+			// Carga combo estados
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS)) {
+				Estado tmpEstado = new Estado();
+				tmpEstado.setCodEstado(res.getId().getCodElem());
+				tmpEstado.setDescripcion(res.getValor1());
+				lstEstado.add(tmpEstado);
+
+				int j = 0;
+
+				for (; j <= lstEstado.size() - 1; j++) {
+					estados.put(lstEstado.get(j).getDescripcion(), lstEstado.get(j).getCodEstado());
 				}
+
 				
-				// Carga combo importes
-				if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES)) {
-					RangosImporte tmpRangos = new RangosImporte();
-					tmpRangos.setCodigoRango(res.getId().getCodElem());
-					tmpRangos.setDescripcion(res.getValor1());
-					lstRangosImporte.add(tmpRangos);
+			}
 
-					
+			// Carga combo estados Nivel
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS_NIVEL)) {
+				EstadosNivel tmpEstadoNivel = new EstadosNivel();
+				tmpEstadoNivel.setCodigoEstadoNivel(res.getId().getCodElem());
+				tmpEstadoNivel.setDescripcion(res.getValor1());
+				lstEstadoNivel.add(tmpEstadoNivel);
+
+
+				int j = 0;
+
+				for (; j <= lstEstadoNivel.size() - 1; j++) {
+					estadosNivel.put(lstEstadoNivel.get(j).getDescripcion(),
+							lstEstadoNivel.get(j).getCodigoEstadoNivel());
 				}
 
-				// Carga combo estados
-				if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS)) {
-					Estado tmpEstado = new Estado();
-					tmpEstado.setCodEstado(res.getId().getCodElem());
-					tmpEstado.setDescripcion(res.getValor1());
-					lstEstado.add(tmpEstado);
+				
+			}
 
-					int j = 0;
+			// Carga combo Tipos de fecha
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPOS_FECHA)) {
+				TiposFecha tmpTiposFecha = new TiposFecha();
+				tmpTiposFecha.setCodigoTipoFecha(res.getId().getCodElem());
+				tmpTiposFecha.setDescripcion(res.getValor1());
+				lstTiposFecha.add(tmpTiposFecha);
 
-					for (; j <= lstEstado.size() - 1; j++) {
-						estados.put(lstEstado.get(j).getDescripcion(), lstEstado.get(j).getCodEstado());
-					}
+				
+			}
 
-					
-				}
+			// Carga lista de monedas
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_MONEDA)) {
+				Moneda tmpMoneda = new Moneda();
+				tmpMoneda.setCodMoneda(res.getId().getCodElem());
+				tmpMoneda.setDesMoneda(res.getValor1());
+				lstMoneda.add(tmpMoneda);
 
-				// Carga combo estados Nivel
-				if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS_NIVEL)) {
-					EstadosNivel tmpEstadoNivel = new EstadosNivel();
-					tmpEstadoNivel.setCodigoEstadoNivel(res.getId().getCodElem());
-					tmpEstadoNivel.setDescripcion(res.getValor1());
-					lstEstadoNivel.add(tmpEstadoNivel);
-
-
-					int j = 0;
-
-					for (; j <= lstEstadoNivel.size() - 1; j++) {
-						estadosNivel.put(lstEstadoNivel.get(j).getDescripcion(),
-								lstEstadoNivel.get(j).getCodigoEstadoNivel());
-					}
-
-					
-				}
-
-				// Carga combo Tipos de fecha
-				if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPOS_FECHA)) {
-					TiposFecha tmpTiposFecha = new TiposFecha();
-					tmpTiposFecha.setCodigoTipoFecha(res.getId().getCodElem());
-					tmpTiposFecha.setDescripcion(res.getValor1());
-					lstTiposFecha.add(tmpTiposFecha);
-
-					
-				}
-
-				// Carga lista de monedas
-				if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_MONEDA)) {
-					Moneda tmpMoneda = new Moneda();
-					tmpMoneda.setCodMoneda(res.getId().getCodElem());
-					tmpMoneda.setDesMoneda(res.getValor1());
-					lstMoneda.add(tmpMoneda);
-
-					
-				}
+				
+			}
 
 			// Carga combo Tipos de documento
-				if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC)) {
-					TipoDocumento tmpTipoDoc = new TipoDocumento();
-					tmpTipoDoc.setCodTipoDoc(res.getId().getCodElem());
-					tmpTipoDoc.setDescripcion(res.getValor1());
-					lstTipoDocumentos.add(tmpTipoDoc);
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC)) {
+				TipoDocumento tmpTipoDoc = new TipoDocumento();
+				tmpTipoDoc.setCodTipoDoc(res.getId().getCodElem());
+				tmpTipoDoc.setDescripcion(res.getValor1());
+				lstTipoDocumentos.add(tmpTipoDoc);
 
-					logger.debug("Tamanio lista de tipos de documento: "+ lstTipoDocumentos.size());
-				}
+				logger.debug("Tamanio lista de tipos de documento: "+ lstTipoDocumentos.size());
 			}
-			
-			logger.debug("Tamanio lista de Clasificacion de Personas: "+ lstClasificacionPersona.size());
-			logger.debug("Tamanio lista de Tipo de Registro de Personas: "+ lstTipoRegistroPersona.size());
-			logger.debug("Tamanio lista de importes: "+ lstRangosImporte.size());
-			logger.debug("Tamanio lista de estados: " + lstEstado.size());
-			logger.debug("Tamanio lista de estados nivel: "+ lstEstadoNivel.size());
-			logger.debug("Tamanio lista de estados: " + lstEstado.size());
-			logger.debug("Tamanio lista de tipos de fecha: "+ lstTiposFecha.size());
-			logger.debug("Tamanio lista de monedas: " + lstMoneda.size());
+		}
+		
+		logger.debug("Tamanio lista de Clasificacion de Personas: "+ lstClasificacionPersona.size());
+		logger.debug("Tamanio lista de Tipo de Registro de Personas: "+ lstTipoRegistroPersona.size());
+		logger.debug("Tamanio lista de importes: "+ lstRangosImporte.size());
+		logger.debug("Tamanio lista de estados: " + lstEstado.size());
+		logger.debug("Tamanio lista de estados nivel: "+ lstEstadoNivel.size());
+		logger.debug("Tamanio lista de estados: " + lstEstado.size());
+		logger.debug("Tamanio lista de tipos de fecha: "+ lstTiposFecha.size());
+		logger.debug("Tamanio lista de monedas: " + lstMoneda.size());
 
+	}
+	
+	
+	public void cargarCombosNoMultitabla(){
+		// Carga combo de Operacion Bancaria
+		GenericDao<TiivsOperacionBancaria, Object> openBanDAO = (GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroOpenBan = Busqueda.forClass(TiivsOperacionBancaria.class);
+       try {
+			lstOpeBancaria = openBanDAO.buscarDinamico(filtroOpenBan);
+			logger.debug("lstOpeBancaria size " + lstOpeBancaria.size());
+		} catch (Exception e) {
+			logger.debug("Error al cargar el listado de operaciones bancarias");
+		}
+
+		GenericDao<TiivsTipoSolicitud, Object> genTipoSolcDAO = (GenericDao<TiivsTipoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroTipoSolc = Busqueda.forClass(TiivsTipoSolicitud.class);
+
+		try {
+			lstTipoSolicitud = genTipoSolcDAO.buscarDinamico(filtroTipoSolc);
+			logger.debug(" lstTipoSolicitud.size() " +lstTipoSolicitud.size());
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("Error al cargar el listado de tipos de solicitud ");
 		}
 		
 		
-		public void cargarCombosNoMultitabla(){
-			// Carga combo de Operacion Bancaria
-			GenericDao<TiivsOperacionBancaria, Object> openBanDAO = (GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			Busqueda filtroOpenBan = Busqueda.forClass(TiivsOperacionBancaria.class);
-           try {
-				lstOpeBancaria = openBanDAO.buscarDinamico(filtroOpenBan);
-				logger.debug("lstOpeBancaria size " + lstOpeBancaria.size());
-			} catch (Exception e) {
-				logger.debug("Error al cargar el listado de operaciones bancarias");
-			}
+		// Carga combo de Territorio
+		GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroTerr = Busqueda.forClass(TiivsTerritorio.class);
 
-			GenericDao<TiivsTipoSolicitud, Object> genTipoSolcDAO = (GenericDao<TiivsTipoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			Busqueda filtroTipoSolc = Busqueda.forClass(TiivsTipoSolicitud.class);
+		try {
+			lstTerritorio = terrDAO.buscarDinamico(filtroTerr);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("Error al cargar el listado de territorios");
+		}
 
-			try {
-				lstTipoSolicitud = genTipoSolcDAO.buscarDinamico(filtroTipoSolc);
-				logger.debug(" lstTipoSolicitud.size() " +lstTipoSolicitud.size());
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.debug("Error al cargar el listado de tipos de solicitud ");
-			}
-			
-			
-			// Carga combo de Territorio
-			GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			Busqueda filtroTerr = Busqueda.forClass(TiivsTerritorio.class);
-
-			try {
-				lstTerritorio = terrDAO.buscarDinamico(filtroTerr);
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.debug("Error al cargar el listado de territorios");
-			}
-
-			// Carga combo de Oficinas
-			GenericDao<TiivsOficina1, Object> oficDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			Busqueda filtroOfi = Busqueda.forClass(TiivsOficina1.class);
-			filtroOfi.add(Restrictions.isNotNull("codTerr"));
-			filtroOfi.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_OFICINA));
-			try {
-				lstOficina = oficDAO.buscarDinamico(filtroOfi);
-				logger.debug("TAMANIOO DE LA LSTOFICIN EN EL COMBOMB " +lstOficina.size());
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.debug("Error al cargar el listado de oficinas");
-			}
-			
-			
-			
+		// Carga combo de Oficinas
+		GenericDao<TiivsOficina1, Object> oficDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroOfi = Busqueda.forClass(TiivsOficina1.class);
+		filtroOfi.add(Restrictions.isNotNull("codTerr"));
+		filtroOfi.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_OFICINA));
+		try {
+			lstOficina = oficDAO.buscarDinamico(filtroOfi);
+			logger.debug("TAMANIOO DE LA LSTOFICIN EN EL COMBOMB " +lstOficina.size());
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("Error al cargar el listado de oficinas");
+		}
 		
-		}
-
+		// Carga data de Agrupacion de Personas
+		GenericDao<TiivsAgrupacionPersona, Object> agrupPerDAO = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroPer = Busqueda.forClass(TiivsAgrupacionPersona.class);
+		filtroPer.addOrder(Order.asc(ConstantesVisado.CAMPO_ID_CODIGO_SOLICITUD_ALIAS));
 		
-
-
-		public List<TiivsMultitabla> getLstMultitabla() {
-			return lstMultitabla;
+		try {
+			lstTiposPersona = agrupPerDAO.buscarDinamico(filtroPer);
+			logger.debug("TAMANIOO DE LOS TIPOS DE PERSONA EN EL COMBOMB " +lstTiposPersona.size());
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("Error al cargar el listado de tipos de persona");
 		}
-
-
-		public void setLstMultitabla(List<TiivsMultitabla> lstMultitabla) {
-			this.lstMultitabla = lstMultitabla;
-		}
-
-
-		public List<RangosImporte> getLstRangosImporte() {
-			return lstRangosImporte;
-		}
-
-
-		public void setLstRangosImporte(List<RangosImporte> lstRangosImporte) {
-			this.lstRangosImporte = lstRangosImporte;
-		}
-
-
-		public List<Estado> getLstEstado() {
-			return lstEstado;
-		}
-
-
-		public void setLstEstado(List<Estado> lstEstado) {
-			this.lstEstado = lstEstado;
-		}
-
-
-		public List<EstadosNivel> getLstEstadoNivel() {
-			return lstEstadoNivel;
-		}
-
-
-		public void setLstEstadoNivel(List<EstadosNivel> lstEstadoNivel) {
-			this.lstEstadoNivel = lstEstadoNivel;
-		}
-
-
-		public List<TiposFecha> getLstTiposFecha() {
-			return lstTiposFecha;
-		}
-
-
-		public void setLstTiposFecha(List<TiposFecha> lstTiposFecha) {
-			this.lstTiposFecha = lstTiposFecha;
-		}
-
-
-		public List<TiivsEstudio> getLstEstudio() {
-			return lstEstudio;
-		}
-
-
-		public void setLstEstudio(List<TiivsEstudio> lstEstudio) {
-			this.lstEstudio = lstEstudio;
-		}
-
-
-		public List<TiivsNivel> getLstNivel() {
-			return lstNivel;
-		}
-
-
-		public void setLstNivel(List<TiivsNivel> lstNivel) {
-			this.lstNivel = lstNivel;
-		}
-
-
-		public List<TiivsOperacionBancaria> getLstOpeBancaria() {
-			return lstOpeBancaria;
-		}
-
-
-		public void setLstOpeBancaria(List<TiivsOperacionBancaria> lstOpeBancaria) {
-			this.lstOpeBancaria = lstOpeBancaria;
-		}
-
-
-		public List<TiivsTerritorio> getLstTerritorio() {
-			return lstTerritorio;
-		}
-
-
-		public void setLstTerritorio(List<TiivsTerritorio> lstTerritorio) {
-			this.lstTerritorio = lstTerritorio;
-		}
-
-
-		public List<TiivsOficina1> getLstOficina() {
-			return lstOficina;
-		}
-
-
-		public void setLstOficina(List<TiivsOficina1> lstOficina) {
-			this.lstOficina = lstOficina;
-		}
-
-
-		public List<Moneda> getLstMoneda() {
-			return lstMoneda;
-		}
-
-
-		public void setLstMoneda(List<Moneda> lstMoneda) {
-			this.lstMoneda = lstMoneda;
-		}
-
-
-		public Map<String, String> getEstados() {
-			return estados;
-		}
-
-
-		public void setEstados(Map<String, String> estados) {
-			this.estados = estados;
-		}
-
-
-		public Map<String, String> getEstadosNivel() {
-			return estadosNivel;
-		}
-
-
-		public void setEstadosNivel(Map<String, String> estadosNivel) {
-			this.estadosNivel = estadosNivel;
-		}
-
-
-		public List<ComboDto> getLstClasificacionPersona() {
-			return lstClasificacionPersona;
-		}
-
-
-		public void setLstClasificacionPersona(List<ComboDto> lstClasificacionPersona) {
-			this.lstClasificacionPersona = lstClasificacionPersona;
-		}
-
-
-		public List<ComboDto> getLstTipoRegistroPersona() {
-			return lstTipoRegistroPersona;
-		}
-
-
-		public void setLstTipoRegistroPersona(List<ComboDto> lstTipoRegistroPersona) {
-			this.lstTipoRegistroPersona = lstTipoRegistroPersona;
-		}
-
 		
-
-		public List<TiivsTipoSolicitud> getLstTipoSolicitud() {
-			return lstTipoSolicitud;
+		// Carga data de Operaciones Bancarias por Solicitud
+		GenericDao<TiivsSolicitudOperban, Object> operBanDAO = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroOperBan = Busqueda.forClass(TiivsSolicitudOperban.class);
+		filtroOperBan.addOrder(Order.asc(ConstantesVisado.CAMPO_ID_CODIGO_SOLICITUD_ALIAS));
+		
+		try {
+			lstSolOperBan = operBanDAO.buscarDinamico(filtroOperBan);
+			logger.debug("TAMANIOO DE LAS OPERACIONES BANCARIAS POR SOLICITUD EN EL COMBOMB " +lstSolOperBan.size());
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("Error al cargar el listado de tipos de persona");
 		}
+		
+		// Carga combo Nivel
+		GenericDao<TiivsNivel, Object> nivelDAO = (GenericDao<TiivsNivel, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroNivel = Busqueda.forClass(TiivsNivel.class);
 
-		public void setLstTipoSolicitud(List<TiivsTipoSolicitud> lstTipoSolicitud) {
-			this.lstTipoSolicitud = lstTipoSolicitud;
+		try {
+			lstNivel = nivelDAO.buscarDinamico(filtroNivel);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("Error al cargar el listado de niveles");
 		}
+	}
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	public List<TiivsMultitabla> getLstMultitabla() {
+		return lstMultitabla;
+	}
+
+
+	public void setLstMultitabla(List<TiivsMultitabla> lstMultitabla) {
+		this.lstMultitabla = lstMultitabla;
+	}
+
+
+	public List<RangosImporte> getLstRangosImporte() {
+		return lstRangosImporte;
+	}
+
+
+	public void setLstRangosImporte(List<RangosImporte> lstRangosImporte) {
+		this.lstRangosImporte = lstRangosImporte;
+	}
+
+
+	public List<Estado> getLstEstado() {
+		return lstEstado;
+	}
+
+
+	public void setLstEstado(List<Estado> lstEstado) {
+		this.lstEstado = lstEstado;
+	}
+
+
+	public List<EstadosNivel> getLstEstadoNivel() {
+		return lstEstadoNivel;
+	}
+
+
+	public void setLstEstadoNivel(List<EstadosNivel> lstEstadoNivel) {
+		this.lstEstadoNivel = lstEstadoNivel;
+	}
+
+
+	public List<TiposFecha> getLstTiposFecha() {
+		return lstTiposFecha;
+	}
+
+
+	public void setLstTiposFecha(List<TiposFecha> lstTiposFecha) {
+		this.lstTiposFecha = lstTiposFecha;
+	}
+
+
+	public List<TiivsEstudio> getLstEstudio() {
+		return lstEstudio;
+	}
+
+
+	public void setLstEstudio(List<TiivsEstudio> lstEstudio) {
+		this.lstEstudio = lstEstudio;
+	}
+
+
+	public List<TiivsNivel> getLstNivel() {
+		return lstNivel;
+	}
+
+
+	public void setLstNivel(List<TiivsNivel> lstNivel) {
+		this.lstNivel = lstNivel;
+	}
+
+
+	public List<TiivsOperacionBancaria> getLstOpeBancaria() {
+		return lstOpeBancaria;
+	}
+
+
+	public void setLstOpeBancaria(List<TiivsOperacionBancaria> lstOpeBancaria) {
+		this.lstOpeBancaria = lstOpeBancaria;
+	}
+
+
+	public List<TiivsTerritorio> getLstTerritorio() {
+		return lstTerritorio;
+	}
+
+
+	public void setLstTerritorio(List<TiivsTerritorio> lstTerritorio) {
+		this.lstTerritorio = lstTerritorio;
+	}
+
+
+	public List<TiivsOficina1> getLstOficina() {
+		return lstOficina;
+	}
+
+
+	public void setLstOficina(List<TiivsOficina1> lstOficina) {
+		this.lstOficina = lstOficina;
+	}
+
+
+	public List<Moneda> getLstMoneda() {
+		return lstMoneda;
+	}
+
+
+	public void setLstMoneda(List<Moneda> lstMoneda) {
+		this.lstMoneda = lstMoneda;
+	}
+
+
+	public Map<String, String> getEstados() {
+		return estados;
+	}
+
+
+	public void setEstados(Map<String, String> estados) {
+		this.estados = estados;
+	}
+
+
+	public Map<String, String> getEstadosNivel() {
+		return estadosNivel;
+	}
+
+
+	public void setEstadosNivel(Map<String, String> estadosNivel) {
+		this.estadosNivel = estadosNivel;
+	}
+
+
+	public List<ComboDto> getLstClasificacionPersona() {
+		return lstClasificacionPersona;
+	}
+
+
+	public void setLstClasificacionPersona(List<ComboDto> lstClasificacionPersona) {
+		this.lstClasificacionPersona = lstClasificacionPersona;
+	}
+
+
+	public List<ComboDto> getLstTipoRegistroPersona() {
+		return lstTipoRegistroPersona;
+	}
+
+
+	public void setLstTipoRegistroPersona(List<ComboDto> lstTipoRegistroPersona) {
+		this.lstTipoRegistroPersona = lstTipoRegistroPersona;
+	}
+
+	
+
+	public List<TiivsTipoSolicitud> getLstTipoSolicitud() {
+		return lstTipoSolicitud;
+	}
+
+	public void setLstTipoSolicitud(List<TiivsTipoSolicitud> lstTipoSolicitud) {
+		this.lstTipoSolicitud = lstTipoSolicitud;
+	}
+
+	public List<TiivsAgrupacionPersona> getLstTiposPersona() {
+		return lstTiposPersona;
+	}
+
+	public void setLstTiposPersona(List<TiivsAgrupacionPersona> lstTiposPersona) {
+		this.lstTiposPersona = lstTiposPersona;
+	}
+
+	public List<TiivsSolicitudOperban> getLstSolOperBan() {
+		return lstSolOperBan;
+	}
+
+	public void setLstSolOperBan(List<TiivsSolicitudOperban> lstSolOperBan) {
+		this.lstSolOperBan = lstSolOperBan;
+	}	
 }

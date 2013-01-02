@@ -33,7 +33,7 @@ public abstract class SeguridadDaoImpl<K, T extends Serializable>
  		" where (trim(m.cod_miembro) = '"+usuarioIILD.getUID().trim()+"' and trim(m.criterio) = 'T030001') " +
  		" OR (trim(m.cod_miembro)= '"+usuarioIILD.getCargo().getCodigo().trim()+"' and trim(m.criterio) = 'T030002') " +
  		" OR (trim(m.cod_miembro)= '"+usuarioIILD.getBancoOficina().getCodigo().trim()+"' and trim(m.criterio) = 'T030003')"	;
-       System.out.println("SQL : "+sql);
+       logger.debug("SQL : "+sql);
 		
 		List<MiembroDto> listaMiembro=new ArrayList<MiembroDto>();
 		MiembroDto nuevo;
@@ -44,7 +44,7 @@ public abstract class SeguridadDaoImpl<K, T extends Serializable>
 				}});
 
 				if(ResultList.size()>0){
-				System.out.println("ResultList.size "+ResultList.size());
+					logger.debug("ResultList.size "+ResultList.size());
 				for(int i=0;i<=ResultList.size()-1;i++){
 				  Object[] row =  (Object[]) ResultList.get(i);
 				   nuevo = new MiembroDto();
