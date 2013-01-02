@@ -3,6 +3,8 @@ package com.hildebrando.visado.mb;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +16,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 
@@ -47,7 +50,9 @@ import com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitudId;
 import com.hildebrando.visado.modelo.TiivsEstudio;
+import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
+import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsParametros;
@@ -120,15 +125,17 @@ public class SolicitudRegistroMB {
 	private int indexUpdateSolicDocumentos = 0;
 	private int indexUpdatePersona = 0;
 	public static Logger logger = Logger.getLogger(SolicitudRegistroMB.class);
+
 	private UploadedFile file;
-
-	public UploadedFile getFile() {
-		return file;
-	}
-
-	public void setFile(UploadedFile file) {
-		this.file = file;
-	}
+	private String sMonedaImporteGlobal;  
+	  
+    public UploadedFile getFile() {  
+        return file;  
+    }  
+  
+    public void setFile(UploadedFile file) {  
+        this.file = file;  
+    }  
 
 	public SolicitudRegistroMB() {
 		solicitudRegistrar = new Solicitud();
@@ -167,9 +174,18 @@ public class SolicitudRegistroMB {
 		logger.info("**************************** eliminarPersona ****************************");
 		System.out.println(objTiivsPersonaCapturado.getCodPer());
 		lstTiivsPersona.remove(objTiivsPersonaCapturado);
-		objTiivsPersonaCapturado = new TiivsPersona();
-		this.flagUpdatePersona = false;
-	}		
+		objTiivsPersonaCapturado=new TiivsPersona();
+        this.flagUpdatePersona=false;
+	}
+/*	public void handleFileUpload(FileUploadEvent event) {  
+        FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");  
+        FacesContext.getCurrentInstance().addMessage(null, msg);  
+        System.out.println(event.getComponent());
+        System.out.println(event.getFile().getFileName());
+        
+        System.out.println(event.getComponent().getId());
+    }  
+*/	
 
 	public boolean cargarUnicoPDF() {
 		
@@ -599,7 +615,10 @@ public class SolicitudRegistroMB {
 					Utilitarios.mensajeInfo("INFO", sMensaje);
 				}
 			}
+			
+			//if(objTiivsPersonaResultado.getTipDoi())
 		}
+
 		return bResult;
 	}
 
@@ -664,65 +683,114 @@ public class SolicitudRegistroMB {
 
 	}
 
-	public void agregarActionListenerAgrupacion() {
-		logger.info("********************** agregarActionListenerAgrupacion ********************* ");
-		lstTiivsPersona = new ArrayList<TiivsPersona>();
-	}
-
-	public void agregarAgrupacion() {
-		numGrupo = numGrupo + 1;
-		logger.info("********************** agregarAgrupacion ********************* "
-				+ numGrupo);
-		List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
-		List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
-		TiivsAgrupacionPersona tiivsAgrupacionPersona = null;
-		for (TiivsPersona objTiivsPersonaResultado : lstTiivsPersona) {
-			if (objTiivsPersonaResultado.getTipPartic().equals(
-					ConstantesVisado.PODERDANTE)) {
-				lstPoderdantes.add(objTiivsPersonaResultado);
-			}
-			if (objTiivsPersonaResultado.getTipPartic().equals(
-					ConstantesVisado.APODERADO)) {
-				lstApoderdantes.add(objTiivsPersonaResultado);
-			}
-			System.out.println("objTiivsPersonaResultado.getCodPer() : "
-					+ objTiivsPersonaResultado.getCodPer());
-			tiivsAgrupacionPersona = new TiivsAgrupacionPersona();
-			TiivsAgrupacionPersonaId tiivsAgrupacionPersonaId = new TiivsAgrupacionPersonaId();
-			tiivsAgrupacionPersonaId.setNumGrupo(numGrupo);
-			tiivsAgrupacionPersonaId.setCodSoli(solicitudRegistrarT
-					.getCodSoli());
-			tiivsAgrupacionPersonaId.setCodPer(objTiivsPersonaResultado
-					.getCodPer());
-			tiivsAgrupacionPersonaId.setClasifPer(objTiivsPersonaResultado
-					.getClasifPer());
-			tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado
-					.getTipPartic());
-			tiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
-			tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
-			lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
-			lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
+  public void agregarNiveles() throws Exception{
+	  logger.info("*********************************** agregarNiveles ********************************************");
+	  GenericDao<TiivsNivel, Object> service=(GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+	  List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class));
+	 List<String> lstCodNivel=new ArrayList<String>();
+		if(sMonedaImporteGlobal.equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+			logger.info("*********************************** COD_SOLES ********************************************"+this.solicitudRegistrarT.getImporte());
+			 for (TiivsNivel x : lstNiveles) {
+				 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+					 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
+						 lstCodNivel.add(x.getId().getCodNiv());
+						 System.out.println("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
+						 System.out.println("x.getId().getRangoInicio(): " +x.getId().getRangoInicio());
+						 System.out.println("x.getId().getRangoFin(): " +x.getId().getRangoFin());
+					 }
+				 }
+		     }
 		}
-		System.out.println("lstPoderdantes " + lstPoderdantes.size());
-		System.out.println("lstApoderdantes " + lstApoderdantes.size());
-		AgrupacionSimpleDto agrupacionSimpleDto = new AgrupacionSimpleDto();
-		agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(
-				this.solicitudRegistrarT.getCodSoli(), numGrupo));
-		agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
-		agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
-		agrupacionSimpleDto.setsEstado("Activo");
-		agrupacionSimpleDto.setiEstado(1);
-		agrupacionSimpleDto.setLstPersonas(this.lstTiivsPersona);
-		lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
-		solicitudRegistrarT.setTiivsSolicitudAgrupacions(this
-				.agregarSolicitudArupacion(numGrupo));
-		lstTiivsPersona = new ArrayList<TiivsPersona>();
-		System.out.println("Tamanio de la lista Solicitud Agrupacion : "
-				+ solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
-		this.llamarComision();
-		System.out.println("tamanio de lstTiivsAgrupacionPersonas "
-				+ lstTiivsAgrupacionPersonas.size());
+		else if(sMonedaImporteGlobal.equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+			logger.info("*********************************** COD_DOLAR ********************************************");
+			 for (TiivsNivel x : lstNiveles) {
+				 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+					 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
+						 lstCodNivel.add(x.getId().getCodNiv());
+						 System.out.println("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
+					 }
+				 }
+		     }
+		}
+		else if(sMonedaImporteGlobal.equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+			logger.info("*********************************** COD_EUROS ********************************************");
+			 for (TiivsNivel x : lstNiveles) {
+				 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+					 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
+						 lstCodNivel.add(x.getId().getCodNiv());
+						 System.out.println("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
+					 }
+				 }
+		     }
+		}
+		
+		if(lstCodNivel.size()>0){
+			// SI LA SOLICITUD SOPERA ALGUN NIVEL, ENTONCES PASA A ESTADO EN VERIFICACION A, SI NO A ACEPTADO
+			this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
+		}else{
+			this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+		}
+	
+  }
+  public void agregarActionListenerAgrupacion(){
+	  logger.info("********************** agregarActionListenerAgrupacion ********************* " );
+	  lstTiivsPersona=new ArrayList<TiivsPersona>();
+	  objTiivsPersonaBusqueda=new TiivsPersona();
+	  objTiivsPersonaResultado=new TiivsPersona();
+  }
+	public boolean validarAgregarAgrupacion(){
+		boolean returno=true;
+		logger.info("***************************** validarAgregarAgrupacion ***************************************");
+		String mensaje="Por lo menos ingrese un Poderdante o Apoderado";
+		if(lstTiivsPersona.size()==0){
+			returno=false;
+			Utilitarios.mensajeInfo("", mensaje);
+		}
+		return returno;
 	}
+  public void agregarAgrupacion(){
+	  if(validarAgregarAgrupacion()){
+	  numGrupo=numGrupo+1;
+	  logger.info("********************** agregarAgrupacion ********************* " +numGrupo);
+	  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
+	  List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
+	  TiivsAgrupacionPersona tiivsAgrupacionPersona=null;
+	  for (TiivsPersona objTiivsPersonaResultado : lstTiivsPersona) {
+		  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+			  lstPoderdantes.add(objTiivsPersonaResultado);}
+		  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.APODERADO)){
+			  lstApoderdantes.add(objTiivsPersonaResultado);}
+		  System.out.println("objTiivsPersonaResultado.getCodPer() : "+objTiivsPersonaResultado.getCodPer());
+		  tiivsAgrupacionPersona =new TiivsAgrupacionPersona();
+		  TiivsAgrupacionPersonaId  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersonaId();
+		  tiivsAgrupacionPersonaId.setNumGrupo(numGrupo);
+		  tiivsAgrupacionPersonaId.setCodSoli(solicitudRegistrarT.getCodSoli());
+		  tiivsAgrupacionPersonaId.setCodPer(objTiivsPersonaResultado.getCodPer());
+		  tiivsAgrupacionPersonaId.setClasifPer(objTiivsPersonaResultado.getClasifPer());
+		  tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado.getTipPartic());
+		  tiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
+		  tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
+		  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
+		  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
+	}  
+	  System.out.println("lstPoderdantes " +lstPoderdantes.size());
+	  System.out.println("lstApoderdantes " +lstApoderdantes.size());
+	  AgrupacionSimpleDto agrupacionSimpleDto =new AgrupacionSimpleDto();
+	   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), numGrupo));
+	   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
+	   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
+	   agrupacionSimpleDto.setsEstado("Activo");
+	   agrupacionSimpleDto.setiEstado(1);
+	   agrupacionSimpleDto.setLstPersonas(this.lstTiivsPersona);
+	  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+	  solicitudRegistrarT.setTiivsSolicitudAgrupacions(this.agregarSolicitudArupacion(numGrupo));
+	  lstTiivsPersona=new ArrayList<TiivsPersona>();
+		System.out.println("Tamanio de la lista Solicitud Agrupacion : " +solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
+	  this.llamarComision();
+	 System.out.println("tamanio de lstTiivsAgrupacionPersonas "+lstTiivsAgrupacionPersonas.size());
+	  }
+ }
+  
 
 	public void instanciarSolicitudRegistro() {
 		logger.info("********************** instanciarSolicitudRegistro *********************");
@@ -763,6 +831,7 @@ public class SolicitudRegistroMB {
 							.setTiivsOficina1(new TiivsOficina1());
 				}
 			}
+		
 		}
 		SolicitudDao<TiivsPersona, Object> service = (SolicitudDao<TiivsPersona, Object>) SpringInit
 				.getApplicationContext().getBean("solicitudEspDao");
@@ -810,6 +879,7 @@ public class SolicitudRegistroMB {
 		}
 
 		for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
+
 			if (s.getCodDoc().equals(sCodDocumento)) {
 				this.lstTipoSolicitudDocumentos.remove(s);
 				break;
@@ -868,7 +938,7 @@ public class SolicitudRegistroMB {
 		}
 		logger.info("codDocumento :  " + sCodDocumento);
 		logger.info("lstAnexoSolicitud.size() :  " + lstAnexoSolicitud.size());
-		
+
 		if(sCodDocumento == null || sCodDocumento.isEmpty()){
 			Utilitarios.mensajeInfo("", "Debe seleccionar un documento");
 			return;
@@ -1143,6 +1213,141 @@ public class SolicitudRegistroMB {
 				this.lstSolicBancarias.set(indexUpdateOperacion,
 						objSolicBancaria);
 			}
+			if(objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+				valor=objSolicBancaria.getTipoCambio()*objSolicBancaria.getImporte();
+				valorSolesD+=valor;
+				valorDolar+=objSolicBancaria.getImporte();
+				objSolicBancaria.setImporteSoles(valor);
+				icontDolares++;
+				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.DOLARES);
+			}
+			if(objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+				valor=objSolicBancaria.getTipoCambio()*objSolicBancaria.getImporte();
+				valorSolesE=valorSolesE+valor;
+				valorEuro+=objSolicBancaria.getImporte();
+				objSolicBancaria.setImporteSoles(valor);
+				icontEuros++;
+				System.out.println("tamanio de euros : " +icontEuros);
+				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
+			}
+	
+          if(icontDolares==0&&icontEuros==0&&icontSoles>0){
+        	  valorFinal=valorSoles_C;
+        	  this.solicitudRegistrarT.setImporte(valorFinal);
+        	  this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+        	  sMonedaImporteGlobal=ConstantesVisado.MONEDAS.COD_SOLES;
+        	  
+        	  
+          }
+          if(icontDolares>0&&icontEuros==0&&icontSoles==0){
+        	  valorFinal=valorDolar;
+        	  this.solicitudRegistrarT.setImporte(valorFinal);
+        	  this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+valorFinal);
+        	  sMonedaImporteGlobal=ConstantesVisado.MONEDAS.COD_DOLAR;
+          }
+          if(icontDolares==0&&icontEuros>0&&icontSoles==0){
+        	  valorFinal=valorEuro;
+        	  this.solicitudRegistrarT.setImporte(valorFinal);
+        	  this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+valorFinal);
+        	  sMonedaImporteGlobal=ConstantesVisado.MONEDAS.COD_EUROS;
+          }
+          if(icontDolares>0&&icontEuros>0&&icontSoles==0
+        		  ||icontDolares>0&&icontEuros==0&&icontSoles>0
+        		  ||icontDolares==0&&icontEuros>0&&icontSoles>0
+        		  ||icontDolares>0&&icontEuros>0&&icontSoles>0){
+        	  valorFinal=valorSoles_C+valorSolesD+valorSolesE;
+        	  this.solicitudRegistrarT.setImporte(valorFinal);
+        	  this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+        	  sMonedaImporteGlobal=ConstantesVisado.MONEDAS.COD_SOLES;
+          }
+          
+          
+        	item++;
+            objSolicBancaria.setsItem("00"+item);
+          this.lstSolicBancarias.add(objSolicBancaria);
+          }else{
+        	  if(objSolicitudOperacionCapturado.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+    				valorSoles_C-=objSolicitudOperacionCapturado.getImporte();
+    				icontSoles--;
+    			}
+    			if(objSolicitudOperacionCapturado.getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+    				valor=objSolicitudOperacionCapturado.getTipoCambio()*objSolicitudOperacionCapturado.getImporte();
+    				valorSolesD-=valor;
+    				valorDolar-=objSolicitudOperacionCapturado.getImporte();
+    				icontDolares--;
+    			}
+    			if(objSolicitudOperacionCapturado.getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+    				valor=objSolicitudOperacionCapturado.getTipoCambio()*objSolicitudOperacionCapturado.getImporte();
+    				valorSolesE-=valor;
+    				valorEuro-=objSolicBancaria.getImporte();
+    				icontEuros--;
+    			}
+    			
+    			if(objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+    				valorSoles_C+=objSolicBancaria.getImporte();
+    				objSolicBancaria.setImporteSoles(objSolicBancaria.getImporte());
+    				icontSoles++;
+    				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.SOLES);
+    			}
+    			if(objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+    				valor=objSolicBancaria.getTipoCambio()*objSolicBancaria.getImporte();
+    				valorSolesD+=valor;
+    				valorDolar+=objSolicBancaria.getImporte();
+    				objSolicBancaria.setImporteSoles(valor);
+    				icontDolares++;
+    				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.DOLARES);
+    			}
+    			if(objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+    				valor=objSolicBancaria.getTipoCambio()*objSolicBancaria.getImporte();
+    				valorSolesE+=valor;
+    				valorEuro+=objSolicBancaria.getImporte();
+    				objSolicBancaria.setImporteSoles(valor);
+    				icontEuros++;
+    				this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
+    			}
+        
+              if(icontDolares==0&&icontEuros==0&&icontSoles>0){
+            	  valorFinal=valorSoles_C;
+            	  this.solicitudRegistrarT.setImporte(valorFinal);
+            	  this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+            	  sMonedaImporteGlobal=ConstantesVisado.MONEDAS.COD_SOLES;
+              }
+              if(icontDolares>0&&icontEuros==0&&icontSoles==0){
+            	  valorFinal=valorDolar;
+            	  this.solicitudRegistrarT.setImporte(valorFinal);
+            	  this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+valorFinal);
+            	  sMonedaImporteGlobal=ConstantesVisado.MONEDAS.COD_DOLAR;
+              }
+              if(icontDolares==0&&icontEuros>0&&icontSoles==0){
+            	  valorFinal=valorEuro;
+            	  this.solicitudRegistrarT.setImporte(valorFinal);
+            	  this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+valorFinal);
+            	  sMonedaImporteGlobal=ConstantesVisado.MONEDAS.COD_EUROS;
+              }
+              if(icontDolares>0&&icontEuros>0&&icontSoles==0
+            		  ||icontDolares>0&&icontEuros==0&&icontSoles>0
+            		  ||icontDolares==0&&icontEuros>0&&icontSoles>0
+            		  ||icontDolares==0&&icontEuros>0&&icontSoles>0
+            		  ||icontDolares>0&&icontEuros>0&&icontSoles>0){
+            	  valorFinal=valorSoles_C+valorSolesD+valorSolesE;
+            	  this.solicitudRegistrarT.setImporte(valorFinal);
+            	  this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+            	  sMonedaImporteGlobal=ConstantesVisado.MONEDAS.COD_SOLES;
+              }
+        		
+        	  this.lstSolicBancarias.set(indexUpdateOperacion, objSolicBancaria);
+          }
+          objSolicBancaria=new TiivsSolicitudOperban();
+          objSolicBancaria.setId(new TiivsSolicitudOperbanId());
+          this.flagUpdateOperacionSolic=false;
+          this.objSolicitudOperacionCapturado=new TiivsSolicitudOperban();
+          this.objSolicitudOperacionCapturado.setId(new TiivsSolicitudOperbanId());
+          this.llamarComision();
+   /*       try {
+			agregarNiveles();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
 			objSolicBancaria = new TiivsSolicitudOperban();
 			objSolicBancaria.setId(new TiivsSolicitudOperbanId());
 			this.flagUpdateOperacionSolic = false;
@@ -1151,7 +1356,7 @@ public class SolicitudRegistroMB {
 					.setId(new TiivsSolicitudOperbanId());
 			this.llamarComision();
 
-		}
+		
 
 	}
 
@@ -1194,30 +1399,40 @@ public class SolicitudRegistroMB {
 			icontEuros--;
 		}
 
-		if (icontDolares == 0 && icontEuros == 0 && icontSoles > 0) {
-			valorFinal = valorSoles_C;
-			this.solicitudRegistrarT.setImporte(valorFinal);
-		}
-		if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) {
-			valorFinal = valorDolar;
-			this.solicitudRegistrarT.setImporte(valorFinal);
-		}
-		if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) {
-			valorFinal = valorEuro;
-			this.solicitudRegistrarT.setImporte(valorFinal);
-		}
-		if (icontDolares > 0 && icontEuros > 0 && icontSoles == 0
-				|| icontDolares > 0 && icontEuros == 0 && icontSoles > 0
-				|| icontDolares == 0 && icontEuros > 0 && icontSoles > 0
-				|| icontDolares > 0 && icontEuros > 0 && icontSoles > 0
-				|| icontDolares == 0 && icontEuros == 0 && icontSoles == 0) {
-			valorFinal = valorSoles_C + valorSolesD + valorSolesE;
-			this.solicitudRegistrarT.setImporte(valorFinal);
-		}
 
-		objSolicitudOperacionCapturado = new TiivsSolicitudOperban();
-		this.flagUpdateOperacionSolic = false;
-		this.llamarComision();
+      if(icontDolares==0&&icontEuros==0&&icontSoles>0){
+    	  valorFinal=valorSoles_C;
+    	  this.solicitudRegistrarT.setImporte(valorFinal);
+    	  sMonedaImporteGlobal=ConstantesVisado.MONEDAS.COD_SOLES;
+    	  this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+      }
+      if(icontDolares>0&&icontEuros==0&&icontSoles==0){
+    	  valorFinal=valorDolar;
+    	  this.solicitudRegistrarT.setImporte(valorFinal);
+    	  sMonedaImporteGlobal=ConstantesVisado.MONEDAS.COD_DOLAR;
+    	  this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+valorFinal);
+      }
+      if(icontDolares==0&&icontEuros>0&&icontSoles==0){
+    	  valorFinal=valorEuro;
+    	  this.solicitudRegistrarT.setImporte(valorFinal);
+    	  this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+valorFinal);
+    	  sMonedaImporteGlobal=ConstantesVisado.MONEDAS.COD_EUROS;
+      }
+      if(icontDolares>0&&icontEuros>0&&icontSoles==0
+    		  ||icontDolares>0&&icontEuros==0&&icontSoles>0
+    		  ||icontDolares==0&&icontEuros>0&&icontSoles>0
+    		  ||icontDolares>0&&icontEuros>0&&icontSoles>0
+    		  ||icontDolares==0&&icontEuros==0&&icontSoles==0){
+    	  valorFinal=valorSoles_C+valorSolesD+valorSolesE;
+    	  this.solicitudRegistrarT.setImporte(valorFinal);
+    	  this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+    	  sMonedaImporteGlobal=ConstantesVisado.MONEDAS.COD_SOLES;
+      }
+     
+      objSolicitudOperacionCapturado=new TiivsSolicitudOperban();
+      this.flagUpdateOperacionSolic=false;
+      this.llamarComision();
+	     
 
 	}
 
@@ -1234,7 +1449,6 @@ public class SolicitudRegistroMB {
 		for (TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion : lstSolicitudAgrupacion) {
 			if (tiivsSolicitudAgrupacion.getId().equals(
 					this.objAgrupacionSimpleDtoCapturado.getId())) {
-				System.out.println("NANANANANANA");
 				lstSolicitudAgrupacion.remove(tiivsSolicitudAgrupacion);
 				break;
 			}
