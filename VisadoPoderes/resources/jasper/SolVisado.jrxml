@@ -2,34 +2,23 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SolVisado" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="277"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\resources\\jasper\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\resources\\jasper\\"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="numDOI" class="java.lang.String"/>
 	<field name="codSoli" class="java.lang.String"/>
 	<field name="nroVoucher" class="java.lang.String"/>
 	<field name="estado" class="java.lang.String"/>
-	<field name="comision" class="java.lang.Number"/>
+	<field name="comision" class="java.lang.String"/>
 	<field name="oficina" class="java.lang.String"/>
-	<field name="importe" class="java.lang.Number"/>
-	<field name="estadoApoderado" class="java.lang.String"/>
+	<field name="importe" class="java.lang.String"/>
+	<field name="PERSONADS" class="net.sf.jasperreports.engine.JRDataSource"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="95" splitType="Stretch">
-			<image>
-				<reportElement x="17" y="12" width="249" height="41"/>
-				<imageExpression class="java.lang.String"><![CDATA["C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif"]]></imageExpression>
-			</image>
-			<textField pattern="dd/MM/yyyy h.mm a">
-				<reportElement x="425" y="12" width="124" height="20"/>
-				<textElement>
-					<font fontName="Arial" size="11" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="29" y="64" width="453" height="20" forecolor="#003366"/>
 				<textElement>
@@ -84,10 +73,6 @@
 				<text><![CDATA[Importe
 Total:]]></text>
 			</staticText>
-			<image>
-				<reportElement x="12" y="12" width="536" height="36"/>
-				<imageExpression class="java.lang.String"><![CDATA["C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\tituloInfoGeneral.jpg"]]></imageExpression>
-			</image>
 			<textField>
 				<reportElement x="117" y="91" width="95" height="20"/>
 				<textElement/>
@@ -101,7 +86,7 @@ Total:]]></text>
 			<textField>
 				<reportElement x="299" y="91" width="75" height="20"/>
 				<textElement/>
-				<textFieldExpression class="java.lang.Number"><![CDATA[$F{comision}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{comision}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="449" y="60" width="81" height="20"/>
@@ -111,7 +96,7 @@ Total:]]></text>
 			<textField>
 				<reportElement x="449" y="91" width="81" height="20"/>
 				<textElement/>
-				<textFieldExpression class="java.lang.Number"><![CDATA[$F{importe}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{importe}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="117" y="60" width="95" height="20"/>
@@ -129,33 +114,20 @@ Total:]]></text>
 				</textElement>
 				<text><![CDATA[Estado]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="73" y="56" width="116" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{estadoApoderado}]]></textFieldExpression>
-			</textField>
-			<image>
-				<reportElement x="17" y="10" width="536" height="36"/>
-				<imageExpression class="java.lang.String"><![CDATA["C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\tituloApoderado.jpg"]]></imageExpression>
-			</image>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="98" splitType="Stretch">
+		<band height="109" splitType="Stretch">
 			<subreport>
-				<reportElement x="25" y="8" width="523" height="79"/>
+				<reportElement x="104" y="9" width="200" height="100"/>
 				<subreportParameter name="numDOI">
 					<subreportParameterExpression><![CDATA[$P{numDOI}]]></subreportParameterExpression>
 				</subreportParameter>
-				<dataSourceExpression><![CDATA[]]></dataSourceExpression>
+				<dataSourceExpression><![CDATA[$F{PERSONADS}]]></dataSourceExpression>
 				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Apoderado.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 		<band height="139">
-			<image>
-				<reportElement x="17" y="7" width="554" height="36"/>
-				<imageExpression class="java.lang.String"><![CDATA["C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\tituloDocumentos.jpg"]]></imageExpression>
-			</image>
 			<subreport>
 				<reportElement x="25" y="49" width="525" height="77"/>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
@@ -163,10 +135,6 @@ Total:]]></text>
 			</subreport>
 		</band>
 		<band height="138">
-			<image>
-				<reportElement x="17" y="7" width="538" height="36"/>
-				<imageExpression class="java.lang.String"><![CDATA["C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\tituloOpeBancarias.jpg"]]></imageExpression>
-			</image>
 			<subreport>
 				<reportElement x="25" y="50" width="521" height="76"/>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
