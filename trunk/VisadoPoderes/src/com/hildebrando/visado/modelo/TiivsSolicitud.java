@@ -26,9 +26,9 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private Timestamp fechaEnvio;
 	private Timestamp fechaEstado;
 	private String moneda;
-    private String sImporteMoneda;
+    private String sImporteMoneda;  
 	private Timestamp fechaRespuesta;
-
+// MODIFICACION 
 	private double comision;
 	private String nroVoucher;
 	private Set tiivsSolicitudNivels = new HashSet(0);
