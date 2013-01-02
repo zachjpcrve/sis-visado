@@ -9,6 +9,7 @@
 
 		
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+<ui:param name="root" value="#{request.contextPath}/" />
 	<ui:define name="contenido">
 		<h:panelGrid columns="5">
 
@@ -28,8 +29,10 @@
 						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>
 					<p:commandButton value="Imprimir" id="btnImprimir3"
 						icon="ui-icon-document" />
+						
 					<p:commandButton value="Salir" id="btnSalir3"
 						icon="ui-icon-document" />
+						
 				</p:toolbarGroup>
 			</p:toolbar>
 
@@ -39,9 +42,10 @@
   
 	<h:form id="formSolicitudRegistro" enctype="multipart/form-data">
 			<p:messages id="idMsmSolicitudRegistro"></p:messages>
-		
-		
-			
+
+<a href="#{root}main/download/reportPDF.htm"  style="color:#0073EA;font-weight:bold; ">Download PDF</a>
+
+
 		<table border="0" width="680">
 			<tbody>
 				<tr>
@@ -125,7 +129,7 @@
 																id="outImpTotal" value="Importe Total" /></td>
 														<td><h:inputText styleClass="inputText"
 																id="txtImpTotal" style="width:100px;"
-																value="#{solicitudRegMB.solicitudRegistrarT.importe}"
+																value="#{solicitudRegMB.solicitudRegistrarT.sImporteMoneda}"
 																disabled="false" readonly="true" /></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
@@ -710,8 +714,8 @@
 								showEffect="slide" /></td>
 						<td colspan="1"><h:outputText styleClass="outputText" id="outCelular"
 								value="Celular:" /></td>
-						<td colspan="1"><h:inputText styleClass="inputText" id="txtCelular"
-								style="width:100px;"
+						<td colspan="1"><h:inputText styleClass="inputText" id="txtCelular" maxlength="9"
+								style="width:100px;" 
 								 value="#{solicitudRegMB.objTiivsPersonaResultado.numCel}"/></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtCelular" /></td>
