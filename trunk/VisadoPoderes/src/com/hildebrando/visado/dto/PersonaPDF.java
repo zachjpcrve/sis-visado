@@ -16,6 +16,7 @@ public class PersonaPDF implements Serializable
 	private String celular;
 	private String email;
 	private String estado;
+	private String numDoi;
 
 	
 	public String getNumDOI() {
@@ -59,6 +60,12 @@ public class PersonaPDF implements Serializable
 	}
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	public String getNumDoi() {
+		return numDoi;
+	}
+	public void setNumDoi(String numDoi) {
+		this.numDoi = numDoi;
 	}
 
 
