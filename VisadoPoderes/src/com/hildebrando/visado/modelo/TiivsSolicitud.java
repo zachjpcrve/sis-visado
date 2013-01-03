@@ -33,6 +33,12 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private String nroVoucher;
 	private Set tiivsSolicitudNivels = new HashSet(0);
 	private Set<TiivsSolicitudAgrupacion> tiivsSolicitudAgrupacions = new HashSet<TiivsSolicitudAgrupacion>();
+	private String txtEstado;
+	private String txtImporte;
+	private String txtApoderado;
+	private String txtPoderdante;
+	private String txtOpeBan;
+	private String txtNivel;
 
 	public TiivsSolicitud() {
 	}
@@ -253,4 +259,51 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.sImporteMoneda = sImporteMoneda;
 	}
 
+	public String getTxtEstado() {
+		return txtEstado;
+	}
+
+	public void setTxtEstado(String txtEstado) {
+		this.txtEstado = txtEstado;
+	}
+
+	public String getTxtImporte() {
+		return txtImporte;
+	}
+
+	public void setTxtImporte(String txtImporte) {
+		this.txtImporte = txtImporte;
+	}
+
+	public String getTxtApoderado() {
+		return txtApoderado;
+	}
+
+	public void setTxtApoderado(String txtApoderado) {
+		this.txtApoderado = txtApoderado;
+	}
+
+	public String getTxtPoderdante() {
+		return txtPoderdante;
+	}
+
+	public void setTxtPoderdante(String txtPoderdante) {
+		this.txtPoderdante = txtPoderdante;
+	}
+
+	public String getTxtOpeBan() {
+		return txtOpeBan;
+	}
+
+	public void setTxtOpeBan(String txtOpeBan) {
+		this.txtOpeBan = txtOpeBan;
+	}
+
+	public String getTxtNivel() {
+		return txtNivel;
+	}
+
+	public void setTxtNivel(String txtNivel) {
+		this.txtNivel = txtNivel;
+	}
 }
