@@ -12,7 +12,7 @@
                 <column name="COD_OPER_BAN" length="7" />
             </key-property>
         </composite-id>
-        <many-to-one name="tiivsOperacionBancaria" class="com.hildebrando.visado.modelo.TiivsOperacionBancaria" update="false" insert="false" fetch="select">
+        <many-to-one name="tiivsOperacionBancaria" class="com.hildebrando.visado.modelo.TiivsOperacionBancaria" update="false" insert="false" fetch="select" >
             <column name="COD_OPER_BAN" length="7" not-null="true" />
         </many-to-one>
         <property name="importe" type="double">
