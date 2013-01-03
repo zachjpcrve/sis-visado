@@ -859,7 +859,7 @@ public class SolicitudRegistroMB {
 		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 		objSolicBancaria = new TiivsSolicitudOperban();
-		objSolicBancaria.setTipoCambio(0);
+		objSolicBancaria.setTipoCambio(0.0);
 		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
 		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
 		iTipoSolicitud = "";
