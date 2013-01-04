@@ -818,7 +818,7 @@ public class SolicitudRegistroMB {
 			String sCodigoSol = service.obtenerPKNuevaSolicitud();
 			logger.debug(" sCodigoSol " + sCodigoSol);
 			this.solicitudRegistrarT.setCodSoli(sCodigoSol);
-		} catch (Exception e) {
+		} catch (Exception e) {  
 			e.printStackTrace();
 		}
 		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02);
