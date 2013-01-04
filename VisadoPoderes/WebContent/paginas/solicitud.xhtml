@@ -284,17 +284,11 @@
 													<tr>
 														<td><h:outputText styleClass="outputText" id="text19"
 																value="Documentos:"></h:outputText></td>
-														<td><p:selectOneMenu   styleClass="selectOneListbox" style="width:100%" value="#{solicitudRegMB.selectedTipoDocumento}"
-																id="listDocumentosXTipoSoli" size="1" var="p" converter="tipoSolicitudDocumentoConverter" 																
+														<td><p:selectOneMenu   styleClass="selectOneListbox" style="width:100%" value="#{solicitudRegMB.sCodDocumento}"
+																id="listDocumentosXTipoSoli" size="1" var="p"  																
 																filter="true" filterMatchMode="startswith">
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />																
-																<f:selectItems value="#{solicitudRegMB.lstTipoSolicitudDocumentos}" var="lOf" itemValue="#{lOf}" itemLabel="#{lOf.codDoc}" />
-																<p:column>  
-													                <p:graphicImage value="/resources/images/#{p.obligatorio == 49 ? 'oblig.png' : 'nooblig.png'}" width="20" height="20"/>  
-													            </p:column>  													  
-													            <p:column>  
-													                #{p.desDoc.substring(0, p.desDoc.length() > 30 ? 30 : p.desDoc.length())}
-													            </p:column>													            
+																<f:selectItems value="#{solicitudRegMB.lstTipoSolicitudDocumentos}" var="lOf" itemValue="#{lOf.codDoc}" itemLabel="#{lOf.desDoc.substring(0, lOf.desDoc.length() > 30 ? 30 : lOf.desDoc.length())}" />																													            
 													            <f:selectItem itemLabel="Otros" itemValue="Otros" />															
 											               </p:selectOneMenu></td>
 															   <td> 															   
@@ -303,7 +297,7 @@
                                                                 update="idfileUpload"  
                                                                  auto="false"  
                                                                  sizeLimit="100000"   
-                                                                 allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|doc?x)$/"/>  
+                                                                 allowTypes="/(\.|\/)(pdf)$/"/>  
   
 										                    </td>
 
