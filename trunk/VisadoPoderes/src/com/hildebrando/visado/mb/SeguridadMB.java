@@ -10,21 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.hibernate.criterion.Restrictions;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
-import com.bbva.persistencia.generica.dao.Busqueda;
-import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SeguridadDao;
-import com.grupobbva.bc.per.tele.ldap.conexion.Conexion;
 import com.grupobbva.bc.per.tele.ldap.conexion.__Conexion2;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.grupobbva.bc.per.tele.seguridad.ServiciosSeguridadBbva;
 import com.hildebrando.visado.dto.MiembroDto;
-import com.hildebrando.visado.modelo.Ldapperu2;
-import com.hildebrando.visado.modelo.Ldapperu2Id;
-import com.hildebrando.visado.modelo.TiivsMiembro;
 
 
 @ManagedBean(name = "seguridadMB")
