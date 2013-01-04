@@ -24,7 +24,7 @@ public class TipoSolicitudDocumentoConverter implements Converter {
 
 	public static List<TiivsTipoSolicDocumento> documentosDB;
 	
-	static {				
+/*	static {				
 		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroTipoSolcDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);		
@@ -34,7 +34,7 @@ public class TipoSolicitudDocumentoConverter implements Converter {
 		} catch (Exception ex) {			
 			ex.printStackTrace();
 		}		
-	}
+	}*/
 	
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String submittedValue)
