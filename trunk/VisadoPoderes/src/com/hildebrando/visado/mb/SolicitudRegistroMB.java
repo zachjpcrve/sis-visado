@@ -154,12 +154,10 @@ public class SolicitudRegistroMB {
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 		objSolicBancaria = new TiivsSolicitudOperban();
 		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
-		objSolicBancaria
-				.setTiivsOperacionBancaria(new TiivsOperacionBancaria());
+		objSolicBancaria.setTiivsOperacionBancaria(new TiivsOperacionBancaria());
 		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
 		lstOperaciones = new ArrayList<OperacionBancariaDTO>();
-		usuario = (IILDPeUsuario) Utilitarios
-				.getObjectInSession("USUARIO_SESION");
+		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		this.instanciarSolicitudRegistro();
 
 		urlServer = new PDFViewerMB().obtenerURLRemota();
@@ -177,15 +175,7 @@ public class SolicitudRegistroMB {
 		objTiivsPersonaCapturado=new TiivsPersona();
         this.flagUpdatePersona=false;
 	}
-/*	public void handleFileUpload(FileUploadEvent event) {  
-        FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");  
-        FacesContext.getCurrentInstance().addMessage(null, msg);  
-        System.out.println(event.getComponent());
-        System.out.println(event.getFile().getFileName());
-        
-        System.out.println(event.getComponent().getId());
-    }  
-*/	
+
 
 	public boolean cargarUnicoPDF() {
 		
@@ -255,25 +245,18 @@ public class SolicitudRegistroMB {
 	}	
 
 	public void listarDocumentosXSolicitud(ValueChangeEvent e) {
-		System.out.println("ValuechanceEvent :  " + e.getNewValue());
-		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroTipoSolcDoc = Busqueda
-				.forClass(TiivsTipoSolicDocumento.class);
-		filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic",
-				(String) e.getNewValue()));
+		//System.out.println("ValuechanceEvent :  " + e.getNewValue());
+		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroTipoSolcDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);
+		filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic",(String) e.getNewValue()));
 		filtroTipoSolcDoc.addOrder(Order.desc("obligatorio"));
 		try {
-			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO
-					.buscarDinamico(filtroTipoSolcDoc);			
-			lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstDocumentosXTipoSolTemp)
-					.clone();
+			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);			
+			lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstDocumentosXTipoSolTemp).clone();
 
 			actualizarListadoDocumentos();
 
-			logger.info(" e.getNewValue()  " + (String) e.getNewValue()
-					+ "  lstTipoSolicitudDocumentos.size : "
-					+ lstTipoSolicitudDocumentos.size());
+			//logger.info(" e.getNewValue()  " + (String) e.getNewValue()+ "  lstTipoSolicitudDocumentos.size : "+ lstTipoSolicitudDocumentos.size());
 		} catch (Exception ex) {
 			logger.info("Error al cargar el listado de documentos por tipo de soliciitud");
 			ex.printStackTrace();
@@ -808,12 +791,10 @@ public class SolicitudRegistroMB {
 		logger.debug("********grupoAdm ****** " + grupoAdm
 				+ "  ******* grupoOfi ******** " + grupoOfi);
 		// if (grupoAdm == null && grupoOfi!= null) {
-		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios
-				.getObjectInSession("USUARIO_SESION");
+		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		logger.debug("usuario en session? --> " + usuario.getNombre());
 		logger.debug("CodOfi: " + usuario.getBancoOficina().getCodigo().trim());
-		logger.debug("DesOfi: "
-				+ usuario.getBancoOficina().getDescripcion().trim());
+		logger.debug("DesOfi: "+ usuario.getBancoOficina().getDescripcion().trim());
 
 		TiivsOficina1 oficina = new TiivsOficina1();
 		oficina.setCodOfi(usuario.getBancoOficina().getCodigo());
@@ -827,14 +808,12 @@ public class SolicitudRegistroMB {
 				if (usuario.getBancoOficina().getCodigo().equals(o.getCodOfi())) {
 					this.solicitudRegistrarT.setTiivsOficina1(o);
 				} else {
-					this.solicitudRegistrarT
-							.setTiivsOficina1(new TiivsOficina1());
+					this.solicitudRegistrarT.setTiivsOficina1(new TiivsOficina1());
 				}
 			}
 		
 		}
-		SolicitudDao<TiivsPersona, Object> service = (SolicitudDao<TiivsPersona, Object>) SpringInit
-				.getApplicationContext().getBean("solicitudEspDao");
+		SolicitudDao<TiivsPersona, Object> service = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		try {
 			String sCodigoSol = service.obtenerPKNuevaSolicitud();
 			logger.debug(" sCodigoSol " + sCodigoSol);
@@ -842,9 +821,8 @@ public class SolicitudRegistroMB {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.solicitudRegistrarT.setEstado("1");
-		this.solicitudRegistrarT
-				.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02);
+		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02);
+		this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_REGISTRADO_T02);
 
 		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
 		personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
