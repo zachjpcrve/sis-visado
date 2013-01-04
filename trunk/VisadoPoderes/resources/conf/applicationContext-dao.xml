@@ -24,5 +24,7 @@
 	<bean id="miembroEspDao"  class="com.bbva.persistencia.generica.dao.SeguridadEspecificoDao" parent="seguridadDao"/>
     <bean id="solicitudEspDao"  class="com.bbva.persistencia.generica.dao.SolicitudEspecificoDao" parent="solicitudDao"/>
     
+     <bean id="metodoInicial" init-method="iniciarListas"  class="com.bbva.common.listener.SpringInit.ListasIniciales" >
+     </bean>
     
 </beans>
