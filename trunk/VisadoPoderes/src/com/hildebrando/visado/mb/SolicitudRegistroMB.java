@@ -931,11 +931,11 @@ public class SolicitudRegistroMB {
 	public void agregarDocumentosXTipoSolicitud() {
 		logger.info(" ************************** agrearDocumentosXTipoSolicitud  ****************************** ");
 		logger.info("iTipoSolicitud  : " + iTipoSolicitud);
-		if(selectedTipoDocumento!=null){
+		/*if(selectedTipoDocumento!=null){
 			sCodDocumento = selectedTipoDocumento.getCodDoc();
 		} else {
 			sCodDocumento = null;
-		}
+		}*/
 		logger.info("codDocumento :  " + sCodDocumento);
 		logger.info("lstAnexoSolicitud.size() :  " + lstAnexoSolicitud.size());
 
@@ -2007,6 +2007,16 @@ public class SolicitudRegistroMB {
 	public void setSelectedTipoDocumento(
 			TiivsTipoSolicDocumento selectedTipoDocumento) {
 		this.selectedTipoDocumento = selectedTipoDocumento;
-	}	
+	}
+
+	public String getsCodDocumento() {
+		return sCodDocumento;
+	}
+
+	public void setsCodDocumento(String sCodDocumento) {
+		this.sCodDocumento = sCodDocumento;
+	}
+	
+	
 
 }
