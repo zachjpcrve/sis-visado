@@ -11,6 +11,7 @@
 		class="org.springframework.beans.factory.config.ListFactoryBean">
 		<property name="sourceList">
 			<list>
+			        <value>hibernate/xml/TiivsDocumento.hbm.xml</value>
 					<value>hibernate/xml/TiivsSolicitud.hbm.xml</value>
 			        <value>hibernate/xml/TiivsEstudio.hbm.xml</value>
 			        <value>hibernate/xml/TiivsHistSolicitud.hbm.xml</value>
