@@ -238,7 +238,6 @@ public class RegistroUtilesMB {
 			comisionFinal = obtenerComision(sTipoComision);	
 		} else {
 			comisionFinal = new Double(0);
-			logger.info("La solicitud no tiene Poderdantes");
 			System.out.println("La solicitud no tiene Poderdantes");
 		}					
 		return comisionFinal;
