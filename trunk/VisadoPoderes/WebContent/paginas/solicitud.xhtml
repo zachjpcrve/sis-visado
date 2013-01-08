@@ -399,7 +399,7 @@
 															id="outImporteSoles" value="Importe en Soles"
 															title="Importe en Soles"></h:outputText></td>
 													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importeSoles}" readonly="true"/></td>
-													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solicitudRegMB.agrearOperacionBancaria}" update=":formSolicitudRegistro"/></td>
+													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solicitudRegMB.agregarOperacionBancaria}" actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}" update=":formSolicitudRegistro"/></td>
 													<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria"  action="#{solicitudRegMB.limpiarListaSolicitudesBancarias}" update=":formSolicitudRegistro" /></td>
 												</tr>
 												<tr>
