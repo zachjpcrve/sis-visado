@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 08/01/2013 11:29:48 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsDocumento" table="TIIVS_DOCUMENTO">
+        <id name="codDocumento" type="string">
+            <column name="COD_DOCUMENTO" length="7" />
+            <generator class="assigned" />
+        </id>
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="250" />
+        </property>
+        <property name="activo" type="string">
+            <column name="ACTIVO" length="1" />
+        </property>
+        <one-to-one name="tiivsTipoSolicDocumento" class="com.hildebrando.visado.modelo.TiivsTipoSolicDocumento"></one-to-one>
+    </class>
+</hibernate-mapping>
