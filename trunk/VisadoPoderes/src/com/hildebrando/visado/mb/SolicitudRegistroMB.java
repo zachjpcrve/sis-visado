@@ -8,8 +8,11 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.faces.application.FacesMessage;
@@ -124,6 +127,7 @@ public class SolicitudRegistroMB {
 	private int indexUpdateAgrupacionSimpleDto = 0;
 	private int indexUpdateSolicDocumentos = 0;
 	private int indexUpdatePersona = 0;
+	Map<Integer, TiivsSolicitudOperban> mapSolicitudes;
 	public static Logger logger = Logger.getLogger(SolicitudRegistroMB.class);
 
 	private UploadedFile file;
@@ -165,12 +169,13 @@ public class SolicitudRegistroMB {
 		aliasFilesToDelete = new ArrayList<String>();
 		
 		selectedTipoDocumento = new TiivsTipoSolicDocumento();
+		mapSolicitudes=new HashMap<Integer, TiivsSolicitudOperban>();
 
 	}
 
 	public void eliminarPersona() {
 		logger.info("**************************** eliminarPersona ****************************");
-		System.out.println(objTiivsPersonaCapturado.getCodPer());
+		logger.info(objTiivsPersonaCapturado.getCodPer());
 		lstTiivsPersona.remove(objTiivsPersonaCapturado);
 		objTiivsPersonaCapturado=new TiivsPersona();
         this.flagUpdatePersona=false;
@@ -205,20 +210,20 @@ public class SolicitudRegistroMB {
 			String extension = fichTemp.getName().substring(fichTemp.getName().lastIndexOf("."));
 			this.aliasArchivo = this.aliasArchivo + extension; 
 
-//			System.out.println("aliasArchivo : " + this.aliasArchivo);
-//			System.out.println("file.getFileName() : " + fichTemp.getName());
-//			System.out.println("file.getFileName() : " + ubicacionTemporal2);
+//			logger.info("aliasArchivo : " + this.aliasArchivo);
+//			logger.info("file.getFileName() : " + fichTemp.getName());
+//			logger.info("file.getFileName() : " + ubicacionTemporal2);
 			String ruta = pdfViewerMB.cargarUnicoPDF(ubicacionTemporal2);
 			
 			this.aliasArchivo = fichTemp.getName();
 						
 			if (ruta.compareTo("")!=0)
 			{
-				System.out.println("subio");
+				logger.info("subio");
 			}
 			else
 			{
-				System.out.println("no subio");
+				logger.info("no subio");
 			}
 			
 			canalSalida.flush();
@@ -245,7 +250,7 @@ public class SolicitudRegistroMB {
 	}	
 
 	public void listarDocumentosXSolicitud(ValueChangeEvent e) {
-		//System.out.println("ValuechanceEvent :  " + e.getNewValue());
+		//logger.info("ValuechanceEvent :  " + e.getNewValue());
 		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroTipoSolcDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);
 		filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic",(String) e.getNewValue()));
@@ -270,12 +275,12 @@ public class SolicitudRegistroMB {
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 
 		for (TiivsTipoSolicDocumento s : lstTipoSolicitudDocumentos) {
-			if (s.getObligatorio() == '1') {
+			if (s.getObligatorio().equals("1") ){
 				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getCodDoc(),
-						s.getDesDoc(), true + "", "",""));
+						s.getTiivsDocumento().getDescripcion(), true + "", "",""));
 			} else {
 				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getCodDoc(),
-						s.getDesDoc(), false + "", "",""));
+						s.getTiivsDocumento().getDescripcion(), false + "", "",""));
 			}
 		}
 
@@ -289,7 +294,7 @@ public class SolicitudRegistroMB {
 	}
 
 	public void obtenerPersonaSeleccionada() {
-		System.out.println(objTiivsPersonaSeleccionado.getCodPer());
+		logger.info(objTiivsPersonaSeleccionado.getCodPer());
 		this.objTiivsPersonaResultado = this.objTiivsPersonaSeleccionado;
 	}
 
@@ -304,7 +309,7 @@ public class SolicitudRegistroMB {
 		try {
 			List<TiivsPersona> lstTiivsPersonaLocal = new ArrayList<TiivsPersona>();
 			lstTiivsPersonaLocal = this.buscarPersonaLocal();
-			System.out.println("lstTiivsPersonaLocal  "
+			logger.info("lstTiivsPersonaLocal  "
 					+ lstTiivsPersonaLocal.size());
 			List<TiivsPersona> lstTiivsPersonaReniec = new ArrayList<TiivsPersona>();
 			if (lstTiivsPersonaLocal.size() == 0) {
@@ -496,7 +501,7 @@ public class SolicitudRegistroMB {
 		tiivsSolicitudAgrupacion.setActivo("1");
 
 		lstSolicitudArupacion.add(tiivsSolicitudAgrupacion);
-		System.out.println("TAMANIO DE LA SOLICI AGRUPA "
+		logger.info("TAMANIO DE LA SOLICI AGRUPA "
 				+ lstSolicitudArupacion.size());
 		return lstSolicitudArupacion;
 	}
@@ -555,7 +560,7 @@ public class SolicitudRegistroMB {
 							lstTiivsPersonaResultado);
 				} else {
 					// update
-					System.out.println("Index Update: " + indexUpdatePersona);
+					logger.info("Index Update: " + indexUpdatePersona);
 
 					this.lstTiivsPersona.set(indexUpdatePersona,
 							objTiivsPersonaCapturado);
@@ -622,7 +627,7 @@ public class SolicitudRegistroMB {
 				+ objTiivsPersonaResultado.getTipPartic());
 		boolean bResult = true;
 		String sMensaje = "";
-		System.out.println("objTiivsPersonaResultado.getClasifPer() "
+		logger.info("objTiivsPersonaResultado.getClasifPer() "
 				+ objTiivsPersonaResultado.getClasifPer());
 		if (objTiivsPersonaResultado.getTipDoi().equals("")) {
 			sMensaje = "Seleccione el Tipo de Documento";
@@ -677,9 +682,9 @@ public class SolicitudRegistroMB {
 				 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
 					 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
 						 lstCodNivel.add(x.getId().getCodNiv());
-						 System.out.println("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
-						 System.out.println("x.getId().getRangoInicio(): " +x.getId().getRangoInicio());
-						 System.out.println("x.getId().getRangoFin(): " +x.getId().getRangoFin());
+						 logger.info("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
+						 logger.info("x.getId().getRangoInicio(): " +x.getId().getRangoInicio());
+						 logger.info("x.getId().getRangoFin(): " +x.getId().getRangoFin());
 					 }
 				 }
 		     }
@@ -690,7 +695,7 @@ public class SolicitudRegistroMB {
 				 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
 					 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
 						 lstCodNivel.add(x.getId().getCodNiv());
-						 System.out.println("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
+						 logger.info("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
 					 }
 				 }
 		     }
@@ -701,7 +706,7 @@ public class SolicitudRegistroMB {
 				 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
 					 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
 						 lstCodNivel.add(x.getId().getCodNiv());
-						 System.out.println("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
+						 logger.info("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
 					 }
 				 }
 		     }
@@ -743,7 +748,7 @@ public class SolicitudRegistroMB {
 			  lstPoderdantes.add(objTiivsPersonaResultado);}
 		  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.APODERADO)){
 			  lstApoderdantes.add(objTiivsPersonaResultado);}
-		  System.out.println("objTiivsPersonaResultado.getCodPer() : "+objTiivsPersonaResultado.getCodPer());
+		  logger.info("objTiivsPersonaResultado.getCodPer() : "+objTiivsPersonaResultado.getCodPer());
 		  tiivsAgrupacionPersona =new TiivsAgrupacionPersona();
 		  TiivsAgrupacionPersonaId  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersonaId();
 		  tiivsAgrupacionPersonaId.setNumGrupo(numGrupo);
@@ -756,8 +761,8 @@ public class SolicitudRegistroMB {
 		  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
 		  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
 	}  
-	  System.out.println("lstPoderdantes " +lstPoderdantes.size());
-	  System.out.println("lstApoderdantes " +lstApoderdantes.size());
+	  logger.info("lstPoderdantes " +lstPoderdantes.size());
+	  logger.info("lstApoderdantes " +lstApoderdantes.size());
 	  AgrupacionSimpleDto agrupacionSimpleDto =new AgrupacionSimpleDto();
 	   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), numGrupo));
 	   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
@@ -768,9 +773,9 @@ public class SolicitudRegistroMB {
 	  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 	  solicitudRegistrarT.setTiivsSolicitudAgrupacions(this.agregarSolicitudArupacion(numGrupo));
 	  lstTiivsPersona=new ArrayList<TiivsPersona>();
-		System.out.println("Tamanio de la lista Solicitud Agrupacion : " +solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
+		logger.info("Tamanio de la lista Solicitud Agrupacion : " +solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
 	  this.llamarComision();
-	 System.out.println("tamanio de lstTiivsAgrupacionPersonas "+lstTiivsAgrupacionPersonas.size());
+	 logger.info("tamanio de lstTiivsAgrupacionPersonas "+lstTiivsAgrupacionPersonas.size());
 	  }
  }
   
@@ -781,8 +786,7 @@ public class SolicitudRegistroMB {
 		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
 		lstTiivsSolicitudAgrupacion = new HashSet<TiivsSolicitudAgrupacion>();
 		solicitudRegistrarT = new TiivsSolicitud();
-		solicitudRegistrarT
-				.setTiivsSolicitudAgrupacions(lstTiivsSolicitudAgrupacion);
+		solicitudRegistrarT.setTiivsSolicitudAgrupacions(lstTiivsSolicitudAgrupacion);
 		solicitudRegistrarT.setTiivsOficina1(new TiivsOficina1());
 		solicitudRegistrarT.setTiivsTipoSolicitud(new TiivsTipoSolicitud());
 		String grupoAdm = (String) Utilitarios.getObjectInSession("GRUPO_ADM");
@@ -818,7 +822,7 @@ public class SolicitudRegistroMB {
 			String sCodigoSol = service.obtenerPKNuevaSolicitud();
 			logger.debug(" sCodigoSol " + sCodigoSol);
 			this.solicitudRegistrarT.setCodSoli(sCodigoSol);
-		} catch (Exception e) {  
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02);
@@ -879,9 +883,8 @@ public class SolicitudRegistroMB {
 		String sMensaje = "";
 		for (TiivsTipoSolicDocumento x : this.lstTipoSolicitudDocumentos) {
 			for (TiivsAnexoSolicitud a : lstAnexoSolicitud) {
-				if (x.getObligatorio() == ConstantesVisado.DOCUMENTO_OBLIGATORIO
-						&& x.getCodDoc().equals(a.getId().getCodDoc())) {
-					result = true;
+				if (Integer.parseInt(x.getObligatorio()) == ConstantesVisado.DOCUMENTO_OBLIGATORIO&& x.getCodDoc().equals(a.getId().getCodDoc())) {
+					result = true; 
 				} else {
 					sMensaje = "Faltan Ingresar Documentos Obligatorios.";
 					Utilitarios.mensajeInfo("INFO", sMensaje);
@@ -987,7 +990,7 @@ public class SolicitudRegistroMB {
 				doc.setAlias("");
 				doc.setAliasLabel("");
 				if(doc.getItem().contains(ConstantesVisado.PREFIJO_OTROS)){
-					System.out.println("Este documento es de tipo otros");
+					logger.info("Este documento es de tipo otros");
 					lstdocumentos.remove(doc);
 				}
 				break;
@@ -1042,7 +1045,7 @@ public class SolicitudRegistroMB {
 			valorDolar = 0, valorFinal = 0;
 	int item = 0;
 
-	public void agrearOperacionBancaria() {
+	public void agregarOperacionBancaria() {
 		logger.info(" ************************** agrearOperacionBancaria  ****************************** ");
 		
 		double valor = 0;
@@ -1054,14 +1057,11 @@ public class SolicitudRegistroMB {
 				}
 			}
 			if (!this.flagUpdateOperacionSolic) {
-				if (objSolicBancaria.getMoneda().equals(
-						ConstantesVisado.MONEDAS.COD_SOLES)) {
+				if (objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
 					valorSoles_C += objSolicBancaria.getImporte();
-					objSolicBancaria.setImporteSoles(objSolicBancaria
-							.getImporte());
+					objSolicBancaria.setImporteSoles(objSolicBancaria.getImporte());
 					icontSoles++;
-					this.objSolicBancaria
-							.setsDescMoneda(ConstantesVisado.MONEDAS.SOLES);
+					this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.SOLES);
 				}
 				if (objSolicBancaria.getMoneda().equals(
 						ConstantesVisado.MONEDAS.COD_DOLAR)) {
@@ -1082,7 +1082,7 @@ public class SolicitudRegistroMB {
 					valorEuro += objSolicBancaria.getImporte();
 					objSolicBancaria.setImporteSoles(valor);
 					icontEuros++;
-					System.out.println("tamanio de euros : " + icontEuros);
+					logger.info("tamanio de euros : " + icontEuros);
 					this.objSolicBancaria
 							.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
 				}
@@ -1121,9 +1121,11 @@ public class SolicitudRegistroMB {
 				this.lstSolicBancarias.add(objSolicBancaria);
 			} else {
 				
-				System.out.println("objSolicitudOperacionCapturadoOld"+objSolicitudOperacionCapturadoOld.getImporte());
+				logger.info("objSolicitudOperacionCapturadoOld"+objSolicBancaria.getImporte() + " mapSolicitudes.size() " +mapSolicitudes.size());
 				if (objSolicitudOperacionCapturado.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
-					valorSoles_C =valorSoles_C+objSolicitudOperacionCapturadoOld.getImporte()- objSolicitudOperacionCapturado.getImporte();
+					logger.info("######################################### "+mapSolicitudes.get(mapSolicitudes.size()).getImporte());
+					
+					valorSoles_C =valorSoles_C-mapSolicitudes.get(mapSolicitudes.size()).getImporte()+ objSolicitudOperacionCapturado.getImporte();
 					icontSoles--;
 				}
 				if (objSolicitudOperacionCapturado.getMoneda().equals(
@@ -1227,20 +1229,21 @@ public class SolicitudRegistroMB {
 
 	public void limpiarListaSolicitudesBancarias() {
 		logger.info("**************************** limpiarListaSolicitudesBancarias ****************************");
-		this.lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
+		this.objSolicBancaria=new TiivsSolicitudOperban();
+		//this.lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
 	}
 
 	public void seterComentario() {
 		logger.info("**************************** Setear Comentario ****************************");
-		System.out.println("Comentario : " + this.solicitudRegistrarT.getObs());
+		logger.info("Comentario : " + this.solicitudRegistrarT.getObs());
 	}
 
 	public void eliminarOperacionBancaria() {
 		double valor = 0;
 		logger.info("**************************** eliminarOperacionBancaria ****************************");
 		// String valor = Utilitarios.capturarParametro("objOperacion");
-		// System.out.println("CODIGO DE OPERACION "+valor);
-		System.out.println(objSolicitudOperacionCapturado.getImporte());
+		// logger.info("CODIGO DE OPERACION "+valor);
+		logger.info(objSolicitudOperacionCapturado.getImporte());
 		lstSolicBancarias.remove(objSolicitudOperacionCapturado);
 		if (objSolicitudOperacionCapturado.getMoneda().equals(
 				ConstantesVisado.MONEDAS.COD_SOLES)) {
@@ -1310,7 +1313,7 @@ public class SolicitudRegistroMB {
 		Set<TiivsSolicitudAgrupacion> lstSolicitudAgrupacion = (Set<TiivsSolicitudAgrupacion>) this.solicitudRegistrarT
 				.getTiivsSolicitudAgrupacions();
 
-		System.out.println("Tamanio de la lista Solicitud Agrupacion : "
+		logger.info("Tamanio de la lista Solicitud Agrupacion : "
 				+ lstSolicitudAgrupacion.size());
 		for (TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion : lstSolicitudAgrupacion) {
 			if (tiivsSolicitudAgrupacion.getId().equals(
@@ -1322,7 +1325,7 @@ public class SolicitudRegistroMB {
 		numGrupo--;
 
 		// lstTiivsAgrupacionPersonas.remove(objAgrupacionSimpleDtoCapturado.g)
-		System.out.println("Tamanio de la lista Solicitud Agrupacion : "
+		logger.info("Tamanio de la lista Solicitud Agrupacion : "
 				+ lstSolicitudAgrupacion.size());
 		this.llamarComision();
 		this.objAgrupacionSimpleDtoCapturado = new AgrupacionSimpleDto();
@@ -1331,24 +1334,49 @@ public class SolicitudRegistroMB {
 	public void verAgrupacion() {
 		logger.info("********************** verAgrupacion *********************************** ");
 
-		System.out.println("this.objAgrupacionSimpleDtoCapturado  "
+		logger.info("this.objAgrupacionSimpleDtoCapturado  "
 				+ this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
-		System.out.println("this.objAgrupacionSimpleDtoCapturado  "
+		logger.info("this.objAgrupacionSimpleDtoCapturado  "
 				+ this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
-		System.out.println("this.objAgrupacionSimpleDtoCapturado  "
+		logger.info("this.objAgrupacionSimpleDtoCapturado  "
 				+ this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
 	}
-
+	
+	int y=0;
+    public void obtenerAccionAgregarOperacionBancaria(){
+    	logger.info("**************************** obtenerAccionAgregarOperacionBancaria ****************************");
+    	logger.info("********************************************* : "+objSolicBancaria.getImporte());
+    	
+    }
 	public void editarOperacionBancaria() {
 		logger.info("**************************** editarOperacionBancaria ****************************");
+		
 		for (int i = 0; i < this.lstSolicBancarias.size(); i++) {
 			if (objSolicitudOperacionCapturado.equals(this.lstSolicBancarias.get(i))) {
 				indexUpdateOperacion = i;
+				break;
 			}
 		}
-		if(!flagUpdateOperacionSolic){
+		y=y+1;
+		logger.info("yyyyyyy : " +y);
+	//	Map<String, TiivsSolicitudOperban> mapSolicitudes=new HashMap<String, TiivsSolicitudOperban>();
+		mapSolicitudes.put(y, objSolicitudOperacionCapturado);
+		
+		Set set = mapSolicitudes.entrySet(); 
+		// Get an iterator 
+		Iterator iterate = set.iterator(); 
+		// Display elements 
+		
+		while(iterate.hasNext()) { 
+		Map.Entry me = (Map.Entry)iterate.next(); 
+		System.out.print(me.getKey() + ": "); 
+		logger.info(me.getValue()); 
+		} 
+		
+		logger.info("mapSolicitudes.get(mapSolicitudes.size()).getImporte()"+mapSolicitudes.get(mapSolicitudes.size()).getImporte());
+		//if(!flagUpdateOperacionSolic){
 		this.objSolicitudOperacionCapturadoOld=this.objSolicitudOperacionCapturado;
-		}
+		//}
 		this.objSolicBancaria = this.objSolicitudOperacionCapturado;
 		this.flagUpdateOperacionSolic = true;
 	}
@@ -1372,8 +1400,7 @@ public class SolicitudRegistroMB {
 
 	public void llamarComision() {
 		logger.info("************************** llamar Comusion *****************************");
-		this.solicitudRegistrarT.setComision(objRegistroUtilesMB
-				.calcularComision(this.solicitudRegistrarT));
+		this.solicitudRegistrarT.setComision(objRegistroUtilesMB.calcularComision(this.solicitudRegistrarT));
 		logger.info("COMISION : " + this.solicitudRegistrarT.getComision());
 
 	}
@@ -1382,70 +1409,63 @@ public class SolicitudRegistroMB {
 	public void registrarSolicitud() {
 		String mensaje = "";
 		logger.info("*********************** registrarSolicitud ************************");
-		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
-		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
-		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
-
-		GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+        GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		try {
 			this.solicitudRegistrarT.setFecha(new Date());
 
 			logger.info("usuario.getUID() " + usuario.getUID());
 			this.solicitudRegistrarT.setRegUsuario(usuario.getUID());
 			this.solicitudRegistrarT.setNomUsuario(usuario.getNombre());
-			logger.info("tiivsOficina1.codOfi ::::::: "
-					+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+			logger.info("tiivsOficina1.codOfi ::::::: "+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
 			for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
-				if (tiivsOficina1.getCodOfi()
-						.equals(this.solicitudRegistrarT.getTiivsOficina1()
-								.getCodOfi())) {
+				if (tiivsOficina1.getCodOfi().equals(this.solicitudRegistrarT.getTiivsOficina1().getCodOfi())) {
 					this.solicitudRegistrarT.setTiivsOficina1(tiivsOficina1);
 				}
 			}
 
-			System.out.println("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : "+ solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
+			logger.info("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : "+ solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
 			if (this.validarRegistroSolicitud()) {
 				if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 					this.enviarSolicitudSSJJ();
 				}
-				TiivsSolicitud objResultado = service
-						.insertar(this.solicitudRegistrarT);
-				/*
-				 * for (TiivsSolicitudAgrupacion x :
-				 * this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
-				 * for (TiivsAgrupacionPersona b :
-				 * x.getTiivsAgrupacionPersonas()) { TiivsPersona
-				 * objPer=servicePers.insertar(b.getTiivsPersona());
-				 * b.setTiivsPersona(objPer);
-				 * System.out.println("objPer "+objPer.getCodPer());
-				 * serviceAgru.insertar(b); } //samira }
-				 */
+				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
+				
+				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+				/*  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { TiivsPersona
+					    objPer=servicePers.insertar(b.getTiivsPersona());
+				  		b.setTiivsPersona(objPer);
+				  		logger.info("objPer "+objPer.getCodPer());
+				  		serviceAgru.insertar(b); 
+				  } 
+				  */
+				  }
+				//Renombra los archivos
+				  this.renombrarArchivos();
+				  for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
+					  logger.info("nnnnnnnnnnnnnnnnnnnnnnn "+n.getAliasArchivo());
+					  serviceAnexos.insertar(n);
+				}
+				 
 				for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
-					System.out.println("a.getId().getCodOperBan() **** "
-							+ a.getId().getCodOperBan());
+					logger.info("a.getId().getCodOperBan() **** "+ a.getId().getCodOperBan());
 					a.getId().setCodSoli(this.solicitudRegistrarT.getCodSoli());
-					System.out.println("a.getId().getCodSoli() **** "
-							+ a.getId().getCodSoli());
-					TiivsSolicitudOperban objResulOperaciones = serviceSoli
-							.insertar(a);
+					logger.info("a.getId().getCodSoli() **** "+ a.getId().getCodSoli());
+					 serviceSoli.insertar(a);
 				}
 				if (objResultado.getCodSoli() != "" || objResultado != null) {
 					if (this.sEstadoSolicitud.equals("BORRADOR")) {
-						mensaje = "Se registro correctamente la Solicitud con codigo : "
-								+ objResultado.getCodSoli() + " en Borrador";
+						mensaje = "Se registro correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
 						Utilitarios.mensajeInfo("INFO", mensaje);
 					} else {
-						mensaje = "Se envio a SSJJ correctamente la Solicitud con codigo : "
-								+ objResultado.getCodSoli();
+						mensaje = "Se envio a SSJJ correctamente la Solicitud con codigo : "+ objResultado.getCodSoli();
 						Utilitarios.mensajeInfo("INFO", mensaje);
 					}
 					
-					//Renombra los archivos
-					this.renombrarArchivos();
+					
 					//--this.eliminarArchivosTemporales();
 					
 				} else {
@@ -1457,12 +1477,8 @@ public class SolicitudRegistroMB {
 					
 				}
 
-				System.out.println("objResultado.getCodSoli(); "
-						+ objResultado.getCodSoli());
-				System.out
-						.println("objResultado.getTiivsSolicitudAgrupacions() "
-								+ objResultado.getTiivsSolicitudAgrupacions()
-										.size());
+				logger.info("objResultado.getCodSoli(); "+ objResultado.getCodSoli());
+				logger.info("objResultado.getTiivsSolicitudAgrupacions() "+ objResultado.getTiivsSolicitudAgrupacions().size());
 
 				instanciarSolicitudRegistro();
 			}
@@ -1478,19 +1494,17 @@ public class SolicitudRegistroMB {
 	public void enviarSolicitudSSJJ() {
 		Timestamp time = new Timestamp(objRegistroUtilesMB
 				.obtenerFechaRespuesta().getTime());
-		System.out.println("time : " + time);
+		logger.info("time : " + time);
 		String sCodigoEstudio = objRegistroUtilesMB.obtenerEstudioMenorCarga();
-		System.out.println(" sCodigoEstudio +  " + sCodigoEstudio);
+		logger.info(" sCodigoEstudio +  " + sCodigoEstudio);
 		for (TiivsEstudio x : combosMB.getLstEstudio()) {
 			if (x.getCodEstudio().equals(sCodigoEstudio)) {
 				this.solicitudRegistrarT.setTiivsEstudio(x);
 			}
 		}
-		this.solicitudRegistrarT
-				.setEstado(ConstantesVisado.CODIGO_ESTADO_ENVIADO);
+		this.solicitudRegistrarT.setEstado(ConstantesVisado.CODIGO_ESTADO_ENVIADO);
 		this.solicitudRegistrarT.setFechaRespuesta(time);
-		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date()
-				.getTime()));
+		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date().getTime()));
 	}
 
 	public void registrarSolicitudBorrador() {
@@ -1553,7 +1567,7 @@ public class SolicitudRegistroMB {
 					+ tmp.getIdSistema() + "&" + "txtLogin=" + usuario.getUID();
 		}
 
-		System.out.println("URL: " + cadFinal);
+		logger.info("URL: " + cadFinal);
 
 		return cadFinal;
 	}
