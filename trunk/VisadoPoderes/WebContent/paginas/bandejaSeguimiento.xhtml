@@ -169,8 +169,8 @@
 						        <f:selectItems value="#{seguimientoMB.combosMB.niveles}" />  
 						    </p:selectCheckboxMenu>  
 						</td>
-						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolNivel" /></td>	
-						<p:tooltip for="toolNivel" value="Nivel" showEffect="fade" hideEffect="fade" />	
+						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolNivel" rendered="#{sessionScope.GRUPO_JRD != null}"/></td>	
+						<p:tooltip for="toolNivel" value="Nivel" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_JRD != null}"/>	
 						<td >
 							<h:outputText styleClass="outputText" id="txtEstNivel" value="Estado del Nivel:" rendered="#{sessionScope.GRUPO_JRD != null}"/>
 						</td>
@@ -180,8 +180,8 @@
 						        <f:selectItems value="#{seguimientoMB.combosMB.estadosNivel}"/>  
 						    </p:selectCheckboxMenu> 
 						</td>
-						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstNivel" /></td>	
-						<p:tooltip for="toolEstNivel" value="Estados del Nivel" showEffect="fade" hideEffect="fade" />	
+						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstNivel" rendered="#{sessionScope.GRUPO_JRD != null}" /></td>	
+						<p:tooltip for="toolEstNivel" value="Estados del Nivel" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_JRD != null}"/>	
 						<td >
 							<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio" rendered="#{sessionScope.GRUPO_JRD != null}"/>
 						</td>
@@ -191,13 +191,22 @@
 						        <f:selectItems value="#{seguimientoMB.combosMB.estudios}" />  
 						    </p:selectCheckboxMenu>  
 						</td>
-						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstudio" /></td>	
-						<p:tooltip for="toolEstudio" value="Estudio" showEffect="fade" hideEffect="fade" />	
+						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstudio" rendered="#{sessionScope.GRUPO_JRD != null}"/></td>	
+						<p:tooltip for="toolEstudio" value="Estudio" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_JRD != null}"/>	
 						 		
 					</tr>
 					
 					<tr bordercolor="white">
-							
+						<td>
+							<h:outputText styleClass="outputText" id="txtEnRev" value="En revision" />
+						</td>
+						<td >
+							<p:selectBooleanCheckbox id="bEnRevision" value="#{seguimientoMB.conRevision}"/>  
+						</td>
+						<td >
+							<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEnRev" />
+							<p:tooltip for="toolEnRev" value="Solicitud en Revision" showEffect="fade" hideEffect="fade" />	
+						</td>			
 						<td>
 							<h:outputText styleClass="outputText" id="txtDel" value="Delegados" />
 						</td>
@@ -208,18 +217,9 @@
 							<p:graphicImage value="/resources/images/pregunta.jpg" id="toolDele" />
 							<p:tooltip for="toolDele" value="Delegados" showEffect="fade" hideEffect="fade" />
 						</td>
+											
 						<td>
-							<h:outputText styleClass="outputText" id="txtEnRev" value="En revision" />
-						</td>
-						<td >
-							<p:selectBooleanCheckbox id="bEnRevision" value="#{seguimientoMB.conRevision}"/>  
-						</td>
-						<td >
-							<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEnRev" />
-							<p:tooltip for="toolEnRev" value="Solicitud en Revision" showEffect="fade" hideEffect="fade" />	
-						</td>							
-						<td>
-							<h:outputText styleClass="outputText" id="txtExo" value="Revocados" />
+							<h:outputText styleClass="outputText" id="txtExo" value="Revocatoria" />
 						</td>
 						<td>
 							<p:selectBooleanCheckbox id="bExonerados" value="#{seguimientoMB.conExonerados}"/>  
