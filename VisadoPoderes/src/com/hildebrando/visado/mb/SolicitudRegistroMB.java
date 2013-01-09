@@ -129,7 +129,8 @@ public class SolicitudRegistroMB {
 	private int indexUpdatePersona = 0;
 	Map<Integer, TiivsSolicitudOperban> mapSolicitudes;
 	public static Logger logger = Logger.getLogger(SolicitudRegistroMB.class);
-
+	String cadenaEscanerFinal = "";
+	//http://172.31.9.41:9080/NAEWeb/pages/escaner/InvocaEscaner.xhtml?idEmpresa=1&idSistema=98&txLogin=P014773
 	private UploadedFile file;
 	private String sMonedaImporteGlobal;  
 	  
@@ -1559,19 +1560,19 @@ public class SolicitudRegistroMB {
 
 	public String prepararURLEscaneo() {
 
-		String cadFinal = "";
-
+		
+        usuario.setUID("P014773");
 		for (TiivsParametros tmp : pdfViewerMB.getLstParametros()) {
-			cadFinal = tmp.getUrlAPP() + "?" + "idEmpresa="
+			cadenaEscanerFinal = tmp.getUrlAPP() + "?" + "idEmpresa="
 					+ tmp.getIdEmpresa() + "&" + "idSistema="
 					+ tmp.getIdSistema() + "&" + "txtLogin=" + usuario.getUID();
 		}
 
-		logger.info("URL: " + cadFinal);
+		logger.info("URL: " + cadenaEscanerFinal);
 
-		return cadFinal;
+		return cadenaEscanerFinal;
 	}
-	
+	 
 	
 	public void renombrarArchivos(){
 		logger.info("************renombrarArchivos()*¨**************");
@@ -1896,6 +1897,14 @@ public class SolicitudRegistroMB {
 
 	public void setsCodDocumento(String sCodDocumento) {
 		this.sCodDocumento = sCodDocumento;
+	}
+
+	public String getCadenaEscanerFinal() {
+		return cadenaEscanerFinal;
+	}
+
+	public void setCadenaEscanerFinal(String cadenaEscanerFinal) {
+		this.cadenaEscanerFinal = cadenaEscanerFinal;
 	}
 	
 	
