@@ -246,7 +246,7 @@ public class QuartzMB  implements Serializable
 		    	}
 			*/
 			
-			System.out.println("En el crear cron *********** crearCronTrigger");
+			log.debug("En el crear cron *********** crearCronTrigger");
     	    boolean msValidacion =false;
     	    if(objParamQrtz.getQrtzJobDetails().getId().getJobName().equals("")||objParamQrtz.getQrtzJobDetails().getId().getJobName()==null){
     	    	Utilitarios.mensajeInfo(""," *Ingrese un Nombre para el JobDetail");

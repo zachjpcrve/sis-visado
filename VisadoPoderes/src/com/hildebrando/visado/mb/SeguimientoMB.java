@@ -138,7 +138,7 @@ public class SeguimientoMB
 		
 		if (textoOficina.compareTo("")!=0)
 		{
-			System.out.println("Texto Oficina a setear: " + textoOficina);
+			logger.info("Texto Oficina a setear: " + textoOficina);
 			setTxtNomOficina(textoOficina);
 		}
 		
@@ -356,7 +356,6 @@ public class SeguimientoMB
 		// 1. Filtro por codigo de solicitud		
 		if (getCodSolicitud().compareTo("") != 0) 
 		{
-			System.out.println("Entro 1");
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,	getCodSolicitud()));
 		}
 
@@ -367,12 +366,11 @@ public class SeguimientoMB
 			// System.out.println("Filtro estado: " + codEstado);
 			// filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,
 			// codEstado));
-			System.out.println("Entro 2");
 			int ind = 0;
 
 			for (; ind <= lstEstadoSelected.size() - 1; ind++) 
 			{
-				System.out.println("Estados: " + lstEstadoSelected.get(ind));
+				logger.info("Estados: " + lstEstadoSelected.get(ind));
 				// filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,
 				// lstEstadoSelected.get(ind)));
 			}
@@ -384,7 +382,6 @@ public class SeguimientoMB
 		// 3. Filtro por importe
 		if (getIdImporte().compareTo("") != 0) 
 		{
-			System.out.println("Entro 3");
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
 			{
 				filtroSol.add(Restrictions.le(
@@ -423,7 +420,6 @@ public class SeguimientoMB
 
 		// 4. Filtro por tipo de solicitud
 		if (lstTipoSolicitudSelected.size() > 0) {
-			System.out.println("Entro 4");
 			filtroSol.createAlias(ConstantesVisado.NOM_TBL_TIPO_SERVICIO,
 					ConstantesVisado.ALIAS_TBL_TIPO_SERVICIO);
 			// filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OPE_ALIAS,
@@ -434,7 +430,6 @@ public class SeguimientoMB
 		// 5. Filtro por tipo de fecha
 		if (getIdTiposFecha().compareTo("") != 0) 
 		{
-			System.out.println("Entro 5");
 			if (getIdTiposFecha().equalsIgnoreCase(
 					ConstantesVisado.TIPO_FECHA_ENVIO)) // Es fecha de envio
 			{
@@ -464,14 +459,12 @@ public class SeguimientoMB
 		// 6. Filtro por operacion bancaria
 		if (getIdOpeBan().compareTo("") != 0) 
 		{
-			System.out.println("Entro 6");
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_OPE_BANCARIAS,
 					getIdOpeBan()));
 		}
 
 		// 7. Filtro por codigo de oficina
 		if (getTxtCodOfi().compareTo("") != 0) {
-			System.out.println("Entro 7");
 			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,
 					ConstantesVisado.ALIAS_TBL_OFICINA);
 			filtroSol.add(Restrictions.eq(
@@ -480,7 +473,6 @@ public class SeguimientoMB
 
 		// 8. Filtro por nombre de oficina
 		if (getTxtNomOfi().compareTo("") != 0) {
-			System.out.println("Entro 8");
 			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,
 					ConstantesVisado.ALIAS_TBL_OFICINA);
 			String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE
@@ -492,7 +484,6 @@ public class SeguimientoMB
 
 		// 9. Filtro por combo de codigos de oficina
 		if (getIdCodOfi().compareTo("") != 0) {
-			System.out.println("Entro 9");
 			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,
 					ConstantesVisado.ALIAS_TBL_OFICINA);
 			filtroSol.add(Restrictions.eq(
@@ -501,7 +492,6 @@ public class SeguimientoMB
 
 		// 10. Filtro por combo de oficinas
 		if (getIdCodOfi1().compareTo("") != 0) {
-			System.out.println("Entro 10");
 			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,
 					ConstantesVisado.ALIAS_TBL_OFICINA);
 			filtroSol.add(Restrictions.eq(
@@ -510,7 +500,6 @@ public class SeguimientoMB
 
 		// 11. Filtro por numero de documento de apoderado
 		if (getNroDOIApoderado().compareTo("") != 0) {
-			System.out.println("Entro 11");
 			filtroSol.add(Restrictions.eq(
 					ConstantesVisado.CAMPO_NUMDOC_APODERADO,
 					getNroDOIApoderado()));
@@ -518,7 +507,6 @@ public class SeguimientoMB
 
 		// 12. Filtro por nombre de apoderado
 		if (getTxtNomApoderado().compareTo("") != 0) {
-			System.out.println("Entro 12");
 			String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE
 					+ getTxtNomApoderado().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
 			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_APODERADO,
@@ -527,7 +515,6 @@ public class SeguimientoMB
 		
 		// 13. Filtro por numero de documento de poderdante
 		if (getNroDOIPoderdante().compareTo("") != 0) {
-			System.out.println("Entro 13");
 			filtroSol.add(Restrictions.eq(
 					ConstantesVisado.CAMPO_NUMDOC_PODERDANTE,
 					getNroDOIPoderdante()));
@@ -535,7 +522,6 @@ public class SeguimientoMB
 
 		// 14. Filtro por nombre de poderdante
 		if (getTxtNomPoderdante().compareTo("") != 0) {
-			System.out.println("Entro 14");
 			String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE
 					+ getTxtNomPoderdante().concat(
 							ConstantesVisado.SIMBOLO_PORCENTAJE);
@@ -545,8 +531,7 @@ public class SeguimientoMB
 
 		// 15. Filtro por nivel
 		if (lstNivelSelected.size() > 0) {
-			System.out.println("Entro 15");
-
+			
 			for (TiivsSolicitud sol : solicitudes) {
 				if (sol.getTxtNivel() != null && sol.getTxtNivel().length() > 0) {
 					if (lstNivelSelected.get(0).indexOf(sol.getTxtNivel()) != -1) {
@@ -559,12 +544,12 @@ public class SeguimientoMB
 
 		// 16. Filtro por estado de nivel
 		if (lstEstadoNivelSelected.size() > 0) {
-			System.out.println("Entro 16");
+			
 		}
 
 		// 17. Filtro por estudio
 		if (lstEstudioSelected.size() > 0) {
-			System.out.println("Entro 17");
+			
 			// filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTUDIO,
 			// getIdEstudio()));
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTUDIO,lstEstudioSelected));
@@ -572,7 +557,7 @@ public class SeguimientoMB
 
 		// 18. Filtro por territorio
 		if (getIdTerr().compareTo("") != 0) {
-			System.out.println("Entro 18");
+			
 			String codTerr = getIdTerr().trim();
 			// System.out.println("Buscando territorio: " + codTerr);
 			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,
@@ -677,9 +662,7 @@ public class SeguimientoMB
 		if (e.getNewValue() != null) 
 		{
 			logger.debug("Buscando oficina por territorio: " + e.getNewValue());
-			System.out.println("Buscando oficina por territorio: "
-					+ e.getNewValue());
-
+			
 			GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
 			filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_TERR_NO_ALIAS, e.getNewValue()));
@@ -970,9 +953,7 @@ public class SeguimientoMB
 	public void buscarOficinaPorNombre(ValueChangeEvent e) 
 	{
 		logger.debug("Buscando oficina por nombre: " + e.getNewValue());
-		 System.out.println("Buscando oficina por nombre: " +
-		 e.getNewValue());
-
+		
 		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
 		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,

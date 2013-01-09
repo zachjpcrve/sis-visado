@@ -89,7 +89,7 @@ public class PDFViewerMB {
 			cadFinal=tmp.getUrlAPP()+"?"+"idEmpresa="+tmp.getIdEmpresa()+"&"+"idSistema="+tmp.getIdSistema()+"&"+"txtLogin="+usuario;
 		}
 		
-		System.out.println("URL: " + cadFinal);
+		logger.debug("URL: " + cadFinal);
 		
 		return cadFinal;
 	}
@@ -108,7 +108,7 @@ public class PDFViewerMB {
 			logger.debug("Error al cargar el listado de parametros");
 		}
 		
-		System.out.println("Lista de parametros encontrados: " + lstParametros.size());
+		logger.debug("Lista de parametros encontrados: " + lstParametros.size());
 	}
 	
 	public boolean validarObligatorioPDF()
@@ -135,7 +135,7 @@ public class PDFViewerMB {
 				if (lista[i].getPath().contains(getAliasArchivo()))
 				{
 					existe=true;
-					System.out.println("Archivo: " + getAliasArchivo()  + " existe en directorio local.");	
+					logger.debug("Archivo: " + getAliasArchivo()  + " existe en directorio local.");	
 					
 				}
 			}
@@ -143,7 +143,7 @@ public class PDFViewerMB {
 				
 		if (!existe)
 		{
-			System.out.println("Archivo: " + getAliasArchivo()  + " no existe en directorio local.");	
+			logger.debug("Archivo: " + getAliasArchivo()  + " no existe en directorio local.");	
 		}
 		return existe; 
 	}
@@ -180,7 +180,7 @@ public class PDFViewerMB {
 			
 			tmp.setDocumento("Copia "+ i);
 			tmp.setNomArchivo(lista[i].getPath());
-			System.out.println("Ruta archivo " + i  + ": " + tmp.getNomArchivo());
+			logger.debug("Ruta archivo " + i  + ": " + tmp.getNomArchivo());
 			tmp.setFormato("Blanco y Negro");
 			InputStream stream = this.getClass().getResourceAsStream(lista[i].getPath());
 	        file = new DefaultStreamedContent(stream, "application/pdf");  
@@ -189,7 +189,7 @@ public class PDFViewerMB {
 			lstPDFEscaneados.add(tmp);
 		}
 		
-		System.out.println("Tamanio lista PDF: " + lstPDFEscaneados.size());
+		logger.debug("Tamanio lista PDF: " + lstPDFEscaneados.size());
 	}
 	
 	
@@ -206,7 +206,7 @@ public class PDFViewerMB {
 	
 		if (lstParametros!=null) 
 		{
-			System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
+			logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
 			
 			for (TiivsParametros tmp: lstParametros)
 			{
@@ -224,13 +224,13 @@ public class PDFViewerMB {
 		}		
 		
 				
-		System.out.println("Parametros leidos de BD");
-		System.out.println("Dir Server: " + urlServer);
-		System.out.println("Dir Local: " + dirLocal);
-		System.out.println("Server: " + server);
-		System.out.println("Login Server:_" + loginServer);
-		System.out.println("Pass Server: " + passServer);
-		System.out.println("Carpeta Remota: " + carpetaRemota);
+		logger.debug("Parametros leidos de BD");
+		logger.debug("Dir Server: " + urlServer);
+		logger.debug("Dir Local: " + dirLocal);
+		logger.debug("Server: " + server);
+		logger.debug("Login Server:_" + loginServer);
+		logger.debug("Pass Server: " + passServer);
+		logger.debug("Carpeta Remota: " + carpetaRemota);
 		
 				
 		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
@@ -273,7 +273,7 @@ public class PDFViewerMB {
 		
 		if (lstParametros!=null) 
 		{
-			System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
+			logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
 			
 			for (TiivsParametros tmp: lstParametros)
 			{
@@ -291,13 +291,13 @@ public class PDFViewerMB {
 		}		
 		
 				
-		System.out.println("Parametros leidos de BD");
-		System.out.println("Dir Server: " + urlServer);
-		System.out.println("Dir Local: " + dirLocal);
-		System.out.println("Server: " + server);
-		System.out.println("Login Server:_" + loginServer);
-		System.out.println("Pass Server: " + passServer);
-		System.out.println("Carpeta Remota: " + carpetaRemota);
+		logger.debug("Parametros leidos de BD");
+		logger.debug("Dir Server: " + urlServer);
+		logger.debug("Dir Local: " + dirLocal);
+		logger.debug("Server: " + server);
+		logger.debug("Login Server:_" + loginServer);
+		logger.debug("Pass Server: " + passServer);
+		logger.debug("Carpeta Remota: " + carpetaRemota);
 		
 				
 		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
@@ -389,7 +389,7 @@ public class PDFViewerMB {
 		{
 			if (lstParametros!=null) 
 			{
-				System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
+				logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
 				
 				for (TiivsParametros tmp: lstParametros)
 				{
@@ -412,7 +412,7 @@ public class PDFViewerMB {
 		{
 			if (lstParametros!=null) 
 			{
-				System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
+				logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
 				
 				for (TiivsParametros tmp: lstParametros)
 				{
@@ -432,13 +432,13 @@ public class PDFViewerMB {
 			}
 		}
 		
-		System.out.println("Parametros leidos de BD");
-		System.out.println("Dir Server: " + urlServer);
-		System.out.println("Dir Local: " + dirLocal);
-		System.out.println("Server: " + server);
-		System.out.println("Login Server:_" + loginServer);
-		System.out.println("Pass Server: " + passServer);
-		System.out.println("Carpeta Remota: " + carpetaRemota);
+		logger.debug("Parametros leidos de BD");
+		logger.debug("Dir Server: " + urlServer);
+		logger.debug("Dir Local: " + dirLocal);
+		logger.debug("Server: " + server);
+		logger.debug("Login Server:_" + loginServer);
+		logger.debug("Pass Server: " + passServer);
+		logger.debug("Carpeta Remota: " + carpetaRemota);
 		
 				
 		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
@@ -495,7 +495,7 @@ public class PDFViewerMB {
 					
 					tmp.setDocumento("Copia "+ ind);
 					tmp.setNomArchivo(listaTMP.get(ind).toString());
-					System.out.println("Ruta archivo " + ind  + ": " + tmp.getNomArchivo());
+					logger.debug("Ruta archivo " + ind  + ": " + tmp.getNomArchivo());
 					tmp.setFormato("Blanco y Negro");
 					tmp.setRutaArchivoLarga(urlServer+tmp.getNomArchivo());
 					
@@ -543,7 +543,7 @@ public class PDFViewerMB {
 	public void showPDF()
 	{
 		String archivoPDF=getSelectEscaneado().getNomArchivo();
-		System.out.println("PDF File: " +archivoPDF);
+		logger.debug("PDF File: " +archivoPDF);
 		//setUrlPDF(archivoPDF);
 		//setMostrarPDF(true);
 		
@@ -648,7 +648,7 @@ public class PDFViewerMB {
 		
 		if (lstParametros!=null) 
 		{
-			System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
+			logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
 			
 			for (TiivsParametros tmp: lstParametros)
 			{
@@ -666,13 +666,13 @@ public class PDFViewerMB {
 		}		
 		
 				
-		System.out.println("Parametros leidos de BD");
-		System.out.println("Dir Server: " + urlServer);
-		System.out.println("Dir Local: " + dirLocal);
-		System.out.println("Server: " + server);
-		System.out.println("Login Server:_" + loginServer);
-		System.out.println("Pass Server: " + passServer);
-		System.out.println("Carpeta Remota: " + carpetaRemota);
+		logger.debug("Parametros leidos de BD");
+		logger.debug("Dir Server: " + urlServer);
+		logger.debug("Dir Local: " + dirLocal);
+		logger.debug("Server: " + server);
+		logger.debug("Login Server:_" + loginServer);
+		logger.debug("Pass Server: " + passServer);
+		logger.debug("Carpeta Remota: " + carpetaRemota);
 		
 		
 		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
@@ -713,7 +713,7 @@ public class PDFViewerMB {
 		
 		if (lstParametros!=null) 
 		{
-			System.out.println("Tamanio lista parametros: " + lstParametros.size()); 
+			logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
 			
 			for (TiivsParametros tmp: lstParametros)
 			{
@@ -731,13 +731,13 @@ public class PDFViewerMB {
 		}		
 		
 				
-		System.out.println("Parametros leidos de BD");
-		System.out.println("Dir Server: " + urlServer);
-		System.out.println("Dir Local: " + dirLocal);
-		System.out.println("Server: " + server);
-		System.out.println("Login Server:_" + loginServer);
-		System.out.println("Pass Server: " + passServer);
-		System.out.println("Carpeta Remota: " + carpetaRemota);
+		logger.debug("Parametros leidos de BD");
+		logger.debug("Dir Server: " + urlServer);
+		logger.debug("Dir Local: " + dirLocal);
+		logger.debug("Server: " + server);
+		logger.debug("Login Server:_" + loginServer);
+		logger.debug("Pass Server: " + passServer);
+		logger.debug("Carpeta Remota: " + carpetaRemota);
 		
 		
 		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);

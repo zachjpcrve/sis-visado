@@ -52,7 +52,7 @@ public class RegistroUtilesMB {
 	public void asignarEstudio() {
 		
 		String estudioAsignado = obtenerEstudioMenorCarga();
-		System.out.println("Estudio Asignado:" + estudioAsignado);
+		logger.debug("Estudio Asignado:" + estudioAsignado);
 		this.resultado = estudioAsignado;
 	}
 	
@@ -99,7 +99,7 @@ public class RegistroUtilesMB {
 		solicitud.setTiivsSolicitudAgrupacions(setAgrupacion);
 					
 		resultado = this.calcularComision(solicitud).toString();		
-		System.out.println("Fin metodo");
+		logger.debug("Fin metodo");
 	}
 
 	
@@ -163,7 +163,7 @@ public class RegistroUtilesMB {
 			 " EST.COD_ESTUDIO" +
 			 " ORDER BY NRO_SOLICITUDES ASC";	
 		
-		System.out.println("Consulta:"+sql);
+		logger.debug("Consulta:"+sql);
 		
 
 		try {			
@@ -173,7 +173,7 @@ public class RegistroUtilesMB {
 				resultEstudio = (String) lstEstudios.get(0)[0];
 			} else { //asignación automática
 				logger.info("Estudios sin solicitudes pendientes - Se asignará aleatoriamente");
-				System.out.println("Estudios sin solicitudes pendientes - Se asignará aleatoriamente");
+				logger.debug("Estudios sin solicitudes pendientes - Se asignará aleatoriamente");
 				resultEstudio = getRandomEstudio();
 			}
 		} catch (Exception e) {
@@ -206,7 +206,7 @@ public class RegistroUtilesMB {
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.error("No se pudo obtener el parámero de comisión:"+e.getMessage(),e);			
-			System.out.println("No se pudo obtener el parámero de comisión");			
+			logger.debug("No se pudo obtener el parámero de comisión");			
 			dMontoLimite = null;
 		}
 		
@@ -231,14 +231,14 @@ public class RegistroUtilesMB {
 				} else {
 					// Regla no permitida
 					logger.info("Regla no permitida");
-					System.out.println("Regla no permitida");
+					logger.debug("Regla no permitida");
 					sTipoComision = null;
 				}
 			}
 			comisionFinal = obtenerComision(sTipoComision);	
 		} else {
 			comisionFinal = new Double(0);
-			System.out.println("La solicitud no tiene Poderdantes");
+			logger.debug("La solicitud no tiene Poderdantes");
 		}					
 		return comisionFinal;
 	}
@@ -267,7 +267,7 @@ public class RegistroUtilesMB {
 				.get(Calendar.HOUR_OF_DAY))
 				+ String.valueOf(fechaActual.get(Calendar.MINUTE)));		
 		
-		System.out.println("Compara fecha:"+iHoraActual+"<"+iHoraCorte);
+		logger.debug("Compara fecha:"+iHoraActual+"<"+iHoraCorte);
 		logger.info("Compara fecha:"+iHoraActual+"<"+iHoraCorte);
 		if(iHoraActual <= iHoraCorte ){ //Si hora actual es menor igual a la hora de corte	
 			logger.info("Hora es menor o igual que la fecha de corte");
@@ -413,7 +413,7 @@ public class RegistroUtilesMB {
 					}
 				}
 			} else {
-				System.out.println("Atributo persona nulo para la agrupacion:"
+				logger.debug("Atributo persona nulo para la agrupacion:"
 						+ agruPersona.getId().getNumGrupo());
 			}
 		}
@@ -454,7 +454,7 @@ public class RegistroUtilesMB {
 					}
 				}
 			} else {
-				System.out.println("Atributo persona nulo para la agrupacion:" + agruPersona.getId().getNumGrupo());
+				logger.debug("Atributo persona nulo para la agrupacion:" + agruPersona.getId().getNumGrupo());
 			}
 		}
 		if (lstAgrupacionPersona.size() == cont) {
@@ -503,7 +503,6 @@ public class RegistroUtilesMB {
 				comision = Double.valueOf(multi.getValor2());
 			} else {
 				logger.info("Registro no encontrado para el tipo de comisión: " + sTipoComision);
-				System.out.println("Registro no encontrado para el tipo de comisión: " + sTipoComision);
 				comision = new Double(0);
 			}
 		} catch (Exception e){
@@ -530,7 +529,7 @@ public class RegistroUtilesMB {
 		if(fecha.get(Calendar.DAY_OF_WEEK)==1){ //si es Domingo sumamos 1 dia a la fecha
 			fecha.add(Calendar.DATE, 1);
 			logger.info("Fecha:'" + fecha + "' es Domingo se obtendrá el siguiente día hábil ");
-			System.out.println("Domingo se agregara 1 día");
+			logger.info("Domingo se agregara 1 día");
 		}
 				
 		//Buscamos si la fecha es feriado
