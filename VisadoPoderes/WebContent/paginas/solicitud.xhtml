@@ -6,7 +6,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+<SCRIPT type="text/javascript">
 
+</SCRIPT>
 		
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 <ui:param name="root" value="#{request.contextPath}/" />
@@ -88,7 +90,7 @@
 
 														<td><h:outputText styleClass="outputText"
 																id="txtOficina" value="Oficina:" /></td>
-														<td><p:selectOneMenu id="cboOficina" value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}" required="true" requiredMessage="Seleccione al menos una Oficina"> 
+														<td><p:selectOneMenu id="cboOficina" value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}" required="false" requiredMessage="Seleccione al menos una Oficina"> 
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 																 <f:selectItems value="#{combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.codTerr})" /> 
 															</p:selectOneMenu></td>
@@ -103,7 +105,7 @@
 													<tr>
 														<td><h:outputText styleClass="outputText"
 																id="outNroVaucher" value="Nro Voucher *" /></td>
-														<td><h:inputText styleClass="inputText" immediate="false"  required="true" requiredMessage="Ingrese el Nro Voucher"
+														<td><h:inputText styleClass="inputText" immediate="false"  required="false" requiredMessage="Ingrese el Nro Voucher"
 																id="txtNroVaucher" style="width:100px;" 
 																value="#{solicitudRegMB.solicitudRegistrarT.nroVoucher}"
 																 /></td>
@@ -279,7 +281,17 @@
 																<f:selectItems value="#{combosMB.lstTipoSolicitud}" var="lOf" itemValue="#{lOf.codTipSolic}" itemLabel="#{lOf.desTipServicio}" />
 										
 															</p:selectOneMenu></td>
-														<td><p:commandButton id="btnEscaner" value="Escaner" /></td>
+														<td><!-- <h:outputLink id="btnEscaner"  
+														     onclick="window.open('#{solicitudRegMB.cadenaEscanerFinal}')" value="Escaner"  >
+														     Escaner
+														     </h:outputLink> -->
+														     <p:commandButton value="Escaner" ajax="true" 
+														     actionListener="#{solicitudRegMB.prepararURLEscaneo}" id="btnEscanerId" update="btnEscanerIdButton"  />
+														     <p:button id="btnEscanerIdButton" href="#{solicitudRegMB.cadenaEscanerFinal}"  value="Escaner" rendered="false">
+														     
+														     </p:button>
+														</td>
+														
 													</tr>
 													<tr>
 														<td><h:outputText styleClass="outputText" id="text19"
@@ -352,12 +364,12 @@
 
 								<tr>
 									<td class="styleLegend2" width="683">
-										<fieldset style="width: 105%;" class="fielset">
+										<fieldset style="width: 105%;" class="fielset" id="fieldsetOperacionesBancarias">
 											<h:outputText title="Operaciones Bancarias"
 												value="Operaciones Bancarias">
 											</h:outputText>
 											<p:separator styleClass="fielset" />
-
+											<p:messages id="idMsmOperacionBancaria"></p:messages>
 											<table border="0">
 												<tr>
 													<td><h:outputText styleClass="outputText"
@@ -381,25 +393,19 @@
 															immediate="true" 
 															disabled="false">
 															<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
-															<f:selectItems value="#{combosMB.lstMoneda}" var="varo"
-																		itemValue="#{varo.codMoneda}" itemLabel="#{varo.desMoneda}" /> 
+															<f:selectItems value="#{combosMB.lstMoneda}" var="varo" itemValue="#{varo.codMoneda}" itemLabel="#{varo.desMoneda}" /> 
 															
 															</p:selectOneMenu></td>
-													<td><h:outputText styleClass="outputText"
-															id="outImporte" value="Importe:" title="Importe"></h:outputText>
+													<td><h:outputText styleClass="outputText" id="outImporte" value="Importe:" title="Importe"></h:outputText>
 													</td>
 													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importe}"/></td>
 												</tr>
 												<tr>
-													<td><h:outputText styleClass="outputText"
-															id="outImporteTipoCambio" value="Tipo Cambio"
-															title="Tipo Cambio"></h:outputText></td>
+													<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
 													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.tipoCambio}" /></td>
-													<td><h:outputText styleClass="outputText"
-															id="outImporteSoles" value="Importe en Soles"
-															title="Importe en Soles"></h:outputText></td>
+													<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
 													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importeSoles}" readonly="true"/></td>
-													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solicitudRegMB.agregarOperacionBancaria}" actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}" update=":formSolicitudRegistro"/></td>
+													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solicitudRegMB.agregarOperacionBancaria}" actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}" update=":formSolicitudRegistro,:formSolicitudRegistro:idMsmOperacionBancaria"/></td>
 													<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria"  action="#{solicitudRegMB.limpiarListaSolicitudesBancarias}" update=":formSolicitudRegistro" /></td>
 												</tr>
 												<tr>
@@ -790,9 +796,9 @@
 		
 	
 	 	<p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"  
-                header="Confirmación" severity="alert" widgetVar="confirmation">  
+                header="Confirmación" severity="alert" widgetVar="confirmation" >  
                   
-        <p:commandButton id="confirm" value="Si" update=":formSolicitudRegistro" oncomplete="confirmation.hide()"  
+        <p:commandButton id="confirm" value="Si" update=":formSolicitudRegistro" oncomplete="confirmation.hide()"   
                     action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />  
         <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
                   
