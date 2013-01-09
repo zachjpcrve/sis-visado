@@ -53,12 +53,16 @@ public class CombosMB {
 	private List<TiivsOperacionBancaria> lstOpeBancaria;
 	private List<TiivsTerritorio> lstTerritorio;
 	private List<TiivsOficina1> lstOficina;
+	private List<TiivsOficina1> lstOficina1;
 	private List<Moneda> lstMoneda;
 	private List<TipoDocumento> lstTipoDocumentos;
 	private List<TiivsAgrupacionPersona> lstTiposPersona;
 	private List<TiivsSolicitudOperban> lstSolOperBan;
 	private Map<String, String> estados;
+	private Map<String, String> niveles;
 	private Map<String, String> estadosNivel;
+	private Map<String, String> estudios;
+	private Map<String, String> tiposSolicitud;
 	private List<ComboDto> lstClasificacionPersona;
 	private List<ComboDto> lstTipoRegistroPersona;
 
@@ -76,8 +80,12 @@ public class CombosMB {
 		lstOpeBancaria = new ArrayList<TiivsOperacionBancaria>();
 		lstTerritorio = new ArrayList<TiivsTerritorio>();
 		lstOficina = new ArrayList<TiivsOficina1>();
+		lstOficina1 = new ArrayList<TiivsOficina1>();
 		lstMoneda = new ArrayList<Moneda>();
 		estados = new HashMap<String, String>();
+		niveles = new HashMap<String, String>();
+		tiposSolicitud = new HashMap<String, String>();
+		estudios = new HashMap<String, String>();
 		estadosNivel = new HashMap<String, String>();
 		lstClasificacionPersona=new ArrayList<ComboDto>();
 		lstTipoRegistroPersona=new ArrayList<ComboDto>();
@@ -250,7 +258,8 @@ public class CombosMB {
 		} catch (Exception e) {
 			logger.debug("Error al cargar el listado de operaciones bancarias");
 		}
-
+       
+        // Carga combo de Tipo de Solicitud
 		GenericDao<TiivsTipoSolicitud, Object> genTipoSolcDAO = (GenericDao<TiivsTipoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroTipoSolc = Busqueda.forClass(TiivsTipoSolicitud.class);
 
@@ -262,6 +271,11 @@ public class CombosMB {
 			logger.debug("Error al cargar el listado de tipos de solicitud ");
 		}
 		
+		int x = 0;
+		for (; x <= lstTipoSolicitud.size() - 1; x++) 
+		{
+			tiposSolicitud.put(lstTipoSolicitud.get(x).getDesTipServicio(),	lstTipoSolicitud.get(x).getCodTipSolic());
+		}
 		
 		// Carga combo de Territorio
 		GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -281,6 +295,7 @@ public class CombosMB {
 		filtroOfi.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_OFICINA));
 		try {
 			lstOficina = oficDAO.buscarDinamico(filtroOfi);
+			lstOficina1 = oficDAO.buscarDinamico(filtroOfi);
 			logger.debug("TAMANIOO DE LA LSTOFICIN EN EL COMBOMB " +lstOficina.size());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -314,8 +329,7 @@ public class CombosMB {
 		}
 		
 		// Carga combo Nivel
-		GenericDao<TiivsNivel, Object> nivelDAO = (GenericDao<TiivsNivel, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsNivel, Object> nivelDAO = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroNivel = Busqueda.forClass(TiivsNivel.class);
 
 		try {
@@ -324,6 +338,33 @@ public class CombosMB {
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.debug("Error al cargar el listado de niveles");
+		}
+		
+		int w = 0;
+		String tmp = "";
+
+		for (; w <= lstNivel.size() - 1; w++) {
+			if (tmp.compareTo(lstNivel.get(w).getId().getDesNiv()) != 0) {
+				niveles.put(lstNivel.get(w).getId().getDesNiv(), lstNivel.get(w).getId().getDesNiv());
+				tmp = lstNivel.get(w).getId().getCodNiv();
+			}
+		}
+		
+		// Carga combo de Estudios
+		GenericDao<TiivsEstudio, Object> estudioDAO = (GenericDao<TiivsEstudio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroEstudio = Busqueda.forClass(TiivsEstudio.class);
+
+		try {
+			lstEstudio = estudioDAO.buscarDinamico(filtroEstudio);
+		} catch (Exception e) {
+			logger.debug("Error al cargar el listado de estudios");
+		}
+
+		int j = 0;
+
+		for (; j <= lstEstudio.size() - 1; j++) {
+			estudios.put(lstEstudio.get(j).getDesEstudio(), lstEstudio.get(j)
+					.getCodEstudio());
 		}
 	}
 
@@ -500,5 +541,37 @@ public class CombosMB {
 
 	public void setLstSolOperBan(List<TiivsSolicitudOperban> lstSolOperBan) {
 		this.lstSolOperBan = lstSolOperBan;
-	}	
+	}
+
+	public Map<String, String> getTiposSolicitud() {
+		return tiposSolicitud;
+	}
+
+	public void setTiposSolicitud(Map<String, String> tiposSolicitud) {
+		this.tiposSolicitud = tiposSolicitud;
+	}
+
+	public List<TiivsOficina1> getLstOficina1() {
+		return lstOficina1;
+	}
+
+	public void setLstOficina1(List<TiivsOficina1> lstOficina1) {
+		this.lstOficina1 = lstOficina1;
+	}
+
+	public Map<String, String> getNiveles() {
+		return niveles;
+	}
+
+	public void setNiveles(Map<String, String> niveles) {
+		this.niveles = niveles;
+	}
+
+	public Map<String, String> getEstudios() {
+		return estudios;
+	}
+
+	public void setEstudios(Map<String, String> estudios) {
+		this.estudios = estudios;
+	}
 }
