@@ -9,12 +9,16 @@ import java.util.List;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.apache.log4j.Logger;
+
+import com.hildebrando.visado.mb.SolicitudMB;
 
 public class ClienteFTP 
 {
 	private String username, password, host ;
 	private boolean login;
 	FTPClient ftpCliente;
+	public static Logger logger = Logger.getLogger(ClienteFTP.class);
 	
 	public ClienteFTP(String host,String username,String password)
 	{
@@ -28,14 +32,14 @@ public class ClienteFTP
         		this.login=ftpCliente.login(this.username, this.password);
         		if(this.login)
         		{
-        			System.out.println("Login success...");
+        			logger.debug("Login success...");
         		}
         		else
         		{
-        			System.out.println("Failure success...");
+        			logger.debug("Failure success...");
         		}
         } catch (IOException e) {
-        	System.err.println(e.getMessage());
+        	logger.debug("Error al conectarse al FTP debido a: " + e.getMessage());
         }
 	}
 
@@ -62,7 +66,9 @@ public class ClienteFTP
 		    }
 		}
 		else
-		      System.out.println("No logeado...");
+		{   
+			logger.debug("No logeado...");
+		}
 		return lista;	
 	}
 	
@@ -97,7 +103,7 @@ public class ClienteFTP
 	public void upLoadOneFiles(String file,String ruta)
 	{
 		FileInputStream fis =null;
-		System.out.println("Ruta: " + ruta);
+		logger.debug("Ruta: " + ruta);
 		try 
 		{
 			fis = new FileInputStream(ruta);
@@ -135,9 +141,9 @@ public class ClienteFTP
 	public void deleteFiles(List<String> aliasArchivos) {
 		
 		try {
-			System.out.println("Numero de ficheros a eliminar:"+aliasArchivos.size());
+			logger.debug("Numero de ficheros a eliminar:"+aliasArchivos.size());
 			for(String archivo : aliasArchivos){
-				System.out.println("Eliminando fichero:" + archivo);
+				logger.debug("Eliminando fichero:" + archivo);
 				ftpCliente.deleteFile(archivo);
 			}
 			ftpCliente.disconnect();
@@ -149,16 +155,16 @@ public class ClienteFTP
 	public void renombrarArchivos(List<String> fromFicheros,
 			List<String> toFicheros) {
 		try {	
-			System.out.println("Numero de ficheros a renombrar:"+fromFicheros.size());
+			logger.debug("Numero de ficheros a renombrar:"+fromFicheros.size());
 			for(int i=0;i<fromFicheros.size();i++){
 				String fromFichero = fromFicheros.get(i);
 				String toFichero = toFicheros.get(i);
-				System.out.println("Renombrando fichero:" + fromFichero + " a " + toFichero);
+				logger.debug("Renombrando fichero:" + fromFichero + " a " + toFichero);
 				ftpCliente.rename(fromFichero, toFichero);
 			}
 			ftpCliente.disconnect();
 		} catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("Error al renombrar archivos debido a: " + e.getMessage());
         }
 		
 	}

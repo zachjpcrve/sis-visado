@@ -68,13 +68,13 @@ public class SolicitudDetalleMB {
 			
 			obtenerListadoAnexos(solicitud.getCodSoli());
 						
-			System.out.println("Estado:" + estado.getValor1());
-			System.out.println("moneda:" + moneda.getValor3());
-			System.out.println("territorio:" + territorio.getCodTer());
-			System.out.println("Cantidad Anexos:" + lstAnexos.size());
+			logger.info("Estado:" + estado.getValor1());
+			logger.info("moneda:" + moneda.getValor3());
+			logger.info("territorio:" + territorio.getCodTer());
+			logger.info("Cantidad Anexos:" + lstAnexos.size());
 
 		} else {
-			System.out.println("Solictud nula");
+			logger.info("Solictud nula");
 		}
 	}
 		
@@ -90,7 +90,7 @@ public class SolicitudDetalleMB {
 			e.printStackTrace();
 		}
 		if(lstAnexos!=null){
-			System.out.println("Se han cargado anexos:"+lstAnexos.size());
+			logger.info("Se han cargado anexos:"+lstAnexos.size());
 		}
 	}
 
@@ -111,7 +111,7 @@ public class SolicitudDetalleMB {
 		try {
 			solicitud = solicitudDAO.buscarById(TiivsSolicitud.class,
 					codSolicitud);
-			System.out.println("codigo:" + solicitud.getCodSoli());
+			logger.info("codigo:" + solicitud.getCodSoli());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

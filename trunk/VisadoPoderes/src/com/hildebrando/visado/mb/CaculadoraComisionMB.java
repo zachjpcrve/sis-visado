@@ -96,7 +96,7 @@ public class CaculadoraComisionMB {
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.error("No se pudo obtener los parámetros de comisión:"+e.getMessage(),e);			
-			System.out.println("No se pudo obtener el parámero de comisión");			
+			logger.error("No se pudo obtener el parámero de comisión");			
 			importeLimite = new Double(0);
 		}					
 	}

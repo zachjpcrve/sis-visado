@@ -75,9 +75,9 @@ public class SeguridadMB {
 			request.getSession(true).setAttribute("strMensaje","Usuario no Encontrado");
 			response.sendRedirect("./sinAcceso.jsp");
 		}else{
-			System.out.println("Codcargo: "+usuarioIILD.getCargo().getCodigo());
-			System.out.println("Codofi: "+usuarioIILD.getBancoOficina().getCodigo());
-			System.out.println("Codusu: "+usuarioIILD.getUID());
+			logger.info("Codcargo: "+usuarioIILD.getCargo().getCodigo());
+			logger.info("Codofi: "+usuarioIILD.getBancoOficina().getCodigo());
+			logger.info("Codusu: "+usuarioIILD.getUID());
 			/*
 			System.out.println("Codcargo: "+usuarioIILD.getId().getCodcargo());
 			System.out.println("Codofi: "+usuarioIILD.getId().getCodofi());
@@ -104,23 +104,22 @@ public class SeguridadMB {
 
 			 List<MiembroDto> ListaMiembros= miembroService.buscarMiembroSql(usuarioIILD);
 				
-        	System.out.println(" ***************** ListaMiembros **************" +ListaMiembros.size());
+			 logger.info(" ***************** ListaMiembros **************" +ListaMiembros.size());
         	for (Iterator iterator = ListaMiembros.iterator(); iterator.hasNext();) {
         		MiembroDto object = (MiembroDto) iterator.next();
-				System.out.println("Grupo: " + object.getCOD_GRUPO()+", criterio: "+ object.getCRITERIO()+", miembro: "+object.getCOD_MIEMBRO() );
-		    	       logger.info("Grupo: " + object.getCOD_GRUPO()+", criterio: "+ object.getCRITERIO()+", miembro: "+object.getCOD_MIEMBRO() );
+				logger.info("Grupo: " + object.getCOD_GRUPO()+", criterio: "+ object.getCRITERIO()+", miembro: "+object.getCOD_MIEMBRO() );
 				if (ConstantesVisado.COD_GRUPO_ADM.equals(object.getCOD_GRUPO())){
-					System.out.println(object.getDESCRIPCION());
+					logger.info(object.getDESCRIPCION());
 					request.getSession(true).setAttribute("GRUPO_ADM", ConstantesVisado.COD_GRUPO_ADM);
 					request.getSession(true).setAttribute("DES_GRUPO", ConstantesVisado.DES_GRUPO_ADM);
                 }else 
 				if (ConstantesVisado.COD_GRUPO_JRD.equals(object.getCOD_GRUPO())){
-					System.out.println(object.getDESCRIPCION());
+					logger.info(object.getDESCRIPCION());
 					request.getSession(true).setAttribute("GRUPO_JRD", ConstantesVisado.COD_GRUPO_JRD);	
 					request.getSession(true).setAttribute("DES_GRUPO", ConstantesVisado.DES_GRUPO_JRD);
                 }else
 				if (ConstantesVisado.COD_GRUPO_OFI.equals(object.getCOD_GRUPO())){
-					System.out.println(object.getDESCRIPCION());
+					logger.info(object.getDESCRIPCION());
 					request.getSession(true).setAttribute("GRUPO_OFI", ConstantesVisado.COD_GRUPO_OFI);
 					request.getSession(true).setAttribute("DES_GRUPO", ConstantesVisado.DES_GRUPO_OFI);
                   }
