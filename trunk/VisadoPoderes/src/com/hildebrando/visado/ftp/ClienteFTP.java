@@ -1,7 +1,6 @@
 package com.hildebrando.visado.ftp;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +9,6 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.log4j.Logger;
-
-import com.hildebrando.visado.mb.SolicitudMB;
 
 public class ClienteFTP 
 {
