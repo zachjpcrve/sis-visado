@@ -71,7 +71,7 @@ public class SeguimientoMB
 	
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
-	public static Logger logger = Logger.getLogger(SolicitudMB.class);
+	public static Logger logger = Logger.getLogger(SeguimientoMB.class);
 	
 	public SeguimientoMB()
 	{
