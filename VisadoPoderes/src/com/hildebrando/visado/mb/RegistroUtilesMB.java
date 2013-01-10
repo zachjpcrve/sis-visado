@@ -77,7 +77,7 @@ public class RegistroUtilesMB {
 
 		TiivsSolicitud solicitud = new TiivsSolicitud();
 		solicitud.setCodSoli("1234567");
-		solicitud.setImporte(40000);
+		solicitud.setImporte((double) 40000);
 
 		TiivsSolicitudAgrupacion agrupacion = new TiivsSolicitudAgrupacion(
 				new TiivsSolicitudAgrupacionId(solicitud.getCodSoli(), 1),
