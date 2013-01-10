@@ -208,14 +208,14 @@
 							<p:tooltip for="toolEnRev" value="Solicitud en Revision" showEffect="fade" hideEffect="fade" />	
 						</td>			
 						<td>
-							<h:outputText styleClass="outputText" id="txtDel" value="Delegados" />
+							<h:outputText styleClass="outputText" id="txtDel" value="Delegados" rendered="#{sessionScope.GRUPO_OFI == null}"/>
 						</td>
 						<td>
-							<p:selectBooleanCheckbox id="bDelegados" value="#{seguimientoMB.conDelegados}" />  
+							<p:selectBooleanCheckbox id="bDelegados" value="#{seguimientoMB.conDelegados}" rendered="#{sessionScope.GRUPO_OFI == null}"/>  
 						</td>
 						<td >
-							<p:graphicImage value="/resources/images/pregunta.jpg" id="toolDele" />
-							<p:tooltip for="toolDele" value="Delegados" showEffect="fade" hideEffect="fade" />
+							<p:graphicImage value="/resources/images/pregunta.jpg" id="toolDele" rendered="#{sessionScope.GRUPO_OFI == null}"/>
+							<p:tooltip for="toolDele" value="Delegados" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_OFI == null}"/>
 						</td>
 											
 						<td>
