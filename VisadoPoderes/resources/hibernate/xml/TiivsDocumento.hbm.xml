@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 10/01/2013 11:57:44 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.hildebrando.visado.modelo.TiivsDocumento" table="TIIVS_DOCUMENTO">
+    <class name="com.hildebrando.visado.modelo.TiivsDocumento" table="TIIVS_DOCUMENTO" lazy="false">
         <id name="codDocumento" type="string">
             <column name="COD_DOCUMENTO" length="7" />
             <generator class="assigned" />
