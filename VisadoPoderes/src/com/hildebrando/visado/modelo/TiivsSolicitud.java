@@ -22,14 +22,14 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private String obs;
 	private String regUsuario;
 	private String nomUsuario;
-	private double importe;
+	private Double importe;
 	private Timestamp fechaEnvio;
 	private Timestamp fechaEstado;
 	private String moneda;
     private String sImporteMoneda;  
 	private Timestamp fechaRespuesta;
 // MODIFICACION 
-	private double comision;
+	private Double comision;
 	private String nroVoucher;
 	private Set tiivsSolicitudNivels = new HashSet(0);
 	private Set<TiivsSolicitudAgrupacion> tiivsSolicitudAgrupacions = new HashSet<TiivsSolicitudAgrupacion>();
@@ -59,9 +59,9 @@ public class TiivsSolicitud implements java.io.Serializable {
 	public TiivsSolicitud(String codSoli, TiivsEstudio tiivsEstudio,
 			TiivsTipoSolicitud tiivsTipoSolicitud, TiivsOficina1 tiivsOficina1,
 			String estado, Timestamp fecha, String regAbogado, String obs,
-			String regUsuario, String nomUsuario, double importe,
+			String regUsuario, String nomUsuario, Double importe,
 			Timestamp fechaEnvio, Timestamp fechaEstado, String moneda,
-			Timestamp fechaRespuesta, double comision,
+			Timestamp fechaRespuesta, Double comision,
 			String nroVoucher, Set tiivsSolicitudNivels,
 			Set tiivsSolicitudAgrupacions) {
 		this.codSoli = codSoli;
@@ -167,11 +167,11 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.nomUsuario = nomUsuario;
 	}
 
-	public double getImporte() {
+	public Double getImporte() {
 		return this.importe;
 	}
 
-	public void setImporte(double importe) {
+	public void setImporte(Double importe) {
 		this.importe = importe;
 	}
 
@@ -209,11 +209,11 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.fechaRespuesta = fechaRespuesta;
 	}
 
-	public double getComision() {
+	public Double getComision() {
 		return this.comision;
 	}
 
-	public void setComision(double comision) {
+	public void setComision(Double comision) {
 		this.comision = comision;
 	}
 
