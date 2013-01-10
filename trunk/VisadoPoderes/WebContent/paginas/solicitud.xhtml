@@ -296,11 +296,19 @@
 													<tr>
 														<td><h:outputText styleClass="outputText" id="text19"
 																value="Documentos:"></h:outputText></td>
-														<td><p:selectOneMenu   styleClass="selectOneListbox" style="width:100%" value="#{solicitudRegMB.sCodDocumento}"
-																id="listDocumentosXTipoSoli" size="1" var="p"  																
-																filter="true" filterMatchMode="startswith">
+														<td><p:selectOneMenu   styleClass="selectOneMenu"  
+																id="listDocumentosXTipoSoli" 
+																value="#{solicitudRegMB.selectedTipoDocumento}"
+																var="p" converter="tipoSolicitudDocumentoConverter" 																
+																>
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />																
-																<f:selectItems value="#{solicitudRegMB.lstTipoSolicitudDocumentos}" var="lOf" itemValue="#{lOf.codDoc}" itemLabel="#{lOf.desDoc.substring(0, lOf.desDoc.length() > 30 ? 30 : lOf.desDoc.length())}" />																													            
+																<f:selectItems value="#{solicitudRegMB.lstTipoSolicitudDocumentos}" var="lOf" itemValue="#{lOf}" itemLabel="#{lOf.id.codDoc}" />
+																<p:column>  
+													                <p:graphicImage value="/resources/images/#{p.obligatorio == 49 ? 'oblig.png' : 'nooblig.png'}" width="20" height="20"/>  
+													            </p:column>  													  
+													            <p:column>  
+													                #{p.id.codDoc}
+													            </p:column>													            
 													            <f:selectItem itemLabel="Otros" itemValue="Otros" />															
 											               </p:selectOneMenu></td>
 															   <td> 															   
