@@ -109,9 +109,7 @@ public class SeguimientoMB
 			setNoHabilitarExportar(false);
 		}
 		
-		
 		setearCamposxPerfil();		
-		
 	}
 	
 	public void setearCamposxPerfil()
@@ -463,14 +461,6 @@ public class SeguimientoMB
 					getIdOpeBan()));
 		}
 
-		// 7. Filtro por codigo de oficina
-		if (getTxtCodOfi().compareTo("") != 0) {
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,
-					ConstantesVisado.ALIAS_TBL_OFICINA);
-			filtroSol.add(Restrictions.eq(
-					ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, getTxtCodOfi()));
-		}
-
 		// 8. Filtro por nombre de oficina
 		if (getTxtNomOfi().compareTo("") != 0) {
 			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,
@@ -480,22 +470,6 @@ public class SeguimientoMB
 							.concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
 			filtroSol.add(Restrictions.like(
 					ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
-		}
-
-		// 9. Filtro por combo de codigos de oficina
-		if (getIdCodOfi().compareTo("") != 0) {
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,
-					ConstantesVisado.ALIAS_TBL_OFICINA);
-			filtroSol.add(Restrictions.eq(
-					ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, getIdCodOfi()));
-		}
-
-		// 10. Filtro por combo de oficinas
-		if (getIdCodOfi1().compareTo("") != 0) {
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,
-					ConstantesVisado.ALIAS_TBL_OFICINA);
-			filtroSol.add(Restrictions.eq(
-					ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, getIdCodOfi1()));
 		}
 
 		// 11. Filtro por numero de documento de apoderado
@@ -553,17 +527,6 @@ public class SeguimientoMB
 			// filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTUDIO,
 			// getIdEstudio()));
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTUDIO,lstEstudioSelected));
-		}
-
-		// 18. Filtro por territorio
-		if (getIdTerr().compareTo("") != 0) {
-			
-			String codTerr = getIdTerr().trim();
-			// System.out.println("Buscando territorio: " + codTerr);
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,
-					ConstantesVisado.ALIAS_TBL_OFICINA);
-			filtroSol.add(Restrictions.eq(
-					ConstantesVisado.CAMPO_COD_TERR_ALIAS, codTerr));
 		}
 
 		// 19. Filtrar solicitudes con revision
