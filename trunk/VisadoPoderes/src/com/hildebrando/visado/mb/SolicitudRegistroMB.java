@@ -259,6 +259,9 @@ public class SolicitudRegistroMB {
 		try {
 			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);			
 			lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstDocumentosXTipoSolTemp).clone();
+			
+			logger.info("lstDocumentosXTipoSolTemp.size()" + lstDocumentosXTipoSolTemp.size());
+			logger.info("lstTipoSolicitudDocumentos.size()" + lstTipoSolicitudDocumentos.size());
 
 			actualizarListadoDocumentos();
 
@@ -276,11 +279,11 @@ public class SolicitudRegistroMB {
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 
 		for (TiivsTipoSolicDocumento s : lstTipoSolicitudDocumentos) {
-			if (s.getObligatorio().equals("1") ){
-				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getCodDoc(),
+			if (s.getObligatorio()!=null && s.getObligatorio().equals("1") ){
+				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId().getCodDoc(),
 						s.getTiivsDocumento().getDescripcion(), true + "", "",""));
-			} else {
-				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getCodDoc(),
+			} else {				
+				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId().getCodDoc(),
 						s.getTiivsDocumento().getDescripcion(), false + "", "",""));
 			}
 		}
@@ -863,7 +866,7 @@ public class SolicitudRegistroMB {
 
 		for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
 
-			if (s.getCodDoc().equals(sCodDocumento)) {
+			if (s.getId().getCodDoc().equals(sCodDocumento)) {
 				this.lstTipoSolicitudDocumentos.remove(s);
 				break;
 			}
@@ -884,7 +887,7 @@ public class SolicitudRegistroMB {
 		String sMensaje = "";
 		for (TiivsTipoSolicDocumento x : this.lstTipoSolicitudDocumentos) {
 			for (TiivsAnexoSolicitud a : lstAnexoSolicitud) {
-				if (Integer.parseInt(x.getObligatorio()) == ConstantesVisado.DOCUMENTO_OBLIGATORIO&& x.getCodDoc().equals(a.getId().getCodDoc())) {
+				if (Integer.parseInt(x.getObligatorio()) == ConstantesVisado.DOCUMENTO_OBLIGATORIO&& x.getId().getCodDoc().equals(a.getId().getCodDoc())) {
 					result = true; 
 				} else {
 					sMensaje = "Faltan Ingresar Documentos Obligatorios.";
@@ -978,7 +981,7 @@ public class SolicitudRegistroMB {
 		// Para el llenado del listado (listBox)
 		int i = 0;
 		for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
-			if (s.getCodDoc().equals(selectedDocumentoDTO.getItem())) {
+			if (s.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {
 				this.lstTipoSolicitudDocumentos.add(i, s);
 				break;
 			}
