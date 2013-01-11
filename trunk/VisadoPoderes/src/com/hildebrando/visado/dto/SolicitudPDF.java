@@ -15,13 +15,28 @@ public class SolicitudPDF implements Serializable
 	private String comision;
 	private String oficina;
 	private String importe;
-	private  JRDataSource PERSONADS;
-	private List<PersonaPDF> lstPersonas=new ArrayList<PersonaPDF>();	
+	private JRDataSource PERSONAS;
+	private JRDataSource DOCUMENTOS;
+	private JRDataSource OPERACIONES;
+	private List<PersonaPDF> lstPersonas=new ArrayList<PersonaPDF>();
+	private List<DocumentosPDF> lstDocumentos=new ArrayList<DocumentosPDF>();
+	private List<OperacionesPDF> lstOperaciones=new ArrayList<OperacionesPDF>();
+	
+	private List<JRDataSource> lstDsPersonas = new ArrayList<JRDataSource>();//er
 	
 	
-	public JRDataSource getPERSONADS() {
+	public JRDataSource getPERSONAS() {
 		return new JRBeanCollectionDataSource(lstPersonas); 
 	}
+	
+	public JRDataSource getDOCUMENTOS() {
+		return new JRBeanCollectionDataSource(lstDocumentos); 
+	}
+	
+	public JRDataSource getOPERACIONES() {
+		return new JRBeanCollectionDataSource(lstOperaciones); 
+	}	
+	
 	public String getCodSoli() {
 		return codSoli;
 	}
@@ -65,4 +80,29 @@ public class SolicitudPDF implements Serializable
 	public void setLstPersonas(List<PersonaPDF> lstPersonas) {
 		this.lstPersonas = lstPersonas;
 	}
+	public List<DocumentosPDF> getLstDocumentos() {
+		return lstDocumentos;
+	}
+	public void setLstDocumentos(List<DocumentosPDF> lstDocumentos) {
+		this.lstDocumentos = lstDocumentos;
+	}
+
+	public List<OperacionesPDF> getLstOperaciones() {
+		return lstOperaciones;
+	}
+
+	public void setLstOperaciones(List<OperacionesPDF> lstOperaciones) {
+		this.lstOperaciones = lstOperaciones;
+	}
+
+	public List<JRDataSource> getLstDsPersonas() {
+		return lstDsPersonas;
+	}
+
+	public void setLstDsPersonas(List<JRDataSource> lstDsPersonas) {
+		this.lstDsPersonas = lstDsPersonas;
+	}
+	
+	
+
 }

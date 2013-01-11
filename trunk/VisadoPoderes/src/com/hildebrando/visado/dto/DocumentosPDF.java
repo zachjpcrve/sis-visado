@@ -6,6 +6,11 @@ public class DocumentosPDF implements Serializable {
 	private String item;
 	private String descripcion;
 	
+	public DocumentosPDF(String item, String descripcion){
+		this.item = item;
+		this.descripcion = descripcion;
+	}
+	
 	public String getItem() {
 		return item;
 	}
