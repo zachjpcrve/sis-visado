@@ -418,7 +418,7 @@ public class SeguimientoMB
 
 		// 4. Filtro por tipo de solicitud
 		if (lstTipoSolicitudSelected.size() > 0) {
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_TIPO_SERVICIO,
+			filtroSol.createAlias(ConstantesVisado.NOM_TBL_TIPO_SOLICITUD,
 					ConstantesVisado.ALIAS_TBL_TIPO_SERVICIO);
 			// filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OPE_ALIAS,
 			// getIdTipoSol()));
@@ -514,11 +514,6 @@ public class SeguimientoMB
 				}
 			}
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
-		}
-
-		// 16. Filtro por estado de nivel
-		if (lstEstadoNivelSelected.size() > 0) {
-			
 		}
 
 		// 17. Filtro por estudio
