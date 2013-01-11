@@ -3,6 +3,12 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<field name="item" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="moneda" class="java.lang.String"/>
+	<field name="importe" class="java.lang.String"/>
+	<field name="tipoCambio" class="java.lang.String"/>
+	<field name="soles" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -13,44 +19,44 @@
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="38" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement x="18" y="8" width="56" height="20" forecolor="#003399"/>
+				<reportElement x="0" y="0" width="56" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Item]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="94" y="8" width="109" height="20" forecolor="#003399"/>
+				<reportElement x="76" y="0" width="109" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Descripcion]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="221" y="8" width="62" height="20" forecolor="#003399"/>
+				<reportElement x="203" y="0" width="62" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Moneda]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="301" y="8" width="62" height="20" forecolor="#003399"/>
+				<reportElement x="283" y="0" width="62" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Importe]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="377" y="8" width="92" height="20" forecolor="#003399"/>
+				<reportElement x="359" y="0" width="92" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Tipo de Cambio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="485" y="8" width="44" height="20" forecolor="#003399"/>
+				<reportElement x="467" y="0" width="44" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
@@ -59,7 +65,38 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="40" splitType="Stretch"/>
+		<band height="27" splitType="Stretch">
+			<textField>
+				<reportElement x="4" y="2" width="56" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{item}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="76" y="2" width="109" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="203" y="3" width="62" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="283" y="3" width="62" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{importe}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="359" y="2" width="92" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipoCambio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="467" y="2" width="44" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{soles}]]></textFieldExpression>
+			</textField>
+		</band>
 	</detail>
 	<columnFooter>
 		<band splitType="Stretch"/>

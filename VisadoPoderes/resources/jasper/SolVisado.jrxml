@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SolVisado" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.0000000000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="128"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\resources\\jasper\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["D:\\WorkSpace\\VisadoPoderes\\resources\\jasper\\"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="numDOI" class="java.lang.String"/>
 	<field name="codSoli" class="java.lang.String"/>
@@ -13,14 +13,17 @@
 	<field name="comision" class="java.lang.String"/>
 	<field name="oficina" class="java.lang.String"/>
 	<field name="importe" class="java.lang.String"/>
-	<field name="PERSONADS" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<field name="PERSONAS" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<field name="DOCUMENTOS" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<field name="OPERACIONES" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<field name="lstDsPersonas" class="java.util.List"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="95" splitType="Stretch">
+		<band height="64" splitType="Stretch">
 			<staticText>
-				<reportElement x="29" y="64" width="453" height="20" forecolor="#003366"/>
+				<reportElement x="13" y="18" width="453" height="20" forecolor="#003366"/>
 				<textElement>
 					<font fontName="Arial" size="16" isBold="true" isUnderline="true"/>
 				</textElement>
@@ -29,44 +32,44 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="131" splitType="Stretch">
+		<band height="80" splitType="Stretch">
 			<staticText>
-				<reportElement x="29" y="60" width="77" height="20" forecolor="#003399"/>
+				<reportElement x="32" y="11" width="77" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nro Solicitud:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="29" y="91" width="77" height="20" forecolor="#003399"/>
+				<reportElement x="32" y="42" width="77" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nro Voucher *]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="229" y="60" width="48" height="20" forecolor="#003399"/>
+				<reportElement x="232" y="11" width="48" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Estado:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="229" y="91" width="60" height="20" forecolor="#003399"/>
+				<reportElement x="232" y="42" width="60" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Comision:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="387" y="60" width="48" height="20" forecolor="#003399"/>
+				<reportElement x="390" y="11" width="48" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Oficina:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="387" y="91" width="48" height="35" forecolor="#003399"/>
+				<reportElement x="390" y="42" width="48" height="35" forecolor="#003399"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
@@ -74,70 +77,64 @@
 Total:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="117" y="91" width="95" height="20"/>
+				<reportElement x="120" y="42" width="95" height="20"/>
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nroVoucher}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="299" y="60" width="75" height="20"/>
+				<reportElement x="302" y="11" width="75" height="20"/>
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{estado}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="299" y="91" width="75" height="20"/>
+				<reportElement x="302" y="42" width="75" height="20"/>
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{comision}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="449" y="60" width="81" height="20"/>
+				<reportElement x="452" y="11" width="81" height="20"/>
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{oficina}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="449" y="91" width="81" height="20"/>
+				<reportElement x="452" y="42" width="81" height="20"/>
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{importe}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="117" y="60" width="95" height="20"/>
+				<reportElement x="120" y="11" width="95" height="20"/>
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{codSoli}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="84">
-			<staticText>
-				<reportElement x="25" y="56" width="44" height="20" forecolor="#003399"/>
-				<textElement>
-					<font fontName="Arial" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Estado]]></text>
-			</staticText>
-		</band>
+		<band height="13"/>
 	</columnHeader>
 	<detail>
-		<band height="109" splitType="Stretch">
+		<band height="104">
 			<subreport>
-				<reportElement x="104" y="9" width="200" height="100"/>
-				<subreportParameter name="numDOI">
-					<subreportParameterExpression><![CDATA[$P{numDOI}]]></subreportParameterExpression>
+				<reportElement x="25" y="1" width="521" height="100"/>
+				<subreportParameter name="numDOI"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="personas"/>
+				<subreportParameter name="listaDsPersonas">
+					<subreportParameterExpression><![CDATA[$F{lstDsPersonas}]]></subreportParameterExpression>
 				</subreportParameter>
-				<dataSourceExpression><![CDATA[$F{PERSONADS}]]></dataSourceExpression>
-				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Apoderado.jasper"]]></subreportExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Personas.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-		<band height="139">
+		<band height="94">
 			<subreport>
-				<reportElement x="25" y="49" width="525" height="77"/>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<reportElement x="25" y="6" width="525" height="77"/>
+				<dataSourceExpression><![CDATA[$F{DOCUMENTOS}]]></dataSourceExpression>
 				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Documentos.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-		<band height="138">
+		<band height="87">
 			<subreport>
-				<reportElement x="25" y="50" width="521" height="76"/>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<reportElement x="26" y="3" width="521" height="76"/>
+				<dataSourceExpression><![CDATA[$F{OPERACIONES}]]></dataSourceExpression>
 				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "OperacionesBancarias.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
