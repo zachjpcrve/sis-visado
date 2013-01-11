@@ -291,7 +291,7 @@ public class CombosMB {
 		// Carga combo de Oficinas
 		GenericDao<TiivsOficina1, Object> oficDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroOfi = Busqueda.forClass(TiivsOficina1.class);
-		filtroOfi.add(Restrictions.isNotNull("codTerr"));
+		filtroOfi.add(Restrictions.isNotNull("tiivsTerritorio.codTer"));
 		filtroOfi.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_OFICINA));
 		try {
 			lstOficina = oficDAO.buscarDinamico(filtroOfi);
