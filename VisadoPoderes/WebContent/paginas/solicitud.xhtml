@@ -92,7 +92,7 @@
 																id="txtOficina" value="Oficina:" /></td>
 														<td><p:selectOneMenu id="cboOficina" value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}" required="false" requiredMessage="Seleccione al menos una Oficina"> 
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-																 <f:selectItems value="#{combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.codTerr})" /> 
+																 <f:selectItems value="#{combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.tiivsTerritorio.codTer}-#{lOf.tiivsTerritorio.desTer})" /> 
 															</p:selectOneMenu></td>
 														<td><p:message for="cboOficina" />
 														<p:graphicImage
@@ -598,7 +598,7 @@
 						<td><h:outputText
 								styleClass="outputText" id="outTipoDoi" style="width:350px;"
 								value="T DOI/C Central*:" /></td>
-						<td colspan="1"><p:selectOneMenu id="cboTipoDoi" value="#{solicitudRegMB.objTiivsPersonaResultado.tipDoi}">
+						<td colspan="1"><p:selectOneMenu id="cboTipoDoi" value="#{solicitudRegMB.objTiivsPersonaBusqueda.tipDoi}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 								<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="lOf" itemValue="#{lOf.codTipoDoc}" itemLabel="#{lOf.descripcion}" />
 							</p:selectOneMenu></td>
@@ -609,7 +609,7 @@
 
 						<td colspan="1"><h:outputText styleClass="outputText" id="outDoi"
 								value="DOI:" /></td>
-						<td colspan="1"><h:inputText id="inpDoitxt" style="width: 50px;"  value="#{solicitudRegMB.objTiivsPersonaResultado.numDoi}"/></td>
+						<td colspan="1"><h:inputText id="inpDoitxt" style="width: 50px;"  value="#{solicitudRegMB.objTiivsPersonaBusqueda.numDoi}"/></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="toolcboDoi" /></td>
 						<td colspan="1"><p:tooltip for="toolcboDoi"
@@ -623,7 +623,7 @@
 								styleClass="outputText" id="outTipoDoi2" style="width:350px;"
 								value="T DOI/C *:" /></td>
 						<td colspan="1">
-						<p:selectOneMenu id="cboTipoDoi2" value="#{solicitudRegMB.objTiivsPersonaBusqueda.tipDoi}">
+						<p:selectOneMenu id="cboTipoDoi2" value="#{solicitudRegMB.objTiivsPersonaResultado.tipDoi}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 								<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="lOf" itemValue="#{lOf.codTipoDoc}" itemLabel="#{lOf.descripcion}" />
 							
@@ -638,7 +638,7 @@
 					    <h:outputText styleClass="outputText" id="outNumDoiBusqueda" value="Num DOI:" /></td>
 						<td colspan="1"><h:inputText styleClass="inputText" id="txtNumDoiBusqueda"
 								style="width:50px;"
-								value="#{solicitudRegMB.objTiivsPersonaBusqueda.numDoi}" /></td>
+								value="#{solicitudRegMB.objTiivsPersonaResultado.numDoi}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtNumDoiBusqueda" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtNumDoiBusqueda" value="Número de Identidad"
