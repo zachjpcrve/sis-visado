@@ -1,6 +1,6 @@
 package com.hildebrando.visado.modelo;
 
-// Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1
+// Generated 11/01/2013 11:19:20 AM by Hibernate Tools 3.4.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,10 +11,10 @@ import java.util.Set;
 public class TiivsOficina1 implements java.io.Serializable {
 
 	private String codOfi;
+	private TiivsTerritorio tiivsTerritorio;
 	private String desOfi;
 	private Character activo;
-	private String codTerr;
-	private Set tiivsSolicituds = new HashSet(0);
+	private Set<TiivsSolicitud> tiivsSolicituds = new HashSet<TiivsSolicitud>();
 
 	public TiivsOficina1() {
 	}
@@ -23,12 +23,12 @@ public class TiivsOficina1 implements java.io.Serializable {
 		this.codOfi = codOfi;
 	}
 
-	public TiivsOficina1(String codOfi, String desOfi, Character activo,
-			String codTerr, Set tiivsSolicituds) {
+	public TiivsOficina1(String codOfi, TiivsTerritorio tiivsTerritorio,
+			String desOfi, Character activo, Set tiivsSolicituds) {
 		this.codOfi = codOfi;
+		this.tiivsTerritorio = tiivsTerritorio;
 		this.desOfi = desOfi;
 		this.activo = activo;
-		this.codTerr = codTerr;
 		this.tiivsSolicituds = tiivsSolicituds;
 	}
 
@@ -38,6 +38,14 @@ public class TiivsOficina1 implements java.io.Serializable {
 
 	public void setCodOfi(String codOfi) {
 		this.codOfi = codOfi;
+	}
+
+	public TiivsTerritorio getTiivsTerritorio() {
+		return this.tiivsTerritorio;
+	}
+
+	public void setTiivsTerritorio(TiivsTerritorio tiivsTerritorio) {
+		this.tiivsTerritorio = tiivsTerritorio;
 	}
 
 	public String getDesOfi() {
@@ -54,14 +62,6 @@ public class TiivsOficina1 implements java.io.Serializable {
 
 	public void setActivo(Character activo) {
 		this.activo = activo;
-	}
-
-	public String getCodTerr() {
-		return this.codTerr;
-	}
-
-	public void setCodTerr(String codTerr) {
-		this.codTerr = codTerr;
 	}
 
 	public Set getTiivsSolicituds() {
