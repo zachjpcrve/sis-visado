@@ -26,7 +26,7 @@ public class ListasIniciales {
 		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroTipoSolcDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);		
-		filtroTipoSolcDoc.add(Restrictions.isNotNull("id.codDoc"));
+		filtroTipoSolcDoc.add(Restrictions.isNotNull("id"));
 		try {
 			documentosDB = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
 			logger.info("****** "+ documentosDB);
