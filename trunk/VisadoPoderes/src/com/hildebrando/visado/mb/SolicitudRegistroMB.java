@@ -115,6 +115,7 @@ public class SolicitudRegistroMB {
 	private List<TiivsTipoSolicDocumento> lstTipoSolicitudDocumentos;
 	private List<TiivsTipoSolicDocumento> lstDocumentosXTipoSolTemp;
 	boolean bBooleanPopup = false;
+	boolean bBooleanPopupTipoCambio = true;
 	private boolean flagUpdateOperacionSolic = false;
 	private boolean flagUpdateOperacionSolcAgrupac = false;
 	private boolean flagUpdateOperacionSolcDocumen = false;
@@ -304,17 +305,13 @@ public class SolicitudRegistroMB {
 
 	public void buscarPersona() {
 		logger.info("******************** buscarPersona **********************");
-		logger.info("***objTiivsPersonaBusqueda.getCodCen() "
-				+ objTiivsPersonaBusqueda.getCodCen());
-		logger.info("***objTiivsPersonaBusqueda.getTipDoi() "
-				+ objTiivsPersonaBusqueda.getTipDoi());
-		logger.info("***objTiivsPersonaBusqueda.getNumDoi() "
-				+ objTiivsPersonaBusqueda.getNumDoi());
+		logger.info("***objTiivsPersonaBusqueda.getCodCen() "+ objTiivsPersonaBusqueda.getCodCen());
+		logger.info("***objTiivsPersonaBusqueda.getTipDoi() "+ objTiivsPersonaBusqueda.getTipDoi());
+		logger.info("***objTiivsPersonaBusqueda.getNumDoi() "	+ objTiivsPersonaBusqueda.getNumDoi());
 		try {
 			List<TiivsPersona> lstTiivsPersonaLocal = new ArrayList<TiivsPersona>();
 			lstTiivsPersonaLocal = this.buscarPersonaLocal();
-			logger.info("lstTiivsPersonaLocal  "
-					+ lstTiivsPersonaLocal.size());
+			logger.info("lstTiivsPersonaLocal  "+ lstTiivsPersonaLocal.size());
 			List<TiivsPersona> lstTiivsPersonaReniec = new ArrayList<TiivsPersona>();
 			if (lstTiivsPersonaLocal.size() == 0) {
 				lstTiivsPersonaReniec = this.buscarPersonaReniec();
@@ -342,7 +339,7 @@ public class SolicitudRegistroMB {
 			} else {
 				this.bBooleanPopup = true;
 			}
-
+		
 		} catch (Exception e) {
 			Utilitarios.mensajeError("ERROR", e.getMessage());
 			e.printStackTrace();
@@ -404,8 +401,7 @@ public class SolicitudRegistroMB {
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
 
-		if ((objTiivsPersonaBusqueda.getCodCen() == null || objTiivsPersonaBusqueda
-				.getCodCen().equals(""))
+		if ((objTiivsPersonaBusqueda.getCodCen() == null || objTiivsPersonaBusqueda.getCodCen().equals(""))
 				&& (objTiivsPersonaBusqueda.getTipDoi() == null || objTiivsPersonaBusqueda
 						.getTipDoi().equals(""))
 				&& (objTiivsPersonaBusqueda.getNumDoi() == null || objTiivsPersonaBusqueda
@@ -437,8 +433,7 @@ public class SolicitudRegistroMB {
 				busco = true;
 			}
 			lstTiivsPersona = service.buscarDinamico(filtro);
-			// lstTiivsPersona
-			// =this.manipularDataPruebaPopup(objTiivsPersonaBusqueda.getNumDoi());
+		
 			for (TiivsPersona tiivsPersona : lstTiivsPersona) {
 				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
 					if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
@@ -448,9 +443,7 @@ public class SolicitudRegistroMB {
 			}
 
 			if (lstTiivsPersona.size() == 0 && busco) {
-				Utilitarios
-						.mensajeInfo("INFO",
-								"No se han encontrado resultados para los criterios de busqueda seleccionados");
+				//Utilitarios.mensajeInfo("INFO","No se han encontrado resultados para los criterios de busqueda seleccionados");
 			}
 		}
 
@@ -1048,6 +1041,14 @@ public class SolicitudRegistroMB {
 	double valorSoles_C = 0, valorSolesD = 0, valorSolesE = 0, valorEuro = 0,
 			valorDolar = 0, valorFinal = 0;
 	int item = 0;
+	public void validarTipoCambioDisabled(ValueChangeEvent e){
+		logger.info(" validarTipoCambioDisabled " +e.getNewValue());
+		if (e.getNewValue().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+			bBooleanPopupTipoCambio=true;
+		}else{
+			bBooleanPopupTipoCambio=false;
+		}
+	}
 
 	public void agregarOperacionBancaria() {
 		logger.info(" ************************** agrearOperacionBancaria  ****************************** ");
@@ -1908,6 +1909,14 @@ public class SolicitudRegistroMB {
 
 	public void setCadenaEscanerFinal(String cadenaEscanerFinal) {
 		this.cadenaEscanerFinal = cadenaEscanerFinal;
+	}
+
+	public boolean isbBooleanPopupTipoCambio() {
+		return bBooleanPopupTipoCambio;
+	}
+
+	public void setbBooleanPopupTipoCambio(boolean bBooleanPopupTipoCambio) {
+		this.bBooleanPopupTipoCambio = bBooleanPopupTipoCambio;
 	}
 	
 	
