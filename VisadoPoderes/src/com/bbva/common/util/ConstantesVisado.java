@@ -62,6 +62,7 @@ public class ConstantesVisado {
 	public static final String CAMPO_COD_SOLICITUD="codSoli";
 	public static final String CAMPO_COD_OFICINA_ALIAS="ofic.codOfi";
 	public static final String CAMPO_NOM_OFICINA_ALIAS="ofic.desOfi";
+	public static final String CAMPO_NOM_OFICINA = "desOfi";
 	public static final String CAMPO_COD_TERR_ALIAS="ofic.codTerr";
 	public static final String CAMPO_COD_TERR_NO_ALIAS="codTerr";
 	public static final String CAMPO_OPE_BANCARIAS="operacionesBancarias";
@@ -82,8 +83,8 @@ public class ConstantesVisado {
 	public static final String CAMPO_ID_ALIAS="id";
 	
 	public static final String NOM_TBL_TIPO_SOLICITUD="tiivsTipoSolicitud";
-	public static final String ALIAS_TBL_TIPO_SERVICIO="tipoSer";
-	public static final String CAMPO_COD_OPE_ALIAS="tipoServ.codOper";
+	public static final String ALIAS_TBL_TIPO_SOLICITUD="tipoSol";
+	public static final String CAMPO_COD_TIPO_SOL_ALIAS="tipoSol.codTipSolic";
 	
 	public static final String CAMPO_COD_TERRITORIO="codTer";
 	public static final String ETIQUETA_COD_CENTRAL="Cod Central: ";
