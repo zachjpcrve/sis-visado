@@ -76,4 +76,13 @@ public class TiivsTipoSolicDocumento implements java.io.Serializable {
 		this.obligatorio = obligatorio;
 	}
 
+	public boolean equals(Object object) {
+		boolean ret = object == this ? true
+				: ((object instanceof TiivsTipoSolicDocumento))
+						&& (this.id != null) ? this.id
+						.equals(((TiivsTipoSolicDocumento) object).id)
+						: false;
+		return ret;
+	}
+
 }
