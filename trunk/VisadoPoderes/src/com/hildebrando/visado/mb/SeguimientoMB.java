@@ -843,7 +843,7 @@ public class SeguimientoMB
 		if (lstTmp.size() == 1) 
 		{
 			setTxtNomOficina(lstTmp.get(0).getDesOfi());
-			setTxtNomTerritorio(buscarDesTerritorio(lstTmp.get(0).getCodTerr()));
+			setTxtNomTerritorio(buscarDesTerritorio(lstTmp.get(0).getTiivsTerritorio().getCodTer()));
 		}
 	}
 	
@@ -884,7 +884,7 @@ public class SeguimientoMB
 		{
 			if (combosMB.getLstOficina().get(i).getCodOfi().equals(codOficina))
 			{
-				codTerr=combosMB.getLstOficina().get(i).getCodTerr();
+				codTerr=combosMB.getLstOficina().get(i).getTiivsTerritorio().getCodTer();
 				break;
 			}
 		}
@@ -927,7 +927,7 @@ public class SeguimientoMB
 
 		if (lstTmp.size() == 1) {
 			setTxtCodOficina(lstTmp.get(0).getCodOfi());
-			setTxtNomTerritorio(buscarDesTerritorio(lstTmp.get(0).getCodTerr()));
+			setTxtNomTerritorio(buscarDesTerritorio(lstTmp.get(0).getTiivsTerritorio().getCodTer()));
 		}
 	}
 	
