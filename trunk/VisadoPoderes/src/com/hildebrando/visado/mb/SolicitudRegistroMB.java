@@ -783,6 +783,7 @@ public class SolicitudRegistroMB {
 		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
 		lstTiivsSolicitudAgrupacion = new HashSet<TiivsSolicitudAgrupacion>();
 		solicitudRegistrarT = new TiivsSolicitud();
+		solicitudRegistrarT.setImporte((double) 0);
 		solicitudRegistrarT.setTiivsSolicitudAgrupacions(lstTiivsSolicitudAgrupacion);
 		solicitudRegistrarT.setTiivsOficina1(new TiivsOficina1());
 		solicitudRegistrarT.setTiivsTipoSolicitud(new TiivsTipoSolicitud());
@@ -1041,12 +1042,15 @@ public class SolicitudRegistroMB {
 	double valorSoles_C = 0, valorSolesD = 0, valorSolesE = 0, valorEuro = 0,
 			valorDolar = 0, valorFinal = 0;
 	int item = 0;
+	
 	public void validarTipoCambioDisabled(ValueChangeEvent e){
+		if(e.getNewValue()!=null){
 		logger.info(" validarTipoCambioDisabled " +e.getNewValue());
 		if (e.getNewValue().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
 			bBooleanPopupTipoCambio=true;
 		}else{
 			bBooleanPopupTipoCambio=false;
+		}
 		}
 	}
 
@@ -1219,6 +1223,7 @@ public class SolicitudRegistroMB {
           this.flagUpdateOperacionSolic=false;
           this.objSolicitudOperacionCapturado=new TiivsSolicitudOperban();
           this.objSolicitudOperacionCapturado.setId(new TiivsSolicitudOperbanId());
+          this.valorFinal=0;
           this.llamarComision();
 		}
    /*       try {
@@ -1235,6 +1240,8 @@ public class SolicitudRegistroMB {
 	public void limpiarListaSolicitudesBancarias() {
 		logger.info("**************************** limpiarListaSolicitudesBancarias ****************************");
 		this.objSolicBancaria=new TiivsSolicitudOperban();
+		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
+		flagUpdateOperacionSolic=false;
 		//this.lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
 	}
 
@@ -1440,20 +1447,20 @@ public class SolicitudRegistroMB {
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
 				
 				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
-				/*  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { TiivsPersona
-					    objPer=servicePers.insertar(b.getTiivsPersona());
+				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
+					  TiivsPersona objPer=servicePers.insertarMerge(b.getTiivsPersona());
 				  		b.setTiivsPersona(objPer);
 				  		logger.info("objPer "+objPer.getCodPer());
 				  		serviceAgru.insertar(b); 
 				  } 
-				  */
+				  
 				  }
 				//Renombra los archivos
 				  this.renombrarArchivos();
 				  for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
 					  logger.info("nnnnnnnnnnnnnnnnnnnnnnn "+n.getAliasArchivo());
 					  serviceAnexos.insertar(n);
-				}
+				   }
 				 
 				for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
 					logger.info("a.getId().getCodOperBan() **** "+ a.getId().getCodOperBan());
@@ -1497,8 +1504,7 @@ public class SolicitudRegistroMB {
 	
 
 	public void enviarSolicitudSSJJ() {
-		Timestamp time = new Timestamp(objRegistroUtilesMB
-				.obtenerFechaRespuesta().getTime());
+		Timestamp time = new Timestamp(objRegistroUtilesMB.obtenerFechaRespuesta().getTime());
 		logger.info("time : " + time);
 		String sCodigoEstudio = objRegistroUtilesMB.obtenerEstudioMenorCarga();
 		logger.info(" sCodigoEstudio +  " + sCodigoEstudio);
@@ -1511,6 +1517,28 @@ public class SolicitudRegistroMB {
 		this.solicitudRegistrarT.setFechaRespuesta(time);
 		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date().getTime()));
 	}
+	@SuppressWarnings("unchecked")
+	public void validarNroVoucher() throws Exception{
+		
+		String mensaje="Ingrese un Nro de Vourcher no registrado ";
+		Busqueda filtroNroVoucher = Busqueda.forClass(TiivsSolicitud.class);
+		GenericDao<TiivsSolicitud, String> serviceNroVoucher=(GenericDao<TiivsSolicitud, String>) SpringInit.getApplicationContext().getBean("genericoDao");
+		List<TiivsSolicitud> lstSolicitud =serviceNroVoucher.buscarDinamico(filtroNroVoucher);
+		for (TiivsSolicitud a : lstSolicitud) {
+			if(!a.getNroVoucher().equals(null)||!a.getNroVoucher().equals("")){
+			if(a.getNroVoucher().equals(this.solicitudRegistrarT.getNroVoucher())){
+				Utilitarios.mensajeInfo("INFO", mensaje);
+				break;
+			}
+			}
+			
+			/*if (!this.sEstadoSolicitud.equals("BORRADOR")) {
+				
+			}*/
+		}
+		
+		
+	}
 
 	public void registrarSolicitudBorrador() {
 		sEstadoSolicitud = "BORRADOR";
@@ -1520,7 +1548,7 @@ public class SolicitudRegistroMB {
 		sEstadoSolicitud = "ENVIADO";
 	}
 
-	public boolean validarRegistroSolicitud() {
+	public boolean validarRegistroSolicitud() throws Exception {
 		boolean retorno = true;
 		String mensaje = "";
 		/*
@@ -1558,6 +1586,9 @@ public class SolicitudRegistroMB {
 			mensaje = "Ingrese al menos una Operación Bancaria";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		if (!this.sEstadoSolicitud.equals("BORRADOR")) {
+		this.validarNroVoucher();
 		}
 		return retorno;
 	}
