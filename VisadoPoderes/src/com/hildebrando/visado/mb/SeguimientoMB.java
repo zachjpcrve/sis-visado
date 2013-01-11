@@ -1,9 +1,13 @@
 package com.hildebrando.visado.mb;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -29,6 +33,8 @@ import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
+import com.sun.jmx.snmp.Timestamp;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 @ManagedBean(name = "seguimientoMB")
 @SessionScoped
@@ -42,6 +48,7 @@ public class SeguimientoMB
 	private List<String> lstEstadoSelected;
 	private List<String> lstNivelSelected;
 	private List<String> lstSolicitudesSelected;
+	private List<String> lstSolicitudesxOpeBan;
 	private String codSolicitud;
 	private String textoTotalResultados;
 	private String idImporte;
@@ -68,6 +75,7 @@ public class SeguimientoMB
 	private Boolean ocultarControl;
 	private Date fechaInicio;
 	private Date fechaFin;
+	private TiivsOficina1 oficina;
 	
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
@@ -80,6 +88,8 @@ public class SeguimientoMB
 		lstNivelSelected = new ArrayList<String>();
 		lstEstudioSelected = new ArrayList<String>();
 		lstTipoSolicitudSelected = new ArrayList<String>();
+		lstSolicitudesxOpeBan = new ArrayList<String>();
+		oficina= new TiivsOficina1();
 		
 		combosMB= new CombosMB();
 		combosMB.cargarMultitabla();
@@ -348,6 +358,8 @@ public class SeguimientoMB
 	{
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
+		Date newFechaInicio = null;
+		Date newFechaFin = null;
 
 		// solicitudes = new ArrayList<TiivsSolicitud>();
 
@@ -373,8 +385,7 @@ public class SeguimientoMB
 				// lstEstadoSelected.get(ind)));
 			}
 
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,
-					lstEstadoSelected));
+			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,lstEstadoSelected));
 		}
 
 		// 3. Filtro por importe
@@ -418,32 +429,43 @@ public class SeguimientoMB
 
 		// 4. Filtro por tipo de solicitud
 		if (lstTipoSolicitudSelected.size() > 0) {
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_TIPO_SOLICITUD,
-					ConstantesVisado.ALIAS_TBL_TIPO_SERVICIO);
-			// filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OPE_ALIAS,
-			// getIdTipoSol()));
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_OPE_ALIAS,lstTipoSolicitudSelected));
+			filtroSol.createAlias(ConstantesVisado.NOM_TBL_TIPO_SOLICITUD,	ConstantesVisado.ALIAS_TBL_TIPO_SOLICITUD);
+			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_TIPO_SOL_ALIAS,lstTipoSolicitudSelected));
 		}
 
 		// 5. Filtro por tipo de fecha
 		if (getIdTiposFecha().compareTo("") != 0) 
 		{
-			if (getIdTiposFecha().equalsIgnoreCase(
-					ConstantesVisado.TIPO_FECHA_ENVIO)) // Es fecha de envio
+			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_ENVIO)) // Es fecha de envio
 			{
-				filtroSol.add(Restrictions.between(
-						ConstantesVisado.CAMPO_FECHA_ENVIO, getFechaInicio(),
-						getFechaFin()));
-				filtroSol.add(Restrictions
-								.eq(ConstantesVisado.CAMPO_ESTADO,buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_ENVIADO)));
+				SimpleDateFormat sf1 = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+				sf1.setTimeZone(TimeZone.getTimeZone("America/Bogota"));
+
+				String sFechaInicio=sf1.format(getFechaInicio());
+				String sFechaFin=sf1.format(getFechaFin());
+				
+				try {
+					newFechaInicio = sf1.parse(sFechaInicio);
+					newFechaFin = sf1.parse(sFechaFin);
+				} catch (ParseException e) {
+					logger.debug("Error al convertir la fecha de String a Date");
+				}
+				
+				Calendar calFecIni = Calendar.getInstance();
+				calFecIni.setTime(newFechaInicio);
+				
+				Calendar calFecFin = Calendar.getInstance();
+				calFecFin.setTime(newFechaFin);
+				
+				logger.info("newFechaInicio: " + calFecIni.getTime());
+				logger.info("newFechaFin: " + calFecFin.getTime());
+				
+				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_ENVIO, newFechaInicio,newFechaFin));
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_ENVIADO)));
 			}
-			if (getIdTiposFecha().equalsIgnoreCase(
-					ConstantesVisado.TIPO_FECHA_RPTA)) // Sino es fecha de
-														// respuesta
+			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_RPTA)) // Sino es fecha de respuesta
 			{
-				filtroSol.add(Restrictions.between(
-						ConstantesVisado.CAMPO_FECHA_RPTA, getFechaInicio(),
-						getFechaFin()));
+				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_RPTA, getFechaInicio(),	getFechaFin()));
 
 				Collection<String> tmpEstados = null;
 				tmpEstados.add(buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_ACEPTADO));
@@ -457,50 +479,117 @@ public class SeguimientoMB
 		// 6. Filtro por operacion bancaria
 		if (getIdOpeBan().compareTo("") != 0) 
 		{
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_OPE_BANCARIAS,
-					getIdOpeBan()));
+			lstSolicitudesxOpeBan.clear();
+			for (TiivsSolicitudOperban opeBanTMP: combosMB.getLstSolOperBan())
+			{
+				if (opeBanTMP.getId().getCodOperBan().equals(getIdOpeBan()))
+				{
+					lstSolicitudesxOpeBan.add(opeBanTMP.getId().getCodSoli());
+				}
+			}
+			
+			if (lstSolicitudesxOpeBan.size()>0)
+			{
+				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudesxOpeBan));
+			}
+			else
+			{
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
+			}
+			
+			//filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_OPE_BANCARIAS,	getIdOpeBan()));
 		}
 
 		// 8. Filtro por nombre de oficina
-		if (getTxtNomOfi().compareTo("") != 0) {
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,
-					ConstantesVisado.ALIAS_TBL_OFICINA);
-			String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE
-					+ getTxtNomOfi()
-							.concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
-			filtroSol.add(Restrictions.like(
-					ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
+		if (getOficina() != null) 
+		{
+			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
+			String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getOficina().getDesOfi().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
+			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
 		}
 
 		// 11. Filtro por numero de documento de apoderado
-		if (getNroDOIApoderado().compareTo("") != 0) {
-			filtroSol.add(Restrictions.eq(
-					ConstantesVisado.CAMPO_NUMDOC_APODERADO,
-					getNroDOIApoderado()));
+		if (getNroDOIApoderado().compareTo("") != 0) 
+		{
+			String codSol="";
+			
+			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
+			{
+				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIApoderado()) && tmp.getId().getClasifPer().equals(ConstantesVisado.APODERADO))
+				{
+					codSol = tmp.getId().getCodSoli();
+					break;
+				}
+			}
+			
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,codSol));
 		}
 
 		// 12. Filtro por nombre de apoderado
-		if (getTxtNomApoderado().compareTo("") != 0) {
-			String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE
-					+ getTxtNomApoderado().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
-			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_APODERADO,
-					filtroNuevo));
+		if (getTxtNomApoderado().compareTo("") != 0) 
+		{
+			//String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getTxtNomApoderado().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
+			//filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_APODERADO, filtroNuevo));
+			
+			String codSol="";
+			
+			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
+			{
+				if ((tmp.getTiivsPersona().getNombre().indexOf(getTxtNomApoderado().toUpperCase())!=-1  
+					|| tmp.getTiivsPersona().getApeMat().indexOf(getTxtNomApoderado().toUpperCase())!=-1 
+					|| tmp.getTiivsPersona().getApePat().indexOf(getTxtNomApoderado().toUpperCase())!=-1)
+					
+					&& tmp.getId().getClasifPer().equals(ConstantesVisado.APODERADO))
+				{
+					codSol = tmp.getId().getCodSoli();
+					break;
+				}
+			}
+			
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,codSol));
 		}
 		
 		// 13. Filtro por numero de documento de poderdante
-		if (getNroDOIPoderdante().compareTo("") != 0) {
-			filtroSol.add(Restrictions.eq(
-					ConstantesVisado.CAMPO_NUMDOC_PODERDANTE,
-					getNroDOIPoderdante()));
+		if (getNroDOIPoderdante().compareTo("") != 0) 
+		{
+			//filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_NUMDOC_PODERDANTE,	getNroDOIPoderdante()));
+			
+			String codSol="";
+			
+			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
+			{
+				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIPoderdante()) && tmp.getId().getClasifPer().equals(ConstantesVisado.PODERDANTE))
+				{
+					codSol = tmp.getId().getCodSoli();
+					break;
+				}
+			}
+			
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,codSol));
 		}
 
 		// 14. Filtro por nombre de poderdante
-		if (getTxtNomPoderdante().compareTo("") != 0) {
-			String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE
-					+ getTxtNomPoderdante().concat(
-							ConstantesVisado.SIMBOLO_PORCENTAJE);
-			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_PODERDANTE,
-					filtroNuevo));
+		if (getTxtNomPoderdante().compareTo("") != 0) 
+		{
+			/*String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getTxtNomPoderdante().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
+			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_PODERDANTE,filtroNuevo));*/
+			
+			String codSol="";
+			
+			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
+			{
+				if ((tmp.getTiivsPersona().getNombre().indexOf(getTxtNomPoderdante().toUpperCase())!=-1  
+					|| tmp.getTiivsPersona().getApeMat().indexOf(getTxtNomPoderdante().toUpperCase())!=-1 
+					|| tmp.getTiivsPersona().getApePat().indexOf(getTxtNomPoderdante().toUpperCase())!=-1)
+					
+					&& tmp.getId().getClasifPer().equals(ConstantesVisado.PODERDANTE))
+				{
+					codSol = tmp.getId().getCodSoli();
+					break;
+				}
+			}
+			
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,codSol));
 		}
 
 		// 15. Filtro por nivel
@@ -580,7 +669,7 @@ public class SeguimientoMB
 		if (getConExonerados()) {
 
 		}
-
+		
 		// Buscar solicitudes de acuerdo a criterios seleccionados
 		try {
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
@@ -789,22 +878,11 @@ public class SeguimientoMB
 		return results;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<TiivsOficina1> completeNomOficina(String query) 
 	{	
 		List<TiivsOficina1> results = new ArrayList<TiivsOficina1>();
 
-		List<TiivsOficina1> oficinas = new ArrayList<TiivsOficina1>();
-		GenericDao<TiivsOficina1, Object> oficinaDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsOficina1.class);
-		
-		try {
-			oficinas = oficinaDAO.buscarDinamico(filtro);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		for (TiivsOficina1 oficina : oficinas) 
+		for (TiivsOficina1 oficina : combosMB.getLstOficina1()) 
 		{
 			if (oficina.getCodOfi() != null) 
 			{
@@ -1209,5 +1287,21 @@ public class SeguimientoMB
 
 	public void setOcultarControl(Boolean ocultarControl) {
 		this.ocultarControl = ocultarControl;
+	}
+
+	public List<String> getLstSolicitudesxOpeBan() {
+		return lstSolicitudesxOpeBan;
+	}
+
+	public void setLstSolicitudesxOpeBan(List<String> lstSolicitudesxOpeBan) {
+		this.lstSolicitudesxOpeBan = lstSolicitudesxOpeBan;
+	}
+
+	public TiivsOficina1 getOficina() {
+		return oficina;
+	}
+
+	public void setOficina(TiivsOficina1 oficina) {
+		this.oficina = oficina;
 	}
 }
