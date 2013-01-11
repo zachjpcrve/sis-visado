@@ -16,8 +16,23 @@ public class PersonaPDF implements Serializable
 	private String celular;
 	private String email;
 	private String estado;
+
+	
+	public PersonaPDF(){
+		
+	}
+
 	private String numDoi;
 
+	public PersonaPDF(String numDOI, String client,String tipoRegistro, String clasificacion, String celular, String email, String estado){
+		this.numDOI = numDOI;
+		this.cliente  = client;
+		this.tipoRegistro = tipoRegistro;
+		this.clasificacion = clasificacion;
+		this.celular = celular ;
+		this.email = email;
+		this.estado = estado;
+	}
 	
 	public String getNumDOI() {
 		return numDOI;

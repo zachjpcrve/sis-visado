@@ -10,6 +10,15 @@ public class OperacionesPDF implements Serializable{
 	private String tipoCambio;
 	private String soles;
 	
+	public OperacionesPDF(String item, String descripcion, String moneda, String importe, String tipoCambio, String soles){
+		this.item = item;
+		this.descripcion = descripcion;
+		this.moneda = moneda;
+		this.importe = importe;
+		this.tipoCambio = tipoCambio;
+		this.soles = soles;
+	}
+	
 	public String getItem() {
 		return item;
 	}
