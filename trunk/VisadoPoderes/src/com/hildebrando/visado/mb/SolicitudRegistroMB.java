@@ -916,11 +916,11 @@ public class SolicitudRegistroMB {
 	public void agregarDocumentosXTipoSolicitud() {
 		logger.info(" ************************** agrearDocumentosXTipoSolicitud  ****************************** ");
 		logger.info("iTipoSolicitud  : " + iTipoSolicitud);
-		/*if(selectedTipoDocumento!=null){
-			sCodDocumento = selectedTipoDocumento.getCodDoc();
+		if(selectedTipoDocumento!=null){
+			sCodDocumento = selectedTipoDocumento.getId().getCodDoc();
 		} else {
 			sCodDocumento = null;
-		}*/
+		}
 		logger.info("codDocumento :  " + sCodDocumento);
 		logger.info("lstAnexoSolicitud.size() :  " + lstAnexoSolicitud.size());
 
