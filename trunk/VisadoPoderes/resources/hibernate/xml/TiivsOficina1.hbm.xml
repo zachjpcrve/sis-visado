@@ -8,7 +8,7 @@
             <column name="COD_OFI" length="8" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="tiivsTerritorio" class="com.hildebrando.visado.modelo.TiivsTerritorio" fetch="select">
+        <many-to-one name="tiivsTerritorio" class="com.hildebrando.visado.modelo.TiivsTerritorio" fetch="select" lazy="false">
             <column name="COD_TERR" length="8" />
         </many-to-one>
         <property name="desOfi" type="string">
