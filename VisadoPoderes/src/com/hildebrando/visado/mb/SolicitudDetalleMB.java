@@ -64,7 +64,7 @@ public class SolicitudDetalleMB {
 					ConstantesVisado.CODIGO_MULTITABLA_ESTADOS,
 					solicitud.getEstado());
 
-			obtenerTerritorio(solicitud.getTiivsOficina1().getCodTerr());
+			obtenerTerritorio(solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer());
 			
 			obtenerListadoAnexos(solicitud.getCodSoli());
 						
