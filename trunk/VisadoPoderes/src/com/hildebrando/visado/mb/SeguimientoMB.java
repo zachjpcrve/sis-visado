@@ -33,8 +33,6 @@ import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
-import com.sun.jmx.snmp.Timestamp;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 @ManagedBean(name = "seguimientoMB")
 @SessionScoped
