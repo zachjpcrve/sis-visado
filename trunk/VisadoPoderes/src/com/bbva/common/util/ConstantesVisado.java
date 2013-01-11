@@ -81,7 +81,7 @@ public class ConstantesVisado {
 	public static final String CAMPO_ID_TIPO_PARTIC_ALIAS="id.tipPartic";
 	public static final String CAMPO_ID_ALIAS="id";
 	
-	public static final String NOM_TBL_TIPO_SERVICIO="tiivsTipoServicio";
+	public static final String NOM_TBL_TIPO_SOLICITUD="tiivsTipoSolicitud";
 	public static final String ALIAS_TBL_TIPO_SERVICIO="tipoSer";
 	public static final String CAMPO_COD_OPE_ALIAS="tipoServ.codOper";
 	
