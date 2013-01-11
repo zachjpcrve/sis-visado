@@ -299,15 +299,14 @@
 														<td><p:selectOneMenu   styleClass="selectOneMenu"  
 																id="listDocumentosXTipoSoli" 
 																value="#{solicitudRegMB.selectedTipoDocumento}"
-																var="p" converter="tipoSolicitudDocumentoConverter" 																
-																>
+																var="p" converter="tipoSolicitudDocumentoConverter" >
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />																
 																<f:selectItems value="#{solicitudRegMB.lstTipoSolicitudDocumentos}" var="lOf" itemValue="#{lOf}" itemLabel="#{lOf.id.codDoc}" />
 																<p:column>  
-													                <p:graphicImage value="/resources/images/#{p.obligatorio == 49 ? 'oblig.png' : 'nooblig.png'}" width="20" height="20"/>  
+													                <p:graphicImage value="/resources/images/#{p.obligatorio == '1' ? 'oblig.png' : 'nooblig.png'}" width="20" height="20"/>  
 													            </p:column>  													  
 													            <p:column>  
-													                #{p.id.codDoc}
+													               #{p.tiivsDocumento.descripcion}
 													            </p:column>													            
 													            <f:selectItem itemLabel="Otros" itemValue="Otros" />															
 											               </p:selectOneMenu></td>
