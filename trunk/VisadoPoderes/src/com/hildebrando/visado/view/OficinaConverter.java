@@ -21,7 +21,7 @@ public class OficinaConverter implements Converter {
             return null;  
         } else {  
             try {  
-                int number = Integer.parseInt(value);  
+                String number = value;  
                 
         		@SuppressWarnings("unchecked")
 				GenericDao<TiivsOficina1, Object> oficinaDAO = (GenericDao<TiivsOficina1, Object>) SpringInit
@@ -30,7 +30,6 @@ public class OficinaConverter implements Converter {
         			TiivsOficina1 oficina = oficinaDAO.buscarById(TiivsOficina1.class, number);
         			return oficina;
         		} catch (Exception e) {
-        			// TODO Auto-generated catch block
         			e.printStackTrace();
         		}
   

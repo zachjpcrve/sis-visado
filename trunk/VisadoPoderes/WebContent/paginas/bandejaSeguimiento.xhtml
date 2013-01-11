@@ -155,8 +155,10 @@
 							<h:outputText styleClass="outputText" id="txtOficina" value="Oficina:"/>
 						</td>
 						<td >
-							<p:autoComplete id="acNomOFina" value="#{seguimientoMB.txtNomOfi}"   
-                   			 completeMethod="#{seguimientoMB.completeNomOficina}" size="24"/> 							
+							 <p:autoComplete id="acNomOFina" value="#{seguimientoMB.oficina}"
+								completeMethod="#{seguimientoMB.completeNomOficina}" var="ofi"
+								converter="oficinaConverter" size="24"
+								itemLabel="#{ofi.desOfi}" itemValue="#{ofi}"/>		
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtNomOfic" /></td>
 						<p:tooltip for="tooltxtNomOfic" value="Oficina" showEffect="fade" hideEffect="fade" /> 
