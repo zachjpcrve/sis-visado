@@ -90,9 +90,9 @@
 
 														<td><h:outputText styleClass="outputText"
 																id="txtOficina" value="Oficina:" /></td>
-														<td><p:selectOneMenu id="cboOficina" value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}" required="false" requiredMessage="Seleccione al menos una Oficina"> 
+														<td style="font-size:0.9em"><p:selectOneMenu id="cboOficina" value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-																 <f:selectItems value="#{combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.tiivsTerritorio.codTer}-#{lOf.tiivsTerritorio.desTer})" /> 
+																 <f:selectItems  value="#{combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.tiivsTerritorio.codTer}-#{lOf.tiivsTerritorio.desTer})" /> 
 															</p:selectOneMenu></td>
 														<td><p:message for="cboOficina" />
 														<p:graphicImage
@@ -386,7 +386,7 @@
 															id="cboTipoOperacion"
 															value="#{solicitudRegMB.objSolicBancaria.id.codOperBan}"
 															immediate="true" 
-															disabled="false">
+															disabled="false" >
 															<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 															<f:selectItems value="#{combosMB.lstOpeBancaria}" var="opeBan"
 																		itemValue="#{opeBan.codOperBan}" itemLabel="#{opeBan.desOperBan}" /> 
@@ -395,10 +395,11 @@
 															id="outTipoMoneda" value="Moneda" title="Moneda"></h:outputText>
 													</td>
 													<td><p:selectOneMenu styleClass="selectOneMenu"
-															id="cboMoneda"
+															id="cboMoneda" 
 															value="#{solicitudRegMB.objSolicBancaria.moneda}"
 															immediate="true" 
-															disabled="false">
+															disabled="false" valueChangeListener="#{solicitudRegMB.validarTipoCambioDisabled}">
+															<p:ajax update=":formSolicitudRegistro:intImporte" event="change"></p:ajax>
 															<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 															<f:selectItems value="#{combosMB.lstMoneda}" var="varo" itemValue="#{varo.codMoneda}" itemLabel="#{varo.desMoneda}" /> 
 															
@@ -409,7 +410,7 @@
 												</tr>
 												<tr>
 													<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
-													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.tipoCambio}" /></td>
+													<td><h:inputText id="intImporte" value="#{solicitudRegMB.objSolicBancaria.tipoCambio}" disabled="#{solicitudRegMB.bBooleanPopupTipoCambio}"/></td>
 													<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
 													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importeSoles}" readonly="true"/></td>
 													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solicitudRegMB.agregarOperacionBancaria}" actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}" update=":formSolicitudRegistro,:formSolicitudRegistro:idMsmOperacionBancaria"/></td>
@@ -577,25 +578,25 @@
  
 		<p:dialog id="modalRegistrarPersona"
 			header="Busqueda Cliente/No Cliente" widgetVar="dlgRegistrarPersona"
-			modal="true" height="400" >
+			modal="true" height="320" >
 	    <h:form id="formRegistrar">
 			<p:messages id="idMsmModalPerona"></p:messages>
-			<table border="0" width="50px;">
+			<table border="0" width="30px">
 		
 				<tbody>
 					<tr>
-						<td style="width:25%;"><h:outputText
+						<td style="width:100%"><h:outputText
 								title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
 								value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" /></td>
 					</tr>
 				</tbody>
 			</table>
 			<p:separator styleClass="fielset"  />
-			<table border="0" width="100px;" id="tableRegistrar">
+			<table border="0" width="50px;" id="tableRegistrar">
 				<tbody>
 					<tr>
 						<td><h:outputText
-								styleClass="outputText" id="outTipoDoi" style="width:350px;"
+								styleClass="outputTextPopup" id="outTipoDoi" style="width:350px;"
 								value="T DOI/C Central*:" /></td>
 						<td colspan="1"><p:selectOneMenu id="cboTipoDoi" value="#{solicitudRegMB.objTiivsPersonaBusqueda.tipDoi}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
@@ -606,9 +607,9 @@
 						<td colspan="1"><p:tooltip for="toolcboTipoDoi"
 								value="Tipo DOI/Código Central" showEffect="slide" /></td>
 
-						<td colspan="1"><h:outputText styleClass="outputText" id="outDoi"
+						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outDoi"
 								value="DOI:" /></td>
-						<td colspan="1"><h:inputText id="inpDoitxt" style="width: 50px;"  value="#{solicitudRegMB.objTiivsPersonaBusqueda.numDoi}"/></td>
+						<td colspan="1"><h:inputText id="inpDoitxt" styleClass="inputTextPopup"  size="12" value="#{solicitudRegMB.objTiivsPersonaBusqueda.numDoi}"/></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="toolcboDoi" /></td>
 						<td colspan="1"><p:tooltip for="toolcboDoi"
@@ -619,7 +620,7 @@
 							 update=":formRegistrar,:formBusqueda" /></td>
 								<!-- onclick="dlgModalBusqueda.show();"  -->
                         <td colspan="1"><h:outputText
-								styleClass="outputText" id="outTipoDoi2" style="width:350px;"
+								styleClass="outputTextPopup" id="outTipoDoi2" 
 								value="T DOI/C *:" /></td>
 						<td colspan="1">
 						<p:selectOneMenu id="cboTipoDoi2" value="#{solicitudRegMB.objTiivsPersonaResultado.tipDoi}">
@@ -634,7 +635,7 @@
 				
 					   
 						<td colspan="1">
-					    <h:outputText styleClass="outputText" id="outNumDoiBusqueda" value="Num DOI:" /></td>
+					    <h:outputText styleClass="outputTextPopup" id="outNumDoiBusqueda" value="Num DOI:" /></td>
 						<td colspan="1"><h:inputText styleClass="inputText" id="txtNumDoiBusqueda"
 								style="width:50px;"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.numDoi}" /></td>
@@ -644,9 +645,9 @@
 								showEffect="slide" /></td>	
 								
 						 <td colspan="1">
-					    <h:outputText styleClass="outputText" id="outCodCentral" value="Código Central:" /></td>
-						<td colspan="1"><h:inputText styleClass="inputText" id="txtCodCentral"
-								style="width:50px;"
+					    <h:outputText styleClass="outputTextPopup" id="outCodCentral" value="Código Central:" /></td>
+						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtCodCentral"
+								size="7"
 								value="#{solicitudRegMB.objTiivsPersonaBusqueda.codCen}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtCodCentral" /></td>
@@ -655,10 +656,10 @@
 						</tr>
 				<tr>	
 					<td style="width: 150px;">
-						<h:outputText styleClass="outputText" id="outApPaterno" value="Ap.Paterno:" /></td>
+						<h:outputText styleClass="outputTextPopup" id="outApPaterno" value="Ap.Paterno:" /></td>
 						
-						<td colspan="3"><h:inputText styleClass="inputText"
-								id="txtApellidoPaterno" style="width:200px;"
+						<td colspan="3"><h:inputText styleClass="inputTextPopup"
+								id="txtApellidoPaterno" size="17"
 								 value="#{solicitudRegMB.objTiivsPersonaResultado.apePat}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtApellidoPaterno" /></td>
@@ -666,26 +667,24 @@
 						
 					
 						<td style="width: 100px; margin-left: 20px;"><h:outputText
-								styleClass="outputText" id="outApMaterno" value="Ap.Materno:" /></td>
-						<td colspan="4"><h:inputText styleClass="inputText"
-								id="txtApellidoMaterno" style="width:200px;"
+								styleClass="outputTextPopup" id="outApMaterno" value="Ap.Materno:" /></td>
+						<td colspan="4"><h:inputText styleClass="inputTextPopup"
+								id="txtApellidoMaterno" size="17"
 								 value="#{solicitudRegMB.objTiivsPersonaResultado.apeMat}"  /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtApellidoMaterno" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtApellidoMaterno" value="Ap.Materno:" showEffect="slide" /></td>
-						<td colspan="1" style="width: 100px;"><h:outputText
-								styleClass="outputText" id="outNombres" value="Nombres:" /></td>	
+						<td colspan="1" ><h:outputText styleClass="outputTextPopup" id="outNombres" value="Nombres:" /></td>	
 						<td colspan="4">
-						<h:inputText styleClass="inputText" id="txtNombres" style="width:200px;"
+						<h:inputText styleClass="inputTextPopup" id="txtNombres" size="17"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.nombre}" /></td>
-						<td colspan="1" ><p:graphicImage value="/resources/images/pregunta.jpg"
-								id="tooltxtNombres" /></td>
+						<td colspan="1" ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtNombres" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtNombres" value="Nombres"
 								showEffect="slide" /></td>
 					</tr>
 					<tr>
 
-						<td colspan="1"><h:outputText styleClass="outputText" id="outTipoReg"
+						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outTipoReg"
 								value="Tipo de Registro*:" /></td>
 						<td colspan="1">
 						<p:selectOneMenu id="cboTipoReg" value="#{solicitudRegMB.objTiivsPersonaResultado.tipPartic}">
@@ -697,7 +696,7 @@
 						<td colspan="1"><p:tooltip for="toolcboTipoReg" value="Tipo de Registro"
 								showEffect="slide" /></td>
 
-						<td colspan="1"><h:outputText styleClass="outputText" id="outClasificacion" value="Clasificacion*:" /></td>
+						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outClasificacion" value="Clasificacion*:" /></td>
 						<td colspan="1"><p:selectOneMenu id="cboClasificacion" value="#{solicitudRegMB.objTiivsPersonaResultado.clasifPer}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 								 <f:selectItems value="#{combosMB.lstClasificacionPersona}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" />
@@ -707,21 +706,20 @@
 								id="toolcboClasificacion" /></td>
 						<td colspan="1"><p:tooltip for="toolcboClasificacion"
 								value="Clasificación" showEffect="slide" /></td>
-						<td colspan="1"><h:inputText styleClass="inputText" id="txtClasiSelect"
-								style="width:50px;"
+						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtClasiSelect" size="15"
 								 value="#{solicitudRegMB.objTiivsPersonaResultado.clasifPerOtro}"/></td>
-						<td colspan="1"><h:outputText styleClass="outputText" id="outEmail"
+						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outEmail"
 								value="Email :" /></td>
-						<td colspan="1"><h:inputText styleClass="inputText" id="txtEmail"
+						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtEmail"
 								style="width:100px;"
 								 value="#{solicitudRegMB.objTiivsPersonaResultado.email}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtEmail" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtEmail" value="Email"
 								showEffect="slide" /></td>
-						<td colspan="1"><h:outputText styleClass="outputText" id="outCelular"
+						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outCelular"
 								value="Celular:" /></td>
-						<td colspan="1"><h:inputText styleClass="inputText" id="txtCelular" maxlength="9"
+						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtCelular" maxlength="9" size="9"
 								style="width:100px;" 
 								 value="#{solicitudRegMB.objTiivsPersonaResultado.numCel}"/></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
