@@ -16,6 +16,8 @@ public interface GenericDao<K, T> {
 
 	public abstract K insertar(K objeto) throws Exception;
 	
+	public abstract K insertarMerge(K objeto) throws Exception;
+	
 	public abstract K save(K objeto) throws Exception;
 
 	public abstract K modificar(K objeto) throws Exception;
