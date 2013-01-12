@@ -618,10 +618,8 @@
 						<td colspan="1">
 						<p:commandButton value="Buscar" id="btnBuscar" action="#{solicitudRegMB.buscarPersona}"
 							 update=":formRegistrar,:formBusqueda" /></td>
-								<!-- onclick="dlgModalBusqueda.show();"  -->
-                        <td colspan="1"><h:outputText
-								styleClass="outputTextPopup" id="outTipoDoi2" 
-								value="T DOI/C *:" /></td>
+                        <td colspan="1">
+                        <h:outputText styleClass="outputTextPopup" id="outTipoDoi2" value="T DOI/C *:" /></td>
 						<td colspan="1">
 						<p:selectOneMenu id="cboTipoDoi2" value="#{solicitudRegMB.objTiivsPersonaResultado.tipDoi}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
