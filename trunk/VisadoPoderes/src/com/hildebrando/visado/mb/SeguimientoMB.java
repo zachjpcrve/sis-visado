@@ -74,6 +74,7 @@ public class SeguimientoMB
 	private Date fechaInicio;
 	private Date fechaFin;
 	private TiivsOficina1 oficina;
+	private Boolean mostrarColumna=true;
 	
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
@@ -180,6 +181,13 @@ public class SeguimientoMB
 		}
 
 		actualizarDatosGrilla();
+		
+		String grupoOfi = (String) Utilitarios.getObjectInSession("GRUPO_OFI");
+		
+		if (grupoOfi.compareTo("")!=0)
+		{
+			setMostrarColumna(false);
+		}
 	}
 
 	private void actualizarDatosGrilla() 
@@ -1301,5 +1309,13 @@ public class SeguimientoMB
 
 	public void setOficina(TiivsOficina1 oficina) {
 		this.oficina = oficina;
+	}
+
+	public Boolean getMostrarColumna() {
+		return mostrarColumna;
+	}
+
+	public void setMostrarColumna(Boolean mostrarColumna) {
+		this.mostrarColumna = mostrarColumna;
 	}
 }

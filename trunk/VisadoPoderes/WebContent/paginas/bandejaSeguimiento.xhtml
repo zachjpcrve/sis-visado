@@ -275,11 +275,13 @@
 	                                       </p:commandLink>
 	                                </p:column>
 									
-									<p:column width="26">
+									<p:column width="26" rendered="#{seguimientoMB.mostrarColumna}">
 										 <f:facet name="header">  
 									         <h:outputText value="Of." style="font-size: 9px"/>  
 									       </f:facet>  
 										<h:outputText value="#{tbl.tiivsOficina1.codOfi}" style="font-size: 9px"/>	
+										<p:graphicImage value="/resources/images/pregunta.jpg" id="toolOfi" />
+										<p:tooltip for="toolOfi" value="#{tbl.tiivsOficina1.desOfi}" showEffect="fade" hideEffect="fade" />
 									</p:column>
 									
 									<p:column width="42">
