@@ -1448,11 +1448,9 @@ public class SolicitudRegistroMB {
 				
 				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
-					  TiivsPersona objPer=servicePers.insertarMerge(b.getTiivsPersona());
-				  		b.setTiivsPersona(objPer);
-				  		logger.info("objPer "+objPer.getCodPer());
-				  		serviceAgru.insertar(b); 
-				  } 
+					     servicePers.insertarMerge(b.getTiivsPersona());
+					   //  serviceAgru.insertar(b);
+					     } 
 				  
 				  }
 				//Renombra los archivos
@@ -1517,25 +1515,30 @@ public class SolicitudRegistroMB {
 		this.solicitudRegistrarT.setFechaRespuesta(time);
 		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date().getTime()));
 	}
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "null" })
 	public void validarNroVoucher() throws Exception{
 		
 		String mensaje="Ingrese un Nro de Vourcher no registrado ";
 		Busqueda filtroNroVoucher = Busqueda.forClass(TiivsSolicitud.class);
 		GenericDao<TiivsSolicitud, String> serviceNroVoucher=(GenericDao<TiivsSolicitud, String>) SpringInit.getApplicationContext().getBean("genericoDao");
-		List<TiivsSolicitud> lstSolicitud =serviceNroVoucher.buscarDinamico(filtroNroVoucher);
+		List<TiivsSolicitud> lstSolicitud =new ArrayList<TiivsSolicitud>();
+		lstSolicitud=serviceNroVoucher.buscarDinamico(filtroNroVoucher);
+		if(lstSolicitud!=null){
 		for (TiivsSolicitud a : lstSolicitud) {
+			if(a!=null||!a.equals("")){
 			if(!a.getNroVoucher().equals(null)||!a.getNroVoucher().equals("")){
 			if(a.getNroVoucher().equals(this.solicitudRegistrarT.getNroVoucher())){
 				Utilitarios.mensajeInfo("INFO", mensaje);
 				break;
 			}
 			}
-			
+		  }
+		}
+		}
 			/*if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 				
 			}*/
-		}
+		
 		
 		
 	}
