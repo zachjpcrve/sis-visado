@@ -9,6 +9,7 @@ public class TiivsAnexoSolicitud implements java.io.Serializable {
 
 	private TiivsAnexoSolicitudId id;
 	private String aliasArchivo;
+	private String aliasTemporal;
 
 	public TiivsAnexoSolicitud() {
 	}
@@ -32,6 +33,14 @@ public class TiivsAnexoSolicitud implements java.io.Serializable {
 
 	public void setAliasArchivo(String aliasArchivo) {
 		this.aliasArchivo = aliasArchivo;
+	}
+	
+	public String getAliasTemporal() {
+		return aliasTemporal;
+	}
+
+	public void setAliasTemporal(String aliasTemporal) {
+		this.aliasTemporal = aliasTemporal;
 	}
 
 }
