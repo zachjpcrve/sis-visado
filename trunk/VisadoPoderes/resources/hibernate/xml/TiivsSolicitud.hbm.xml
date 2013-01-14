@@ -56,7 +56,7 @@
         <property name="nroVoucher" type="string">
             <column name="NRO_VOUCHER" length="12" />
         </property>
-        <set name="tiivsSolicitudNivels" table="TIIVS_SOLICITUD_NIVEL" inverse="true" lazy="true" fetch="select" >
+        <set name="tiivsSolicitudNivels" table="TIIVS_SOLICITUD_NIVEL" inverse="false" cascade="all" lazy="true" fetch="select" >
             <key>
                 <column name="COD_SOLI" length="7" not-null="true" />
             </key>

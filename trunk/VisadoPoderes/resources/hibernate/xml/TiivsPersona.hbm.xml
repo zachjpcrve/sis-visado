@@ -3,11 +3,11 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 05/12/2012 11:41:39 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.hildebrando.visado.modelo.TiivsPersona" table="TIIVS_PERSONA" lazy="false">
+    <class name="com.hildebrando.visado.modelo.TiivsPersona" table="TIIVS_PERSONA">
         <id name="codPer" type="int">
             <column name="COD_PER" precision="8" scale="0" />
             <generator class="sequence" >
-            <param name="sequence">SEQ_PERSONA</param>
+            <param name="sequence">SEQ_PER</param>
             </generator>
         </id>
         <property name="codCen" type="string">
