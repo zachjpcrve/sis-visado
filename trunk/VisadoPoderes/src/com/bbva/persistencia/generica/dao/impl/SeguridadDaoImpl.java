@@ -28,8 +28,8 @@ public abstract class SeguridadDaoImpl<K, T extends Serializable>
 	public  List<MiembroDto> buscarMiembroSql(IILDPeUsuario usuarioIILD) throws Exception{
 		
 		final String  sql ="select M.COD_MIEMBRO, M.DESCRIPCION, M.CRITERIO, M.COD_GRUPO, MT.VALOR1 AS DES_CRITERIO, M.ESTUDIO" +
- 		" from IIVS.TIIVS_MIEMBRO M " +
- 		" left join IIVS.TIIVS_MULTITABLA MT on M.CRITERIO = MT.COD_MULT || MT.COD_ELEM " +
+ 		" from TIIVS_MIEMBRO M " +
+ 		" left join TIIVS_MULTITABLA MT on M.CRITERIO = MT.COD_MULT || MT.COD_ELEM " +
  		" where (trim(m.cod_miembro) = '"+usuarioIILD.getUID().trim()+"' and trim(m.criterio) = 'T030001') " +
  		" OR (trim(m.cod_miembro)= '"+usuarioIILD.getCargo().getCodigo().trim()+"' and trim(m.criterio) = 'T030002') " +
  		" OR (trim(m.cod_miembro)= '"+usuarioIILD.getBancoOficina().getCodigo().trim()+"' and trim(m.criterio) = 'T030003')"	;
