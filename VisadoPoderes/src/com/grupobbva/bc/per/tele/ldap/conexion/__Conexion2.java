@@ -28,7 +28,7 @@ public class __Conexion2 extends __Conexion{
         try
         {
             Context initialContext = new InitialContext();
-            DataSource datasource = (DataSource)initialContext.lookup("java:/comp/env/jdbc/ORA_Biiwx001");
+            DataSource datasource = (DataSource)initialContext.lookup("jdbc/ORA_Biiwx001");
             con = datasource.getConnection();
             Statement s = con.createStatement();
             try
