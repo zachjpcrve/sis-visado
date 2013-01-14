@@ -267,9 +267,6 @@ public class PDFViewerMB {
 		String dirLocal="";
 		String rutaResultante="";
 		
-		//String codUsuario="P014773";
-		
-		//String dirPDF = "ftp://hilde:$i$tema$2012@10.172.0.4/VISADO/PDF/";
 		
 		if (lstParametros!=null) 
 		{
@@ -278,9 +275,9 @@ public class PDFViewerMB {
 			for (TiivsParametros tmp: lstParametros)
 			{
 				urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
-							  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
-							  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
-							  File.separator+tmp.getCarpetaRemota();
+						  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
+						  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
+						  File.separator+tmp.getCarpetaRemota();
 					
 				dirLocal=ruta;
 				server=tmp.getServer();
@@ -310,64 +307,13 @@ public class PDFViewerMB {
 		if (cliente!=null)
 		{
 			//Transferir archivos PDF de la carpeta local al Servidor
-			File Listfile = new File(dirLocal);
-			/*FilenameFilter filterPDF = new FilenameFilter() 
-			{
-		      public boolean accept(File dir, String name) 
-		      {
-		        return name.endsWith(nombreArchivo);
-		      }
-		    };*/
+			File Listfile = new File(dirLocal);			
 			 
-			//File[] lista = Listfile.listFiles(filterPDF);
-			cliente.upLoadOneFiles(Listfile.getName(),dirLocal);
-//			cliente.renombrarArchivo(nombreArchivo, Listfile.getName()); eramos
+			cliente.upLoadOneFiles(nombreArchivo,dirLocal);
 			
-/*//			for (int i = 0; i < lista.length; i++) 
-//			{
-//				//String codDocumento = buscarTipoDocByNombre(lista[i].getName());
-//				//String codDocumento="";
-//				cliente.upLoadFiles(lista[i].getName(),dirLocal);
-//				/*if (codDocumento.isEmpty())
-//				{
-//					cliente.renombrarArchivo(getValCodSolicitud()+"-"+"00"+(i+1)+".pdf", lista[i].getName());
-//				}
-//				else
-//				{
-//					cliente.renombrarArchivo(getValCodSolicitud()+"-"+codDocumento+".pdf", lista[i].getName());
-//				}*/
-//				
-//			}
-		
-			/*//Leer ficheros PDF para mostrarlos en la grilla
-			List listaTMP=new ArrayList<String>();
-			try {
-				listaTMP = cliente.listar();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			if (listaTMP !=null)
-			{
-				int ind=0;
-				for (; ind<=listaTMP.size()-1;ind++)
-				{
-					Escaneado tmp=new Escaneado();
-					
-					tmp.setDocumento("Copia "+ ind);
-					tmp.setNomArchivo(listaTMP.get(ind).toString());
-					System.out.println("Ruta archivo " + ind  + ": " + tmp.getNomArchivo());
-					tmp.setFormato("Blanco y Negro");
-					tmp.setRutaArchivoLarga(urlServer+tmp.getNomArchivo());
-					
-					lstPDFEscaneados.add(tmp);
-				}
-				r*/rutaResultante=urlServer+nombreArchivo;
-			//}
+			rutaResultante=urlServer+nombreArchivo;
 			
 		}
-		
-		
 		return rutaResultante;
 	}
 	
