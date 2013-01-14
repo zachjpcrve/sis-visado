@@ -1454,9 +1454,10 @@ public class SolicitudRegistroMB {
 				  
 				  }
 				  
-				  //Carga ficheros al FTP					  
-				  cargarArchivosFTP();
-				  //Elimina archivos temporales del proyecto
+				  //Carga ficheros al FTP
+				  boolean bRet = cargarArchivosFTP();
+				  logger.info("Resultado de carga de archivos al FTP:" + bRet);
+				  //Elimina archivos temporales
 				  eliminarArchivosTemporales();
 				  
 				  for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
@@ -1615,9 +1616,11 @@ public class SolicitudRegistroMB {
 		return cadenaEscanerFinal;
 	}
 	 
-	public void cargarArchivosFTP(){
+	public boolean cargarArchivosFTP(){
+		
 		logger.info("************cargarArchivosFTP()*¨**************");
 		
+		boolean exito = true;
 		String sUbicacionTemporal = getUbicacionTemporal();									
 		logger.info("ubicacion temporal "+ sUbicacionTemporal);
 
@@ -1626,10 +1629,13 @@ public class SolicitudRegistroMB {
 			String ruta = pdfViewerMB.cargarUnicoPDF(anexo.getAliasArchivo(),sUbicacionTemporal + anexo.getAliasTemporal());					
 			if (ruta.compareTo("") != 0) {
 				logger.debug("subio: " + anexo.getAliasTemporal());
+				exito = exito && true;
 			} else {
 				logger.debug("no subio: " + anexo.getAliasTemporal());
+				exito = exito && false;
 			}
 		}
+		return exito;
 	}
 				
 	public void eliminarArchivosTemporales() {	
