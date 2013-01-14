@@ -12,7 +12,7 @@
                 <column name="COD_NIV" length="4" />
             </key-property>
         </composite-id>
-        <many-to-one name="tiivsSolicitud" class="com.hildebrando.visado.modelo.TiivsSolicitud" update="false" insert="false" fetch="select">
+        <many-to-one name="tiivsSolicitud" class="com.hildebrando.visado.modelo.TiivsSolicitud" update="false" lazy="false" insert="false" fetch="select">
             <column name="COD_SOLI" length="7" not-null="true" />
         </many-to-one>
         <property name="estado" type="string">
