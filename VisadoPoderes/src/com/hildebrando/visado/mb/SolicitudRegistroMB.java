@@ -1530,7 +1530,7 @@ public class SolicitudRegistroMB {
 		if(lstSolicitud!=null){
 		for (TiivsSolicitud a : lstSolicitud) {
 			if(a!=null||!a.equals("")){
-			if(!a.getNroVoucher().equals(null)||!a.getNroVoucher().equals("")){
+			if(a.getNroVoucher()!=(null)){
 			if(a.getNroVoucher().equals(this.solicitudRegistrarT.getNroVoucher())){
 				Utilitarios.mensajeInfo("INFO", mensaje);
 				break;
