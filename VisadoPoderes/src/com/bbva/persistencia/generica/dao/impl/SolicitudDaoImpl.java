@@ -7,11 +7,20 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
+import com.bbva.common.listener.SpringInit.SpringInit;
+import com.bbva.persistencia.generica.dao.Busqueda;
+import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.MiembroDto;
+import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
+import com.hildebrando.visado.modelo.TiivsGrupo;
+import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
+import com.hildebrando.visado.modelo.TiivsSolicitud;
+import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 
 public abstract  class SolicitudDaoImpl <K, T extends Serializable> 
                               extends GenericDaoImpl<K, Serializable> implements SolicitudDao<K,Serializable>{
@@ -44,5 +53,24 @@ public abstract  class SolicitudDaoImpl <K, T extends Serializable>
 		return codigoSol;
 				
 	}
+	public TiivsSolicitud obtenerTiivsSolicitud(TiivsSolicitud solicitud) throws Exception{
+		GenericDao<TiivsSolicitud, Object>service=(GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+	    solicitud= service.buscarById(TiivsSolicitud.class, solicitud.getCodSoli());
+	return solicitud;
+	}
 	
+	public List<TiivsSolicitudOperban> obtenerListarOperacionesBancarias(TiivsSolicitud solicitud) throws Exception{
+		List<TiivsSolicitudOperban> lstOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();
+		GenericDao<TiivsSolicitudOperban, Object>service=(GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsSolicitudOperban.class);
+		filtro.add(Restrictions.eq("id.codSoli", solicitud.getCodSoli()));
+		return lstOperacionesBancarias=service.buscarDinamico(filtro);
+	}
+	public List<TiivsAnexoSolicitud> obtenerListarAnexosSolicitud(TiivsSolicitud solicitud) throws Exception{
+		List<TiivsAnexoSolicitud> lstAnexoSolicitud=new ArrayList<TiivsAnexoSolicitud>();
+		GenericDao<TiivsAnexoSolicitud, Object>service=(GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsAnexoSolicitud.class);
+		filtro.add(Restrictions.eq("id.codSoli", solicitud.getCodSoli()));
+		return lstAnexoSolicitud=service.buscarDinamico(filtro);
+	}
 }
