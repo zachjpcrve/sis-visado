@@ -22,6 +22,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
@@ -104,8 +105,7 @@ public class SolicitudRegistroMB {
 	private String sCodDocumento;
 	private TiivsTipoSolicDocumento selectedTipoDocumento;
 	private DocumentoTipoSolicitudDTO selectedDocumentoDTO;
-	private String urlServer = "";
-	private String aliasArchivo ="";
+	private String ubicacionTemporal;
 	private List<String> aliasFilesToDelete;
 
 	private IILDPeUsuario usuario;
@@ -166,7 +166,6 @@ public class SolicitudRegistroMB {
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		this.instanciarSolicitudRegistro();
 
-		urlServer = new PDFViewerMB().obtenerURLRemota();
 		
 		aliasFilesToDelete = new ArrayList<String>();
 		
@@ -184,58 +183,53 @@ public class SolicitudRegistroMB {
 	}
 
 
-	public boolean cargarUnicoPDF() {
+	public String cargarUnicoPDF() {
 		
 		if(file == null){
 			Utilitarios.mensajeInfo("", "No se ha seleccionado ningún archivo");
-			return false;
+			return "";
 		}
 		
 		byte fileBytes[] = getFile().getContents();
 
 		File fichTemp = null;
-		String ubicacionTemporal2 = "";
+		String sUbicacionTemporal = "";
+		String sNombreTemporal = "";
 		FileOutputStream canalSalida = null;
 		
 		try {
-
-			fichTemp = File.createTempFile("temp", file.getFileName()
-					.substring(getFile().getFileName().lastIndexOf(".")));
-			ubicacionTemporal2 = fichTemp.getAbsolutePath();
-						
 			
-			logger.debug("ubicacion temporal " + ubicacionTemporal2);
+			//Obteniendo ubicación del proyecto
+			HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();							
+			sUbicacionTemporal = request.getRealPath(File.separator)  + File.separator + "files" + File.separator;
+			this.setUbicacionTemporal(sUbicacionTemporal);
+			
+			logger.debug("ubicacion temporal "+ sUbicacionTemporal);
+			
+			File fDirectory = new File(sUbicacionTemporal);
+			fDirectory.mkdirs();	
+			
+			String extension = file.getFileName().substring(
+					getFile().getFileName().lastIndexOf("."));
+			
+			fichTemp = File.createTempFile("temp", extension, new File(
+					sUbicacionTemporal));
+			
+			sNombreTemporal = fichTemp.getName();
+									
+			logger.debug("Nombre temporal de archivo:  " + sNombreTemporal);
+			
 			canalSalida = new FileOutputStream(fichTemp);
 			canalSalida.write(fileBytes);
 			
-			
-			String extension = fichTemp.getName().substring(fichTemp.getName().lastIndexOf("."));
-			this.aliasArchivo = this.aliasArchivo + extension; 
-
-//			logger.info("aliasArchivo : " + this.aliasArchivo);
-//			logger.info("file.getFileName() : " + fichTemp.getName());
-//			logger.info("file.getFileName() : " + ubicacionTemporal2);
-			String ruta = pdfViewerMB.cargarUnicoPDF(ubicacionTemporal2);
-			
-			this.aliasArchivo = fichTemp.getName();
-						
-			if (ruta.compareTo("")!=0)
-			{
-				logger.info("subio");
-			}
-			else
-			{
-				logger.info("no subio");
-			}
-			
 			canalSalida.flush();
-			return true;
+			return sNombreTemporal;
 
 		} catch (IOException e) {
 			logger.debug("error anexo " + e.toString());
 			String sMensaje = "Se produjo un error al adjuntar fichero";
 			Utilitarios.mensajeInfo("", sMensaje);
-			return false;
+			return "";
 		} finally {
 
 			fichTemp.deleteOnExit(); // Delete the file when the
@@ -294,7 +288,7 @@ public class SolicitudRegistroMB {
 	
 	public void addArchivosTemporalesToDelete(){		
 		for(TiivsAnexoSolicitud a : lstAnexoSolicitud){	
-			aliasFilesToDelete.add(a.getAliasArchivo());
+			aliasFilesToDelete.add(a.getAliasTemporal());
 		}				
 	}
 
@@ -849,28 +843,31 @@ public class SolicitudRegistroMB {
 
 	}
 
-	public void actualizarListaDocumentosXTipo() {
+	public void actualizarListaDocumentosXTipo(TiivsAnexoSolicitud objAnexo) {
 		logger.info("****************************** actualizarListaDocumentosXTipo *********************************");
-		if (sCodDocumento.contains(ConstantesVisado.PREFIJO_OTROS)) {
-			String sAliasLabel = solicitudRegistrarT.getCodSoli()+"_"+sCodDocumento + aliasArchivo.substring(aliasArchivo.lastIndexOf("."));
-			DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO(sCodDocumento,ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS, false + "", this.aliasArchivo,sAliasLabel); 
+		if (objAnexo.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS)) {
+			String sAlias = objAnexo.getAliasArchivo();
+			String sAliasTemporal = objAnexo.getAliasTemporal();
+			DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO(
+					objAnexo.getId().getCodDoc(),
+					ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS, false + "",
+					sAlias, sAliasTemporal); 
 			lstdocumentos.add(doc);
 			return;
 		}
 
 		for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
 
-			if (s.getId().getCodDoc().equals(sCodDocumento)) {
+			if (s.getId().getCodDoc().equals(objAnexo.getId().getCodDoc())) {
 				this.lstTipoSolicitudDocumentos.remove(s);
 				break;
 			}
 		}
 
 		for (DocumentoTipoSolicitudDTO doc : lstdocumentos) {
-			if (doc.getItem().equals(sCodDocumento)) {
-				doc.setAlias(aliasArchivo);
-				String sAliasLabel = solicitudRegistrarT.getCodSoli()+"_"+sCodDocumento+aliasArchivo.substring(aliasArchivo.lastIndexOf("."));
-				doc.setAliasLabel(sAliasLabel);
+			if (doc.getItem().equals(objAnexo.getId().getCodDoc())) {
+				doc.setAlias(objAnexo.getAliasArchivo());
+				doc.setAliasTemporal(objAnexo.getAliasTemporal());
 				break;
 			}
 		}
@@ -928,21 +925,24 @@ public class SolicitudRegistroMB {
 			if (sCodDocumento.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
 				sCodDocumento = ConstantesVisado.PREFIJO_OTROS+String.format("%06d", lstdocumentos.size() + 1);
 			} 
-			
-			this.aliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_" + sCodDocumento;
 						
-			logger.info("aliasArchivo *** " + this.aliasArchivo);			
-			if(!cargarUnicoPDF()){				
+			String sAliasTemporal = cargarUnicoPDF();
+			String sExtension = sAliasTemporal.substring(sAliasTemporal.lastIndexOf("."));
+			String sAliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_" + sCodDocumento + sExtension;
+						
+			if(sAliasTemporal == null || sAliasTemporal.trim().isEmpty()){				
 				return;
 			}			
-			logger.info("aliasArchivo *** " + this.aliasArchivo);			
+			logger.info("aliasArchivo *** " + sAliasArchivo);
+			logger.info("aliasArchivoTemporal *** " + sAliasTemporal);
 			
 			TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
 			objAnexo.setId(new TiivsAnexoSolicitudId(this.solicitudRegistrarT.getCodSoli(), sCodDocumento));
-			objAnexo.setAliasArchivo(this.aliasArchivo);
+			objAnexo.setAliasArchivo(sAliasArchivo);
+			objAnexo.setAliasTemporal(sAliasTemporal);
 			lstAnexoSolicitud.add(objAnexo);
 			
-			this.actualizarListaDocumentosXTipo();
+			this.actualizarListaDocumentosXTipo(objAnexo);
 
 			for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
 				if (tipoSoli.getCodTipSolic().equals(iTipoSolicitud)) {
@@ -967,7 +967,7 @@ public class SolicitudRegistroMB {
 		for (TiivsAnexoSolicitud anexo : lstAnexoSolicitud) {
 			if (anexo.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {
 				lstAnexoSolicitud.remove(anexo);
-				this.aliasFilesToDelete.add(anexo.getAliasArchivo());
+				this.aliasFilesToDelete.add(anexo.getAliasTemporal());
 				break;
 			}
 		}
@@ -986,7 +986,7 @@ public class SolicitudRegistroMB {
 		for (DocumentoTipoSolicitudDTO doc : lstdocumentos) {			
 			if (doc.getItem().equals(selectedDocumentoDTO.getItem())) {
 				doc.setAlias("");
-				doc.setAliasLabel("");
+				doc.setAliasTemporal("");
 				if(doc.getItem().contains(ConstantesVisado.PREFIJO_OTROS)){
 					logger.info("Este documento es de tipo otros");
 					lstdocumentos.remove(doc);
@@ -1453,8 +1453,12 @@ public class SolicitudRegistroMB {
 					     } 
 				  
 				  }
-				//Renombra los archivos
-				  this.renombrarArchivos();
+				  
+				  //Carga ficheros al FTP					  
+				  cargarArchivosFTP();
+				  //Elimina archivos temporales del proyecto
+				  eliminarArchivosTemporales();
+				  
 				  for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
 					  logger.info("nnnnnnnnnnnnnnnnnnnnnnn "+n.getAliasArchivo());
 					  serviceAnexos.insertar(n);
@@ -1483,7 +1487,7 @@ public class SolicitudRegistroMB {
 					Utilitarios.mensajeInfo("INFO", mensaje);
 					
 					//Elimina archivo temporal
-					this.eliminarArchivosTemporales();
+					//this.eliminarArchivosTemporales();
 					
 				}
 
@@ -1611,26 +1615,39 @@ public class SolicitudRegistroMB {
 		return cadenaEscanerFinal;
 	}
 	 
-	
-	public void renombrarArchivos(){
-		logger.info("************renombrarArchivos()*¨**************");
-		List<String> fromficheros = new ArrayList<String>();
-		List<String> toFricheros = new ArrayList<String>();	
+	public void cargarArchivosFTP(){
+		logger.info("************cargarArchivosFTP()*¨**************");
 		
+		String sUbicacionTemporal = getUbicacionTemporal();									
+		logger.info("ubicacion temporal "+ sUbicacionTemporal);
+
 		for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){
-			fromficheros.add(anexo.getAliasArchivo());
-			String extension = anexo.getAliasArchivo().substring(anexo.getAliasArchivo().lastIndexOf("."));
-			toFricheros.add(anexo.getId().getCodSoli()+"_"+anexo.getId().getCodDoc()+extension);
-			anexo.setAliasArchivo(anexo.getId().getCodSoli()+"_"+anexo.getId().getCodDoc()+extension);
+			
+			String ruta = pdfViewerMB.cargarUnicoPDF(anexo.getAliasArchivo(),sUbicacionTemporal + anexo.getAliasTemporal());					
+			if (ruta.compareTo("") != 0) {
+				logger.debug("subio: " + anexo.getAliasTemporal());
+			} else {
+				logger.debug("no subio: " + anexo.getAliasTemporal());
+			}
 		}
-		pdfViewerMB.renombrarFiles(fromficheros,toFricheros);
 	}
-	
-	
+				
 	public void eliminarArchivosTemporales() {	
 		logger.info("************eliminarArchivosTemporales()*¨**************");
-		logger.info("Archivos a eliminar:" + aliasFilesToDelete.size()); 
-		pdfViewerMB.eliminarArchivos(aliasFilesToDelete);
+		logger.info("Archivos a eliminar:" + aliasFilesToDelete.size()); 	
+		File fileToDelete = null;
+		
+		for(String sfile : aliasFilesToDelete){
+			logger.debug("borrar archivo: " + this.getUbicacionTemporal() + sfile);
+			fileToDelete = new File(this.getUbicacionTemporal() + sfile);
+			if(fileToDelete.delete()){
+				logger.debug("borro archivo temporal :" + sfile);
+			} else {
+				logger.debug("no borro archivo temporal :" + sfile);
+			}
+		}
+		
+		fileToDelete = null;
 		aliasFilesToDelete = new ArrayList<String>();		
 	}
 
@@ -1910,15 +1927,7 @@ public class SolicitudRegistroMB {
 
 	public void setIndexUpdatePersona(int indexUpdatePersona) {
 		this.indexUpdatePersona = indexUpdatePersona;
-	}
-
-	public String getUrlServer() {
-		return urlServer;
-	}
-
-	public void setUrlServer(String urlServer) {
-		this.urlServer = urlServer;
-	}
+	}	
 	
 	public TiivsTipoSolicDocumento getSelectedTipoDocumento() {
 		return selectedTipoDocumento;
@@ -1951,6 +1960,14 @@ public class SolicitudRegistroMB {
 
 	public void setbBooleanPopupTipoCambio(boolean bBooleanPopupTipoCambio) {
 		this.bBooleanPopupTipoCambio = bBooleanPopupTipoCambio;
+	}
+
+	public String getUbicacionTemporal() {
+		return ubicacionTemporal;
+	}
+
+	public void setUbicacionTemporal(String ubicacionTemporal) {
+		this.ubicacionTemporal = ubicacionTemporal;
 	}
 	
 	
