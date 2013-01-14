@@ -321,7 +321,9 @@
 										                    </td>
 
 														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro" ajax="false"
-														action="#{solicitudRegMB.agregarDocumentosXTipoSolicitud}"/></td>
+														action="#{solicitudRegMB.agregarDocumentosXTipoSolicitud}"/>
+																												
+														</td>
 														
 													</tr>
 													<tr>
@@ -343,8 +345,8 @@
 																	<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>																	
 																</p:column>
 																<p:column headerText="Archivo" >
-																	<h:outputLink onclick="window.open('#{solicitudRegMB.urlServer}#{s.alias}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
-																		<h:outputText value="#{s.aliasLabel}" /> 
+																	<h:outputLink onclick="window.open('../../files/#{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
+																		<h:outputText value="#{s.alias}" /> 
 																	</h:outputLink>																																																																																																																																						
 																</p:column>
 																<p:column headerText="Eliminar">
