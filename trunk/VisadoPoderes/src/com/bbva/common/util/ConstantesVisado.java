@@ -169,6 +169,11 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_COLUMNA_FECHA_ENVIO = "Fecha de Envio";
 	public static final String ETIQUETA_COLUMNA_FECHA_RPTA = "Fecha de Respuesta";
 	public static final String ETIQUETA_COLUMNA_FECHA_ESTADO = "Fecha de Estado";
+	public static final String ETIQUETA_COLUMNA_COMISION = "Comision";
+	public static final String ETIQUETA_COLUMNA_LIBERADO = "Liberado";
+	public static final String ETIQUETA_COLUMNA_DELEGADO = "Delegado";
+	public static final String ETIQUETA_COLUMNA_EN_REVISION = "En revision";
+	public static final String ETIQUETA_COLUMNA_REVOCATORIA = "Revocatoria";
 	
 	static public class ESTADOS {
 		
