@@ -35,7 +35,7 @@ public class SeguridadMB {
 	}
 	@SuppressWarnings("rawtypes")
 	public void iniciarSession(){
-	logger.trace("Entra al Metodo");				
+	logger.info("Entra al Metodo iniciarSession");				
 	ServiciosSeguridadBbva objSeguridad;
 	IILDPeUsuario usuarioIILD = null;
 	//Ldapperu2 usuarioIILD = new Ldapperu2();;
@@ -101,7 +101,13 @@ public class SeguridadMB {
 			request.getSession(true).setAttribute("TAREA_REGISTRO_SOLICITUDES", null);		
 			
 			SeguridadDao<MiembroDto, Object> miembroService = (SeguridadDao<MiembroDto, Object>) SpringInit.getApplicationContext().getBean("miembroEspDao");
-
+			logger.info("**************** miembroService : "+miembroService);
+			if(miembroService==null){
+				logger.info("Nullo");
+			}else{
+				logger.info("No Nullo");
+			}
+			
 			 List<MiembroDto> ListaMiembros= miembroService.buscarMiembroSql(usuarioIILD);
 				
 			 logger.info(" ***************** ListaMiembros **************" +ListaMiembros.size());
