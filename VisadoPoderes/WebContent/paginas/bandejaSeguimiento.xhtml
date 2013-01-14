@@ -27,7 +27,8 @@
 						<p:tooltip for="tooltxtSolicitud" value="Numero de solicitud" showEffect="fade" hideEffect="fade" />  
 						<td ><h:outputText styleClass="outputText" id="txtEstado" value="Estado" /></td>
 						<td >
-							<p:selectCheckboxMenu label="--Todos--" value="#{seguimientoMB.lstEstadoSelected}" panelStyle="width:220px;" style="width:162px;">  
+							<p:selectCheckboxMenu id="scmEstados" label="--Todos--" value="#{seguimientoMB.lstEstadoSelected}" 
+								panelStyle="width:220px;" style="width:162px;">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.estados}"/>  
 						    </p:selectCheckboxMenu>  
 						</td>	
@@ -47,7 +48,8 @@
 						
 						<td ><h:outputText styleClass="outputText" id="txtTipoSol" value="T. de Solicitud" /></td>
 						<td >
-							<p:selectCheckboxMenu label="--Todos--" value="#{seguimientoMB.lstTipoSolicitudSelected}" panelStyle="width:220px;" style="width:167px;">  
+							<p:selectCheckboxMenu id="scmTSolicitud" label="--Todos--" value="#{seguimientoMB.lstTipoSolicitudSelected}" 
+								panelStyle="width:220px;" style="width:167px;">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.tiposSolicitud}" />  
 						    </p:selectCheckboxMenu>
 						</td>
@@ -76,8 +78,8 @@
 						<td ><h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" /></td>
 						<td >
 							<p:calendar  id="calFecIni" disabled="#{seguimientoMB.noMostrarFechas}"
-								pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaInicio}"
-								label="Fecha de Fin" showOn="button" maxlength="10" size="23"/>
+								pattern="dd/MM/yyyy hh:mm a" value="#{seguimientoMB.fechaInicio}" 
+								showOn="button" maxlength="10" size="23"/>
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecIni" /></td>
 						<p:tooltip for="tooltxtFecIni" value="Fecha de Inicio" showEffect="fade" hideEffect="fade" />  
@@ -85,8 +87,8 @@
 						<td ><h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin" /></td>
 						<td >
 							<p:calendar  id="calFecFin" disabled="#{seguimientoMB.noMostrarFechas}"
-								pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaFin}"
-								label="Fecha de Fin" showOn="button" maxlength="10" size="21"/>
+								pattern="dd/MM/yyyy hh:mm a" value="#{seguimientoMB.fechaFin}"
+								showOn="button" maxlength="10" size="21"/>
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecFin" /></td>
 						<p:tooltip for="tooltxtFecFin" value="Fecha de Fin" showEffect="fade" hideEffect="fade" />  
@@ -166,7 +168,7 @@
 							<h:outputText styleClass="outputText" id="txtNivel" value="Nivel" rendered="#{sessionScope.GRUPO_JRD != null}"/>
 						</td>
 						<td >
-							<p:selectCheckboxMenu label="--Todos--" value="#{seguimientoMB.lstNivelSelected}" style="width:177px;" 
+							<p:selectCheckboxMenu id="scmNivel" label="--Todos--" value="#{seguimientoMB.lstNivelSelected}" style="width:177px;" 
 								rendered="#{sessionScope.GRUPO_JRD != null}">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.niveles}" />  
 						    </p:selectCheckboxMenu>  
@@ -177,7 +179,7 @@
 							<h:outputText styleClass="outputText" id="txtEstNivel" value="Estado del Nivel:" rendered="#{sessionScope.GRUPO_JRD != null}"/>
 						</td>
 						<td >
-							<p:selectCheckboxMenu label="--Todos--" value="#{seguimientoMB.lstEstadoNivelSelected}" panelStyle="width:100px;" style="width:135px;"
+							<p:selectCheckboxMenu id="scmEstadoNivel" label="--Todos--" value="#{seguimientoMB.lstEstadoNivelSelected}" panelStyle="width:100px;" style="width:135px;"
 							   rendered="#{sessionScope.GRUPO_JRD != null}">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.estadosNivel}"/>  
 						    </p:selectCheckboxMenu> 
@@ -188,7 +190,7 @@
 							<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio" rendered="#{sessionScope.GRUPO_JRD != null}"/>
 						</td>
 						<td >
-							<p:selectCheckboxMenu label="--Todos--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:120px;" style="width:160px;" 
+							<p:selectCheckboxMenu id="scmEstudio" label="--Todos--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:120px;" style="width:160px;" 
 								rendered="#{sessionScope.GRUPO_JRD != null}">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.estudios}" />  
 						    </p:selectCheckboxMenu>  
@@ -280,8 +282,7 @@
 									         <h:outputText value="Of." style="font-size: 9px"/>  
 									       </f:facet>  
 										<h:outputText value="#{tbl.tiivsOficina1.codOfi}" style="font-size: 9px"/>	
-										<p:graphicImage value="/resources/images/pregunta.jpg" id="toolOfi" />
-										<p:tooltip for="toolOfi" value="#{tbl.tiivsOficina1.desOfi}" showEffect="fade" hideEffect="fade" />
+										
 									</p:column>
 									
 									<p:column width="42">
@@ -319,7 +320,7 @@
 										<h:outputText value="#{tbl.txtOpeBan}" style="font-size: 9px"/>					
 									</p:column>
 									
-									<p:column width="40">
+									<p:column width="40" rendered="#{seguimientoMB.ocultarControl}">
 										<f:facet name="header">  
 									         <h:outputText value="Estudio" style="font-size: 9px"/>  
 									    </f:facet>
