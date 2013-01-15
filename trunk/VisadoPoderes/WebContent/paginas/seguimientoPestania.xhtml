@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+
+				<h:panelGrid columns="5">
+
+			<p:tabMenu activeIndex="0" style="width:350px;">
+				<p:menuitem value="Solicitud" url="/faces/paginas/detalleSolicitud.xhtml"
+					icon="ui-icon-star" />
+				<p:menuitem value="Seguimiento"
+					url="/faces/paginas/seguimientoPestania.xhtml" icon="ui-icon-star" />
+			
+			</p:tabMenu>
+
+			<p:toolbar>
+				<p:toolbarGroup align="rigth">
+					<p:commandButton value="Imprimir" id="btnImprimir3"
+						icon="ui-icon-document" />
+					<p:commandButton value="Salir" id="btnSalir3"
+						icon="ui-icon-document" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+		</h:panelGrid>
+		
+		
+		
+		<h:form id="formSolicitudRegistro">
+	      
+
+
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>
+
+</html>
