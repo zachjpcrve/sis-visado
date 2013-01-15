@@ -15,5 +15,8 @@
         <property name="aliasArchivo" type="string">
             <column name="ALIAS_ARCHIVO" length="50" not-null="true" />
         </property>
+        <property name="aliasTemporal" type="string">
+            <column name="ALIAS_TEMPORAL" length="50" not-null="false" />
+        </property>
     </class>
 </hibernate-mapping>
