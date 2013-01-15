@@ -132,6 +132,7 @@ public class ConstantesVisado {
 	public static final String CERO = "0";
 	public static final String PROTOCOLO_FTP="ftp";
 	public static final String SALTO_LINEA = "\n";
+	public static final String EXTENSION_XLS = ".xls";
 	
 	//Constantes para archivo Excel
 	public static final String TITULO_CABECERA_EXCEL ="CONSULTA DE SOLICITUDES DE VISADO";

@@ -11,6 +11,7 @@ public class TiivsParametros implements java.io.Serializable {
 	private String carpetaRemota;
 	private String urlAPP;
 	private String codUsuario;
+	private String rutaArchivoExcel;
 	
 	public int getIdParam() {
 		return idParam;
@@ -71,5 +72,11 @@ public class TiivsParametros implements java.io.Serializable {
 	}
 	public void setCodUsuario(String codUsuario) {
 		this.codUsuario = codUsuario;
+	}
+	public String getRutaArchivoExcel() {
+		return rutaArchivoExcel;
+	}
+	public void setRutaArchivoExcel(String rutaArchivoExcel) {
+		this.rutaArchivoExcel = rutaArchivoExcel;
 	}
 }

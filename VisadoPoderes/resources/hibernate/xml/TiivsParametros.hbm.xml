@@ -35,5 +35,8 @@
          <property name="codUsuario" type="java.lang.String">
             <column name="COD_USUARIO" />
         </property>
+        <property name="rutaArchivoExcel" type="java.lang.String">
+        	<column name="RUTA_ARCHIVO_EXPORTAR_EXCEL"/>
+        </property>
     </class>
 </hibernate-mapping>

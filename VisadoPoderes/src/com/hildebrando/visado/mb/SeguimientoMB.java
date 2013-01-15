@@ -43,6 +43,7 @@ import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
+import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
@@ -51,6 +52,8 @@ import com.hildebrando.visado.modelo.TiivsTerritorio;
 @SessionScoped
 public class SeguimientoMB 
 {
+	@ManagedProperty(value = "#{pdfViewerMB}")
+	private PDFViewerMB pdfViewerMB;
 	private List<TiivsSolicitud> solicitudes;
 	private List<TiivsAgrupacionPersona> lstAgrupPer;
 	private List<TiivsHistSolicitud> lstHistorial;
@@ -156,8 +159,7 @@ public class SeguimientoMB
 				desOfi=usuario.getBancoOficina().getDescripcion();
 				TiivsTerritorio terr=buscarTerritorioPorOficina(codOfi);
 						
-				textoOficina =codOfi + " "
-						+ desOfi+ " (" + terr.getCodTer() + "-" + terr.getDesTer() + ")";
+				textoOficina =codOfi + " "  + desOfi+ " (" + terr.getCodTer() + "-" + terr.getDesTer() + ")";
 			}
 		}
 		
@@ -883,18 +885,43 @@ public class SeguimientoMB
 			sheet.autoSizeColumn(18);
 			sheet.autoSizeColumn(19);
 			sheet.autoSizeColumn(20);
-			
-			
+						
 			//Se crea el archivo con la informacion y estilos definidos previamente
-			String strRuta = "C:/hildebrando/" + getNombreArchivoExcel() + ".xls";
-			FileOutputStream fileOut = new FileOutputStream(strRuta);
-			wb.write(fileOut);
+			String strRuta="";
+			if (obtenerRutaExcel().compareTo("")!=0)
+			{
+				strRuta = obtenerRutaExcel() + getNombreArchivoExcel() + ConstantesVisado.EXTENSION_XLS;
+				FileOutputStream fileOut = new FileOutputStream(strRuta);
+				wb.write(fileOut);
 
-			fileOut.close();
-
+				fileOut.close();
+			}
+			else
+			{
+				logger.info("No se pudo encontrar la ruta para exportar a excel.");
+			}
+			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.info("Error al generar el archivo excel debido a: " +e.getMessage());
 		}	
+	}
+	
+	public String obtenerRutaExcel()
+	{
+		String res="";
+		
+		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
+		
+		for (TiivsParametros tmp: pdfViewerMB.getLstParametros())
+		{
+			if (usuario.getUID().equals(tmp.getCodUsuario()))
+			{
+				res=tmp.getRutaArchivoExcel();
+				break;
+			}
+		}
+		
+		return res;
 	}
 	
 	private String validarCampoNull(String campo)
@@ -1106,7 +1133,7 @@ public class SeguimientoMB
 			}
 		}
 
-		// 6. Filtro por operacion bancaria ( ya esta )
+		// 6. Filtro por operacion bancaria (funciona)
 		if (getIdOpeBan().compareTo("") != 0) 
 		{
 			lstSolicitudesxOpeBan.clear();
@@ -1150,7 +1177,7 @@ public class SeguimientoMB
 			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
 		}
 
-		// 11. Filtro por numero de documento de apoderado (ya esta)
+		// 11. Filtro por numero de documento de apoderado (funciona)
 		if (getNroDOIApoderado().compareTo("") != 0) 
 		{
 			String codSol="";
@@ -1169,7 +1196,7 @@ public class SeguimientoMB
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,codSol));
 		}
 
-		// 12. Filtro por nombre de apoderado (ya esta)
+		// 12. Filtro por nombre de apoderado (funciona)
 		if (getTxtNomApoderado().compareTo("") != 0) 
 		{
 			//String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getTxtNomApoderado().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
@@ -1194,7 +1221,7 @@ public class SeguimientoMB
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,codSol));
 		}
 		
-		// 13. Filtro por numero de documento de poderdante (ya esta)
+		// 13. Filtro por numero de documento de poderdante (funciona)
 		if (getNroDOIPoderdante().compareTo("") != 0) 
 		{
 			//filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_NUMDOC_PODERDANTE,	getNroDOIPoderdante()));
@@ -1214,7 +1241,7 @@ public class SeguimientoMB
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,codSol));
 		}
 
-		// 14. Filtro por nombre de poderdante (ya esta)
+		// 14. Filtro por nombre de poderdante (funciona)
 		if (getTxtNomPoderdante().compareTo("") != 0) 
 		{
 			/*String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getTxtNomPoderdante().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
@@ -1265,8 +1292,14 @@ public class SeguimientoMB
 			
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
 		}
-
-		// 17. Filtro por estudio (ya esta)
+		
+		// 16. Filtro por estado nivel
+		if (lstEstadoNivelSelected.size() > 0)
+		{
+			
+		}
+		
+		// 17. Filtro por estudio (funciona)
 		if (lstEstudioSelected.size() > 0) {
 			
 			// filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTUDIO,
@@ -1330,7 +1363,7 @@ public class SeguimientoMB
 			}
 		}
 
-		// 21. Filtrar solicitudes que se hayan Revocado
+		// 21. Filtrar solicitudes que se hayan Revocado (funciona)
 		if (getbRevocatoria()) 
 		{
 			String codigoSolicRevocado = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_REVOCADO);
