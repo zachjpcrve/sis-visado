@@ -28,7 +28,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.mapping.Array;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -46,6 +45,7 @@ import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
+import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
 
@@ -1304,7 +1304,38 @@ public class SeguimientoMB
 		// 16. Filtro por estado nivel
 		if (lstEstadoNivelSelected.size() > 0)
 		{
+			GenericDao<TiivsSolicitudNivel, Object> busqSolNivDAO = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsSolicitudNivel.class);
+			List<TiivsSolicitudNivel> lstSolNivel = new ArrayList<TiivsSolicitudNivel>();
+			filtro.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO, lstEstadoNivelSelected));
 			
+			try {
+				lstSolNivel = busqSolNivDAO.buscarDinamico(filtro);
+			} catch (Exception e) {
+				logger.debug("Error al buscar los estados de los niveles en las solicitudes");
+			}
+			
+			lstSolicitudesSelected.clear();
+			
+			for (TiivsSolicitudNivel sol : lstSolNivel) 
+			{
+				for (TiivsSolicitud soli: solicitudes)
+				{	
+					if (sol.getId().getCodSoli().equals(soli.getCodSoli()) && soli.getTxtNivel().length()>0)
+					{
+						lstSolicitudesSelected.add(sol.getId().getCodSoli());
+					}
+				}
+			}
+			
+			int ind = 0;
+
+			for (; ind <= lstEstadoNivelSelected.size() - 1; ind++) 
+			{
+				logger.info("Filtro estado nivel" + "[" + ind + "]" + lstEstadoNivelSelected.get(ind));
+			}
+			
+			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
 		}
 		
 		// 17. Filtro por estudio (funciona)
@@ -1327,6 +1358,40 @@ public class SeguimientoMB
 		// 19. Filtrar solicitudes con Revision
 		if (getbRevision()) 
 		{
+			/*String codigoSolicEnRevision = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_EN_REVISION);
+			GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
+			filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicEnRevision));
+
+			try {
+				lstHistorial = busqHisDAO.buscarDinamico(filtro);
+			} catch (Exception e) {
+				logger.debug("Error al buscar en historial de solicitudes");
+			}
+			
+			//String codigoSolicEnRevision = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_EN_REVISION);
+			lstSolicitudesSelected.clear();
+			for (SeguimientoDTO tmp: lstSeguimientoDTO)
+			{
+				if (tmp.getEstado().equals(ConstantesVisado.CAMPO_ESTADO_EN_REVISION))
+				{
+					lstSolicitudesSelected.add(tmp.getCodSolicitud());
+				}
+			}
+			
+
+			if (lstSolicitudesSelected.size() > 0) 
+			{
+				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudesSelected));
+			} 
+			else 
+			{
+				logger.info("No hay solicitudes en el historial con estado En Revision");
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
+			
+			
+			}*/
+			
 			String codigoSolicEnRevision = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_EN_REVISION);
 			GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
@@ -1337,14 +1402,25 @@ public class SeguimientoMB
 			} catch (Exception e) {
 				logger.debug("Error al buscar en historial de solicitudes");
 			}
-
-			if (lstHistorial.size() > 0) 
+			
+			lstSolicitudesSelected.clear();
+			for (TiivsHistSolicitud tmp: lstHistorial)
 			{
-				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstHistorial));
+				if (lstHistorial!=null && lstHistorial.size()>0)
+				{
+					lstSolicitudesSelected.add(tmp.getId().getCodSoli());
+				}
+			}
+			
+			
+			if (lstSolicitudesSelected.size() > 0) 
+			{
+				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudesSelected));
 			} 
 			else 
 			{
 				logger.info("No hay solicitudes en el historial con estado En Revision");
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
 			}
 		}
 		
@@ -1367,7 +1443,33 @@ public class SeguimientoMB
 			if (lstHistorial.size() > 0) 
 			{
 				// Colocar aqui la logica para filtrar los niveles aprobados o rechazados
+				GenericDao<TiivsSolicitudNivel, Object> busqSolNivDAO = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+				Busqueda filtro2 = Busqueda.forClass(TiivsSolicitudNivel.class);
+				List<TiivsSolicitudNivel> lstSolNivel = new ArrayList<TiivsSolicitudNivel>();
+								
+				try {
+					lstSolNivel = busqSolNivDAO.buscarDinamico(filtro2);
+				} catch (Exception e) {
+					logger.debug("Error al buscar los estados de los niveles en las solicitudes");
+				}
 				
+				for (TiivsSolicitudNivel tmp: lstSolNivel)
+				{
+					for (TiivsHistSolicitud hist: lstHistorial)
+					{
+						if (tmp.getId().getCodSoli().equals(hist.getId().getCodSoli()))
+						{
+							lstSolicitudesSelected.add(hist.getId().getCodSoli());
+						}
+					}
+				}
+				
+				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
+			}
+			else
+			{
+				logger.info("No hay solicitudes en el historial con delegacion de niveles");
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
 			}
 		}
 
@@ -1384,14 +1486,24 @@ public class SeguimientoMB
 			} catch (Exception e) {
 				logger.debug("Error al buscar en historial de solicitudes");
 			}
-
-			if (lstHistorial.size() > 0) 
+			
+			lstSolicitudesSelected.clear();
+			for (TiivsHistSolicitud tmp: lstHistorial)
 			{
-				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstHistorial));
+				if (lstHistorial!=null && lstHistorial.size()>0)
+				{
+					lstSolicitudesSelected.add(tmp.getId().getCodSoli());
+				}
+			}
+
+			if (lstSolicitudesSelected.size() > 0) 
+			{
+				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudesSelected));
 			} 
 			else 
 			{
 				logger.info("No hay solicitudes en el historial con estado Revocado");
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
 			}
 		}
 		
