@@ -20,6 +20,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import com.bbva.common.util.ConstantesVisado;
+
 public class Utilitarios {
 	
      private static Logger log = Logger.getLogger(Utilitarios.class);
@@ -32,6 +34,73 @@ public class Utilitarios {
 	public static String WARN =   "WARN";
 	public static String ERROR =  "ERROR";
 	public static String FATAL =  "FATAL";
+	
+	public static String obternerDescripcionEstado(String estado){
+		String descEstado="";
+		if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_ACTIVO;
+		}else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_DESACTIVO)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_DESACTIVO;
+		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_REGISTRADO_T02;
+		}else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_RESERVADO_T02;
+		}else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02;
+		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02;
+		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_ENVIADOSSJJ_T02;
+		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_VENCIDO_T02;
+		}
+		
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_EN_VERIFICACION_A_T02;
+		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_EN_VERIFICACION_B_T02;
+		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02;
+		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_IMPROCEDENTE_T02;
+		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PRE_EJECUTADO_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_PRE_EJECUTADO_T02;
+		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_EJECUTADO_T02;
+		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_REVOCADO_T02;
+		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_REVOCADO_T02;
+		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_EN_REVISION_T02;
+		}
+		return descEstado;
+	}
+	
+	public static String obternerDescripcionMoneda(String moneda){
+		String desMoneda="";
+		 if(moneda.trim().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+			return desMoneda=ConstantesVisado.MONEDAS.SOLES;
+		}else if(moneda.trim().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+			return desMoneda=ConstantesVisado.MONEDAS.DOLARES;
+		}else  if(moneda.trim().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+			return desMoneda=ConstantesVisado.MONEDAS.EUROS;
+		}
+		 return desMoneda;
+	}
+	
 	
 	public static String capturarParametro(String codigo){
 		  Map<String, String> paramMap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
