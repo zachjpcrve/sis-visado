@@ -18,7 +18,7 @@
 			<p:tabMenu activeIndex="0" style="width:380px;">
 				<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml"
 					icon="ui-icon-star" />
-				<p:menuitem value="Seguimiento"
+				<p:menuitem value="Seguimiento" actionListener="#{consultarSolicitudMB.obtenerHistorialSolicitud}"
 					url="/faces/paginas/seguimientoPestania.xhtml" icon="ui-icon-star" />
 			
 			</p:tabMenu>
@@ -97,7 +97,7 @@
 																id="outImpTotal" value="Importe Total" /></td>
 														<td><h:outputText 
 																id="txtImpTotal" style="width:100px;"
-																value="#{consultarSolicitudMB.solicitudRegistrarT.sImporteMoneda}"/></td>
+																value="#{consultarSolicitudMB.solicitudRegistrarT.importe}"/></td>
 														</tr>
 
 												</tbody>
