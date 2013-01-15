@@ -56,6 +56,8 @@ import com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitudId;
 import com.hildebrando.visado.modelo.TiivsEstudio;
+import com.hildebrando.visado.modelo.TiivsHistSolicitud;
+import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
@@ -1451,15 +1453,16 @@ public class SolicitudRegistroMB {
 					this.enviarSolicitudSSJJ();
 				}
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
-				
+				TiivsAgrupacionPersonaId objAgruPer=null;
 				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
 					     servicePers.insertarMerge(b.getTiivsPersona());
-					   //  serviceAgru.insertar(b);
+					    // serviceAgru.insertar(b);
 					     } 
 				  
 				  }
-				  
+				  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
+				  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),1+""));
 				  //Carga ficheros al FTP
 				  boolean bRet = cargarArchivosFTP();
 				  logger.info("Resultado de carga de archivos al FTP:" + bRet);
