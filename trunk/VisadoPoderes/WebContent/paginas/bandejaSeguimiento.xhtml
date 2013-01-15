@@ -355,9 +355,17 @@
 									</p:column>
 									
 									<p:column headerText="Seguimiento" width="55" exportable="false" style="font-size: 9px">
-										 <p:commandButton icon="ui-icon-document" update=":frm">
-					                       
-					                     </p:commandButton>
+
+										<p:commandButton icon="ui-icon-document"
+											update=":frm:modalSeguimiento,:frm:datosSeguimiento"		
+											action="#{seguimientoMB.obtenerHistorialSolicitud}"																				
+											oncomplete="dlgSeguimiento.show();">
+											<f:setPropertyActionListener
+												target="#{seguimientoMB.selectedSolicitud}"
+												value="#{tbl}">
+											</f:setPropertyActionListener>
+										</p:commandButton>
+
 									</p:column>
 																		
 						   </p:dataTable>
@@ -368,7 +376,41 @@
 			</table>
 			
 			
-		
+			<p:dialog
+				id="modalSeguimiento"
+				header="Seguimiento" widgetVar="dlgSeguimiento"
+				modal="true" height="250" width="515" >
+								
+							
+				<p:dataTable value="#{seguimientoMB.lstSeguimientoDTO}" var="seg" rows="5" id="datosSeguimiento"
+						paginatorPosition="bottom" scrollable="true" scrollHeight="200"
+						paginator="false"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						rowsPerPageTemplate="5,10,15"
+						emptyMessage="">
+				
+						<p:column headerText="Estado" width="55" exportable="false" style="font-size: 9px">
+							<h:outputText value="#{seg.estado}" style="font-size: 9px"/>							  							 
+						</p:column>
+						
+						<p:column headerText="Nivel" width="55" exportable="false" style="font-size: 9px">
+							<h:outputText value="#{seg.nivel}" style="font-size: 9px"/>							  							 
+						</p:column>
+						
+						<p:column headerText="Fecha" width="55" exportable="false" style="font-size: 9px">
+							<h:outputText value="#{seg.fecha}" style="font-size: 9px"/>  							 
+						</p:column>
+						
+						<p:column headerText="Usuario" width="165" exportable="false" style="font-size: 9px">
+							<h:outputText value="#{seg.regUsuario} #{seg.usuario}" style="font-size: 9px"/>  							 
+						</p:column>
+						
+						<p:column headerText="Ver" width="55" exportable="false" style="font-size: 9px">							  
+							 <p:commandButton icon="ui-icon-document">		                       
+		                     </p:commandButton>
+						</p:column>																		
+				</p:dataTable>
+			</p:dialog>
 		</h:form>
 
 	</ui:define>
