@@ -1434,6 +1434,7 @@ public class SolicitudRegistroMB {
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
         GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		try {
 			this.solicitudRegistrarT.setFecha(new Date());
 
@@ -1463,6 +1464,12 @@ public class SolicitudRegistroMB {
 				  }
 				  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 				  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),1+""));
+				  objHistorial.setEstado(this.solicitudRegistrarT.getEstado());
+				  objHistorial.setNomUsuario(this.solicitudRegistrarT.getNomUsuario());
+				  objHistorial.setObs(this.solicitudRegistrarT.getObs());
+				  objHistorial.setFecha(new Timestamp(new Date().getDate()));
+				  objHistorial.setRegUsuario(this.solicitudRegistrarT.getRegUsuario());
+				  serviceHistorialSolicitud.insertar(objHistorial);
 				  //Carga ficheros al FTP
 				  boolean bRet = cargarArchivosFTP();
 				  logger.info("Resultado de carga de archivos al FTP:" + bRet);
