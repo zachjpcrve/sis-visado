@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -76,7 +75,6 @@ public class SeguimientoMB
 	private String txtNomPoderdante;
 	private String nroDOIApoderado;
 	private String nroDOIPoderdante;
-	private String txtValTipoFecha;
 	private Boolean noHabilitarExportar;
 	private Boolean noMostrarFechas;
 	private Boolean bRevision;
@@ -1989,10 +1987,6 @@ public class SeguimientoMB
 
 	public void setIdTerr(String idTerr) {
 		this.idTerr = idTerr;
-	}
-	
-	public void setTxtValTipoFecha(String txtValTipoFecha) {
-		this.txtValTipoFecha = txtValTipoFecha;
 	}
 
 	public List<String> getLstSolicitudesSelected() {
