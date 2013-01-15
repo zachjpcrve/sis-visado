@@ -184,6 +184,8 @@ public class ConstantesVisado {
 	
 	static public class ESTADOS {
 		
+		public static final String ESTADO_COD_ACTIVO="1";
+		public static final String ESTADO_COD_DESACTIVO="0";
 		
 		public static final String ESTADO_COD_REGISTRADO_T02="0001";					
 		public static final String ESTADO_COD_RESERVADO_T02="0002";					
@@ -201,6 +203,8 @@ public class ConstantesVisado {
 		public static final String ESTADO_COD_EN_REVISION_T02="0017";			
 		
 		
+		public static final String ESTADO_ACTIVO="Activo";
+		public static final String ESTADO_DESACTIVO="Desactivo";
 		
 		public static final String ESTADO_REGISTRADO_T02="Registrado";					
 		public static final String ESTADO_RESERVADO_T02="Reservado";					
