@@ -134,7 +134,7 @@ public class SeguridadMB {
         	
         	if(ListaMiembros.size()>0){      		
         
-            response.sendRedirect("./paginas/bienvenido.xhtml");
+            response.sendRedirect("./bienvenido.xhtml");
         	}else{
             	request.getSession().setAttribute("strMensaje","Usuario no se encuentra registrado en el sistema.");
             response.sendRedirect("./sinAcceso.jsp");
