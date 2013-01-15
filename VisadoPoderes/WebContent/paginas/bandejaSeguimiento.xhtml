@@ -18,7 +18,7 @@
 		<h:form id="frm">
 			<p:spacer height="5"/>
 			
-			<table border="1" bordercolor="#00BFFF">
+			<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
 				<tbody>
 					<tr bordercolor="white">
 						<td ><h:outputText styleClass="outputText" id="txtCod" value="Nro Solicitud: " /></td>
@@ -164,38 +164,38 @@
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtNomOfic" /></td>
 						<p:tooltip for="tooltxtNomOfic" value="Oficina" showEffect="fade" hideEffect="fade" /> 
 						<td >
-							<h:outputText styleClass="outputText" id="txtNivel" value="Nivel" rendered="#{sessionScope.GRUPO_JRD != null}"/>
+							<h:outputText styleClass="outputText" id="txtNivel" value="Nivel" />
 						</td>
 						<td >
 							<p:selectCheckboxMenu id="scmNivel" label="--Todos--" value="#{seguimientoMB.lstNivelSelected}" style="width:177px;" 
-								rendered="#{sessionScope.GRUPO_JRD != null}">  
+								>  
 						        <f:selectItems value="#{seguimientoMB.combosMB.niveles}" />  
 						    </p:selectCheckboxMenu>  
 						</td>
-						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolNivel" rendered="#{sessionScope.GRUPO_JRD != null}"/></td>	
-						<p:tooltip for="toolNivel" value="Nivel" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_JRD != null}"/>	
+						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolNivel" /></td>	
+						<p:tooltip for="toolNivel" value="Nivel" showEffect="fade" hideEffect="fade" />	
 						<td >
-							<h:outputText styleClass="outputText" id="txtEstNivel" value="Estado del Nivel:" rendered="#{sessionScope.GRUPO_JRD != null}"/>
+							<h:outputText styleClass="outputText" id="txtEstNivel" value="Estado del Nivel:" />
 						</td>
 						<td >
 							<p:selectCheckboxMenu id="scmEstadoNivel" label="--Todos--" value="#{seguimientoMB.lstEstadoNivelSelected}" panelStyle="width:100px;" style="width:135px;"
-							   rendered="#{sessionScope.GRUPO_JRD != null}">  
+							   >  
 						        <f:selectItems value="#{seguimientoMB.combosMB.estadosNivel}"/>  
 						    </p:selectCheckboxMenu> 
 						</td>
-						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstNivel" rendered="#{sessionScope.GRUPO_JRD != null}" /></td>	
-						<p:tooltip for="toolEstNivel" value="Estados del Nivel" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_JRD != null}"/>	
+						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstNivel"  /></td>	
+						<p:tooltip for="toolEstNivel" value="Estados del Nivel" showEffect="fade" hideEffect="fade" />	
 						<td >
-							<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio" rendered="#{sessionScope.GRUPO_JRD != null}"/>
+							<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio" />
 						</td>
 						<td >
 							<p:selectCheckboxMenu id="scmEstudio" label="--Todos--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:120px;" style="width:160px;" 
-								rendered="#{sessionScope.GRUPO_JRD != null}">  
+								>  
 						        <f:selectItems value="#{seguimientoMB.combosMB.estudios}" />  
 						    </p:selectCheckboxMenu>  
 						</td>
-						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstudio" rendered="#{sessionScope.GRUPO_JRD != null}"/></td>	
-						<p:tooltip for="toolEstudio" value="Estudio" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_JRD != null}"/>	
+						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstudio"/></td>	
+						<p:tooltip for="toolEstudio" value="Estudio" showEffect="fade" hideEffect="fade"/>	
 						 		
 					</tr>
 					

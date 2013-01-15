@@ -100,6 +100,7 @@ public class SeguimientoMB
 		lstTipoSolicitudSelected = new ArrayList<String>();
 		lstSolicitudesxOpeBan = new ArrayList<String>();
 		oficina= new TiivsOficina1();
+		lstSolicitudesSelected = new ArrayList<String>();
 		
 		combosMB= new CombosMB();
 		combosMB.cargarMultitabla();
@@ -131,6 +132,7 @@ public class SeguimientoMB
 		
 		setearCamposxPerfil();		
 		generarNombreArchivo();
+		//setNoMostrarFechas(true);
 	}
 	
 	public void setearCamposxPerfil()
@@ -869,7 +871,6 @@ public class SeguimientoMB
 			sheet.setColumnWidth(10,256*20);
 			sheet.setColumnWidth(11,256*12);
 			sheet.autoSizeColumn(5);
-			sheet.autoSizeColumn(11);
 			sheet.autoSizeColumn(13);
 			sheet.autoSizeColumn(14);
 			sheet.autoSizeColumn(15);
@@ -1233,13 +1234,19 @@ public class SeguimientoMB
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,codSol));
 		}
 
-		// 15. Filtro por nivel
-		if (lstNivelSelected.size() > 0) {
-			
-			for (TiivsSolicitud sol : solicitudes) {
-				if (sol.getTxtNivel() != null && sol.getTxtNivel().length() > 0) {
-					if (lstNivelSelected.get(0).indexOf(sol.getTxtNivel()) != -1) {
-						lstSolicitudesSelected.add(sol.getCodSoli());
+		// 15. Filtro por nivel (funciona)
+		if (lstNivelSelected.size() > 0) 
+		{
+			for (TiivsSolicitud sol : solicitudes) 
+			{
+				if (sol.getTxtNivel() != null && sol.getTxtNivel().length() > 0) 
+				{
+					if (sol.getTxtNivel()!=null)
+					{
+						if (lstNivelSelected.get(0).indexOf(sol.getTxtNivel()) != -1) 
+						{
+							lstSolicitudesSelected.add(sol.getCodSoli());
+						}
 					}
 				}
 			}
@@ -1254,7 +1261,7 @@ public class SeguimientoMB
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
 		}
 
-		// 17. Filtro por estudio
+		// 17. Filtro por estudio (ya esta)
 		if (lstEstudioSelected.size() > 0) {
 			
 			// filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTUDIO,
@@ -1267,14 +1274,15 @@ public class SeguimientoMB
 				logger.info("Filtro estudio" + "[" + ind + "]" + lstEstudioSelected.get(ind));
 			}
 			
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTUDIO,lstEstudioSelected));
+			filtroSol.createAlias(ConstantesVisado.NOM_TBL_ESTUDIO,	ConstantesVisado.ALIAS_TBL_ESTUDIO);
+			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_ESTUDIO_ALIAS, lstEstudioSelected));
 		}
 
 		// 19. Filtrar solicitudes con revision
-		/*if (getConRevision()) 
+		/*if (getbRevision()) 
 		{
 			String codigoSolicEnRevision = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_EN_REVISION);
-			GenericDao<TiivsHistorialDeSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistorialDeSolicitud, Object>) SpringInit
+			GenericDao<TiivsHistorialSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistorialDeSolicitud, Object>) SpringInit
 					.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda
 					.forClass(TiivsHistorialDeSolicitud.class);
@@ -1296,7 +1304,7 @@ public class SeguimientoMB
 		}
 
 		// 20. Filtrar solicitudes que se hayan delegado
-		if (getConDelegados()) {
+		if (getbDelegados()) {
 			String codigoSolicVerA = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_A);
 			String codigoSolicVerB = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_B);
 
