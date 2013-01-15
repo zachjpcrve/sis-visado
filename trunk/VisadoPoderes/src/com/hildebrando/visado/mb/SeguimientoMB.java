@@ -37,6 +37,7 @@ import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.Moneda;
+import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
@@ -93,6 +94,10 @@ public class SeguimientoMB
 	private Boolean mostrarColumna=true;
 	private String nombreArchivoExcel;
 	
+//	private List<TiivsHistSolicitud> lstHistorial;
+	private List<SeguimientoDTO> lstSeguimientoDTO;
+	private TiivsSolicitud selectedSolicitud;
+	
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
 	public static Logger logger = Logger.getLogger(SeguimientoMB.class);
@@ -105,6 +110,9 @@ public class SeguimientoMB
 		lstEstudioSelected = new ArrayList<String>();
 		lstTipoSolicitudSelected = new ArrayList<String>();
 		lstSolicitudesxOpeBan = new ArrayList<String>();
+
+		lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
+				
 		oficina= new TiivsOficina1();
 		lstSolicitudesSelected = new ArrayList<String>();
 		lstHistorial = new ArrayList<TiivsHistSolicitud>();
@@ -1425,7 +1433,7 @@ public class SeguimientoMB
 	{
 		int i = 0;
 		String res = "";
-		for (; i <= combosMB.getLstEstado().size(); i++) {
+		for (; i < combosMB.getLstEstado().size(); i++) {
 			if (combosMB.getLstEstado().get(i).getCodEstado().equalsIgnoreCase(codigo)) {
 				res = combosMB.getLstEstado().get(i).getDescripcion();
 				break;
@@ -1817,6 +1825,49 @@ public class SeguimientoMB
 		}
 	}
 	
+	public void obtenerHistorialSolicitud(){
+		logger.info("Obteniendo Historial ");
+		logger.info("Codigo de solicitud : " + selectedSolicitud.getCodSoli());
+		
+		String sCodSolicitud=selectedSolicitud.getCodSoli();
+		
+		GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
+		filtroHist.add(Restrictions.eq("id.codSoli",sCodSolicitud));
+		
+		List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
+
+		try {
+			lstHist = histDAO.buscarDinamico(filtroHist);
+		} catch (Exception exp) {
+			logger.debug("No se pudo encontrar el historial de la solicitud");			
+			exp.printStackTrace();
+		}
+				
+		logger.info("Numero de registros encontrados:"+lstHist.size());
+		
+		if(lstHist!=null && lstHist.size()>0){
+			lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
+			
+			for(TiivsHistSolicitud h : lstHist){
+				SeguimientoDTO seg = new SeguimientoDTO();
+				String estado = h.getEstado();
+				if(estado!=null)
+					seg.setEstado(buscarEstadoxCodigo(estado.trim()));
+				seg.setNivel("");
+				seg.setFecha(h.getFecha());
+				seg.setUsuario(h.getNomUsuario());
+				seg.setRegUsuario(h.getRegUsuario());
+				seg.setObs(h.getObs());
+				lstSeguimientoDTO.add(seg);				
+			}
+		}
+		
+		
+	}
+	
+	
+	
 	public List<TiivsSolicitud> getSolicitudes() {
 		return solicitudes;
 	}
@@ -2121,6 +2172,23 @@ public class SeguimientoMB
 		this.bRevocatoria = bRevocatoria;
 	}
 
+	public List<SeguimientoDTO> getLstSeguimientoDTO() {
+		return lstSeguimientoDTO;
+	}
+
+	public void setLstSeguimientoDTO(List<SeguimientoDTO> lstSeguimientoDTO) {
+		this.lstSeguimientoDTO = lstSeguimientoDTO;
+	}
+
+	public TiivsSolicitud getSelectedSolicitud() {
+		return selectedSolicitud;
+	}
+
+	public void setSelectedSolicitud(TiivsSolicitud selectedSolicitud) {
+		this.selectedSolicitud = selectedSolicitud;
+	}
+	
+
 	public List<TiivsHistSolicitud> getLstHistorial() {
 		return lstHistorial;
 	}
@@ -2128,4 +2196,5 @@ public class SeguimientoMB
 	public void setLstHistorial(List<TiivsHistSolicitud> lstHistorial) {
 		this.lstHistorial = lstHistorial;
 	}
+
 }
