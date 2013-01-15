@@ -22,7 +22,7 @@
 				<tbody>
 					<tr bordercolor="white">
 						<td ><h:outputText styleClass="outputText" id="txtCod" value="Nro Solicitud: " /></td>
-						<td ><h:inputText styleClass="inputText" id="text100" value="#{seguimientoMB.codSolicitud}" maxlength="15" size="15" /></td>
+						<td ><p:inputText id="text100" value="#{seguimientoMB.codSolicitud}" maxlength="15" size="15"/></td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtSolicitud" /></td>	
 						<p:tooltip for="tooltxtSolicitud" value="Numero de solicitud" showEffect="fade" hideEffect="fade" />  
 						<td ><h:outputText styleClass="outputText" id="txtEstado" value="Estado" /></td>
@@ -65,15 +65,14 @@
 							<p:selectOneMenu value="#{seguimientoMB.idTiposFecha}" id="somTiposFecha" 
 								valueChangeListener="#{seguimientoMB.habilitarFechas}" 
 								immediate="true" onchange="this" style="width:120px;">
-								<p:ajax update="@form"/>
-								
+																
 								<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 								<f:selectItems value="#{seguimientoMB.combosMB.lstTiposFecha}" var="tipoFec"
 									itemValue="#{tipoFec.codigoTipoFecha}" itemLabel="#{tipoFec.descripcion}" />
 							</p:selectOneMenu>
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTFecha" /></td>
-						<p:tooltip for="tooltxtTFecha" value="#{seguimientoMB.txtValTipoFecha}" showEffect="fade" hideEffect="fade" />  
+						<p:tooltip for="tooltxtTFecha" value="Tipo de Fecha" showEffect="fade" hideEffect="fade" />  
 						
 						<td ><h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" /></td>
 						<td >
@@ -205,32 +204,32 @@
 							<h:outputText styleClass="outputText" id="txtEnRev" value="En revision" />
 						</td>
 						<td >
-							<p:selectBooleanCheckbox id="bEnRevision" value="#{seguimientoMB.conRevision}"/>  
+							<p:selectBooleanCheckbox id="bEnRevision" value="#{seguimientoMB.bRevision}"/>  
 						</td>
 						<td >
 							<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEnRev" />
-							<p:tooltip for="toolEnRev" value="Solicitud en Revision" showEffect="fade" hideEffect="fade" />	
+							<p:tooltip for="toolEnRev" value="Solicitudes en revision" showEffect="fade" hideEffect="fade" />	
 						</td>			
 						<td>
 							<h:outputText styleClass="outputText" id="txtDel" value="Delegados" rendered="#{sessionScope.GRUPO_OFI == null}"/>
 						</td>
 						<td>
-							<p:selectBooleanCheckbox id="bDelegados" value="#{seguimientoMB.conDelegados}" rendered="#{sessionScope.GRUPO_OFI == null}"/>  
+							<p:selectBooleanCheckbox id="bDelegados" value="#{seguimientoMB.bDelegados}" rendered="#{sessionScope.GRUPO_OFI == null}"/>  
 						</td>
 						<td >
 							<p:graphicImage value="/resources/images/pregunta.jpg" id="toolDele" rendered="#{sessionScope.GRUPO_OFI == null}"/>
-							<p:tooltip for="toolDele" value="Delegados" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_OFI == null}"/>
+							<p:tooltip for="toolDele" value="Solicitudes con delegacion de niveles" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_OFI == null}"/>
 						</td>
 											
 						<td>
-							<h:outputText styleClass="outputText" id="txtExo" value="Revocatoria" />
+							<h:outputText styleClass="outputText" id="txtRevc" value="Revocatoria" />
 						</td>
 						<td>
-							<p:selectBooleanCheckbox id="bExonerados" value="#{seguimientoMB.conExonerados}"/>  
+							<p:selectBooleanCheckbox id="bExonerados" value="#{seguimientoMB.bRevocatoria}"/>  
 						</td>
 						<td >
-							<p:graphicImage value="/resources/images/pregunta.jpg" id="toolExo" />
-							<p:tooltip for="toolExo" value="Exonerados" showEffect="fade" hideEffect="fade" />
+							<p:graphicImage value="/resources/images/pregunta.jpg" id="toolRevc" />
+							<p:tooltip for="txtRevc" value="Solicitudes con revocatoria" showEffect="fade" hideEffect="fade" />
 						</td>	
 					</tr>
 				</tbody>			

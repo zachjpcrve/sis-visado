@@ -79,9 +79,9 @@ public class SeguimientoMB
 	private String txtValTipoFecha;
 	private Boolean noHabilitarExportar;
 	private Boolean noMostrarFechas;
-	private Boolean conRevision;
-	private Boolean conDelegados;
-	private Boolean conExonerados;
+	private Boolean bRevision;
+	private Boolean bDelegados;
+	private Boolean bRevocatoria;
 	private Boolean ocultarControl;
 	private Date fechaInicio;
 	private Date fechaFin;
@@ -428,7 +428,7 @@ public class SeguimientoMB
 			}
 			
 			crearCell(wb, row2, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_ESTADO, false, false,false);
-			if (lstEstadoSelected.size()>=0)
+			if (lstEstadoSelected!=null)
 			{
 				String cadena = "";
 				int ind=0;
@@ -451,35 +451,36 @@ public class SeguimientoMB
 			{
 				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "<50", true, false,true);
 			}
-
-			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE)) 
+			else if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE)) 
 			{
 				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">50 y <120", true, false,true);
 			}
-
-			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA)) 
+			else if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA)) 
 			{
 				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">120 y <250", true, false,true);
 			}
-
-			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA)) 
+			else if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA)) 
 			{
 				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">250", true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
 			}
 			
 			crearCell(wb, row2, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TIPO_SOL, false, false,false);
 			
-			if (lstTipoSolicitudSelected.size()>0)
+			if (lstTipoSolicitudSelected!=null)
 			{
 				String cadena = "";
 				int ind=0;
 				
-				for (; ind <= lstEstadoSelected.size() - 1; ind++) 
+				for (; ind <= lstTipoSolicitudSelected.size() - 1; ind++) 
 				{
-					cadena+= buscarTipoSolxCodigo(lstEstadoSelected.get(ind))+",";
+					cadena+= buscarTipoSolxCodigo(lstTipoSolicitudSelected.get(ind))+",";
 				}
 				
-				crearCell(wb, row2, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+				crearCell(wb, row2, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
 			}
 			else
 			{
@@ -505,7 +506,10 @@ public class SeguimientoMB
 			
 			if (getFechaInicio()!=null)
 			{
-				crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getFechaInicio().toString(), true, false,true);
+				SimpleDateFormat sf1 = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+				String sFechaInicio = sf1.format(getFechaInicio());
+				
+				crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, sFechaInicio, true, false,true);
 			}
 			else
 			{
@@ -516,7 +520,10 @@ public class SeguimientoMB
 			
 			if (getFechaFin()!=null)
 			{
-				crearCell(wb, row3, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getFechaFin().toString(), true, false,true);
+				SimpleDateFormat sf1 = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+				String sFechaFin = sf1.format(getFechaFin());
+				
+				crearCell(wb, row3, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,sFechaFin, true, false,true);
 			}
 			else
 			{
@@ -651,11 +658,37 @@ public class SeguimientoMB
 			
 			Row row7 = sheet.createRow((short) 9);
 			crearCell(wb, row7, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_REVISION, false, false,false);
-			crearCell(wb, row7, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			
+			if (bRevision)
+			{
+				crearCell(wb, row7, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row7, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+			}
+			
 			crearCell(wb, row7, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_DELEGADO, false, false,false);
-			crearCell(wb, row7, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			
+			if (bDelegados)
+			{
+				crearCell(wb, row7, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row7, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+			}
+			
 			crearCell(wb, row7, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_REVOCATORIA, false, false,false);
-			crearCell(wb, row7, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			
+			if (bRevocatoria)
+			{
+				crearCell(wb, row7, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row7, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+			}
 		
 			if (solicitudes.size()==0)
 			{
@@ -837,6 +870,8 @@ public class SeguimientoMB
 			sheet.autoSizeColumn(9);
 			sheet.setColumnWidth(10,256*20);
 			sheet.setColumnWidth(11,256*12);
+			sheet.autoSizeColumn(5);
+			sheet.autoSizeColumn(11);
 			sheet.autoSizeColumn(13);
 			sheet.autoSizeColumn(14);
 			sheet.autoSizeColumn(15);
@@ -1290,7 +1325,7 @@ public class SeguimientoMB
 
 		// 21. Filtrar solicitudes que se hayan exonerado (no hay definicion
 		// funcional)
-		if (getConExonerados()) {
+		if (getbRevocatoria()) {
 
 		}
 		
@@ -1955,35 +1990,7 @@ public class SeguimientoMB
 	public void setIdTerr(String idTerr) {
 		this.idTerr = idTerr;
 	}
-
-	public Boolean getConRevision() {
-		return conRevision;
-	}
-
-	public void setConRevision(Boolean conRevision) {
-		this.conRevision = conRevision;
-	}
-
-	public Boolean getConDelegados() {
-		return conDelegados;
-	}
-
-	public void setConDelegados(Boolean conDelegados) {
-		this.conDelegados = conDelegados;
-	}
-
-	public Boolean getConExonerados() {
-		return conExonerados;
-	}
-
-	public void setConExonerados(Boolean conExonerados) {
-		this.conExonerados = conExonerados;
-	}
-
-	public String getTxtValTipoFecha() {
-		return txtValTipoFecha;
-	}
-
+	
 	public void setTxtValTipoFecha(String txtValTipoFecha) {
 		this.txtValTipoFecha = txtValTipoFecha;
 	}
@@ -2034,5 +2041,29 @@ public class SeguimientoMB
 
 	public void setNombreArchivoExcel(String nombreArchivoExcel) {
 		this.nombreArchivoExcel = nombreArchivoExcel;
+	}
+
+	public Boolean getbRevision() {
+		return bRevision;
+	}
+
+	public void setbRevision(Boolean bRevision) {
+		this.bRevision = bRevision;
+	}
+
+	public Boolean getbDelegados() {
+		return bDelegados;
+	}
+
+	public void setbDelegados(Boolean bDelegados) {
+		this.bDelegados = bDelegados;
+	}
+
+	public Boolean getbRevocatoria() {
+		return bRevocatoria;
+	}
+
+	public void setbRevocatoria(Boolean bRevocatoria) {
+		this.bRevocatoria = bRevocatoria;
 	}
 }
