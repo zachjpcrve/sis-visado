@@ -12,7 +12,7 @@
                 <column name="MOVIMIENTO" length="3" />
             </key-property>
         </composite-id>
-        <property name="fecha" type="serializable">
+        <property name="fecha" type="java.sql.Timestamp">
             <column name="FECHA" not-null="true" />
         </property>
         <property name="regUsuario" type="string">
