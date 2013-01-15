@@ -109,5 +109,18 @@
 	<bean id="tablaGeneralServiceLocator"  class="com.bbva.general.service.TablaGeneralServiceLocator" >		 
 		 <property	name="tablaGeneralEndpointAddress" value="${tablaGeneral.urlWS}" /> 
 	</bean>
+	
+	<!-- Definicion de bean para servicio de Reniec -->
+	<bean id="reniecService" class="com.bbva.consulta.reniec.impl.ObtenerPersonaReniecServiceImpl"
+		init-method="initialize" destroy-method="finalize" lazy-init="false">
+		<property name="properties">
+			<bean
+				class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+				<property name="location">					
+					<value>classpath:properties/reniec.properties</value>
+				</property>
+			</bean>
+		</property>			
+	</bean>
 
 </beans>
