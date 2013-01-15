@@ -32,7 +32,9 @@ import org.primefaces.model.UploadedFile;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.consulta.reniec.ObtenerPersonaReniecService;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
+import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecServiceImpl;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Persona;
 import com.bbva.persistencia.generica.dao.Busqueda;
@@ -358,20 +360,22 @@ public class SolicitudRegistroMB {
 	}
 
 	public List<TiivsPersona> buscarPersonaReniec() throws Exception {
+		logger.debug("==== inicia buscarPersonaReniec() ==== ");
 		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
 		BResult resultado = null;
 		TiivsPersona objPersona = null;
 		Persona persona = null;
 		if (objTiivsPersonaBusqueda.getNumDoi() != null) {
-			logger.info("El DNI a buscar es: "
-					+ objTiivsPersonaBusqueda.getNumDoi());
+			logger.info("[RENIEC]-Dni:"+ objTiivsPersonaBusqueda.getNumDoi());
 
-			// ObtenerPersonaReniecService reniecService = new
-			// ObtenerPersonaReniecDUMMY();
-			ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
-			resultado = reniecService.devolverPersonaReniecDNI("", "",
-					objTiivsPersonaBusqueda.getNumDoi());
+			ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
+			logger.debug("reniecService="+reniecService);
+			//ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
+			resultado = reniecService.devolverPersonaReniecDNI("P013371", "0553",objTiivsPersonaBusqueda.getNumDoi());
+			logger.debug("[RENIEC]-resultado: "+resultado);
+			
 			if (resultado.getCode() == 0) {
+				
 				persona = (Persona) resultado.getObject();
 				logger.info("PERSONA : " + persona.getNombreCompleto()
 						+ "\nDNI: " + persona.getNumerodocIdentidad());
@@ -385,6 +389,8 @@ public class SolicitudRegistroMB {
 				lstTiivsPersona.add(objPersona);
 			}
 		}
+		
+		logger.debug("==== saliendo de buscarPersonaReniec() ==== ");
 		return lstTiivsPersona;
 	}
 
@@ -1608,10 +1614,10 @@ public class SolicitudRegistroMB {
 		for (TiivsParametros tmp : pdfViewerMB.getLstParametros()) {
 			cadenaEscanerFinal = tmp.getUrlAPP() + "?" + "idEmpresa="
 					+ tmp.getIdEmpresa() + "&" + "idSistema="
-					+ tmp.getIdSistema() + "&" + "txtLogin=" + usuario.getUID();
+					+ tmp.getIdSistema() + "&" + "txLogin=" + usuario.getUID();
 		}
 
-		logger.info("URL: " + cadenaEscanerFinal);
+		logger.info("URL APPLET: " + cadenaEscanerFinal);
 
 		return cadenaEscanerFinal;
 	}
