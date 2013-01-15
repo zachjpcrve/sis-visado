@@ -2197,4 +2197,12 @@ public class SeguimientoMB
 		this.lstHistorial = lstHistorial;
 	}
 
+	public PDFViewerMB getPdfViewerMB() {
+		return pdfViewerMB;
+	}
+
+	public void setPdfViewerMB(PDFViewerMB pdfViewerMB) {
+		this.pdfViewerMB = pdfViewerMB;
+	}
+
 }

@@ -8,15 +8,20 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Restrictions;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.persistencia.generica.dao.Busqueda;
+import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
+import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
+import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
@@ -38,6 +43,7 @@ public class ConsultarSolicitudMB {
 	private List<AgrupacionSimpleDto> lstAgrupacionSimpleDto;
 	private AgrupacionSimpleDto objAgrupacionSimpleDtoCapturado;
 	private List<DocumentoTipoSolicitudDTO> lstdocumentos;
+	private List<SeguimientoDTO> lstSeguimientoDTO;
 	
 	public ConsultarSolicitudMB() {
 		inicializarContructor();
@@ -49,10 +55,12 @@ public class ConsultarSolicitudMB {
 		lstAgrupacionSimpleDto=new ArrayList<AgrupacionSimpleDto>();
 		objAgrupacionSimpleDtoCapturado=new AgrupacionSimpleDto();
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+		lstSeguimientoDTO=new ArrayList<SeguimientoDTO>();
 	}
 	public String redirectDetalleSolicitud() {
 		logger.info(" **** redirectDetalleSolicitud ***");
 		obtenerSolicitud();
+		//obtenerHistorialSolicitud();
 		//return "/faces/paginas/detalleSolicitudEstadoEnviado.xhtml";
 		return "/faces/paginas/detalleSolicitud.xhtml";
 		
@@ -68,26 +76,25 @@ public class ConsultarSolicitudMB {
 		   solicitud.setCodSoli(codigoSolicitud);
 		   SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		   solicitudRegistrarT= solicitudService.obtenerTiivsSolicitud(solicitud);
-		   logger.info("getTiivsSolicitudAgrupacions :" +solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
-		   logger.info("getNomUsuario : " +solicitudRegistrarT.getTiivsOficina1());
+		   System.out.println("################ "+solicitudRegistrarT.getEstado());
+		   solicitudRegistrarT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudRegistrarT.getEstado()));
+		   
+		  
 		   
 		   lstSolicBancarias=solicitudService.obtenerListarOperacionesBancarias(solicitud);
 		   int y=0;
 		   for (TiivsSolicitudOperban f : lstSolicBancarias) {
 			y++;
-			 System.out.println("y"+y);
-			 f.setsItem(String.format("%02d",y));
+			 f.setsItem(String.format("%03d",y));
+			 f.setsDescMoneda(Utilitarios.obternerDescripcionMoneda(f.getMoneda()));
 		   }
 		   lstAnexosSolicitudes=solicitudService.obtenerListarAnexosSolicitud(solicitud);
 		   lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 		   int i=0;
 		  for (TiivsAnexoSolicitud v : lstAnexosSolicitudes) {
 			  i++;
-			  System.out.println("i"+i);
-			  lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%02d",i) , v.getAliasArchivo()));
-		}
-		   logger.info("" +lstSolicBancarias.size()) ;
-		   logger.info("" + lstAnexosSolicitudes.size());
+			  lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%03d",i) , v.getAliasArchivo()));
+		     }
 		   
 		    List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
@@ -107,8 +114,7 @@ public class ConsultarSolicitudMB {
 			   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), x.getId().getNumGrupo()));
 			   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
 			   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
-			   agrupacionSimpleDto.setsEstado(x.getActivo());
-			  // agrupacionSimpleDto.setiEstado(x.getActivo());
+			   agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionMoneda(x.getActivo()) );
 		   }
 		  
 		  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
@@ -116,7 +122,9 @@ public class ConsultarSolicitudMB {
 			e.printStackTrace();
 		}
 	}
-	
+					
+				
+						
 	
 	public void verAgrupacion() {
 		logger.info("********************** verAgrupacion *********************************** ");
@@ -129,6 +137,58 @@ public class ConsultarSolicitudMB {
 				+ this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
 	}
 	
+	
+	public void obtenerHistorialSolicitud(){
+		logger.info("Obteniendo Historial ");
+		logger.info("Codigo de solicitud : " + solicitudRegistrarT.getCodSoli());
+		
+		String sCodSolicitud=solicitudRegistrarT.getCodSoli();
+		try {
+		GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
+		filtroHist.add(Restrictions.eq("id.codSoli",sCodSolicitud));
+		
+		List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
+        lstHist = histDAO.buscarDinamico(filtroHist);
+			
+		logger.info("Numero de registros encontrados:"+lstHist.size());
+		
+		if(lstHist!=null && lstHist.size()>0){
+			lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
+			
+			for(TiivsHistSolicitud h : lstHist){
+				SeguimientoDTO seg = new SeguimientoDTO();
+				String estado = h.getEstado();
+				if(estado!=null)
+					seg.setEstado(buscarEstadoxCodigo(estado.trim()));
+				seg.setNivel("");
+				seg.setFecha(h.getFecha());
+				seg.setUsuario(h.getNomUsuario());
+				seg.setRegUsuario(h.getRegUsuario());
+				seg.setObs(h.getObs());
+				lstSeguimientoDTO.add(seg);				
+			}
+		}
+		} catch (Exception exp) {
+			logger.debug("No se pudo encontrar el historial de la solicitud");			
+			exp.printStackTrace();
+		}
+			
+		
+	}
+	
+	public String buscarEstadoxCodigo(String codigo) 
+	{
+		int i = 0;
+		String res = "";
+		for (; i < combosMB.getLstEstado().size(); i++) {
+			if (combosMB.getLstEstado().get(i).getCodEstado().equalsIgnoreCase(codigo)) {
+				res = combosMB.getLstEstado().get(i).getDescripcion();
+				break;
+			}
+		}
+		return res;
+	}
 	
 	public CombosMB getCombosMB() {
 		return combosMB;
@@ -175,6 +235,12 @@ public class ConsultarSolicitudMB {
 	}
 	public void setLstdocumentos(List<DocumentoTipoSolicitudDTO> lstdocumentos) {
 		this.lstdocumentos = lstdocumentos;
+	}
+	public List<SeguimientoDTO> getLstSeguimientoDTO() {
+		return lstSeguimientoDTO;
+	}
+	public void setLstSeguimientoDTO(List<SeguimientoDTO> lstSeguimientoDTO) {
+		this.lstSeguimientoDTO = lstSeguimientoDTO;
 	}
 	
 	
