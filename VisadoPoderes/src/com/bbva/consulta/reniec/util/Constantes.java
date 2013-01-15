@@ -14,7 +14,25 @@ public class Constantes {
 	
 	public static final String RENIEC_EXITO = "0000";
 	public static final String RENIEC_NO_EXISTE = "5200";
-    
+    public static final int    RENIEC_TTL = 0;
+    public static final int    RENIEC_LONG_CABECERA = 128;
+    public static final int    RENIEC_LONG_SUB_TRAMA_CONSULTA = 15;
+    public static final String RENIEC_URL_WS = "VV_URL_WS_RENIEC";
+    public static final String PROXY_HOST = "VV_PROXY_HOST";
+    public static final String PROXY_PORT = "VV_PROXY_PORT";
+    public static final String PROXY_SET = "VV_PROXY_SET";
+    public static final String RENIEC_FRAGMENTACION = "                      ";
+    public static final String RENIEC_RESERVADO_CHAR5  = "     ";
+    public static final String RENIEC_RESERVADO_CHAR10 = "          ";
+    public static final String RENIEC_CARACTER_VERIFICACION = " ";
+    public static final String RENIEC_TIPO_SERVICIO  = "000";
+    public static final String RENIEC_TIPO_CONSULTA  = "7";
+    public static final String RENIEC_TIPO_DOCUMENTO = " ";
+    public static final String RENIEC_VERSION = "0001";
+    public static final String RENIEC_CARACTERES_VERIFICACION = "RENIECPERURENIEC";
+    public static final String RENIEC_COD_INST_SOLICITANTE  = "LD2019"; //Antes: LDD019
+    public static final String RENIEC_COD_SERVIDOR_RENIEC   = "RENIEC001";
+    public static final String RENIEC_HOST_INST_SOLICITANTE = "BBVA";
     public static final String RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA = "Error al procesar trama de respuesta";
     //public static final String RENIEC_NO_EXISTE_CLIENTE = "La persona no figura en la Reniec";
     public static final String RENIEC_NO_EXISTE_CLIENTE = "";    
