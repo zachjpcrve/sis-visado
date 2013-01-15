@@ -72,10 +72,19 @@ public class ConsultarSolicitudMB {
 		   logger.info("getNomUsuario : " +solicitudRegistrarT.getTiivsOficina1());
 		   
 		   lstSolicBancarias=solicitudService.obtenerListarOperacionesBancarias(solicitud);
+		   int y=0;
+		   for (TiivsSolicitudOperban f : lstSolicBancarias) {
+			y++;
+			 System.out.println("y"+y);
+			 f.setsItem(String.format("%02d",y));
+		   }
 		   lstAnexosSolicitudes=solicitudService.obtenerListarAnexosSolicitud(solicitud);
 		   lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+		   int i=0;
 		  for (TiivsAnexoSolicitud v : lstAnexosSolicitudes) {
-			  lstdocumentos.add(new DocumentoTipoSolicitudDTO("001", v.getAliasArchivo()));
+			  i++;
+			  System.out.println("i"+i);
+			  lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%02d",i) , v.getAliasArchivo()));
 		}
 		   logger.info("" +lstSolicBancarias.size()) ;
 		   logger.info("" + lstAnexosSolicitudes.size());
