@@ -28,6 +28,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.mapping.Array;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -38,6 +39,7 @@ import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.Moneda;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
+import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
@@ -51,6 +53,7 @@ public class SeguimientoMB
 {
 	private List<TiivsSolicitud> solicitudes;
 	private List<TiivsAgrupacionPersona> lstAgrupPer;
+	private List<TiivsHistSolicitud> lstHistorial;
 	private List<String> lstEstudioSelected;
 	private List<String> lstEstadoNivelSelected;
 	private List<String> lstTipoSolicitudSelected;
@@ -101,6 +104,7 @@ public class SeguimientoMB
 		lstSolicitudesxOpeBan = new ArrayList<String>();
 		oficina= new TiivsOficina1();
 		lstSolicitudesSelected = new ArrayList<String>();
+		lstHistorial = new ArrayList<TiivsHistSolicitud>();
 		
 		combosMB= new CombosMB();
 		combosMB.cargarMultitabla();
@@ -985,6 +989,7 @@ public class SeguimientoMB
 	// @Autor: Cesar La Rosa
 	// @Version: 3.0
 	// @param: -
+	@SuppressWarnings("unchecked")
 	public void busquedaSolicitudes() 
 	{
 		logger.info("Buscando solicitudes");
@@ -1278,16 +1283,13 @@ public class SeguimientoMB
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_ESTUDIO_ALIAS, lstEstudioSelected));
 		}
 
-		// 19. Filtrar solicitudes con revision
-		/*if (getbRevision()) 
+		// 19. Filtrar solicitudes con Revision
+		if (getbRevision()) 
 		{
 			String codigoSolicEnRevision = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_EN_REVISION);
-			GenericDao<TiivsHistorialSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistorialDeSolicitud, Object>) SpringInit
-					.getApplicationContext().getBean("genericoDao");
-			Busqueda filtro = Busqueda
-					.forClass(TiivsHistorialDeSolicitud.class);
-			filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,
-					codigoSolicEnRevision));
+			GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
+			filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicEnRevision));
 
 			try {
 				lstHistorial = busqHisDAO.buscarDinamico(filtro);
@@ -1295,27 +1297,25 @@ public class SeguimientoMB
 				logger.debug("Error al buscar en historial de solicitudes");
 			}
 
-			if (lstHistorial.size() > 0) {
+			if (lstHistorial.size() > 0) 
+			{
 				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstHistorial));
-			} else {
-				System.out.println("No hay solicitudes en el historial con estado En Revision");
+			} 
+			else 
+			{
+				logger.info("No hay solicitudes en el historial con estado En Revision");
 			}
-
 		}
-
-		// 20. Filtrar solicitudes que se hayan delegado
-		if (getbDelegados()) {
+		
+		// 20. Filtrar solicitudes que se hayan Delegado
+		if (getbDelegados()) 
+		{
 			String codigoSolicVerA = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_A);
 			String codigoSolicVerB = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_B);
 
-			GenericDao<TiivsHistorialDeSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistorialDeSolicitud, Object>) SpringInit
-					.getApplicationContext().getBean("genericoDao");
-			Busqueda filtro = Busqueda
-					.forClass(TiivsHistorialDeSolicitud.class);
-			filtro.add(Restrictions.or(Restrictions.eq(
-					ConstantesVisado.CAMPO_ESTADO, codigoSolicVerA),
-					Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,
-							codigoSolicVerB)));
+			GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
+			filtro.add(Restrictions.or(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO, codigoSolicVerA),Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicVerB)));
 
 			try {
 				lstHistorial = busqHisDAO.buscarDinamico(filtro);
@@ -1323,16 +1323,35 @@ public class SeguimientoMB
 				logger.debug("Error al buscar en historial de solicitudes");
 			}
 
-			if (lstHistorial.size() > 0) {
-				// Colocar aqui la logica para filtrar los niveles aprobados o
-				// rechazados
+			if (lstHistorial.size() > 0) 
+			{
+				// Colocar aqui la logica para filtrar los niveles aprobados o rechazados
+				
 			}
-		}*/
+		}
 
-		// 21. Filtrar solicitudes que se hayan exonerado (no hay definicion
-		// funcional)
-		if (getbRevocatoria()) {
+		// 21. Filtrar solicitudes que se hayan Revocado
+		if (getbRevocatoria()) 
+		{
+			String codigoSolicRevocado = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_REVOCADO);
+			GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
+			filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicRevocado));
 
+			try {
+				lstHistorial = busqHisDAO.buscarDinamico(filtro);
+			} catch (Exception e) {
+				logger.debug("Error al buscar en historial de solicitudes");
+			}
+
+			if (lstHistorial.size() > 0) 
+			{
+				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstHistorial));
+			} 
+			else 
+			{
+				logger.info("No hay solicitudes en el historial con estado Revocado");
+			}
 		}
 		
 		// Buscar solicitudes de acuerdo a criterios seleccionados
@@ -2067,5 +2086,13 @@ public class SeguimientoMB
 
 	public void setbRevocatoria(Boolean bRevocatoria) {
 		this.bRevocatoria = bRevocatoria;
+	}
+
+	public List<TiivsHistSolicitud> getLstHistorial() {
+		return lstHistorial;
+	}
+
+	public void setLstHistorial(List<TiivsHistSolicitud> lstHistorial) {
+		this.lstHistorial = lstHistorial;
 	}
 }

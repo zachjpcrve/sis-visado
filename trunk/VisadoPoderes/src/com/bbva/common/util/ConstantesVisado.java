@@ -104,6 +104,7 @@ public class ConstantesVisado {
 	
 	public static final String CAMPO_ESTADO_VERIFICACION_B="En Verificación B";
 	public static final String CAMPO_ESTADO_EN_REVISION="En Revisión";
+	public static final String CAMPO_ESTADO_REVOCADO="Revocado";
 	
 	public static final String CAMPO_RANGO_INICIO = "rangoInicio";
 	public static final String CAMPO_RANGO_FIN = "rangoFin";
