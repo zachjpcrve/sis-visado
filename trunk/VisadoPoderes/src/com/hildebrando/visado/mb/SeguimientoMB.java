@@ -387,7 +387,6 @@ public class SeguimientoMB
 		return nuevaFecha;
 	}
 	
-	@SuppressWarnings("deprecation")
 	private void crearExcel() 
 	{
 		try 
@@ -400,7 +399,7 @@ public class SeguimientoMB
 
 			// quito las lineas del libro para darle un mejor acabado
 			sheet.setDisplayGridlines(false);
-			sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
+			//sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
 
 			// creo una nueva fila
 			Row trow = sheet.createRow((short) 0);
@@ -417,58 +416,245 @@ public class SeguimientoMB
 			
 			//Genera celdas con los filtros de busqueda
 			Row row2 = sheet.createRow((short) 4);
+			
 			crearCell(wb, row2, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_NRO_SOL, false, false,false);
-			crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			if (getCodSolicitud()!=null)
+			{
+				crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getCodSolicitud(), true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
 			crearCell(wb, row2, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_ESTADO, false, false,false);
-			crearCell(wb, row2, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			if (lstEstadoSelected.size()>=0)
+			{
+				String cadena = "";
+				int ind=0;
+				
+				for (; ind <= lstEstadoSelected.size() - 1; ind++) 
+				{
+					cadena+= buscarEstadoxCodigo(lstEstadoSelected.get(ind))+",";
+				}
+				
+				crearCell(wb, row2, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row2, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
 			crearCell(wb, row2, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_IMPORTE, false, false,false);
-			crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			
+			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
+			{
+				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "<50", true, false,true);
+			}
+
+			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE)) 
+			{
+				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">50 y <120", true, false,true);
+			}
+
+			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA)) 
+			{
+				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">120 y <250", true, false,true);
+			}
+
+			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA)) 
+			{
+				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">250", true, false,true);
+			}
+			
 			crearCell(wb, row2, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TIPO_SOL, false, false,false);
-			crearCell(wb, row2, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			
+			if (lstTipoSolicitudSelected.size()>0)
+			{
+				String cadena = "";
+				int ind=0;
+				
+				for (; ind <= lstEstadoSelected.size() - 1; ind++) 
+				{
+					cadena+= buscarTipoSolxCodigo(lstEstadoSelected.get(ind))+",";
+				}
+				
+				crearCell(wb, row2, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row2, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
 			
 			Row row3 = sheet.createRow((short) 5);
 			crearCell(wb, row3, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TIPO_FECHA, false, false,false);
-			crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-			crearCell(wb, row3, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_INICIO, false, false,false);
-			crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-			crearCell(wb, row3, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_FIN, false, false,false);
-			crearCell(wb, row3, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-			crearCell(wb, row3, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TIPO_OPE, false, false,false);
-			crearCell(wb, row3, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
 			
-			Row row4 = sheet.createRow((short) 6);
-			crearCell(wb, row4, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_COD_OFICINA, false, false,false);
-			crearCell(wb, row4, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-			crearCell(wb, row4, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_OFICINA, false, false,false);
-			crearCell(wb, row4, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-			crearCell(wb, row4, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_COMB_COD_OFICINA, false, false,false);
-			crearCell(wb, row4, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-			crearCell(wb, row4, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_COMB_OFICINA, false, false,false);
-			crearCell(wb, row4, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			if (getIdTiposFecha().compareTo("")!=0)
+			{
+				String cadena = "";
+				cadena= buscarTipoFechaxCodigo(getIdTiposFecha());
+								
+				crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
+			crearCell(wb, row3, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_INICIO, false, false,false);
+			
+			if (getFechaInicio()!=null)
+			{
+				crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getFechaInicio().toString(), true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
+			crearCell(wb, row3, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_FIN, false, false,false);
+			
+			if (getFechaFin()!=null)
+			{
+				crearCell(wb, row3, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getFechaFin().toString(), true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row3, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
+			crearCell(wb, row3, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TIPO_OPE, false, false,false);
+			
+			if (getIdOpeBan().compareTo("")!=0)
+			{
+				crearCell(wb, row3, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarOpeBanxCodigo(getIdOpeBan()), true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row3, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
 			
 			Row row5 = sheet.createRow((short) 7);
+			
 			crearCell(wb, row5, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_DOI_APODERADO, false, false,false);
-			crearCell(wb, row5, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			
+			if (getNroDOIApoderado()!=null)
+			{
+				crearCell(wb, row5, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getNroDOIApoderado(), true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row5, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
 			crearCell(wb, row5, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_APODERADO, false, false,false);
-			crearCell(wb, row5, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			
+			if (getTxtNomApoderado()!=null)
+			{
+				crearCell(wb, row5, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getTxtNomApoderado(), true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row5, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
 			crearCell(wb, row5, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_DOI_PODERDANTE, false, false,false);
-			crearCell(wb, row5, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			
+			if (getNroDOIPoderdante()!=null)
+			{
+				crearCell(wb, row5, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getNroDOIPoderdante(), true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row5, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
 			crearCell(wb, row5, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_PODERDANTE, false, false,false);
-			crearCell(wb, row5, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			
+			if (getTxtNomPoderdante()!=null)
+			{
+				crearCell(wb, row5, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getTxtNomPoderdante(), true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row5, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
 			
 			Row row6 = sheet.createRow((short) 8);
-			crearCell(wb, row6, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-			crearCell(wb, row6, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-			crearCell(wb, row6, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-			crearCell(wb, row6, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TERRITORIO,false, false,false);
-			crearCell(wb, row6, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			crearCell(wb, row6, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_OFICINA, false, false,false);
+			
+			if (getOficina()!=null)
+			{
+				crearCell(wb, row6, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getOficina().getDesOfi(), true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row6, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
+			crearCell(wb, row6, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_NIVEL, false, false,false);
+			
+			if (getLstNivelSelected()!=null)
+			{
+				String cadena = "";
+				int ind=0;
+				
+				for (; ind <= getLstNivelSelected().size() - 1; ind++) 
+				{
+					cadena+= buscarNivelxCodigo(getLstNivelSelected().get(ind))+",";
+				}
+				
+				crearCell(wb, row6, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row6, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
+			crearCell(wb, row6, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_ESTADO_NIVEL, false, false,false);
+			
+			if (getLstEstadoNivelSelected()!=null)
+			{
+				String cadena = "";
+				int ind=0;
+				
+				for (; ind <= getLstEstadoNivelSelected().size() - 1; ind++) 
+				{
+					cadena+= buscarEstNivelxCodigo(getLstEstadoNivelSelected().get(ind))+",";
+				}
+				
+				crearCell(wb, row6, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row6, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
+			crearCell(wb, row6, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_ESTUDIO,false, false,false);
+			
+			if (getLstEstudioSelected()!=null)
+			{
+				String cadena = "";
+				int ind=0;
+				
+				for (; ind <= getLstEstudioSelected().size() - 1; ind++) 
+				{
+					cadena+= buscarEstudioxCodigo(getLstEstudioSelected().get(ind))+",";
+				}
+				
+				crearCell(wb, row6, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+			}
+			else
+			{
+				crearCell(wb, row6, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
 			
 			Row row7 = sheet.createRow((short) 9);
-			crearCell(wb, row7, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_RECLAMO, false, false,false);
+			crearCell(wb, row7, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_REVISION, false, false,false);
 			crearCell(wb, row7, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
 			crearCell(wb, row7, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_DELEGADO, false, false,false);
 			crearCell(wb, row7, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-			crearCell(wb, row7, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_NIVEL, false, false,false);
+			crearCell(wb, row7, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_REVOCATORIA, false, false,false);
 			crearCell(wb, row7, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
 		
 			if (solicitudes.size()==0)
@@ -513,15 +699,15 @@ public class SeguimientoMB
 						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_FECHA_RPTA, true, true,false);
 				crearCell(wb, rowT, 15, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_FECHA_ESTADO, true, true,false);
-				crearCell(wb, rowT, 15, CellStyle.ALIGN_CENTER,
+				crearCell(wb, rowT, 16, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_COMISION, true, true,false);
-				crearCell(wb, rowT, 15, CellStyle.ALIGN_CENTER,
+				crearCell(wb, rowT, 17, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_LIBERADO, true, true,false);
-				crearCell(wb, rowT, 15, CellStyle.ALIGN_CENTER,
+				crearCell(wb, rowT, 18, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_DELEGADO, true, true,false);
-				crearCell(wb, rowT, 15, CellStyle.ALIGN_CENTER,
+				crearCell(wb, rowT, 19, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_EN_REVISION, true, true,false);
-				crearCell(wb, rowT, 15, CellStyle.ALIGN_CENTER,
+				crearCell(wb, rowT, 20, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_REVOCATORIA, true, true,false);
 				
 				int numReg=13;
@@ -624,13 +810,17 @@ public class SeguimientoMB
 					//Columna Comision en Excel
 					if (tmp.getComision()!=null)
 					{
-						crearCell(wb, row, 15, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getComision()), true, false,true);
+						crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getComision()), true, false,true);
 					}
 					else
 					{
-						crearCell(wb, row, 15, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+						crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
 					}
 					
+					crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+					crearCell(wb, row, 18, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+					crearCell(wb, row, 19, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+					crearCell(wb, row, 20, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
 					
 					numReg++;
 				}
@@ -650,6 +840,12 @@ public class SeguimientoMB
 			sheet.autoSizeColumn(13);
 			sheet.autoSizeColumn(14);
 			sheet.autoSizeColumn(15);
+			sheet.autoSizeColumn(16);
+			sheet.autoSizeColumn(17);
+			sheet.autoSizeColumn(18);
+			sheet.autoSizeColumn(19);
+			sheet.autoSizeColumn(20);
+			
 			
 			//Se crea el archivo con la informacion y estilos definidos previamente
 			String strRuta = "C:/hildebrando/" + getNombreArchivoExcel() + ".xls";
@@ -1130,6 +1326,97 @@ public class SeguimientoMB
 			}
 		}
 		return codigo;
+	}
+	
+	public String buscarEstadoxCodigo(String codigo) 
+	{
+		int i = 0;
+		String res = "";
+		for (; i <= combosMB.getLstEstado().size(); i++) {
+			if (combosMB.getLstEstado().get(i).getCodEstado().equalsIgnoreCase(codigo)) {
+				res = combosMB.getLstEstado().get(i).getDescripcion();
+				break;
+			}
+		}
+		return res;
+	}
+	
+	public String buscarNivelxCodigo(String codigo) 
+	{
+		int i = 0;
+		String res = "";
+		for (; i <= combosMB.getLstNivel().size(); i++) {
+			if (combosMB.getLstNivel().get(i).getId().getCodNiv().equalsIgnoreCase(codigo)) {
+				res = combosMB.getLstNivel().get(i).getId().getDesNiv();
+				break;
+			}
+		}
+		return res;
+	}
+	
+	public String buscarEstNivelxCodigo(String codigo) 
+	{
+		int i = 0;
+		String res = "";
+		for (; i <= combosMB.getLstEstadoNivel().size(); i++) {
+			if (combosMB.getLstEstadoNivel().get(i).getCodigoEstadoNivel().equalsIgnoreCase(codigo)) {
+				res = combosMB.getLstEstadoNivel().get(i).getDescripcion();
+				break;
+			}
+		}
+		return res;
+	}
+	
+	public String buscarEstudioxCodigo(String codigo) 
+	{
+		int i = 0;
+		String res = "";
+		for (; i <= combosMB.getLstEstudio().size(); i++) {
+			if (combosMB.getLstEstudio().get(i).getCodEstudio().equalsIgnoreCase(codigo)) {
+				res = combosMB.getLstEstudio().get(i).getDesEstudio();
+				break;
+			}
+		}
+		return res;
+	}
+	
+	public String buscarOpeBanxCodigo(String codigo) 
+	{
+		int i = 0;
+		String res = "";
+		for (; i <= combosMB.getLstOpeBancaria().size(); i++) {
+			if (combosMB.getLstOpeBancaria().get(i).getCodOperBan().equalsIgnoreCase(codigo)) {
+				res = combosMB.getLstOpeBancaria().get(i).getDesOperBan();
+				break;
+			}
+		}
+		return res;
+	}
+	
+	public String buscarTipoSolxCodigo(String codigo)
+	{
+		int i = 0;
+		String res = "";
+		for (; i <= combosMB.getLstTipoSolicitud().size(); i++) {
+			if (combosMB.getLstTipoSolicitud().get(i).getCodTipSolic().equalsIgnoreCase(codigo)) {
+				res = combosMB.getLstTipoSolicitud().get(i).getDesTipServicio();
+				break;
+			}
+		}
+		return res;
+	}
+	
+	public String buscarTipoFechaxCodigo(String codigo)
+	{
+		int i = 0;
+		String res = "";
+		for (; i <= combosMB.getLstTiposFecha().size(); i++) {
+			if (combosMB.getLstTiposFecha().get(i).getCodigoTipoFecha().equalsIgnoreCase(codigo)) {
+				res = combosMB.getLstTiposFecha().get(i).getDescripcion();
+				break;
+			}
+		}
+		return res;
 	}
 	
 	public void buscarOficinaPorTerritorio(ValueChangeEvent e) 

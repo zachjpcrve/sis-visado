@@ -135,7 +135,9 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_FILTRO_BUS_TIPO_FECHA="Tipo de Fecha";
 	public static final String ETIQUETA_FILTRO_BUS_COD_OFICINA="Código de Oficina";
 	public static final String ETIQUETA_FILTRO_BUS_DOI_APODERADO="DOI Apoderado";
-	public static final String ETIQUETA_FILTRO_BUS_RECLAMO="Reclamo";
+	public static final String ETIQUETA_FILTRO_BUS_REVISION="En Revision";
+	public static final String ETIQUETA_FILTRO_BUS_NIVEL="Nivel";
+	public static final String ETIQUETA_FILTRO_BUS_ESTADO_NIVEL="Estados de Nivel";
 	public static final String ETIQUETA_FILTRO_BUS_ESTADO="Estado";
 	public static final String ETIQUETA_FILTRO_BUS_FECHA_INICIO ="Fecha de Inicio";
 	public static final String ETIQUETA_FILTRO_BUS_OFICINA="Oficina";
@@ -145,12 +147,12 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_FILTRO_BUS_FECHA_FIN="Fecha de Fin";
 	public static final String ETIQUETA_FILTRO_BUS_COMB_COD_OFICINA="Código de Oficina";
 	public static final String ETIQUETA_FILTRO_BUS_DOI_PODERDANTE="DOI Poderdante";
-	public static final String ETIQUETA_FILTRO_BUS_NIVEL="Nivel";
+	public static final String ETIQUETA_FILTRO_BUS_REVOCATORIA="Revocatoria";
 	public static final String ETIQUETA_FILTRO_BUS_TIPO_SOL="Tipo de solicitud";
 	public static final String ETIQUETA_FILTRO_BUS_TIPO_OPE="Tipo de operación";
 	public static final String ETIQUETA_FILTRO_BUS_COMB_OFICINA="Oficina";
 	public static final String ETIQUETA_FILTRO_BUS_PODERDANTE="Poderdante";
-	public static final String ETIQUETA_FILTRO_BUS_TERRITORIO="Territorio";
+	public static final String ETIQUETA_FILTRO_BUS_ESTUDIO="Estudio";
 	public static final String ETIQUETA_FILTRO_BUS_GENERADOR="Generador:";
 	public static final String ETIQUETA_FILTRO_BUS_FECHA_HORA = "Fecha y Hora:";
 	public static final String ETIQUETA_COLUMNA_ITEM = "Item";
