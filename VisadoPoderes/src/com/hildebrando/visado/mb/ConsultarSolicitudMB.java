@@ -2,7 +2,9 @@ package com.hildebrando.visado.mb;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -24,6 +26,7 @@ import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
+import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
@@ -122,7 +125,7 @@ public class ConsultarSolicitudMB {
 		   }
 		  
 		  
-		  
+		  this.actualizarEstadoReservadoSolicitud();
 		  this.obtenerHistorialSolicitud();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -130,6 +133,23 @@ public class ConsultarSolicitudMB {
 	}
 					
 				
+	public void actualizarEstadoReservadoSolicitud() throws Exception{
+		logger.info("*********************** actualizarEstadoReservadoSolicitud **************************");
+		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02);
+		this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_RESERVADO_T02);
+		 GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		 service.modificar(solicitudRegistrarT);
+		 GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			
+		  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
+		  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),2+""));
+		  objHistorial.setEstado(this.solicitudRegistrarT.getEstado());
+		  objHistorial.setNomUsuario(this.solicitudRegistrarT.getNomUsuario());
+		  objHistorial.setObs(this.solicitudRegistrarT.getObs());
+		  objHistorial.setFecha(new Timestamp(new Date().getDate()));
+		  objHistorial.setRegUsuario(this.solicitudRegistrarT.getRegUsuario());
+		  serviceHistorialSolicitud.insertar(objHistorial);
+	}
 						
 	
 	public void verAgrupacion() {
@@ -137,7 +157,7 @@ public class ConsultarSolicitudMB {
 
 		logger.info("this.objAgrupacionSimpleDtoCapturado  "+ this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
 		logger.info("this.objAgrupacionSimpleDtoCapturado  " + this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
-		logger.info("this.objAgrupacionSimpleDtoCapturado  " + this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
+		//logger.info("this.objAgrupacionSimpleDtoCapturado  " + this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
 	}
 	
 	
