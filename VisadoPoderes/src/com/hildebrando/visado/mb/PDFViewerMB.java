@@ -708,4 +708,63 @@ public class PDFViewerMB {
 		}
 		
 	}
+
+	public boolean descargarArchivo(String ubicacionLocal, String aliasArchivo) {
+		
+		String urlServer="";
+		String server="";
+		String loginServer="";
+		String passServer="";
+		String carpetaRemota="";
+		String dirLocal="";
+		String rutaResultante="";
+		boolean iRet = true; 
+		
+		
+		if (lstParametros!=null) 
+		{
+			logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
+			
+			for (TiivsParametros tmp: lstParametros)
+			{
+				urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
+							  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
+							  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
+							  File.separator+tmp.getCarpetaRemota();
+					
+				server=tmp.getServer();
+				loginServer=tmp.getLoginServer();
+				passServer=tmp.getPassServer();	
+				carpetaRemota=tmp.getCarpetaRemota();
+			}
+		}		
+		
+				
+		logger.debug("Parametros leidos de BD");
+		logger.debug("Dir Server: " + urlServer);
+		logger.debug("Dir Local: " + dirLocal);
+		logger.debug("Server: " + server);
+		logger.debug("Login Server:_" + loginServer);
+		logger.debug("Pass Server: " + passServer);
+		logger.debug("Carpeta Remota: " + carpetaRemota);
+		
+		
+		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
+		try {
+			cliente.setDirectorio(carpetaRemota);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		if (cliente!=null)
+		{
+			
+			iRet = cliente.downloadFile(ubicacionLocal,aliasArchivo);
+			
+			
+		}
+		
+		return iRet;
+		
+	}
 }
