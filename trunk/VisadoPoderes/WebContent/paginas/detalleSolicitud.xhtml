@@ -215,8 +215,12 @@
 																	<h:outputText value="#{s.item}" />
 																</p:column>
 																<p:column headerText="Documento" style="width:400px;">
-																	<h:outputText value="#{s.documento}" />
+																	<h:outputLink onclick="window.open('../../files/#{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
+																		<h:outputText value="#{s.documento}" /> 
+																	</h:outputLink>
 																</p:column>
+																
+																
 																
 																
 																
