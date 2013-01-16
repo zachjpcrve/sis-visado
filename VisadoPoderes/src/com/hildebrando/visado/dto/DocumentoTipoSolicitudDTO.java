@@ -29,6 +29,12 @@ public class DocumentoTipoSolicitudDTO {
 		this.item = item;
 		this.documento = aliasArchivo;
 	}
+	
+	public DocumentoTipoSolicitudDTO(String item, String aliasArchivo, String aliasTemporal) {
+		this.item = item;
+		this.documento = aliasArchivo;
+		this.aliasTemporal = aliasTemporal;
+	}
 
 	public String getItem() {
 		return item;
