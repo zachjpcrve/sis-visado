@@ -106,10 +106,10 @@ public class ConsultarSolicitudMB {
 		   
 		   for (TiivsSolicitudAgrupacion x : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) {
-				if(d.getTiivsPersona().getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+				if(d.getId().getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 					lstPoderdantes.add(d.getTiivsPersona());
 					}
-				else  if(d.getTiivsPersona().getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+				else  if(d.getId().getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 					lstApoderdantes.add(d.getTiivsPersona());
 				}
 			}
@@ -117,7 +117,7 @@ public class ConsultarSolicitudMB {
 			   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), x.getId().getNumGrupo()));
 			   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
 			   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
-			   agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionMoneda(x.getActivo()) );
+			   agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionMoneda(x.getActivo().trim()) );
 			   lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 		   }
 		  
