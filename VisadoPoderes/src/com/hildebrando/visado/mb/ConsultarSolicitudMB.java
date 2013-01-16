@@ -1,5 +1,7 @@
 package com.hildebrando.visado.mb;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,11 +88,16 @@ public class ConsultarSolicitudMB {
 			 f.setsDescMoneda(Utilitarios.obternerDescripcionMoneda(f.getMoneda()));
 		   }
 		   lstAnexosSolicitudes=solicitudService.obtenerListarAnexosSolicitud(solicitud);
+		   
+		   //descargar anexos
+		   descargarAnexosFileServer();
+		   
 		   lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 		   int i=0;
 		  for (TiivsAnexoSolicitud v : lstAnexosSolicitudes) {
 			  i++;
-			  lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%03d",i) , v.getAliasArchivo()));
+			  //lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%03d",i) , v.getAliasArchivo()));
+			  lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%03d",i) , v.getAliasArchivo(), v.getAliasTemporal()));
 		     }
 		   // PODERDANTES Y APODERADOS
 		    List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
@@ -184,6 +191,75 @@ public class ConsultarSolicitudMB {
 			}
 		}
 		return res;
+	}
+	
+	public boolean descargarAnexosFileServer() {
+
+		logger.info("********************** descargarAnexosFileServer():INICIO ********************************");
+		
+		boolean iRet = true;
+		
+		String ubicacionTemporal = Utilitarios.getProjectPath() + File.separator + ConstantesVisado.FILES + File.separator;
+		logger.debug("ubicacion temporal " + ubicacionTemporal);
+		
+		for (TiivsAnexoSolicitud a : this.lstAnexosSolicitudes) {
+
+			File fileTemporal = new File(ubicacionTemporal + a.getAliasTemporal());
+			if (!fileTemporal.exists()) {
+				logger.info("Archivo no existe se descargara:" + a.getAliasArchivo() );
+								
+				File fichTemp = null;
+				boolean bSaved = false;
+				try {
+					File fDirectory = new File(ubicacionTemporal);
+					if (!fDirectory.exists()){
+						fDirectory.mkdirs();
+					}
+
+					String fileName = a.getAliasArchivo();
+					String extension = fileName.substring(fileName.lastIndexOf("."));
+					String sNombreTemporal = "";
+					fichTemp = File.createTempFile("temp", extension, new File(ubicacionTemporal));
+					sNombreTemporal = fichTemp.getName().substring(1 + fichTemp.getName().lastIndexOf(File.separator));					
+					logger.debug("sNombreTemporal: " + sNombreTemporal);
+
+					PDFViewerMB pdfViewerMB = new PDFViewerMB();
+					if(pdfViewerMB.descargarFichero(fichTemp.getAbsolutePath(),fileName)){
+						a.setAliasTemporal(sNombreTemporal);						
+					} else {	
+						a.setAliasTemporal("");
+						logger.debug("Archivo no existe en el File Server");						
+					}
+					bSaved = true;
+					
+				} catch (IOException e) {
+					logger.debug("Error al descargar archivo: " + a.getAliasArchivo());
+					logger.debug(e.toString());
+					e.printStackTrace();
+					bSaved = false;
+				} finally {
+					fichTemp.deleteOnExit(); // Delete the file when the
+												// JVM terminates					
+				}
+				if (bSaved) {
+					GenericDao<TiivsAnexoSolicitud, Object> anexoDAO = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+					try {
+						anexoDAO.modificar(a);
+					} catch (Exception ex) {
+						logger.debug("No se actualizará el anexo " + ex.getMessage());
+					}
+					iRet = iRet && true;
+				} else {
+					logger.debug("Error no se actualizará anexo");
+					iRet = iRet && false;
+				}
+
+			} else {
+				logger.info("Archivo ya existe en ubicacion temporal ");
+			}
+		}	
+		logger.info("********************** descargarAnexosFileServer():FIN ***********************************");
+		return iRet;
 	}
 	
 	public CombosMB getCombosMB() {
