@@ -1437,6 +1437,7 @@ public class SolicitudRegistroMB {
 		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		try {
 			this.solicitudRegistrarT.setFecha(new Date());
+			this.solicitudRegistrarT.setEstado(this.solicitudRegistrarT.getEstado().trim());
 
 			logger.info("usuario.getUID() " + usuario.getUID());
 			this.solicitudRegistrarT.setRegUsuario(usuario.getUID());
@@ -1457,8 +1458,10 @@ public class SolicitudRegistroMB {
 				TiivsAgrupacionPersonaId objAgruPer=null;
 				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
+					  System.out.println("b.getTiivsPersona() " +b.getTiivsPersona());
 					     servicePers.insertarMerge(b.getTiivsPersona());
-					    // serviceAgru.insertar(b);
+					     b.setTiivsPersona(null);
+					     serviceAgru.insertar(b);
 					     } 
 				  
 				  }
