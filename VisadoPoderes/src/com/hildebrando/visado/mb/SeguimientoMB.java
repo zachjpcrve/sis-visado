@@ -1281,12 +1281,9 @@ public class SeguimientoMB
 			{
 				if (sol.getTxtNivel() != null && sol.getTxtNivel().length() > 0) 
 				{
-					if (sol.getTxtNivel()!=null)
+					if (lstNivelSelected.get(0).indexOf(sol.getTxtNivel()) != -1) 
 					{
-						if (lstNivelSelected.get(0).indexOf(sol.getTxtNivel()) != -1) 
-						{
 							lstSolicitudesSelected.add(sol.getCodSoli());
-						}
 					}
 				}
 			}
