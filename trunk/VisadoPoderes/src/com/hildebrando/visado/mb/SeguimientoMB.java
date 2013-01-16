@@ -924,11 +924,7 @@ public class SeguimientoMB
 				//Abrir archivo excel
 				Desktop.getDesktop().open(new File(strRuta));  
 			}
-			else
-			{
-				logger.info("No se pudo encontrar la ruta para exportar el archivo de excel.");
-			}
-			
+						
 		} catch (Exception e) {
 			logger.info("Error al generar el archivo excel debido a: " +e.getMessage());
 		}	
@@ -947,6 +943,11 @@ public class SeguimientoMB
 				res=tmp.getRutaArchivoExcel();
 				break;
 			}
+		}
+		
+		if (res.compareTo("")==0)
+		{
+			logger.debug("No se encontro el parametro de ruta para exportar excel para el usuario: " + usuario.getUID());
 		}
 		
 		return res;
@@ -1532,6 +1533,33 @@ public class SeguimientoMB
 			actualizarDatosGrilla();
 			setNoHabilitarExportar(false);
 		}
+	}
+	
+	private List<String> cargarHistorialSolicitudes(List<TiivsHistSolicitud> lstHist)
+	{
+		// Colocar aqui la logica para filtrar los niveles aprobados o rechazados
+		GenericDao<TiivsSolicitudNivel, Object> busqSolNivDAO = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro2 = Busqueda.forClass(TiivsSolicitudNivel.class);
+		List<TiivsSolicitudNivel> lstSolNivel = new ArrayList<TiivsSolicitudNivel>();
+						
+		try {
+			lstSolNivel = busqSolNivDAO.buscarDinamico(filtro2);
+		} catch (Exception e) {
+			logger.debug("Error al buscar los estados de los niveles en las solicitudes");
+		}
+		
+		for (TiivsSolicitudNivel tmp: lstSolNivel)
+		{
+			for (TiivsHistSolicitud hist: lstHist)
+			{
+				if (tmp.getId().getCodSoli().equals(hist.getId().getCodSoli()))
+				{
+					lstSolicitudesSelected.add(hist.getId().getCodSoli());
+				}
+			}
+		}
+		
+		return lstSolicitudesSelected;
 	}
 	
 	public String buscarCodigoEstado(String estado) 
