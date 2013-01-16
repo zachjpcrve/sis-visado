@@ -18,7 +18,7 @@
 			<p:tabMenu activeIndex="0" style="width:380px;">
 				<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml"
 					icon="ui-icon-star" />
-				<p:menuitem value="Seguimiento" actionListener="#{consultarSolicitudMB.obtenerHistorialSolicitud}"
+				<p:menuitem value="Seguimiento" actionListener="#{consultarSolicitudMB.obtenerHistorialSolicitud}" ajax="false"
 					url="/faces/paginas/seguimientoPestania.xhtml" icon="ui-icon-star" />
 			
 			</p:tabMenu>
@@ -199,7 +199,7 @@
 									<td class="styleLegend2" width="683">
 										<fieldset style="width: 105%" class="fielset">
 											<h:outputText title="Documentos por Tipo de Solicitud"
-												value="Documentos por Tipo de Solicitud" />
+												value="Documentos por Tipo de Solicitud : #{consultarSolicitudMB.solicitudRegistrarT.tiivsTipoSolicitud.desTipServicio} "  />
 											<p:separator styleClass="fielset" />
 											<table>
 												<tr>
