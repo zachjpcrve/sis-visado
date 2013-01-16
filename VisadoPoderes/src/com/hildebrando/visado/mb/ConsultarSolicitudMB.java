@@ -13,6 +13,7 @@ import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.mapping.Array;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -106,11 +107,19 @@ public class ConsultarSolicitudMB {
 		    List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
 		   AgrupacionSimpleDto agrupacionSimpleDto  =new AgrupacionSimpleDto(); ;
-		   
+		   List<TiivsPersona>lstPersonas=new ArrayList<TiivsPersona>();
+		   TiivsPersona objPersona=new TiivsPersona();
 		   for (TiivsSolicitudAgrupacion x : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) {
+				   System.out.println("d.getTiivsPersona() "+d.getTiivsPersona());
+				   objPersona=new TiivsPersona();
+				   objPersona=d.getTiivsPersona();
+				   objPersona.setTipPartic(d.getId().getTipPartic());
+				   objPersona.setClasifPer(d.getId().getClasifPer());
+				  lstPersonas.add(objPersona);
 				if(d.getId().getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 					lstPoderdantes.add(d.getTiivsPersona());
+					
 					}
 				else  if(d.getId().getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 					lstApoderdantes.add(d.getTiivsPersona());
@@ -121,6 +130,7 @@ public class ConsultarSolicitudMB {
 			   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
 			   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
 			   agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionMoneda(x.getActivo().trim()) );
+			   agrupacionSimpleDto.setLstPersonas(lstPersonas);
 			   lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 		   }
 		  
@@ -135,6 +145,7 @@ public class ConsultarSolicitudMB {
 				
 	public void actualizarEstadoReservadoSolicitud() throws Exception{
 		logger.info("*********************** actualizarEstadoReservadoSolicitud **************************");
+		if(!this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)){
 		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02);
 		this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_RESERVADO_T02);
 		 GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -149,6 +160,7 @@ public class ConsultarSolicitudMB {
 		  objHistorial.setFecha(new Timestamp(new Date().getDate()));
 		  objHistorial.setRegUsuario(this.solicitudRegistrarT.getRegUsuario());
 		  serviceHistorialSolicitud.insertar(objHistorial);
+		}
 	}
 						
 	
@@ -157,7 +169,7 @@ public class ConsultarSolicitudMB {
 
 		logger.info("this.objAgrupacionSimpleDtoCapturado  "+ this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
 		logger.info("this.objAgrupacionSimpleDtoCapturado  " + this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
-		//logger.info("this.objAgrupacionSimpleDtoCapturado  " + this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
+		logger.info("this.objAgrupacionSimpleDtoCapturado  " + this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
 	}
 	
 	
