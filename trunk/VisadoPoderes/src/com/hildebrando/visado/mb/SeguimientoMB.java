@@ -867,16 +867,6 @@ public class SeguimientoMB
 						crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
 					}
 					
-					/*
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_LIBERADO, true, true,false);
-							crearCell(wb, rowT, 18, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_DELEGADO, true, true,false);
-							crearCell(wb, rowT, 19, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_EN_REVISION, true, true,false);
-							crearCell(wb, rowT, 20, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_REVOCATORIA, true, true,false);
-					*/
-					
 					//Columna Liberado
 					crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
 					
