@@ -1435,6 +1435,8 @@ public class SolicitudRegistroMB {
         GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+	    TiivsPersona objPersonaRetorno=new TiivsPersona();
+	    TiivsAgrupacionPersonaId objAgruId=new TiivsAgrupacionPersonaId();
 		try {
 			this.solicitudRegistrarT.setFecha(new Date());
 			this.solicitudRegistrarT.setEstado(this.solicitudRegistrarT.getEstado().trim());
@@ -1455,12 +1457,16 @@ public class SolicitudRegistroMB {
 					this.enviarSolicitudSSJJ();
 				}
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
-				TiivsAgrupacionPersonaId objAgruPer=null;
 				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
-					  System.out.println("b.getTiivsPersona() " +b.getTiivsPersona());
-					     servicePers.insertarMerge(b.getTiivsPersona());
+					  System.out.println("b.getTiivsPersona() " +b.getId().getCodPer());
+					     //b.setId
+					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
+					   System.out.println("ccdcdcd : "+objPersonaRetorno.getCodPer());
 					     b.setTiivsPersona(null);
+					     objAgruId=b.getId();
+					     objAgruId.setCodPer(objPersonaRetorno.getCodPer());
+					     b.setId(objAgruId);
 					     serviceAgru.insertar(b);
 					     } 
 				  
