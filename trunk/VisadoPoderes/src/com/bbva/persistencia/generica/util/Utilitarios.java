@@ -16,6 +16,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -233,6 +234,12 @@ public class Utilitarios {
 		HttpSession session = (HttpSession) context.getSession(false);
 		session.removeAttribute(value);
 		session.invalidate();
+	}
+	
+	public static String getProjectPath(){
+		HttpServletRequest request = (HttpServletRequest) FacesContext
+				.getCurrentInstance().getExternalContext().getRequest();
+		return request.getRealPath(File.separator);
 	}
 
 }
