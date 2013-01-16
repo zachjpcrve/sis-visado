@@ -59,7 +59,7 @@ public abstract class GenericDaoImpl<K, T extends Serializable>
 	}
 	
 	public  K insertarMerge(K objeto) throws Exception{
-		getHibernateTemplate().merge(objeto);
+		objeto=getHibernateTemplate().merge(objeto);
 		
 		return objeto;
 	}
