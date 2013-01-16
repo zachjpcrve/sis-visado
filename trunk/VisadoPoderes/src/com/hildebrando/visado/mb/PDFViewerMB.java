@@ -98,6 +98,7 @@ public class PDFViewerMB {
 	
 	public void cargarParametrosBD()
 	{
+		try {
 		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		setCodUsuario(usuario.getUID());
 		
@@ -105,7 +106,7 @@ public class PDFViewerMB {
 		Busqueda filtroParam = Busqueda.forClass(TiivsParametros.class);
 		filtroParam.add(Restrictions.eq("codUsuario", getCodUsuario()));
 		
-		try {
+		
 			lstParametros = paramDAO.buscarDinamico(filtroParam);
 
 		} catch (Exception e) {
