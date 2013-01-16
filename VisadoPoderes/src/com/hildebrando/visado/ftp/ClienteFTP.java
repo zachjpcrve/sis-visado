@@ -1,6 +1,7 @@
 package com.hildebrando.visado.ftp;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -164,5 +165,31 @@ public class ClienteFTP
             logger.debug("Error al renombrar archivos debido a: " + e.getMessage());
         }
 		
+	}
+	
+	public boolean downloadFile(String rutaLocal, String rutaRemota){
+		
+		FileOutputStream fos = null;		
+		boolean iRet = true;
+		try 
+		{
+			fos = new FileOutputStream(rutaLocal);						
+			iRet = ftpCliente.retrieveFile(rutaRemota, fos);
+			
+		} catch (IOException e) {
+			iRet = false;
+            e.printStackTrace();
+        } finally {
+            try 
+            {
+                if (fos != null) 
+                {
+                	fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }		
+		return iRet;		
 	}
 }
