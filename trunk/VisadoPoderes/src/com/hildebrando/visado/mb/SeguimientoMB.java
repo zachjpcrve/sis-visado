@@ -868,7 +868,14 @@ public class SeguimientoMB
 					}
 					
 					//Columna Liberado
-					crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+					if (tmp.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
+					{
+						crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+					}
+					if (tmp.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02))
+					{
+						crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+					}
 					
 					//Columna Delegado
 					crearCell(wb, row, 18, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
@@ -1311,6 +1318,7 @@ public class SeguimientoMB
 		// 15. Filtro por nivel (funciona)
 		if (lstNivelSelected.size() > 0) 
 		{
+			lstSolicitudesSelected.clear();
 			for (TiivsSolicitud sol : solicitudes) 
 			{
 				if (sol.getTxtNivel() != null && sol.getTxtNivel().length() > 0) 
@@ -1436,7 +1444,8 @@ public class SeguimientoMB
 			} catch (Exception e) {
 				logger.debug("Error al buscar en historial de solicitudes");
 			}
-
+			
+			lstSolicitudesSelected.clear();
 			if (lstHistorial.size() > 0) 
 			{
 				// Colocar aqui la logica para filtrar los niveles aprobados o rechazados
