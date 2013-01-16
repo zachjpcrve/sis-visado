@@ -76,10 +76,7 @@ public class ConsultarSolicitudMB {
 		   solicitud.setCodSoli(codigoSolicitud);
 		   SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		   solicitudRegistrarT= solicitudService.obtenerTiivsSolicitud(solicitud);
-		   System.out.println("################ "+solicitudRegistrarT.getEstado());
 		   solicitudRegistrarT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudRegistrarT.getEstado()));
-		   
-		  
 		   
 		   lstSolicBancarias=solicitudService.obtenerListarOperacionesBancarias(solicitud);
 		   int y=0;
@@ -95,7 +92,7 @@ public class ConsultarSolicitudMB {
 			  i++;
 			  lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%03d",i) , v.getAliasArchivo()));
 		     }
-		   
+		   // PODERDANTES Y APODERADOS
 		    List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
 		   AgrupacionSimpleDto agrupacionSimpleDto  =new AgrupacionSimpleDto(); ;
@@ -108,16 +105,18 @@ public class ConsultarSolicitudMB {
 				else  if(d.getTiivsPersona().getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 					lstApoderdantes.add(d.getTiivsPersona());
 				}
-					
 			}
 			   agrupacionSimpleDto =new AgrupacionSimpleDto();
 			   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), x.getId().getNumGrupo()));
 			   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
 			   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
 			   agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionMoneda(x.getActivo()) );
+			   lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 		   }
 		  
-		  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+		  
+		  
+		  this.obtenerHistorialSolicitud();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -129,12 +128,9 @@ public class ConsultarSolicitudMB {
 	public void verAgrupacion() {
 		logger.info("********************** verAgrupacion *********************************** ");
 
-		logger.info("this.objAgrupacionSimpleDtoCapturado  "
-				+ this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
-		logger.info("this.objAgrupacionSimpleDtoCapturado  "
-				+ this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
-		logger.info("this.objAgrupacionSimpleDtoCapturado  "
-				+ this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
+		logger.info("this.objAgrupacionSimpleDtoCapturado  "+ this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
+		logger.info("this.objAgrupacionSimpleDtoCapturado  " + this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
+		logger.info("this.objAgrupacionSimpleDtoCapturado  " + this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
 	}
 	
 	
