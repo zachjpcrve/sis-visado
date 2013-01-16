@@ -19,6 +19,8 @@ import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
+import com.bbva.persistencia.generica.util.Utilitarios;
+import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.Escaneado;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.ftp.ClienteFTP;
@@ -96,6 +98,9 @@ public class PDFViewerMB {
 	
 	public void cargarParametrosBD()
 	{
+		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
+		setCodUsuario(usuario.getUID());
+		
 		GenericDao<TiivsParametros, Object> paramDAO = (GenericDao<TiivsParametros, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroParam = Busqueda.forClass(TiivsParametros.class);
 		filtroParam.add(Restrictions.eq("codUsuario", getCodUsuario()));
