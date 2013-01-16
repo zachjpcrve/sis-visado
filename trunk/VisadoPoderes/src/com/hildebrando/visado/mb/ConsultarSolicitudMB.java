@@ -224,7 +224,7 @@ public class ConsultarSolicitudMB {
 					logger.debug("sNombreTemporal: " + sNombreTemporal);
 
 					PDFViewerMB pdfViewerMB = new PDFViewerMB();
-					if(pdfViewerMB.descargarFichero(fichTemp.getAbsolutePath(),fileName)){
+					if(pdfViewerMB.descargarArchivo(fichTemp.getAbsolutePath(),fileName)){
 						a.setAliasTemporal(sNombreTemporal);						
 					} else {	
 						a.setAliasTemporal("");
