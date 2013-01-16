@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.faces.bean.ManagedBean;
@@ -28,6 +29,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.springframework.format.datetime.DateFormatter;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -1031,19 +1037,19 @@ public class SeguimientoMB
 		
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
-		Date newFechaInicio = null;
-		Date newFechaFin = null;
+		LocalDate newFechaInicio = null;
+		LocalDate newFechaFin = null;
 
 		// solicitudes = new ArrayList<TiivsSolicitud>();
 
-		// 1. Filtro por codigo de solicitud (ya esta)
+		// 1. Filtro por codigo de solicitud (funciona)
 		if (getCodSolicitud().compareTo("") != 0) 
 		{
 			logger.debug("Filtro por codigo de solicitud: " + getCodSolicitud());
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,	getCodSolicitud()));
 		}
 
-		// 2. Filtro por estado (no funciona)
+		// 2. Filtro por estado (si funciona, validar que campo estado en BD no tenga espacios en blanco)
 		if (lstEstadoSelected.size() > 0) 
 		{
 			int ind = 0;
@@ -1056,7 +1062,7 @@ public class SeguimientoMB
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,lstEstadoSelected));
 		}
 
-		// 3. Filtro por importe (si funciona)
+		// 3. Filtro por importe (funciona)
 		if (getIdImporte().compareTo("") != 0) 
 		{
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
@@ -1086,7 +1092,7 @@ public class SeguimientoMB
 			}
 		}
 
-		// 4. Filtro por tipo de solicitud (si funciona)
+		// 4. Filtro por tipo de solicitud (funciona)
 		if (lstTipoSolicitudSelected.size() > 0) {
 			int ind = 0;
 
@@ -1103,41 +1109,62 @@ public class SeguimientoMB
 		{
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_ENVIO)) // Es fecha de envio
 			{
-				//SimpleDateFormat sf1 = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+				DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss");
 				DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-				formato.setTimeZone(TimeZone.getTimeZone("America/Bogota"));
-
-				String sFechaInicio = formato.format(getFechaInicio());
-				String sFechaFin    = formato.format(getFechaFin());
 				
-				try {
-					newFechaInicio = formato.parse(sFechaInicio);
-					newFechaFin    = formato.parse(sFechaFin);
-				} catch (ParseException e) {
-					logger.debug("Error al convertir la fecha de String a Date");
-				}
+				String tmpFecIni = formato.format(getFechaInicio());
+				String tmpFecFin = formato.format(getFechaFin());
+				
+				newFechaInicio=fmt.parseLocalDate(tmpFecIni);
+				newFechaFin= fmt.parseLocalDate(tmpFecFin);
+				
+				Date dateIni = newFechaInicio.toDateTimeAtStartOfDay().toDate();
+				Date dateFin = newFechaFin.toDateTimeAtStartOfDay().toDate();
 				
 				logger.debug("Filtro por fecha de envio...");
-				logger.info("Fecha Inicio: " + newFechaInicio);
-				logger.info("Fecha Fin: " + newFechaFin);
+				logger.info("Fecha Inicio: " + dateIni);
+				logger.info("Fecha Fin: " + dateFin);
 				
-				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_ENVIO, newFechaInicio,newFechaFin));
-				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_ENVIADO)));
+				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_ENVIO, dateIni,dateFin));
+				
+				String codEstado = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_ENVIADO);
+				
+				logger.info("Estado enviado: " + codEstado);
+				
+				//Verificar que el campo estado no tenga espacios en blanco en BD
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codEstado));
+				//filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codEstado+ "   "));
+				filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 			}
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_RPTA)) // Sino es fecha de respuesta
 			{
-				logger.debug("Filtro por fecha de rpta...");
-				logger.info("Fecha Inicio: " + getFechaInicio());
-				logger.info("Fecha Fin: " + getFechaFin());
+				DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
+				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
 				
-				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_RPTA, getFechaInicio(),	getFechaFin()));
+				String tmpFecIni = formato.format(getFechaInicio());
+				String tmpFecFin = formato.format(getFechaFin());
+				
+				newFechaInicio=fmt.parseLocalDate(tmpFecIni);
+				newFechaFin= fmt.parseLocalDate(tmpFecFin);
+				
+				Date dateIni = newFechaInicio.toDateTimeAtStartOfDay().toDate();
+				Date dateFin = newFechaFin.toDateTimeAtStartOfDay().toDate();
+				
+				logger.debug("Filtro por fecha de rpta...");
+				logger.info("Fecha Inicio: " + dateIni);
+				logger.info("Fecha Fin: " + dateFin);
+				
+				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_RPTA, dateIni,	dateFin));
 
 				Collection<String> tmpEstados = null;
 				tmpEstados.add(buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_ACEPTADO));
 				tmpEstados.add(buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_RECHAZADO));
 				tmpEstados.add(buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_A));
-
+				
+				//Verificar que el campo estado no tenga espacios en blanco en BD
 				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,tmpEstados));
+				
+				filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 			}
 		}
 
@@ -1175,7 +1202,7 @@ public class SeguimientoMB
 			//filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_OPE_BANCARIAS,	getIdOpeBan()));
 		}
 
-		// 8. Filtro por nombre de oficina (ya esta)
+		// 8. Filtro por nombre de oficina (funciona)
 		if (getOficina() != null) 
 		{
 			logger.debug("Filtro Oficina: " + getOficina());
@@ -1298,7 +1325,7 @@ public class SeguimientoMB
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
 		}
 		
-		// 16. Filtro por estado nivel
+		// 16. Filtro por estado nivel (funciona)
 		if (lstEstadoNivelSelected.size() > 0)
 		{
 			GenericDao<TiivsSolicitudNivel, Object> busqSolNivDAO = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -1352,43 +1379,9 @@ public class SeguimientoMB
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_ESTUDIO_ALIAS, lstEstudioSelected));
 		}
 
-		// 19. Filtrar solicitudes con Revision
+		// 19. Filtrar solicitudes con Revision (funciona)
 		if (getbRevision()) 
 		{
-			/*String codigoSolicEnRevision = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_EN_REVISION);
-			GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
-			filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicEnRevision));
-
-			try {
-				lstHistorial = busqHisDAO.buscarDinamico(filtro);
-			} catch (Exception e) {
-				logger.debug("Error al buscar en historial de solicitudes");
-			}
-			
-			//String codigoSolicEnRevision = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_EN_REVISION);
-			lstSolicitudesSelected.clear();
-			for (SeguimientoDTO tmp: lstSeguimientoDTO)
-			{
-				if (tmp.getEstado().equals(ConstantesVisado.CAMPO_ESTADO_EN_REVISION))
-				{
-					lstSolicitudesSelected.add(tmp.getCodSolicitud());
-				}
-			}
-			
-
-			if (lstSolicitudesSelected.size() > 0) 
-			{
-				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudesSelected));
-			} 
-			else 
-			{
-				logger.info("No hay solicitudes en el historial con estado En Revision");
-				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
-			
-			
-			}*/
-			
 			String codigoSolicEnRevision = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_EN_REVISION);
 			GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
@@ -1421,7 +1414,7 @@ public class SeguimientoMB
 			}
 		}
 		
-		// 20. Filtrar solicitudes que se hayan Delegado
+		// 20. Filtrar solicitudes que se hayan Delegado (funciona)
 		if (getbDelegados()) 
 		{
 			String codigoSolicVerA = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_A);

@@ -77,7 +77,7 @@
 						<td ><h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" /></td>
 						<td >
 							<p:calendar  id="calFecIni" disabled="#{seguimientoMB.noMostrarFechas}"
-								pattern="dd/MM/yyyy hh:mm a" value="#{seguimientoMB.fechaInicio}" 
+								pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaInicio}" 
 								showOn="button" maxlength="10" size="23"/>
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecIni" /></td>
@@ -86,7 +86,7 @@
 						<td ><h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin" /></td>
 						<td >
 							<p:calendar  id="calFecFin" disabled="#{seguimientoMB.noMostrarFechas}"
-								pattern="dd/MM/yyyy hh:mm a" value="#{seguimientoMB.fechaFin}"
+								pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaFin}"
 								showOn="button" maxlength="10" size="21"/>
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecFin" /></td>
