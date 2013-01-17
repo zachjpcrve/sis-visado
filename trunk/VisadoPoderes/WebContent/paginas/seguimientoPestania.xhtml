@@ -10,7 +10,7 @@
 
 				<h:panelGrid columns="5">
 
-			<p:tabMenu activeIndex="0" style="width:350px;">
+			<p:tabMenu activeIndex="0" style="width:750px;">
 				<p:menuitem value="Solicitud" url="/faces/paginas/detalleSolicitud.xhtml"
 					icon="ui-icon-star" />
 				<p:menuitem value="Seguimiento" actionListener="#{consultarSolicitudMB.obtenerHistorialSolicitud}"
@@ -33,8 +33,37 @@
 		
 		<h:form id="formSolicitudRegistro">
 	      <p:spacer></p:spacer>
+	      <h:panelGrid columns="2">
+	      <h:panelGrid >
+	        <p:messages id="idGrowlSolicitudRegistro"></p:messages>
+	        
+											
+			<p:editor id="editor" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="380" height="400"/>
+
+			<h:panelGrid columns="2" style="margin-top:10px">
+				<p:commandButton id="submitButton" value="Guardar" update="display" actionListener="#{consultarSolicitudMB.seterComentario}"
+					 icon="ui-icon-disk" />
+				<p:commandButton id="clearButton" type="button" value="Limpiar"
+					onclick="editor.clear()" icon="ui-icon-close" />
+			</h:panelGrid>
+<!-- oncomplete="dlg.show()" -->
+			<p:dialog header="Content" widgetVar="dlg" showEffect="fade"
+				hideEffect="fade" modal="true">
+				<h:outputText id="display" value="#{editorMB.value}"
+					escape="false" />
+			</p:dialog>
+			
+	      </h:panelGrid>
+	      <h:panelGrid>
+	
+			
+			<table>
+			<tr>
+			<td width="100%">
+			<h:outputText title="Seguimiento" value="Seguimiento" styleClass="outputText" />
+			<p:separator styleClass="fielset" />
           <p:dataTable value="#{consultarSolicitudMB.lstSeguimientoDTO}" var="seg" rows="5" id="datosSeguimiento"
-						paginatorPosition="bottom" scrollable="true" scrollHeight="200"
+						paginatorPosition="bottom" scrollable="true" scrollHeight="120"
 						paginator="false"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 						rowsPerPageTemplate="5,10,15"
@@ -61,7 +90,39 @@
 		                     </p:commandButton>
 						</p:column>																		
 				</p:dataTable>
+				</td>
+				</tr>
+				<tr>
+			<td width="100%">
+			<h:outputText title="Reasignar" value="Reasignar" styleClass="outputText" />
+			<p:separator styleClass="fielset" />
+			<h:panelGrid columns="2">
+			<h:panelGrid columns="2">
+			<h:outputText  value="Estudio" styleClass="outputText"/>
+			<p:selectOneMenu id="cboOficina" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio == null ? ' ' : consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
+					<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+					 <f:selectItems  value="#{combosMB.lstEstudio}" var="lOf" itemValue="#{lOf.codEstudio}" itemLabel="#{lOf.desEstudio}" /> 
+			</p:selectOneMenu>
+			</h:panelGrid>
+			
+			<p:commandButton id="btnAceptar" value="Aceptar"/>
+			<h:panelGrid columns="2">
+			<h:outputText  value="Abogado" styleClass="outputText"/>
+			</h:panelGrid>
+			</h:panelGrid>
+			</td>
+				</tr>
+				<tr>
+			<td width="100%">
+			<h:outputText title="Documentos" value="Documentos" styleClass="outputText" />
+			<p:separator styleClass="fielset" />
+			</td>
+				</tr>
+				</table>
+				
 
+</h:panelGrid>
+</h:panelGrid>
 		</h:form>
 
 
