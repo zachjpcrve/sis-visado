@@ -7,9 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -394,6 +396,35 @@ public class SeguimientoMB
 		
 	}
 	
+	public String obtenerGenerador()
+	{
+		String resultado="";
+		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
+		
+		if (usuario != null)
+		{
+			resultado = usuario.getUID() + ConstantesVisado.GUION + usuario.getNombre() +  ConstantesVisado.ESPACIO_BLANCO + 
+						usuario.getApellido1() + ConstantesVisado.ESPACIO_BLANCO + usuario.getApellido2();
+		}
+		return resultado;
+	}
+	
+	public String obtenerFechaHoraActual()
+	{
+		String fechaActualizacion="";
+		String horaActualizacion="";
+		
+		java.util.Date date = new java.util.Date();
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+		String fecha = sdf.format(date);
+		fechaActualizacion = fecha.substring(0, 2) + ConstantesVisado.SLASH + fecha.substring(3, 5) + ConstantesVisado.SLASH + fecha.substring(6, fecha.length());
+
+		java.text.SimpleDateFormat sdf2 = new java.text.SimpleDateFormat("HH:mm:ss");
+		horaActualizacion = sdf2.format(date);
+		
+		return fechaActualizacion + ConstantesVisado.GUION + horaActualizacion;		
+	}
+	
 	public void exportarExcelPOI()
 	{
 		crearExcel();
@@ -435,11 +466,11 @@ public class SeguimientoMB
 			//Se crea la leyenda de quien genero el archivo y la hora respectiva
 			Row rowG = sheet.createRow((short) 1);
 			crearCell(wb, rowG, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false, false,false);
-			crearCell(wb, rowG, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "",  true, false,true);
+			crearCell(wb, rowG, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerGenerador(),  true, false,true);
 			
 			Row rowG1 = sheet.createRow((short) 2);
 			crearCell(wb, rowG1, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false, false,false);
-			crearCell(wb, rowG1, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "",  true, false,true);
+			crearCell(wb, rowG1, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerFechaHoraActual(),  true, false,true);
 			
 			//Genera celdas con los filtros de busqueda
 			Row row2 = sheet.createRow((short) 4);
