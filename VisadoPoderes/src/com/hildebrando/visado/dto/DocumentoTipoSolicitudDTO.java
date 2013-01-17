@@ -30,9 +30,9 @@ public class DocumentoTipoSolicitudDTO {
 		this.documento = aliasArchivo;
 	}
 	
-	public DocumentoTipoSolicitudDTO(String item, String aliasArchivo, String aliasTemporal) {
+	public DocumentoTipoSolicitudDTO(String item, String documento, String aliasTemporal) {
 		this.item = item;
-		this.documento = aliasArchivo;
+		this.documento = documento;
 		this.aliasTemporal = aliasTemporal;
 	}
 
