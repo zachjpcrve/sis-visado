@@ -935,12 +935,14 @@ public class SolicitudRegistroMB {
 			} 
 						
 			String sAliasTemporal = cargarUnicoPDF();
+									
+			if(sAliasTemporal == null || sAliasTemporal.trim() ==""){				
+				return;
+			}
+			
 			String sExtension = sAliasTemporal.substring(sAliasTemporal.lastIndexOf("."));
 			String sAliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_" + sCodDocumento + sExtension;
-						
-			if(sAliasTemporal == null || sAliasTemporal.trim().isEmpty()){				
-				return;
-			}			
+			
 			logger.info("aliasArchivo *** " + sAliasArchivo);
 			logger.info("aliasArchivoTemporal *** " + sAliasTemporal);
 			
