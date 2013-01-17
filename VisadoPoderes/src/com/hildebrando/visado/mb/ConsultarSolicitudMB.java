@@ -13,7 +13,6 @@ import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.mapping.Array;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -34,7 +33,6 @@ import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
-import com.hildebrando.visado.modelo.TiivsTerritorio;
 
 @ManagedBean(name = "consultarSolicitudMB")
 @SessionScoped
@@ -52,7 +50,8 @@ public class ConsultarSolicitudMB {
 	private AgrupacionSimpleDto objAgrupacionSimpleDtoCapturado;
 	private List<DocumentoTipoSolicitudDTO> lstdocumentos;
 	private List<SeguimientoDTO> lstSeguimientoDTO;
-	private List<TiivsDocumento> lstTiivsDocumentos;	
+    private List<TiivsDocumento> lstTiivsDocumentos;	
+
 	
 	public ConsultarSolicitudMB() {
 		inicializarContructor();
@@ -66,14 +65,13 @@ public class ConsultarSolicitudMB {
 		objAgrupacionSimpleDtoCapturado=new AgrupacionSimpleDto();
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 		lstSeguimientoDTO=new ArrayList<SeguimientoDTO>();
+
 		lstTiivsDocumentos= new ArrayList<TiivsDocumento>();
 	}			
 
 	public String redirectDetalleSolicitud() {
 		logger.info(" **** redirectDetalleSolicitud ***");
 		obtenerSolicitud();
-		//obtenerHistorialSolicitud();
-		//return "/faces/paginas/detalleSolicitudEstadoEnviado.xhtml";
 		return "/faces/paginas/detalleSolicitud.xhtml";
 		
 	}
