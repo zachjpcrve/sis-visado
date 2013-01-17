@@ -406,6 +406,10 @@ public class SeguimientoMB
 			resultado = usuario.getUID() + ConstantesVisado.GUION + usuario.getNombre() +  ConstantesVisado.ESPACIO_BLANCO + 
 						usuario.getApellido1() + ConstantesVisado.ESPACIO_BLANCO + usuario.getApellido2();
 		}
+		else
+		{
+			logger.debug("Error al obtener datos del usuario de session para mostrar en el excel");
+		}
 		return resultado;
 	}
 	
@@ -1584,6 +1588,8 @@ public class SeguimientoMB
 				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
 			}
 		}
+		
+		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 		
 		// Buscar solicitudes de acuerdo a criterios seleccionados
 		try {
