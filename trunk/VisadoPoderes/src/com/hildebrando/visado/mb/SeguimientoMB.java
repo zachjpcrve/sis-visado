@@ -2,7 +2,11 @@ package com.hildebrando.visado.mb;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +35,8 @@ import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -51,6 +57,8 @@ import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
+import javax.faces.context.FacesContext;  
+import javax.servlet.ServletContext;
 
 @ManagedBean(name = "seguimientoMB")
 @SessionScoped
@@ -96,6 +104,8 @@ public class SeguimientoMB
 	private TiivsOficina1 oficina;
 	private Boolean mostrarColumna=true;
 	private String nombreArchivoExcel;
+	private String rutaArchivoExcel;
+	private StreamedContent file;  
 	
 //	private List<TiivsHistSolicitud> lstHistorial;
 	private List<SeguimientoDTO> lstSeguimientoDTO;
@@ -921,13 +931,43 @@ public class SeguimientoMB
 				
 				fileOut.close();
 				
-				//Abrir archivo excel
-				Desktop.getDesktop().open(new File(strRuta));  
+				setRutaArchivoExcel(strRuta);
 			}
 						
 		} catch (Exception e) {
 			logger.info("Error al generar el archivo excel debido a: " +e.getMessage());
 		}	
+	}
+	
+	public void abrirExcel()
+	{
+		exportarExcelPOI();
+		//Abrir archivo excel
+		try {
+			
+			if (rutaArchivoExcel!=null && rutaArchivoExcel.length()>0)
+			{
+				Desktop.getDesktop().open(new File(rutaArchivoExcel));
+			}
+		} catch (IOException e) {
+			logger.debug("Error al abrir archivo excel debido a: " + e.getMessage());
+		}  
+	}
+	
+	public void descargarArchivo()
+	{
+		exportarExcelPOI();
+		InputStream stream=null;
+		try {
+			stream = new FileInputStream(rutaArchivoExcel);
+		} catch (FileNotFoundException e) {
+			logger.debug("Error al obtener archivo excel debido a: " + e.getMessage());
+		}
+		
+		if (stream!=null)
+		{
+			file = new DefaultStreamedContent(stream, "application/excel", nombreArchivoExcel);
+		}
 	}
 	
 	public String obtenerRutaExcel()
@@ -2351,4 +2391,19 @@ public class SeguimientoMB
 		this.pdfViewerMB = pdfViewerMB;
 	}
 
+	public String rutaArchivoExcel() {
+		return rutaArchivoExcel;
+	}
+
+	public void setRutaArchivoExcel(String rutaArchivoExcel) {
+		this.rutaArchivoExcel = rutaArchivoExcel;
+	}
+
+	public StreamedContent getFile() {
+		return file;
+	}
+
+	public void setFile(StreamedContent file) {
+		this.file = file;
+	}
 }

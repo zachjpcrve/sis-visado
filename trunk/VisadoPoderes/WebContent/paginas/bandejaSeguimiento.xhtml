@@ -246,7 +246,7 @@
 					</td>
 					<td>
 						<p:commandButton value="Exportar" disabled="#{seguimientoMB.noHabilitarExportar}"
-							actionListener="#{seguimientoMB.exportarExcelPOI}"/>
+							 oncomplete="confirmation.show()"/>
 					</td>
 				</tr>	
 			</table>	
@@ -375,7 +375,19 @@
 			  </tbody>
 			</table>
 			
-			
+			<p:confirmDialog id="confirmDialog" message="Que desea hacer?"  
+                header="Exportar Excel" severity="alert" widgetVar="confirmation">  
+                  
+		        <p:commandButton id="confirm" value="Abrir"  oncomplete="confirmation.hide()"  
+		                    actionListener="#{seguimientoMB.abrirExcel}" />  
+		        
+		        <p:commandButton id="decline" value="Grabar" onclick="PrimeFaces.monitorDownload(start, stop)" ajax="false"   
+				        icon="ui-icon-arrowthichk-s" oncomplete="confirmation.hide()" actionListener="#{seguimientoMB.descargarArchivo}" >
+				    <p:fileDownload value="#{seguimientoMB.file}" />  
+				</p:commandButton>  
+		                  
+		    </p:confirmDialog>  
+    
 			<p:dialog
 				id="modalSeguimiento"
 				header="Seguimiento" widgetVar="dlgSeguimiento"
