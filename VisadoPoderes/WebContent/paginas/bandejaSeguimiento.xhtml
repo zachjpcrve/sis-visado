@@ -366,7 +366,10 @@
 											</f:setPropertyActionListener>
 										</p:commandButton>
 										
-	                                    <p:commandLink value="Liberar" action="#{seguimientoMB.liberarSolicitud}" ajax="false" style="font-size: 9px" rendered="false">
+										<p:spacer width="1"/>
+										
+	                                    <p:commandLink value="Liberar" action="#{seguimientoMB.liberarSolicitud}" ajax="false" style="font-size: 9px" 
+	                                    	rendered="#{tbl.bLiberado}" update=":frm:panelRes">
 	                                    	<f:param value="#{tbl.codSoli}" id="prm_codSoli2" name="prm_codSoli"/>
 	                                    </p:commandLink>
 

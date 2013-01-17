@@ -39,6 +39,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private String txtPoderdante;
 	private String txtOpeBan;
 	private String txtNivel;
+	private Boolean bLiberado;
 
 	public TiivsSolicitud() {
 	}
@@ -305,5 +306,13 @@ public class TiivsSolicitud implements java.io.Serializable {
 
 	public void setTxtNivel(String txtNivel) {
 		this.txtNivel = txtNivel;
+	}
+
+	public Boolean getbLiberado() {
+		return bLiberado;
+	}
+
+	public void setbLiberado(Boolean bLiberado) {
+		this.bLiberado = bLiberado;
 	}
 }

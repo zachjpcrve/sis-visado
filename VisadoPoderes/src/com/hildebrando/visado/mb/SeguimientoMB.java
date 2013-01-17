@@ -37,11 +37,13 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import org.springframework.beans.BeansException;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
+import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.Moneda;
@@ -252,11 +254,25 @@ public class SeguimientoMB
 		
 		if (solicitudes.size()==1)
 		{
-			if (solicitudes.get(0).getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
+			if (solicitudes.get(0).getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
 			{
-				
+				 try {
+					  TiivsSolicitud solicitud =new TiivsSolicitud();
+					  solicitud.setCodSoli(codigoSolicitud);	  
+					  SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+					  solicitud= solicitudService.obtenerTiivsSolicitud(solicitud);
+					  solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02);
+					  solicitud.setDescEstado(Utilitarios.obternerDescripcionEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02));
+					  					  
+					  solicitudService.modificar(solicitud);
+				} catch (BeansException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
+		cargarSolicitudes();
 	}
 
 	private void actualizarDatosGrilla() 
@@ -269,11 +285,19 @@ public class SeguimientoMB
 		// Se obtiene y setea la descripcion del Estado en la grilla
 		for (TiivsSolicitud tmpSol : solicitudes) 
 		{
+			if (tmpSol.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
+			{
+				tmpSol.setbLiberado(true);
+			}
+			else
+			{
+				tmpSol.setbLiberado(false);
+			}
+			
 			// Se obtiene y setea la descripcion del Estado en la grilla
 			if (tmpSol.getEstado() != null) {
-				if (tmpSol.getEstado().trim().equalsIgnoreCase(combosMB.getLstEstado().get(0).getCodEstado())) {
-					tmpSol.setTxtEstado(combosMB.getLstEstado().get(0).getDescripcion());
-				}
+				String estado=buscarEstadoxCodigo(tmpSol.getEstado().trim());
+				tmpSol.setTxtEstado(estado);
 			}
 			
 			// Se obtiene la moneda y se coloca las iniciales en la columna Importe Total
