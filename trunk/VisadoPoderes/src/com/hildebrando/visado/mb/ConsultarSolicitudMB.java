@@ -26,6 +26,7 @@ import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
+import com.hildebrando.visado.modelo.TiivsDocumento;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsPersona;
@@ -33,6 +34,7 @@ import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
+import com.hildebrando.visado.modelo.TiivsTerritorio;
 
 @ManagedBean(name = "consultarSolicitudMB")
 @SessionScoped
@@ -50,10 +52,12 @@ public class ConsultarSolicitudMB {
 	private AgrupacionSimpleDto objAgrupacionSimpleDtoCapturado;
 	private List<DocumentoTipoSolicitudDTO> lstdocumentos;
 	private List<SeguimientoDTO> lstSeguimientoDTO;
+	private List<TiivsDocumento> lstTiivsDocumentos;	
 	
 	public ConsultarSolicitudMB() {
 		inicializarContructor();
-	}
+		cargarDocumentos();
+	}	
 	public void inicializarContructor(){
 		solicitudRegistrarT=new TiivsSolicitud();
 		lstSolicBancarias=new ArrayList<TiivsSolicitudOperban>();
@@ -62,7 +66,9 @@ public class ConsultarSolicitudMB {
 		objAgrupacionSimpleDtoCapturado=new AgrupacionSimpleDto();
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 		lstSeguimientoDTO=new ArrayList<SeguimientoDTO>();
-	}
+		lstTiivsDocumentos= new ArrayList<TiivsDocumento>();
+	}			
+
 	public String redirectDetalleSolicitud() {
 		logger.info(" **** redirectDetalleSolicitud ***");
 		obtenerSolicitud();
@@ -100,8 +106,7 @@ public class ConsultarSolicitudMB {
 		   int i=0;
 		  for (TiivsAnexoSolicitud v : lstAnexosSolicitudes) {
 			  i++;
-			  //lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%03d",i) , v.getAliasArchivo()));
-			  lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%03d",i) , v.getAliasArchivo(), v.getAliasTemporal()));
+			  lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%03d",i) , obtenerDescripcionDocumento(v.getId().getCodDoc()), v.getAliasTemporal()));
 		     }
 		   // PODERDANTES Y APODERADOS
 		    List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
@@ -141,8 +146,10 @@ public class ConsultarSolicitudMB {
 			e.printStackTrace();
 		}
 	}
-					
-				
+
+	
+	
+	
 	public void actualizarEstadoReservadoSolicitud() throws Exception{
 		logger.info("*********************** actualizarEstadoReservadoSolicitud **************************");
 		if(!this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)){
@@ -162,8 +169,7 @@ public class ConsultarSolicitudMB {
 		  serviceHistorialSolicitud.insertar(objHistorial);
 		}
 	}
-						
-	
+							
 	public void verAgrupacion() {
 		logger.info("********************** verAgrupacion *********************************** ");
 
@@ -292,6 +298,31 @@ public class ConsultarSolicitudMB {
 		}	
 		logger.info("********************** descargarAnexosFileServer():FIN ***********************************");
 		return iRet;
+	}
+	
+	private void cargarDocumentos() {
+		
+		GenericDao<TiivsDocumento, Object> documentoDAO = (GenericDao<TiivsDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroDocumento = Busqueda.forClass(TiivsDocumento.class);
+		try {
+			lstTiivsDocumentos = documentoDAO.buscarDinamico(filtroDocumento);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("Error al cargar el listado de territorios");
+		}
+		
+	}
+				
+	private String obtenerDescripcionDocumento(String codDoc) {		
+		if(codDoc.contains(ConstantesVisado.PREFIJO_OTROS)){
+			return ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS;
+		}
+		for(TiivsDocumento doc : lstTiivsDocumentos){
+			if(doc.getCodDocumento().equalsIgnoreCase(codDoc.trim())){
+				return doc.getDescripcion();
+			}
+		}
+		return "";
 	}
 	
 	public CombosMB getCombosMB() {
