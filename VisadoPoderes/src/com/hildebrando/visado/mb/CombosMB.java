@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.ValueChangeEvent;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
@@ -365,9 +366,9 @@ public class CombosMB {
 		}
 	}
 
-	public List<TiivsMultitabla> getLstMultitabla() {
-		return lstMultitabla;
-	}
+	
+	
+  
 
 
 	public void setLstMultitabla(List<TiivsMultitabla> lstMultitabla) {
