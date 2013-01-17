@@ -28,6 +28,7 @@ import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
 import com.hildebrando.visado.modelo.TiivsDocumento;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
+import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
@@ -51,7 +52,7 @@ public class ConsultarSolicitudMB {
 	private List<DocumentoTipoSolicitudDTO> lstdocumentos;
 	private List<SeguimientoDTO> lstSeguimientoDTO;
     private List<TiivsDocumento> lstTiivsDocumentos;	
-
+    private List<TiivsMiembro> lstAbogados;
 	
 	public ConsultarSolicitudMB() {
 		inicializarContructor();
@@ -65,7 +66,7 @@ public class ConsultarSolicitudMB {
 		objAgrupacionSimpleDtoCapturado=new AgrupacionSimpleDto();
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 		lstSeguimientoDTO=new ArrayList<SeguimientoDTO>();
-
+		lstAbogados=new ArrayList<TiivsMiembro>();
 		lstTiivsDocumentos= new ArrayList<TiivsDocumento>();
 	}			
 
@@ -376,6 +377,12 @@ public class ConsultarSolicitudMB {
 		this.lstSeguimientoDTO = lstSeguimientoDTO;
 	}
 	
-	
+	public List<TiivsMiembro> getLstAbogados() {
+		return lstAbogados;
+	}
+
+	public void setLstAbogados(List<TiivsMiembro> lstAbogados) {
+		this.lstAbogados = lstAbogados;
+	}
 
 }

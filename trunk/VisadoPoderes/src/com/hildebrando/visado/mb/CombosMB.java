@@ -26,6 +26,7 @@ import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.dto.TiposFecha;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsEstudio;
+import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
@@ -63,6 +64,7 @@ public class CombosMB {
 	private Map<String, String> tiposSolicitud;
 	private List<ComboDto> lstClasificacionPersona;
 	private List<ComboDto> lstTipoRegistroPersona;
+	private List<TiivsMiembro> lstAbogados;
 
 	private List<TiivsTipoSolicitud> lstTipoSolicitud;
 	
@@ -89,6 +91,7 @@ public class CombosMB {
 		lstTipoRegistroPersona=new ArrayList<ComboDto>();
 		lstTipoSolicitud=new ArrayList<TiivsTipoSolicitud>();
 		lstSolOperBan= new ArrayList<TiivsSolicitudOperban>();
+		lstAbogados=new ArrayList<TiivsMiembro>();
 		
 		cargarMultitabla();
 		cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
@@ -247,6 +250,15 @@ public class CombosMB {
 	
 	
 	public void cargarCombosNoMultitabla(){
+		try {
+		GenericDao<TiivsMiembro, Object> serviceMiembro = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMiembro = Busqueda.forClass(TiivsMiembro.class);
+		filtroMiembro.add(Restrictions.eq("tiivsGrupo.codGrupo", ConstantesVisado.CODIGO_GRUPO_ABOGADOS));
+		lstAbogados=serviceMiembro.buscarDinamico(filtroMiembro);
+		}catch (Exception e) {
+			logger.debug("Error al cargar el listado de abogados - miembro");
+		}
+		
 		// Carga combo de Operacion Bancaria
 		GenericDao<TiivsOperacionBancaria, Object> openBanDAO = (GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroOpenBan = Busqueda.forClass(TiivsOperacionBancaria.class);
@@ -572,4 +584,14 @@ public class CombosMB {
 	public void setEstudios(Map<String, String> estudios) {
 		this.estudios = estudios;
 	}
+
+	public List<TiivsMiembro> getLstAbogados() {
+		return lstAbogados;
+	}
+
+	public void setLstAbogados(List<TiivsMiembro> lstAbogados) {
+		this.lstAbogados = lstAbogados;
+	}
+	
+	
 }
