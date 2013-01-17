@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.SeguridadDao;
+import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.conexion.__Conexion2;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.grupobbva.bc.per.tele.seguridad.ServiciosSeguridadBbva;
@@ -131,6 +132,25 @@ public class SeguridadMB {
                   }
 			}
         	request.getSession(true).setAttribute("USUARIO_SESION", usuarioIILD);
+        	String grupoAdm = (String) Utilitarios.getObjectInSession("GRUPO_ADM");
+    		String grupoOfi = (String) Utilitarios.getObjectInSession("GRUPO_OFI");
+    		String grupoJrd = (String) Utilitarios.getObjectInSession("GRUPO_JRD");
+    		
+    		// DES_GRUPO_ADM= "SERVICIOS JURIDICOS";	
+    		// DES_GRUPO_JRD= "ABOGADO";
+    		// DES_GRUPO_OFI= "OFICINA";
+        	 if(grupoAdm ==null && grupoJrd==null ){
+        		 logger.info("ROL OFICINA");
+        		 request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.OFICINA);
+        		 }else{
+        		 if (grupoAdm ==null) {
+        		 logger.info("ROL ABOOGADO");
+        		 request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.ABOGADO);
+        		 }else{	
+        			 logger.info("ROL SSJJ");
+            		 request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.SSJJ);
+        		 }
+        		 }
         	
         	if(ListaMiembros.size()>0){      		
         
