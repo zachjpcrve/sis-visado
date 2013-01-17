@@ -13,7 +13,7 @@ public class TiivsEstudio implements java.io.Serializable {
 	private String codEstudio;
 	private String desEstudio;
 	private Character activo;
-	private Set tiivsSolicituds = new HashSet(0);
+	private Set<TiivsSolicitud> tiivsSolicituds = new HashSet<TiivsSolicitud>();
 
 	public TiivsEstudio() {
 	}
