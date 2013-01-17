@@ -452,32 +452,7 @@ public class SolicitudRegistroMB {
 		return lstTiivsPersona;
 	}
 
-	public List<TiivsPersona> manipularDataPruebaPopup(String numDoi) {
-		TiivsPersona p = new TiivsPersona();
-		p.setCodPer(new Integer(1));
-		p.setNombre("SAMIRA");
-		p.setApePat("CLEMENTE");
-		p.setApeMat("KIMA ");
-		p.setNumDoi("12345678");
-		p.setTipDoi("0001");
-		TiivsPersona s = new TiivsPersona();
-		s.setCodPer(2);
-		s.setNombre("DIEGO");
-		s.setApePat("CLEMENTE");
-		s.setApeMat("KIMA ");
-		s.setNumDoi("12345678");
-		s.setTipDoi("0001");
 
-		List<TiivsPersona> lstPersona = new ArrayList<TiivsPersona>();
-		if (p.getNumDoi().equals(numDoi)) {
-			lstPersona.add(p);
-		}
-		if (s.getNumDoi().equals(numDoi)) {
-			lstPersona.add(s);
-		}
-		return lstPersona;
-
-	}
 
 	public String redirectDetalleSolicitud() {
 		logger.info(" **** redirectDetalleSolicitud ***");
