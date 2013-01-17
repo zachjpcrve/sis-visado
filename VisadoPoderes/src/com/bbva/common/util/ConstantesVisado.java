@@ -135,6 +135,7 @@ public class ConstantesVisado {
 	public static final String SALTO_LINEA = "\n";
 	public static final String EXTENSION_XLS = ".xls";
 	public static final String ESPACIO_BLANCO =" ";
+	public static final String UNDERLINE = "_";
 	
 	//Constantes para archivo Excel
 	public static final String TITULO_CABECERA_EXCEL ="CONSULTA DE SOLICITUDES DE VISADO";

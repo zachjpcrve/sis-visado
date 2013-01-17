@@ -7,11 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -59,8 +57,6 @@ import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
-import javax.faces.context.FacesContext;  
-import javax.servlet.ServletContext;
 
 @ManagedBean(name = "seguimientoMB")
 @SessionScoped
@@ -463,7 +459,25 @@ public class SeguimientoMB
 	
 	public void generarNombreArchivo() 
 	{
-		setNombreArchivoExcel("Solicitudes_Visado "	+ obtenerFechaArchivoExcel() + "_XXXX");
+		String grupoSSJJ = (String) Utilitarios.getObjectInSession("GRUPO_JRD");
+		String grupoADM = (String) Utilitarios.getObjectInSession("GRUPO_ADM");
+		String grupoOFI = (String) Utilitarios.getObjectInSession("GRUPO_OFI");
+		String rol="";
+		
+		if (grupoSSJJ!=null)
+		{
+			rol="SSJJ";
+		}
+		else if (grupoADM!=null)
+		{
+			rol="ADM";
+		}
+		else if (grupoOFI!=null)
+		{
+			rol="OFI";
+		}
+		
+		setNombreArchivoExcel("Solicitudes_Visado "	+ obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + rol);
 	}
 
 	public String obtenerFechaArchivoExcel() 
@@ -1039,17 +1053,21 @@ public class SeguimientoMB
 	
 	public void abrirExcel()
 	{
-		exportarExcelPOI();
-		//Abrir archivo excel
 		try {
-			
+			exportarExcelPOI();
+			//Abrir archivo excel
+				
 			if (rutaArchivoExcel!=null && rutaArchivoExcel.length()>0)
 			{
 				Desktop.getDesktop().open(new File(rutaArchivoExcel));
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
 			logger.debug("Error al abrir archivo excel debido a: " + e.getMessage());
-		}  
+		} catch (Exception e1)
+		{
+			e1.printStackTrace();
+		}
 	}
 	
 	public void descargarArchivo()
@@ -1064,7 +1082,7 @@ public class SeguimientoMB
 		
 		if (stream!=null)
 		{
-			file = new DefaultStreamedContent(stream, "application/excel", nombreArchivoExcel);
+			file = new DefaultStreamedContent(stream, "application/excel", nombreArchivoExcel+ConstantesVisado.EXTENSION_XLS);
 		}
 	}
 	
