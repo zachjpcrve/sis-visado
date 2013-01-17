@@ -99,7 +99,7 @@
 			<h:panelGrid columns="2">
 			<h:panelGrid columns="2">
 			<h:outputText  value="Estudio" styleClass="outputText"/>
-			<p:selectOneMenu id="cboOficina" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio == null ? ' ' : consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
+			<p:selectOneMenu id="cboEstudio" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio == null ? ' ' : consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
 					<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 					 <f:selectItems  value="#{combosMB.lstEstudio}" var="lOf" itemValue="#{lOf.codEstudio}" itemLabel="#{lOf.desEstudio}" /> 
 			</p:selectOneMenu>
@@ -108,6 +108,11 @@
 			<p:commandButton id="btnAceptar" value="Aceptar"/>
 			<h:panelGrid columns="2">
 			<h:outputText  value="Abogado" styleClass="outputText"/>
+			<p:selectOneMenu id="cboAbogado" value="#{consultarSolicitudMB.solicitudRegistrarT.regAbogado == null ? ' ' : consultarSolicitudMB.solicitudRegistrarT.regAbogado}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
+					<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+					 <f:selectItems  value="#{combosMB.lstAbogados}" var="lOf" itemValue="#{lOf.codMiembro}" itemLabel="#{lOf.descripcion}" /> 
+			</p:selectOneMenu>
+			
 			</h:panelGrid>
 			</h:panelGrid>
 			</td>
