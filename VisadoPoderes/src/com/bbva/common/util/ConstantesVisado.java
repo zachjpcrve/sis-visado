@@ -48,6 +48,12 @@ public class ConstantesVisado {
 	public static final String DES_GRUPO_ADM= "SERVICIOS JURIDICOS";	
 	public static final String DES_GRUPO_JRD= "ABOGADO";
 	public static final String DES_GRUPO_OFI= "OFICINA";
+	
+	public static final String OFICINA= "OFICINA";
+	public static final String ABOGADO= "ABOGADO";
+	public static final String SSJJ= "SSJJ";
+	
+    		 
 	/* FIN SAMIRA*/
 	public static final String TOOLTIP_TIPO_FECHA_ENVIO="-Fecha de envio";
 	public static final String TOOLTIP_TIPO_FECHA_RPTA="-Fecha de respuesta";
