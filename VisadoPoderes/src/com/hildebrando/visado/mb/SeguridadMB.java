@@ -144,7 +144,7 @@ public class SeguridadMB {
         		 request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.OFICINA);
         		 }else{
         		 if (grupoAdm ==null) {
-        		 logger.info("ROL ABOOGADO");
+        		 logger.info("ROL ABOGADO");
         		 request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.ABOGADO);
         		 }else{	
         			 logger.info("ROL SSJJ");
