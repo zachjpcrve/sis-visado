@@ -235,6 +235,33 @@ public class SeguimientoMB
 			}
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void liberarSolicitud()
+	{
+		String codigoSolicitud=Utilitarios.capturarParametro("prm_codSoli");
+		logger.info("codigoSolicitud : "+codigoSolicitud);
+		
+		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
+		filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, codigoSolicitud));
+		
+		try {
+			solicitudes = solicDAO.buscarDinamico(filtroSol);
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.debug("Error al buscar las solicitudes");
+		}
+		
+		if (solicitudes.size()==1)
+		{
+			if (solicitudes.get(0).getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
+			{
+				
+			}
+		}
+	}
 
 	private void actualizarDatosGrilla() 
 	{	
@@ -988,17 +1015,25 @@ public class SeguimientoMB
 			String strRuta="";
 			if (obtenerRutaExcel().compareTo("")!=0)
 			{
+				
+				logger.info("Parametros recogidos para exportar");
+				logger.info("Ruta: " + obtenerRutaExcel());
+				logger.info("Nombre Archivo Excel: " + getNombreArchivoExcel());
+				
 				strRuta = obtenerRutaExcel() + getNombreArchivoExcel() + ConstantesVisado.EXTENSION_XLS;
 				FileOutputStream fileOut = new FileOutputStream(strRuta);
 				wb.write(fileOut);
 				
 				fileOut.close();
 				
+				logger.debug("Ruta final donde encontrar el archivo excel: " + strRuta);
+				
 				setRutaArchivoExcel(strRuta);
 			}
 						
 		} catch (Exception e) {
-			logger.info("Error al generar el archivo excel debido a: " +e.getMessage());
+			e.printStackTrace();
+			//logger.info("Error al generar el archivo excel debido a: " + e.getStackTrace());
 		}	
 	}
 	
@@ -1051,6 +1086,10 @@ public class SeguimientoMB
 		if (res.compareTo("")==0)
 		{
 			logger.debug("No se encontro el parametro de ruta para exportar excel para el usuario: " + usuario.getUID());
+		}
+		else
+		{
+			logger.debug("Parametro ruta encontrada para el usuario: " + usuario.getUID() + " es: " +  res);
 		}
 		
 		return res;
