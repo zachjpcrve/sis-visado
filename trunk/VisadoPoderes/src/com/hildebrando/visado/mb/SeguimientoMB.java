@@ -1059,6 +1059,7 @@ public class SeguimientoMB
 				logger.info("Nombre Archivo Excel: " + getNombreArchivoExcel());
 				
 				strRuta = obtenerRutaExcel() + getNombreArchivoExcel() + ConstantesVisado.EXTENSION_XLS;
+				logger.info("Nombre strRuta: " + strRuta);
 				FileOutputStream fileOut = new FileOutputStream(strRuta);
 				wb.write(fileOut);
 				

@@ -109,7 +109,7 @@ public class ConsultarSolicitudMB {
 	@SuppressWarnings("unchecked")
 	public void obtenerSolicitud(){
 		try {
-		   
+		   lstAgrupacionSimpleDto=new ArrayList<AgrupacionSimpleDto>();
 		   String codigoSolicitud=Utilitarios.capturarParametro("prm_codSoli");
 		   logger.info("codigoSolicitud : "+codigoSolicitud);
 		   TiivsSolicitud solicitud =new TiivsSolicitud();
