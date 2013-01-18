@@ -60,6 +60,7 @@
 			<table>
 			<tr>
 			<td width="100%">
+			
 			<h:outputText title="Seguimiento" value="Seguimiento" styleClass="outputText" />
 			<p:separator styleClass="fielset" />
           <p:dataTable value="#{consultarSolicitudMB.lstSeguimientoDTO}" var="seg" rows="5" id="datosSeguimiento"
@@ -90,10 +91,12 @@
 		                     </p:commandButton>
 						</p:column>																		
 				</p:dataTable>
+			
 				</td>
 				</tr>
 				<tr>
 			<td width="100%">
+			<p:panel rendered="#{consultarSolicitudMB.bSeccionReasignacion}" >
 			<h:outputText title="Reasignar" value="Reasignar" styleClass="outputText" />
 			<p:separator styleClass="fielset" />
 			<h:panelGrid columns="2">
@@ -118,12 +121,34 @@
 			
 			</h:panelGrid>
 			</h:panelGrid>
+				</p:panel>
 			</td>
 				</tr>
 				<tr>
 			<td width="100%">
+			<p:panel rendered="#{consultarSolicitudMB.bSeccionDictaminar}">
+			<h:outputText title="Dictaminar" value="Dictaminar" styleClass="outputText" />
+			<p:separator styleClass="fielset" />
+			
+			<h:panelGrid columns="3">
+			
+			<h:outputText  value="Dictamen : " styleClass="outputText"/>
+			<p:selectOneMenu id="cboDictamen" value="#{consultarSolicitudMB.valorDictamen}" > 
+					<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+					 <f:selectItems  value="#{consultarSolicitudMB.lstComboDictamen}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" /> 
+			</p:selectOneMenu>
+				<p:commandButton id="btnAceptarDictamen" value="Aceptar" action="#{consultarSolicitudMB.dictaminarSolicitud}"/>
+			</h:panelGrid>
+			
+			</p:panel>
+			</td>
+				</tr>
+			<tr>
+			<td width="100%">
 			<h:outputText title="Documentos" value="Documentos" styleClass="outputText" />
 			<p:separator styleClass="fielset" />
+			
+			
 			</td>
 				</tr>
 				</table>
