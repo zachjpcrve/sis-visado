@@ -10,6 +10,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.ValueChangeEvent;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
@@ -27,6 +28,7 @@ import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
 import com.hildebrando.visado.modelo.TiivsDocumento;
+import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMiembro;
@@ -61,6 +63,7 @@ public class ConsultarSolicitudMB {
 	}	
 	public void inicializarContructor(){
 		solicitudRegistrarT=new TiivsSolicitud();
+		
 		lstSolicBancarias=new ArrayList<TiivsSolicitudOperban>();
 		lstAnexosSolicitudes=new ArrayList<TiivsAnexoSolicitud>();
 		lstAgrupacionSimpleDto=new ArrayList<AgrupacionSimpleDto>();
@@ -77,7 +80,32 @@ public class ConsultarSolicitudMB {
 		return "/faces/paginas/detalleSolicitud.xhtml";
 		
 	}
-
+	
+	public void abogadosXEstudios(ValueChangeEvent e){
+		logger.info("*************** abogadosXEstudios *********************" +e.getNewValue());
+	List<TiivsMiembro>	lstAbogadosMiembro=combosMB.getLstAbogados();
+	lstAbogados=new ArrayList<TiivsMiembro>();
+		for (TiivsMiembro x : lstAbogadosMiembro) {
+			if(x.getEstudio().trim().equals(e.getNewValue())){
+				lstAbogados.add(x);
+			}
+			
+		}
+	}
+    
+	public void reasignacionManual(){
+		 logger.info("********** reasignacionManual *********");
+		 logger.info(""+solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
+		 logger.info(""+solicitudRegistrarT.getRegAbogado());
+			try {
+		     GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		     solicitudRegistrarT= service.modificar(solicitudRegistrarT);
+		     Utilitarios.mensajeInfo("INFO", "Se realizó la reasignación manual Correctamente");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void obtenerSolicitud(){
 		try {
@@ -89,7 +117,9 @@ public class ConsultarSolicitudMB {
 		   SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		   solicitudRegistrarT= solicitudService.obtenerTiivsSolicitud(solicitud);
 		   solicitudRegistrarT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudRegistrarT.getEstado()));
-		   
+		   if(solicitudRegistrarT.getTiivsEstudio()==null){
+		   solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
+		   }
 		   lstSolicBancarias=solicitudService.obtenerListarOperacionesBancarias(solicitud);
 		   int y=0;
 		   for (TiivsSolicitudOperban f : lstSolicBancarias) {
