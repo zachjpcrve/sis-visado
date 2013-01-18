@@ -31,7 +31,7 @@
 		
 		
 		
-		<h:form id="formSolicitudRegistro">
+		<h:form id="formSolicitudSeguimiento">
 	      <p:spacer></p:spacer>
 	      <h:panelGrid columns="2">
 	      <h:panelGrid >
@@ -99,18 +99,21 @@
 			<h:panelGrid columns="2">
 			<h:panelGrid columns="2">
 			<h:outputText  value="Estudio" styleClass="outputText"/>
-			<p:selectOneMenu id="cboEstudio" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio == null ? ' ' : consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
+			<p:selectOneMenu id="cboEstudio" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio}" valueChangeListener="#{consultarSolicitudMB.abogadosXEstudios}"> 
+					 <p:ajax update=":formSolicitudSeguimiento:cboAbogado" event="change"> </p:ajax> 
 					<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-					 <f:selectItems  value="#{combosMB.lstEstudio}" var="lOf" itemValue="#{lOf.codEstudio}" itemLabel="#{lOf.desEstudio}" /> 
+					 <f:selectItems  value="#{combosMB.lstEstudio}" var="lOf" itemValue="#{lOf.codEstudio}" itemLabel="#{lOf.desEstudio}" />
+					
+					 
 			</p:selectOneMenu>
 			</h:panelGrid>
 			
-			<p:commandButton id="btnAceptar" value="Aceptar"/>
+			<p:commandButton id="btnAceptar" value="Aceptar" action="#{consultarSolicitudMB.reasignacionManual}" update=":formSolicitudSeguimiento:idGrowlSolicitudRegistro"/>
 			<h:panelGrid columns="2">
 			<h:outputText  value="Abogado" styleClass="outputText"/>
-			<p:selectOneMenu id="cboAbogado" value="#{consultarSolicitudMB.solicitudRegistrarT.regAbogado == null ? ' ' : consultarSolicitudMB.solicitudRegistrarT.regAbogado}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
+			<p:selectOneMenu id="cboAbogado" value="#{consultarSolicitudMB.solicitudRegistrarT.regAbogado}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
 					<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-					 <f:selectItems  value="#{combosMB.lstAbogados}" var="lOf" itemValue="#{lOf.codMiembro}" itemLabel="#{lOf.descripcion}" /> 
+					 <f:selectItems  value="#{consultarSolicitudMB.lstAbogados}" var="lOf" itemValue="#{lOf.codMiembro}" itemLabel="#{lOf.descripcion}" /> 
 			</p:selectOneMenu>
 			
 			</h:panelGrid>
