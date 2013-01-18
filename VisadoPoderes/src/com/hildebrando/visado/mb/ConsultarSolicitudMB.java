@@ -23,6 +23,7 @@ import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
+import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
@@ -56,10 +57,15 @@ public class ConsultarSolicitudMB {
 	private List<SeguimientoDTO> lstSeguimientoDTO;
     private List<TiivsDocumento> lstTiivsDocumentos;	
     private List<TiivsMiembro> lstAbogados;
+    private List<ComboDto>lstComboDictamen;
+	private boolean bSeccionDictaminar=false;
+	private boolean bSeccionReasignacion=false;
+	private String valorDictamen="";
 	
 	public ConsultarSolicitudMB() {
 		inicializarContructor();
 		cargarDocumentos();
+		listarComboDictamen();
 	}	
 	public void inicializarContructor(){
 		solicitudRegistrarT=new TiivsSolicitud();
@@ -72,8 +78,13 @@ public class ConsultarSolicitudMB {
 		lstSeguimientoDTO=new ArrayList<SeguimientoDTO>();
 		lstAbogados=new ArrayList<TiivsMiembro>();
 		lstTiivsDocumentos= new ArrayList<TiivsDocumento>();
+		
 	}			
-
+    public void listarComboDictamen(){
+    	lstComboDictamen=new ArrayList<ComboDto>();
+    	lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02,ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02));
+    	lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02,ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02));
+    }
 	public String redirectDetalleSolicitud() {
 		logger.info(" **** redirectDetalleSolicitud ***");
 		obtenerSolicitud();
@@ -130,7 +141,7 @@ public class ConsultarSolicitudMB {
 		   lstAnexosSolicitudes=solicitudService.obtenerListarAnexosSolicitud(solicitud);
 		   
 		   //descargar anexos
-		   descargarAnexosFileServer();
+		  // descargarAnexosFileServer();
 		   
 		   lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 		   int i=0;
@@ -185,7 +196,12 @@ public class ConsultarSolicitudMB {
 		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
 		logger.info("*********************** actualizarEstadoReservadoSolicitud **************************");
-		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) && !this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)){
+		if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02)){
+		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) ){
+			//Seccion Dictaminar 
+		this.bSeccionDictaminar=true;
+		this.bSeccionReasignacion=false;
+			
 		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02);
 		this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_RESERVADO_T02);
 		 GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -200,7 +216,33 @@ public class ConsultarSolicitudMB {
 		  objHistorial.setFecha(new Timestamp(new Date().getDate()));
 		  objHistorial.setRegUsuario(this.solicitudRegistrarT.getRegUsuario());
 		  serviceHistorialSolicitud.insertar(objHistorial);
+		}else if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+			//Seccion Reasgnar 
+		this.bSeccionDictaminar=false;
+		this.bSeccionReasignacion=true;
+		
+		}else if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
+			this.bSeccionDictaminar=false;
+			this.bSeccionReasignacion=false;
 		}
+	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)){
+		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) ){
+			this.bSeccionDictaminar=true;
+			this.bSeccionReasignacion=false;
+		}else if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+			this.bSeccionDictaminar=true;
+			this.bSeccionReasignacion=false;
+			
+		}else if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
+			this.bSeccionDictaminar=false;
+			this.bSeccionReasignacion=false;
+		}
+	}
+		
+	}
+	public void dictaminarSolicitud(){
+		logger.info("********************** dictaminarSolicitud *********************************** ");
+		logger.info("********** "+valorDictamen);
 	}
 	
 	public void actualizarEstadoEjecutadoSolicitud() throws Exception
@@ -230,6 +272,7 @@ public class ConsultarSolicitudMB {
 		  serviceHistorialSolicitud.insertar(objHistorial);
 		}
 	}
+
 							
 	public void verAgrupacion() {
 		logger.info("********************** verAgrupacion *********************************** ");
@@ -445,6 +488,30 @@ public class ConsultarSolicitudMB {
 
 	public void setLstAbogados(List<TiivsMiembro> lstAbogados) {
 		this.lstAbogados = lstAbogados;
+	}
+	public boolean isbSeccionDictaminar() {
+		return bSeccionDictaminar;
+	}
+	public void setbSeccionDictaminar(boolean bSeccionDictaminar) {
+		this.bSeccionDictaminar = bSeccionDictaminar;
+	}
+	public boolean isbSeccionReasignacion() {
+		return bSeccionReasignacion;
+	}
+	public void setbSeccionReasignacion(boolean bSeccionReasignacion) {
+		this.bSeccionReasignacion = bSeccionReasignacion;
+	}
+	public List<ComboDto> getLstComboDictamen() {
+		return lstComboDictamen;
+	}
+	public void setLstComboDictamen(List<ComboDto> lstComboDictamen) {
+		this.lstComboDictamen = lstComboDictamen;
+	}
+	public String getValorDictamen() {
+		return valorDictamen;
+	}
+	public void setValorDictamen(String valorDictamen) {
+		this.valorDictamen = valorDictamen;
 	}
 
 }
