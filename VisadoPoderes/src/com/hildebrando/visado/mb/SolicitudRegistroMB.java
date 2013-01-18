@@ -1518,7 +1518,7 @@ public class SolicitudRegistroMB {
 				this.solicitudRegistrarT.setTiivsEstudio(x);
 			}
 		}
-		this.solicitudRegistrarT.setEstado(ConstantesVisado.CODIGO_ESTADO_ENVIADO);
+		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02);
 		this.solicitudRegistrarT.setFechaRespuesta(time);
 		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date().getTime()));
 	}
