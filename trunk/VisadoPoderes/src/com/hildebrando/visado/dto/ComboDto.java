@@ -4,6 +4,18 @@ public class ComboDto {
 	private String key;
 	private String descripcion;
 
+	
+	
+	
+	public ComboDto() {
+		super();
+	}
+
+	public ComboDto(String key, String descripcion) {
+		this.key = key;
+		this.descripcion = descripcion;
+	}
+
 	public String getKey() {
 		return key;
 	}
