@@ -61,6 +61,8 @@ public class ConsultarSolicitudMB {
 	private boolean bSeccionDictaminar=false;
 	private boolean bSeccionReasignacion=false;
 	private String valorDictamen="";
+	private String descValorDictamen="";
+	private List<ComboDto> lstDocumentosGenerados;
 	
 	public ConsultarSolicitudMB() {
 		inicializarContructor();
@@ -78,7 +80,7 @@ public class ConsultarSolicitudMB {
 		lstSeguimientoDTO=new ArrayList<SeguimientoDTO>();
 		lstAbogados=new ArrayList<TiivsMiembro>();
 		lstTiivsDocumentos= new ArrayList<TiivsDocumento>();
-		
+		lstDocumentosGenerados=new ArrayList<ComboDto>();
 	}			
     public void listarComboDictamen(){
     	lstComboDictamen=new ArrayList<ComboDto>();
@@ -206,16 +208,8 @@ public class ConsultarSolicitudMB {
 		this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_RESERVADO_T02);
 		 GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		 service.modificar(solicitudRegistrarT);
-		 GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			
-		  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
-		  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),2+""));
-		  objHistorial.setEstado(this.solicitudRegistrarT.getEstado());
-		  objHistorial.setNomUsuario(this.solicitudRegistrarT.getNomUsuario());
-		  objHistorial.setObs(this.solicitudRegistrarT.getObs());
-		  objHistorial.setFecha(new Timestamp(new Date().getDate()));
-		  objHistorial.setRegUsuario(this.solicitudRegistrarT.getRegUsuario());
-		  serviceHistorialSolicitud.insertar(objHistorial);
+		 this.registrarHistorial(solicitudRegistrarT,"2");
+		 
 		}else if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 			//Seccion Reasgnar 
 		this.bSeccionDictaminar=false;
@@ -240,11 +234,55 @@ public class ConsultarSolicitudMB {
 	}
 		
 	}
+	public void obtenerDictamen(ValueChangeEvent e){
+		logger.info("****************** obtenerDictamen ********************** "+e.getNewValue());
+		
+		if(e.getNewValue()!=null){
+			if(e.getNewValue().toString().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02))
+			descValorDictamen=ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02;
+			else if(e.getNewValue().toString().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02))
+				descValorDictamen=ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02;
+		}
+		
+	}
 	public void dictaminarSolicitud(){
 		logger.info("********************** dictaminarSolicitud *********************************** ");
 		logger.info("********** "+valorDictamen);
+		 GenericDao<TiivsSolicitud, Object> serviceS = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		if(this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
+			this.bSeccionDictaminar=false;
+			this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+			   try {
+				solicitudRegistrarT= serviceS.modificar(solicitudRegistrarT);
+				this.registrarHistorial(solicitudRegistrarT,"3");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		     Utilitarios.mensajeInfo("INFO", "Se dictaminó correctamente la solicitud");
+			
+		}else if(this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)){
+			 try {
+				this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
+					solicitudRegistrarT= serviceS.modificar(solicitudRegistrarT);
+					this.registrarHistorial(solicitudRegistrarT,"3");
+					  Utilitarios.mensajeInfo("INFO", "Se dictaminó correctamente la solicitud");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		}
+		this.obtenerHistorialSolicitud();
 	}
-	
+	public void registrarHistorial(TiivsSolicitud solicitud,String numeroMovimiento) throws Exception{
+		 TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
+		  objHistorial.setId(new TiivsHistSolicitudId(solicitud.getCodSoli(),numeroMovimiento));
+		  objHistorial.setEstado(solicitud.getEstado());
+		  objHistorial.setNomUsuario(solicitud.getNomUsuario());
+		  objHistorial.setObs(solicitud.getObs());
+		  objHistorial.setFecha(new Timestamp(new Date().getDate()));
+		  objHistorial.setRegUsuario(solicitud.getRegUsuario());
+		  GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		  serviceHistorialSolicitud.insertar(objHistorial);
+	}
 	public void actualizarEstadoEjecutadoSolicitud() throws Exception
 	{
 		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
@@ -260,16 +298,8 @@ public class ConsultarSolicitudMB {
 		  GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		  service.modificar(solicitudRegistrarT);
 		  
-		  GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			
-		  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
-		  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),2+""));
-		  objHistorial.setEstado(this.solicitudRegistrarT.getEstado());
-		  objHistorial.setNomUsuario(this.solicitudRegistrarT.getNomUsuario());
-		  objHistorial.setObs(this.solicitudRegistrarT.getObs());
-		  objHistorial.setFecha(new Timestamp(new Date().getDate()));
-		  objHistorial.setRegUsuario(this.solicitudRegistrarT.getRegUsuario());
-		  serviceHistorialSolicitud.insertar(objHistorial);
+		   this.registrarHistorial(solicitudRegistrarT, "5");
+		 
 		}
 	}
 
@@ -292,6 +322,7 @@ public class ConsultarSolicitudMB {
 		GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
 		filtroHist.add(Restrictions.eq("id.codSoli",sCodSolicitud));
+		//filtroHist.add(Restrictions.or(lhs, rhs))
 		
 		List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
         lstHist = histDAO.buscarDinamico(filtroHist);
@@ -512,6 +543,18 @@ public class ConsultarSolicitudMB {
 	}
 	public void setValorDictamen(String valorDictamen) {
 		this.valorDictamen = valorDictamen;
+	}
+	public String getDescValorDictamen() {
+		return descValorDictamen;
+	}
+	public void setDescValorDictamen(String descValorDictamen) {
+		this.descValorDictamen = descValorDictamen;
+	}
+	public List<ComboDto> getLstDocumentosGenerados() {
+		return lstDocumentosGenerados;
+	}
+	public void setLstDocumentosGenerados(List<ComboDto> lstDocumentosGenerados) {
+		this.lstDocumentosGenerados = lstDocumentosGenerados;
 	}
 
 }
