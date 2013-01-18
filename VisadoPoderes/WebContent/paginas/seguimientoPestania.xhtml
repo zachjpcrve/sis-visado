@@ -46,7 +46,6 @@
 				<p:commandButton id="clearButton" type="button" value="Limpiar"
 					onclick="editor.clear()" icon="ui-icon-close" />
 			</h:panelGrid>
-<!-- oncomplete="dlg.show()" -->
 			<p:dialog header="Content" widgetVar="dlg" showEffect="fade"
 				hideEffect="fade" modal="true">
 				<h:outputText id="display" value="#{editorMB.value}"
@@ -133,11 +132,13 @@
 			<h:panelGrid columns="3">
 			
 			<h:outputText  value="Dictamen : " styleClass="outputText"/>
-			<p:selectOneMenu id="cboDictamen" value="#{consultarSolicitudMB.valorDictamen}" > 
+			<p:selectOneMenu id="cboDictamen" value="#{consultarSolicitudMB.valorDictamen}"
+			valueChangeListener="#{consultarSolicitudMB.obtenerDictamen}" > 
+			<p:ajax event="change" update=":formSolicitudSeguimiento:confirmDialog"></p:ajax>
 					<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 					 <f:selectItems  value="#{consultarSolicitudMB.lstComboDictamen}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" /> 
 			</p:selectOneMenu>
-				<p:commandButton id="btnAceptarDictamen" value="Aceptar" action="#{consultarSolicitudMB.dictaminarSolicitud}"/>
+				<p:commandButton id="btnAceptarDictamen" value="Aceptar" onclick="confirmation.show()" />
 			</h:panelGrid>
 			
 			</p:panel>
@@ -150,12 +151,24 @@
 			
 			
 			</td>
-				</tr>
-				</table>
+			</tr>
+			</table>
 				
 
 </h:panelGrid>
 </h:panelGrid>
+
+
+
+ 	<p:confirmDialog id="confirmDialog" message="¿Está seguro de pasar a estado #{consultarSolicitudMB.descValorDictamen} la solicitud de visado?"  
+                header="Confirmación" severity="alert" widgetVar="confirmation" >  
+                  
+        <p:commandButton id="confirm" value="Si" update=":formSolicitudSeguimiento" oncomplete="confirmation.hide()"   
+                    action="#{consultarSolicitudMB.dictaminarSolicitud}"  />  
+        <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
+                  
+    </p:confirmDialog> 
+    
 		</h:form>
 
 
