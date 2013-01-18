@@ -202,6 +202,34 @@ public class ConsultarSolicitudMB {
 		  serviceHistorialSolicitud.insertar(objHistorial);
 		}
 	}
+	
+	public void actualizarEstadoEjecutadoSolicitud() throws Exception
+	{
+		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		
+		logger.info("*********************** actualizarEstadoReservadoSolicitud **************************");
+
+		if((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) 
+		   && this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02))
+		{
+		  this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02);
+		  this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02);
+		  
+		  GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		  service.modificar(solicitudRegistrarT);
+		  
+		  GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			
+		  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
+		  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),2+""));
+		  objHistorial.setEstado(this.solicitudRegistrarT.getEstado());
+		  objHistorial.setNomUsuario(this.solicitudRegistrarT.getNomUsuario());
+		  objHistorial.setObs(this.solicitudRegistrarT.getObs());
+		  objHistorial.setFecha(new Timestamp(new Date().getDate()));
+		  objHistorial.setRegUsuario(this.solicitudRegistrarT.getRegUsuario());
+		  serviceHistorialSolicitud.insertar(objHistorial);
+		}
+	}
 							
 	public void verAgrupacion() {
 		logger.info("********************** verAgrupacion *********************************** ");
