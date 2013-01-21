@@ -53,6 +53,28 @@ public abstract  class SolicitudDaoImpl <K, T extends Serializable>
 		return codigoSol;
 				
 	}
+	
+	public String obtenerMaximoMovimiento(String codSolicitud) throws Exception{
+     
+		final String  sql ="select max(movimiento)movimiento from tiivs_hist_solicitud where cod_soli='"+codSolicitud+"' group by cod_soli";
+		
+		String movimiento="";
+		List ResultList = (List)getHibernateTemplate().execute(new HibernateCallback() {
+				public List doInHibernate(Session session) throws HibernateException {
+				SQLQuery sq =session.createSQLQuery(sql);
+				return sq.list();
+				}});
+
+				if(ResultList.size()>0){
+				for(int i=0;i<=ResultList.size()-1;i++){
+					movimiento=  (String) ResultList.get(i);
+				
+				}
+	           }
+		return movimiento;
+
+
+	}
 	public TiivsSolicitud obtenerTiivsSolicitud(TiivsSolicitud solicitud) throws Exception{
 		GenericDao<TiivsSolicitud, Object>service=(GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 	    solicitud= service.buscarById(TiivsSolicitud.class, solicitud.getCodSoli());
