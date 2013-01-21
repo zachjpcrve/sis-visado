@@ -58,6 +58,7 @@
 	
 			
 			<table>
+			<p:messages id="idGrowlSolicitudSeguimiento"></p:messages>
 			<tr>
 			<td width="100%">
 			
@@ -111,7 +112,7 @@
 			</p:selectOneMenu>
 			</h:panelGrid>
 			
-			<p:commandButton id="btnAceptar" value="Aceptar" action="#{consultarSolicitudMB.reasignacionManual}" update=":formSolicitudSeguimiento:idGrowlSolicitudRegistro"/>
+			<p:commandButton id="btnAceptar" value="Aceptar" action="#{consultarSolicitudMB.reasignacionManual}" update=":formSolicitudSeguimiento:idGrowlSolicitudSeguimiento"/>
 			<h:panelGrid columns="2">
 			<h:outputText  value="Abogado" styleClass="outputText"/>
 			<p:selectOneMenu id="cboAbogado" value="#{consultarSolicitudMB.solicitudRegistrarT.regAbogado}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
