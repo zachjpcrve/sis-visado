@@ -95,7 +95,18 @@
 			
 				</td>
 				</tr>
-				<tr>
+			<tr>
+				<td width="100%">
+					
+					<p:panel rendered="#{consultarSolicitudMB.bSeccionAccion}" >
+						<h:outputText title="Accion" value="Accion" styleClass="outputText" />
+						<p:separator styleClass="fielset" />
+						<p:commandButton id="btnRevision" value="Generar Revisión" action="#{consultarSolicitudMB.mostrarCartaRevision}" 
+						update=":formSolicitudSeguimiento" oncomplete="confirmDialogRevision.show()"/>
+					</p:panel>
+				</td>
+			</tr>
+			<tr>
 			<td width="100%">
 			<p:panel rendered="#{consultarSolicitudMB.bSeccionReasignacion}" >
 			<h:outputText title="Reasignar" value="Reasignar" styleClass="outputText" />
@@ -127,7 +138,7 @@
 				</tr>
 				<tr>
 			<td width="100%">
-			<p:panel rendered="#{consultarSolicitudMB.bSeccionDictaminar}">
+			<p:panel rendered="#{consultarSolicitudMB.bSeccionDictaminar}" menuTitle="Accion">
 			<h:outputText title="Dictaminar" value="Dictaminar" styleClass="outputText" />
 			<p:separator styleClass="fielset" />
 			
@@ -157,6 +168,18 @@
 							</font>
 						</a>
 					</c:if>
+					<br/>
+					<c:if test="#{consultarSolicitudMB.bMostrarCartaRevision}">
+						<font color="red">
+							Obtener la firma del cliente en la Carta de solicitud de revisión
+						</font>
+						<br/>
+						<a href="">
+							<font color="blue">
+								<u>Carta de solicitud de revisión</u>
+							</font>
+						</a>
+					</c:if>
 				</td>
 			</tr>
 			</table>
@@ -180,6 +203,16 @@
 	                    actionListener="#{consultarSolicitudMB.actualizarEstadoEjecutadoSolicitud}" />  
 	        
 	        <p:commandButton id="decline" value="No" oncomplete="confirmation2.hide()" />  
+                  
+    </p:confirmDialog>
+    
+    <p:confirmDialog id="confirmDialogRevision" message="¿está seguro de generar una  revisión?"  
+              header="Revision" severity="alert" widgetVar="confirmation3" visible="true">  
+                
+	        <p:commandButton id="confirmRev" value="Si"  oncomplete="confirmation3.hide()" update=":formSolicitudSeguimiento" 
+	                    actionListener="#{consultarSolicitudMB.actualizarEstadoEnRevisionSolicitud}" />  
+	        
+	        <p:commandButton id="declineRev" value="No" oncomplete="confirmation3.hide()" />  
                   
     </p:confirmDialog>
     
