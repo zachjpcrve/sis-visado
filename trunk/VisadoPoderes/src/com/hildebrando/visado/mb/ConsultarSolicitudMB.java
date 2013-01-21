@@ -112,8 +112,8 @@ public class ConsultarSolicitudMB
 			if((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
 			  && (!this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02)))
 			{
-				if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02) &&
-					PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
+				if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02) 
+					&& PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
 				{
 					setbMostrarCartaAtencion(false);
 					logger.info("No Se debe mostrar el link de carta de atencion");
