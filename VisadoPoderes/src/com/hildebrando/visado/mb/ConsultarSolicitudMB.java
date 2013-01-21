@@ -94,15 +94,45 @@ public class ConsultarSolicitudMB
 	public void mostrarCartaAtencion()
 	{
 		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
-		
-		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)
-		&& this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02))
+		String codigoSolicitud=Utilitarios.capturarParametro("prm_codSoli");
+	    
+		if (codigoSolicitud!=null)
 		{
-			setbMostrarCartaAtencion(true);
+			try {
+				logger.info("codigoSolicitud : "+codigoSolicitud);
+				TiivsSolicitud solicitud =new TiivsSolicitud();
+				solicitud.setCodSoli(codigoSolicitud);
+				SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+				solicitudRegistrarT= solicitudService.obtenerTiivsSolicitud(solicitud);
+				solicitudRegistrarT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudRegistrarT.getEstado()));
+			}  catch (Exception e) {
+				logger.info("No se pueden obtener los datos de la solicitud");
+			}
+			   
+			if((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
+			  && (!this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02)))
+			{
+				if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02) &&
+					PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
+				{
+					setbMostrarCartaAtencion(false);
+					logger.info("No Se debe mostrar el link de carta de atencion");
+				}
+				else
+				{
+					setbMostrarCartaAtencion(true);
+					logger.info("Se debe mostrar el link de carta de atencion");
+				}
+			}
+			else
+			{
+				setbMostrarCartaAtencion(false);
+				logger.info("No Se debe mostrar el link de carta de atencion");
+			}
 		}
 		else
 		{
-			setbMostrarCartaAtencion(false);
+			logger.info("Solicitud no valida o nula");
 		}
 	}
 	

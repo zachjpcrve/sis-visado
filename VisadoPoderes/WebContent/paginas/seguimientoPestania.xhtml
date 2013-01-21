@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
@@ -148,9 +149,13 @@
 				<td width="100%">
 					<h:outputText title="Documentos" value="Documentos" styleClass="outputText" />
 					<p:separator styleClass="fielset" />
-					<p:panel rendered="#{consultarSolicitudMB.bSeccionCartaAtencion}">
-					<a href="" onclick="confirmation2.show()">Carta de atención</a>
-					</p:panel>
+					<c:if test="#{consultarSolicitudMB.bMostrarCartaAtencion}">
+						<a href="" onclick="confirmation2.show()">
+							<font color="blue">
+								<u>Carta de atención</u>
+							</font>
+						</a>
+					</c:if>
 				</td>
 			</tr>
 			</table>
