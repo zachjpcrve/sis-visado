@@ -134,7 +134,7 @@
 			<h:outputText  value="Dictamen : " styleClass="outputText"/>
 			<p:selectOneMenu id="cboDictamen" value="#{consultarSolicitudMB.valorDictamen}"
 			valueChangeListener="#{consultarSolicitudMB.obtenerDictamen}" > 
-			<p:ajax event="change" update=":formSolicitudSeguimiento:confirmDialog"></p:ajax>
+			<p:ajax event="change" update=":formSolicitudSeguimiento:confirmDialogDictamen"></p:ajax>
 					<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 					 <f:selectItems  value="#{consultarSolicitudMB.lstComboDictamen}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" /> 
 			</p:selectOneMenu>
@@ -148,7 +148,9 @@
 				<td width="100%">
 					<h:outputText title="Documentos" value="Documentos" styleClass="outputText" />
 					<p:separator styleClass="fielset" />
+					<p:panel rendered="#{consultarSolicitudMB.bSeccionCartaAtencion}">
 					<a href="" onclick="confirmation2.show()">Carta de atención</a>
+					</p:panel>
 				</td>
 			</tr>
 			</table>
@@ -156,12 +158,12 @@
 </h:panelGrid>
 </h:panelGrid>
 
- 	<p:confirmDialog id="confirmDialog" message="¿Está seguro de pasar a estado #{consultarSolicitudMB.descValorDictamen} la solicitud de visado?"  
+ 	<p:confirmDialog id="confirmDialogDictamen" message="¿Está seguro de pasar a estado #{consultarSolicitudMB.descValorDictamen} la solicitud de visado?"  
                 header="Confirmación" severity="alert" widgetVar="confirmation" >  
                   
-        <p:commandButton id="confirm" value="Si" update=":formSolicitudSeguimiento" oncomplete="confirmation.hide()"   
+        <p:commandButton id="confirmSiDic" value="Si" update=":formSolicitudSeguimiento" oncomplete="confirmation.hide()"   
                     action="#{consultarSolicitudMB.dictaminarSolicitud}"  />  
-        <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
+        <p:commandButton id="declineNoDic" value="No" onclick="confirmation.hide()" type="button" />   
                   
     </p:confirmDialog> 
     
