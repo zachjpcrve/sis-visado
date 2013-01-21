@@ -419,13 +419,13 @@ public class ConsultarSolicitudMB
 	}
 	public void actualizarEstadoEjecutadoSolicitud() throws Exception
 	{
-		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
-		
-		logger.info("*********************** actualizarEstadoReservadoSolicitud **************************");
+		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");		
 
 		if((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) 
 		   && this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02))
 		{
+		  logger.info("*********************** actualizarEstadoEjecutarSolicitud **************************");
+			
 		  this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02);
 		  this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02);
 		  
