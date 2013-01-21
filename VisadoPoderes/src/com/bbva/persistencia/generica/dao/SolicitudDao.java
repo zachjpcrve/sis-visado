@@ -9,6 +9,7 @@ import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 public interface SolicitudDao<K, T> extends GenericDao<K, T>{ 
 
 	public  String obtenerPKNuevaSolicitud() throws Exception;
+	public String obtenerMaximoMovimiento(String codSolicitud) throws Exception;
 	public TiivsSolicitud obtenerTiivsSolicitud(TiivsSolicitud solicitud) throws Exception;
 	public List<TiivsSolicitudOperban> obtenerListarOperacionesBancarias(TiivsSolicitud solicitud) throws Exception;
 	public List<TiivsAnexoSolicitud> obtenerListarAnexosSolicitud(TiivsSolicitud solicitud) throws Exception;
