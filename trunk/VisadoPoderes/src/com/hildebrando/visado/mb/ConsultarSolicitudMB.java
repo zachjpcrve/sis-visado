@@ -363,24 +363,38 @@ public class ConsultarSolicitudMB
 	  public void agregarNiveles(TiivsSolicitud solicitud) throws Exception{
 		  logger.info("*********************************** agregarNiveles ********************************************");
 		  GenericDao<TiivsNivel, Object> service=(GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		  List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class));
-		 List<String> lstCodNivel=new ArrayList<String>();
+		  List<String> lstCodNivel=new ArrayList<String>();
 			if(solicitud.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
-				logger.info("*********************************** COD_SOLES ********************************************"+this.solicitudRegistrarT.getImporte());
+				 List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda", ConstantesVisado.MONEDAS.COD_SOLES)));
+					
+				logger.info("********************** COD_SOLES ****************************"+this.solicitudRegistrarT.getImporte() + " tamanio de la lista : " +lstNiveles.size());
 				 for (TiivsNivel x : lstNiveles) {
-					 System.out.println("x.getId().getMoneda() : "+x.getId().getMoneda());
 					 if(x.getId().getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
-						 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
-							 lstCodNivel.add(x.getId().getCodNiv());
-							 logger.info("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
-							 logger.info("x.getId().getRangoInicio(): " +x.getId().getRangoInicio());
-							 logger.info("x.getId().getRangoFin(): " +x.getId().getRangoFin());
+						 System.out.println("x.getId().getRangoInicio() " +x.getId().getRangoInicio());
+						 System.out.println("x.getId().getRangoFin() " +x.getId().getRangoFin());
+						 if(this.solicitudRegistrarT.getImporte()>=lstNiveles.get(0).getId().getRangoInicio()){
+							 System.out.println("a" +x.getId().getDesNiv());
+							 if(this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
+								 System.out.println("b");
+								 lstCodNivel.add(x.getId().getCodNiv());
+							 }
+							
+						 }
+						 
+						 logger.info("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
+						 logger.info("x.getId().getRangoInicio(): " +x.getId().getRangoInicio());
+						 logger.info("x.getId().getRangoFin(): " +x.getId().getRangoFin());
+						
+						 if(this.solicitudRegistrarT.getImporte()>lstNiveles.get(lstNiveles.size()-1).getId().getRangoFin()){
+							 System.out.println("c");
 						 }
 					 }
 			     }
 			}
 			else if(solicitud.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
 				logger.info("*********************************** COD_DOLAR ********************************************");
+				List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda", ConstantesVisado.MONEDAS.COD_DOLAR)));
+				
 				 for (TiivsNivel x : lstNiveles) {
 					 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
 						 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
@@ -392,6 +406,7 @@ public class ConsultarSolicitudMB
 			}
 			else if(solicitud.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
 				logger.info("*********************************** COD_EUROS ********************************************");
+				List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda", ConstantesVisado.MONEDAS.COD_EUROS)));
 				 for (TiivsNivel x : lstNiveles) {
 					 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
 						 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
@@ -415,6 +430,15 @@ public class ConsultarSolicitudMB
 	public void registrarHistorial(TiivsSolicitud solicitud) throws Exception{
 		  SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		  String numeroMovimiento=serviceMaxMovi.obtenerMaximoMovimiento(solicitud.getCodSoli());
+		
+		  int num=0;
+		  if(!numeroMovimiento.equals("")){
+		  num= Integer.parseInt(numeroMovimiento)+1;
+		  }else{
+			  num=1;
+		  }
+		  numeroMovimiento=num+"";
+		 logger.info("Numero de Movimiento a registrar para el CodSolicitud : " +solicitud.getCodSoli());
 		 TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 		  objHistorial.setId(new TiivsHistSolicitudId(solicitud.getCodSoli(),numeroMovimiento));
 		  objHistorial.setEstado(solicitud.getEstado());
