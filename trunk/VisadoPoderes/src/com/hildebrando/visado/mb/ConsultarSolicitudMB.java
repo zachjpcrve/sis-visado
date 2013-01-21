@@ -47,6 +47,8 @@ public class ConsultarSolicitudMB
 	public static Logger logger = Logger.getLogger(ConsultarSolicitudMB.class);
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
+	@ManagedProperty(value = "#{seguimientoMB}")
+	private SeguimientoMB seguimientoMB;
 	private TiivsSolicitud solicitudRegistrarT;
 	private List<TiivsSolicitudOperban> lstSolicBancarias;
 	private List<TiivsAnexoSolicitud> lstAnexosSolicitudes;
@@ -419,6 +421,7 @@ public class ConsultarSolicitudMB
 		  GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		  serviceHistorialSolicitud.insertar(objHistorial);
 	}
+	
 	public void actualizarEstadoEjecutadoSolicitud() throws Exception
 	{
 		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");		
@@ -426,17 +429,17 @@ public class ConsultarSolicitudMB
 		if((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) 
 		   && this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02))
 		{
-		  logger.info("*********************** actualizarEstadoEjecutarSolicitud **************************");
-			
-		  this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02);
-		  this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02);
-		  
-		  GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		  service.modificar(solicitudRegistrarT);
-		  
-		   this.registrarHistorial(solicitudRegistrarT, "5");
-		   this.obtenerHistorialSolicitud();
-		 
+			  logger.info("*********************** actualizarEstadoEjecutadoSolicitud **************************");
+			  
+			  this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02);
+			  this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02);
+			  
+			  GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			  service.modificar(solicitudRegistrarT);
+			  
+			  this.registrarHistorial(solicitudRegistrarT, "5");
+			  this.obtenerHistorialSolicitud();
+			  this.seguimientoMB.busquedaSolicitudes();
 		}
 	}
 
@@ -721,6 +724,12 @@ public class ConsultarSolicitudMB
 	public void setbSeccionComentario(boolean bSeccionComentario) {
 		this.bSeccionComentario = bSeccionComentario;
 	}
-	
-	
+
+	public SeguimientoMB getSeguimientoMB() {
+		return seguimientoMB;
+	}
+
+	public void setSeguimientoMB(SeguimientoMB seguimientoMB) {
+		this.seguimientoMB = seguimientoMB;
+	}
 }

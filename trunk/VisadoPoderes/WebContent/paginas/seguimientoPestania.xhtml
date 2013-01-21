@@ -175,7 +175,7 @@
     <p:confirmDialog id="confirmDialog" message="#{consultarSolicitudMB.textoMensajeCartaAtencion}"  
               header="Carta de Atencion" severity="alert" widgetVar="confirmation2" visible="true">  
                 
-	        <p:commandButton id="confirm" value="Si"  oncomplete="confirmation2.hide()"  
+	        <p:commandButton id="confirm" value="Si"  oncomplete="confirmation2.hide()" update=":formSolicitudSeguimiento" 
 	                    actionListener="#{consultarSolicitudMB.actualizarEstadoEjecutadoSolicitud}" />  
 	        
 	        <p:commandButton id="decline" value="No" oncomplete="confirmation2.hide()" />  
