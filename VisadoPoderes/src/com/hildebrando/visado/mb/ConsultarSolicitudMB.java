@@ -63,12 +63,48 @@ public class ConsultarSolicitudMB {
 	private String valorDictamen="";
 	private String descValorDictamen="";
 	private List<ComboDto> lstDocumentosGenerados;
+	private String textoMensajeCartaAtencion;
+	private boolean bMostrarCartaAtencion;
 	
 	public ConsultarSolicitudMB() {
 		inicializarContructor();
 		cargarDocumentos();
 		listarComboDictamen();
+		modificarTextoVentanaCartaAtencion();
+		mostrarCartaAtencion();
 	}	
+	
+	public void modificarTextoVentanaCartaAtencion()
+	{
+		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		
+		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ))
+		{
+			setTextoMensajeCartaAtencion(ConstantesVisado.MENSAJE_CARTA_ATENCION.MENSA_SSJJ);
+		}
+		else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
+		{
+			setTextoMensajeCartaAtencion(ConstantesVisado.MENSAJE_CARTA_ATENCION.MENSAJE_OFICINA);
+		}
+		
+		logger.info("Texto Ventana: " + getTextoMensajeCartaAtencion());
+	}
+	
+	public void mostrarCartaAtencion()
+	{
+		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		
+		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)
+		&& this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02))
+		{
+			setbMostrarCartaAtencion(true);
+		}
+		else
+		{
+			setbMostrarCartaAtencion(false);
+		}
+	}
+	
 	public void inicializarContructor(){
 		solicitudRegistrarT=new TiivsSolicitud();
 		
@@ -556,5 +592,16 @@ public class ConsultarSolicitudMB {
 	public void setLstDocumentosGenerados(List<ComboDto> lstDocumentosGenerados) {
 		this.lstDocumentosGenerados = lstDocumentosGenerados;
 	}
-
+	public String getTextoMensajeCartaAtencion() {
+		return textoMensajeCartaAtencion;
+	}
+	public void setTextoMensajeCartaAtencion(String textoMensajeCartaAtencion) {
+		this.textoMensajeCartaAtencion = textoMensajeCartaAtencion;
+	}
+	public boolean isbMostrarCartaAtencion() {
+		return bMostrarCartaAtencion;
+	}
+	public void setbMostrarCartaAtencion(boolean bMostrarCartaAtencion) {
+		this.bMostrarCartaAtencion = bMostrarCartaAtencion;
+	}
 }
