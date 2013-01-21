@@ -41,13 +41,11 @@ import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 
 @ManagedBean(name = "consultarSolicitudMB")
 @SessionScoped
-public class ConsultarSolicitudMB {
+public class ConsultarSolicitudMB 
+{
 	public static Logger logger = Logger.getLogger(ConsultarSolicitudMB.class);
-	
-	
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
-	
 	private TiivsSolicitud solicitudRegistrarT;
 	private List<TiivsSolicitudOperban> lstSolicBancarias;
 	private List<TiivsAnexoSolicitud> lstAnexosSolicitudes;
