@@ -1399,7 +1399,7 @@ public class SolicitudRegistroMB {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
 					  System.out.println("b.getTiivsPersona() " +b.getId().getCodPer());
 					     //b.setId
-					  //objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
+					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
 					   System.out.println("ccdcdcd : "+objPersonaRetorno.getCodPer());
 					     b.setTiivsPersona(null);
 					     objAgruId=b.getId();
