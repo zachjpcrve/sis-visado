@@ -40,13 +40,15 @@
 			<center><h3>CALCULADORA DE COMISION</h3></center>
 			
 
-			<h:panelGrid columns="4">
+			<h:panelGrid columns="5">
 				<p:spacer width="50" height="10" />
 
 				<h:outputText>Si</h:outputText>
 
 				<h:outputText>No</h:outputText>
 
+				<p:spacer width="50" height="10" />
+				
 				<p:spacer width="50" height="10" />
 
 
@@ -70,6 +72,8 @@
 
 				<p:graphicImage value="/resources/images/pregunta.jpg"
 					id="questionItem1" />
+					
+				<p:tooltip for="questionItem1" value="Por lo menos un poderdante es de tipo Fallecido" showEffect="slide" />
 
 
 
@@ -95,6 +99,8 @@
 
 				<p:graphicImage value="/resources/images/pregunta.jpg"
 					id="questionItem2" />
+				
+				<p:tooltip for="questionItem2" value="Monto global de las operaciones es mayor a #{calculadoraMB.importeLimite}" showEffect="slide" />
 
 
 
@@ -118,6 +124,8 @@
 
 				<p:graphicImage value="/resources/images/pregunta.jpg"
 					id="questionItem3" />
+				
+				<p:tooltip for="questionItem3" value="El poderdante es persona natural" showEffect="slide" />
 
 
 
@@ -142,6 +150,8 @@
 
 				<p:graphicImage value="/resources/images/pregunta.jpg"
 					id="questionItem4" />
+				
+				<p:tooltip for="questionItem4" value="El poderdante es persona juridica" showEffect="slide" />
 
 
 			</h:panelGrid>
@@ -155,10 +165,12 @@
 				<p:spacer width="100" height="10" />
 
 				<h:inputText id="textResultado" styleClass="inputText"
-					maxlength="10" value="#{calculadoraMB.resultado}" disabled="false" />
+					maxlength="10" value="#{calculadoraMB.resultado}" disabled="true" />
 
 				<p:graphicImage value="/resources/images/pregunta.jpg"
 					id="questionResultado" />
+				
+				<p:tooltip for="questionResultado" value="Comisión a pagar" showEffect="slide" />
 
 			</h:panelGrid>
 
