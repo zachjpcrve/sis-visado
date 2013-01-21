@@ -145,12 +145,11 @@
 			</td>
 				</tr>
 			<tr>
-			<td width="100%">
-			<h:outputText title="Documentos" value="Documentos" styleClass="outputText" />
-			<p:separator styleClass="fielset" />
-			
-			
-			</td>
+				<td width="100%">
+					<h:outputText title="Documentos" value="Documentos" styleClass="outputText" />
+					<p:separator styleClass="fielset" />
+					<a href="" onclick="confirmation2.show()">Carta de atención</a>
+				</td>
 			</tr>
 			</table>
 				
@@ -168,6 +167,16 @@
         <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
                   
     </p:confirmDialog> 
+    
+    <p:confirmDialog id="confirmDialog" message="#{consultarSolicitudMB.textoMensajeCartaAtencion}"  
+              header="Carta de Atencion" severity="alert" widgetVar="confirmation2" visible="true">  
+                
+	        <p:commandButton id="confirm" value="Si"  oncomplete="confirmation2.hide()"  
+	                    actionListener="#{consultarSolicitudMB.actualizarEstadoEjecutadoSolicitud}" />  
+	        
+	        <p:commandButton id="decline" value="No" oncomplete="confirmation2.hide()" />  
+                  
+    	</p:confirmDialog>
     
 		</h:form>
 
