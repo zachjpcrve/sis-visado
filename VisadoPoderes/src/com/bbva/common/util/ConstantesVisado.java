@@ -245,6 +245,9 @@ public class ConstantesVisado {
 	
 		public static final int DOCUMENTO_OBLIGATORIO = 1;
 	
-	
+	static public class MENSAJE_CARTA_ATENCION {
+		public static final String MENSAJE_OFICINA="¿Está seguro de generar la Carta de atención? Luego de la generación no podrá volverse a imprimir.";
+		public static final String MENSA_SSJJ="¿Esta seguro de generar la Carta de Atencion?";
+	}
 }
 
