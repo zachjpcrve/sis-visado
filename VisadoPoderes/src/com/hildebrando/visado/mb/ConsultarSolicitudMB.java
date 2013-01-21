@@ -247,6 +247,7 @@ public class ConsultarSolicitudMB
 			   agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionMoneda(x.getActivo().trim()) );
 			   agrupacionSimpleDto.setLstPersonas(lstPersonas);
 			   lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+			   
 		   }
 		  
 		  
@@ -351,6 +352,7 @@ public class ConsultarSolicitudMB
 		if(this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)
 				|| this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){
 			bSeccionCartaAtencion=true;
+			bSeccionComentario=false;
 		}
 		this.obtenerHistorialSolicitud();
 	}
