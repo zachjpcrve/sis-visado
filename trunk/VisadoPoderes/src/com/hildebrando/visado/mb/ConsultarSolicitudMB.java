@@ -60,6 +60,7 @@ public class ConsultarSolicitudMB
 	private boolean bSeccionDictaminar=false;
 	private boolean bSeccionReasignacion=false;
 	private boolean bSeccionCartaAtencion=false;
+	private boolean bSeccionComentario =false;
 	private String valorDictamen="";
 	private String descValorDictamen="";
 	private List<ComboDto> lstDocumentosGenerados;
@@ -238,6 +239,7 @@ public class ConsultarSolicitudMB
 		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) ){
 			//Seccion Dictaminar 
 		this.bSeccionDictaminar=true;
+		this.bSeccionComentario=true;
 		this.bSeccionReasignacion=false;
 			
 		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02);
@@ -249,22 +251,27 @@ public class ConsultarSolicitudMB
 		}else if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 			//Seccion Reasgnar 
 		this.bSeccionDictaminar=false;
+		this.bSeccionComentario=false;
 		this.bSeccionReasignacion=true;
 		
 		}else if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
 			this.bSeccionDictaminar=false;
+			this.bSeccionComentario=false;
 			this.bSeccionReasignacion=false;
 		}
 	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)){
 		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) ){
 			this.bSeccionDictaminar=true;
+			this.bSeccionComentario=true;
 			this.bSeccionReasignacion=false;
 		}else if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 			this.bSeccionDictaminar=true;
+			this.bSeccionComentario=true;
 			this.bSeccionReasignacion=false;
 			
 		}else if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
 			this.bSeccionDictaminar=false;
+			this.bSeccionComentario=false;
 			this.bSeccionReasignacion=false;
 		}
 	}
@@ -396,6 +403,7 @@ public class ConsultarSolicitudMB
 		  service.modificar(solicitudRegistrarT);
 		  
 		   this.registrarHistorial(solicitudRegistrarT, "5");
+		   this.obtenerHistorialSolicitud();
 		 
 		}
 	}
@@ -672,6 +680,14 @@ public class ConsultarSolicitudMB
 
 	public void setbSeccionCartaAtencion(boolean bSeccionCartaAtencion) {
 		this.bSeccionCartaAtencion = bSeccionCartaAtencion;
+	}
+
+	public boolean isbSeccionComentario() {
+		return bSeccionComentario;
+	}
+
+	public void setbSeccionComentario(boolean bSeccionComentario) {
+		this.bSeccionComentario = bSeccionComentario;
 	}
 	
 	
