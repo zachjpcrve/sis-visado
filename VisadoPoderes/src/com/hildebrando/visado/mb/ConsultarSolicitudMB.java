@@ -413,7 +413,7 @@ public class ConsultarSolicitudMB
 		
 	  }
 	public void registrarHistorial(TiivsSolicitud solicitud) throws Exception{
-		  SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudDao");
+		  SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		  String numeroMovimiento=serviceMaxMovi.obtenerMaximoMovimiento(solicitud.getCodSoli());
 		 TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 		  objHistorial.setId(new TiivsHistSolicitudId(solicitud.getCodSoli(),numeroMovimiento));
