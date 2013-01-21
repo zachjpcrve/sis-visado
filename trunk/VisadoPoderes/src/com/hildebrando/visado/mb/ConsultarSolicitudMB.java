@@ -64,11 +64,14 @@ public class ConsultarSolicitudMB
 	private boolean bSeccionReasignacion=false;
 	private boolean bSeccionCartaAtencion=false;
 	private boolean bSeccionComentario =false;
+	private boolean bSeccionAccion =false;
 	private String valorDictamen="";
 	private String descValorDictamen="";
 	private List<ComboDto> lstDocumentosGenerados;
 	private String textoMensajeCartaAtencion;
 	private boolean bMostrarCartaAtencion;
+	private boolean bMostrarCartaRevision;
+	private boolean bRevision=false;
 	
 	public ConsultarSolicitudMB() {
 		inicializarContructor();
@@ -76,6 +79,7 @@ public class ConsultarSolicitudMB
 		listarComboDictamen();
 		modificarTextoVentanaCartaAtencion();
 		mostrarCartaAtencion();
+		ocultarCartas();
 	}	
 	
 	public void modificarTextoVentanaCartaAtencion()
@@ -136,6 +140,32 @@ public class ConsultarSolicitudMB
 		else
 		{
 			logger.info("Solicitud no valida o nula");
+		}
+	}
+	
+	public void ocultarCartas()
+	{
+		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02))
+		{
+			setbMostrarCartaRevision(false);
+			setbMostrarCartaAtencion(false);
+		}
+	}
+	
+	public void mostrarCartaRevision()
+	{
+		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		
+		if((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
+			&& (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)))
+		{
+			setbMostrarCartaRevision(true);
+			setbMostrarCartaAtencion(false);
+		}
+		else
+		{
+			setbMostrarCartaRevision(false);
+			setbMostrarCartaAtencion(false);
 		}
 	}
 	
@@ -206,9 +236,12 @@ public class ConsultarSolicitudMB
 		   lstSolicBancarias=solicitudService.obtenerListarOperacionesBancarias(solicitud);
 		   int y=0;
 		   for (TiivsSolicitudOperban f : lstSolicBancarias) {
-			y++;
-			 f.setsItem(String.format("%03d",y));
-			 f.setsDescMoneda(Utilitarios.obternerDescripcionMoneda(f.getMoneda()));
+		 	 if (f.getMoneda()!=null)
+			 {
+		 		 y++;
+		 		 f.setsItem(String.format("%03d",y));
+		 		 f.setsDescMoneda(Utilitarios.obternerDescripcionMoneda(f.getMoneda()));
+			 }
 		   }
 		   lstAnexosSolicitudes=solicitudService.obtenerListarAnexosSolicitud(solicitud);
 		   
@@ -308,8 +341,18 @@ public class ConsultarSolicitudMB
 			this.bSeccionComentario=false;
 			this.bSeccionReasignacion=false;
 		}
-	}
-		
+	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)){
+		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) ){
+			this.bSeccionAccion=false;
+		}else if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+			this.bSeccionComentario=true;
+			this.bSeccionAccion=true;
+			
+		}else if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
+			this.bSeccionComentario=true;
+			this.bSeccionAccion=true;
+		}
+	}		
 	}
 	public void obtenerDictamen(ValueChangeEvent e){
 		logger.info("****************** obtenerDictamen ********************** "+e.getNewValue());
@@ -773,5 +816,29 @@ public class ConsultarSolicitudMB
 
 	public void setSeguimientoMB(SeguimientoMB seguimientoMB) {
 		this.seguimientoMB = seguimientoMB;
+	}
+
+	public boolean isbMostrarCartaRevision() {
+		return bMostrarCartaRevision;
+	}
+
+	public void setbMostrarCartaRevision(boolean bMostrarCartaRevision) {
+		this.bMostrarCartaRevision = bMostrarCartaRevision;
+	}
+
+	public boolean isbRevision() {
+		return bRevision;
+	}
+
+	public void setbRevision(boolean bRevision) {
+		this.bRevision = bRevision;
+	}
+
+	public boolean isbSeccionAccion() {
+		return bSeccionAccion;
+	}
+
+	public void setbSeccionAccion(boolean bSeccionAccion) {
+		this.bSeccionAccion = bSeccionAccion;
 	}
 }
