@@ -33,6 +33,7 @@ import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMiembro;
+import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
@@ -58,6 +59,7 @@ public class ConsultarSolicitudMB
     private List<ComboDto>lstComboDictamen;
 	private boolean bSeccionDictaminar=false;
 	private boolean bSeccionReasignacion=false;
+	private boolean bSeccionCartaAtencion=false;
 	private String valorDictamen="";
 	private String descValorDictamen="";
 	private List<ComboDto> lstDocumentosGenerados;
@@ -284,9 +286,14 @@ public class ConsultarSolicitudMB
 		logger.info("********** "+valorDictamen);
 		 GenericDao<TiivsSolicitud, Object> serviceS = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		if(this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
+			
+			//Llamada a los Niveles
+			try {
+				this.agregarNiveles(solicitudRegistrarT);
+			
 			this.bSeccionDictaminar=false;
 			this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
-			   try {
+			  
 				solicitudRegistrarT= serviceS.modificar(solicitudRegistrarT);
 				this.registrarHistorial(solicitudRegistrarT,"3");
 			} catch (Exception e) {
@@ -304,8 +311,64 @@ public class ConsultarSolicitudMB
 					e.printStackTrace();
 				}
 		}
+		if(this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)
+				|| this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){
+			bSeccionCartaAtencion=true;
+		}
 		this.obtenerHistorialSolicitud();
 	}
+	
+	  public void agregarNiveles(TiivsSolicitud solicitud) throws Exception{
+		  logger.info("*********************************** agregarNiveles ********************************************");
+		  GenericDao<TiivsNivel, Object> service=(GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		  List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class));
+		 List<String> lstCodNivel=new ArrayList<String>();
+			if(solicitud.getImporte().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+				logger.info("*********************************** COD_SOLES ********************************************"+this.solicitudRegistrarT.getImporte());
+				 for (TiivsNivel x : lstNiveles) {
+					 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+						 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
+							 lstCodNivel.add(x.getId().getCodNiv());
+							 logger.info("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
+							 logger.info("x.getId().getRangoInicio(): " +x.getId().getRangoInicio());
+							 logger.info("x.getId().getRangoFin(): " +x.getId().getRangoFin());
+						 }
+					 }
+			     }
+			}
+			else if(solicitud.getImporte().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+				logger.info("*********************************** COD_DOLAR ********************************************");
+				 for (TiivsNivel x : lstNiveles) {
+					 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+						 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
+							 lstCodNivel.add(x.getId().getCodNiv());
+							 logger.info("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
+						 }
+					 }
+			     }
+			}
+			else if(solicitud.getImporte().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+				logger.info("*********************************** COD_EUROS ********************************************");
+				 for (TiivsNivel x : lstNiveles) {
+					 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+						 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
+							 lstCodNivel.add(x.getId().getCodNiv());
+							 logger.info("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
+						 }
+					 }
+			     }
+			}else {
+				logger.info("*********************************** NO ENTRO EN NINGUNO ********************************************");
+			}
+			System.out.println("Tamanio de la lista de Niveles : " +lstCodNivel.size());
+			if(lstCodNivel.size()>0){
+				// SI LA SOLICITUD SOPERA ALGUN NIVEL, ENTONCES PASA A ESTADO EN VERIFICACION A, SI NO A ACEPTADO
+				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
+			}else{
+				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+			}
+		
+	  }
 	public void registrarHistorial(TiivsSolicitud solicitud,String numeroMovimiento) throws Exception{
 		 TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 		  objHistorial.setId(new TiivsHistSolicitudId(solicitud.getCodSoli(),numeroMovimiento));
@@ -602,4 +665,14 @@ public class ConsultarSolicitudMB
 	public void setbMostrarCartaAtencion(boolean bMostrarCartaAtencion) {
 		this.bMostrarCartaAtencion = bMostrarCartaAtencion;
 	}
+
+	public boolean isbSeccionCartaAtencion() {
+		return bSeccionCartaAtencion;
+	}
+
+	public void setbSeccionCartaAtencion(boolean bSeccionCartaAtencion) {
+		this.bSeccionCartaAtencion = bSeccionCartaAtencion;
+	}
+	
+	
 }
