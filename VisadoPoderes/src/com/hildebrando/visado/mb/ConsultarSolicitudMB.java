@@ -74,6 +74,7 @@ public class ConsultarSolicitudMB
 	private boolean bRevision=false;
 	private boolean bMostrarGenerarRevision=true;
 	private boolean bMostrarComentario=true;
+	private boolean bMostrarCartaRechazo=false;
 	
 	public ConsultarSolicitudMB() 
 	{
@@ -370,13 +371,15 @@ public class ConsultarSolicitudMB
 	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)){
 		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) ){
 			this.bSeccionAccion=false;
+			this.bMostrarCartaRechazo=true;
 		}else if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 			this.bSeccionComentario=true;
 			this.bSeccionAccion=true;
-			
+			this.bMostrarCartaRechazo=false;
 		}else if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
 			this.bSeccionComentario=true;
 			this.bSeccionAccion=true;
+			this.bMostrarCartaRechazo=false;
 		}
 	}		
 	}
@@ -889,5 +892,12 @@ public class ConsultarSolicitudMB
 	public void setbMostrarComentario(boolean bMostrarComentario) {
 		this.bMostrarComentario = bMostrarComentario;
 	}
-	
+
+	public boolean isbMostrarCartaRechazo() {
+		return bMostrarCartaRechazo;
+	}
+
+	public void setbMostrarCartaRechazo(boolean bMostrarCartaRechazo) {
+		this.bMostrarCartaRechazo = bMostrarCartaRechazo;
+	}
 }
