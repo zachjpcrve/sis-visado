@@ -101,8 +101,8 @@
 					<p:panel rendered="#{consultarSolicitudMB.bSeccionAccion}" >
 						<h:outputText title="Accion" value="Accion" styleClass="outputText" />
 						<p:separator styleClass="fielset" />
-						<p:commandButton id="btnRevision" value="Generar Revisión" action="#{consultarSolicitudMB.mostrarCartaRevision}" 
-						update=":formSolicitudSeguimiento" oncomplete="confirmDialogRevision.show()"/>
+						<p:commandButton id="btnRevision" value="Generar Revisión" 
+						update=":formSolicitudSeguimiento" oncomplete="confirmation3.show()"/>
 					</p:panel>
 				</td>
 			</tr>
@@ -210,7 +210,7 @@
               header="Revision" severity="alert" widgetVar="confirmation3" visible="true">  
                 
 	        <p:commandButton id="confirmRev" value="Si"  oncomplete="confirmation3.hide()" update=":formSolicitudSeguimiento" 
-	                    actionListener="#{consultarSolicitudMB.actualizarEstadoEnRevisionSolicitud}" />  
+	            action="#{consultarSolicitudMB.actualizarEstadoEnRevisionSolicitud}" actionListener="#{consultarSolicitudMB.mostrarCartaRevision}" />  
 	        
 	        <p:commandButton id="declineRev" value="No" oncomplete="confirmation3.hide()" />  
                   
