@@ -165,6 +165,11 @@ public class ConsultarSolicitudMB
 			setbMostrarCartaRevision(false);
 			setbMostrarCartaAtencion(false);
 		}
+		else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02))
+		{
+			setbMostrarCartaRevision(true);
+			setbMostrarCartaAtencion(false);
+		}
 	}
 	
 	public void mostrarCartaRevision()
@@ -172,7 +177,7 @@ public class ConsultarSolicitudMB
 		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
 		if((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
-			&& (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)))
+			&& (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)))
 		{
 			setbMostrarCartaRevision(true);
 			setbMostrarCartaAtencion(false);
