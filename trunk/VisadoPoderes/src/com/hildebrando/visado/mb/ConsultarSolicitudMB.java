@@ -560,7 +560,7 @@ public class ConsultarSolicitudMB
 	
 	public void actualizarEstadoVencidoSolicitud() throws Exception
 	{
-		  logger.info("*********************** actualizarEstadoEnRevisionSolicitud **************************");
+		  logger.info("*********************** actualizarEstadoVencidoSolicitud **************************");
 				  
 		  this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02);
 		  this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02);
