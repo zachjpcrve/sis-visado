@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +40,8 @@ import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
+import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
+import com.hildebrando.visado.modelo.TiivsSolicitudNivelId;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 
 @ManagedBean(name = "consultarSolicitudMB")
@@ -72,6 +75,7 @@ public class ConsultarSolicitudMB
 	private boolean bMostrarCartaAtencion;
 	private boolean bMostrarCartaRevision;
 	private boolean bRevision=false;
+	IILDPeUsuario usuario;
 	private boolean bMostrarGenerarRevision=true;
 	private boolean bMostrarComentario=true;
 	private boolean bMostrarCartaRechazo=false;
@@ -84,7 +88,7 @@ public class ConsultarSolicitudMB
 		modificarTextoVentanaCartaAtencion();
 		mostrarCartaAtencion();
 		ocultarCartas();
-		
+		 usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
 		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA) && this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02))
@@ -403,10 +407,7 @@ public class ConsultarSolicitudMB
 			//Llamada a los Niveles
 			try {
 				this.agregarNiveles(solicitudRegistrarT);
-			
-			this.bSeccionDictaminar=false;
-			this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
-			  
+			    this.bSeccionDictaminar=false;
 				solicitudRegistrarT= serviceS.modificar(solicitudRegistrarT);
 				this.registrarHistorial(solicitudRegistrarT);
 			} catch (Exception e) {
@@ -424,8 +425,7 @@ public class ConsultarSolicitudMB
 					e.printStackTrace();
 				}
 		}
-		if(this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)
-				|| this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){
+		if(this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
 			bSeccionCartaAtencion=true;
 			bSeccionComentario=false;
 		}
@@ -438,55 +438,67 @@ public class ConsultarSolicitudMB
 		  List<String> lstCodNivel=new ArrayList<String>();
 			if(solicitud.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
 				 List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda", ConstantesVisado.MONEDAS.COD_SOLES)));
-					
-				logger.info("********************** COD_SOLES ****************************"+this.solicitudRegistrarT.getImporte() + " tamanio de la lista : " +lstNiveles.size());
-				 for (TiivsNivel x : lstNiveles) {
-					 if(x.getId().getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
-						 System.out.println("x.getId().getRangoInicio() " +x.getId().getRangoInicio());
-						 System.out.println("x.getId().getRangoFin() " +x.getId().getRangoFin());
-						 if(this.solicitudRegistrarT.getImporte()>=lstNiveles.get(0).getId().getRangoInicio()){
-							 System.out.println("a" +x.getId().getDesNiv());
-							 if(this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
-								 System.out.println("b");
+				 if(solicitud.getImporte()>=lstNiveles.get(0).getId().getRangoInicio()){
+					 System.out.println("a" +lstNiveles.get(0).getId().getDesNiv());
+					 
+					 if(this.solicitudRegistrarT.getImporte()>lstNiveles.get(lstNiveles.size()-1).getId().getRangoFin()){
+						 System.out.println("c");
+					 }else{
+						 System.out.println("d");
+						 for (TiivsNivel x : lstNiveles) {
+							 if(solicitud.getImporte()>=x.getId().getRangoInicio()){
+								 System.out.println("g " +x.getId().getDesNiv());
 								 lstCodNivel.add(x.getId().getCodNiv());
+								
 							 }
-							
-						 }
-						 
-						 logger.info("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
-						 logger.info("x.getId().getRangoInicio(): " +x.getId().getRangoInicio());
-						 logger.info("x.getId().getRangoFin(): " +x.getId().getRangoFin());
-						
-						 if(this.solicitudRegistrarT.getImporte()>lstNiveles.get(lstNiveles.size()-1).getId().getRangoFin()){
-							 System.out.println("c");
-						 }
+								
+					     }
 					 }
-			     }
+				 }
+				 
+				
 			}
 			else if(solicitud.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
 				logger.info("*********************************** COD_DOLAR ********************************************");
 				List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda", ConstantesVisado.MONEDAS.COD_DOLAR)));
-				
-				 for (TiivsNivel x : lstNiveles) {
-					 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
-						 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
-							 lstCodNivel.add(x.getId().getCodNiv());
-							 logger.info("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
-						 }
+				 if(solicitud.getImporte()>=lstNiveles.get(0).getId().getRangoInicio()){
+					 System.out.println("a" +lstNiveles.get(0).getId().getDesNiv());
+					 
+					 if(this.solicitudRegistrarT.getImporte()>lstNiveles.get(lstNiveles.size()-1).getId().getRangoFin()){
+						 System.out.println("c");
+					 }else{
+						 System.out.println("d");
+						 for (TiivsNivel x : lstNiveles) {
+							 if(solicitud.getImporte()>=x.getId().getRangoInicio()){
+								 System.out.println("g " +x.getId().getDesNiv());
+								 lstCodNivel.add(x.getId().getCodNiv());
+								
+							 }
+								
+					     }
 					 }
-			     }
+				 }
 			}
 			else if(solicitud.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
 				logger.info("*********************************** COD_EUROS ********************************************");
 				List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda", ConstantesVisado.MONEDAS.COD_EUROS)));
-				 for (TiivsNivel x : lstNiveles) {
-					 if(x.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
-						 if(x.getId().getRangoInicio()<=this.solicitudRegistrarT.getImporte()&&this.solicitudRegistrarT.getImporte()<=x.getId().getRangoFin()){
-							 lstCodNivel.add(x.getId().getCodNiv());
-							 logger.info("x.getId().getDesNiv() ::: " +x.getId().getDesNiv()); 
-						 }
+				 if(solicitud.getImporte()>=lstNiveles.get(0).getId().getRangoInicio()){
+					 System.out.println("a" +lstNiveles.get(0).getId().getDesNiv());
+					 
+					 if(this.solicitudRegistrarT.getImporte()>lstNiveles.get(lstNiveles.size()-1).getId().getRangoFin()){
+						 System.out.println("c");
+					 }else{
+						 System.out.println("d");
+						 for (TiivsNivel x : lstNiveles) {
+							 if(solicitud.getImporte()>=x.getId().getRangoInicio()){
+								 System.out.println("g " +x.getId().getDesNiv());
+								 lstCodNivel.add(x.getId().getCodNiv());
+								
+							 }
+								
+					     }
 					 }
-			     }
+				 }
 			}else {
 				logger.info("*********************************** NO ENTRO EN NINGUNO ********************************************");
 			}
@@ -494,9 +506,23 @@ public class ConsultarSolicitudMB
 			if(lstCodNivel.size()>0){
 				// SI LA SOLICITUD SOPERA ALGUN NIVEL, ENTONCES PASA A ESTADO EN VERIFICACION A, SI NO A ACEPTADO
 				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
+				GenericDao<TiivsSolicitudNivel, Object> serviceSolicitud=(GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+				TiivsSolicitudNivel soliNivel=null;
+				System.out.println("Calendar.DATE " +Calendar.DATE);
+				for (String codNivel : lstCodNivel) {
+					soliNivel=new TiivsSolicitudNivel();
+					soliNivel.setId(new TiivsSolicitudNivelId(solicitud.getCodSoli(), codNivel));
+					soliNivel.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
+					soliNivel.setUsuarioRegistro(usuario.getUID());
+					soliNivel.setFechaRegistro(new Timestamp(Calendar.DATE));
+					serviceSolicitud.insertar(soliNivel);
+				}
+				
 			}else{
 				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
 			}
+			
+			
 		
 	  }
 	public void registrarHistorial(TiivsSolicitud solicitud) throws Exception{
