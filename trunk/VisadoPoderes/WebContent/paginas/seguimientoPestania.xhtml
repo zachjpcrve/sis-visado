@@ -38,8 +38,9 @@
 	      <h:panelGrid rendered="#{consultarSolicitudMB.bSeccionComentario}">
 	        <p:messages id="idGrowlSolicitudRegistro"></p:messages>
 	        
+	        <p:commandButton id="comentar" value="Comentar" update=":formSolicitudSeguimiento" actionListener="#{consultarSolicitudMB.habilitarComentario}"/>
 											
-			<p:editor id="editor" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="380" height="400"/>
+			<p:editor id="editor" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="380" height="400" disabled="#{consultarSolicitudMB.bMostrarComentario}"/>
 
 			<h:panelGrid columns="2" style="margin-top:10px">
 				<p:commandButton id="submitButton" value="Guardar" update="display" actionListener="#{consultarSolicitudMB.seterComentario}"
@@ -64,7 +65,7 @@
 			
 			<h:outputText title="Seguimiento" value="Seguimiento" styleClass="outputText" />
 			<p:separator styleClass="fielset" />
-          <p:dataTable value="#{consultarSolicitudMB.lstSeguimientoDTO}" var="seg" rows="5" id="datosSeguimiento"
+            <p:dataTable value="#{consultarSolicitudMB.lstSeguimientoDTO}" var="seg" rows="5" id="datosSeguimiento"
 						paginatorPosition="bottom" scrollable="true" scrollHeight="120"
 						paginator="false"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
@@ -97,12 +98,12 @@
 				</tr>
 			<tr>
 				<td width="100%">
-					
 					<p:panel rendered="#{consultarSolicitudMB.bSeccionAccion}" >
 						<h:outputText title="Accion" value="Accion" styleClass="outputText" />
 						<p:separator styleClass="fielset" />
-						<p:commandButton id="btnRevision" value="Generar Revisión" 
-						update=":formSolicitudSeguimiento" oncomplete="confirmation3.show()"/>
+						<p:commandButton id="btnRevision" value="Generar Revisión" rendered="#{consultarSolicitudMB.bMostrarGenerarRevision}"
+							update=":formSolicitudSeguimiento" actionListener="#{consultarSolicitudMB.ocultarComentario}" 
+							oncomplete="confirmation3.show()"/>
 					</p:panel>
 				</td>
 			</tr>
@@ -209,10 +210,10 @@
     <p:confirmDialog id="confirmDialogRevision" message="¿está seguro de generar una  revisión?"  
               header="Revision" severity="alert" widgetVar="confirmation3" visible="true">  
                 
-	        <p:commandButton id="confirmRev" value="Si"  oncomplete="confirmation3.hide()" update=":formSolicitudSeguimiento" 
+	        <p:commandButton id="confirmRev" value="Aceptar"  oncomplete="confirmation3.hide()" update=":formSolicitudSeguimiento" 
 	            action="#{consultarSolicitudMB.actualizarEstadoEnRevisionSolicitud}" actionListener="#{consultarSolicitudMB.mostrarCartaRevision}" />  
 	        
-	        <p:commandButton id="declineRev" value="No" oncomplete="confirmation3.hide()" />  
+	        <p:commandButton id="declineRev" value="Cancelar" oncomplete="confirmation3.hide()" />  
                   
     </p:confirmDialog>
     
