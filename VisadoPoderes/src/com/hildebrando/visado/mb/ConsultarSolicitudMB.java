@@ -557,6 +557,21 @@ public class ConsultarSolicitudMB
 		  this.obtenerHistorialSolicitud();
 		  this.seguimientoMB.busquedaSolicitudes();
 	}
+	
+	public void actualizarEstadoVencidoSolicitud() throws Exception
+	{
+		  logger.info("*********************** actualizarEstadoEnRevisionSolicitud **************************");
+				  
+		  this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02);
+		  this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02);
+		  
+		  GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		  service.modificar(solicitudRegistrarT);
+		  
+		  this.registrarHistorial(solicitudRegistrarT);
+		  this.obtenerHistorialSolicitud();
+		  this.seguimientoMB.busquedaSolicitudes();
+	}
 							
 	public void verAgrupacion() {
 		logger.info("********************** verAgrupacion *********************************** ");
