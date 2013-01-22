@@ -193,6 +193,17 @@ public class ConstantesVisado {
 	
 	static public class ESTADOS {
 		
+		
+		public static final String ESTADO_COD_Pendiente_T09="0001";
+		public static final String ESTADO_COD_Aprobado_T09="0002";
+		public static final String ESTADO_COD_Desaprobado_T09="0003";
+		
+		
+		public static final String ESTADO_Pendiente_T09="Pendiente";
+		public static final String ESTADO_Aprobado_T09="Aprobado";
+		public static final String ESTADO_Desaprobado_T09="Desaprobado";
+		
+		
 		public static final String ESTADO_COD_ACTIVO="1";
 		public static final String ESTADO_COD_DESACTIVO="0";
 		
