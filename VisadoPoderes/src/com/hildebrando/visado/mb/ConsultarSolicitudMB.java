@@ -72,14 +72,24 @@ public class ConsultarSolicitudMB
 	private boolean bMostrarCartaAtencion;
 	private boolean bMostrarCartaRevision;
 	private boolean bRevision=false;
+	private boolean bMostrarGenerarRevision=true;
+	private boolean bMostrarComentario=true;
 	
-	public ConsultarSolicitudMB() {
+	public ConsultarSolicitudMB() 
+	{
 		inicializarContructor();
 		cargarDocumentos();
 		listarComboDictamen();
 		modificarTextoVentanaCartaAtencion();
 		mostrarCartaAtencion();
 		ocultarCartas();
+		
+		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		
+		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA) && this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02))
+		{
+			setbMostrarComentario(false);
+		}
 	}	
 	
 	public void modificarTextoVentanaCartaAtencion()
@@ -161,12 +171,28 @@ public class ConsultarSolicitudMB
 		{
 			setbMostrarCartaRevision(true);
 			setbMostrarCartaAtencion(false);
+			setbMostrarGenerarRevision(false);
 		}
 		else
 		{
 			setbMostrarCartaRevision(false);
 			setbMostrarCartaAtencion(false);
 		}
+	}
+	
+	public void habilitarComentario()
+	{
+		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		
+		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ))
+		{
+			setbMostrarComentario(false);
+		}	
+	}
+	
+	public void ocultarComentario()
+	{
+		setbSeccionComentario(false);
 	}
 	
 	public void inicializarContructor(){
@@ -660,6 +686,12 @@ public class ConsultarSolicitudMB
 		return iRet;
 	}
 	
+	public void seterComentario() 
+	{
+        logger.info("************************** Setear Comentario **************************");
+        logger.info("Comentario : " + this.solicitudRegistrarT.getObs());
+	}
+	
 	private void cargarDocumentos() {
 		
 		GenericDao<TiivsDocumento, Object> documentoDAO = (GenericDao<TiivsDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -841,4 +873,21 @@ public class ConsultarSolicitudMB
 	public void setbSeccionAccion(boolean bSeccionAccion) {
 		this.bSeccionAccion = bSeccionAccion;
 	}
+
+	public boolean isbMostrarGenerarRevision() {
+		return bMostrarGenerarRevision;
+	}
+
+	public void setbMostrarGenerarRevision(boolean bMostrarGenerarRevision) {
+		this.bMostrarGenerarRevision = bMostrarGenerarRevision;
+	}
+
+	public boolean isbMostrarComentario() {
+		return bMostrarComentario;
+	}
+
+	public void setbMostrarComentario(boolean bMostrarComentario) {
+		this.bMostrarComentario = bMostrarComentario;
+	}
+	
 }
