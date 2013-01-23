@@ -189,6 +189,10 @@ public class ConsultarSolicitudMB
 			setbMostrarCartaRevision(true);
 			setbMostrarCartaAtencion(false);
 		}
+		else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02))
+		{
+			setbMostrarCartaAtencion(false);
+		}
 	}
 	
 	public void mostrarCartaRevision()
@@ -467,7 +471,9 @@ public class ConsultarSolicitudMB
 		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) ){
 			this.bSeccionDictaminar=true;
 		}
-	}
+	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02)){
+		this.bSeccionAccion=false;
+	}	
 	}
 	public void obtenerDictamen(ValueChangeEvent e){
 		logger.info("****************** obtenerDictamen ********************** "+e.getNewValue());
