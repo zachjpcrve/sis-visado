@@ -81,7 +81,7 @@ public class ConsultarSolicitudMB
 	private boolean bMostrarGenerarRevision=true;
 	private boolean bMostrarComentario=true;
 	private boolean bMostrarCartaRechazo=false;
-	
+	private String PERFIL_USUARIO;
 	
 	private String sCodigoEstadoNivel;
 	private Integer iGrupoDelegados;
@@ -99,7 +99,7 @@ public class ConsultarSolicitudMB
 		mostrarCartaAtencion();
 		ocultarCartas();
 		 usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
-		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
 		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA) && this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02))
 		{
@@ -109,7 +109,7 @@ public class ConsultarSolicitudMB
 	
 	public void modificarTextoVentanaCartaAtencion()
 	{
-		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
 		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ))
 		{
@@ -125,7 +125,7 @@ public class ConsultarSolicitudMB
 	
 	public void mostrarCartaAtencion()
 	{
-		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		String codigoSolicitud=Utilitarios.capturarParametro("prm_codSoli");
 	    
 		if (codigoSolicitud!=null)
@@ -184,7 +184,7 @@ public class ConsultarSolicitudMB
 	
 	public void mostrarCartaRevision()
 	{
-		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
 		if((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
 			&& (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)))
@@ -202,7 +202,7 @@ public class ConsultarSolicitudMB
 	
 	public void habilitarComentario()
 	{
-		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
 		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ))
 		{
@@ -350,7 +350,7 @@ public class ConsultarSolicitudMB
 	
 	public void actualizarEstadoReservadoSolicitud() throws Exception{
 		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
-		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
 		logger.info("*********************** actualizarEstadoReservadoSolicitud **************************");
 		if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02)){
@@ -574,7 +574,7 @@ public class ConsultarSolicitudMB
 	
 	public void actualizarEstadoEjecutadoSolicitud() throws Exception
 	{
-		String PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");		
+		PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");		
 
 		if((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) 
 		   && this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02))
@@ -801,7 +801,7 @@ public class ConsultarSolicitudMB
 		}
 		
 		IILDPeUsuario usuarioIILD = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");				
-		String sPerfilUsuario =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		String sCodUsuario = (String) usuarioIILD.getUID();
 //		String sCodUsuario = this.usuario; 
 		TiivsSolicitudNivel solicitudNivel;
@@ -814,7 +814,7 @@ public class ConsultarSolicitudMB
 
 		
 		
-		if(sPerfilUsuario.equals(ConstantesVisado.SSJJ)){
+		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 			//llena variable: lstSolicitudNivel
 			solicitudNivel = obtenerNivelSolicitud();
 			sCodNivel = solicitudNivel.getId().getCodNiv().trim();	
@@ -1331,4 +1331,13 @@ public class ConsultarSolicitudMB
 	public void setbMostrarCartaRechazo(boolean bMostrarCartaRechazo) {
 		this.bMostrarCartaRechazo = bMostrarCartaRechazo;
 	}
+
+	public String getPERFIL_USUARIO() {
+		return PERFIL_USUARIO;
+	}
+
+	public void setPERFIL_USUARIO(String pERFIL_USUARIO) {
+		PERFIL_USUARIO = pERFIL_USUARIO;
+	}
+	
 }
