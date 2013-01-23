@@ -1546,9 +1546,9 @@ public class SeguimientoMB
 			{
 				for (TiivsSolicitud soli: solicitudes)
 				{	
-					if (sol.getId().getCodSoli().equals(soli.getCodSoli()) && soli.getTxtNivel().length()>0)
+					if (sol.getTiivsSolicitud().getCodSoli().equals(soli.getCodSoli()) && soli.getTxtNivel().length()>0)
 					{
-						lstSolicitudesSelected.add(sol.getId().getCodSoli());
+						lstSolicitudesSelected.add(sol.getTiivsSolicitud().getCodSoli());
 					}
 				}
 			}
@@ -1649,7 +1649,7 @@ public class SeguimientoMB
 				{
 					for (TiivsHistSolicitud hist: lstHistorial)
 					{
-						if (tmp.getId().getCodSoli().equals(hist.getId().getCodSoli()))
+						if (tmp.getTiivsSolicitud().getCodSoli().equals(hist.getId().getCodSoli()))
 						{
 							lstSolicitudesSelected.add(hist.getId().getCodSoli());
 						}
@@ -1757,7 +1757,7 @@ public class SeguimientoMB
 			{
 				for (TiivsHistSolicitud hist: lstHistorial)
 				{
-					if (tmp.getId().getCodSoli().equals(hist.getId().getCodSoli()))
+					if (tmp.getTiivsSolicitud().getCodSoli().equals(hist.getId().getCodSoli()))
 					{
 						lstSolicitudesSelected.add(hist.getId().getCodSoli());
 					}
