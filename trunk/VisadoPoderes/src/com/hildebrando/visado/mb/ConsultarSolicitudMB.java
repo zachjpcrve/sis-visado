@@ -82,8 +82,9 @@ public class ConsultarSolicitudMB
 	private boolean bMostrarGenerarRevision=true;
 	private boolean bMostrarComentario=true;
 	private boolean bMostrarCartaRechazo=false;
+	private boolean bMostrarCartaImprocedente=false;
+	private boolean bMostrarCartaRespuesta=false;
 	private String PERFIL_USUARIO;
-	
 	private String sCodigoEstadoNivel;
 	private Integer iGrupoDelegados;
 	private String sNivelSolicitud; 
@@ -96,7 +97,7 @@ public class ConsultarSolicitudMB
 	{
 		inicializarContructor();
 		cargarDocumentos();
-		listarComboDictamen();
+		
 		modificarTextoVentanaCartaAtencion();
 		mostrarCartaAtencion();
 		ocultarCartas();
@@ -292,9 +293,20 @@ public class ConsultarSolicitudMB
 	}			
     public void listarComboDictamen(){
     	lstComboDictamen=new ArrayList<ComboDto>();
+    	System.out.println("this.solicitudRegistrarT.getEstado() " +this.solicitudRegistrarT.getEstado());
+    	//SOLO SERVICIOS JURIDICOS
+    	if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+    	if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)){
     	lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02,ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02));
     	lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02,ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02));
-    }
+    	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)){
+    	lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02,ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02));
+        lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02,ConstantesVisado.ESTADOS.ESTADO_IMPROCEDENTE_T02));
+    	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
+    	lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02,ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02));
+    	}
+    	}
+    	}
 	public String redirectDetalleSolicitud() {
 		logger.info(" **** redirectDetalleSolicitud ***");
 		obtenerSolicitud();
@@ -401,7 +413,8 @@ public class ConsultarSolicitudMB
 		  if(solNivel!=null){
 			  this.sNivelSolicitud = solNivel.getId().getCodNiv();
 		  }
-		  
+		  //Listar ComboDictamen
+		  listarComboDictamen();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -470,19 +483,39 @@ public class ConsultarSolicitudMB
 	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)){
 		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) ){
 			this.bSeccionDictaminar=true;
+			this.bSeccionComentario=true;
 		}
-	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02)){
+	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)){
+		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) ){
+			this.bMostrarCartaRechazo=true;
+			this.bMostrarCartaRevision=true;
+			this.bMostrarCartaAtencion=true;
+		}
+	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)){
+			if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) ){
+				this.bMostrarCartaRechazo=true;
+				this.bMostrarCartaImprocedente=true;
+				this.bMostrarCartaRespuesta=true;
+			}
+		}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02)){
 		this.bSeccionAccion=false;
 	}	
 	}
+	
+	
 	public void obtenerDictamen(ValueChangeEvent e){
 		logger.info("****************** obtenerDictamen ********************** "+e.getNewValue());
 		
 		if(e.getNewValue()!=null){
+			valorDictamen=e.getNewValue().toString();
 			if(e.getNewValue().toString().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02))
 			descValorDictamen=ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02;
 			else if(e.getNewValue().toString().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02))
-				descValorDictamen=ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02;
+			descValorDictamen=ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02;
+			else if(e.getNewValue().toString().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02))
+			descValorDictamen=ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02;
+			else if(e.getNewValue().toString().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02))
+			descValorDictamen=ConstantesVisado.ESTADOS.ESTADO_IMPROCEDENTE_T02;
 		}
 		
 	}
@@ -490,13 +523,14 @@ public class ConsultarSolicitudMB
 		logger.info("********************** dictaminarSolicitud *********************************** ");
 		logger.info("********** "+valorDictamen);
 		 GenericDao<TiivsSolicitud, Object> serviceS = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		 if(this.PERFIL_USUARIO.trim().equals(ConstantesVisado.OFICINA)||this.PERFIL_USUARIO.trim().equals(ConstantesVisado.SSJJ)){
 		if(this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
 			
 			//Llamada a los Niveles
 			try {
 				this.agregarNiveles(solicitudRegistrarT);
 			    this.bSeccionDictaminar=false;
-				solicitudRegistrarT= serviceS.modificar(solicitudRegistrarT);
+				this.solicitudRegistrarT= serviceS.modificar(solicitudRegistrarT);
 				this.registrarHistorial(solicitudRegistrarT);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -513,11 +547,41 @@ public class ConsultarSolicitudMB
 					e.printStackTrace();
 				}
 		}
+		else if(this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)){
+			 try {
+				 this.agregarNiveles(solicitudRegistrarT);
+				 this.bSeccionDictaminar=false;
+				 this.solicitudRegistrarT= serviceS.modificar(solicitudRegistrarT);
+					this.registrarHistorial(solicitudRegistrarT);
+					  Utilitarios.mensajeInfo("INFO", "Se dictaminó correctamente la solicitud");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		}
+		else if(this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)){
+			 try {
+				this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
+					solicitudRegistrarT= serviceS.modificar(solicitudRegistrarT);
+					this.registrarHistorial(solicitudRegistrarT);
+					  Utilitarios.mensajeInfo("INFO", "Se dictaminó correctamente la solicitud");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		}
 		if(this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
 			bSeccionCartaAtencion=true;
 			bSeccionComentario=false;
+		}else if(this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)){
+			if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) ){
+				this.bMostrarCartaRechazo=true;
+				this.bMostrarCartaRevision=true;
+				this.bMostrarCartaAtencion=true;
+			}
 		}
+		
+		
 		this.obtenerHistorialSolicitud();
+		 }
 	}
 	
 	  public void agregarNiveles(TiivsSolicitud solicitud) throws Exception{
@@ -593,7 +657,11 @@ public class ConsultarSolicitudMB
 			System.out.println("Tamanio de la lista de Niveles : " +lstCodNivel.size());
 			if(lstCodNivel.size()>0){
 				// SI LA SOLICITUD SOPERA ALGUN NIVEL, ENTONCES PASA A ESTADO EN VERIFICACION A, SI NO A ACEPTADO
-				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
+				if(this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
+				 solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
+				}else if(this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)){
+				 solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02);
+		     	}   
 				GenericDao<TiivsSolicitudNivel, Object> serviceSolicitud=(GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 				TiivsSolicitudNivel soliNivel=null;
 				System.out.println("Calendar.DATE " +Calendar.DATE);
@@ -606,8 +674,12 @@ public class ConsultarSolicitudMB
 					serviceSolicitud.insertar(soliNivel);
 				}
 				
-			}else{
+			}else if(lstCodNivel.size()==0){
+				if(this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
 				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+				}else if(this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)){
+				 solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
+		     	} 
 			}
 			
 			
