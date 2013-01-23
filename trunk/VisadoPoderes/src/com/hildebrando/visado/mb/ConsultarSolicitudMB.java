@@ -291,33 +291,42 @@ public class ConsultarSolicitudMB
 		lstTiivsDocumentos= new ArrayList<TiivsDocumento>();
 		lstDocumentosGenerados=new ArrayList<ComboDto>();
 	}			
-    public void listarComboDictamen(){
+    
+	public void listarComboDictamen()
+    {
     	lstComboDictamen=new ArrayList<ComboDto>();
     	System.out.println("this.solicitudRegistrarT.getEstado() " +this.solicitudRegistrarT.getEstado());
     	//SOLO SERVICIOS JURIDICOS
-    	if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
-    	if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)){
-    	lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02,ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02));
-    	lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02,ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02));
-    	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)){
-    	lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02,ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02));
-        lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02,ConstantesVisado.ESTADOS.ESTADO_IMPROCEDENTE_T02));
-    	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
-    	lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02,ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02));
+    	if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ))
+    	{
+    		if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
+    		{
+    			lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02,ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02));
+    			lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02,ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02));
+    		}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02))
+    		{
+    			lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02,ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02));
+    			lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02,ConstantesVisado.ESTADOS.ESTADO_IMPROCEDENTE_T02));
+    		}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) 
+    		{
+    			lstComboDictamen.add(new ComboDto(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02,ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02));
+    		}
     	}
-    	}
-    	}
+    }
+    
 	public String redirectDetalleSolicitud() {
 		logger.info(" **** redirectDetalleSolicitud ***");
 		obtenerSolicitud();
+		
 		return "/faces/paginas/detalleSolicitud.xhtml";
 		
 	}
 	
-	public void abogadosXEstudios(ValueChangeEvent e){
+	public void abogadosXEstudios(ValueChangeEvent e)
+	{
 		logger.info("*************** abogadosXEstudios *********************" +e.getNewValue());
-	List<TiivsMiembro>	lstAbogadosMiembro=combosMB.getLstAbogados();
-	lstAbogados=new ArrayList<TiivsMiembro>();
+		List<TiivsMiembro>	lstAbogadosMiembro=combosMB.getLstAbogados();
+		lstAbogados=new ArrayList<TiivsMiembro>();
 		for (TiivsMiembro x : lstAbogadosMiembro) {
 			if(x.getEstudio().trim().equals(e.getNewValue())){
 				lstAbogados.add(x);
