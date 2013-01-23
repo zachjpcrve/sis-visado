@@ -641,7 +641,8 @@ public class ConsultarSolicitudMB
 		PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");		
 
 		if((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) 
-		   && this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02))
+		   && (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02) || 
+				this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)))
 		{
 			  logger.info("*********************** actualizarEstadoEjecutadoSolicitud **************************");
 			  
