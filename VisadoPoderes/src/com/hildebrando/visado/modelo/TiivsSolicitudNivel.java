@@ -1,8 +1,8 @@
 package com.hildebrando.visado.modelo;
 
-// Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR1
+// Generated 23/01/2013 04:04:35 PM by Hibernate Tools 3.4.0.CR1
 
-import java.sql.Timestamp;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,39 +11,44 @@ import java.util.Set;
  */
 public class TiivsSolicitudNivel implements java.io.Serializable {
 
-	private TiivsSolicitudNivelId id;
+	private int id;
 	private TiivsSolicitud tiivsSolicitud;
-	private String estado;
+	private String codNiv;
+	private String estadoNivel;
 	private String usuarioRegistro;
-	private Timestamp fechaRegistro;
+	private Serializable fechaRegistro;
+	private String estadoSolicitud;
 	private Set tiivsMovimientoNivels = new HashSet(0);
 
 	public TiivsSolicitudNivel() {
 	}
 
-	public TiivsSolicitudNivel(TiivsSolicitudNivelId id,
-			TiivsSolicitud tiivsSolicitud) {
+	public TiivsSolicitudNivel(int id, TiivsSolicitud tiivsSolicitud,
+			String codNiv) {
 		this.id = id;
 		this.tiivsSolicitud = tiivsSolicitud;
+		this.codNiv = codNiv;
 	}
 
-	public TiivsSolicitudNivel(TiivsSolicitudNivelId id,
-			TiivsSolicitud tiivsSolicitud, String estado,
-			String usuarioRegistro, Timestamp fechaRegistro,
+	public TiivsSolicitudNivel(int id, TiivsSolicitud tiivsSolicitud,
+			String codNiv, String estadoNivel, String usuarioRegistro,
+			Serializable fechaRegistro, String estadoSolicitud,
 			Set tiivsMovimientoNivels) {
 		this.id = id;
 		this.tiivsSolicitud = tiivsSolicitud;
-		this.estado = estado;
+		this.codNiv = codNiv;
+		this.estadoNivel = estadoNivel;
 		this.usuarioRegistro = usuarioRegistro;
 		this.fechaRegistro = fechaRegistro;
+		this.estadoSolicitud = estadoSolicitud;
 		this.tiivsMovimientoNivels = tiivsMovimientoNivels;
 	}
 
-	public TiivsSolicitudNivelId getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(TiivsSolicitudNivelId id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -55,12 +60,20 @@ public class TiivsSolicitudNivel implements java.io.Serializable {
 		this.tiivsSolicitud = tiivsSolicitud;
 	}
 
-	public String getEstado() {
-		return this.estado;
+	public String getCodNiv() {
+		return this.codNiv;
 	}
 
-	public void setEstado(String estado) {
-		this.estado = estado;
+	public void setCodNiv(String codNiv) {
+		this.codNiv = codNiv;
+	}
+
+	public String getEstadoNivel() {
+		return this.estadoNivel;
+	}
+
+	public void setEstadoNivel(String estadoNivel) {
+		this.estadoNivel = estadoNivel;
 	}
 
 	public String getUsuarioRegistro() {
@@ -71,12 +84,20 @@ public class TiivsSolicitudNivel implements java.io.Serializable {
 		this.usuarioRegistro = usuarioRegistro;
 	}
 
-	public Timestamp getFechaRegistro() {
+	public Serializable getFechaRegistro() {
 		return this.fechaRegistro;
 	}
 
-	public void setFechaRegistro(Timestamp fechaRegistro) {
+	public void setFechaRegistro(Serializable fechaRegistro) {
 		this.fechaRegistro = fechaRegistro;
+	}
+
+	public String getEstadoSolicitud() {
+		return this.estadoSolicitud;
+	}
+
+	public void setEstadoSolicitud(String estadoSolicitud) {
+		this.estadoSolicitud = estadoSolicitud;
 	}
 
 	public Set getTiivsMovimientoNivels() {
