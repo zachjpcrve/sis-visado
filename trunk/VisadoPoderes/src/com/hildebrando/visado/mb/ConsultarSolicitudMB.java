@@ -1143,19 +1143,21 @@ public class ConsultarSolicitudMB
 			filtroNivel.add(Restrictions.eq("id.codSoli", sCodSolicitud));
 			filtroNivel.addOrder(Order.asc("id.codNiv"));
 			this.lstSolicitudNivel = soliNivelDAO.buscarDinamico(filtroNivel);
+			
+			for(TiivsSolicitudNivel n : this.lstSolicitudNivel){
+				if(n.getEstadoNivel()==null || n.getEstadoNivel().trim().equals("")){
+					solNivel = n;				
+					break;
+				}
+					
+			} 
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.lstSolicitudNivel = null;
 			logger.error("Error al obtener datos de nivel");
 		}        
 		
-		for(TiivsSolicitudNivel n : this.lstSolicitudNivel){
-			if(n.getEstadoNivel()==null || n.getEstadoNivel().trim().equals("")){
-				solNivel = n;				
-				break;
-			}
-				
-		}        		
+		       		
 		return solNivel;
 	}
 	
