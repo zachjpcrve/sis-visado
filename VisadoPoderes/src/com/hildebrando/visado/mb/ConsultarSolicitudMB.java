@@ -420,7 +420,7 @@ public class ConsultarSolicitudMB
 		  this.obtenerHistorialSolicitud();	
 		  TiivsSolicitudNivel solNivel = this.obtenerNivelSolicitud();
 		  if(solNivel!=null){
-			  this.sNivelSolicitud = solNivel.getId().getCodNiv();
+			  this.sNivelSolicitud = solNivel.getCodNiv();
 		  }
 		  //Listar ComboDictamen
 		  listarComboDictamen();
@@ -676,8 +676,8 @@ public class ConsultarSolicitudMB
 				System.out.println("Calendar.DATE " +Calendar.DATE);
 				for (String codNivel : lstCodNivel) {
 					soliNivel=new TiivsSolicitudNivel();
-					soliNivel.setId(new TiivsSolicitudNivelId(solicitud.getCodSoli(), codNivel));
-					soliNivel.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
+					//soliNivel.setId(new TiivsSolicitudNivelId(solicitud.getCodSoli(), codNivel));
+					soliNivel.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
 					soliNivel.setUsuarioRegistro(usuario.getUID());
 					soliNivel.setFechaRegistro(new Timestamp(Calendar.DATE));
 					serviceSolicitud.insertar(soliNivel);
@@ -970,7 +970,7 @@ public class ConsultarSolicitudMB
 			//llena variable: lstSolicitudNivel
 			solicitudNivel = obtenerNivelSolicitud();
 			if(solicitudNivel!=null){
-				sCodNivel = solicitudNivel.getId().getCodNiv().trim();
+				sCodNivel = solicitudNivel.getCodNiv().trim();
 			}
 	
 			logger.info("Nivel: " + sCodNivel);
@@ -1031,7 +1031,7 @@ public class ConsultarSolicitudMB
 				i++;
 			}			
 			if(i != lstMovimientoNivel.size()){
-				logger.debug("Existe mas de un grupo evaluador para el nivel:" + tiivsSolicitudNivel.getId().getCodNiv());
+				logger.debug("Existe mas de un grupo evaluador para el nivel:" + tiivsSolicitudNivel.getCodNiv());
 				iGrupo = null;
 			}						
 		}catch(Exception e){
@@ -1044,7 +1044,7 @@ public class ConsultarSolicitudMB
 						
 		logger.info("*********************** modificarEstadoSolicitudNivel **************************");
 
-		tiivsSolicitudNivel.setEstado(sCodigoEstado);
+		tiivsSolicitudNivel.setEstadoNivel(sCodigoEstado);
 		tiivsSolicitudNivel.setUsuarioRegistro(sRegistro);
 		tiivsSolicitudNivel.setFechaRegistro(new Timestamp((new Date().getTime())));
 		
@@ -1150,7 +1150,7 @@ public class ConsultarSolicitudMB
 		}        
 		
 		for(TiivsSolicitudNivel n : this.lstSolicitudNivel){
-			if(n.getEstado()==null || n.getEstado().trim().equals("")){
+			if(n.getEstadoNivel()==null || n.getEstadoNivel().trim().equals("")){
 				solNivel = n;				
 				break;
 			}
@@ -1167,7 +1167,7 @@ public class ConsultarSolicitudMB
 		this.lstDelegados = new ArrayList<TiivsMiembroNivel>();
 		String sCodNivel=null;
 		if(solicitudNivel!=null){
-			sCodNivel = solicitudNivel.getId().getCodNiv();
+			sCodNivel = solicitudNivel.getCodNiv();
 		}
 		
 		try {
@@ -1252,7 +1252,7 @@ public class ConsultarSolicitudMB
 		boolean iRet = false;
 		int i=0;
 		for(TiivsSolicitudNivel sn : lstSolicitudNivel){
-			if(sn.getEstado()!=null && sn.getEstado().equals(sEstado)){
+			if(sn.getEstadoNivel()!=null && sn.getEstadoNivel().equals(sEstado)){
 				i++;
 			}
 		}
