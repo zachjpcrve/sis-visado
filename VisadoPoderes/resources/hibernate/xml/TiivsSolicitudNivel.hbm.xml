@@ -1,37 +1,38 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 23/01/2013 04:04:35 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsSolicitudNivel" table="TIIVS_SOLICITUD_NIVEL">
-        <composite-id name="id" class="com.hildebrando.visado.modelo.TiivsSolicitudNivelId">
-            <key-property name="codSoli" type="string">
-                <column name="COD_SOLI" length="7" />
-            </key-property>
-            <key-property name="codNiv" type="string">
-                <column name="COD_NIV" length="4" />
-            </key-property>
-        </composite-id>
-        <many-to-one name="tiivsSolicitud" class="com.hildebrando.visado.modelo.TiivsSolicitud" update="false" lazy="false" insert="false" fetch="select">
+        <id name="id" type="int">
+            <column name="ID" precision="8" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="tiivsSolicitud" class="com.hildebrando.visado.modelo.TiivsSolicitud" fetch="select">
             <column name="COD_SOLI" length="7" not-null="true" />
         </many-to-one>
-        <property name="estado" type="string">
-            <column name="ESTADO" length="4" />
+        <property name="codNiv" type="string">
+            <column name="COD_NIV" length="4" not-null="true" />
+        </property>
+        <property name="estadoNivel" type="string">
+            <column name="ESTADO_NIVEL" length="4" />
         </property>
         <property name="usuarioRegistro" type="string">
             <column name="USUARIO_REGISTRO" length="7">
                 <comment>C&#243;digo de usuario del responsable o grupo de delegados que efectuan el cambi&#243; de estado del nivel</comment>
             </column>
         </property>
-        <property name="fechaRegistro" type="java.sql.Timestamp">
+        <property name="fechaRegistro" type="serializable">
             <column name="FECHA_REGISTRO">
                 <comment>Fecha en que se realiz&#243; el cambio de estado de nivel</comment>
             </column>
         </property>
+        <property name="estadoSolicitud" type="string">
+            <column name="ESTADO_SOLICITUD" length="4" />
+        </property>
         <set name="tiivsMovimientoNivels" table="TIIVS_MOVIMIENTO_NIVEL" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="COD_SOLI" length="7" />
-                <column name="COD_NIV" length="4" />
+                <column name="ID_SOL_NIVEL" precision="22" scale="0" />
             </key>
             <one-to-many class="com.hildebrando.visado.modelo.TiivsMovimientoNivel" />
         </set>
