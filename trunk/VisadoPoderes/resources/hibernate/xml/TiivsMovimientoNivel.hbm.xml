@@ -1,18 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 23/01/2013 04:04:35 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsMovimientoNivel" table="TIIVS_MOVIMIENTO_NIVEL">
         <id name="idMovimiento" type="int">
-            <column name="ID_MOVIMIENTO" precision="8" scale="0" />            
-            <generator class="sequence">
-            	<param name="sequence">SEQ_MOVIMIENTO_NIVEL</param>
-            </generator>
+            <column name="ID_MOVIMIENTO" precision="8" scale="0" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="tiivsSolicitudNivel" class="com.hildebrando.visado.modelo.TiivsSolicitudNivel" fetch="select">
-            <column name="COD_SOLI" length="7" />
-            <column name="COD_NIV" length="4" />
+            <column name="ID_SOL_NIVEL" precision="22" scale="0" />
         </many-to-one>
         <property name="estado" type="string">
             <column name="ESTADO" length="4" />
@@ -25,7 +22,7 @@
                 <comment>Se registra el codigo de usuario del delegado</comment>
             </column>
         </property>
-        <property name="fechaRegistro" type="java.sql.Timestamp">
+        <property name="fechaRegistro" type="serializable">
             <column name="FECHA_REGISTRO" />
         </property>
     </class>
