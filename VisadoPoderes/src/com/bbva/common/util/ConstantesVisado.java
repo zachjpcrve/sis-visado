@@ -33,6 +33,9 @@ public class ConstantesVisado {
 	public static final java.lang.String VALOR_TIPO_DOCUMENTO_OTROS="Otros";
 	public static final java.lang.String PREFIJO_OTROS="O";
 	public static final java.lang.String FILES="files";
+	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_RESPONSABLE="R";
+	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_DELEGADO="D";
+	
 	
 	/*SAMIRA*/
 	public static final java.lang.String CODIGO_MULTITABLA_CLASIFICACION_PERSONA = "T13";
@@ -220,7 +223,11 @@ public class ConstantesVisado {
 		public static final String ESTADO_COD_PRE_EJECUTADO_T02="0014";						
 		public static final String ESTADO_COD_EJECUTADO_T02="0015";					
 		public static final String ESTADO_COD_REVOCADO_T02="0016";						
-		public static final String ESTADO_COD_EN_REVISION_T02="0017";			
+		public static final String ESTADO_COD_EN_REVISION_T02="0017";	
+		
+		public static final String ESTADO_COD_APROBADO_T09="0002";
+		public static final String ESTADO_COD_DESAPROBADO_T09="0003";
+		
 		
 		
 		public static final String ESTADO_ACTIVO="Activo";
