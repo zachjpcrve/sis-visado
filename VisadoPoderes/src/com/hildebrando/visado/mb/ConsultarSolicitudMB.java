@@ -851,15 +851,11 @@ public class ConsultarSolicitudMB
 		
 		logger.info("**************registrarAccionSolicitud()*********************");
 		
-		if(!sCodigoEstadoNivel.equals(ConstantesVisado.ESTADOS.ESTADO_COD_APROBADO_T09) && 
-				!sCodigoEstadoNivel.equals(ConstantesVisado.ESTADOS.ESTADO_COD_DESAPROBADO_T09)){
-			Utilitarios.mensajeInfo("INFO", "Debe seleccionar una opción correcta");
-			logger.info("Debe seleccionar una opción correcta:" + sCodigoEstadoNivel);
-			return;
-		}
+		
+		
 						
 		String sCodUsuario = (String) usuario.getUID();
-//		String sCodUsuario = this.usuario; 
+//		String sCodUsuario = this.registroUsuario; 
 		TiivsSolicitudNivel solicitudNivel;
 		
 		String sCodigoEstadoActual = this.solicitudRegistrarT.getEstado().trim();
@@ -867,49 +863,61 @@ public class ConsultarSolicitudMB
 		String sCodigoSolicitud= this.solicitudRegistrarT.getCodSoli();				
 		boolean bRegistro = false;				
 		String sCodNivel ="";
+		
+		if(!sCodigoEstadoNivel.equals(ConstantesVisado.ESTADOS.ESTADO_COD_APROBADO_T09) && 
+				!sCodigoEstadoNivel.equals(ConstantesVisado.ESTADOS.ESTADO_COD_DESAPROBADO_T09)){
+			Utilitarios.mensajeInfo("INFO", "Debe seleccionar una opción correcta");
+			logger.info("Debe seleccionar una opción correcta:" + sCodigoEstadoNivel);
+			return;
+		}
+		if(!sCodigoEstadoActual.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){
+			Utilitarios.mensajeInfo("INFO", "No se permite el cambio de estado de la solicitud");
+			logger.info("No se permite el cambio de estado de: " + sCodigoEstadoActual);		
+			return;
+		}	
 
 		
 		
 		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 			//llena variable: lstSolicitudNivel
 			solicitudNivel = obtenerNivelSolicitud();
-			sCodNivel = solicitudNivel.getId().getCodNiv().trim();	
-			
-			//llena variables: lstResponsables,lstDelegados
-			obtenerDatosDelegadosResponsables(solicitudNivel);
-//			obtenerDatosDelegadosResponsables(sCodNivel);
-			Integer iGrupo = obtenerGrupoEvaluador(solicitudNivel);
-			
-			logger.info("Solicitud: " + sCodigoSolicitud);
+			if(solicitudNivel!=null){
+				sCodNivel = solicitudNivel.getId().getCodNiv().trim();
+			}
+	
 			logger.info("Nivel: " + sCodNivel);
-			logger.info("Grupo Evaluador: " + iGrupo);
-			logger.info("Responsables: " + lstResponsables.size());
-			logger.info("Delegados: " + lstDelegados.size());
-			logger.info("sCodUsuario: " + sCodUsuario);
-
-			
-			if(!sCodigoEstadoActual.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){
-				Utilitarios.mensajeInfo("INFO", "No se permite el cambio de estado de la solicitud");
-				logger.info("No se permite el cambio de estado de: " + sCodigoEstadoActual);		
-				return;
-			}			
+								
 			if(sCodNivel==null || sCodNivel.equals("")){
 				Utilitarios.mensajeInfo("INFO", "No se obtuvo el nivel de la solicitud");
 				logger.info("No se obtuvo el nivel de la solicitud, no se realizará ninguna cambio");
 				return;
-			}		
+			}	
 			
-			if(usuarioEsMiembroDe(sCodUsuario,lstResponsables,null)){
-				modificarEstadoSolicitudNivel(solicitudNivel,sCodigoEstadoNuevo, sCodUsuario);
-				bRegistro = true;
-			} else if(usuarioEsMiembroDe(sCodUsuario,lstDelegados,iGrupo)){			
-				registrarEstadoMovimientoNivel(solicitudNivel, sCodigoEstadoNuevo, sCodUsuario);
-				if(verificarCalificacionPorDelegados(solicitudNivel, sCodigoEstadoNuevo)){	
-					logger.info("Grupo Delegados: " + iGrupoDelegados);
-					modificarEstadoSolicitudNivel(solicitudNivel, sCodigoEstadoNuevo,iGrupoDelegados.toString());
-				}
-				bRegistro = true;
-			} 		
+			//llena variables: lstResponsables,lstDelegados
+			obtenerDatosDelegadosResponsables(solicitudNivel);
+			Integer iGrupo = obtenerGrupoEvaluador(solicitudNivel);
+			
+			logger.info("Solicitud: " + sCodigoSolicitud);			
+			logger.info("Grupo Evaluador: " + iGrupo);
+			logger.info("Responsables: " + lstResponsables.size());
+			logger.info("Delegados: " + lstDelegados.size());
+			logger.info("sCodUsuario: " + sCodUsuario);
+			
+			try{
+				if(usuarioEsMiembroDe(sCodUsuario,lstResponsables,null)){
+					modificarEstadoSolicitudNivel(solicitudNivel,sCodigoEstadoNuevo, sCodUsuario);
+					bRegistro = true;
+				} else if(usuarioEsMiembroDe(sCodUsuario,lstDelegados,iGrupo)){			
+					registrarEstadoMovimientoNivel(solicitudNivel, sCodigoEstadoNuevo, sCodUsuario);
+					if(verificarCalificacionPorDelegados(solicitudNivel, sCodigoEstadoNuevo)){	
+						logger.info("Grupo Delegados: " + iGrupoDelegados);
+						modificarEstadoSolicitudNivel(solicitudNivel, sCodigoEstadoNuevo,iGrupoDelegados.toString());
+					}
+					bRegistro = true;
+				} 		
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 			
 			if(bRegistro){
 				Utilitarios.mensajeInfo("INFO", "Acción registrada correctamente");
@@ -944,20 +952,17 @@ public class ConsultarSolicitudMB
 		return iGrupo;
 	}
 
-	private void modificarEstadoSolicitudNivel(TiivsSolicitudNivel tiivsSolicitudNivel,String sCodigoEstado,String sRegistro){
+	private void modificarEstadoSolicitudNivel(TiivsSolicitudNivel tiivsSolicitudNivel,String sCodigoEstado,String sRegistro) throws Exception{
 						
 		logger.info("*********************** modificarEstadoSolicitudNivel **************************");
 
 		tiivsSolicitudNivel.setEstado(sCodigoEstado);
 		tiivsSolicitudNivel.setUsuarioRegistro(sRegistro);
 		tiivsSolicitudNivel.setFechaRegistro(new Timestamp((new Date().getTime())));
-		try {
-			GenericDao<TiivsSolicitudNivel, Object> service = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			service.modificar(tiivsSolicitudNivel);
-		} catch (Exception e) {
-			logger.debug("Error al cambiar el estado de la tabla SolicitudNivel");
-		}		
 		
+		GenericDao<TiivsSolicitudNivel, Object> service = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		service.modificar(tiivsSolicitudNivel);
+
 		if(sCodigoEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_DESAPROBADO_T09)){
 			modificarEstadoSolicitud(this.solicitudRegistrarT,sCodigoEstado);
 		} else if(sCodigoEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_APROBADO_T09)){						
@@ -1009,6 +1014,7 @@ public class ConsultarSolicitudMB
 			}						
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			lstMovimientoNivel = null;
 			logger.error("Error al registrar el movimiento");
 		}    
@@ -1050,6 +1056,7 @@ public class ConsultarSolicitudMB
 			filtroNivel.addOrder(Order.asc("id.codNiv"));
 			this.lstSolicitudNivel = soliNivelDAO.buscarDinamico(filtroNivel);
 		} catch (Exception e) {
+			e.printStackTrace();
 			this.lstSolicitudNivel = null;
 			logger.error("Error al obtener datos de nivel");
 		}        
@@ -1070,8 +1077,10 @@ public class ConsultarSolicitudMB
 		lstMiembroNivel = new ArrayList<TiivsMiembroNivel>();
 		this.lstResponsables = new ArrayList<TiivsMiembroNivel>();
 		this.lstDelegados = new ArrayList<TiivsMiembroNivel>();
-		String sCodNivel = solicitudNivel.getId().getCodNiv();
-//		String sCodNivel = solicitudNivel;
+		String sCodNivel=null;
+		if(solicitudNivel!=null){
+			sCodNivel = solicitudNivel.getId().getCodNiv();
+		}
 		
 		try {
 			GenericDao<TiivsMiembroNivel, Object> miembroNivelDAO = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -1079,6 +1088,7 @@ public class ConsultarSolicitudMB
 			filtroMiembroNivel.add(Restrictions.eq("codNiv", sCodNivel));
 			lstMiembroNivel = miembroNivelDAO.buscarDinamico(filtroMiembroNivel);
 		} catch (Exception e) {
+			e.printStackTrace();
 			lstMiembroNivel = null;
 			logger.error("Error al obtener datos de los responsables:" + e.getMessage());
 		}        
@@ -1143,6 +1153,7 @@ public class ConsultarSolicitudMB
 			filtro.add(Restrictions.eq("tiivsSolicitudNivel", tiivsSolicitudNivel));
 			lstMovimientoNivel = movimientoNivelDAO.buscarDinamico(filtro);
 		} catch (Exception e) {
+			e.printStackTrace();
 			lstMovimientoNivel = null;
 			logger.error("Error al obtener datos de movimientos por nivel:"+ e.getMessage());
 		}
@@ -1163,29 +1174,20 @@ public class ConsultarSolicitudMB
 		return iRet;
 	}
 	
-	private void modificarEstadoSolicitud(TiivsSolicitud tiivsSolicitud, String sCodigoEstado) {
+	private void modificarEstadoSolicitud(TiivsSolicitud tiivsSolicitud, String sCodigoEstado) throws Exception {
 				
 		if(sCodigoEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_APROBADO_T09)){
 			sCodigoEstado = ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02;
 		} else if (sCodigoEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_DESAPROBADO_T09)){
 			sCodigoEstado = ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02;
-		}
-		
-				
-		String sCodUsuario = usuario.getUID();
-		
+		}					
+		String sCodUsuario = usuario.getUID();		
 		tiivsSolicitud.setEstado(sCodigoEstado);
 		tiivsSolicitud.setFechaEstado(new Timestamp((new Date().getTime())));
-		tiivsSolicitud.setRegUsuario(sCodUsuario);//validar con diego
-		
-		
-		try {
-			GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			service.modificar(tiivsSolicitud);
-			registrarHistorial(tiivsSolicitud);
-		} catch (Exception e) {
-			logger.debug("No se pudo modificar la solicitud" + e.getMessage());
-		}		 				
+		tiivsSolicitud.setRegUsuario(sCodUsuario);//validar con diego		
+		GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		service.modificar(tiivsSolicitud);
+		registrarHistorial(tiivsSolicitud);				 				
 	}	
 		
 	/*************************************************************************************/
@@ -1401,6 +1403,6 @@ public class ConsultarSolicitudMB
 
 	public void setVerPnlEvaluarNivel(boolean verPnlEvaluarNivel) {
 		this.verPnlEvaluarNivel = verPnlEvaluarNivel;
-	}	
-	
+	}
+
 }
