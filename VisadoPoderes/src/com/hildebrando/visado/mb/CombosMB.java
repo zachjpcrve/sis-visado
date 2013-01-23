@@ -592,6 +592,8 @@ public class CombosMB {
 	public void setLstAbogados(List<TiivsMiembro> lstAbogados) {
 		this.lstAbogados = lstAbogados;
 	}
-	
-	
+
+	public List<TiivsMultitabla> getLstMultitabla() {
+		return lstMultitabla;
+	}	
 }
