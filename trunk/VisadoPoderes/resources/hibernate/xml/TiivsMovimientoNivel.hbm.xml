@@ -5,8 +5,10 @@
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsMovimientoNivel" table="TIIVS_MOVIMIENTO_NIVEL">
         <id name="idMovimiento" type="int">
-            <column name="ID_MOVIMIENTO" precision="8" scale="0" />
-            <generator class="assigned" />
+            <column name="ID_MOVIMIENTO" precision="8" scale="0" />            
+            <generator class="sequence">
+            	<param name="sequence">SEQ_MOVIMIENTO_NIVEL</param>
+            </generator>
         </id>
         <many-to-one name="tiivsSolicitudNivel" class="com.hildebrando.visado.modelo.TiivsSolicitudNivel" fetch="select">
             <column name="COD_SOLI" length="7" />
