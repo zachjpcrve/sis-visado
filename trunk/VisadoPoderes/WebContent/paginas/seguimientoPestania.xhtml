@@ -30,7 +30,8 @@
 
 		</h:panelGrid>
 		
-		
+		<p:commandButton id="validar" value="Validar Vencimiento" update=":formSolicitudSeguimiento" 
+			rendered="false"  actionListener="#{consultarSolicitudMB.validarCambioEstadoVencido}"/>	
 		
 		<h:form id="formSolicitudSeguimiento">
 	      <p:spacer></p:spacer>
