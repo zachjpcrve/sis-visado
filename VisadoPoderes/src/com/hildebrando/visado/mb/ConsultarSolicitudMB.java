@@ -35,6 +35,7 @@ import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMiembro;
+import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
@@ -110,6 +111,9 @@ public class ConsultarSolicitudMB
 		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) && this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){			
 			verPnlEvaluarNivel = true;
 		}
+		
+		combosMB= new CombosMB();
+		combosMB.cargarMultitabla();
 	}	
 	
 	public void modificarTextoVentanaCartaAtencion()
@@ -203,6 +207,55 @@ public class ConsultarSolicitudMB
 			setbMostrarCartaRevision(false);
 			setbMostrarCartaAtencion(false);
 		}
+	}
+	
+	public void validarCambioEstadoVencido()
+	{
+		int diasUtiles=0;
+		
+		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)
+			|| this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02))
+		{
+			for (TiivsMultitabla tmp: combosMB.getLstMultitabla())
+			{
+				if (tmp.getId().getCodMult().trim().equals(ConstantesVisado.CODIGO_MULTITABLA_DIAS_UTILES))
+				{
+					diasUtiles=Integer.valueOf(tmp.getValor2());
+					break;
+				}
+			}
+			
+			Date fechaSolicitud = this.solicitudRegistrarT.getFecha();
+			Date fechaLimite = aumentarFechaxVen(fechaSolicitud, diasUtiles);
+			
+			java.util.Date fechaActual = new java.util.Date();
+			
+			if (fechaActual.after(fechaLimite))
+			{
+				logger.info("Se supero el plazo. Cambiar la solicitud a estado vencido");
+				try {
+					actualizarEstadoVencidoSolicitud();
+				} catch (Exception e) {
+					logger.info("No se pudo cambiar el estado de la solicitud: " + this.solicitudRegistrarT.getCodSoli() + " a vencida");
+					logger.info(e.getStackTrace());
+				}
+			}		
+			else
+			{
+				logger.info("No se supero el plazo. El estado de la solicitud se mantiene");
+			}
+		}	
+	}
+	
+	public Date aumentarFechaxVen(Date fecha, int nroDias)
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(fecha);
+				
+		Date nuevaFecha = cal.getTime();
+		cal.add(Calendar.DAY_OF_YEAR, nroDias);
+		nuevaFecha = cal.getTime();
+		return nuevaFecha;
 	}
 	
 	public void habilitarComentario()
