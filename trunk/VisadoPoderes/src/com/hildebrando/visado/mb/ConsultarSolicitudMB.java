@@ -405,7 +405,11 @@ public class ConsultarSolicitudMB
 			this.bSeccionAccion=true;
 			this.bMostrarCartaRechazo=false;
 		}
-	}		
+	}else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)){
+		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) ){
+			this.bSeccionDictaminar=true;
+		}
+	}
 	}
 	public void obtenerDictamen(ValueChangeEvent e){
 		logger.info("****************** obtenerDictamen ********************** "+e.getNewValue());
