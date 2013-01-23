@@ -136,7 +136,34 @@
 			</h:panelGrid>
 				</p:panel>
 			</td>
-				</tr>
+				</tr>				
+				<tr>
+			<td width="100%">
+
+					<h:panelGrid width="100%" columns="1" rendered="#{consultarSolicitudMB.verPnlEvaluarNivel}">
+					 	<p:messages id="idGrowlSolicitudAccion"></p:messages>
+						<h:outputText title="Acción" value="Acción" styleClass="outputText" />
+						<p:separator styleClass="fielset" />						
+						<!-- Panel Evaluar x Nivel -->
+						<h:panelGrid columns="4"
+							rendered="#{consultarSolicitudMB.verPnlEvaluarNivel}">
+							<h:outputText value="Evaluar Nivel:" styleClass="outputText" />
+							<p:selectOneMenu id="cboEvalNivel" value="#{consultarSolicitudMB.sCodigoEstadoNivel}" required="false"
+								requiredMessage="Seleccione una acción"
+								style="font-size:0.98em; width:150px">								
+								<f:selectItems  value="#{combosMB.lstEstadoNivel}" var="estNivel" itemValue="#{estNivel.codigoEstadoNivel}" itemLabel="#{estNivel.descripcion}" />								
+							</p:selectOneMenu>
+							<p:spacer width="15" />
+							<h:outputText value="Nivel: #{consultarSolicitudMB.sNivelSolicitud}" styleClass="outputText" />
+							<p:spacer />
+							<p:spacer />
+							<p:spacer />
+							<p:commandButton value="Aceptar" action="#{consultarSolicitudMB.registrarAccionSolicitud}" update=":formSolicitudSeguimiento:idGrowlSolicitudAccion" />
+						</h:panelGrid>
+					</h:panelGrid>
+				</td>
+				</tr>													
+				
 				<tr>
 			<td width="100%">
 			<p:panel rendered="#{consultarSolicitudMB.bSeccionDictaminar}" menuTitle="Accion">
