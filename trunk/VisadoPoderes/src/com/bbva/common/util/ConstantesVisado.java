@@ -36,6 +36,8 @@ public class ConstantesVisado {
 	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_RESPONSABLE="R";
 	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_DELEGADO="D";
 	
+	/*clarosa*/
+	public static final java.lang.String CODIGO_MULTITABLA_DIAS_UTILES = "T14";
 	
 	/*SAMIRA*/
 	public static final java.lang.String CODIGO_MULTITABLA_CLASIFICACION_PERSONA = "T13";
