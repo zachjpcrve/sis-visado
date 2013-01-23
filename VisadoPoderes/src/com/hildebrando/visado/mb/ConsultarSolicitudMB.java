@@ -89,6 +89,7 @@ public class ConsultarSolicitudMB
 	private List<TiivsMiembroNivel> lstResponsables;
 	private List<TiivsMiembroNivel> lstDelegados;	
 	private List<TiivsSolicitudNivel> lstSolicitudNivel;
+	private boolean verPnlEvaluarNivel = false;
 	
 	public ConsultarSolicitudMB() 
 	{
@@ -104,6 +105,10 @@ public class ConsultarSolicitudMB
 		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA) && this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02))
 		{
 			setbMostrarComentario(false);
+		}
+		
+		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) && this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){			
+			verPnlEvaluarNivel = true;
 		}
 	}	
 	
@@ -799,10 +804,8 @@ public class ConsultarSolicitudMB
 			logger.info("Debe seleccionar una opción correcta:" + sCodigoEstadoNivel);
 			return;
 		}
-		
-		IILDPeUsuario usuarioIILD = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");				
-		PERFIL_USUARIO =(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
-		String sCodUsuario = (String) usuarioIILD.getUID();
+						
+		String sCodUsuario = (String) usuario.getUID();
 //		String sCodUsuario = this.usuario; 
 		TiivsSolicitudNivel solicitudNivel;
 		
@@ -1115,9 +1118,8 @@ public class ConsultarSolicitudMB
 			sCodigoEstado = ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02;
 		}
 		
-		
-		IILDPeUsuario usuarioIILD = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
-		String sCodUsuario = usuarioIILD.getUID();
+				
+		String sCodUsuario = usuario.getUID();
 		
 		tiivsSolicitud.setEstado(sCodigoEstado);
 		tiivsSolicitud.setFechaEstado(new Timestamp((new Date().getTime())));
@@ -1331,7 +1333,7 @@ public class ConsultarSolicitudMB
 	public void setbMostrarCartaRechazo(boolean bMostrarCartaRechazo) {
 		this.bMostrarCartaRechazo = bMostrarCartaRechazo;
 	}
-
+	
 	public String getPERFIL_USUARIO() {
 		return PERFIL_USUARIO;
 	}
@@ -1339,5 +1341,13 @@ public class ConsultarSolicitudMB
 	public void setPERFIL_USUARIO(String pERFIL_USUARIO) {
 		PERFIL_USUARIO = pERFIL_USUARIO;
 	}
+	
+	public boolean isVerPnlEvaluarNivel() {
+		return verPnlEvaluarNivel;
+	}
+
+	public void setVerPnlEvaluarNivel(boolean verPnlEvaluarNivel) {
+		this.verPnlEvaluarNivel = verPnlEvaluarNivel;
+	}	
 	
 }
