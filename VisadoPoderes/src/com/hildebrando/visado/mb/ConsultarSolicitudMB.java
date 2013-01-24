@@ -585,6 +585,7 @@ public class ConsultarSolicitudMB
 				this.bMostrarCartaRechazo=true;
 				this.bMostrarCartaRevision=true;
 				this.bMostrarCartaAtencion=true;
+				this.bSeccionComentario=false;
 			}
 		}
 		
@@ -598,6 +599,8 @@ public class ConsultarSolicitudMB
 		  GenericDao<TiivsNivel, Object> service=(GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		  List<String> lstCodNivel=new ArrayList<String>();
 			if(solicitud.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+				logger.info("****************** COD_SOLES ******************** " +solicitud.getMoneda());
+				
 				 List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda", ConstantesVisado.MONEDAS.COD_SOLES)));
 				 if(solicitud.getImporte()>=lstNiveles.get(0).getId().getRangoInicio()){
 					 System.out.println("a" +lstNiveles.get(0).getId().getDesNiv());
@@ -676,7 +679,9 @@ public class ConsultarSolicitudMB
 				System.out.println("Calendar.DATE " +Calendar.DATE);
 				for (String codNivel : lstCodNivel) {
 					soliNivel=new TiivsSolicitudNivel();
-					//soliNivel.setId(new TiivsSolicitudNivelId(solicitud.getCodSoli(), codNivel));
+					soliNivel.setCodNiv(codNivel);
+					soliNivel.setEstadoSolicitud(solicitud.getEstado());
+					soliNivel.setTiivsSolicitud(solicitud);
 					soliNivel.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
 					soliNivel.setUsuarioRegistro(usuario.getUID());
 					soliNivel.setFechaRegistro(new Timestamp(Calendar.DATE));
@@ -1566,4 +1571,20 @@ public class ConsultarSolicitudMB
 		this.verPnlEvaluarNivel = verPnlEvaluarNivel;
 	}
 	
+	public boolean isbMostrarCartaImprocedente() {
+		return bMostrarCartaImprocedente;
+	}
+
+	public void setbMostrarCartaImprocedente(boolean bMostrarCartaImprocedente) {
+		this.bMostrarCartaImprocedente = bMostrarCartaImprocedente;
+	}
+
+	public boolean isbMostrarCartaRespuesta() {
+		return bMostrarCartaRespuesta;
+	}
+
+	public void setbMostrarCartaRespuesta(boolean bMostrarCartaRespuesta) {
+		this.bMostrarCartaRespuesta = bMostrarCartaRespuesta;
+	}
+
 }
