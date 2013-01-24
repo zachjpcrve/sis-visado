@@ -216,6 +216,20 @@
 							</font>
 						</a>
 					</c:if>
+					<c:if test="#{consultarSolicitudMB.bMostrarCartaImprocedente}">
+						<a href="">
+							<font color="blue">
+								<u>Carta Improcedente</u>
+							</font>
+						</a>
+					</c:if>
+					<c:if test="#{consultarSolicitudMB.bMostrarCartaRespuesta}">
+						<a href="">
+							<font color="blue">
+								<u>Carta Respuesta</u>
+							</font>
+						</a>
+					</c:if>
 				</td>
 			</tr>
 			</table>
