@@ -22,7 +22,7 @@
                 <comment>C&#243;digo de usuario del responsable o grupo de delegados que efectuan el cambi&#243; de estado del nivel</comment>
             </column>
         </property>
-        <property name="fechaRegistro" type="serializable">
+        <property name="fechaRegistro" type="java.sql.Timestamp">
             <column name="FECHA_REGISTRO">
                 <comment>Fecha en que se realiz&#243; el cambio de estado de nivel</comment>
             </column>
