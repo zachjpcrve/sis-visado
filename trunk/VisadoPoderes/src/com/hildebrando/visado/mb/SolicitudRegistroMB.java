@@ -1368,6 +1368,7 @@ public class SolicitudRegistroMB {
 	    TiivsPersona objPersonaRetorno=new TiivsPersona();
 	    TiivsAgrupacionPersonaId objAgruId=new TiivsAgrupacionPersonaId();
 		try {
+			System.out.println("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getImporte());
 			this.solicitudRegistrarT.setFecha(new Date());
 			this.solicitudRegistrarT.setEstado(this.solicitudRegistrarT.getEstado().trim());
 
@@ -1386,6 +1387,7 @@ public class SolicitudRegistroMB {
 				if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 					this.enviarSolicitudSSJJ();
 				}
+				logger.info(solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
 				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
@@ -1449,7 +1451,7 @@ public class SolicitudRegistroMB {
 
 				logger.info("objResultado.getCodSoli(); "+ objResultado.getCodSoli());
 				logger.info("objResultado.getTiivsSolicitudAgrupacions() "+ objResultado.getTiivsSolicitudAgrupacions().size());
-
+				System.out.println("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getImporte());
 				instanciarSolicitudRegistro();
 			}
 		} catch (Exception e) {
