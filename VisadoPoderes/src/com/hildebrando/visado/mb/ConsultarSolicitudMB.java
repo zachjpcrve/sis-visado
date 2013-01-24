@@ -941,18 +941,17 @@ public class ConsultarSolicitudMB
 	
 	
 	/****************** Evaluacion por Niveles*************************************/	
-	public void registrarAccionSolicitud(){
+	public void registrarEvaluacionNivel(){
 		
-		logger.info("**************registrarAccionSolicitud()*********************");
+		logger.info("**************registrarEvaluacionNivel()*********************");
 			
 		String sCodUsuario = (String) usuario.getUID();
-//		String sCodUsuario = this.registroUsuario; 
+		//String sCodUsuario = this.registroUsuario; 
 		TiivsSolicitudNivel solicitudNivel;
 		
 		String sCodigoEstadoActual = this.solicitudRegistrarT.getEstado().trim();
 		String sCodigoEstadoNuevo = this.getsCodigoEstadoNivel();
-		String sCodigoSolicitud= this.solicitudRegistrarT.getCodSoli();				
-		boolean bRegistro = false;				
+		String sCodigoSolicitud= this.solicitudRegistrarT.getCodSoli();									
 		String sCodNivel ="";
 		
 		if(!sCodigoEstadoNivel.equals(ConstantesVisado.ESTADOS.ESTADO_COD_APROBADO_T09) && 
@@ -961,87 +960,99 @@ public class ConsultarSolicitudMB
 			logger.info("Debe seleccionar una opción correcta:" + sCodigoEstadoNivel);
 			return;
 		}
-		if(!sCodigoEstadoActual.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){
+		if(!sCodigoEstadoActual.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02) &&
+				!sCodigoEstadoActual.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)){
 			Utilitarios.mensajeInfo("INFO", "No se permite el cambio de estado de la solicitud");
 			logger.info("No se permite el cambio de estado de: " + sCodigoEstadoActual);		
 			return;
 		}	
+		
+		if(!PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+			Utilitarios.mensajeInfo("INFO", "No se permite el cambio de estado para el perfil");
+			logger.info("No se permite el cambio de estado para el perfil");		
+			return;
+		}	
+		
+		//llena variable: lstSolicitudNivel
+		solicitudNivel = obtenerNivelSolicitud();
+		if(solicitudNivel!=null){
+			sCodNivel = solicitudNivel.getCodNiv().trim();
+		}
 
+		logger.info("Nivel: " + sCodNivel);
+							
+		if(sCodNivel==null || sCodNivel.equals("")){
+			Utilitarios.mensajeInfo("INFO", "Solicitud sin nivel de evaluación");
+			logger.info("Solicitud sin nivel de evaluación, no se permite realizar cambios");
+			return;
+		}	
 		
+		//llena variables: lstResponsables,lstDelegados
+		obtenerDatosDelegadosResponsables(solicitudNivel);
+		List<Integer> lstGrupo = obtenerGrupoEvaluador(solicitudNivel);
 		
-		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
-			//llena variable: lstSolicitudNivel
-			solicitudNivel = obtenerNivelSolicitud();
-			if(solicitudNivel!=null){
-				sCodNivel = solicitudNivel.getCodNiv().trim();
-			}
-	
-			logger.info("Nivel: " + sCodNivel);
-								
-			if(sCodNivel==null || sCodNivel.equals("")){
-				Utilitarios.mensajeInfo("INFO", "No se obtuvo el nivel de la solicitud");
-				logger.info("No se obtuvo el nivel de la solicitud, no se realizará ninguna cambio");
-				return;
-			}	
-			
-			//llena variables: lstResponsables,lstDelegados
-			obtenerDatosDelegadosResponsables(solicitudNivel);
-			Integer iGrupo = obtenerGrupoEvaluador(solicitudNivel);
-			
-			logger.info("Solicitud: " + sCodigoSolicitud);			
-			logger.info("Grupo Evaluador: " + iGrupo);
-			logger.info("Responsables: " + lstResponsables.size());
-			logger.info("Delegados: " + lstDelegados.size());
-			logger.info("sCodUsuario: " + sCodUsuario);
-			
-			try{
-				if(usuarioEsMiembroDe(sCodUsuario,lstResponsables,null)){
-					modificarEstadoSolicitudNivel(solicitudNivel,sCodigoEstadoNuevo, sCodUsuario,"R");
-					bRegistro = true;
-				} else if(usuarioEsMiembroDe(sCodUsuario,lstDelegados,iGrupo)){			
-					registrarEstadoMovimientoNivel(solicitudNivel, sCodigoEstadoNuevo, sCodUsuario);
-					if(verificarCalificacionPorDelegados(solicitudNivel, sCodigoEstadoNuevo,iGrupo)){						
-						String registro = iGrupoDelegados !=null ? iGrupoDelegados.toString(): null;						
-						logger.info("Registro Estado Solicitud Nivel: " + registro);
-						modificarEstadoSolicitudNivel(solicitudNivel, sCodigoEstadoNuevo,registro,"D");
-					}
-					bRegistro = true;
-				} 		
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			
-			if(bRegistro){
-				Utilitarios.mensajeInfo("INFO", "Acción registrada correctamente");
-			} else {
-				Utilitarios.mensajeInfo("INFO", "Acción no registrada");
-			}
+		StringBuilder sb = new StringBuilder();
+		for(Integer iGrupo : lstGrupo){
+			sb.append(iGrupo + ",");
 		}
 		
-		logger.info("***********registrarAccionSolicitud():FIN ****************");		
+		logger.info("Solicitud: " + sCodigoSolicitud);			
+		logger.info("lstGrupo: " + lstGrupo.size());
+		logger.info("Grupo evaluador: " + sb);
+		logger.info("Responsables: " + lstResponsables.size());
+		logger.info("Delegados: " + lstDelegados.size());
+		logger.info("sCodUsuario: " + sCodUsuario);
+		
+		boolean bRegistro = false;
+		
+		try{
+			if (usuarioEsMiembroDe(sCodUsuario, lstResponsables, null)) {
+				modificarEstadoSolicitudNivel(solicitudNivel,sCodigoEstadoNuevo, sCodUsuario, "R");
+				bRegistro = true;
+			} else if (usuarioEsMiembroDe(sCodUsuario, lstDelegados,lstGrupo)) {
+				registrarEstadoMovimientoNivel(solicitudNivel,sCodigoEstadoNuevo, sCodUsuario);
+				if (verificarCalificacionPorDelegados(solicitudNivel,sCodigoEstadoNuevo, lstGrupo)) {
+					String registro = iGrupoDelegados != null ? iGrupoDelegados.toString() : null;
+					logger.info("Registro Estado Solicitud Nivel: "+ registro);
+					modificarEstadoSolicitudNivel(solicitudNivel,sCodigoEstadoNuevo, registro, "D");
+				}
+				bRegistro = true;
+			} else {
+				bRegistro = false;
+				logger.info("Acción no permitida para el usuario, ya existe un grupo evaluador");
+			}
+													
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		if(bRegistro){
+			Utilitarios.mensajeInfo("INFO", "Acción registrada correctamente");
+		} else {
+			Utilitarios.mensajeInfo("INFO", "Acción no permitida para el usuario");
+		}
+		logger.info("***********registrarEvaluacionNivel():FIN ****************");		
 	}
 	
-	private Integer obtenerGrupoEvaluador(TiivsSolicitudNivel tiivsSolicitudNivel) {
+	private List<Integer> obtenerGrupoEvaluador(TiivsSolicitudNivel tiivsSolicitudNivel) {
 		List<TiivsMovimientoNivel> lstMovimientoNivel = new ArrayList<TiivsMovimientoNivel>();
-		Integer iGrupo = null;
+		List<Integer> lstGrupo = new ArrayList<Integer>();
 		try {
 			GenericDao<TiivsMovimientoNivel, Object> moviNivelDAO = (GenericDao<TiivsMovimientoNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtroNivel = Busqueda.forClass(TiivsMovimientoNivel.class);
 			filtroNivel.add(Restrictions.eq("tiivsSolicitudNivel", tiivsSolicitudNivel));
 			lstMovimientoNivel = moviNivelDAO.buscarDinamico(filtroNivel);			
-			int i=0;			
+			int iGrupo=0;
 			for(TiivsMovimientoNivel m : lstMovimientoNivel){
-				iGrupo=m.getGrupo();
-				i++;
-			}			
-			if(i != lstMovimientoNivel.size()){
-				logger.debug("Existe mas de un grupo evaluador para el nivel:" + tiivsSolicitudNivel.getCodNiv());
-				iGrupo = null;
+				if(iGrupo!=m.getGrupo()){
+					iGrupo = m.getGrupo();
+					lstGrupo.add(iGrupo);
+				}
 			}						
 		}catch(Exception e){
-			iGrupo = null;
+			e.printStackTrace();
 		}
-		return iGrupo;
+		return lstGrupo;
 	}
 
 	private void modificarEstadoSolicitudNivel(TiivsSolicitudNivel tiivsSolicitudNivel,String sCodigoEstado,String sRegistro, String sRolNivel) throws Exception{
@@ -1083,6 +1094,7 @@ public class ConsultarSolicitudMB
 							
 				for(TiivsMovimientoNivel m : lstMovimientoNivel){
 					m.setEstado(sCodigoEstado);
+					m.setFechaRegistro(new Timestamp(new Date().getTime()));
 					moviNivelDAO.modificar(m);
 				}
 				
@@ -1105,26 +1117,25 @@ public class ConsultarSolicitudMB
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			lstMovimientoNivel = null;
 			logger.error("Error al registrar el movimiento");
 		}    
 	
 	}
 	
-	private boolean usuarioEsMiembroDe(String sCodUsuario, List<TiivsMiembroNivel> lstMiembros, Integer iGrupo){
+	private boolean usuarioEsMiembroDe(String sCodUsuario, List<TiivsMiembroNivel> lstMiembros, List<Integer> lstGrupo){
 		if(sCodUsuario == null){
 			return false;
 		}
 		for(TiivsMiembroNivel res : lstMiembros){
 			if(res.getTiivsMiembro().getCodMiembro().equals(sCodUsuario.trim())){
-				if(iGrupo==null){
+				if(lstGrupo==null || lstGrupo.size()==0){
 					return true;
-				} else {					
-					if(res.getGrupo().equals(iGrupo)){
-						return true;
-					} else {
-						return false;
-					}
+				} else {		
+					for(Integer iGrupo : lstGrupo){
+						if(res.getGrupo().equals(iGrupo)){
+							return true;
+						} 
+					}	
 				}				
 			}
 		}
@@ -1198,47 +1209,38 @@ public class ConsultarSolicitudMB
 		
 	
 	
-	private boolean verificarCalificacionPorDelegados(TiivsSolicitudNivel tiivsSolicitudNivel, String sCodigoEstado, Integer iGrupo){				
-
-		List<TiivsMovimientoNivel> lstMovimientoNivel = new ArrayList<TiivsMovimientoNivel>();	
-		lstMovimientoNivel = obtenerMovimientoNivelxGrupo(tiivsSolicitudNivel, iGrupo);						
-		int cont=0;
-		for(TiivsMovimientoNivel movNivel : lstMovimientoNivel){				
-			if(movNivel.getEstado().equals(sCodigoEstado)){
-				cont++;
-			}
-		}
-		int nroDelegados = obtenerNroDelegados(lstDelegados,iGrupo);
-		if(cont==nroDelegados && nroDelegados > 0){
-			this.iGrupoDelegados = iGrupo;
-			return true;				
+	private boolean verificarCalificacionPorDelegados(TiivsSolicitudNivel tiivsSolicitudNivel, String sCodigoEstado, List<Integer> lstGrupo){				
+		
+		List<TiivsMovimientoNivel> lstMovimientoNivel = new ArrayList<TiivsMovimientoNivel>();
+		try {
+			GenericDao<TiivsMovimientoNivel, Object> movimientoNivelDAO = (GenericDao<TiivsMovimientoNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsMovimientoNivel.class);
+			filtro.add(Restrictions.eq("tiivsSolicitudNivel", tiivsSolicitudNivel));
+			lstMovimientoNivel = movimientoNivelDAO.buscarDinamico(filtro);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("Error al obtener datos de movimientos por nivel:"+ e.getMessage());
 		}
 		
-		return false;
-		
-		/*Integer grupo = new Integer(0);
-		List<Integer> lstGrupos = new ArrayList<Integer>();
-		for(TiivsMiembroNivel delegado : lstDelegados){
-			if(grupo!=delegado.getGrupo()){	
-				grupo = delegado.getGrupo();
-				lstGrupos.add(grupo);		
-			}
-		}		
-		for(Integer iGrupo : lstGrupos){
-			int cont=0;
-			for(TiivsMovimientoNivel movNivel : lstMovimientoNivel){				
-				if(movNivel.getGrupo().equals(iGrupo) && movNivel.getEstado().equals(sCodigoEstado)){
-					cont++;
+		int cont;
+		int nroDelegados;
+		if(lstGrupo!=null){
+			for(Integer iGrupo : lstGrupo){
+				cont=0;
+				for(TiivsMovimientoNivel movNivel : lstMovimientoNivel){
+					if(movNivel.getGrupo().equals(iGrupo) && movNivel.getEstado().equals(sCodigoEstado)){ //movimiento nivel x grupo
+						cont++;
+					}
+				}
+				nroDelegados=obtenerNroDelegados(lstDelegados,iGrupo);
+				if(cont==nroDelegados && nroDelegados > 0){
+					this.iGrupoDelegados = iGrupo;
+					return true;				
 				}
 			}
-			if(cont==obtenerNroDelegados(lstDelegados,iGrupo)){
-				this.iGrupoDelegados = iGrupo;
-				return true;				
-			}
 		}
+
 		return false;
-		*/
-		
 	}
 	
 	private int obtenerNroDelegados(List<TiivsMiembroNivel> lstDelegados, Integer iGrupo) {
