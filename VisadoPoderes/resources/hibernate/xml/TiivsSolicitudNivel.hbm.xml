@@ -6,7 +6,9 @@
     <class name="com.hildebrando.visado.modelo.TiivsSolicitudNivel" table="TIIVS_SOLICITUD_NIVEL">
         <id name="id" type="int">
             <column name="ID" precision="8" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence" >
+            <param name="sequence">SEQ_SOL_NIVEL</param>
+            </generator>
         </id>
         <many-to-one name="tiivsSolicitud" class="com.hildebrando.visado.modelo.TiivsSolicitud" fetch="select">
             <column name="COD_SOLI" length="7" not-null="true" />
