@@ -6,7 +6,9 @@
     <class name="com.hildebrando.visado.modelo.TiivsMovimientoNivel" table="TIIVS_MOVIMIENTO_NIVEL">
         <id name="idMovimiento" type="int">
             <column name="ID_MOVIMIENTO" precision="8" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence">
+            	<param name="sequence">SEQ_MOVIMIENTO_NIVEL</param>
+            </generator>
         </id>
         <many-to-one name="tiivsSolicitudNivel" class="com.hildebrando.visado.modelo.TiivsSolicitudNivel" fetch="select">
             <column name="ID_SOL_NIVEL" precision="22" scale="0" />
@@ -22,7 +24,7 @@
                 <comment>Se registra el codigo de usuario del delegado</comment>
             </column>
         </property>
-        <property name="fechaRegistro" type="serializable">
+        <property name="fechaRegistro" type="java.sql.Timestamp">
             <column name="FECHA_REGISTRO" />
         </property>
     </class>
