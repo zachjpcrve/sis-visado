@@ -211,6 +211,7 @@ public class SeguimientoMB
 	{
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
+		filtroSol.setMaxResults(1000);
 		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 		
 		try {
@@ -220,6 +221,8 @@ public class SeguimientoMB
 			ex.printStackTrace();
 			logger.debug("Error al buscar las solicitudes");
 		}
+		
+		logger.info("Numero de solicitudes encontradas: " + solicitudes.size());
 
 		actualizarDatosGrilla();
 		
