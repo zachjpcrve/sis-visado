@@ -2202,22 +2202,27 @@ public class SeguimientoMB
 		return resultado;
 	}
 	
+	/*Probar cuando la tabla miembro tenga el registro 0237 (con cualquiera)*/
 	public TiivsTerritorio buscarTerritorioPorOficina(String codOficina)
 	{
 		int i=0;
 		int j=0;
 		String codTerr="";
 		String desTerr="";
+		TiivsTerritorio terrTMP = new TiivsTerritorio();
+		
 		for (;i<=combosMB.getLstOficina().size();i++)
 		{
-			if (combosMB.getLstOficina().get(i).getCodOfi().equals(codOficina))
+			if (combosMB.getLstOficina().get(i).getCodOfi().trim().equals(codOficina))
 			{
 				codTerr=combosMB.getLstOficina().get(i).getTiivsTerritorio().getCodTer();
 				break;
 			}
 		}
 		
-		if (codTerr!="")
+		logger.info("Cod Territorio encontrado:" + codTerr);
+		
+		if (codTerr.length()>0)
 		{
 			for (;j<=combosMB.getLstTerritorio().size();j++)
 			{
@@ -2227,11 +2232,10 @@ public class SeguimientoMB
 					break;
 				}
 			}
+						
+			terrTMP.setCodTer(codTerr);
+			terrTMP.setDesTer(desTerr);
 		}
-		
-		TiivsTerritorio terrTMP = new TiivsTerritorio();
-		terrTMP.setCodTer(codTerr);
-		terrTMP.setDesTer(desTerr);
 		
 		return terrTMP;
 	}
