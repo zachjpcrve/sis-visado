@@ -694,6 +694,7 @@ public class ConsultarSolicitudMB
 			
 		
 	  }
+	  
 	public void registrarHistorial(TiivsSolicitud solicitud) throws Exception{
 		  SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		  String numeroMovimiento=serviceMaxMovi.obtenerMaximoMovimiento(solicitud.getCodSoli());
@@ -938,10 +939,7 @@ public class ConsultarSolicitudMB
 	public void registrarAccionSolicitud(){
 		
 		logger.info("**************registrarAccionSolicitud()*********************");
-		
-		
-		
-						
+			
 		String sCodUsuario = (String) usuario.getUID();
 //		String sCodUsuario = this.registroUsuario; 
 		TiivsSolicitudNivel solicitudNivel;
@@ -993,13 +991,14 @@ public class ConsultarSolicitudMB
 			
 			try{
 				if(usuarioEsMiembroDe(sCodUsuario,lstResponsables,null)){
-					modificarEstadoSolicitudNivel(solicitudNivel,sCodigoEstadoNuevo, sCodUsuario);
+					modificarEstadoSolicitudNivel(solicitudNivel,sCodigoEstadoNuevo, sCodUsuario,"R");
 					bRegistro = true;
 				} else if(usuarioEsMiembroDe(sCodUsuario,lstDelegados,iGrupo)){			
 					registrarEstadoMovimientoNivel(solicitudNivel, sCodigoEstadoNuevo, sCodUsuario);
-					if(verificarCalificacionPorDelegados(solicitudNivel, sCodigoEstadoNuevo)){	
-						logger.info("Grupo Delegados: " + iGrupoDelegados);
-						modificarEstadoSolicitudNivel(solicitudNivel, sCodigoEstadoNuevo,iGrupoDelegados.toString());
+					if(verificarCalificacionPorDelegados(solicitudNivel, sCodigoEstadoNuevo,iGrupo)){						
+						String registro = iGrupoDelegados !=null ? iGrupoDelegados.toString(): null;						
+						logger.info("Registro Estado Solicitud Nivel: " + registro);
+						modificarEstadoSolicitudNivel(solicitudNivel, sCodigoEstadoNuevo,registro,"D");
 					}
 					bRegistro = true;
 				} 		
@@ -1040,7 +1039,7 @@ public class ConsultarSolicitudMB
 		return iGrupo;
 	}
 
-	private void modificarEstadoSolicitudNivel(TiivsSolicitudNivel tiivsSolicitudNivel,String sCodigoEstado,String sRegistro) throws Exception{
+	private void modificarEstadoSolicitudNivel(TiivsSolicitudNivel tiivsSolicitudNivel,String sCodigoEstado,String sRegistro, String sRolNivel) throws Exception{
 						
 		logger.info("*********************** modificarEstadoSolicitudNivel **************************");
 
@@ -1050,6 +1049,8 @@ public class ConsultarSolicitudMB
 		
 		GenericDao<TiivsSolicitudNivel, Object> service = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		service.modificar(tiivsSolicitudNivel);
+		
+		this.registrarHistorialSolicitud(this.solicitudRegistrarT,tiivsSolicitudNivel.getCodNiv(),sCodigoEstado,sRolNivel);
 
 		if(sCodigoEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_DESAPROBADO_T09)){
 			modificarEstadoSolicitud(this.solicitudRegistrarT,sCodigoEstado);
@@ -1058,9 +1059,7 @@ public class ConsultarSolicitudMB
 				modificarEstadoSolicitud(this.solicitudRegistrarT,sCodigoEstado);
 			}		
 		}		
-		/*if(verificarCalificacionPorNiveles(sCodigoEstado)){
-			modificarEstadoSolicitud(this.solicitudRegistrarT,sCodigoEstado);
-		}*/
+		
 	}
 	
 	private void registrarEstadoMovimientoNivel(TiivsSolicitudNivel tiivsSolicitudNivel, String sCodigoEstado,String sCodUsuario){
@@ -1076,11 +1075,7 @@ public class ConsultarSolicitudMB
 			lstMovimientoNivel = moviNivelDAO.buscarDinamico(filtroNivel);
 			
 			if(lstMovimientoNivel.size()>0){	//...Si ya existe movimiento modificar
-				/*
-				movimientoNivel = lstMovimientoNivel.get(0);
-				movimientoNivel.setEstado(sCodigoEstado);
-				moviNivelDAO.modificar(movimientoNivel);
-				*/				
+							
 				for(TiivsMovimientoNivel m : lstMovimientoNivel){
 					m.setEstado(sCodigoEstado);
 					moviNivelDAO.modificar(m);
@@ -1099,19 +1094,18 @@ public class ConsultarSolicitudMB
 					}
 				}
 				
-			}						
+			}	
+			
+			this.registrarHistorialSolicitud(this.solicitudRegistrarT,tiivsSolicitudNivel.getCodNiv(),sCodigoEstado,"D");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			lstMovimientoNivel = null;
 			logger.error("Error al registrar el movimiento");
 		}    
-		
-//		this.registrarHistorial(this.solicitudRegistrarT);
-				
+	
 	}
 	
-	//private boolean usuarioEsMiembroDe(String sCodUsuario, List<TiivsMiembroNivel> lstMiembros ){
 	private boolean usuarioEsMiembroDe(String sCodUsuario, List<TiivsMiembroNivel> lstMiembros, Integer iGrupo){
 		if(sCodUsuario == null){
 			return false;
@@ -1136,12 +1130,14 @@ public class ConsultarSolicitudMB
 		
 		this.lstSolicitudNivel = new ArrayList<TiivsSolicitudNivel>();
 		TiivsSolicitudNivel solNivel = null;
-		String sCodSolicitud = this.solicitudRegistrarT.getCodSoli();
+		String sCodEstadoSolicitud = null;
 		try {
+			sCodEstadoSolicitud = this.solicitudRegistrarT.getEstado().trim();
 			GenericDao<TiivsSolicitudNivel, Object> soliNivelDAO = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtroNivel = Busqueda.forClass(TiivsSolicitudNivel.class);
-			filtroNivel.add(Restrictions.eq("id.codSoli", sCodSolicitud));
-			filtroNivel.addOrder(Order.asc("id.codNiv"));
+			filtroNivel.add(Restrictions.eq("tiivsSolicitud", this.solicitudRegistrarT));
+			filtroNivel.add(Restrictions.eq("estadoSolicitud", sCodEstadoSolicitud));
+			filtroNivel.addOrder(Order.asc("codNiv"));
 			this.lstSolicitudNivel = soliNivelDAO.buscarDinamico(filtroNivel);
 			
 			for(TiivsSolicitudNivel n : this.lstSolicitudNivel){
@@ -1176,6 +1172,7 @@ public class ConsultarSolicitudMB
 			GenericDao<TiivsMiembroNivel, Object> miembroNivelDAO = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtroMiembroNivel = Busqueda.forClass(TiivsMiembroNivel.class);
 			filtroMiembroNivel.add(Restrictions.eq("codNiv", sCodNivel));
+			filtroMiembroNivel.add(Restrictions.eq("estado", "1"));
 			lstMiembroNivel = miembroNivelDAO.buscarDinamico(filtroMiembroNivel);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1196,11 +1193,25 @@ public class ConsultarSolicitudMB
 		
 	
 	
-	private boolean verificarCalificacionPorDelegados(TiivsSolicitudNivel tiivsSolicitudNivel, String sCodigoEstado){				
+	private boolean verificarCalificacionPorDelegados(TiivsSolicitudNivel tiivsSolicitudNivel, String sCodigoEstado, Integer iGrupo){				
 
 		List<TiivsMovimientoNivel> lstMovimientoNivel = new ArrayList<TiivsMovimientoNivel>();	
-		lstMovimientoNivel = obtenerMovimientoNivel(tiivsSolicitudNivel);						
-		Integer grupo = new Integer(0);
+		lstMovimientoNivel = obtenerMovimientoNivelxGrupo(tiivsSolicitudNivel, iGrupo);						
+		int cont=0;
+		for(TiivsMovimientoNivel movNivel : lstMovimientoNivel){				
+			if(movNivel.getEstado().equals(sCodigoEstado)){
+				cont++;
+			}
+		}
+		int nroDelegados = obtenerNroDelegados(lstDelegados,iGrupo);
+		if(cont==nroDelegados && nroDelegados > 0){
+			this.iGrupoDelegados = iGrupo;
+			return true;				
+		}
+		
+		return false;
+		
+		/*Integer grupo = new Integer(0);
 		List<Integer> lstGrupos = new ArrayList<Integer>();
 		for(TiivsMiembroNivel delegado : lstDelegados){
 			if(grupo!=delegado.getGrupo()){	
@@ -1221,6 +1232,7 @@ public class ConsultarSolicitudMB
 			}
 		}
 		return false;
+		*/
 		
 	}
 	
@@ -1235,16 +1247,17 @@ public class ConsultarSolicitudMB
 	}
 	
 	
-	private List<TiivsMovimientoNivel> obtenerMovimientoNivel(TiivsSolicitudNivel tiivsSolicitudNivel) {
+	private List<TiivsMovimientoNivel> obtenerMovimientoNivelxGrupo(TiivsSolicitudNivel tiivsSolicitudNivel, Integer iGrupo) {
 		List<TiivsMovimientoNivel> lstMovimientoNivel = new ArrayList<TiivsMovimientoNivel>();
 		try {
 			GenericDao<TiivsMovimientoNivel, Object> movimientoNivelDAO = (GenericDao<TiivsMovimientoNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda.forClass(TiivsMovimientoNivel.class);
 			filtro.add(Restrictions.eq("tiivsSolicitudNivel", tiivsSolicitudNivel));
+			filtro.add(Restrictions.eq("grupo", iGrupo));
 			lstMovimientoNivel = movimientoNivelDAO.buscarDinamico(filtro);
 		} catch (Exception e) {
 			e.printStackTrace();
-			lstMovimientoNivel = null;
+//			lstMovimientoNivel = null;
 			logger.error("Error al obtener datos de movimientos por nivel:"+ e.getMessage());
 		}
 		return lstMovimientoNivel;
@@ -1277,9 +1290,67 @@ public class ConsultarSolicitudMB
 		tiivsSolicitud.setRegUsuario(sCodUsuario);//validar con diego		
 		GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		service.modificar(tiivsSolicitud);
-		registrarHistorial(tiivsSolicitud);				 				
+		registrarHistorial(tiivsSolicitud);
+//		this.registrarHistorialSolicitud(tiivsSolicitud,tiivsSolicitudNivel.getCodNiv(),sCodigoEstado,sRolNivel);
 	}	
 		
+	
+	public void registrarHistorialSolicitud(TiivsSolicitud solicitud, String sCodNivel, String sCodEstadoNivel, String sCodRolNivel) throws Exception{
+		logger.info("******************registrarHistorialSolicitud()*****************************");
+		 Timestamp tsFechaRegistro = new Timestamp(new Date().getTime());
+		 String sRegUsuario = this.usuario.getUID();
+		 String sNomUsuario = this.usuario.getNombre() + ' ' + this.usuario.getApellido1() + ' ' + this.usuario.getApellido2();		 
+		 String sCodSoli = solicitud.getCodSoli();
+		 String sEstado = solicitud.getEstado();
+		 String sNivel = sCodNivel;
+		 String sEstadoNivel = sCodEstadoNivel;
+		 String sRolNivel = sCodRolNivel;
+		 logger.info("Registro:" + sRegUsuario);
+		 logger.info("sNomUsuario:" + sNomUsuario);
+		 logger.info("sCodSoli:" + sCodSoli);
+		 logger.info("sEstado:" + sEstado);
+		 logger.info("sNivel:" + sNivel);
+		 logger.info("sEstadoNivel:" + sEstadoNivel);
+		 logger.info("sRolNivel:" + sRolNivel);
+		logger.info("******************registrarHistorialSolicitud()*****************************");
+		
+//		  SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+//		  String numeroMovimiento=serviceMaxMovi.obtenerMaximoMovimiento(solicitud.getCodSoli());
+//		
+//		  int num=0;
+//		  if(!numeroMovimiento.equals("")){
+//		  num= Integer.parseInt(numeroMovimiento)+1;
+//		  }else{
+//			  num=1;
+//		  }
+//		  numeroMovimiento=num+"";
+//		 logger.info("Numero de Movimiento a registrar para el CodSolicitud : " +solicitud.getCodSoli());
+//		 
+//		 
+//		 //movimiento
+//		 Timestamp tsFechaRegistro = new Timestamp(new Date().getTime());
+//		 String sRegUsuario = this.usuario.getUID();
+//		 String sNomUsuario = this.usuario.getNombre() + ' ' + this.usuario.getApellido1() + ' ' + this.usuario.getApellido2();		 
+//		 String sCodSoli = solicitud.getCodSoli();
+//		 String sEstado = solicitud.getEstado();
+//		 String sNivel = sCodNivel;
+//		 String sEstadoNivel = sCodEstadoNivel;
+//		 String sRolNivel = sCodRolNivel;
+//		 
+//		 
+//		TiivsHistSolicitud objHistorial = new TiivsHistSolicitud();
+//		objHistorial.setId(new TiivsHistSolicitudId(sCodSoli, numeroMovimiento));
+//		objHistorial.setEstado(sEstado);
+//		objHistorial.setNomUsuario(sNomUsuario);
+//		objHistorial.setRegUsuario(sRegUsuario);
+//		objHistorial.setFecha(tsFechaRegistro);
+//		objHistorial.setNivel(sNivel);
+//		objHistorial.setEstadoNivel(sEstadoNivel);
+//		objHistorial.setRolNivel(sRolNivel);
+//		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+//		serviceHistorialSolicitud.insertar(objHistorial);
+	}
+	
 	/*************************************************************************************/
 	
 	public CombosMB getCombosMB() {
@@ -1494,5 +1565,5 @@ public class ConsultarSolicitudMB
 	public void setVerPnlEvaluarNivel(boolean verPnlEvaluarNivel) {
 		this.verPnlEvaluarNivel = verPnlEvaluarNivel;
 	}
-
+	
 }
