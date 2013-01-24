@@ -3,6 +3,7 @@ package com.hildebrando.visado.modelo;
 // Generated 23/01/2013 04:04:35 PM by Hibernate Tools 3.4.0.CR1
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ public class TiivsSolicitudNivel implements java.io.Serializable {
 	private String codNiv;
 	private String estadoNivel;
 	private String usuarioRegistro;
-	private Serializable fechaRegistro;
+	private Timestamp fechaRegistro;
 	private String estadoSolicitud;
 	private Set tiivsMovimientoNivels = new HashSet(0);
 
@@ -32,7 +33,7 @@ public class TiivsSolicitudNivel implements java.io.Serializable {
 
 	public TiivsSolicitudNivel(int id, TiivsSolicitud tiivsSolicitud,
 			String codNiv, String estadoNivel, String usuarioRegistro,
-			Serializable fechaRegistro, String estadoSolicitud,
+			Timestamp fechaRegistro, String estadoSolicitud,
 			Set tiivsMovimientoNivels) {
 		this.id = id;
 		this.tiivsSolicitud = tiivsSolicitud;
@@ -84,11 +85,11 @@ public class TiivsSolicitudNivel implements java.io.Serializable {
 		this.usuarioRegistro = usuarioRegistro;
 	}
 
-	public Serializable getFechaRegistro() {
+	public Timestamp getFechaRegistro() {
 		return this.fechaRegistro;
 	}
 
-	public void setFechaRegistro(Serializable fechaRegistro) {
+	public void setFechaRegistro(Timestamp fechaRegistro) {
 		this.fechaRegistro = fechaRegistro;
 	}
 
