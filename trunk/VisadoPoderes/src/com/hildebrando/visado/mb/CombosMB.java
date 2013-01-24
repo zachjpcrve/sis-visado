@@ -306,7 +306,7 @@ public class CombosMB {
 		try {
 			lstOficina = oficDAO.buscarDinamico(filtroOfi);
 			lstOficina1 = oficDAO.buscarDinamico(filtroOfi);
-			logger.debug("TAMANIOO DE LA LSTOFICIN EN EL COMBOMB " +lstOficina.size());
+			logger.info("TAMANIOO DE LA LSTOFICIN EN EL COMBOMB " +lstOficina.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.debug("Error al cargar el listado de oficinas");
