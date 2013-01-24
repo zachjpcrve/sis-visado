@@ -51,6 +51,7 @@ import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
+import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
@@ -106,6 +107,9 @@ public class SeguimientoMB
 	private String nombreArchivoExcel;
 	private String rutaArchivoExcel;
 	private StreamedContent file;  
+	private IILDPeUsuario usuario;
+	private String PERFIL_USUARIO ;
+	private boolean bloquearOficina=false;
 	
 //	private List<TiivsHistSolicitud> lstHistorial;
 	private List<SeguimientoDTO> lstSeguimientoDTO;
@@ -117,6 +121,8 @@ public class SeguimientoMB
 	
 	public SeguimientoMB()
 	{
+		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");	
+		PERFIL_USUARIO=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		solicitudes = new ArrayList<TiivsSolicitud>();
 		lstAgrupPer= new ArrayList<TiivsAgrupacionPersona>();
 		lstNivelSelected = new ArrayList<String>();
@@ -170,14 +176,14 @@ public class SeguimientoMB
 		String codOfi="";
 		String desOfi="";
 		String textoOficina="";
-		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");	
-		
+				
 		if (grupoOfi!=null)
 		{
 			if (grupoOfi.compareTo("")!=0)
 			{
 				codOfi=usuario.getBancoOficina().getCodigo().trim();
 				desOfi=usuario.getBancoOficina().getDescripcion();
+				
 				TiivsTerritorio terr=buscarTerritorioPorOficina(codOfi);
 						
 				textoOficina =codOfi + " "  + desOfi+ " (" + terr.getCodTer() + "-" + terr.getDesTer() + ")";
@@ -188,6 +194,13 @@ public class SeguimientoMB
 		{
 			logger.info("Texto Oficina a setear: " + textoOficina);
 			setTxtNomOficina(textoOficina);
+			
+			TiivsOficina1 tmpOfi = new TiivsOficina1();
+			tmpOfi.setCodOfi(usuario.getBancoOficina().getCodigo().trim());
+			tmpOfi.setDesOfi(textoOficina);
+			
+			setOficina(tmpOfi);
+			setBloquearOficina(true);
 		}
 		
 		//Seteo del campo Estudio en caso de que el grupo sea de Servicios Juridicos
@@ -212,6 +225,15 @@ public class SeguimientoMB
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
 		filtroSol.setMaxResults(1000);
+		
+		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) ){
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTUDIO, buscarEstudioxAbogado()));
+		}
+		else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
+		{
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, usuario.getBancoOficina().getCodigo().trim()));
+		}
+		
 		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 		
 		try {
@@ -235,6 +257,30 @@ public class SeguimientoMB
 				setMostrarColumna(false);
 			}
 		}
+	}
+	
+	public String buscarEstudioxAbogado()
+	{
+		String codEstudio ="";
+		GenericDao<TiivsMiembro, Object> mDAO = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroM = Busqueda.forClass(TiivsMiembro.class);
+		filtroM.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_MIEMBRO, usuario.getUID()));
+		List<TiivsMiembro> result = new ArrayList<TiivsMiembro>();
+		
+		try {
+			result = mDAO.buscarDinamico(filtroM);
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.debug("Error el estudio asociado al abogado");
+		}
+		
+		if (result!=null)
+		{
+			codEstudio = result.get(0).getEstudio();
+		}
+		
+		return codEstudio;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -449,7 +495,6 @@ public class SeguimientoMB
 	public String obtenerGenerador()
 	{
 		String resultado="";
-		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		
 		if (usuario != null)
 		{
@@ -1118,8 +1163,6 @@ public class SeguimientoMB
 	{
 		String res="";
 		
-		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
-		
 		for (TiivsParametros tmp: pdfViewerMB.getLstParametros())
 		{
 			if (usuario.getUID().equals(tmp.getCodUsuario()))
@@ -1700,6 +1743,14 @@ public class SeguimientoMB
 				logger.info("No hay solicitudes en el historial con estado Revocado");
 				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
 			}
+		}
+		
+		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) ){
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTUDIO, buscarEstudioxAbogado()));
+		}
+		else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
+		{
+			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, usuario.getBancoOficina().getCodigo().trim()));
 		}
 		
 		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
@@ -2660,5 +2711,29 @@ public class SeguimientoMB
 
 	public void setFile(StreamedContent file) {
 		this.file = file;
+	}
+
+	public IILDPeUsuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(IILDPeUsuario usuario) {
+		this.usuario = usuario;
+	}
+
+	public String getPERFIL_USUARIO() {
+		return PERFIL_USUARIO;
+	}
+
+	public void setPERFIL_USUARIO(String pERFIL_USUARIO) {
+		PERFIL_USUARIO = pERFIL_USUARIO;
+	}
+
+	public boolean isBloquearOficina() {
+		return bloquearOficina;
+	}
+
+	public void setBloquearOficina(boolean bloquearOficina) {
+		this.bloquearOficina = bloquearOficina;
 	}
 }

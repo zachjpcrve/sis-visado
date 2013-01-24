@@ -91,6 +91,7 @@ public class ConstantesVisado {
 	public static final String CAMPO_FECHA_RPTA="fechaRespuesta";
 	public static final String CAMPO_COD_OFICINA="codOfi";
 	public static final String CAMPO_ESTADO="estado";
+	public static final String CAMPO_COD_MIEMBRO="codMiembro";
 	
 	/*eramoz*/
 	public static final String CAMPO_ID_CODIGO_SOLICITUD_ALIAS="id.codSoli";
