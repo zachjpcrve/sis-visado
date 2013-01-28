@@ -28,6 +28,7 @@ import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
 import com.hildebrando.visado.dto.SeguimientoDTO;
+import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
 import com.hildebrando.visado.modelo.TiivsDocumento;
@@ -375,7 +376,7 @@ public class ConsultarSolicitudMB
 		   lstAnexosSolicitudes=solicitudService.obtenerListarAnexosSolicitud(solicitud);
 		   
 		   //descargar anexos
-		  // descargarAnexosFileServer();
+		   //descargarAnexosFileServer();
 		   
 		   lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 		   int i=0;
@@ -391,15 +392,17 @@ public class ConsultarSolicitudMB
 		   TiivsPersona objPersona=new TiivsPersona();
 		   for (TiivsSolicitudAgrupacion x : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) {
-				   System.out.println("d.getTiivsPersona() "+d.getTiivsPersona());
+				   System.out.println("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
 				   objPersona=new TiivsPersona();
 				   objPersona=d.getTiivsPersona();
 				   objPersona.setTipPartic(d.getId().getTipPartic());
+				   objPersona.setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getId().getTipPartic().trim()));
 				   objPersona.setClasifPer(d.getId().getClasifPer());
+				   objPersona.setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getId().getClasifPer().trim()));
+				   objPersona.setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
 				  lstPersonas.add(objPersona);
 				if(d.getId().getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 					lstPoderdantes.add(d.getTiivsPersona());
-					
 					}
 				else  if(d.getId().getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 					lstApoderdantes.add(d.getTiivsPersona());
@@ -409,7 +412,7 @@ public class ConsultarSolicitudMB
 			   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), x.getId().getNumGrupo()));
 			   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
 			   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
-			   agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionMoneda(x.getActivo().trim()) );
+			   agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionEstado(x.getActivo().trim()) );
 			   agrupacionSimpleDto.setLstPersonas(lstPersonas);
 			   lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 			   
@@ -429,8 +432,36 @@ public class ConsultarSolicitudMB
 		}
 	}
 
-	
-	
+	public String obtenerDescripcionDocumentos(String idTipoDocumentos){
+		String descripcion="";
+		for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
+			if(z.getCodTipoDoc().trim().equals(idTipoDocumentos)){
+				 descripcion=z.getDescripcion();
+				 break;
+			}
+		}
+		return descripcion;
+	}
+	public String obtenerDescripcionClasificacion(String idTipoClasificacion){
+		String descripcion="";
+		for (ComboDto z : combosMB.getLstClasificacionPersona()) {
+			if(z.getKey().trim().equals(idTipoClasificacion)){
+				 descripcion=z.getDescripcion();
+				 break;
+			}
+		}
+		return descripcion;
+	}
+	public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro){
+		String descripcion="";
+		for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+			if(z.getKey().trim().equals(idTipoTipoRegistro)){
+				 descripcion=z.getDescripcion();
+				 break;
+			}
+		}
+		return descripcion;
+	}
 	
 	public void actualizarEstadoReservadoSolicitud() throws Exception{
 		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
