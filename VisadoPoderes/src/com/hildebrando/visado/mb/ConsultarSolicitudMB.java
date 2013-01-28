@@ -36,6 +36,8 @@ import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMiembro;
+import com.hildebrando.visado.modelo.TiivsMiembroNivel;
+import com.hildebrando.visado.modelo.TiivsMovimientoNivel;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsPersona;
@@ -43,10 +45,7 @@ import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
-import com.hildebrando.visado.modelo.TiivsSolicitudNivelId;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
-import com.hildebrando.visado.modelo.TiivsMiembroNivel;
-import com.hildebrando.visado.modelo.TiivsMovimientoNivel;
 
 @ManagedBean(name = "consultarSolicitudMB")
 @SessionScoped
@@ -296,7 +295,7 @@ public class ConsultarSolicitudMB
 	public void listarComboDictamen()
     {
     	lstComboDictamen=new ArrayList<ComboDto>();
-    	System.out.println("this.solicitudRegistrarT.getEstado() " +this.solicitudRegistrarT.getEstado());
+    	logger.info("this.solicitudRegistrarT.getEstado() " +this.solicitudRegistrarT.getEstado());
     	//SOLO SERVICIOS JURIDICOS
     	if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ))
     	{
@@ -315,12 +314,24 @@ public class ConsultarSolicitudMB
     	}
     }
     
-	public String redirectDetalleSolicitud() {
+	public String redirectDetalleSolicitud() 
+	{
 		logger.info(" **** redirectDetalleSolicitud ***");
+		
+		String redirect="";
 		obtenerSolicitud();
 		
-		return "/faces/paginas/detalleSolicitud.xhtml";
+		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02))
+		{
+			redirect ="/faces/paginas/solicitudEdicion.xhtml";
+			//redirect ="/faces/paginas/detalleSolicitud.xhtml";
+		}
+		else
+		{
+			redirect ="/faces/paginas/detalleSolicitud.xhtml";
+		}
 		
+		return redirect;	
 	}
 	
 	public void abogadosXEstudios(ValueChangeEvent e)
@@ -392,7 +403,7 @@ public class ConsultarSolicitudMB
 		   TiivsPersona objPersona=new TiivsPersona();
 		   for (TiivsSolicitudAgrupacion x : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) {
-				   System.out.println("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
+				   logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
 				   objPersona=new TiivsPersona();
 				   objPersona=d.getTiivsPersona();
 				   objPersona.setTipPartic(d.getId().getTipPartic());
@@ -634,15 +645,15 @@ public class ConsultarSolicitudMB
 				
 				 List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda", ConstantesVisado.MONEDAS.COD_SOLES)));
 				 if(solicitud.getImporte()>=lstNiveles.get(0).getId().getRangoInicio()){
-					 System.out.println("a" +lstNiveles.get(0).getId().getDesNiv());
+					 logger.info("a" +lstNiveles.get(0).getId().getDesNiv());
 					 
 					 if(this.solicitudRegistrarT.getImporte()>lstNiveles.get(lstNiveles.size()-1).getId().getRangoFin()){
-						 System.out.println("c");
+						 //System.out.println("c");
 					 }else{
-						 System.out.println("d");
+						 //System.out.println("d");
 						 for (TiivsNivel x : lstNiveles) {
 							 if(solicitud.getImporte()>=x.getId().getRangoInicio()){
-								 System.out.println("g " +x.getId().getDesNiv());
+								 logger.info("g " +x.getId().getDesNiv());
 								 lstCodNivel.add(x.getId().getCodNiv());
 								
 							 }
@@ -657,15 +668,15 @@ public class ConsultarSolicitudMB
 				logger.info("*********************************** COD_DOLAR ********************************************");
 				List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda", ConstantesVisado.MONEDAS.COD_DOLAR)));
 				 if(solicitud.getImporte()>=lstNiveles.get(0).getId().getRangoInicio()){
-					 System.out.println("a" +lstNiveles.get(0).getId().getDesNiv());
+					 logger.info("a" +lstNiveles.get(0).getId().getDesNiv());
 					 
 					 if(this.solicitudRegistrarT.getImporte()>lstNiveles.get(lstNiveles.size()-1).getId().getRangoFin()){
-						 System.out.println("c");
+						 //System.out.println("c");
 					 }else{
-						 System.out.println("d");
+						 //System.out.println("d");
 						 for (TiivsNivel x : lstNiveles) {
 							 if(solicitud.getImporte()>=x.getId().getRangoInicio()){
-								 System.out.println("g " +x.getId().getDesNiv());
+								 logger.info("g " +x.getId().getDesNiv());
 								 lstCodNivel.add(x.getId().getCodNiv());
 								
 							 }
@@ -678,15 +689,15 @@ public class ConsultarSolicitudMB
 				logger.info("*********************************** COD_EUROS ********************************************");
 				List<TiivsNivel>lstNiveles=service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda", ConstantesVisado.MONEDAS.COD_EUROS)));
 				 if(solicitud.getImporte()>=lstNiveles.get(0).getId().getRangoInicio()){
-					 System.out.println("a" +lstNiveles.get(0).getId().getDesNiv());
+					 logger.info("a" +lstNiveles.get(0).getId().getDesNiv());
 					 
 					 if(this.solicitudRegistrarT.getImporte()>lstNiveles.get(lstNiveles.size()-1).getId().getRangoFin()){
-						 System.out.println("c");
+						 //System.out.println("c");
 					 }else{
-						 System.out.println("d");
+						 //System.out.println("d");
 						 for (TiivsNivel x : lstNiveles) {
 							 if(solicitud.getImporte()>=x.getId().getRangoInicio()){
-								 System.out.println("g " +x.getId().getDesNiv());
+								 logger.info("g " +x.getId().getDesNiv());
 								 lstCodNivel.add(x.getId().getCodNiv());
 								
 							 }
@@ -697,7 +708,7 @@ public class ConsultarSolicitudMB
 			}else {
 				logger.info("*********************************** NO ENTRO EN NINGUNO ********************************************");
 			}
-			System.out.println("Tamanio de la lista de Niveles : " +lstCodNivel.size());
+			logger.info("Tamanio de la lista de Niveles : " +lstCodNivel.size());
 			if(lstCodNivel.size()>0){
 				// SI LA SOLICITUD SOPERA ALGUN NIVEL, ENTONCES PASA A ESTADO EN VERIFICACION A, SI NO A ACEPTADO
 				if(this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
@@ -707,7 +718,7 @@ public class ConsultarSolicitudMB
 		     	}   
 				GenericDao<TiivsSolicitudNivel, Object> serviceSolicitud=(GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 				TiivsSolicitudNivel soliNivel=null;
-				System.out.println("Calendar.DATE " +Calendar.DATE);
+				logger.info("Calendar.DATE " +Calendar.DATE);
 				for (String codNivel : lstCodNivel) {
 					soliNivel=new TiivsSolicitudNivel();
 					soliNivel.setCodNiv(codNivel);
