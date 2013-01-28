@@ -112,6 +112,7 @@ public class SolicitudRegistroMB {
 	private List<TiivsTipoSolicDocumento> lstDocumentosXTipoSolTemp;
 	boolean bBooleanPopup = false;
 	boolean bBooleanPopupTipoCambio = true;
+	boolean bBooleanPopupEmail = true;
 	private boolean flagUpdateOperacionSolic = false;
 	private boolean flagUpdateOperacionSolcAgrupac = false;
 	private boolean flagUpdateOperacionSolcDocumen = false;
@@ -1386,8 +1387,9 @@ public class SolicitudRegistroMB {
 			if (this.validarRegistroSolicitud()) {
 				if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 					this.enviarSolicitudSSJJ();
+					logger.info(solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
 				}
-				logger.info(solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
+				
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
 				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
