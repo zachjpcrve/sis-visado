@@ -1,6 +1,7 @@
 package com.bbva.persistencia.generica.dao.impl;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,9 +57,10 @@ public abstract  class SolicitudDaoImpl <K, T extends Serializable>
 	
 	public String obtenerMaximoMovimiento(String codSolicitud) throws Exception{
      
-		final String  sql ="select max(movimiento)movimiento from tiivs_hist_solicitud where cod_soli='"+codSolicitud+"' group by cod_soli";
+		final String  sql ="select max(cast(movimiento as number))movimiento from tiivs_hist_solicitud where cod_soli='"+codSolicitud+"' group by cod_soli";
 		
 		String movimiento="";
+		BigDecimal nMovimiento=null;
 		List ResultList = (List)getHibernateTemplate().execute(new HibernateCallback() {
 				public List doInHibernate(Session session) throws HibernateException {
 				SQLQuery sq =session.createSQLQuery(sql);
@@ -67,10 +69,13 @@ public abstract  class SolicitudDaoImpl <K, T extends Serializable>
 
 				if(ResultList.size()>0){
 				for(int i=0;i<=ResultList.size()-1;i++){
-					movimiento=  (String) ResultList.get(i);
+					nMovimiento =  (BigDecimal) ResultList.get(i);
 				
 				}
 	           }
+		if(nMovimiento!=null){
+			movimiento = nMovimiento.toString();
+		}
 		return movimiento;
 
 
