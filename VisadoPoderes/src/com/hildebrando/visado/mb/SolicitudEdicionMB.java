@@ -1,11 +1,14 @@
 package com.hildebrando.visado.mb;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +16,9 @@ import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
@@ -29,13 +35,16 @@ import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.converter.PersonaDataModal;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.ApoderadoDTO;
+import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
 import com.hildebrando.visado.dto.OperacionBancariaDTO;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.Solicitud;
+import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
+import com.hildebrando.visado.modelo.TiivsAnexoSolicitudId;
 import com.hildebrando.visado.modelo.TiivsDocumento;
 import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
@@ -47,6 +56,7 @@ import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
+import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperbanId;
 import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
@@ -156,7 +166,85 @@ public class SolicitudEdicionMB
 		cargarDocumentos();
 		obtenerSolicitud();
 	}
-	
+	public boolean validarAgregarAgrupacion(){
+		boolean returno=true;
+		logger.info("***************************** validarAgregarAgrupacion ***************************************");
+		String mensaje="Por lo menos ingrese un Poderdante o Apoderado";
+		if(lstTiivsPersona.size()==0){
+			returno=false;
+			Utilitarios.mensajeInfo("", mensaje);
+		}
+		return returno;
+	}
+	 public void agregarAgrupacion(){
+		  if(validarAgregarAgrupacion()){
+		  numGrupo=numGrupo+1;
+		  logger.info("********************** agregarAgrupacion ********************* " +numGrupo);
+		  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
+		  List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
+		  TiivsAgrupacionPersona tiivsAgrupacionPersona=null;
+		  for (TiivsPersona objTiivsPersonaResultado : lstTiivsPersona) {
+			  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+				  lstPoderdantes.add(objTiivsPersonaResultado);}
+			  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.APODERADO)){
+				  lstApoderdantes.add(objTiivsPersonaResultado);}
+			  logger.info("objTiivsPersonaResultado.getCodPer() : "+objTiivsPersonaResultado.getCodPer());
+			  tiivsAgrupacionPersona =new TiivsAgrupacionPersona();
+			  TiivsAgrupacionPersonaId  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersonaId();
+			  tiivsAgrupacionPersonaId.setNumGrupo(numGrupo);
+			  tiivsAgrupacionPersonaId.setCodSoli(solicitudEdicionT.getCodSoli());
+			  tiivsAgrupacionPersonaId.setCodPer(objTiivsPersonaResultado.getCodPer());
+			  tiivsAgrupacionPersonaId.setClasifPer(objTiivsPersonaResultado.getClasifPer());
+			  tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado.getTipPartic());
+			  tiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
+			  tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
+			  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
+			  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
+		}  
+		  logger.info("lstPoderdantes " +lstPoderdantes.size());
+		  logger.info("lstApoderdantes " +lstApoderdantes.size());
+		  AgrupacionSimpleDto agrupacionSimpleDto =new AgrupacionSimpleDto();
+		   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudEdicionT.getCodSoli(), numGrupo));
+		   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
+		   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
+		   agrupacionSimpleDto.setsEstado("Activo");
+		   agrupacionSimpleDto.setiEstado(1);
+		   agrupacionSimpleDto.setLstPersonas(this.lstTiivsPersona);
+		  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+		  solicitudEdicionT.setTiivsSolicitudAgrupacions(this.agregarSolicitudArupacion(numGrupo));
+		  lstTiivsPersona=new ArrayList<TiivsPersona>();
+			logger.info("Tamanio de la lista Solicitud Agrupacion : " +solicitudEdicionT.getTiivsSolicitudAgrupacions().size());
+		  this.llamarComision();
+		 logger.info("tamanio de lstTiivsAgrupacionPersonas "+lstTiivsAgrupacionPersonas.size());
+		  }
+	 }
+	 public void llamarComision() {
+			logger.info("************************** llamar Comusion *****************************");
+			this.solicitudEdicionT.setComision(objRegistroUtilesMB.calcularComision(this.solicitudEdicionT));
+			logger.info("COMISION : " + this.solicitudEdicionT.getComision());
+
+		}
+	 public Set<TiivsSolicitudAgrupacion> agregarSolicitudArupacion(int iNumGrupo) {
+			logger.info("iNumGrupo : " + iNumGrupo);
+
+			Set<TiivsSolicitudAgrupacion> lstSolicitudArupacion = new HashSet<TiivsSolicitudAgrupacion>();
+			lstSolicitudArupacion = this.solicitudEdicionT
+					.getTiivsSolicitudAgrupacions();
+			TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion = new TiivsSolicitudAgrupacion();
+			TiivsSolicitudAgrupacionId tiivsSolicitudAgrupacionId = new TiivsSolicitudAgrupacionId();
+			tiivsSolicitudAgrupacionId.setCodSoli(solicitudEdicionT.getCodSoli());
+			tiivsSolicitudAgrupacionId.setNumGrupo(iNumGrupo);
+			tiivsSolicitudAgrupacion.setId(tiivsSolicitudAgrupacionId);
+			tiivsSolicitudAgrupacion
+					.setTiivsAgrupacionPersonas(lstTiivsAgrupacionPersonas);
+			tiivsSolicitudAgrupacion.setActivo("1");
+
+			lstSolicitudArupacion.add(tiivsSolicitudAgrupacion);
+			logger.info("TAMANIO DE LA SOLICI AGRUPA "
+					+ lstSolicitudArupacion.size());
+			return lstSolicitudArupacion;
+		}
+
 	public boolean validarRegistroSolicitud() throws Exception 
 	{
 		boolean retorno = true;
@@ -492,10 +580,8 @@ public class SolicitudEdicionMB
 		return descripcion;
 	}
 	
-	public void obtenerSolicitud()
-	{
-		try 
-		{
+	public void obtenerSolicitud(){
+		try {
 		   lstAgrupacionSimpleDto=new ArrayList<AgrupacionSimpleDto>();
 		   String codigoSolicitud=Utilitarios.capturarParametro("prm_codSoli");
 		   logger.info("codigoSolicitud : "+codigoSolicitud);
@@ -504,29 +590,12 @@ public class SolicitudEdicionMB
 		   SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		   solicitudEdicionT= solicitudService.obtenerTiivsSolicitud(solicitud);
 		   solicitudEdicionT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudEdicionT.getEstado()));
-		   
-		   if (solicitudEdicionT.getMoneda()!=null && solicitudEdicionT.getImporte()!=null)
-		   {
-			   solicitudEdicionT.setsImporteMoneda(buscarAbrevMoneda(solicitudEdicionT.getMoneda()).concat(ConstantesVisado.DOS_PUNTOS).concat(solicitudEdicionT.getImporte().toString()));
+		   if(solicitudEdicionT.getTiivsEstudio()==null){
+		   solicitudEdicionT.setTiivsEstudio(new TiivsEstudio());
 		   }
-		   else
-		   {
-			   if (solicitudEdicionT.getImporte()!=null)
-			   {
-				   solicitudEdicionT.setsImporteMoneda(solicitudEdicionT.getImporte().toString());
-			   }
-		   }
-		   
-		   if(solicitudEdicionT.getTiivsEstudio()==null)
-		   {
-			   solicitudEdicionT.setTiivsEstudio(new TiivsEstudio());
-		   }
-		   
 		   lstSolicBancarias=solicitudService.obtenerListarOperacionesBancarias(solicitud);
 		   int y=0;
-		   
-		   for (TiivsSolicitudOperban f : lstSolicBancarias) 
-		   {
+		   for (TiivsSolicitudOperban f : lstSolicBancarias) {
 		 	 if (f.getMoneda()!=null)
 			 {
 		 		 y++;
@@ -534,75 +603,93 @@ public class SolicitudEdicionMB
 		 		 f.setsDescMoneda(Utilitarios.obternerDescripcionMoneda(f.getMoneda()));
 			 }
 		   }
-		   
 		   lstAnexosSolicitudes=solicitudService.obtenerListarAnexosSolicitud(solicitud);
 		   
 		   //descargar anexos
-		   // descargarAnexosFileServer();
+		   //descargarAnexosFileServer();
 		   
 		   lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 		   int i=0;
-		   
-		   for (TiivsAnexoSolicitud v : lstAnexosSolicitudes) 
-		   {
+		  for (TiivsAnexoSolicitud v : lstAnexosSolicitudes) {
 			  i++;
-			  lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%03d",i) , obtenerDescripcionDocumento(v.getId().getCodDoc()), v.getAliasTemporal()));
-		   }
-		   
+			  lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%03d",i) , obtenerDescripcionDocumentos(v.getId().getCodDoc()), v.getAliasTemporal()));
+		     }
 		   // PODERDANTES Y APODERADOS
-		   List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
-		   List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
+		    List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
+			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
 		   AgrupacionSimpleDto agrupacionSimpleDto  =new AgrupacionSimpleDto(); ;
 		   List<TiivsPersona>lstPersonas=new ArrayList<TiivsPersona>();
 		   TiivsPersona objPersona=new TiivsPersona();
-		   
-		   for (TiivsSolicitudAgrupacion x : solicitudEdicionT.getTiivsSolicitudAgrupacions()) 
-		   {
-			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) 
-			   {
-				   logger.info("d.getTiivsPersona() "+d.getTiivsPersona());
+		   for (TiivsSolicitudAgrupacion x : solicitudEdicionT.getTiivsSolicitudAgrupacions()) {
+			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) {
+				   logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
 				   objPersona=new TiivsPersona();
 				   objPersona=d.getTiivsPersona();
 				   objPersona.setTipPartic(d.getId().getTipPartic());
+				   objPersona.setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getId().getTipPartic().trim()));
 				   objPersona.setClasifPer(d.getId().getClasifPer());
-				   lstPersonas.add(objPersona);
-				   
-				   if(d.getId().getTipPartic().equals(ConstantesVisado.PODERDANTE))
-				   {
-					  lstPoderdantes.add(d.getTiivsPersona());
-				   }
-				   else  if(d.getId().getTipPartic().equals(ConstantesVisado.PODERDANTE))
-				   {
-					  lstApoderdantes.add(d.getTiivsPersona());
-				   }
-			   }
-			   
+				   objPersona.setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getId().getClasifPer().trim()));
+				   objPersona.setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
+				  lstPersonas.add(objPersona);
+				if(d.getId().getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+					lstPoderdantes.add(d.getTiivsPersona());
+					}
+				else  if(d.getId().getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+					lstApoderdantes.add(d.getTiivsPersona());
+				}
+			}
 			   agrupacionSimpleDto =new AgrupacionSimpleDto();
 			   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudEdicionT.getCodSoli(), x.getId().getNumGrupo()));
 			   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
 			   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
-			   agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionMoneda(x.getActivo().trim()) );
+			   agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionEstado(x.getActivo().trim()) );
 			   agrupacionSimpleDto.setLstPersonas(lstPersonas);
 			   lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+			   
 		   }
-		  		  
+		  
+		  
+		 
+		  this.obtenerHistorialSolicitud();	
+	/*	  TiivsSolicitudNivel solNivel = this.obtenerNivelSolicitud();
+		  if(solNivel!=null){
+			  this.sNivelSolicitud = solNivel.getCodNiv();
+		  }*/
 		 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private String obtenerDescripcionDocumento(String codDoc) 
-	{		
-		if(codDoc.contains(ConstantesVisado.PREFIJO_OTROS)){
-			return ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS;
-		}
-		for(TiivsDocumento doc : lstTiivsDocumentos){
-			if(doc.getCodDocumento().equalsIgnoreCase(codDoc.trim())){
-				return doc.getDescripcion();
+	public String obtenerDescripcionClasificacion(String idTipoClasificacion){
+		String descripcion="";
+		for (ComboDto z : combosMB.getLstClasificacionPersona()) {
+			if(z.getKey().trim().equals(idTipoClasificacion)){
+				 descripcion=z.getDescripcion();
+				 break;
 			}
 		}
-		return "";
+		return descripcion;
+	}
+	public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro){
+		String descripcion="";
+		for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+			if(z.getKey().trim().equals(idTipoTipoRegistro)){
+				 descripcion=z.getDescripcion();
+				 break;
+			}
+		}
+		return descripcion;
+	}
+	
+	public String obtenerDescripcionDocumentos(String idTipoDocumentos){
+		String descripcion="";
+		for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
+			if(z.getCodTipoDoc().trim().equals(idTipoDocumentos)){
+				 descripcion=z.getDescripcion();
+				 break;
+			}
+		}
+		return descripcion;
 	}
 	
 	public void obtenerHistorialSolicitud(){
@@ -655,7 +742,388 @@ public class SolicitudEdicionMB
 		}
 		return res;
 	}
+	public void listarDocumentosXSolicitud(ValueChangeEvent e) {
+		//logger.info("ValuechanceEvent :  " + e.getNewValue());
+		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroTipoSolcDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);
+		filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic",(String) e.getNewValue()));
+		filtroTipoSolcDoc.addOrder(Order.desc("obligatorio"));
+		try {
+			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);			
+			lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstDocumentosXTipoSolTemp).clone();
+			
+			logger.info("lstDocumentosXTipoSolTemp.size()" + lstDocumentosXTipoSolTemp.size());
+			logger.info("lstTipoSolicitudDocumentos.size()" + lstTipoSolicitudDocumentos.size());
 
+			actualizarListadoDocumentos();
+
+			//logger.info(" e.getNewValue()  " + (String) e.getNewValue()+ "  lstTipoSolicitudDocumentos.size : "+ lstTipoSolicitudDocumentos.size());
+		} catch (Exception ex) {
+			logger.info("Error al cargar el listado de documentos por tipo de soliciitud");
+			ex.printStackTrace();
+		}
+	}
+   public void actualizarListadoDocumentos() {
+		
+		addArchivosTemporalesToDelete();
+		
+		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+
+		for (TiivsTipoSolicDocumento s : lstTipoSolicitudDocumentos) {
+			if (s.getObligatorio()!=null && s.getObligatorio().equals("1") ){
+				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId().getCodDoc(),
+						s.getTiivsDocumento().getDescripcion(), true + "", "",""));
+			} else {				
+				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId().getCodDoc(),
+						s.getTiivsDocumento().getDescripcion(), false + "", "",""));
+			}
+		}
+
+		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
+	}
+public void addArchivosTemporalesToDelete(){		
+	for(TiivsAnexoSolicitud a : lstAnexoSolicitud){	
+		aliasFilesToDelete.add(a.getAliasTemporal());
+	}				
+}
+
+public void agregarDocumentosXTipoSolicitud() {
+	logger.info(" ************************** agrearDocumentosXTipoSolicitud  ****************************** ");
+	logger.info("iTipoSolicitud  : " + iTipoSolicitud);
+	if(selectedTipoDocumento!=null){
+		sCodDocumento = selectedTipoDocumento.getId().getCodDoc();
+	} else {
+		sCodDocumento = null;
+	}
+	logger.info("codDocumento :  " + sCodDocumento);
+	logger.info("lstAnexoSolicitud.size() :  " + lstAnexoSolicitud.size());
+
+	if(sCodDocumento == null || sCodDocumento.isEmpty()){
+		Utilitarios.mensajeInfo("", "Debe seleccionar un documento");
+		return;
+	}
+
+	if (this.ValidarDocumentosDuplicados()) {
+											
+		if (sCodDocumento.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
+			sCodDocumento = ConstantesVisado.PREFIJO_OTROS+String.format("%06d", lstdocumentos.size() + 1);
+		} 
+					
+		String sAliasTemporal = cargarUnicoPDF();
+								
+		if(sAliasTemporal == null || sAliasTemporal.trim() ==""){				
+			return;
+		}
+		
+		String sExtension = sAliasTemporal.substring(sAliasTemporal.lastIndexOf("."));
+		String sAliasArchivo = this.solicitudEdicionT.getCodSoli() + "_" + sCodDocumento + sExtension;
+		
+		logger.info("aliasArchivo *** " + sAliasArchivo);
+		logger.info("aliasArchivoTemporal *** " + sAliasTemporal);
+		
+		TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
+		objAnexo.setId(new TiivsAnexoSolicitudId(this.solicitudEdicionT.getCodSoli(), sCodDocumento));
+		objAnexo.setAliasArchivo(sAliasArchivo);
+		objAnexo.setAliasTemporal(sAliasTemporal);
+		lstAnexoSolicitud.add(objAnexo);
+		
+		this.actualizarListaDocumentosXTipo(objAnexo);
+
+		for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
+			if (tipoSoli.getCodTipSolic().equals(iTipoSolicitud)) {
+				solicitudEdicionT.setTiivsTipoSolicitud(tipoSoli);
+			}
+		}
+		
+	}
+	// solicitudEdicionT.getTiivsTipoSolicitud().setTiivsTipoSolicDocumentos(tiivsTipoSolicDocumentos);
+}
+
+public void validarTipoCambioDisabled(ValueChangeEvent e){
+	if(e.getNewValue()!=null){
+	logger.info(" validarTipoCambioDisabled " +e.getNewValue());
+	if (e.getNewValue().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+		bBooleanPopupTipoCambio=true;
+	}else{
+		bBooleanPopupTipoCambio=false;
+	}
+	}
+}
+int y=0;
+public void editarOperacionBancaria() {
+	logger.info("**************************** editarOperacionBancaria ****************************");
+	
+	for (int i = 0; i < this.lstSolicBancarias.size(); i++) {
+		if (objSolicitudOperacionCapturado.equals(this.lstSolicBancarias.get(i))) {
+			indexUpdateOperacion = i;
+			break;
+		}
+	}
+	y=y+1;
+	logger.info("yyyyyyy : " +y);
+//	Map<String, TiivsSolicitudOperban> mapSolicitudes=new HashMap<String, TiivsSolicitudOperban>();
+	mapSolicitudes.put(y, objSolicitudOperacionCapturado);
+	
+	Set set = mapSolicitudes.entrySet(); 
+	// Get an iterator 
+	Iterator iterate = set.iterator(); 
+	// Display elements 
+	
+	while(iterate.hasNext()) { 
+	Map.Entry me = (Map.Entry)iterate.next(); 
+	System.out.print(me.getKey() + ": "); 
+	logger.info(me.getValue()); 
+	} 
+	
+	logger.info("mapSolicitudes.get(mapSolicitudes.size()).getImporte()"+mapSolicitudes.get(mapSolicitudes.size()).getImporte());
+	//if(!flagUpdateOperacionSolic){
+	this.objSolicitudOperacionCapturadoOld=this.objSolicitudOperacionCapturado;
+	//}
+	this.objSolicBancaria = this.objSolicitudOperacionCapturado;
+	this.flagUpdateOperacionSolic = true;
+}
+
+public void actualizarListaDocumentosXTipo(TiivsAnexoSolicitud objAnexo) {
+	logger.info("****************************** actualizarListaDocumentosXTipo *********************************");
+	if (objAnexo.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS)) {
+		String sAlias = objAnexo.getAliasArchivo();
+		String sAliasTemporal = objAnexo.getAliasTemporal();
+		DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO(
+				objAnexo.getId().getCodDoc(),
+				ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS, false + "",
+				sAlias, sAliasTemporal); 
+		lstdocumentos.add(doc);
+		return;
+	}
+
+	for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
+
+		if (s.getId().getCodDoc().equals(objAnexo.getId().getCodDoc())) {
+			this.lstTipoSolicitudDocumentos.remove(s);
+			break;
+		}
+	}
+
+	for (DocumentoTipoSolicitudDTO doc : lstdocumentos) {
+		if (doc.getItem().equals(objAnexo.getId().getCodDoc())) {
+			doc.setAlias(objAnexo.getAliasArchivo());
+			doc.setAliasTemporal(objAnexo.getAliasTemporal());
+			break;
+		}
+	}
+}
+public String cargarUnicoPDF() {
+	
+	if(file == null){
+		Utilitarios.mensajeInfo("", "No se ha seleccionado ningún archivo");
+		return "";
+	}
+	
+	byte fileBytes[] = getFile().getContents();
+
+	File fichTemp = null;
+	String sUbicacionTemporal = "";
+	String sNombreTemporal = "";
+	FileOutputStream canalSalida = null;
+	
+	try {
+		
+		//Obteniendo ubicación del proyecto
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();							
+		sUbicacionTemporal = request.getRealPath(File.separator)  + File.separator + "files" + File.separator;
+		this.setUbicacionTemporal(sUbicacionTemporal);
+		
+		logger.debug("ubicacion temporal "+ sUbicacionTemporal);
+		
+		File fDirectory = new File(sUbicacionTemporal);
+		fDirectory.mkdirs();	
+		
+		String extension = file.getFileName().substring(
+				getFile().getFileName().lastIndexOf("."));
+		
+		fichTemp = File.createTempFile("temp", extension, new File(
+				sUbicacionTemporal));
+		
+		sNombreTemporal = fichTemp.getName();
+								
+		logger.debug("Nombre temporal de archivo:  " + sNombreTemporal);
+		
+		canalSalida = new FileOutputStream(fichTemp);
+		canalSalida.write(fileBytes);
+		
+		canalSalida.flush();
+		return sNombreTemporal;
+
+	} catch (IOException e) {
+		logger.debug("error anexo " + e.toString());
+		String sMensaje = "Se produjo un error al adjuntar fichero";
+		Utilitarios.mensajeInfo("", sMensaje);
+		return "";
+	} finally {
+
+		fichTemp.deleteOnExit(); // Delete the file when the
+		// JVM terminates
+
+		if (canalSalida != null) {
+			try {
+				canalSalida.close();
+			} catch (IOException x) {
+				// handle error
+			}
+		}
+	}
+}	
+public boolean ValidarDocumentosDuplicados() {
+	boolean result = true;
+	String sMensaje = "";
+	for (TiivsAnexoSolicitud a : this.lstAnexoSolicitud) {
+		if (a.getId().getCodDoc().equals(sCodDocumento) 
+				&& !sCodDocumento.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
+			result = false;
+			sMensaje = "Documento ya se encuentra en la lista de Documentos";
+			Utilitarios.mensajeInfo("INFO ", sMensaje);
+		}
+	}
+	return result;
+}
+public boolean validarPersona() {
+	logger.info("******************************* validarPersona ******************************* "
+			+ objTiivsPersonaResultado.getTipPartic());
+	boolean bResult = true;
+	String sMensaje = "";
+	logger.info("objTiivsPersonaResultado.getClasifPer() "
+			+ objTiivsPersonaResultado.getClasifPer());
+	if (objTiivsPersonaResultado.getTipDoi().equals("")) {
+		sMensaje = "Seleccione el Tipo de Documento";
+		bResult = false;
+		Utilitarios.mensajeInfo("INFO", sMensaje);
+	}
+	if (objTiivsPersonaResultado.getNumDoi().equals("")) {
+		sMensaje = "Ingrese el Número de Doi";
+		bResult = false;
+		Utilitarios.mensajeInfo("INFO", sMensaje);
+	}
+	if (objTiivsPersonaResultado.getClasifPer() == null
+			|| objTiivsPersonaResultado.getClasifPer().equals("")) {
+		sMensaje = "Ingrese el Tipo de Clasificación";
+		bResult = false;
+		Utilitarios.mensajeInfo("INFO", sMensaje);
+	}
+	if ((objTiivsPersonaResultado.getTipPartic() == null || objTiivsPersonaResultado
+			.getTipPartic().equals(""))) {
+		sMensaje = "Ingrese el Tipo de Participacion";
+		bResult = false;
+		Utilitarios.mensajeInfo("INFO", sMensaje);
+	} else if (objTiivsPersonaResultado.getClasifPer().equals("99")
+			&& (objTiivsPersonaResultado.getClasifPerOtro().equals("") || objTiivsPersonaResultado
+					.getClasifPerOtro() == null)) {
+		sMensaje = "Ingrese la descipcion Tipo de Participacion";
+		bResult = false;
+		Utilitarios.mensajeInfo("INFO", sMensaje);
+	} else if (!flagUpdatePersona) {
+		for (TiivsPersona x : lstTiivsPersona) {
+			if (x.getCodPer() == objTiivsPersonaResultado.getCodPer()) {
+				sMensaje = "Persona ya registrada, Ingrese otros datos de persona. ";
+				Utilitarios.mensajeInfo("", sMensaje);
+				bResult = false;
+				break;
+			}
+		}
+	}
+
+	return bResult;
+
+}
+public boolean validarRegistroDuplicado() {
+	logger.info("******************************* validarRegistroDuplicado ******************************* "
+			+ objTiivsPersonaResultado.getNumDoi());
+	boolean bResult = true;
+	String sMensaje = "";
+	for (TipoDocumento c : combosMB.getLstTipoDocumentos()) {
+		if (objTiivsPersonaResultado.getTipDoi().equals(c.getCodTipoDoc())) {
+			objTiivsPersonaResultado.setsDesctipDoi(c.getDescripcion());
+		}
+	}
+	for (ComboDto c : combosMB.getLstTipoRegistroPersona()) {
+		if (objTiivsPersonaResultado.getTipPartic().equals(c.getKey())) {
+			objTiivsPersonaResultado.setsDesctipPartic(c.getDescripcion());
+		}
+	}
+	if (!flagUpdatePersona) {
+		for (TiivsPersona p : lstTiivsPersona) {
+			if (objTiivsPersonaResultado.getNumDoi().equals(p.getNumDoi())) {
+				bResult = false;
+				sMensaje = "Ya existe una persona con número de Doi :  "
+						+ p.getNumDoi() + " y Tipo de Registro : "
+						+ objTiivsPersonaResultado.getsDesctipPartic();
+				Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}
+		
+		//if(objTiivsPersonaResultado.getTipDoi())
+	}
+
+	return bResult;
+}
+public void agregarPersona() {
+	logger.info("****************** agregarPersona ********************");
+	if (validarPersona()) {
+		if (validarRegistroDuplicado()) {
+
+			for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+				if (objTiivsPersonaResultado.getTipDoi().equals(
+						p.getCodTipoDoc())) {
+					objTiivsPersonaResultado.setsDesctipDoi(p
+							.getDescripcion());
+				}
+			}
+			for (ComboDto p : combosMB.getLstTipoRegistroPersona()) {
+				if (objTiivsPersonaResultado.getTipPartic().equals(
+						p.getKey())) {
+					objTiivsPersonaResultado.setsDesctipPartic(p
+							.getDescripcion());
+				}
+			}
+			for (ComboDto p : combosMB.getLstClasificacionPersona()) {
+				if (objTiivsPersonaResultado.getClasifPer().equals(
+						p.getKey())) {
+					objTiivsPersonaResultado.setsDescclasifPer(p
+							.getDescripcion());
+				}
+				if (objTiivsPersonaResultado.getClasifPer().equals("99")) {
+					objTiivsPersonaResultado
+							.setsDescclasifPer(objTiivsPersonaResultado
+									.getClasifPerOtro());
+				}
+			}
+
+			if (!flagUpdatePersona) {
+				lstTiivsPersona.add(objTiivsPersonaResultado);
+				objTiivsPersonaResultado = new TiivsPersona();
+				objTiivsPersonaBusqueda = new TiivsPersona();
+				objTiivsPersonaSeleccionado = new TiivsPersona();
+				lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
+				personaDataModal = new PersonaDataModal(
+						lstTiivsPersonaResultado);
+			} else {
+				// update
+				logger.info("Index Update: " + indexUpdatePersona);
+
+				this.lstTiivsPersona.set(indexUpdatePersona,
+						objTiivsPersonaCapturado);
+				personaDataModal = new PersonaDataModal(
+						lstTiivsPersonaResultado);
+				objTiivsPersonaResultado = new TiivsPersona();
+				objTiivsPersonaBusqueda = new TiivsPersona();
+				objTiivsPersonaSeleccionado = new TiivsPersona();
+				flagUpdatePersona = false;
+			}
+		}
+
+	}
+	// return objTiivsPersonaBusqueda;
+
+}
 	public TiivsSolicitud getSolicitudEdicionT() {
 		return solicitudEdicionT;
 	}
