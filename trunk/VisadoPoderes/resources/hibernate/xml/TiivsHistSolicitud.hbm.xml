@@ -30,5 +30,14 @@
         <property name="estado" type="string">
             <column name="ESTADO" length="7" not-null="true" />
         </property>
+        <property name="nivel" type="string">
+            <column name="NIVEL" length="4" not-null="false" />
+        </property>
+        <property name="nivelEstado" type="string">
+            <column name="NIVEL_ESTADO" length="4" not-null="false" />
+        </property>
+        <property name="nivelRol" type="string">
+            <column name="NIVEL_ROL" length="1" not-null="false" />
+        </property>
     </class>
 </hibernate-mapping>
