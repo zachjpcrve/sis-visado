@@ -17,6 +17,9 @@ public class TiivsHistSolicitud implements java.io.Serializable {
 	private String obs;
 	private String regAbogado;
 	private String estado;
+	private String nivel;
+	private String nivelEstado;
+	private String nivelRol;
 
 	public TiivsHistSolicitud() {
 	}
@@ -98,4 +101,28 @@ public class TiivsHistSolicitud implements java.io.Serializable {
 		this.estado = estado;
 	}
 
+	public String getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(String nivel) {
+		this.nivel = nivel;
+	}
+
+	public String getNivelEstado() {
+		return nivelEstado;
+	}
+
+	public void setNivelEstado(String nivelEstado) {
+		this.nivelEstado = nivelEstado;
+	}
+
+	public String getNivelRol() {
+		return nivelRol;
+	}
+
+	public void setNivelRol(String nivelRol) {
+		this.nivelRol = nivelRol;
+	}
+	
 }
