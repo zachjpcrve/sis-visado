@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -18,6 +19,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
@@ -241,5 +244,54 @@ public class Utilitarios {
 				.getCurrentInstance().getExternalContext().getRequest();
 		return request.getRealPath(File.separator);
 	}
-
+	public static boolean validaCaracteresEspeciales(String email) {
+		 
+        Pattern p = Pattern.compile("[^A-Za-z0-9\\.\\·ÈÌÛ˙¡…Õ”⁄\\/\\@_\\-~#]+");
+ 
+        boolean caracteresIlegales = false;
+        
+        if(email.contains(" ")){
+        	
+        	StringTokenizer st = new StringTokenizer(email, " ");
+    		while(st.hasMoreElements()){
+    			Matcher m = p.matcher(st.nextToken());
+    	        StringBuffer sb = new StringBuffer();
+    	        boolean resultado = m.find();
+    	       // boolean caracteresIlegales = false;
+    	        while(resultado) {
+    	            caracteresIlegales = true;
+    	            m.appendReplacement(sb, "");
+    	            resultado = m.find();
+    	        }
+    	    
+    		}
+    	
+        }
+        else{
+        	
+        	Matcher m = p.matcher(email);
+            StringBuffer sb = new StringBuffer();
+            boolean resultado = m.find();
+            
+            while(resultado) {
+                caracteresIlegales = true;
+                m.appendReplacement(sb, "");
+                resultado = m.find();
+            }
+        }
+        
+        
+        if(caracteresIlegales)
+        	return true;
+        else
+        	return false;
+	}
+	
+	  public static boolean validateEmail(String email) {
+			 
+	        Pattern p = Pattern.compile("[a-zA-Z0-9]+[.[a-zA-Z0-9_-]+]*@[a-z0-9][\\w\\.-]*[a-z0-9]\\.[a-z][a-z\\.]*[a-z]$");//me gusta esta
+	 
+	        Matcher m = p.matcher(email);
+	        return m.matches();
+	  }
 }
