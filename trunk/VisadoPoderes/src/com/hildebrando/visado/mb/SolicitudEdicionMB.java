@@ -727,6 +727,11 @@ public class SolicitudEdicionMB
 					logger.info(solicitudEdicionT.getTiivsEstudio().getCodEstudio());
 				}
 				
+				if (this.solicitudEdicionT.getTiivsEstudio()!=null)
+				{
+					this.solicitudEdicionT.setTiivsEstudio(new TiivsEstudio());
+				}
+				
 				TiivsSolicitud objResultado = service.modificar(this.solicitudEdicionT);
 				  for (TiivsSolicitudAgrupacion x : this.solicitudEdicionT.getTiivsSolicitudAgrupacions()) {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
