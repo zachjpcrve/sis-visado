@@ -36,8 +36,6 @@ import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMiembro;
-import com.hildebrando.visado.modelo.TiivsMiembroNivel;
-import com.hildebrando.visado.modelo.TiivsMovimientoNivel;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsPersona;
@@ -332,7 +330,6 @@ public class ConsultarSolicitudMB
 		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02))
 		{
 			redirect ="/faces/paginas/solicitudEdicion.xhtml";
-			//redirect ="/faces/paginas/detalleSolicitud.xhtml";
 		}
 		else
 		{
