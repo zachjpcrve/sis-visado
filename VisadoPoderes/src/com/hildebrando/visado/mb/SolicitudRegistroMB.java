@@ -28,6 +28,7 @@ import org.primefaces.model.UploadedFile;
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.consulta.reniec.ObtenerPersonaReniecService;
+import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecServiceImpl;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Persona;
@@ -309,8 +310,7 @@ public class SolicitudRegistroMB {
 				if (lstTiivsPersonaReniec.size() == 0) {
 					objTiivsPersonaResultado = new TiivsPersona();
 					this.bBooleanPopup = false;
-					// Utilitarios.mensajeInfo("INFO",
-					// "No se encontro resultados para la busqueda.");
+					 Utilitarios.mensajeInfo("INFO","No se encontro resultados para la busqueda.");
 				} else if (lstTiivsPersonaReniec.size() == 1) {
 					objTiivsPersonaResultado = lstTiivsPersonaReniec.get(0);
 					this.bBooleanPopup = false;
@@ -363,9 +363,9 @@ public class SolicitudRegistroMB {
 		if (objTiivsPersonaBusqueda.getNumDoi() != null) {
 			logger.info("[RENIEC]-Dni:"+ objTiivsPersonaBusqueda.getNumDoi());
 
-			ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
-			logger.debug("reniecService="+reniecService);
-			//ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
+			//ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
+			//logger.debug("reniecService="+reniecService);
+			ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
 			resultado = reniecService.devolverPersonaReniecDNI("P013371", "0553",objTiivsPersonaBusqueda.getNumDoi());
 			logger.debug("[RENIEC]-resultado: "+resultado);
 			
@@ -611,6 +611,13 @@ public class SolicitudRegistroMB {
 			sMensaje = "Ingrese el Tipo de Clasificación";
 			bResult = false;
 			Utilitarios.mensajeInfo("INFO", sMensaje);
+		}
+		if(!objTiivsPersonaResultado.getEmail().equals("")){
+		if(!Utilitarios.validateEmail(objTiivsPersonaResultado.getEmail())){
+			sMensaje = "Ingrese un email valido";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+		}
 		}
 		if ((objTiivsPersonaResultado.getTipPartic() == null || objTiivsPersonaResultado
 				.getTipPartic().equals(""))) {
@@ -1292,7 +1299,16 @@ public class SolicitudRegistroMB {
 		logger.info("this.objAgrupacionSimpleDtoCapturado  "
 				+ this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
 	}
-	
+	public void verEditarAgrupacion(){
+		logger.info("********************** verEditarAgrupacion *********************************** ");
+		logger.info("this.objAgrupacionSimpleDtoCapturado  "
+				+ this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
+		logger.info("this.objAgrupacionSimpleDtoCapturado  "
+				+ this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
+		logger.info("this.objAgrupacionSimpleDtoCapturado  "
+				+ this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
+		setLstTiivsPersona(this.objAgrupacionSimpleDtoCapturado.getLstPersonas());
+	}
 	int y=0;
     public void obtenerAccionAgregarOperacionBancaria(){
     	logger.info("**************************** obtenerAccionAgregarOperacionBancaria ****************************");
@@ -1464,7 +1480,7 @@ public class SolicitudRegistroMB {
 	}
 
 	
-
+/**Enviar la solicitud a SSJJ*/
 	public void enviarSolicitudSSJJ() {
 		Timestamp time = new Timestamp(objRegistroUtilesMB.obtenerFechaRespuesta().getTime());
 		logger.info("time : " + time);
@@ -1480,8 +1496,9 @@ public class SolicitudRegistroMB {
 		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date().getTime()));
 	}
 	@SuppressWarnings({ "unchecked", "null" })
-	public void validarNroVoucher() throws Exception{
-		
+	public boolean validarNroVoucher() throws Exception{
+		boolean booleano=true;
+		if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 		String mensaje="Ingrese un Nro de Vourcher no registrado ";
 		Busqueda filtroNroVoucher = Busqueda.forClass(TiivsSolicitud.class);
 		GenericDao<TiivsSolicitud, String> serviceNroVoucher=(GenericDao<TiivsSolicitud, String>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -1492,6 +1509,7 @@ public class SolicitudRegistroMB {
 			if(a!=null||!a.equals("")){
 			if(a.getNroVoucher()!=(null)){
 			if(a.getNroVoucher().equals(this.solicitudRegistrarT.getNroVoucher())){
+				booleano=false;
 				Utilitarios.mensajeInfo("INFO", mensaje);
 				break;
 			}
@@ -1499,12 +1517,8 @@ public class SolicitudRegistroMB {
 		  }
 		}
 		}
-			/*if (!this.sEstadoSolicitud.equals("BORRADOR")) {
-				
-			}*/
-		
-		
-		
+		}
+		return booleano;
 	}
 
 	public void registrarSolicitudBorrador() {
@@ -1554,8 +1568,8 @@ public class SolicitudRegistroMB {
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
-		if (!this.sEstadoSolicitud.equals("BORRADOR")) {
-		this.validarNroVoucher();
+		if(!this.validarNroVoucher()){
+			retorno=false;
 		}
 		return retorno;
 	}
