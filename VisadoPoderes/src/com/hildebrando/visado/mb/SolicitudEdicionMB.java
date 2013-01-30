@@ -27,6 +27,10 @@ import org.primefaces.model.UploadedFile;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.consulta.reniec.ObtenerPersonaReniecService;
+import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecServiceImpl;
+import com.bbva.consulta.reniec.util.BResult;
+import com.bbva.consulta.reniec.util.Persona;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
@@ -693,8 +697,14 @@ public class SolicitudEdicionMB
 		sEstadoSolicitud = "ENVIADO";
 	}
 	
+	public void obtenerPersonaSeleccionada() {
+		logger.info(objTiivsPersonaSeleccionado.getCodPer());
+		this.objTiivsPersonaResultado = this.objTiivsPersonaSeleccionado;
+	}
+	
 	@SuppressWarnings({ "unused", "unchecked" })
-	public void registrarSolicitud() {
+	public void registrarSolicitud() 
+	{
 		String mensaje = "";
 		logger.info("*********************** registrarSolicitud ************************");
 		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -721,88 +731,224 @@ public class SolicitudEdicionMB
 			}
 
 			logger.info("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : "+ solicitudEdicionT.getTiivsSolicitudAgrupacions().size());
-			if (this.validarRegistroSolicitud()) {
+			if (this.validarRegistroSolicitud()) 
+			{
 				if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 					this.enviarSolicitudSSJJ();
 					logger.info(solicitudEdicionT.getTiivsEstudio().getCodEstudio());
 				}
 				
-				if (this.solicitudEdicionT.getTiivsEstudio()!=null)
+				/*if (this.solicitudEdicionT.getTiivsEstudio().getCodEstudio()==null)
 				{
 					this.solicitudEdicionT.setTiivsEstudio(new TiivsEstudio());
 				}
-				
-				TiivsSolicitud objResultado = service.modificar(this.solicitudEdicionT);
-				  for (TiivsSolicitudAgrupacion x : this.solicitudEdicionT.getTiivsSolicitudAgrupacions()) {
-				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
-					  logger.info("b.getTiivsPersona() " +b.getId().getCodPer());
-					     //b.setId
-					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
-					   logger.info("ccdcdcd : "+objPersonaRetorno.getCodPer());
-					     b.setTiivsPersona(null);
-					     objAgruId=b.getId();
-					     objAgruId.setCodPer(objPersonaRetorno.getCodPer());
-					     b.setId(objAgruId);
-					     serviceAgru.insertar(b);
-					     } 
-				  
+				*/
+			
+				TiivsSolicitud objResultado = service.insertarMerge(this.solicitudEdicionT);
+				  for (TiivsSolicitudAgrupacion x : this.solicitudEdicionT.getTiivsSolicitudAgrupacions()) 
+				  {
+					  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) 
+					  { 
+						  logger.info("b.getTiivsPersona() " +b.getId().getCodPer());
+						  
+						  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
+						  logger.info("ccdcdcd : "+objPersonaRetorno.getCodPer());
+						  b.setTiivsPersona(null);
+					      objAgruId=b.getId();
+					     // objAgruId.setCodPer(objPersonaRetorno.getCodPer());
+					      b.setId(objAgruId);
+						  serviceAgru.save(b);
+					  } 
 				  }
-				  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
+				  /*TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 				  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudEdicionT.getCodSoli(),1+""));
 				  objHistorial.setEstado(this.solicitudEdicionT.getEstado());
 				  objHistorial.setNomUsuario(this.solicitudEdicionT.getNomUsuario());
 				  objHistorial.setObs(this.solicitudEdicionT.getObs());
 				  objHistorial.setFecha(new Timestamp(new Date().getDate()));
 				  objHistorial.setRegUsuario(this.solicitudEdicionT.getRegUsuario());
-				  serviceHistorialSolicitud.insertar(objHistorial);
+				  serviceHistorialSolicitud.insertar(objHistorial);*/
 				  //Carga ficheros al FTP
 				  boolean bRet = cargarArchivosFTP();
 				  logger.info("Resultado de carga de archivos al FTP:" + bRet);
 				  //Elimina archivos temporales
 				  eliminarArchivosTemporales();
 				  
-				  for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
+				  for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) 
+				  {
 					  logger.info("nnnnnnnnnnnnnnnnnnnnnnn "+n.getAliasArchivo());
-					  serviceAnexos.insertar(n);
-				   }
+					  
+					 serviceAnexos.insertarMerge(n);
+				  }
 				 
-				for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
-					logger.info("a.getId().getCodOperBan() **** "+ a.getId().getCodOperBan());
-					a.getId().setCodSoli(this.solicitudEdicionT.getCodSoli());
-					logger.info("a.getId().getCodSoli() **** "+ a.getId().getCodSoli());
-					 serviceSoli.insertar(a);
-				}
-				if (objResultado.getCodSoli() != "" || objResultado != null) {
-					if (this.sEstadoSolicitud.equals("BORRADOR")) {
-						mensaje = "Se registro correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
-						Utilitarios.mensajeInfo("INFO", mensaje);
-					} else {
-						mensaje = "Se envio a SSJJ correctamente la Solicitud con codigo : "+ objResultado.getCodSoli();
-						Utilitarios.mensajeInfo("INFO", mensaje);
-					}
-					
-					
-					//--this.eliminarArchivosTemporales();
-					
-				} else {
+				  for (TiivsSolicitudOperban a : this.lstSolicBancarias) 
+				  {
+						logger.info("a.getId().getCodOperBan() **** "+ a.getId().getCodOperBan());
+						a.getId().setCodSoli(this.solicitudEdicionT.getCodSoli());
+						logger.info("a.getId().getCodSoli() **** "+ a.getId().getCodSoli());
+						serviceSoli.insertarMerge(a);
+				  }
+				
+				  if (objResultado.getCodSoli() != "" || objResultado != null) 
+				  {
+						if (this.sEstadoSolicitud.equals("BORRADOR")) {
+							mensaje = "Se actualizo correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
+							Utilitarios.mensajeInfo("INFO", mensaje);
+						} else {
+							mensaje = "Se envio a SSJJ correctamente la Solicitud con codigo : "+ objResultado.getCodSoli();
+							Utilitarios.mensajeInfo("INFO", mensaje);
+						}
+				  } 
+				  else 
+				  {
 					mensaje = "Error al generar la Solicitud ";
 					Utilitarios.mensajeInfo("INFO", mensaje);
-					
-					//Elimina archivo temporal
-					//this.eliminarArchivosTemporales();
-					
-				}
+				  }
 
-				logger.info("objResultado.getCodSoli(); "+ objResultado.getCodSoli());
-				logger.info("objResultado.getTiivsSolicitudAgrupacions() "+ objResultado.getTiivsSolicitudAgrupacions().size());
-				logger.info("this.solicitudRegistrarT.importe : " +this.solicitudEdicionT.getImporte());
-				instanciarSolicitudRegistro();
+				  logger.info("objResultado.getCodSoli(); "+ objResultado.getCodSoli());
+				  logger.info("objResultado.getTiivsSolicitudAgrupacions() "+ objResultado.getTiivsSolicitudAgrupacions().size());
+				  logger.info("this.solicitudRegistrarT.importe : " +this.solicitudEdicionT.getImporte());
+				//instanciarSolicitudRegistro();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 
 		}
 
+	}
+	
+	public List<TiivsPersona> buscarPersonaLocal() throws Exception {
+		boolean busco = false;
+		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
+		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
+
+		if ((objTiivsPersonaBusqueda.getCodCen() == null || objTiivsPersonaBusqueda.getCodCen().equals(""))
+				&& (objTiivsPersonaBusqueda.getTipDoi() == null || objTiivsPersonaBusqueda
+						.getTipDoi().equals(""))
+				&& (objTiivsPersonaBusqueda.getNumDoi() == null || objTiivsPersonaBusqueda
+						.getNumDoi().equals(""))) {
+			Utilitarios.mensajeInfo("INFO",
+					"Ingrese al menos un criterio de busqueda");
+
+		} else if (objTiivsPersonaBusqueda.getNumDoi() == null
+				|| objTiivsPersonaBusqueda.getNumDoi().equals("")) {
+			Utilitarios.mensajeInfo("INFO", "Ingrese el Número de Doi");
+		} else if (objTiivsPersonaBusqueda.getTipDoi() == null
+				|| objTiivsPersonaBusqueda.getTipDoi().equals("")) {
+			Utilitarios.mensajeInfo("INFO", "Ingrese el Tipo de Doi");
+		} else {
+			if (objTiivsPersonaBusqueda.getTipDoi() != null
+					&& objTiivsPersonaBusqueda.getNumDoi() != null
+					&& objTiivsPersonaBusqueda.getTipDoi().compareTo("") != 0
+					&& objTiivsPersonaBusqueda.getNumDoi().compareTo("") != 0) {
+				filtro.add(Restrictions.eq("tipDoi",
+						objTiivsPersonaBusqueda.getTipDoi()));
+				filtro.add(Restrictions.eq("numDoi",
+						objTiivsPersonaBusqueda.getNumDoi()));
+				busco = true;
+			}
+			if (objTiivsPersonaBusqueda.getCodCen() != null
+					&& objTiivsPersonaBusqueda.getCodCen().compareTo("") != 0) {
+				filtro.add(Restrictions.eq("codCen",
+						objTiivsPersonaBusqueda.getCodCen()));
+				busco = true;
+			}
+			lstTiivsPersona = service.buscarDinamico(filtro);
+		
+			for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+					if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+						tiivsPersona.setsDesctipDoi(p.getDescripcion());
+					}
+				}
+			}
+
+			if (lstTiivsPersona.size() == 0 && busco) {
+				//Utilitarios.mensajeInfo("INFO","No se han encontrado resultados para los criterios de busqueda seleccionados");
+			}
+		}
+
+		return lstTiivsPersona;
+	}
+	
+	public List<TiivsPersona> buscarPersonaReniec() throws Exception {
+		logger.debug("==== inicia buscarPersonaReniec() ==== ");
+		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
+		BResult resultado = null;
+		TiivsPersona objPersona = null;
+		Persona persona = null;
+		if (objTiivsPersonaBusqueda.getNumDoi() != null) {
+			logger.info("[RENIEC]-Dni:"+ objTiivsPersonaBusqueda.getNumDoi());
+
+			ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
+			logger.debug("reniecService="+reniecService);
+			//ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
+			resultado = reniecService.devolverPersonaReniecDNI("P013371", "0553",objTiivsPersonaBusqueda.getNumDoi());
+			logger.debug("[RENIEC]-resultado: "+resultado);
+			
+			if (resultado.getCode() == 0) {
+				
+				persona = (Persona) resultado.getObject();
+				logger.info("PERSONA : " + persona.getNombreCompleto()
+						+ "\nDNI: " + persona.getNumerodocIdentidad());
+				objPersona = new TiivsPersona();
+				objPersona.setNumDoi(persona.getNumerodocIdentidad());
+				objPersona.setNombre(persona.getNombre());
+				objPersona.setApePat(persona.getApellidoPaterno());
+				objPersona.setApeMat(persona.getApellidoMaterno());
+				objPersona.setTipDoi(objTiivsPersonaBusqueda.getTipDoi());
+				objPersona.setCodCen(objTiivsPersonaBusqueda.getCodCen());
+				lstTiivsPersona.add(objPersona);
+			}
+		}
+		
+		logger.debug("==== saliendo de buscarPersonaReniec() ==== ");
+		return lstTiivsPersona;
+	}
+	
+	public void buscarPersona() {
+		logger.info("******************** buscarPersona **********************");
+		logger.info("***objTiivsPersonaBusqueda.getCodCen() "+ objTiivsPersonaBusqueda.getCodCen());
+		logger.info("***objTiivsPersonaBusqueda.getTipDoi() "+ objTiivsPersonaBusqueda.getTipDoi());
+		logger.info("***objTiivsPersonaBusqueda.getNumDoi() "	+ objTiivsPersonaBusqueda.getNumDoi());
+		try {
+			List<TiivsPersona> lstTiivsPersonaLocal = new ArrayList<TiivsPersona>();
+			lstTiivsPersonaLocal = this.buscarPersonaLocal();
+			logger.info("lstTiivsPersonaLocal  "+ lstTiivsPersonaLocal.size());
+			List<TiivsPersona> lstTiivsPersonaReniec = new ArrayList<TiivsPersona>();
+			if (lstTiivsPersonaLocal.size() == 0) {
+				lstTiivsPersonaReniec = this.buscarPersonaReniec();
+				if (lstTiivsPersonaReniec.size() == 0) {
+					objTiivsPersonaResultado = new TiivsPersona();
+					this.bBooleanPopup = false;
+					// Utilitarios.mensajeInfo("INFO",
+					// "No se encontro resultados para la busqueda.");
+				} else if (lstTiivsPersonaReniec.size() == 1) {
+					objTiivsPersonaResultado = lstTiivsPersonaReniec.get(0);
+					this.bBooleanPopup = false;
+				} else if (lstTiivsPersonaReniec.size() > 1) {
+					this.bBooleanPopup = true;
+					lstTiivsPersonaResultado = lstTiivsPersonaReniec;
+				}
+			} else if (lstTiivsPersonaLocal.size() == 1) {
+				this.bBooleanPopup = false;
+				objTiivsPersonaResultado = lstTiivsPersonaLocal.get(0);
+			} else if (lstTiivsPersonaLocal.size() > 1) {
+				this.bBooleanPopup = true;
+				lstTiivsPersonaResultado = lstTiivsPersonaLocal;
+
+				personaDataModal = new PersonaDataModal(
+						lstTiivsPersonaResultado);
+			} else {
+				this.bBooleanPopup = true;
+			}
+		
+		} catch (Exception e) {
+			Utilitarios.mensajeError("ERROR", e.getMessage());
+			e.printStackTrace();
+		}
 	}
 	
 	public void enviarSolicitudSSJJ() {
@@ -966,11 +1112,15 @@ public class SolicitudEdicionMB
 		   solicitudEdicionT= solicitudService.obtenerTiivsSolicitud(solicitud);
 		   solicitudEdicionT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudEdicionT.getEstado()));
 		   
-		   if(solicitudEdicionT.getTiivsEstudio()==null)
+		   if (solicitudEdicionT.getMoneda()!=null)
 		   {
-			   solicitudEdicionT.setTiivsEstudio(new TiivsEstudio());
+			   solicitudEdicionT.setsImporteMoneda(solicitudEdicionT.getMoneda() + " " +solicitudEdicionT.getImporte());
 		   }
-		   
+		   else
+		   {
+			   solicitudEdicionT.setsImporteMoneda(solicitudEdicionT.getImporte().toString());
+		   }
+		   		   
 		   lstSolicBancarias=solicitudService.obtenerListarOperacionesBancarias(solicitud);
 		   int y=0;
 		   
@@ -1041,6 +1191,9 @@ public class SolicitudEdicionMB
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
 	public String obtenerDescripcionClasificacion(String idTipoClasificacion){
 		String descripcion="";
 		for (ComboDto z : combosMB.getLstClasificacionPersona()) {
