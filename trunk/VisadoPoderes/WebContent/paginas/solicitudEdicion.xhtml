@@ -26,7 +26,7 @@
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">
 					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro"
-						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"/>
+						icon="ui-icon-document" action="#{solEdicionMB.registrarSolicitud}" actionListener="#{solEdicionMB.registrarSolicitudBorrador}"/>
 					<p:commandButton value="Enviar" id="btnEnviar3"  
 						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>
 					<p:commandButton value="Imprimir" id="btnImprimir3"
@@ -107,7 +107,8 @@
 													<tr>
 														<td><h:outputText styleClass="outputText"
 																id="outNroVaucher" value="Nro Voucher *" /></td>
-														<td><h:inputText styleClass="inputText" immediate="false"  required="false" requiredMessage="Ingrese el Nro Voucher"
+														<td><h:inputText styleClass="inputText" immediate="false"  required="false" 
+																requiredMessage="Ingrese el Nro Voucher"
 																id="txtNroVaucher" style="width:100px;" 
 																value="#{solEdicionMB.solicitudEdicionT.nroVoucher}"
 																 /></td>
@@ -809,7 +810,7 @@
                 header="Confirmación" severity="alert" widgetVar="confirmation" >  
                   
         <p:commandButton id="confirm" value="Si" update=":formSolicitudRegistro" oncomplete="confirmation.hide()"   
-                    action="#{solEdicionMB.actualizarSolicitud}" actionListener="#{solEdicionMB.registrarSolicitudEnviado}" />  
+                    action="#{solEdicionMB.registrarSolicitud}" actionListener="#{solEdicionMB.registrarSolicitudEnviado}" />  
         <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
                   
     </p:confirmDialog> 
