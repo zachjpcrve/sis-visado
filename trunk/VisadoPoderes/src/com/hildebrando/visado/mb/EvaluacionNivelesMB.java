@@ -51,7 +51,7 @@ public class EvaluacionNivelesMB {
 		logger.info("**************registrarEvaluacionNivel()*********************");
 			
 		String sCodUsuario = (String) usuario.getUID();
-		//String sCodUsuario = this.registroUsuario; 
+//		String sCodUsuario = this.registroUsuario; 
 		TiivsSolicitudNivel solicitudNivel;
 		
 		String sCodigoEstadoActual = this.solicitudRegistrarT.getEstado().trim();
@@ -87,8 +87,8 @@ public class EvaluacionNivelesMB {
 		logger.info("Nivel: " + sCodNivel);
 							
 		if(sCodNivel==null || sCodNivel.equals("")){
-			Utilitarios.mensajeInfo("INFO", "Solicitud sin nivel de evaluación");
-			logger.info("Solicitud sin nivel de evaluación, no se permite realizar cambios");
+			Utilitarios.mensajeInfo("INFO", "Solicitud no tiene nivel de evaluación");
+			logger.info("Solicitud no tiene nivel de evaluación, no se permite realizar cambios");
 			return;
 		}	
 		
@@ -132,9 +132,9 @@ public class EvaluacionNivelesMB {
 		}
 		
 		if(bRegistro){
-			Utilitarios.mensajeInfo("INFO", "Acción registrada correctamente");
+			Utilitarios.mensajeInfo("INFO", "Evaluación registrada correctamente");
 		} else {
-			Utilitarios.mensajeInfo("INFO", "Acción no permitida para el usuario");
+			Utilitarios.mensajeInfo("INFO", "No se permite el registro de la evaluación");
 		}
 		logger.info("***********registrarEvaluacionNivel():FIN ****************");		
 	}
@@ -348,57 +348,67 @@ public class EvaluacionNivelesMB {
 	}
 
 	public void registrarHistorialSolicitud(TiivsSolicitud solicitud, String sCodNivel, String sCodEstadoNivel, String sCodRolNivel) throws Exception{
-	logger.info("******************registrarHistorialSolicitud()*****************************");
-	Timestamp tsFechaRegistro = new Timestamp(new Date().getTime());
-	String sRegUsuario = this.usuario.getUID();
-	String sNomUsuario = this.usuario.getNombre() + ' ' + this.usuario.getApellido1() + ' '	+ this.usuario.getApellido2();
-	String sCodSoli = solicitud.getCodSoli();
-	String sEstado = solicitud.getEstado();
-	String sNivel = sCodNivel;
-	String sEstadoNivel = sCodEstadoNivel;
-	String sRolNivel = sCodRolNivel;
-	logger.info("Registro:" + sRegUsuario);
-	logger.info("sNomUsuario:" + sNomUsuario);
-	logger.info("sCodSoli:" + sCodSoli);
-	logger.info("sEstado:" + sEstado);
-	logger.info("sNivel:" + sNivel);
-	logger.info("sEstadoNivel:" + sEstadoNivel);
-	logger.info("sRolNivel:" + sRolNivel);
-	logger.info("tsFechaRegistro:" + tsFechaRegistro);
-	logger.info("******************registrarHistorialSolicitud()*****************************");
-
-	SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
-	String numeroMovimiento = serviceMaxMovi.obtenerMaximoMovimiento(solicitud.getCodSoli());
+		logger.info("******************registrarHistorialSolicitud()*****************************");
+		Timestamp tsFechaRegistro = new Timestamp(new Date().getTime());
+		String sRegUsuario = this.usuario.getUID();
+		String sNomUsuario = this.usuario.getNombre() + ' ' + this.usuario.getApellido1() + ' '	+ this.usuario.getApellido2();
+		String sCodSoli = solicitud.getCodSoli();
+		String sEstado = solicitud.getEstado();
+		String sNivel = sCodNivel;
+		String sEstadoNivel = sCodEstadoNivel;
+		String sRolNivel = sCodRolNivel;
+		logger.info("Registro:" + sRegUsuario);
+		logger.info("sNomUsuario:" + sNomUsuario);
+		logger.info("sCodSoli:" + sCodSoli);
+		logger.info("sEstado:" + sEstado);
+		logger.info("sNivel:" + sNivel);
+		logger.info("sEstadoNivel:" + sEstadoNivel);
+		logger.info("sRolNivel:" + sRolNivel);
+		logger.info("tsFechaRegistro:" + tsFechaRegistro);
+		logger.info("******************registrarHistorialSolicitud()*****************************");
+	
+		SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+		String numeroMovimiento = serviceMaxMovi.obtenerMaximoMovimiento(solicitud.getCodSoli());
+		 
+		int num = 0;
+		if (!numeroMovimiento.equals("")) {
+			num = Integer.parseInt(numeroMovimiento) + 1;
+		} else {
+			num = 1;
+		}
+		numeroMovimiento = num + "";
+		logger.info("Numero de Movimiento a registrar para el CodSolicitud : " + solicitud.getCodSoli() + " is :" + numeroMovimiento);
 	 
-	int num = 0;
-	if (!numeroMovimiento.equals("")) {
-		num = Integer.parseInt(numeroMovimiento) + 1;
-	} else {
-		num = 1;
-	}
-	numeroMovimiento = num + "";
-	logger.info("Numero de Movimiento a registrar para el CodSolicitud : " + solicitud.getCodSoli() + " is :" + numeroMovimiento);
- 
-	TiivsHistSolicitud objHistorial = new TiivsHistSolicitud();
-	objHistorial.setId(new TiivsHistSolicitudId(sCodSoli, numeroMovimiento));
-	objHistorial.setEstado(sEstado);
-	objHistorial.setNomUsuario(sNomUsuario);
-	objHistorial.setRegUsuario(sRegUsuario);
-	objHistorial.setFecha(tsFechaRegistro);
-	objHistorial.setNivel(sNivel);
-	objHistorial.setNivelEstado(sEstadoNivel);
-	objHistorial.setNivelRol(sRolNivel);
-	GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-	serviceHistorialSolicitud.insertar(objHistorial);
+		TiivsHistSolicitud objHistorial = new TiivsHistSolicitud();
+		objHistorial.setId(new TiivsHistSolicitudId(sCodSoli, numeroMovimiento));
+		objHistorial.setEstado(sEstado);
+		objHistorial.setNomUsuario(sNomUsuario);
+		objHistorial.setRegUsuario(sRegUsuario);
+		objHistorial.setFecha(tsFechaRegistro);
+		objHistorial.setNivel(sNivel);
+		objHistorial.setNivelEstado(sEstadoNivel);
+		objHistorial.setNivelRol(sRolNivel);
+		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		serviceHistorialSolicitud.insertar(objHistorial);
 	}
 	
 	private void modificarEstadoSolicitud(TiivsSolicitud tiivsSolicitud, String sCodigoEstado) throws Exception {
-		
+				
 		if(sCodigoEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_APROBADO_T09)){
-			sCodigoEstado = ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02;
+			if(tiivsSolicitud.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){
+				sCodigoEstado = ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02;
+			} else if(tiivsSolicitud.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)){
+				sCodigoEstado = ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02;
+			}
+			
 		} else if (sCodigoEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_DESAPROBADO_T09)){
-			sCodigoEstado = ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02;
+			if(tiivsSolicitud.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){
+				sCodigoEstado = ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02;
+			} else if(tiivsSolicitud.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)){
+				sCodigoEstado = ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02;
+			}
 		}					
+		
 		String sCodUsuario = usuario.getUID();		
 		tiivsSolicitud.setEstado(sCodigoEstado);
 		tiivsSolicitud.setFechaEstado(new Timestamp((new Date().getTime())));
@@ -434,23 +444,7 @@ public class EvaluacionNivelesMB {
 		}
 		return cont;
 	}
-
-	public String getPERFIL_USUARIO() {
-		return PERFIL_USUARIO;
-	}
-
-	public void setPERFIL_USUARIO(String pERFIL_USUARIO) {
-		PERFIL_USUARIO = pERFIL_USUARIO;
-	}
-
-	public IILDPeUsuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(IILDPeUsuario usuario) {
-		this.usuario = usuario;
-	}
-
+	
 	public String getRegistroUsuario() {
 		return registroUsuario;
 	}
