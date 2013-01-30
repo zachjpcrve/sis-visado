@@ -104,16 +104,18 @@ public class ConsultarSolicitudMB
 			setbMostrarComentario(false);
 		}
 		
-		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) && this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){
+		if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 			
 			if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02) || 
-					this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){
+					this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)){
+				
 				
 				evaluacionNivelesMB = new EvaluacionNivelesMB(this.solicitudRegistrarT);	
 				TiivsSolicitudNivel solNivel = evaluacionNivelesMB.obtenerNivelSolicitud();
 				if (solNivel != null) {
 					this.sNivelSolicitud = solNivel.getCodNiv();
-				}
+				}											
+				
 				verPnlEvaluarNivel = true;
 			}
 			
@@ -1239,5 +1241,5 @@ public class ConsultarSolicitudMB
 	public void setbMostrarCartaRespuesta(boolean bMostrarCartaRespuesta) {
 		this.bMostrarCartaRespuesta = bMostrarCartaRespuesta;
 	}
-	
+		
 }
