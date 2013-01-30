@@ -6,13 +6,70 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-<SCRIPT type="text/javascript">
 
-</SCRIPT>
 		
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 <ui:param name="root" value="#{request.contextPath}/" />
 	<ui:define name="contenido">
+	<SCRIPT type="text/javascript">
+function validaNumero(e, ent, obj, fn) {
+	//Se captura la tecla presionada             
+	var tecla = (document.all) ? e.keyCode : e.which;
+	var patron;
+	var te;
+	var result;
+	//Tecla de retroceso (para poder borrar)       
+	if (tecla == 8) {
+		return true;
+	}
+	if (ent == '0') {
+		if (fn == '1') {
+			if (obj.value == '') {
+				return true;
+			}
+			var puntos = obj.value.split('.');
+			if (puntos.length > 2) {
+				obj.value = '';
+				obj.focus();
+			}
+		}
+		if (tecla == 46) {
+			if (obj.value.indexOf('.') != -1) {
+				return false;
+			}
+			return true;
+		}
+	} else {
+		if (fn == '1') {
+			if (obj.value.indexOf('.') != -1) {
+				obj.value = '';
+				obj.focus();
+			}
+		}
+	}
+		//Dejar la línea de patron que se necesite y borrar el resto             
+	//patron =/[A-Za-z]/; // Solo acepta letras             
+	patron = /\d/; // Solo acepta números             
+	//patron = /\w/; // Acepta números y letras             
+	//patron = /\D/; // No acepta números             
+	//
+	te = String.fromCharCode(tecla);
+	if (fn == '1') {
+		te = obj.value;
+	}
+	result = patron.test(te);
+	if (result == false) {
+		if (fn == '1') {
+			if (obj.value == '') {
+				return true;
+			}
+			obj.value = '';
+			obj.focus();
+		}
+	}
+	return result;
+}
+</SCRIPT>
 		<h:panelGrid columns="5">
 
 			<p:tabMenu activeIndex="0" style="width:350px;">
@@ -45,7 +102,6 @@
 	<h:form id="formSolicitudRegistro" enctype="multipart/form-data">
 			<p:messages id="idMsmSolicitudRegistro"></p:messages>
 
-<!-- <a href="#{root}main/download/reportPDF.htm"  style="color:#0073EA;font-weight:bold; ">Download PDF</a> -->
 
 
 		<table border="0" width="680">
@@ -227,8 +283,8 @@
 															</p:commandButton>
 															
 															</td>
-															<td><p:commandButton icon="ui-icon-pencil" 
-																			 update=":formSolicitudRegistro" >
+															<td><p:commandButton icon="ui-icon-pencil"  oncomplete ="dlgRegistrarPersona.show()"
+																			 update=":formSolicitudRegistro" action="#{solicitudRegMB.verEditarAgrupacion}">
 																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
 																							  value="#{s}">
 																</f:setPropertyActionListener>
@@ -241,6 +297,7 @@
 																							  value="#{s}" >
 																</f:setPropertyActionListener>
 															</p:commandButton></td>
+															
 														</tr>
 														</c:forEach>
 														
@@ -611,7 +668,9 @@
 
 						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outDoi"
 								value="DOI:" /></td>
-						<td colspan="1"><h:inputText id="inpDoitxt" styleClass="inputTextPopup"  size="12" value="#{solicitudRegMB.objTiivsPersonaBusqueda.numDoi}"/></td>
+						<td colspan="1"><h:inputText id="inpDoitxt" styleClass="inputTextPopup"  size="12" value="#{solicitudRegMB.objTiivsPersonaBusqueda.numDoi}"
+						maxlength="12"   onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');"/></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="toolcboDoi" /></td>
 						<td colspan="1"><p:tooltip for="toolcboDoi"
@@ -637,7 +696,8 @@
 						<td colspan="1">
 					    <h:outputText styleClass="outputTextPopup" id="outNumDoiBusqueda" value="Num DOI:" /></td>
 						<td colspan="1"><h:inputText styleClass="inputText" id="txtNumDoiBusqueda"
-								style="width:50px;"
+								style="width:50px;" size="11" maxlength="11"  onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.numDoi}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtNumDoiBusqueda" /></td>
@@ -647,7 +707,8 @@
 						 <td colspan="1">
 					    <h:outputText styleClass="outputTextPopup" id="outCodCentral" value="Código Central:" /></td>
 						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtCodCentral"
-								size="7"
+								size="7" maxlength="7"  onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');"
 								value="#{solicitudRegMB.objTiivsPersonaBusqueda.codCen}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtCodCentral" /></td>
@@ -720,10 +781,11 @@
 						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outCelular"
 								value="Celular:" /></td>
 						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtCelular" maxlength="9" size="9"
-								style="width:100px;" 
+								style="width:100px;" onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');"
 								 value="#{solicitudRegMB.objTiivsPersonaResultado.numCel}"/></td>
-						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
-								id="tooltxtCelular" /></td>
+						<td colspan="1">
+						<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtCelular" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtCelular" value="Celular"
 								showEffect="slide" /></td>
 						<td colspan="1" width="50px">
