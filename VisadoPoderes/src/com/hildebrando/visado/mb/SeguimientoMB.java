@@ -226,8 +226,10 @@ public class SeguimientoMB
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
 		filtroSol.setMaxResults(1000);
 		
-		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) ){
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTUDIO, buscarEstudioxAbogado()));
+		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) )
+		{
+			filtroSol.createAlias(ConstantesVisado.NOM_TBL_ESTUDIO,	ConstantesVisado.ALIAS_TBL_ESTUDIO);
+			filtroSol.add(Restrictions.eq(ConstantesVisado.ALIAS_COD_ESTUDIO, buscarEstudioxAbogado()));
 		}
 		else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
 		{

@@ -73,6 +73,7 @@ public class ConstantesVisado {
 	public static final String NOM_TBL_ESTUDIO="tiivsEstudio";
 	public static final String ALIAS_TBL_OFICINA="ofic";
 	public static final String ALIAS_TBL_ESTUDIO="estu";
+	public static final String ALIAS_COD_ESTUDIO="estu.codEstudio";
 	public static final String CAMPO_COD_SOLICITUD="codSoli";
 	public static final String CAMPO_COD_OFICINA_ALIAS="ofic.codOfi";
 	public static final String CAMPO_NOM_OFICINA_ALIAS="ofic.desOfi";
