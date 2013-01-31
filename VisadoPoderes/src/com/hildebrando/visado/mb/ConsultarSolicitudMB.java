@@ -327,10 +327,11 @@ public class ConsultarSolicitudMB
 		logger.info(" **** redirectDetalleSolicitud ***");
 		
 		String redirect="";
-		obtenerSolicitud();
 		
+		obtenerSolicitud();
 		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02))
-		{
+		{   SolicitudEdicionMB c =new SolicitudEdicionMB();
+		    c.obtenerSolicitud();
 			redirect ="/faces/paginas/solicitudEdicion.xhtml";
 		}
 		else
