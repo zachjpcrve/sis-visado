@@ -272,5 +272,14 @@ public class ConstantesVisado {
 		public static final String MENSAJE_OFICINA="¿Está seguro de generar la Carta de atención? Luego de la generación no podrá volverse a imprimir.";
 		public static final String MENSA_SSJJ="¿Esta seguro de generar la Carta de Atencion?";
 	}
+	
+	static public class MENSAJE{
+		public static final String OCURRE_EXCEPCION = "Ha ocurrido una excepcion ";
+		public static final String OCURRE_ERROR = "Ha ocurrido un error ";		
+		public static final String REGISTRO_OK = "Se ha registrado correctamente ";		
+		public static final String NO_RESULTADOS = "No se han encontrado resultados ";
+		public static final String TAMANHIO_LISTA = "El tamaño de la lista ";
+		
+	}
 }
 
