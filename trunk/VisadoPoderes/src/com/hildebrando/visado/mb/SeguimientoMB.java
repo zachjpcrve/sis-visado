@@ -1908,7 +1908,7 @@ public class SeguimientoMB
 	{
 		int i = 0;
 		String codigo = "";
-		for (; i <= combosMB.getLstEstado().size(); i++) {
+		for (; i < combosMB.getLstEstado().size(); i++) {
 			if (combosMB.getLstEstado().get(i).getDescripcion().equalsIgnoreCase(estado)) {
 				codigo = combosMB.getLstEstado().get(i).getCodEstado();
 				break;
@@ -1934,7 +1934,7 @@ public class SeguimientoMB
 	{
 		int i = 0;
 		String res = "";
-		for (; i <= combosMB.getLstNivel().size(); i++) {
+		for (; i < combosMB.getLstNivel().size(); i++) {
 			if (combosMB.getLstNivel().get(i).getId().getCodNiv().equalsIgnoreCase(codigo)) {
 				res = combosMB.getLstNivel().get(i).getId().getDesNiv();
 				break;
@@ -1947,7 +1947,7 @@ public class SeguimientoMB
 	{
 		int i = 0;
 		String res = "";
-		for (; i <= combosMB.getLstEstadoNivel().size(); i++) {
+		for (; i < combosMB.getLstEstadoNivel().size(); i++) {
 			if (combosMB.getLstEstadoNivel().get(i).getCodigoEstadoNivel().equalsIgnoreCase(codigo)) {
 				res = combosMB.getLstEstadoNivel().get(i).getDescripcion();
 				break;
@@ -1960,7 +1960,7 @@ public class SeguimientoMB
 	{
 		int i = 0;
 		String res = "";
-		for (; i <= combosMB.getLstEstudio().size(); i++) {
+		for (; i < combosMB.getLstEstudio().size(); i++) {
 			if (combosMB.getLstEstudio().get(i).getCodEstudio().equalsIgnoreCase(codigo)) {
 				res = combosMB.getLstEstudio().get(i).getDesEstudio();
 				break;
@@ -1973,7 +1973,7 @@ public class SeguimientoMB
 	{
 		int i = 0;
 		String res = "";
-		for (; i <= combosMB.getLstOpeBancaria().size(); i++) {
+		for (; i < combosMB.getLstOpeBancaria().size(); i++) {
 			if (combosMB.getLstOpeBancaria().get(i).getCodOperBan().equalsIgnoreCase(codigo)) {
 				res = combosMB.getLstOpeBancaria().get(i).getDesOperBan();
 				break;
@@ -1986,7 +1986,7 @@ public class SeguimientoMB
 	{
 		int i = 0;
 		String res = "";
-		for (; i <= combosMB.getLstTipoSolicitud().size(); i++) {
+		for (; i < combosMB.getLstTipoSolicitud().size(); i++) {
 			if (combosMB.getLstTipoSolicitud().get(i).getCodTipSolic().equalsIgnoreCase(codigo)) {
 				res = combosMB.getLstTipoSolicitud().get(i).getDesTipServicio();
 				break;
@@ -1999,7 +1999,7 @@ public class SeguimientoMB
 	{
 		int i = 0;
 		String res = "";
-		for (; i <= combosMB.getLstTiposFecha().size(); i++) {
+		for (; i < combosMB.getLstTiposFecha().size(); i++) {
 			if (combosMB.getLstTiposFecha().get(i).getCodigoTipoFecha().equalsIgnoreCase(codigo)) {
 				res = combosMB.getLstTiposFecha().get(i).getDescripcion();
 				break;
@@ -2268,7 +2268,7 @@ public class SeguimientoMB
 		String desTerr="";
 		
 		
-		for (;i<=combosMB.getLstOficina().size();i++)
+		for (;i<combosMB.getLstOficina().size();i++)
 		{
 			if (combosMB.getLstOficina().get(i).getCodOfi().trim().equals(codOficina))
 			{
@@ -2281,7 +2281,7 @@ public class SeguimientoMB
 		
 		if (codTerr.length()>0)
 		{
-			for (;j<=combosMB.getLstTerritorio().size();j++)
+			for (;j<combosMB.getLstTerritorio().size();j++)
 			{
 				if (combosMB.getLstTerritorio().get(j).getCodTer().equals(codTerr))
 				{
