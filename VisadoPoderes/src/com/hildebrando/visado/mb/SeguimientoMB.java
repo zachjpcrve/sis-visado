@@ -1748,7 +1748,8 @@ public class SeguimientoMB
 		}
 		
 		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) ){
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTUDIO, buscarEstudioxAbogado()));
+			filtroSol.createAlias(ConstantesVisado.NOM_TBL_ESTUDIO,	ConstantesVisado.ALIAS_TBL_ESTUDIO);
+			filtroSol.add(Restrictions.eq(ConstantesVisado.ALIAS_COD_ESTUDIO, buscarEstudioxAbogado()));
 		}
 		else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
 		{
@@ -1762,7 +1763,7 @@ public class SeguimientoMB
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			logger.debug("Error al buscar las solicitudes");
+			logger.debug("Error al buscar las solicitudes: " + ex.getStackTrace());
 		}
 
 		if (solicitudes.size() == 0) 
