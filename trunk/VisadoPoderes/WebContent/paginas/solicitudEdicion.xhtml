@@ -68,7 +68,7 @@
 																id="txtCodNumSol" value="Nro Solicitud:" /></td>
 														<td><h:inputText styleClass="inputText" id="text1"
 																style="width:100px;"
-																value="#{solEdicionMB.solicitudEdicionT.codSoli}"
+																value="#{consultarSolicitudMB.solicitudRegistrarT.codSoli}"
 																disabled="false" readonly="true" /></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
@@ -80,7 +80,7 @@
 																value="Estado:" /></td>
 														<td><h:inputText styleClass="inputText"
 																id="txtEstado" style="width:100px;"
-																value="#{solEdicionMB.solicitudEdicionT.descEstado}"
+																value="#{consultarSolicitudMB.solicitudRegistrarT.descEstado}"
 																disabled="false" readonly="true" /></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
@@ -91,7 +91,7 @@
 														<td><h:outputText styleClass="outputText"
 																id="txtOficina" value="Oficina:" /></td>
 														<td style="font-size:0.9em">
-															<p:selectOneMenu id="cboOficina" value="#{solEdicionMB.solicitudEdicionT.tiivsOficina1.codOfi}" 
+															<p:selectOneMenu id="cboOficina" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsOficina1.codOfi}" 
 																required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 																 <f:selectItems  value="#{combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.tiivsTerritorio.codTer}-#{lOf.tiivsTerritorio.desTer})" /> 
@@ -110,7 +110,7 @@
 														<td><h:inputText styleClass="inputText" immediate="false"  required="false" 
 																requiredMessage="Ingrese el Nro Voucher"
 																id="txtNroVaucher" style="width:100px;" 
-																value="#{solEdicionMB.solicitudEdicionT.nroVoucher}"
+																value="#{consultarSolicitudMB.solicitudRegistrarT.nroVoucher}"
 																 /></td>
 														<td><p:message for="txtNroVaucher"></p:message><p:graphicImage
 																value="/resources/images/pregunta.jpg"
@@ -122,7 +122,7 @@
 																id="outComision" value="Comision" /></td>
 														<td><h:inputText styleClass="inputText"
 																id="txtComision" style="width:100px;"
-																value="#{solEdicionMB.solicitudEdicionT.comision}"
+																value="#{consultarSolicitudMB.solicitudRegistrarT.comision}"
 																readonly="true" /></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
@@ -134,7 +134,7 @@
 																id="outImpTotal" value="Importe Total" /></td>
 														<td><h:inputText styleClass="inputText"
 																id="txtImpTotal" style="width:100px;"
-																value="#{solEdicionMB.solicitudEdicionT.sImporteMoneda}"
+																value="#{consultarSolicitudMB.solicitudRegistrarT.sImporteMoneda}"
 																disabled="false" readonly="true" /></td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
@@ -334,7 +334,7 @@
 													<tr>
 														<td width="95%" colspan="11">
 														<p:dataTable var="s" id="tblDocumentos"
-																rows="20" value="#{solEdicionMB.lstdocumentos}"
+																rows="20" value="#{consultarSolicitudMB.lstdocumentos}"
 																emptyMessage="No hay resultados en la bandeja"
 																paginatorPosition="bottom" paginator="true"
 																paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
@@ -391,7 +391,7 @@
 															title="Tipo de Operación"></h:outputText></td>
 													<td><p:selectOneMenu styleClass="selectOneMenu"
 															id="cboTipoOperacion"
-															value="#{solEdicionMB.objSolicBancaria.id.codOperBan}"
+															value="#{consultarSolicitudMB.objSolicBancaria.id.codOperBan}"
 															immediate="true" 
 															disabled="false" >
 															<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
@@ -418,16 +418,16 @@
 												</tr>
 												<tr>
 													<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
-													<td><h:inputText id="intImporte" value="#{solEdicionMB.objSolicBancaria.tipoCambio}" disabled="#{solEdicionMB.bBooleanPopupTipoCambio}"/></td>
+													<td><h:inputText id="intImporte" value="#{consultarSolicitudMB.objSolicBancaria.tipoCambio}" disabled="#{consultarSolicitudMB.bBooleanPopupTipoCambio}"/></td>
 													<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
-													<td><h:inputText value="#{solEdicionMB.objSolicBancaria.importeSoles}" readonly="true"/></td>
+													<td><h:inputText value="#{consultarSolicitudMBobjSolicBancaria.importeSoles}" readonly="true"/></td>
 													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solEdicionMB.agregarOperacionBancaria}" actionListener="#{solEdicionMB.obtenerAccionAgregarOperacionBancaria}" update=":formSolicitudRegistro,:formSolicitudRegistro:idMsmOperacionBancaria"/></td>
 													<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria"  action="#{solEdicionMB.limpiarListaSolicitudesBancarias}" update=":formSolicitudRegistro" /></td>
 												</tr>
 												<tr>
 													<td align="center" width="95%" colspan="11"><p:dataTable
 															var="o" rows="20"
-															value="#{solEdicionMB.lstSolicBancarias}"
+															value="#{consultarSolicitudMB.lstSolicBancarias}"
 															emptyMessage="No hay resultados en la bandeja"
 															paginatorPosition="bottom" paginator="true"
 															paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
@@ -508,11 +508,11 @@
 
 					<tr>
 					<td align="center"><h:outputText value="Estado :"></h:outputText> </td>
-						<td align="center"><h:outputText value="#{solEdicionMB.objAgrupacionSimpleDtoCapturado.sEstado}"></h:outputText> </td>
+						<td align="center"><h:outputText value="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado.sEstado}"></h:outputText> </td>
 					</tr>
 					<tr>
 						<td align="center" width="45%" colspan="22"><p:dataTable
-								var="x" rows="20" value="#{solEdicionMB.objAgrupacionSimpleDtoCapturado.lstPersonas}"
+								var="x" rows="20" value="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado.lstPersonas}"
 								emptyMessage="No hay resultados en la bandeja"
 								paginatorPosition="bottom" paginator="true"
 								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
@@ -557,7 +557,7 @@
 
 			<p:dataTable var="s" rows="20" 
 				emptyMessage="No hay resultados en la bandeja" 
-				paginatorPosition="bottom" paginator="true" value="#{solEdicionMB.personaDataModal}"
+				paginatorPosition="bottom" paginator="true" value="#{consultarSolicitudMB.personaDataModal}"
 				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 				rowKey="#{s.codPer}"
 				selection="#{solEdicionMB.objTiivsPersonaSeleccionado}" selectionMode="single" >
@@ -606,7 +606,7 @@
 						<td><h:outputText
 								styleClass="outputTextPopup" id="outTipoDoi" style="width:350px;"
 								value="T DOI/C Central*:" /></td>
-						<td colspan="1"><p:selectOneMenu id="cboTipoDoi" value="#{solEdicionMB.objTiivsPersonaBusqueda.tipDoi}">
+						<td colspan="1"><p:selectOneMenu id="cboTipoDoi" value="#{consultarSolicitudMB.objTiivsPersonaBusqueda.tipDoi}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 								<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="lOf" itemValue="#{lOf.codTipoDoc}" itemLabel="#{lOf.descripcion}" />
 							</p:selectOneMenu></td>
@@ -617,7 +617,7 @@
 
 						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outDoi"
 								value="DOI:" /></td>
-						<td colspan="1"><h:inputText id="inpDoitxt" styleClass="inputTextPopup"  size="12" value="#{solEdicionMB.objTiivsPersonaBusqueda.numDoi}"/></td>
+						<td colspan="1"><h:inputText id="inpDoitxt" styleClass="inputTextPopup"  size="12" value="#{consultarSolicitudMB.objTiivsPersonaBusqueda.numDoi}"/></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="toolcboDoi" /></td>
 						<td colspan="1"><p:tooltip for="toolcboDoi"
@@ -629,7 +629,7 @@
                         <td colspan="1">
                         <h:outputText styleClass="outputTextPopup" id="outTipoDoi2" value="T DOI/C *:" /></td>
 						<td colspan="1">
-						<p:selectOneMenu id="cboTipoDoi2" value="#{solEdicionMB.objTiivsPersonaResultado.tipDoi}">
+						<p:selectOneMenu id="cboTipoDoi2" value="#{consultarSolicitudMB.objTiivsPersonaResultado.tipDoi}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 								<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="lOf" itemValue="#{lOf.codTipoDoc}" itemLabel="#{lOf.descripcion}" />
 							
@@ -644,7 +644,7 @@
 					    <h:outputText styleClass="outputTextPopup" id="outNumDoiBusqueda" value="Num DOI:" /></td>
 						<td colspan="1"><h:inputText styleClass="inputText" id="txtNumDoiBusqueda"
 								style="width:50px;"
-								value="#{solEdicionMB.objTiivsPersonaResultado.numDoi}" /></td>
+								value="#{consultarSolicitudMB.objTiivsPersonaResultado.numDoi}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtNumDoiBusqueda" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtNumDoiBusqueda" value="Número de Identidad"
@@ -654,7 +654,7 @@
 					    <h:outputText styleClass="outputTextPopup" id="outCodCentral" value="Código Central:" /></td>
 						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtCodCentral"
 								size="7"
-								value="#{solEdicionMB.objTiivsPersonaBusqueda.codCen}" /></td>
+								value="#{consultarSolicitudMB.objTiivsPersonaBusqueda.codCen}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtCodCentral" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtCodCentral" value="Código Central"
@@ -666,7 +666,7 @@
 						
 						<td colspan="3"><h:inputText styleClass="inputTextPopup"
 								id="txtApellidoPaterno" size="17"
-								 value="#{solEdicionMB.objTiivsPersonaResultado.apePat}" /></td>
+								 value="#{consultarSolicitudMB.objTiivsPersonaResultado.apePat}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtApellidoPaterno" /></td>
 						<td><p:tooltip for="tooltxtApellidoPaterno" value="Ap.Paterno:" showEffect="slide" /></td>
@@ -676,14 +676,14 @@
 								styleClass="outputTextPopup" id="outApMaterno" value="Ap.Materno:" /></td>
 						<td colspan="4"><h:inputText styleClass="inputTextPopup"
 								id="txtApellidoMaterno" size="17"
-								 value="#{solEdicionMB.objTiivsPersonaResultado.apeMat}"  /></td>
+								 value="#{consultarSolicitudMB.objTiivsPersonaResultado.apeMat}"  /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtApellidoMaterno" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtApellidoMaterno" value="Ap.Materno:" showEffect="slide" /></td>
 						<td colspan="1" ><h:outputText styleClass="outputTextPopup" id="outNombres" value="Nombres:" /></td>	
 						<td colspan="4">
 						<h:inputText styleClass="inputTextPopup" id="txtNombres" size="17"
-								value="#{solEdicionMB.objTiivsPersonaResultado.nombre}" /></td>
+								value="#{consultarSolicitudMB.objTiivsPersonaResultado.nombre}" /></td>
 						<td colspan="1" ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtNombres" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtNombres" value="Nombres"
 								showEffect="slide" /></td>
@@ -693,7 +693,7 @@
 						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outTipoReg"
 								value="Tipo de Registro*:" /></td>
 						<td colspan="1">
-						<p:selectOneMenu id="cboTipoReg" value="#{solEdicionMB.objTiivsPersonaResultado.tipPartic}">
+						<p:selectOneMenu id="cboTipoReg" value="#{consultarSolicitudMB.objTiivsPersonaResultado.tipPartic}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 						        <f:selectItems value="#{combosMB.lstTipoRegistroPersona}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" /> 
 						</p:selectOneMenu></td>
@@ -703,7 +703,7 @@
 								showEffect="slide" /></td>
 
 						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outClasificacion" value="Clasificacion*:" /></td>
-						<td colspan="1"><p:selectOneMenu id="cboClasificacion" value="#{solEdicionMB.objTiivsPersonaResultado.clasifPer}">
+						<td colspan="1"><p:selectOneMenu id="cboClasificacion" value="#{consultarSolicitudMB.objTiivsPersonaResultado.clasifPer}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 								 <f:selectItems value="#{combosMB.lstClasificacionPersona}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" />
 								<f:selectItem itemLabel="Otro" itemValue="99" />
@@ -713,12 +713,12 @@
 						<td colspan="1"><p:tooltip for="toolcboClasificacion"
 								value="Clasificación" showEffect="slide" /></td>
 						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtClasiSelect" size="15"
-								 value="#{solEdicionMB.objTiivsPersonaResultado.clasifPerOtro}"/></td>
+								 value="#{consultarSolicitudMB.objTiivsPersonaResultado.clasifPerOtro}"/></td>
 						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outEmail"
 								value="Email :" /></td>
 						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtEmail"
 								style="width:100px;"
-								 value="#{solEdicionMB.objTiivsPersonaResultado.email}" /></td>
+								 value="#{consultarSolicitudMB.objTiivsPersonaResultado.email}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtEmail" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtEmail" value="Email"
@@ -727,7 +727,7 @@
 								value="Celular:" /></td>
 						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtCelular" maxlength="9" size="9"
 								style="width:100px;" 
-								 value="#{solEdicionMB.objTiivsPersonaResultado.numCel}"/></td>
+								 value="#{consultarSolicitudMB.objTiivsPersonaResultado.numCel}"/></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtCelular" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtCelular" value="Celular"
@@ -748,7 +748,7 @@
 					</tr>
 					<tr>
 						<td align="center" width="45%" colspan="22"><p:dataTable
-								var="s" rows="20" value="#{solEdicionMB.lstTiivsPersona}"
+								var="s" rows="20" value="#{consultarSolicitudMB.lstTiivsPersona}"
 								emptyMessage="No hay resultados en la bandeja"
 								paginatorPosition="bottom" paginator="true"
 								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
