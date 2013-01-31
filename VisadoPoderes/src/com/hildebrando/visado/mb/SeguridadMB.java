@@ -36,7 +36,7 @@ public class SeguridadMB {
 	}
 	@SuppressWarnings("rawtypes")
 	public void iniciarSession(){
-	logger.info("Entra al Metodo iniciarSession");				
+	logger.info("===== entrando a iniciarSession() ====");				
 	ServiciosSeguridadBbva objSeguridad;
 	IILDPeUsuario usuarioIILD = null;
 	//Ldapperu2 usuarioIILD = new Ldapperu2();;
@@ -72,13 +72,16 @@ public class SeguridadMB {
 		
 		
 		if(usuarioIILD==null){
-			logger.info("IIVP : Usuario es nulo");
+			logger.info("==== El [USU_LDAP] es NULO === ");
 			request.getSession(true).setAttribute("strMensaje","Usuario no Encontrado");
 			response.sendRedirect("./sinAcceso.jsp");
 		}else{
-			logger.info("Codcargo: "+usuarioIILD.getCargo().getCodigo());
-			logger.info("Codofi: "+usuarioIILD.getBancoOficina().getCodigo());
-			logger.info("Codusu: "+usuarioIILD.getUID());
+			logger.info("==== [USU_LDAP] encontrado === ");
+			logger.info("[USU_LDAP]-Codcargo: "+usuarioIILD.getCargo().getCodigo());
+			logger.info("[USU_LDAP]-Codofi: "+usuarioIILD.getBancoOficina().getCodigo());
+			logger.info("[USU_LDAP]-Codusu: "+usuarioIILD.getUID());
+			logger.info("[USU_LDAP]-Nombres: "+usuarioIILD.getNombre()+" "+usuarioIILD.getApellido1());
+			
 			/*
 			System.out.println("Codcargo: "+usuarioIILD.getId().getCodcargo());
 			System.out.println("Codofi: "+usuarioIILD.getId().getCodofi());
@@ -116,17 +119,17 @@ public class SeguridadMB {
         		MiembroDto object = (MiembroDto) iterator.next();
 				logger.info("Grupo: " + object.getCOD_GRUPO()+", criterio: "+ object.getCRITERIO()+", miembro: "+object.getCOD_MIEMBRO() );
 				if (ConstantesVisado.COD_GRUPO_ADM.equals(object.getCOD_GRUPO())){
-					logger.info(object.getDESCRIPCION());
+					logger.info("[GRUPO_ADMIN]:"+object.getDESCRIPCION());
 					request.getSession(true).setAttribute("GRUPO_ADM", ConstantesVisado.COD_GRUPO_ADM);
 					request.getSession(true).setAttribute("DES_GRUPO", ConstantesVisado.DES_GRUPO_ADM);
                 }else 
 				if (ConstantesVisado.COD_GRUPO_JRD.equals(object.getCOD_GRUPO())){
-					logger.info(object.getDESCRIPCION());
+					logger.info("[GRUPO_JRD]:"+object.getDESCRIPCION());
 					request.getSession(true).setAttribute("GRUPO_JRD", ConstantesVisado.COD_GRUPO_JRD);	
 					request.getSession(true).setAttribute("DES_GRUPO", ConstantesVisado.DES_GRUPO_JRD);
                 }else
 				if (ConstantesVisado.COD_GRUPO_OFI.equals(object.getCOD_GRUPO())){
-					logger.info(object.getDESCRIPCION());
+					logger.info("[GRUPO_OFI]:"+object.getDESCRIPCION());
 					request.getSession(true).setAttribute("GRUPO_OFI", ConstantesVisado.COD_GRUPO_OFI);
 					request.getSession(true).setAttribute("DES_GRUPO", ConstantesVisado.DES_GRUPO_OFI);
                   }
@@ -139,25 +142,24 @@ public class SeguridadMB {
     		// DES_GRUPO_ADM= "SERVICIOS JURIDICOS";	
     		// DES_GRUPO_JRD= "ABOGADO";
     		// DES_GRUPO_OFI= "OFICINA";
-        	 if(grupoAdm ==null && grupoJrd==null ){
-        		 logger.info("ROL OFICINA");
-        		 request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.OFICINA);
-        		 }else{
+        	if(grupoAdm ==null && grupoJrd==null ){
+        		logger.info("ROL OFICINA");
+        		request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.OFICINA);
+        	}else{
         		 if (grupoAdm ==null) {
-        		 logger.info("ROL ABOGADO");
-        		 request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.ABOGADO);
+        			 logger.info("ROL ABOGADO");
+        			 request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.ABOGADO);
         		 }else{	
         			 logger.info("ROL SSJJ");
             		 request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.SSJJ);
         		 }
-        		 }
+        	}
         	
-        	if(ListaMiembros.size()>0){      		
-        
-            response.sendRedirect("./bienvenido.xhtml");
+        	if(ListaMiembros.size()>0){
+        		response.sendRedirect("./bienvenido.xhtml");
         	}else{
             	request.getSession().setAttribute("strMensaje","Usuario no se encuentra registrado en el sistema.");
-            response.sendRedirect("./sinAcceso.jsp");
+            	response.sendRedirect("./sinAcceso.jsp");
         	}
         	
     	}
@@ -168,7 +170,7 @@ public class SeguridadMB {
     	logger.error(e.getMessage(),e);
     	request.getSession().setAttribute("strMensaje","Excepcion al procesar la validacion:" + e.getMessage());
     }   
-    logger.trace("Sale del Metodo");
+    logger.debug("===== saliendo de iniciarSession() ====");	
 
 	}
 	public String getsCodUsuarioBBVA() {
