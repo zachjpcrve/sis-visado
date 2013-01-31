@@ -136,13 +136,15 @@ public class SolicitudEdicionMB
 	
 	public SolicitudEdicionMB()
 	{
-		solicitudEdicion = new Solicitud();
+		inicializarListas();
+		inicializarObjetos();
+		//obtenerSolicitud();
+	}
+	
+	public void inicializarListas()
+	{
 		lstTiivsPersona = new ArrayList<TiivsPersona>();
 		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
-		personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
-		objTiivsPersonaBusqueda = new TiivsPersona();
-		objTiivsPersonaResultado = new TiivsPersona();
-		objTiivsPersonaSeleccionado = new TiivsPersona();
 		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
 		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		lstTipoSolicitudDocumentos = new ArrayList<TiivsTipoSolicDocumento>();
@@ -150,15 +152,28 @@ public class SolicitudEdicionMB
 		lstDocumentosXTipoSolTemp = new ArrayList<TiivsTipoSolicDocumento>();
 		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+		
+		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
+		lstOperaciones = new ArrayList<OperacionBancariaDTO>();
+		
+		aliasFilesToDelete = new ArrayList<String>();
+	}
+	
+	public void inicializarObjetos()
+	{
+		solicitudEdicion = new Solicitud();
+		
+		personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
+		objTiivsPersonaBusqueda = new TiivsPersona();
+		objTiivsPersonaResultado = new TiivsPersona();
+		objTiivsPersonaSeleccionado = new TiivsPersona();
+		
 		objSolicBancaria = new TiivsSolicitudOperban();
 		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
 		objSolicBancaria.setTiivsOperacionBancaria(new TiivsOperacionBancaria());
-		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
-		lstOperaciones = new ArrayList<OperacionBancariaDTO>();
+		
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
-		
-		aliasFilesToDelete = new ArrayList<String>();
-		
+				
 		selectedTipoDocumento = new TiivsTipoSolicDocumento();
 		mapSolicitudes=new HashMap<Integer, TiivsSolicitudOperban>();
 		
@@ -166,8 +181,7 @@ public class SolicitudEdicionMB
 		combosMB.cargarMultitabla();
 		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_MONEDA);
 		
-		cargarDocumentos();
-		obtenerSolicitud();
+		//cargarDocumentos();
 	}
 	
 	public void obtenerAccionAgregarOperacionBancaria()
@@ -1104,16 +1118,20 @@ public class SolicitudEdicionMB
 		return descripcion;
 	}
 	
-	public void obtenerSolicitud()
+	public void actualizarVista(TiivsSolicitud solicitud)
 	{
-		try {
+	    this.solicitudEdicionT.setCodSoli(solicitud.getCodSoli());
+		this.solicitudEdicionT.setNroVoucher(solicitud.getNroVoucher());
+		//solicitudEdicionT.getCodSoli()=solicitud.
+		
+		/*try {
 		   lstAgrupacionSimpleDto=new ArrayList<AgrupacionSimpleDto>();
-		   String codigoSolicitud=Utilitarios.capturarParametro("prm_codSoli");
-		   logger.info("codigoSolicitud : "+codigoSolicitud);
-		   TiivsSolicitud solicitud =new TiivsSolicitud();
-		   solicitud.setCodSoli(codigoSolicitud);
+		  
+		   //TiivsSolicitud solicitud =new TiivsSolicitud();
+		   //solicitud.setCodSoli(codigoSolicitud);
 		   SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
-		   solicitudEdicionT= solicitudService.obtenerTiivsSolicitud(solicitud);
+		   //solicitudEdicionT= solicitudService.obtenerTiivsSolicitud(solicitud);
+		   solicitudEdicionT=solicitud;
 		   solicitudEdicionT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudEdicionT.getEstado()));
 		   
 		   if (solicitudEdicionT.getMoneda()!=null)
@@ -1124,7 +1142,7 @@ public class SolicitudEdicionMB
 		   {
 			   solicitudEdicionT.setsImporteMoneda(solicitudEdicionT.getImporte().toString());
 		   }
-		   		   
+		   
 		   lstSolicBancarias=solicitudService.obtenerListarOperacionesBancarias(solicitud);
 		   int y=0;
 		   
@@ -1193,7 +1211,7 @@ public class SolicitudEdicionMB
 		 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	

@@ -24,6 +24,7 @@ import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
+import com.hildebrando.visado.converter.PersonaDataModal;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
@@ -54,6 +55,9 @@ public class ConsultarSolicitudMB
 	private CombosMB combosMB;
 	@ManagedProperty(value = "#{seguimientoMB}")
 	private SeguimientoMB seguimientoMB;
+	/*@ManagedProperty(value = "#{solEdicionMB}")
+	private SolicitudEdicionMB solicitudEdicionMB;*/
+	
 	private TiivsSolicitud solicitudRegistrarT;
 	private List<TiivsSolicitudOperban> lstSolicBancarias;
 	private List<TiivsAnexoSolicitud> lstAnexosSolicitudes;
@@ -64,6 +68,7 @@ public class ConsultarSolicitudMB
     private List<TiivsDocumento> lstTiivsDocumentos;	
     private List<TiivsMiembro> lstAbogados;
     private List<ComboDto>lstComboDictamen;
+    private List<TiivsPersona> lstTiivsPersona;
 	private boolean bSeccionDictaminar=false;
 	private boolean bSeccionReasignacion=false;
 	private boolean bSeccionCartaAtencion=false;
@@ -82,11 +87,18 @@ public class ConsultarSolicitudMB
 	private boolean bMostrarCartaRechazo=false;
 	private boolean bMostrarCartaImprocedente=false;
 	private boolean bMostrarCartaRespuesta=false;
+	boolean bBooleanPopupTipoCambio = true;
 	private String PERFIL_USUARIO;
 	private String sCodigoEstadoNivel;	
 	private String sNivelSolicitud; 	
 	private boolean verPnlEvaluarNivel = false;	
 	private EvaluacionNivelesMB evaluacionNivelesMB;
+	private TiivsSolicitudOperban objSolicBancaria;
+	private PersonaDataModal personaDataModal;
+	private TiivsPersona objTiivsPersonaBusqueda;
+	private TiivsPersona objTiivsPersonaResultado;
+	private TiivsPersona objTiivsPersonaSeleccionado;
+	private TiivsPersona objTiivsPersonaCapturado;
 	
 	public ConsultarSolicitudMB() 
 	{
@@ -330,8 +342,11 @@ public class ConsultarSolicitudMB
 		
 		obtenerSolicitud();
 		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02))
-		{   SolicitudEdicionMB c =new SolicitudEdicionMB();
-		    c.obtenerSolicitud();
+		{   
+			/*String codigoSolicitud=Utilitarios.capturarParametro("prm_codSoli");
+			logger.info("codigoSolicitud : "+codigoSolicitud);
+			SolicitudEdicionMB solicitud= new SolicitudEdicionMB();
+			solicitud.actualizarVista(solicitudRegistrarT);*/
 			redirect ="/faces/paginas/solicitudEdicion.xhtml";
 		}
 		else
@@ -1242,5 +1257,82 @@ public class ConsultarSolicitudMB
 	public void setbMostrarCartaRespuesta(boolean bMostrarCartaRespuesta) {
 		this.bMostrarCartaRespuesta = bMostrarCartaRespuesta;
 	}
-		
+
+	public TiivsSolicitudOperban getObjSolicBancaria() {
+		return objSolicBancaria;
+	}
+
+	public void setObjSolicBancaria(TiivsSolicitudOperban objSolicBancaria) {
+		this.objSolicBancaria = objSolicBancaria;
+	}
+
+	public boolean isbBooleanPopupTipoCambio() {
+		return bBooleanPopupTipoCambio;
+	}
+
+	public void setbBooleanPopupTipoCambio(boolean bBooleanPopupTipoCambio) {
+		this.bBooleanPopupTipoCambio = bBooleanPopupTipoCambio;
+	}
+
+	public PersonaDataModal getPersonaDataModal() {
+		return personaDataModal;
+	}
+
+	public void setPersonaDataModal(PersonaDataModal personaDataModal) {
+		this.personaDataModal = personaDataModal;
+	}
+
+	public TiivsPersona getObjTiivsPersonaBusqueda() {
+		return objTiivsPersonaBusqueda;
+	}
+
+	public void setObjTiivsPersonaBusqueda(TiivsPersona objTiivsPersonaBusqueda) {
+		this.objTiivsPersonaBusqueda = objTiivsPersonaBusqueda;
+	}
+
+	public TiivsPersona getObjTiivsPersonaResultado() {
+		return objTiivsPersonaResultado;
+	}
+
+	public void setObjTiivsPersonaResultado(TiivsPersona objTiivsPersonaResultado) {
+		this.objTiivsPersonaResultado = objTiivsPersonaResultado;
+	}
+
+	public TiivsPersona getObjTiivsPersonaSeleccionado() {
+		return objTiivsPersonaSeleccionado;
+	}
+
+	public void setObjTiivsPersonaSeleccionado(
+			TiivsPersona objTiivsPersonaSeleccionado) {
+		this.objTiivsPersonaSeleccionado = objTiivsPersonaSeleccionado;
+	}
+
+	public TiivsPersona getObjTiivsPersonaCapturado() {
+		return objTiivsPersonaCapturado;
+	}
+
+	public void setObjTiivsPersonaCapturado(TiivsPersona objTiivsPersonaCapturado) {
+		this.objTiivsPersonaCapturado = objTiivsPersonaCapturado;
+	}
+
+	public List<TiivsDocumento> getLstTiivsDocumentos() {
+		return lstTiivsDocumentos;
+	}
+
+	public void setLstTiivsDocumentos(List<TiivsDocumento> lstTiivsDocumentos) {
+		this.lstTiivsDocumentos = lstTiivsDocumentos;
+	}
+
+	public List<TiivsPersona> getLstTiivsPersona() {
+		return lstTiivsPersona;
+	}
+
+	public void setLstTiivsPersona(List<TiivsPersona> lstTiivsPersona) {
+		this.lstTiivsPersona = lstTiivsPersona;
+	}
+	
+	/*public SolicitudEdicionMB getSolicitudEdicionMB() {
+		return solicitudEdicionMB;
+	}
+		*/
 }
