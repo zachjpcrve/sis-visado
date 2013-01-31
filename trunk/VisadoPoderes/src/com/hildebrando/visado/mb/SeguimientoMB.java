@@ -96,9 +96,9 @@ public class SeguimientoMB
 	private String nroDOIPoderdante;
 	private Boolean noHabilitarExportar;
 	private Boolean noMostrarFechas;
-	private Boolean bRevision;
-	private Boolean bDelegados;
-	private Boolean bRevocatoria;
+	private Boolean bRevision=false;
+	private Boolean bDelegados=false;
+	private Boolean bRevocatoria=false;
 	private Boolean ocultarControl;
 	private Date fechaInicio;
 	private Date fechaFin;
