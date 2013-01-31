@@ -743,8 +743,12 @@ public class SolicitudEdicionMB
 					this.solicitudEdicionT.setTiivsEstudio(new TiivsEstudio());
 				}
 				*/
-			
-				TiivsSolicitud objResultado = service.insertarMerge(this.solicitudEdicionT);
+				TiivsSolicitud objResultadoTemp = this.solicitudEdicionT;
+				for (TiivsSolicitudAgrupacion y : objResultadoTemp.getTiivsSolicitudAgrupacions()) 
+				  {
+					y.setTiivsAgrupacionPersonas(null);
+				  }
+				TiivsSolicitud objResultado =service.insertarMerge(objResultadoTemp);
 				  for (TiivsSolicitudAgrupacion x : this.solicitudEdicionT.getTiivsSolicitudAgrupacions()) 
 				  {
 					  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) 
