@@ -15,7 +15,9 @@
 			columns="2" rows="4">
 			<p:column>
 				<p:panel >					
-					<h:outputText title="#{doc.documento}" value="#{doc.documento}:" styleClass="outputText"/>
+					<h:outputLink onclick="window.open('../../files/#{doc.aliasTemporal}', 'WindowNameDoc', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
+						<h:outputText title="#{doc.documento}" value="#{doc.documento}:" styleClass="outputText"/>
+					</h:outputLink>
 					<h:panelGrid columns="1">
 						<iframe width="250" height="150"
 							src="../../files/#{doc.aliasTemporal}" />
@@ -24,6 +26,8 @@
 			</p:column>
 
 		</p:dataGrid>
+		
+		
 	
 </h:body>
 </html>
