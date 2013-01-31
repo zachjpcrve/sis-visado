@@ -317,7 +317,7 @@ public class ConsultarSolicitudMB
     	lstComboDictamen=new ArrayList<ComboDto>();
     	logger.info("this.solicitudRegistrarT.getEstado() " +this.solicitudRegistrarT.getEstado());
     	//SOLO SERVICIOS JURIDICOS
-    	if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ))
+    	if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)||PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO))
     	{
     		if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
     		{
@@ -341,18 +341,18 @@ public class ConsultarSolicitudMB
 		String redirect="";
 		
 		obtenerSolicitud();
-		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02))
-		{   
+		///if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02))
+		//{   
 			/*String codigoSolicitud=Utilitarios.capturarParametro("prm_codSoli");
 			logger.info("codigoSolicitud : "+codigoSolicitud);
 			SolicitudEdicionMB solicitud= new SolicitudEdicionMB();
 			solicitud.actualizarVista(solicitudRegistrarT);*/
 			redirect ="/faces/paginas/solicitudEdicion.xhtml";
-		}
-		else
-		{
+		//}
+	//	else
+		//{
 			redirect ="/faces/paginas/detalleSolicitud.xhtml";
-		}
+		//}
 		
 		return redirect;	
 	}
@@ -593,51 +593,47 @@ public class ConsultarSolicitudMB
 	public void dictaminarSolicitud(){
 		logger.info("********************** dictaminarSolicitud *********************************** ");
 		logger.info("********** "+valorDictamen);
+		try {
+			
+		
+		
 		 GenericDao<TiivsSolicitud, Object> serviceS = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		 if(this.PERFIL_USUARIO.trim().equals(ConstantesVisado.OFICINA)||this.PERFIL_USUARIO.trim().equals(ConstantesVisado.SSJJ)){
+		 if(this.PERFIL_USUARIO.trim().equals(ConstantesVisado.ABOGADO)||this.PERFIL_USUARIO.trim().equals(ConstantesVisado.SSJJ)){
 		if(this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
 			
 			//Llamada a los Niveles
-			try {
+		
 				this.agregarNiveles(solicitudRegistrarT);
 			    this.bSeccionDictaminar=false;
 				this.solicitudRegistrarT= serviceS.modificar(solicitudRegistrarT);
 				this.registrarHistorial(solicitudRegistrarT);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			
 		     Utilitarios.mensajeInfo("INFO", "Se dictaminó correctamente la solicitud");
 			
 		}else if(this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)){
-			 try {
+			
 				this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
 					solicitudRegistrarT= serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
 					  Utilitarios.mensajeInfo("INFO", "Se dictaminó correctamente la solicitud");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			
 		}
 		else if(this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)){
-			 try {
+			
 				 this.agregarNiveles(solicitudRegistrarT);
 				 this.bSeccionDictaminar=false;
 				 this.solicitudRegistrarT= serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
 					  Utilitarios.mensajeInfo("INFO", "Se dictaminó correctamente la solicitud");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				
 		}
 		else if(this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)){
-			 try {
+			
 				this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
 					solicitudRegistrarT= serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
 					  Utilitarios.mensajeInfo("INFO", "Se dictaminó correctamente la solicitud");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				
 		}
 		if(this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
 			bSeccionCartaAtencion=true;
@@ -653,7 +649,12 @@ public class ConsultarSolicitudMB
 		
 		
 		this.obtenerHistorialSolicitud();
+		 
 		 }
+		 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	  public void agregarNiveles(TiivsSolicitud solicitud) throws Exception{
