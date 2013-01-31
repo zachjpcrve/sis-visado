@@ -303,6 +303,7 @@ public class CombosMB {
 		Busqueda filtroOfi = Busqueda.forClass(TiivsOficina1.class);
 		filtroOfi.add(Restrictions.isNotNull("tiivsTerritorio.codTer"));
 		filtroOfi.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_OFICINA));
+		filtroOfi.setMaxResults(1000);
 		try {
 			lstOficina = oficDAO.buscarDinamico(filtroOfi);
 			lstOficina1 = oficDAO.buscarDinamico(filtroOfi);
