@@ -1385,7 +1385,10 @@ public class SolicitudRegistroMB {
 	    TiivsPersona objPersonaRetorno=new TiivsPersona();
 	    TiivsAgrupacionPersonaId objAgruId=new TiivsAgrupacionPersonaId();
 		try {
-			logger.info("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getImporte());
+			logger.info("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getMoneda());
+			if(this.solicitudRegistrarT.getMoneda()==null){
+				this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+			}
 			this.solicitudRegistrarT.setFecha(new Date());
 			this.solicitudRegistrarT.setEstado(this.solicitudRegistrarT.getEstado().trim());
 
@@ -1456,14 +1459,12 @@ public class SolicitudRegistroMB {
 					}
 					
 					
-					//--this.eliminarArchivosTemporales();
+					
 					
 				} else {
 					mensaje = "Error al generar la Solicitud ";
 					Utilitarios.mensajeInfo("INFO", mensaje);
-					
-					//Elimina archivo temporal
-					//this.eliminarArchivosTemporales();
+				
 					
 				}
 
