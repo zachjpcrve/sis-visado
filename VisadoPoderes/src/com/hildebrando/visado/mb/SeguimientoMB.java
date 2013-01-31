@@ -2258,12 +2258,15 @@ public class SeguimientoMB
 	
 	/*Probar cuando la tabla miembro tenga el registro 0237 (con cualquiera)*/
 	public TiivsTerritorio buscarTerritorioPorOficina(String codOficina)
-	{
+	{   TiivsTerritorio terrTMP = new TiivsTerritorio();
+		try {
+			
+		
 		int i=0;
 		int j=0;
 		String codTerr="";
 		String desTerr="";
-		TiivsTerritorio terrTMP = new TiivsTerritorio();
+		
 		
 		for (;i<=combosMB.getLstOficina().size();i++)
 		{
@@ -2290,7 +2293,9 @@ public class SeguimientoMB
 			terrTMP.setCodTer(codTerr);
 			terrTMP.setDesTer(desTerr);
 		}
-		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return terrTMP;
 	}
 	
