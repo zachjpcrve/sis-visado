@@ -5,15 +5,18 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.SeguridadDao;
+import com.bbva.persistencia.generica.util.Sesion;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.conexion.__Conexion2;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
@@ -29,10 +32,30 @@ public class SeguridadMB {
 	HttpServletResponse response;
 	private String sCodUsuarioBBVA="P015740";
 	//private String sCodUsuarioBBVA="P017433";
-	
+	private String idSesion = "";
+	private String usuarioCodigo = "";
+	private boolean bNoLogeado = true;
+	public boolean isbNoLogeado() {
+		return bNoLogeado;
+	}
+	public void setbNoLogeado(boolean bNoLogeado) {
+		this.bNoLogeado = bNoLogeado;
+	}
 	private String password="iivs";
 	
 	public SeguridadMB() {
+	}
+	public String getIdSesion() {
+		return idSesion;
+	}
+	public void setIdSesion(String idSesion) {
+		this.idSesion = idSesion;
+	}
+	public String getUsuarioCodigo() {
+		return usuarioCodigo;
+	}
+	public void setUsuarioCodigo(String usuarioCodigo) {
+		this.usuarioCodigo = usuarioCodigo;
 	}
 	@SuppressWarnings("rawtypes")
 	public void iniciarSession(){
@@ -81,6 +104,16 @@ public class SeguridadMB {
 			logger.info("[USU_LDAP]-Codofi: "+usuarioIILD.getBancoOficina().getCodigo());
 			logger.info("[USU_LDAP]-Codusu: "+usuarioIILD.getUID());
 			logger.info("[USU_LDAP]-Nombres: "+usuarioIILD.getNombre()+" "+usuarioIILD.getApellido1());
+			
+			this.bNoLogeado = false;
+			
+			if(idSesion.equals("")){
+				int numIdSesion = Sesion.crearNuevaSesion();
+				idSesion = String.valueOf(numIdSesion);
+				logger.info("idSesion :: " + idSesion);
+				
+			}
+			
 			
 			/*
 			System.out.println("Codcargo: "+usuarioIILD.getId().getCodcargo());
@@ -135,6 +168,9 @@ public class SeguridadMB {
                   }
 			}
         	request.getSession(true).setAttribute("USUARIO_SESION", usuarioIILD);
+        	request.getSession(true).setAttribute(ConstantesVisado.USUARIO_ID, usuarioIILD.getUID());
+        	request.getSession(true).setAttribute(ConstantesVisado.USUARIO_NOMBRE, usuarioIILD.getNombre()
+        			                                                              + " " + usuarioIILD.getApellido1() );
         	String grupoAdm = (String) Utilitarios.getObjectInSession("GRUPO_ADM");
     		String grupoOfi = (String) Utilitarios.getObjectInSession("GRUPO_OFI");
     		String grupoJrd = (String) Utilitarios.getObjectInSession("GRUPO_JRD");
@@ -173,6 +209,27 @@ public class SeguridadMB {
     logger.debug("===== saliendo de iniciarSession() ====");	
 
 	}
+	
+	
+	public String cerrarSesion() {
+		logger.info("*********************************cerrarSesion **********************************" +idSesion);
+		Sesion.cerrarSesion(Integer.parseInt(idSesion));
+		this.idSesion = "";
+		this.usuarioCodigo = "";
+		try {
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+		ExternalContext externalContext = context.getExternalContext();
+		Object session = externalContext.getSession(false);
+		HttpSession httpSession = (HttpSession) session;
+		httpSession.invalidate();
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "/faces/paginas/seguridad.xhtml";
+	}
+	
 	public String getsCodUsuarioBBVA() {
 		return sCodUsuarioBBVA;
 	}
