@@ -31,7 +31,13 @@
 			<div id="banner"></div>
 
 			<div class="clear"></div>
-
+			
+          <div id="usuario">
+          <h:panelGrid columns="1" style="padding-left:850px"> 
+				<h:outputText styleClass="outputText" value=" ${usuarioId} : ${usuarioNombre}  " />
+				<h:outputText styleClass="outputText" value=" ${PERFIL_USUARIO}" />
+		  </h:panelGrid>
+			</div>
 		</div>
 
 		<div id="menu"  >
@@ -55,6 +61,31 @@
 		</div>
 
 	</div>
+
+   <p:confirmDialog message="¿Est&#225; seguro de cerrar sesi&#243;n?"
+		width="300" header="Mensaje de cerrar sesión" severity="alert"
+		widgetVar="cfdCerrarSesion" modal="true">
+		<h:form id="frmCerrarSesion">
+			<p:commandButton value="Si" ajax="false"
+				action="#{seguridadMB.cerrarSesion}"
+				oncomplete="cfdCerrarSesion.hide();closeWindows();"/>
+			<p:commandButton value="No" onclick="cfdCerrarSesion.hide()"
+				type="button" />
+		</h:form>
+	</p:confirmDialog>
+	
+	<p:idleMonitor onactive="sesionCaducada.show();"
+		timeout="#{session.maxInactiveInterval * 1000}" />
+	<p:dialog header="Sesión caducada" widgetVar="sesionCaducada"
+		modal="true" fixedCenter="true" closable="false" width="400"
+		visible="false">
+		<h:outputText
+			value="La sesión ha caducado, por favor vuelva a intentarlo" />
+		<input id="confirmBackToLogin" type="button"
+			value="ir a iniciar sesión"
+			onclick="window.location='../../../login.jsp';" />
+	</p:dialog>
+
 
 </h:body>
 
