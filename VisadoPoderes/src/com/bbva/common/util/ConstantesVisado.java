@@ -2,6 +2,12 @@ package com.bbva.common.util;
 
 
 public class ConstantesVisado {
+	
+	public static final String USUARIO_ID = "usuarioId";
+	public static final String USUARIO_NOMBRE = "usuarioNombre";
+	public static final String USUARIO_CODIGO = "usuarioCodigo";
+	public static final String USUARIO_ESTADO = "usuarioEstado";
+	
 	public static final java.lang.String APODERADO="0002";
 	public static final java.lang.String PODERDANTE="0001";
 	
