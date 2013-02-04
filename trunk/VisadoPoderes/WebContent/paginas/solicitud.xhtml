@@ -162,7 +162,8 @@ function validaNumero(e, ent, obj, fn) {
 														<td><h:outputText styleClass="outputText"
 																id="outNroVaucher" value="Nro Voucher *" /></td>
 														<td><h:inputText styleClass="inputText" immediate="false"  required="false" requiredMessage="Ingrese el Nro Voucher"
-																id="txtNroVaucher" style="width:100px;" 
+																id="txtNroVaucher" style="width:100px;" maxlength="11" onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');"
 																value="#{solicitudRegMB.solicitudRegistrarT.nroVoucher}"
 																 /></td>
 														<td><p:message for="txtNroVaucher"></p:message><p:graphicImage
@@ -213,7 +214,8 @@ function validaNumero(e, ent, obj, fn) {
 													<td></td>
 													<td></td>
 													<td style="width: 50px;"></td>
-													<td><p:commandButton value="+" actionListener="#{solicitudRegMB.agregarActionListenerAgrupacion}" oncomplete="dlgRegistrarPersona.show();"/></td>
+													<td><p:commandButton value="+" actionListener="#{solicitudRegMB.agregarActionListenerAgrupacion}"
+													         update=":formRegistrar:tlbPersonasPopup"   oncomplete="dlgRegistrarPersona.show();"/></td>
 												</tr>
 											</table>
 											<p:separator styleClass="fielset" />
@@ -284,7 +286,7 @@ function validaNumero(e, ent, obj, fn) {
 															
 															</td>
 															<td><p:commandButton icon="ui-icon-pencil"  oncomplete ="dlgRegistrarPersona.show()"
-																			 update=":formSolicitudRegistro" action="#{solicitudRegMB.verEditarAgrupacion}">
+																			 update=":formRegistrar:tlbPersonasPopup" action="#{solicitudRegMB.verEditarAgrupacion}">
 																<f:setPropertyActionListener target="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado}"
 																							  value="#{s}">
 																</f:setPropertyActionListener>
@@ -709,7 +711,7 @@ function validaNumero(e, ent, obj, fn) {
 						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtCodCentral"
 								size="7" maxlength="7"  onkeypress="return validaNumero(event,'0',this,'0');"
 															onblur="validaNumero(event,'0',this,'1');"
-								value="#{solicitudRegMB.objTiivsPersonaBusqueda.codCen}" /></td>
+								value="#{solicitudRegMB.objTiivsPersonaResultado.codCen}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtCodCentral" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtCodCentral" value="Código Central"
@@ -803,14 +805,14 @@ function validaNumero(e, ent, obj, fn) {
 						<td align="center"><p:spacer /></td>
 					</tr>
 					<tr>
-						<td align="center" width="45%" colspan="22"><p:dataTable
+						<td align="center" width="45%" colspan="22"><p:dataTable id="tlbPersonasPopup"
 								var="s" rows="20" value="#{solicitudRegMB.lstTiivsPersona}"
 								emptyMessage="No hay resultados en la bandeja"
 								paginatorPosition="bottom" paginator="true"
 								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 								rowsPerPageTemplate="5,10,15" editable="true">
 
-								<p:column headerText="Codigo Central">
+								<p:column headerText="DOI">
 									<h:outputText value="#{s.sDesctipDoi} : #{s.numDoi}" />
 								</p:column>
 								<p:column headerText="Cliente / No Cliente">
