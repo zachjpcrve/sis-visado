@@ -27,9 +27,7 @@ import org.primefaces.model.UploadedFile;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
-import com.bbva.consulta.reniec.ObtenerPersonaReniecService;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
-import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecServiceImpl;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Persona;
 import com.bbva.persistencia.generica.dao.Busqueda;
