@@ -476,18 +476,24 @@ public class ConsultarSolicitudMB {
 			if (solicitudRegistrarT.getTiivsEstudio() == null) {
 				solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
 			}
-			lstSolicBancarias = solicitudService
-					.obtenerListarOperacionesBancarias(solicitud);
+			
+			lstSolicBancarias = solicitudService.obtenerListarOperacionesBancarias(solicitud);
+			
 			int y = 0;
-			for (TiivsSolicitudOperban f : lstSolicBancarias) {
-				if (f.getMoneda() != null) {
+			
+			for (TiivsSolicitudOperban f : lstSolicBancarias) 
+			{
+				if (f.getMoneda() != null) 
+				{
 					y++;
 					f.setsItem(String.format("%03d", y));
-					f.setsDescMoneda(Utilitarios.obternerDescripcionMoneda(f
-							.getMoneda()));
+					f.setsDescMoneda(Utilitarios.obternerDescripcionMoneda(f.getMoneda()));
 				}
 			}
-			lstAnexosSolicitudes = solicitudService.obtenerListarAnexosSolicitud(solicitud);
+			
+			obtenerImporteTotalxSolicitud(lstSolicBancarias);
+			
+			this.lstAnexosSolicitudes = solicitudService.obtenerListarAnexosSolicitud(solicitud);
 			
 			this.iTipoSolicitud =solicitudRegistrarT.getTiivsTipoSolicitud().getCodTipSolic(); 
 			
@@ -496,7 +502,7 @@ public class ConsultarSolicitudMB {
 			
 			lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 			int i = 0;
-			for (TiivsAnexoSolicitud v : lstAnexosSolicitudes) 
+			for (TiivsAnexoSolicitud v : this.lstAnexosSolicitudes) 
 			{
 				i++;
 				
@@ -1324,6 +1330,7 @@ public class ConsultarSolicitudMB {
 		 * mensaje="Ingrese Nro Voucher correcto de 11 digitos"; retorno=false;
 		 * Utilitarios.mensajeInfo("INFO", mensaje); }
 		 */
+		
 		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
 			mensaje = "Ingrese la sección Apoderado y Poderdante";
 			retorno = false;
@@ -1334,7 +1341,7 @@ public class ConsultarSolicitudMB {
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
-		if (this.lstAnexoSolicitud.size() == 0) {
+		if (this.lstAnexosSolicitudes.size() == 0) {
 			mensaje = "Ingrese los documentos Obligatorios";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
@@ -1346,9 +1353,9 @@ public class ConsultarSolicitudMB {
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
-		if (!this.validarNroVoucher()) {
+		/*if (!this.validarNroVoucher()) {
 			retorno = false;
-		}
+		}*/
 		return retorno;
 	}
 
@@ -1381,22 +1388,24 @@ public class ConsultarSolicitudMB {
 	}
 
 	/** Enviar la solicitud a SSJJ */
-	public void enviarSolicitudSSJJ() {
-		Timestamp time = new Timestamp(objRegistroUtilesMB
-				.obtenerFechaRespuesta().getTime());
+	public void enviarSolicitudSSJJ() 
+	{
+		Timestamp time = new Timestamp(objRegistroUtilesMB.obtenerFechaRespuesta().getTime());
 		logger.info("time : " + time);
 		String sCodigoEstudio = objRegistroUtilesMB.obtenerEstudioMenorCarga();
 		logger.info(" sCodigoEstudio +  " + sCodigoEstudio);
-		for (TiivsEstudio x : combosMB.getLstEstudio()) {
-			if (x.getCodEstudio().equals(sCodigoEstudio)) {
+		
+		for (TiivsEstudio x : combosMB.getLstEstudio()) 
+		{
+			if (x.getCodEstudio().equals(sCodigoEstudio)) 
+			{
 				this.solicitudRegistrarT.setTiivsEstudio(x);
 			}
 		}
-		this.solicitudRegistrarT
-				.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02);
+		
+		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02);
 		this.solicitudRegistrarT.setFechaRespuesta(time);
-		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date()
-				.getTime()));
+		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date().getTime()));
 	}
 
 	public boolean cargarArchivosFTP() {
@@ -1443,8 +1452,11 @@ public class ConsultarSolicitudMB {
 	}
 
 	@SuppressWarnings({ "unused", "unchecked" })
-	public void registrarSolicitud() {
+	public void registrarSolicitud() 
+	{
 		String mensaje = "";
+		boolean actualizarBandeja=false;
+		
 		logger.info("*********************** registrarSolicitud ************************");
 		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
@@ -1460,63 +1472,62 @@ public class ConsultarSolicitudMB {
 				.getApplicationContext().getBean("genericoDao");
 		TiivsPersona objPersonaRetorno = new TiivsPersona();
 		TiivsAgrupacionPersonaId objAgruId = new TiivsAgrupacionPersonaId();
+		
 		try {
-			logger.info("this.solicitudRegistrarT.importe : "
-					+ this.solicitudRegistrarT.getMoneda());
-			if (this.solicitudRegistrarT.getMoneda() == null) {
-				this.solicitudRegistrarT
-						.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+			logger.info("this.solicitudRegistrarT.importe : " + this.solicitudRegistrarT.getMoneda());
+			
+			if (this.solicitudRegistrarT.getMoneda() == null) 
+			{
+				this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 			}
+			
 			this.solicitudRegistrarT.setFecha(new Date());
-			this.solicitudRegistrarT.setEstado(this.solicitudRegistrarT
-					.getEstado().trim());
+			this.solicitudRegistrarT.setEstado(this.solicitudRegistrarT.getEstado().trim());
 
 			logger.info("usuario.getUID() " + usuario.getUID());
 			this.solicitudRegistrarT.setRegUsuario(usuario.getUID());
 			this.solicitudRegistrarT.setNomUsuario(usuario.getNombre());
-			logger.info("tiivsOficina1.codOfi ::::::: "
-					+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
-			for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
-				if (tiivsOficina1.getCodOfi()
-						.equals(this.solicitudRegistrarT.getTiivsOficina1()
-								.getCodOfi())) {
+			logger.info("tiivsOficina1.codOfi ::::::: "	+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+			
+			for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) 
+			{
+				if (tiivsOficina1.getCodOfi().equals(this.solicitudRegistrarT.getTiivsOficina1().getCodOfi())) 
+				{
 					this.solicitudRegistrarT.setTiivsOficina1(tiivsOficina1);
 				}
 			}
 
-			logger.info("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : "
-					+ solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
-			if (this.validarRegistroSolicitud()) {
-				if (!this.sEstadoSolicitud.equals("BORRADOR")) {
+			logger.info("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : " + solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
+			
+			if (this.validarRegistroSolicitud()) 
+			{
+				if (!this.sEstadoSolicitud.equals("BORRADOR")) 
+				{
 					this.enviarSolicitudSSJJ();
-					logger.info(solicitudRegistrarT.getTiivsEstudio()
-							.getCodEstudio());
+					logger.info(solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
+					actualizarBandeja=true;
 				}
 
-				Set<TiivsSolicitudAgrupacion> listaTMP = this.solicitudRegistrarT
-						.getTiivsSolicitudAgrupacions();
+				Set<TiivsSolicitudAgrupacion> listaTMP = this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
 
 				solicitudRegistrarT.setTiivsEstudio(null);
 				solicitudRegistrarT.setTiivsSolicitudAgrupacions(null);
-				TiivsSolicitud objResultado = service
-						.insertarMerge(this.solicitudRegistrarT);
-				for (TiivsSolicitudAgrupacion x : listaTMP) {
-					for (TiivsAgrupacionPersona b : x
-							.getTiivsAgrupacionPersonas()) {
-						logger.info("b.getTiivsPersona() "
-								+ b.getId().getCodPer());
+				TiivsSolicitud objResultado = service.insertarMerge(this.solicitudRegistrarT);
+				
+				for (TiivsSolicitudAgrupacion x : listaTMP) 
+				{
+					for (TiivsAgrupacionPersona b : x.getTiivsAgrupacionPersonas()) 
+					{
+						logger.info("b.getTiivsPersona() " + b.getId().getCodPer());
 						// b.setId
-						objPersonaRetorno = servicePers.insertarMerge(b
-								.getTiivsPersona());
-						logger.info("ccdcdcd : "
-								+ objPersonaRetorno.getCodPer());
+						objPersonaRetorno = servicePers.insertarMerge(b.getTiivsPersona());
+						logger.info("ccdcdcd : " + objPersonaRetorno.getCodPer());
 						b.setTiivsPersona(null);
 						objAgruId = b.getId();
 						objAgruId.setCodPer(objPersonaRetorno.getCodPer());
 						b.setId(objAgruId);
 						serviceAgru.insertarMerge(b);
 					}
-
 				}
 
 				// Carga ficheros al FTP
@@ -1525,42 +1536,47 @@ public class ConsultarSolicitudMB {
 				// Elimina archivos temporales
 				eliminarArchivosTemporales();
 
-				for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
-					logger.info("nnnnnnnnnnnnnnnnnnnnnnn "
-							+ n.getAliasArchivo());
+				for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) 
+				{
+					logger.info("nnnnnnnnnnnnnnnnnnnnnnn " + n.getAliasArchivo());
 					serviceAnexos.insertarMerge(n);
 				}
 
-				for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
-					logger.info("a.getId().getCodOperBan() **** "
-							+ a.getId().getCodOperBan());
+				for (TiivsSolicitudOperban a : this.lstSolicBancarias) 
+				{
+					logger.info("a.getId().getCodOperBan() **** " + a.getId().getCodOperBan());
 					a.getId().setCodSoli(this.solicitudRegistrarT.getCodSoli());
-					logger.info("a.getId().getCodSoli() **** "
-							+ a.getId().getCodSoli());
+					logger.info("a.getId().getCodSoli() **** " + a.getId().getCodSoli());
 					serviceSoli.insertarMerge(a);
 				}
-				if (objResultado.getCodSoli() != "" || objResultado != null) {
-					if (this.sEstadoSolicitud.equals("BORRADOR")) {
-						mensaje = "Se registro correctamente la Solicitud con codigo : "
-								+ objResultado.getCodSoli() + " en Borrador";
+				if (objResultado.getCodSoli() != "" || objResultado != null) 
+				{
+					if (this.sEstadoSolicitud.equals("BORRADOR")) 
+					{
+						mensaje = "Se registro correctamente la Solicitud con codigo : " + objResultado.getCodSoli() + " en Borrador";
 						Utilitarios.mensajeInfo("INFO", mensaje);
-					} else {
-						mensaje = "Se envio a SSJJ correctamente la Solicitud con codigo : "
-								+ objResultado.getCodSoli();
+					} 
+					else 
+					{
+						mensaje = "Se envio a SSJJ correctamente la Solicitud con codigo : " + objResultado.getCodSoli();
 						Utilitarios.mensajeInfo("INFO", mensaje);
 					}
 
-				} else {
+				} 
+				else 
+				{
 					mensaje = "Error al generar la Solicitud ";
 					Utilitarios.mensajeInfo("INFO", mensaje);
 				}
 
-				logger.info("objResultado.getCodSoli(); "
-						+ objResultado.getCodSoli());
-				logger.info("objResultado.getTiivsSolicitudAgrupacions() "
-						+ listaTMP.size());
-				logger.info("this.solicitudRegistrarT.importe : "
-						+ this.solicitudRegistrarT.getImporte());
+				logger.info("objResultado.getCodSoli(); " + objResultado.getCodSoli());
+				logger.info("objResultado.getTiivsSolicitudAgrupacions() " 	+ listaTMP.size());
+				logger.info("this.solicitudRegistrarT.importe : " + this.solicitudRegistrarT.getImporte());
+				
+				if (actualizarBandeja)
+				{
+					this.seguimientoMB.busquedaSolicitudes();
+				}
 				// instanciarSolicitudRegistro();
 			}
 		} catch (Exception e) {
@@ -1776,6 +1792,9 @@ public class ConsultarSolicitudMB {
 	public void agregarDocumentosXTipoSolicitud() {
 		logger.info(" ************************** agrearDocumentosXTipoSolicitud  ****************************** ");
 		logger.info("iTipoSolicitud  : " + iTipoSolicitud);
+		
+		setbBooleanPopup(false);
+		
 		if (selectedTipoDocumento != null) {
 			sCodDocumento = selectedTipoDocumento.getId().getCodDoc();
 		} else {
@@ -2447,146 +2466,204 @@ public class ConsultarSolicitudMB {
 		this.objSolicBancaria = this.objSolicitudOperacionCapturado;
 		this.flagUpdateOperacionSolic = true;
 	}
+	
+	public void obtenerImporteTotalxSolicitud(List<TiivsSolicitudOperban> lstOperBan)
+	{
+		logger.info(" ************************** obtenerImporteTotalxSolicitud  ****************************** ");
 
-	public void agregarOperacionBancaria() {
+		for (TiivsSolicitudOperban x : lstOperBan) 
+		{
+			if (x.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_SOLES)) 
+			{
+				icontSoles++;
+			} 
+			else if (x.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) 
+			{
+				icontDolares++;
+			} 
+			else if (x.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_EUROS)) 
+			{
+				icontEuros++;
+			}
+
+		}
+		if (icontDolares == 0 && icontEuros == 0 && icontSoles > 0) 
+		{
+			// ONLI SOLES
+			for (TiivsSolicitudOperban x : lstSolicBancarias) 
+			{
+				valorFinal = valorFinal + x.getImporte();
+				this.solicitudRegistrarT.setImporte(valorFinal);
+			}
+			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ valorFinal);
+			this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+		}
+		if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) 
+		{
+			// ONLI DOLARES
+			for (TiivsSolicitudOperban x : lstSolicBancarias) 
+			{
+				valorFinal = valorFinal + x.getImporte();
+				this.solicitudRegistrarT.setImporte(valorFinal);
+			}
+			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR + valorFinal);
+			this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
+		}
+		if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) 
+		{
+			// ONLI EUROS
+			for (TiivsSolicitudOperban x : lstSolicBancarias) 
+			{
+				valorFinal = valorFinal + x.getImporte();
+				this.solicitudRegistrarT.setImporte(valorFinal);
+			}
+			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO + valorFinal);
+			this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_EUROS);
+		}
+		if (icontDolares > 0 && icontEuros > 0 && icontSoles == 0
+				|| icontDolares > 0 && icontEuros == 0
+				&& icontSoles > 0 || icontDolares == 0
+				&& icontEuros > 0 && icontSoles > 0 || icontDolares > 0
+				&& icontEuros > 0 && icontSoles > 0) 
+		{
+			for (TiivsSolicitudOperban x : lstSolicBancarias) 
+			{
+				valorFinal = valorFinal + x.getImporteSoles();
+				this.solicitudRegistrarT.setImporte(valorFinal);
+			}
+			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES + valorFinal);
+			this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+		}
+
+		icontDolares = 0;
+		icontEuros = 0;
+		icontSoles = 0;
+		valorFinal = 0;
+		
+	}
+
+	public void agregarOperacionBancaria() 
+	{
 		logger.info(" ************************** agrearOperacionBancaria  ****************************** ");
 
-		if (this.validarOperacionBancaria()) {
-			for (TiivsOperacionBancaria n : combosMB.getLstOpeBancaria()) {
-				if (n.getCodOperBan().equals(
-						objSolicBancaria.getId().getCodOperBan())) {
+		if (this.validarOperacionBancaria()) 
+		{
+			for (TiivsOperacionBancaria n : combosMB.getLstOpeBancaria()) 
+			{
+				if (n.getCodOperBan().equals(objSolicBancaria.getId().getCodOperBan())) 
+				{
 					this.objSolicBancaria.setTiivsOperacionBancaria(n);
 					break;
 				}
 			}
-			if (!this.flagUpdateOperacionSolic) {
-				if (objSolicBancaria.getMoneda().equals(
-						ConstantesVisado.MONEDAS.COD_SOLES)) {
-					objSolicBancaria.setImporteSoles(objSolicBancaria
-							.getImporte());
-					this.objSolicBancaria
-							.setsDescMoneda(ConstantesVisado.MONEDAS.SOLES);
+			if (!this.flagUpdateOperacionSolic) 
+			{
+				if (objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) 
+				{
+					objSolicBancaria.setImporteSoles(objSolicBancaria.getImporte());
+					this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.SOLES);
 				}
-				if (objSolicBancaria.getMoneda().equals(
-						ConstantesVisado.MONEDAS.COD_DOLAR)) {
-					objSolicBancaria.setImporteSoles(objSolicBancaria
-							.getTipoCambio() * objSolicBancaria.getImporte());
-					this.objSolicBancaria
-							.setsDescMoneda(ConstantesVisado.MONEDAS.DOLARES);
+				if (objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) 
+				{
+					objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio() * objSolicBancaria.getImporte());
+					this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.DOLARES);
 				}
-				if (objSolicBancaria.getMoneda().equals(
-						ConstantesVisado.MONEDAS.COD_EUROS)) {
-					objSolicBancaria.setImporteSoles(objSolicBancaria
-							.getTipoCambio() * objSolicBancaria.getImporte());
-					this.objSolicBancaria
-							.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
+				if (objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) 
+				{
+					objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio() * objSolicBancaria.getImporte());
+					this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
 				}
 
 				item++;
 				objSolicBancaria.setsItem("00" + item);
 				this.lstSolicBancarias.add(objSolicBancaria);
-				for (TiivsSolicitudOperban x : lstSolicBancarias) {
-					if (x.getMoneda().trim()
-							.equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+				for (TiivsSolicitudOperban x : lstSolicBancarias) 
+				{
+					if (x.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_SOLES)) 
+					{
 						icontSoles++;
-					} else if (x.getMoneda().trim()
-							.equals(ConstantesVisado.MONEDAS.COD_DOLAR)) {
+					} 
+					else if (x.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) 
+					{
 						icontDolares++;
-					} else if (x.getMoneda().trim()
-							.equals(ConstantesVisado.MONEDAS.COD_EUROS)) {
+					} 
+					else if (x.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_EUROS)) 
+					{
 						icontEuros++;
 					}
 
 				}
-
-				if (icontDolares == 0 && icontEuros == 0 && icontSoles > 0) {
+				if (icontDolares == 0 && icontEuros == 0 && icontSoles > 0) 
+				{
 					// ONLI SOLES
-					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+					for (TiivsSolicitudOperban x : lstSolicBancarias) 
+					{
 						valorFinal = valorFinal + x.getImporte();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					this.solicitudRegistrarT
-							.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES
-									+ valorFinal);
-					this.solicitudRegistrarT
-							.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ valorFinal);
+					this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 				}
-				if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) {
+				if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) 
+				{
 					// ONLI DOLARES
-					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+					for (TiivsSolicitudOperban x : lstSolicBancarias) 
+					{
 						valorFinal = valorFinal + x.getImporte();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					this.solicitudRegistrarT
-							.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR
-									+ valorFinal);
-					this.solicitudRegistrarT
-							.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR + valorFinal);
+					this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
 				}
-				if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) {
+				if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) 
+				{
 					// ONLI EUROS
-					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+					for (TiivsSolicitudOperban x : lstSolicBancarias) 
+					{
 						valorFinal = valorFinal + x.getImporte();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					this.solicitudRegistrarT
-							.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO
-									+ valorFinal);
-					this.solicitudRegistrarT
-							.setMoneda(ConstantesVisado.MONEDAS.COD_EUROS);
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO + valorFinal);
+					this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_EUROS);
 				}
 				if (icontDolares > 0 && icontEuros > 0 && icontSoles == 0
 						|| icontDolares > 0 && icontEuros == 0
 						&& icontSoles > 0 || icontDolares == 0
 						&& icontEuros > 0 && icontSoles > 0 || icontDolares > 0
-						&& icontEuros > 0 && icontSoles > 0) {
-					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						&& icontEuros > 0 && icontSoles > 0) 
+				{
+					for (TiivsSolicitudOperban x : lstSolicBancarias) 
+					{
 						valorFinal = valorFinal + x.getImporteSoles();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					this.solicitudRegistrarT
-							.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES
-									+ valorFinal);
-					this.solicitudRegistrarT
-							.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES + valorFinal);
+					this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 				}
 
-			} else {
+			} 
+			else 
+			{
+				logger.info("objSolicitudOperacionCapturadoOld"	+ objSolicBancaria.getImporte());
 
-				logger.info("objSolicitudOperacionCapturadoOld"
-						+ objSolicBancaria.getImporte());
-
-				if (objSolicitudOperacionCapturado.getMoneda().equals(
-						ConstantesVisado.MONEDAS.COD_SOLES)) {
-					objSolicitudOperacionCapturado
-							.setImporteSoles(objSolicitudOperacionCapturado
-									.getImporte());
-					this.objSolicitudOperacionCapturado
-							.setsDescMoneda(ConstantesVisado.MONEDAS.SOLES);
+				if (objSolicitudOperacionCapturado.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) 
+				{
+					objSolicitudOperacionCapturado.setImporteSoles(objSolicitudOperacionCapturado.getImporte());
+					this.objSolicitudOperacionCapturado.setsDescMoneda(ConstantesVisado.MONEDAS.SOLES);
 				}
 				if (objSolicitudOperacionCapturado.getMoneda().equals(
-						ConstantesVisado.MONEDAS.COD_DOLAR)) {
-					objSolicitudOperacionCapturado
-							.setImporteSoles(objSolicitudOperacionCapturado
-									.getTipoCambio()
-									* objSolicitudOperacionCapturado
-											.getImporte());
-					this.objSolicitudOperacionCapturado
-							.setsDescMoneda(ConstantesVisado.MONEDAS.DOLARES);
+						ConstantesVisado.MONEDAS.COD_DOLAR)) 
+				{
+					objSolicitudOperacionCapturado.setImporteSoles(objSolicitudOperacionCapturado.getTipoCambio()* objSolicitudOperacionCapturado.getImporte());
+					this.objSolicitudOperacionCapturado.setsDescMoneda(ConstantesVisado.MONEDAS.DOLARES);
 				}
-				if (objSolicitudOperacionCapturado.getMoneda().equals(
-						ConstantesVisado.MONEDAS.COD_EUROS)) {
-					objSolicitudOperacionCapturado
-							.setImporteSoles(objSolicitudOperacionCapturado
-									.getTipoCambio()
-									* objSolicitudOperacionCapturado
-											.getImporte());
-					this.objSolicitudOperacionCapturado
-							.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
+				if (objSolicitudOperacionCapturado.getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) 
+				{
+					objSolicitudOperacionCapturado.setImporteSoles(objSolicitudOperacionCapturado.getTipoCambio() * objSolicitudOperacionCapturado.getImporte());
+					this.objSolicitudOperacionCapturado.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
 				}
 				// actualizar registro
-				this.lstSolicBancarias.set(indexUpdateOperacion,
-						objSolicitudOperacionCapturado);
+				this.lstSolicBancarias.set(indexUpdateOperacion,objSolicitudOperacionCapturado);
 
 				for (TiivsSolicitudOperban x : lstSolicBancarias) {
 					if (x.getMoneda().trim()
@@ -2663,8 +2740,7 @@ public class ConsultarSolicitudMB {
 			objSolicBancaria.setTipoCambio(0.0);
 			this.flagUpdateOperacionSolic = false;
 			this.objSolicitudOperacionCapturado = new TiivsSolicitudOperban();
-			this.objSolicitudOperacionCapturado
-					.setId(new TiivsSolicitudOperbanId());
+			this.objSolicitudOperacionCapturado.setId(new TiivsSolicitudOperbanId());
 			this.valorFinal = 0;
 			this.llamarComision();
 		}
