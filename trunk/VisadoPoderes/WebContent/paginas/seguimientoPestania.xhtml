@@ -89,9 +89,11 @@
 							<h:outputText value="#{seg.regUsuario} #{seg.usuario}" style="font-size: 9px"/>  							 
 						</p:column>
 						
-						<p:column headerText="Ver" width="55" exportable="false" style="font-size: 9px">							  
-							 <p:commandButton icon="ui-icon-document">		                       
-		                     </p:commandButton>
+						<p:column headerText="Ver" width="55" exportable="false" style="font-size: 9px">								 					   
+		                     <p:commandButton id="downloadLink" actionListener="#{htmlToPdfMB.generarPDF}" ajax="false" icon="ui-icon-arrowthichk-s">
+		                     	<f:param name="action" value="#{seg.obs}" />  
+    							<p:fileDownload value="#{htmlToPdfMB.file}" />  
+							</p:commandButton>
 						</p:column>																		
 				</p:dataTable>
 			
@@ -140,7 +142,7 @@
 				</tr>				
 				<tr>
 			<td width="100%">
-
+					
 					<h:panelGrid width="100%" columns="1" rendered="#{consultarSolicitudMB.verPnlEvaluarNivel}">
 					 	<p:messages id="idGrowlSolicitudAccion"></p:messages>
 						<h:outputText title="Acción" value="Acción" styleClass="outputText" />
@@ -150,8 +152,11 @@
 							rendered="#{consultarSolicitudMB.verPnlEvaluarNivel}">
 							<h:outputText value="Evaluar Nivel:" styleClass="outputText" />
 							<p:selectOneMenu id="cboEvalNivel" value="#{consultarSolicitudMB.sCodigoEstadoNivel}" required="false"
+								widgetVar="varCboNivel"
+								valueChangeListener="#{consultarSolicitudMB.obtenerDictamenNivel}"
 								requiredMessage="Seleccione una acción"
-								style="font-size:0.98em; width:150px">								
+								style="font-size:0.98em; width:150px">	
+								<p:ajax event="change" update=":formSolicitudSeguimiento:confirmDialogDictamenNivel"></p:ajax>							
 								<f:selectItems  value="#{combosMB.lstEstadoNivel}" var="estNivel" itemValue="#{estNivel.codigoEstadoNivel}" itemLabel="#{estNivel.descripcion}" />								
 							</p:selectOneMenu>
 							<p:spacer width="15" />
@@ -159,7 +164,8 @@
 							<p:spacer />
 							<p:spacer />
 							<p:spacer />
-							<p:commandButton value="Aceptar" action="#{consultarSolicitudMB.registrarEvaluacionNivel}" update=":formSolicitudSeguimiento:idGrowlSolicitudAccion" />
+							<p:commandButton value="Aceptar" onclick="varCboNivel.getSelectedValue()=='0001' ? 1 : confirmationNivel.show()"/>
+							
 						</h:panelGrid>
 					</h:panelGrid>
 				</td>
@@ -263,6 +269,16 @@
 	            action="#{consultarSolicitudMB.mostrarCartaRevision}" actionListener="#{consultarSolicitudMB.actualizarEstadoEnRevisionSolicitud}" />  
 	        
 	        <p:commandButton id="declineRev" value="Cancelar" oncomplete="confirmation3.hide()" />  
+                  
+    </p:confirmDialog>
+    
+    <!-- Pregunta Evaluación por nivel -->
+    <p:confirmDialog id="confirmDialogDictamenNivel" message="¿Está seguro de pasar a estado #{consultarSolicitudMB.descValorDictamen} la solicitud de visado?"  
+                header="Confirmación" severity="alert" widgetVar="confirmationNivel" >  
+                  
+        <p:commandButton id="confirmSiDicNiv" value="Si" update=":formSolicitudSeguimiento:idGrowlSolicitudAccion" oncomplete="confirmationNivel.hide()"   
+                 action="#{consultarSolicitudMB.registrarEvaluacionNivel}"     />  
+        <p:commandButton id="declineNoDicNiv" value="No" onclick="confirmationNivel.hide()" type="button" />   
                   
     </p:confirmDialog>
     
