@@ -362,7 +362,7 @@ public class ConsultarSolicitudMB {
 		lstAnexosSolicitudes = new ArrayList<TiivsAnexoSolicitud>();
 		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		objAgrupacionSimpleDtoCapturado = new AgrupacionSimpleDto();
-		//lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 		lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
 		lstAbogados = new ArrayList<TiivsMiembro>();
 		lstTiivsDocumentos = new ArrayList<TiivsDocumento>();
@@ -491,7 +491,30 @@ public class ConsultarSolicitudMB {
 			
 			this.iTipoSolicitud =solicitudRegistrarT.getTiivsTipoSolicitud().getCodTipSolic(); 
 			
-			if (lstAnexosSolicitudes.size()==0)
+			// descargar anexos
+			// descargarAnexosFileServer();
+			
+			lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+			int i = 0;
+			for (TiivsAnexoSolicitud v : lstAnexosSolicitudes) 
+			{
+				i++;
+				
+				if (v.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS))
+				{
+					lstdocumentos.add(new DocumentoTipoSolicitudDTO(v.getId().getCodDoc(), 
+							obtenerDescripcionDocumento(v.getId().getCodDoc()),false+"",
+							v.getAliasArchivo(),v.getAliasTemporal()));
+				}
+				else
+				{
+					lstdocumentos.add(new DocumentoTipoSolicitudDTO(v.getId().getCodDoc(), 
+									obtenerDescripcionDocumento(v.getId().getCodDoc()),obtenerFlagObligatorioxDoc(v.getId().getCodDoc())+"",
+									v.getAliasArchivo(),v.getAliasTemporal()));
+				}
+			}
+			
+			if (lstdocumentos.size()==0)
 			{
 				GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
 						.getApplicationContext().getBean("genericoDao");
@@ -521,19 +544,6 @@ public class ConsultarSolicitudMB {
 					logger.info("Error al cargar el listado de documentos por tipo de soliciitud");
 					ex.printStackTrace();
 				}
-			}
-			
-			// descargar anexos
-			// descargarAnexosFileServer();
-
-			//lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
-			int i = 0;
-			for (TiivsAnexoSolicitud v : lstAnexosSolicitudes) 
-			{
-				i++;
-				lstdocumentos.add(new DocumentoTipoSolicitudDTO(v.getId().getCodDoc(), 
-									obtenerDescripcionDocumento(v.getId().getCodDoc()),obtenerFlagObligatorioxDoc(v.getId().getCodDoc())+"",
-									v.getAliasArchivo(),v.getAliasTemporal()));
 			}
 			
 			// PODERDANTES Y APODERADOS
@@ -589,15 +599,13 @@ public class ConsultarSolicitudMB {
 		
 		List<TiivsTipoSolicDocumento> lista = new ArrayList<TiivsTipoSolicDocumento>();
 		
-		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroTipoSolcDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);
-		filtroTipoSolcDoc.createAlias("TiivsTipoSolicDocumento", "tipoSolDoc");
-		filtroTipoSolcDoc.add(Restrictions.eq("tipoSolDoc.id.codDoc",codDoc));
+		//filtroTipoSolcDoc.createAlias("id", "tipoSolDoc");
+		filtroTipoSolcDoc.add(Restrictions.eq("id.codDoc",codDoc));
 		
 		try {
-			lista = genTipoSolcDocumDAO
-					.buscarDinamico(filtroTipoSolcDoc);
+			lista = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
 		} catch (Exception ex) {
 			logger.info("Error al cargar el listado de documentos por tipo de soliciitud");
 			ex.printStackTrace();
