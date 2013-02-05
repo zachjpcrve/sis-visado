@@ -8,7 +8,7 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
-
+<ui:param name="root" value="#{request.contextPath}/" />
 				<h:panelGrid columns="5">
 
 			<p:tabMenu activeIndex="0" style="width:750px;">
@@ -203,6 +203,7 @@
 							</font>
 						</a>
 					</c:if>
+					<a href="#{root}main/download/pdfReportCartaAtencion.htm"  style="color:#0073EA;font-weight:bold; ">Download PDF</a><br/>
 					<br/>
 					<c:if test="#{consultarSolicitudMB.bMostrarCartaRevision}">
 						<font color="red">
