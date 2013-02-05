@@ -416,12 +416,14 @@ public class ConsultarSolicitudMB {
 		logger.info(" **** redirectDetalleSolicitud ***");
 
 		String redirect = "";
-
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		obtenerSolicitud();
-		if (this.solicitudRegistrarT.getEstado().trim()
-				.equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)) {
+		
+		
+		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)) {
 			redirect = "/faces/paginas/solicitudEdicion.xhtml";
 		} else {
+			request.getSession(true).setAttribute("SOLICITUD_TEMP", solicitudRegistrarT);
 			redirect = "/faces/paginas/detalleSolicitud.xhtml";
 		}
 
