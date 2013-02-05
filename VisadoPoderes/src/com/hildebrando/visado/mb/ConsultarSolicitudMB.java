@@ -459,40 +459,85 @@ public class ConsultarSolicitudMB {
 	@SuppressWarnings("unchecked")
 	public void obtenerSolicitud(){
 		try {
-		   lstAgrupacionSimpleDto=new ArrayList<AgrupacionSimpleDto>();
-		   String codigoSolicitud=Utilitarios.capturarParametro("prm_codSoli");
-		   logger.info("codigoSolicitud : "+codigoSolicitud);
-		   TiivsSolicitud solicitud =new TiivsSolicitud();
-		   solicitud.setCodSoli(codigoSolicitud);
-		   SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
-		   solicitudRegistrarT= solicitudService.obtenerTiivsSolicitud(solicitud);
-		   solicitudRegistrarT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudRegistrarT.getEstado()));
-		   if(solicitudRegistrarT.getTiivsEstudio()==null){
-		   solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
-		   }
-		   lstSolicBancarias=solicitudService.obtenerListarOperacionesBancarias(solicitud);
-		   int y=0;
-		   for (TiivsSolicitudOperban f : lstSolicBancarias) {
-		 	 if (f.getMoneda()!=null)
-			 {
-		 		 y++;
-		 		 f.setsItem(String.format("%03d",y));
-		 		 f.setsDescMoneda(Utilitarios.obternerDescripcionMoneda(f.getMoneda()));
-			 }
-		   }
-		   lstAnexosSolicitudes=solicitudService.obtenerListarAnexosSolicitud(solicitud);
-		   
-		   //descargar anexos
-		   //descargarAnexosFileServer();
-		   
-		   lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
-		   int i=0;
-		  for (TiivsAnexoSolicitud v : lstAnexosSolicitudes) {
-			  i++;
-			  lstdocumentos.add(new DocumentoTipoSolicitudDTO(String.format("%03d",i) , obtenerDescripcionDocumento(v.getId().getCodDoc()), v.getAliasTemporal()));
-		     }
-		   // PODERDANTES Y APODERADOS
-		    List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
+			lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
+			String codigoSolicitud = Utilitarios
+					.capturarParametro("prm_codSoli");
+			logger.info("codigoSolicitud : " + codigoSolicitud);
+			TiivsSolicitud solicitud = new TiivsSolicitud();
+			solicitud.setCodSoli(codigoSolicitud);
+			SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit
+					.getApplicationContext().getBean("solicitudEspDao");
+			solicitudRegistrarT = solicitudService
+					.obtenerTiivsSolicitud(solicitud);
+			solicitudRegistrarT
+					.setDescEstado(Utilitarios
+							.obternerDescripcionEstado(solicitudRegistrarT
+									.getEstado()));
+			if (solicitudRegistrarT.getTiivsEstudio() == null) {
+				solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
+			}
+			lstSolicBancarias = solicitudService
+					.obtenerListarOperacionesBancarias(solicitud);
+			int y = 0;
+			for (TiivsSolicitudOperban f : lstSolicBancarias) {
+				if (f.getMoneda() != null) {
+					y++;
+					f.setsItem(String.format("%03d", y));
+					f.setsDescMoneda(Utilitarios.obternerDescripcionMoneda(f
+							.getMoneda()));
+				}
+			}
+			lstAnexosSolicitudes = solicitudService.obtenerListarAnexosSolicitud(solicitud);
+			
+			this.iTipoSolicitud =solicitudRegistrarT.getTiivsTipoSolicitud().getCodTipSolic(); 
+			
+			if (lstAnexosSolicitudes.size()==0)
+			{
+				GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
+						.getApplicationContext().getBean("genericoDao");
+				Busqueda filtroTipoSolcDoc = Busqueda
+						.forClass(TiivsTipoSolicDocumento.class);
+				filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic",
+						iTipoSolicitud));
+				filtroTipoSolcDoc.addOrder(Order.desc("obligatorio"));
+				
+				try {
+					lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO
+							.buscarDinamico(filtroTipoSolcDoc);
+					lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstDocumentosXTipoSolTemp)
+							.clone();
+	
+					logger.info("lstDocumentosXTipoSolTemp.size()"
+							+ lstDocumentosXTipoSolTemp.size());
+					logger.info("lstTipoSolicitudDocumentos.size()"
+							+ lstTipoSolicitudDocumentos.size());
+	
+					actualizarListadoDocumentos();
+	
+					// logger.info(" e.getNewValue()  " + (String) e.getNewValue()+
+					// "  lstTipoSolicitudDocumentos.size : "+
+					// lstTipoSolicitudDocumentos.size());
+				} catch (Exception ex) {
+					logger.info("Error al cargar el listado de documentos por tipo de soliciitud");
+					ex.printStackTrace();
+				}
+			}
+			
+			// descargar anexos
+			// descargarAnexosFileServer();
+
+			//lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+			int i = 0;
+			for (TiivsAnexoSolicitud v : lstAnexosSolicitudes) 
+			{
+				i++;
+				lstdocumentos.add(new DocumentoTipoSolicitudDTO(v.getId().getCodDoc(), 
+									obtenerDescripcionDocumento(v.getId().getCodDoc()),obtenerFlagObligatorioxDoc(v.getId().getCodDoc())+"",
+									v.getAliasArchivo(),v.getAliasTemporal()));
+			}
+			
+			// PODERDANTES Y APODERADOS
+			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
 		   AgrupacionSimpleDto agrupacionSimpleDto  =new AgrupacionSimpleDto(); ;
 		   List<TiivsPersona>lstPersonas=new ArrayList<TiivsPersona>();
@@ -514,26 +559,63 @@ public class ConsultarSolicitudMB {
 				else  if(d.getId().getTipPartic().trim().equals(ConstantesVisado.APODERADO)){
 					lstApoderdantes.add(d.getTiivsPersona());
 				}
+				agrupacionSimpleDto = new AgrupacionSimpleDto();
+				agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(
+						this.solicitudRegistrarT.getCodSoli(), x.getId()
+								.getNumGrupo()));
+				agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
+				agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
+				agrupacionSimpleDto.setsEstado(Utilitarios
+						.obternerDescripcionEstado(x.getActivo().trim()));
+				agrupacionSimpleDto.setLstPersonas(lstPersonas);
+				lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+
 			}
-			   agrupacionSimpleDto =new AgrupacionSimpleDto();
-			   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), x.getId().getNumGrupo()));
-			   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
-			   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
-			   agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionEstado(x.getActivo().trim()) );
-			   agrupacionSimpleDto.setLstPersonas(lstPersonas);
-			   lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
-			   
 		   }
-		  
-		  
-		  this.actualizarEstadoReservadoSolicitud();
-		  this.obtenerHistorialSolicitud();			  		 
-		  
-		  //Listar ComboDictamen
-		  listarComboDictamen();
+			this.actualizarEstadoReservadoSolicitud();
+			this.obtenerHistorialSolicitud();
+
+			// Listar ComboDictamen
+			listarComboDictamen();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean obtenerFlagObligatorioxDoc(String codDoc)
+	{
+		boolean flag=false;
+		
+		List<TiivsTipoSolicDocumento> lista = new ArrayList<TiivsTipoSolicDocumento>();
+		
+		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroTipoSolcDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);
+		filtroTipoSolcDoc.createAlias("TiivsTipoSolicDocumento", "tipoSolDoc");
+		filtroTipoSolcDoc.add(Restrictions.eq("tipoSolDoc.id.codDoc",codDoc));
+		
+		try {
+			lista = genTipoSolcDocumDAO
+					.buscarDinamico(filtroTipoSolcDoc);
+		} catch (Exception ex) {
+			logger.info("Error al cargar el listado de documentos por tipo de soliciitud");
+			ex.printStackTrace();
+		}
+		
+		for (TiivsTipoSolicDocumento tmp: lista)
+		{
+			if (tmp.getId().getCodDoc().equals(codDoc))
+			{
+				if (tmp.getObligatorio().trim().equals("1"))
+				{
+					flag=true;
+				}
+				break;
+			}
+		}
+		
+		return flag;
 	}
 
 	public String obtenerDescripcionDocumentos(String idTipoDocumentos) {
