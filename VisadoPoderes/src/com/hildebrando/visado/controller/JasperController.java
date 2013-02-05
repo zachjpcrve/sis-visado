@@ -21,12 +21,14 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.dto.DocumentosPDF;
 import com.hildebrando.visado.dto.FormatosDTO;
 import com.hildebrando.visado.dto.OperacionesPDF;
 import com.hildebrando.visado.dto.PersonaPDF;
 import com.hildebrando.visado.dto.SolicitudPDF;
 import com.hildebrando.visado.mb.CombosMB;
+import com.hildebrando.visado.mb.ConsultarSolicitudMB;
 import com.hildebrando.visado.mb.SolicitudRegistroMB;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
@@ -37,8 +39,9 @@ import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 public class JasperController {
 	
 	private static Logger log =  Logger.getLogger(JasperController.class);
-	@ManagedProperty(value = "#{solicitudRegMB}")
-	private SolicitudRegistroMB solicitudRegMB;
+	
+	@ManagedProperty(value = "#{consultarSolicitudMB}")
+	private ConsultarSolicitudMB consultarSolicitudMB;
 	
 	public JasperController() {
 		log.info("Estoy en el Constructor JasperController");
@@ -48,10 +51,12 @@ public class JasperController {
 	@RequestMapping(value="/download/pdfReportCartaAtencion.htm", method=RequestMethod.GET)
 	public String generarReporteCartaAtencion(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
 		log.info("generarReporteCartaAtencion : ");
-	/*	TiivsSolicitud solicitud=solicitudRegMB.getSolicitudRegistrarT();
+		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getAttribute("SOLICITUD_TEMP");
+		//TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) Utilitarios.getObjectInSession("SOLICITUD_TEMP");
+	    //TiivsSolicitud solicitud=consultarSolicitudMB.getSolicitudRegistrarT();
 		
-		log.info("solicitud : "+solicitud.getCodSoli());
-		*/
+		log.info("solicitud : "+SOLICITUD_TEMP);
+		
 		
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
 		FormatosDTO uno = new FormatosDTO();
@@ -225,9 +230,15 @@ public class JasperController {
         return("pdfReport");
     }
 
-	public void setSolicitudRegMB(SolicitudRegistroMB solicitudRegMB) {
-		this.solicitudRegMB = solicitudRegMB;
+	public ConsultarSolicitudMB getConsultarSolicitudMB() {
+		return consultarSolicitudMB;
 	}
+
+	public void setConsultarSolicitudMB(ConsultarSolicitudMB consultarSolicitudMB) {
+		this.consultarSolicitudMB = consultarSolicitudMB;
+	}
+
+	
 
 	
     
