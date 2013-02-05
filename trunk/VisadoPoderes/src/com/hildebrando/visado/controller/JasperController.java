@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.bean.ManagedProperty;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,18 +22,80 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.hildebrando.visado.dto.DocumentosPDF;
+import com.hildebrando.visado.dto.FormatosDTO;
 import com.hildebrando.visado.dto.OperacionesPDF;
 import com.hildebrando.visado.dto.PersonaPDF;
 import com.hildebrando.visado.dto.SolicitudPDF;
+import com.hildebrando.visado.mb.CombosMB;
+import com.hildebrando.visado.mb.SolicitudRegistroMB;
+import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
+import com.hildebrando.visado.modelo.TiivsSolicitud;
+import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 
 @Controller
 @RequestMapping("/main")
 public class JasperController {
 	
 	private static Logger log =  Logger.getLogger(JasperController.class);
+	@ManagedProperty(value = "#{solicitudRegMB}")
+	private SolicitudRegistroMB solicitudRegMB;
 	
 	public JasperController() {
 		log.info("Estoy en el Constructor JasperController");
+	
+	}
+	
+	@RequestMapping(value="/download/pdfReportCartaAtencion.htm", method=RequestMethod.GET)
+	public String generarReporteCartaAtencion(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
+		log.info("generarReporteCartaAtencion : ");
+	/*	TiivsSolicitud solicitud=solicitudRegMB.getSolicitudRegistrarT();
+		
+		log.info("solicitud : "+solicitud.getCodSoli());
+		*/
+		
+		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
+		FormatosDTO uno = new FormatosDTO();
+		uno.setNumeroSolicitud("XXXXXX");
+		uno.setNumeroDiasForEjecucion("3");
+		uno.setInstrucciones(" INSTRUCCIONES SJSJJSJSJS");
+		uno.setOficina("OFICINA 123");
+		
+		
+		
+	    //Add lista datasource
+		List<TiivsSolicitudOperban> listaOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();
+		TiivsSolicitudOperban x =new TiivsSolicitudOperban();
+		x.setImporte(35.0);
+		x.setsDescMoneda("soles");
+		x.setTipoCambio(2.0);
+		listaOperacionesBancarias.add(x);
+	    JRDataSource dsOperacion = new JRBeanCollectionDataSource(listaOperacionesBancarias);
+	    List<JRDataSource> lstDsSolicitudOperban = new ArrayList<JRDataSource>();
+	    lstDsSolicitudOperban.add(dsOperacion);
+	    uno.setLstDsSolicitudOperban(lstDsSolicitudOperban);
+	    cabecera.add(uno);
+	    
+	    
+    	
+		   	
+        response.setHeader("Content-type", "application/pdf");
+        response.setHeader("Content-Disposition","attachment; filename=\"Carta_Atencion.pdf\"");
+		
+        JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
+              
+
+        
+        modelMap.put("dataKey", objCab);
+        modelMap.put("SUBREPORT_DIR", "C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\resources\\jasper\\");
+        modelMap.put("IMG_CABECERA", "C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
+
+        try {
+        	OutputStream os = response.getOutputStream();
+        	os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        return("pdfReportCartaAtencion");
 	}
 	
     @RequestMapping(value="/download/reportPDF.htm", method=RequestMethod.GET)
@@ -161,4 +224,13 @@ public class JasperController {
 		}
         return("pdfReport");
     }
+
+	public void setSolicitudRegMB(SolicitudRegistroMB solicitudRegMB) {
+		this.solicitudRegMB = solicitudRegMB;
+	}
+
+	
+    
+    
+    
 }
