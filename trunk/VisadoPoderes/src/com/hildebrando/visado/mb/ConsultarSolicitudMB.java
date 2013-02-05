@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -373,6 +374,12 @@ public class ConsultarSolicitudMB {
 		lstDocumentosXTipoSolTemp = new ArrayList<TiivsTipoSolicDocumento>();
 		aliasFilesToDelete = new ArrayList<String>();
 		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
+		objSolicitudOperacionCapturado = new TiivsSolicitudOperban();
+		mapSolicitudes=new HashMap<Integer, TiivsSolicitudOperban>();
+		objTiivsPersonaResultado = new TiivsPersona();
+		objTiivsPersonaCapturado = new TiivsPersona();
+		objTiivsPersonaBusqueda = new TiivsPersona();
+		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
 		//selectedDocumentoDTO = new DocumentoTipoSolicitudDTO();
 	}
 
@@ -490,6 +497,23 @@ public class ConsultarSolicitudMB {
 					y++;
 					f.setsItem(String.format("%03d", y));
 					f.setsDescMoneda(Utilitarios.obternerDescripcionMoneda(f.getMoneda()));
+					
+					if (f.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) 
+					{
+						f.setImporteSoles(f.getImporte());
+						f.setTipoCambio(0.0);
+						
+					}
+					if (f.getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) 
+					{
+						f.setImporteSoles(f.getTipoCambio() * f.getImporte());
+						
+					}
+					if (f.getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) 
+					{
+						f.setImporteSoles(f.getTipoCambio() * f.getImporte());
+						
+					}
 				}
 			}
 			
@@ -560,6 +584,10 @@ public class ConsultarSolicitudMB {
 		   AgrupacionSimpleDto agrupacionSimpleDto  =new AgrupacionSimpleDto(); ;
 		   List<TiivsPersona>lstPersonas=new ArrayList<TiivsPersona>();
 		   TiivsPersona objPersona=new TiivsPersona();
+		   
+		   lstPoderdantes = new ArrayList<TiivsPersona>();
+		   lstApoderdantes = new ArrayList<TiivsPersona>();
+		   
 		   for (TiivsSolicitudAgrupacion x : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) {
 				   logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
@@ -2563,6 +2591,7 @@ public class ConsultarSolicitudMB {
 				if (objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) 
 				{
 					objSolicBancaria.setImporteSoles(objSolicBancaria.getImporte());
+					objSolicBancaria.setTipoCambio(0.0);
 					this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.SOLES);
 				}
 				if (objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) 

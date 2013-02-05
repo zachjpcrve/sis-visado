@@ -224,7 +224,7 @@
 															
 															<td>
 															<p:commandButton icon="ui-icon-search" 
-																			 update=":formSolicitudRegistro:modalVerPersona,:formSolicitudRegistro:idMsmSolicitudRegistro" 
+																			 update=":formSolicitudRegistro:modalVerPersona,:formSolicitudRegistro:idMsmSolicitudRegistro" action="#{consultarSolicitudMB.verAgrupacion}"
 																			 oncomplete ="dlgVerPersona.show()"  >
 																<f:setPropertyActionListener target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}"
 																							  value="#{s}">
@@ -232,8 +232,8 @@
 															</p:commandButton>
 															
 															</td>
-															<td><p:commandButton icon="ui-icon-pencil" 
-																			 update=":formSolicitudRegistro" >
+															<td><p:commandButton icon="ui-icon-pencil"  oncomplete ="dlgRegistrarPersona.show()"
+																			 update=":formRegistrar:tlbPersonasPopup" action="#{consultarSolicitudMB.verEditarAgrupacion}">
 																<f:setPropertyActionListener target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}"
 																							  value="#{s}">
 																</f:setPropertyActionListener>
@@ -617,7 +617,9 @@
 
 						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outDoi"
 								value="DOI:" /></td>
-						<td colspan="1"><h:inputText id="inpDoitxt" styleClass="inputTextPopup"  size="12" value="#{consultarSolicitudMB.objTiivsPersonaBusqueda.numDoi}"/></td>
+						<td colspan="1"><h:inputText id="inpDoitxt" styleClass="inputTextPopup"  size="12" value="#{consultarSolicitudMB.objTiivsPersonaBusqueda.numDoi}"
+						maxlength="12"   onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');"/></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="toolcboDoi" /></td>
 						<td colspan="1"><p:tooltip for="toolcboDoi"
@@ -643,7 +645,8 @@
 						<td colspan="1">
 					    <h:outputText styleClass="outputTextPopup" id="outNumDoiBusqueda" value="Num DOI:" /></td>
 						<td colspan="1"><h:inputText styleClass="inputText" id="txtNumDoiBusqueda"
-								style="width:50px;"
+								style="width:50px;" size="11" maxlength="11"  onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');"
 								value="#{consultarSolicitudMB.objTiivsPersonaResultado.numDoi}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtNumDoiBusqueda" /></td>
@@ -653,8 +656,9 @@
 						 <td colspan="1">
 					    <h:outputText styleClass="outputTextPopup" id="outCodCentral" value="Código Central:" /></td>
 						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtCodCentral"
-								size="7"
-								value="#{consultarSolicitudMB.objTiivsPersonaBusqueda.codCen}" /></td>
+								size="7" maxlength="7"  onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');"
+								value="#{consultarSolicitudMB.objTiivsPersonaResultado.codCen}" /></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtCodCentral" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtCodCentral" value="Código Central"
@@ -726,10 +730,11 @@
 						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outCelular"
 								value="Celular:" /></td>
 						<td colspan="1"><h:inputText styleClass="inputTextPopup" id="txtCelular" maxlength="9" size="9"
-								style="width:100px;" 
+								style="width:100px;" onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');"
 								 value="#{consultarSolicitudMB.objTiivsPersonaResultado.numCel}"/></td>
-						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
-								id="tooltxtCelular" /></td>
+						<td colspan="1">
+						<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtCelular" /></td>
 						<td colspan="1"><p:tooltip for="tooltxtCelular" value="Celular"
 								showEffect="slide" /></td>
 						<td colspan="1" width="50px">
@@ -747,14 +752,14 @@
 						<td align="center"><p:spacer /></td>
 					</tr>
 					<tr>
-						<td align="center" width="45%" colspan="22"><p:dataTable
+						<td align="center" width="45%" colspan="22"><p:dataTable id="tlbPersonasPopup"
 								var="s" rows="20" value="#{consultarSolicitudMB.lstTiivsPersona}"
 								emptyMessage="No hay resultados en la bandeja"
 								paginatorPosition="bottom" paginator="true"
 								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 								rowsPerPageTemplate="5,10,15" editable="true">
 
-								<p:column headerText="Codigo Central">
+								<p:column headerText="DOI">
 									<h:outputText value="#{s.sDesctipDoi} : #{s.numDoi}" />
 								</p:column>
 								<p:column headerText="Cliente / No Cliente">
