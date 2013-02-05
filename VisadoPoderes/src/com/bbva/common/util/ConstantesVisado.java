@@ -78,10 +78,12 @@ public class ConstantesVisado {
 	public static final String NOM_TBL_OFICINA="tiivsOficina1";
 	public static final String NOM_TBL_ESTUDIO="tiivsEstudio";
 	public static final String ALIAS_TBL_OFICINA="ofic";
+	public static final String ALIAS_TBL_OFICINA_FILTRO="ofic1";
 	public static final String ALIAS_TBL_ESTUDIO="estu";
 	public static final String ALIAS_COD_ESTUDIO="estu.codEstudio";
 	public static final String CAMPO_COD_SOLICITUD="codSoli";
 	public static final String CAMPO_COD_OFICINA_ALIAS="ofic.codOfi";
+	public static final String CAMPO_COD_OFICINA_ALIAS_FILTRO="ofic1.codOfi";
 	public static final String CAMPO_NOM_OFICINA_ALIAS="ofic.desOfi";
 	public static final String CAMPO_COD_ESTUDIO_ALIAS="estu.codEstudio";
 	public static final String CAMPO_NOM_OFICINA = "desOfi";
