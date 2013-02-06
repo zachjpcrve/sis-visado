@@ -425,8 +425,6 @@ public class ConsultarSolicitudMB {
 		String redirect = "";
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		obtenerSolicitud();
-		
-		
 		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)) {
 			redirect = "/faces/paginas/solicitudEdicion.xhtml";
 		} else {
@@ -487,7 +485,9 @@ public class ConsultarSolicitudMB {
 			}
 			
 			lstSolicBancarias = solicitudService.obtenerListarOperacionesBancarias(solicitud);
-			
+			// BY SAMIRA 
+			solicitudRegistrarT.setLstSolicBancarias(lstSolicBancarias);
+			//FIN  BY SAMIRA 
 			int y = 0;
 			
 			for (TiivsSolicitudOperban f : lstSolicBancarias) 
