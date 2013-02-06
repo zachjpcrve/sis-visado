@@ -40,6 +40,18 @@
         <property name="fechaRegistro" type="java.sql.Timestamp">
             <column name="FECHA_REGISTRO" />
         </property>
+        <set name="tiivsRevocadosForCodPer1" table="TIIVS_REVOCADO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COD_PER_1" precision="8" scale="0" />
+            </key>
+            <one-to-many class="com.hildebrando.visado.modelo.TiivsRevocado" />
+        </set>
+        <set name="tiivsRevocadosForCodPer2" table="TIIVS_REVOCADO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COD_PER_2" precision="8" scale="0" />
+            </key>
+            <one-to-many class="com.hildebrando.visado.modelo.TiivsRevocado" />
+        </set>
         <set name="tiivsAgrupacionPersonas" table="TIIVS_AGRUPACION_PERSONA" cascade="all" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="COD_PER" precision="22" scale="0" />
