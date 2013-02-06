@@ -4,6 +4,7 @@ package com.hildebrando.visado.modelo;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -40,7 +41,9 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private String txtOpeBan;
 	private String txtNivel;
 	private Boolean bLiberado;
-
+	
+	private List<TiivsSolicitudOperban> lstSolicBancarias; ///Solo para el reporte
+	
 	public TiivsSolicitud() {
 	}
 
@@ -315,4 +318,15 @@ public class TiivsSolicitud implements java.io.Serializable {
 	public void setbLiberado(Boolean bLiberado) {
 		this.bLiberado = bLiberado;
 	}
+//solo para el reporte
+	public List<TiivsSolicitudOperban> getLstSolicBancarias() {
+		return lstSolicBancarias;
+	}
+
+	public void setLstSolicBancarias(List<TiivsSolicitudOperban> lstSolicBancarias) {
+		this.lstSolicBancarias = lstSolicBancarias;
+	}
+	
+	
+	
 }
