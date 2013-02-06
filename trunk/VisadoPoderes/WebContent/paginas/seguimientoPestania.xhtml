@@ -89,11 +89,16 @@
 							<h:outputText value="#{seg.regUsuario} #{seg.usuario}" style="font-size: 9px"/>  							 
 						</p:column>
 						
-						<p:column headerText="Ver" width="55" exportable="false" style="font-size: 9px">								 					   
-		                     <p:commandButton id="downloadLink" actionListener="#{htmlToPdfMB.generarPDF}" ajax="false" icon="ui-icon-arrowthichk-s">
-		                     	<f:param name="action" value="#{seg.obs}" />  
+						<p:column headerText="Ver" width="55" exportable="false" style="font-size: 9px">								 					   							
+							<p:commandButton id="downloadLink" actionListener="#{htmlToPdfMB.generarPdfListener}" value="Ver" ajax="false" icon="ui-icon-arrowthichk-s">							 			                     			                     	
+							 	<f:attribute name="texto" value="#{seg.obs}" />
     							<p:fileDownload value="#{htmlToPdfMB.file}" />  
 							</p:commandButton>
+							
+							<p:commandLink actionListener="#{htmlToPdfMB.generarPdfListener}" ajax="true" value="ver" oncomplete="window.open('../#{htmlToPdfMB.nombrePdf}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no');" >
+								<f:attribute name="texto" value="#{seg.obs}" />
+							</p:commandLink>
+																						
 						</p:column>																		
 				</p:dataTable>
 			
