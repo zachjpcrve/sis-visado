@@ -467,19 +467,13 @@ public class ConsultarSolicitudMB {
 	public void obtenerSolicitud(){
 		try {
 			lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
-			String codigoSolicitud = Utilitarios
-					.capturarParametro("prm_codSoli");
+			String codigoSolicitud = Utilitarios.capturarParametro("prm_codSoli");
 			logger.info("codigoSolicitud : " + codigoSolicitud);
 			TiivsSolicitud solicitud = new TiivsSolicitud();
 			solicitud.setCodSoli(codigoSolicitud);
-			SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit
-					.getApplicationContext().getBean("solicitudEspDao");
-			solicitudRegistrarT = solicitudService
-					.obtenerTiivsSolicitud(solicitud);
-			solicitudRegistrarT
-					.setDescEstado(Utilitarios
-							.obternerDescripcionEstado(solicitudRegistrarT
-									.getEstado()));
+			SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+			solicitudRegistrarT = solicitudService.obtenerTiivsSolicitud(solicitud);
+			solicitudRegistrarT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudRegistrarT.getEstado()));
 			if (solicitudRegistrarT.getTiivsEstudio() == null) {
 				solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
 			}
@@ -1360,6 +1354,11 @@ public class ConsultarSolicitudMB {
 		 * mensaje="Ingrese Nro Voucher correcto de 11 digitos"; retorno=false;
 		 * Utilitarios.mensajeInfo("INFO", mensaje); }
 		 */
+		
+		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size()==0)
+		{
+			this.obtenerSolicitud();
+		}
 		
 		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
 			mensaje = "Ingrese la sección Apoderado y Poderdante";
