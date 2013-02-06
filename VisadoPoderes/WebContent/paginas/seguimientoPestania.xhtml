@@ -202,14 +202,19 @@
 					<h:outputText title="Documentos" value="Documentos" styleClass="outputText" />
 					<p:separator styleClass="fielset" />
 					<c:if test="#{consultarSolicitudMB.bMostrarCartaAtencion}">
-						<a href="#{root}main/download/pdfReportCartaAtencion.htm"  style="color:#0073EA;font-weight:bold; ">Carta de Atención</a><br/>
+						<a href="#{root}main/download/pdfReportCartaAtencion.htm" onclick="confirmation2.show()">
+							<font color="blue">
+								<u>Carta de atención</u>
+							</font>
+						</a>
+
 					</c:if>
 					<c:if test="#{consultarSolicitudMB.bMostrarCartaRevision}">
 						<font color="red">
 							Obtener la firma del cliente en la Carta de solicitud de revisión
 						</font>
 						<br/>
-						<a href="">
+						<a href="#{root}main/download/pdfReportCartaSolicitudRevision.htm" >
 							<font color="blue">
 								<u>Carta de solicitud de revisión</u>
 							</font>
