@@ -18,123 +18,155 @@
 				<tr>
 					<td>
 						<fieldset>
-							<legend class="fielset">Bandeja de Revocados</legend>
-							<h:panelGrid columns="4" id="gridLabels" style="width: 800px">
-								<h:outputLabel value="Tipo de Búsqueda:" />
-								<p:selectOneMenu id="cboTipoBusqueda" style="width: 120px">
-									<f:selectItem itemLabel="Apoderado" itemValue="" />
-									<f:selectItem itemLabel="Poderdante" itemValue="" />
-									<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+							<legend class="fielset">CONSULTA DE REVOCADOS</legend>
+
+							<h:panelGrid columns="8" style="width: 800px">
+								<h:outputLabel value="Tipo de Registro: " />
+								<p:selectOneMenu id="cboTipoRegistro"
+									value="#{revocadosMB.objTiivsPersonaBusqueda.tipPartic}"
+									style="width: 120px">
+									<f:selectItems value="#{combosMB.lstTipoRegistroPersona}"
+										var="t" itemValue="#{t.key}" itemLabel="#{t.descripcion}" />
+									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 								</p:selectOneMenu>
-								<h:outputLabel value="Código Central:" />
-								<h:inputText styleClass="inputText" maxlength="10" value=""
-									disabled="false" />
 
-								<h:outputLabel value="Tipo de DOI:" />
-								<p:selectOneMenu id="cboTipoDoi" style="width: 120px">
-									<f:selectItem itemLabel="DNI" itemValue="" />
-									<f:selectItem itemLabel="C. EXTRANJE" itemValue="" />
-									<f:selectItem itemLabel="OTROS" itemValue="" />
+								<h:outputLabel value="T.DOI/ C.Central: " />
+								<p:selectOneMenu id="cboTipoDoi"
+									value="#{revocadosMB.objTiivsPersonaBusqueda.tipDoi}"
+									style="width: 120px">
+									<f:selectItem itemLabel="Codigo Central" itemValue="" />
+									<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
+										itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
+									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 								</p:selectOneMenu>
-								<h:outputLabel value="Nro. de DOI:" />
-								<h:inputText styleClass="inputText" maxlength="13" value=""
-									disabled="false" />
 
-								<h:outputLabel value="Apellido Paterno:" />
-								<h:inputText styleClass="inputText" maxlength="30" value=""
-									disabled="false" />
-								<h:outputLabel value="Apellido Materno:" />
-								<h:inputText styleClass="inputText" maxlength="30" value=""
-									disabled="false" />
+								<h:outputLabel value="Nro de DOI: " />
+								<p:inputText styleClass="inputText"
+									value="#{revocadosMB.objTiivsPersonaBusqueda.numDoi}"
+									maxlength="13" />
 
-								<h:outputLabel value="Primer Nombre:" />
-								<h:inputText styleClass="inputText" maxlength="30" value=""
-									disabled="false" />
-								<h:outputLabel value="Segundo Nombre:" />
-								<h:inputText styleClass="inputText" maxlength="30" value=""
-									disabled="false" />
+								<h:outputLabel value="Nombre: " />
+								<p:autoComplete completeMethod="#{revocadosMB.completePersona}"
+									value="#{revocadosMB.objTiivsPersonaBusqueda2}"
+									forceSelection="true" 
+									var="p"
+									converter="personaCvtr"
+									itemLabel="#{p.nombreCompletoMayuscula}"
+									itemValue="#{p}" size="30">
+								</p:autoComplete>
 
-								<h:outputLabel value="Fecha Inicio:" />
-								<p:calendar id="calFecfIN" pattern="dd/MM/yyyy"
+
+							</h:panelGrid>
+
+							<h:panelGrid columns="8" style="width: 800px">
+								<h:outputLabel value="Estado: " />
+								<p:selectOneMenu id="cboEstado" value="#{revocadosMB.estadoRevocado}" style="width: 120px">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+									<f:selectItem itemLabel="Pendiente" itemValue="P" />
+									<f:selectItem itemLabel="--Seleccione--" itemValue="S" />
+								</p:selectOneMenu>
+								
+								<!-- 
+								<h:outputLabel value="Oficina: " />
+								<p:autoComplete completeMethod="#{revocadosMB.completeOficina}"
+									value="#{revocadosMB.tiivsOficina1}"
+									forceSelection="true" 
+									var="p"
+									converter="oficinaConverter" 
+									itemLabel="#{p.nombreDetallado}"
+									itemValue="#{p}" 
+									size="30">
+								</p:autoComplete>
+								 -->
+								
+								<h:outputLabel for="calFecIni" value="Fecha de Inicio: " />
+								<p:calendar id="calFecIni" pattern="dd/MM/yyyy" value="#{revocadosMB.fechaInicio}"
 									label="Fecha de Inicio:" showOn="button" maxlength="10"
 									size="15">
+									<p:ajax event="dateSelect" update="calFecFin" />  
 								</p:calendar>
 
-
-								<h:outputLabel value="Fecha Fin:" />
-								<p:calendar id="calFecFin" pattern="dd/MM/yyyy"
-									label="Fecha de Fin:" showOn="button" maxlength="10" size="15"
-									onkeypress="alert('s');">
+								<h:outputLabel for="calFecFin" value="Fecha de Fin:" />
+								<p:calendar id="calFecFin" pattern="dd/MM/yyyy" 
+									mindate="#{revocadosMB.fechaInicio}" value="#{revocadosMB.fechaFin}"
+									label="Fecha de Fin:" showOn="button" maxlength="10" size="15">
 								</p:calendar>
-
-
-								<h:outputLabel value="Estado:" />
-								<p:selectOneMenu id="cboEstado" style="width: 120px">
-									<f:selectItem itemLabel="Activo" itemValue="" />
-									<f:selectItem itemLabel="Inactivo" itemValue="" />
-									<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-								</p:selectOneMenu>
 							</h:panelGrid>
+
 						</fieldset>
 					</td>
 				</tr>
 			</table>
 
-			<h:panelGrid columns="2" id="gridButtons" style="width: 800px">
-				<h:outputLabel
+			<div class="btnIzq">
+				
+				<p:commandButton value="Nuevo" action="#{revocadosMB.reset}"
+					ajax="false" />
+				
+				<h:outputLabel id="outLblTotal"
 					value="Total de registros: #{revocadosMB.nroRegistros} Registros" />
-				<h:panelGrid columns="2">
-					<p:commandButton value="Nuevo" action="#{revocadosMB.reset}"
-						ajax="false" />
-					<p:commandButton value="Buscar" action="#{revocadosMB.buscar}"
-						ajax="false" />
-				</h:panelGrid>
-				<p:spacer width="50" height="10" />
-			</h:panelGrid>
+					
+				<p:commandButton value="Buscar" action="#{revocadosMB.buscar}"
+					ajax="false" update="tbl" />
+			</div>
 
-			<h:panelGrid>
-				<p:dataTable var="revocado" value="#{revocadosMB.revocados}"
-					paginator="true" rows="5" paginatorPosition="bottom">
-					<p:column headerText="Tipo DOI">
-						<h:outputText value="#{revocado.tipoDoiAp}" />
-					</p:column>
-					<p:column headerText="Nro. DOI">
-						<h:outputText value="#{revocado.nroDoiAp}" />
-					</p:column>
-					<p:column headerText="Apoderado">
-						<h:outputText value="#{revocado.nombreAp}" />
-					</p:column>
-					<p:column headerText="Código Central">
-						<h:outputText value="#{revocado.codigoCentralAp}" />
-					</p:column>
-					<p:column headerText="Tipo DOI">
-						<h:outputText value="#{revocado.tipoDoiPo}" />
-					</p:column>
-					<p:column headerText="Poderdante">
-						<h:outputText value="#{revocado.nombrePo}" />
-					</p:column>
-					<p:column headerText="Estado">
-						<h:outputText value="#{revocado.estado}" />
-					</p:column>
-					<p:column headerText="Fecha de Reg">
-						<h:outputText value="#{revocado.fechaRegistro}" />
-					</p:column>
-					<p:column headerText="Usuario de Reg">
-						<h:outputText value="#{revocado.codigoRegistro}" />
-					</p:column>
-					<p:column headerText="Acción">
-						 <p:commandButton id="selectButton" action="#{revocadosMB.editar}"
-						 	 icon="ui-icon-pencil" title="Editar">  			                  
-			            </p:commandButton>  
-					</p:column>
-				</p:dataTable>
-				<f:facet name="footer">
-					<h:panelGroup style="display:block; text-align:right">
-						<p:commandButton value="Exportar" action="#{revocadosMB.editar}"
-						icon="ui-icon-disk" />
-					</h:panelGroup>
-				</f:facet>
-			</h:panelGrid>
+			<br></br>
+			<br></br>
+			<br></br>
+			<br></br>
+
+			<p:dataTable style="width: 650px;" id="tbl" var="revocado"
+				value="#{revocadosMB.revocados}" paginator="true" rows="5"
+				paginatorPosition="bottom">
+				<p:column headerText="Tipo DOI">
+					<h:outputText value="#{revocado.tipoDoiAp}" />
+				</p:column>
+				<p:column headerText="Nro. DOI">
+					<h:outputText value="#{revocado.nroDoiAp}" />
+				</p:column>
+				<p:column headerText="Apoderado">
+					<h:outputText value="#{revocado.nombreAp}" />
+				</p:column>
+				<p:column headerText="Código Central">
+					<h:outputText value="#{revocado.codigoCentralAp}" />
+				</p:column>
+				<p:column headerText="Tipo DOI">
+					<h:outputText value="#{revocado.tipoDoiPo}" />
+				</p:column>
+				<p:column headerText="Poderdante">
+					<h:outputText value="#{revocado.nombrePo}" />
+				</p:column>
+				<p:column headerText="Estado">
+					<h:outputText value="#{revocado.estado}" />
+				</p:column>
+				<p:column headerText="Fecha de Reg">
+					<h:outputText value="#{revocado.fechaRegistro}" />
+				</p:column>
+				<p:column headerText="Usuario de Reg">
+					<h:outputText value="#{revocado.codigoRegistro}" />
+				</p:column>
+				<p:column headerText="Ver">
+					<p:commandButton id="idVer" action="#{revocadosMB.ver}"
+						icon="ui-icon-search" title="Ver Registro">
+					</p:commandButton>
+				</p:column>
+				<p:column headerText="Editar">
+					<p:commandButton id="idEdit" action="#{revocadosMB.editar}"
+						icon="ui-icon-pencil" title="Editar Registro">
+					</p:commandButton>
+				</p:column>
+				<p:column headerText="Eliminar">
+					<p:commandButton id="idDel" action="#{revocadosMB.delete}"
+						icon="ui-icon-closethick" title="Eliminar Registro">
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<h:commandLink>
+				<h:graphicImage library="images" name="excel.png" />
+				<p:dataExporter type="xls" target="tbl" fileName="Revocados" />
+			</h:commandLink>
 
 		</h:form>
 
