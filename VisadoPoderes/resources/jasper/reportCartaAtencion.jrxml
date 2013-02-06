@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" language="groovy" pageWidth="795" pageHeight="542" columnWidth="755" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="234"/>
+	<property name="ireport.y" value="158"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\resources\\jasper\\"]]></defaultValueExpression>
@@ -11,7 +11,7 @@
 	<field name="numeroSolicitud" class="java.lang.String"/>
 	<field name="instrucciones" class="java.lang.String"/>
 	<field name="numeroDiasForEjecucion" class="java.lang.String"/>
-	<field name="lstSolicitudOperban" class="java.util.List"/>
+	<field name="lstSolicitudOperban" class="net.sf.jasperreports.engine.JRDataSource"/>
 	<background>
 		<band/>
 	</background>
@@ -22,22 +22,22 @@
 				<staticText>
 					<reportElement x="99" y="24" width="460" height="43" forecolor="#000099"/>
 					<textElement>
-						<font size="34" isBold="true"/>
+						<font size="30" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Atención de la Solicitud Nro]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="542" y="24" width="173" height="53" forecolor="#000066"/>
+					<reportElement x="542" y="24" width="173" height="53" forecolor="#330099"/>
 					<textElement>
-						<font size="34" isBold="true"/>
+						<font size="30" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{numeroSolicitud}]]></textFieldExpression>
 				</textField>
-				<image>
-					<reportElement x="0" y="0" width="172" height="77"/>
-					<imageExpression class="java.lang.String"><![CDATA[$P{IMG_CABECERA}]]></imageExpression>
-				</image>
 			</frame>
+			<image>
+				<reportElement x="0" y="1" width="234" height="77"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{IMG_CABECERA}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -57,12 +57,12 @@
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="304">
+		<band height="327">
 			<line>
 				<reportElement x="39" y="0" width="641" height="1" forecolor="#666666"/>
 			</line>
 			<staticText>
-				<reportElement x="39" y="178" width="641" height="112"/>
+				<reportElement x="39" y="259" width="641" height="68"/>
 				<textElement/>
 				<text><![CDATA[Este documento permite hacer efectiva la operación del Visado de Poderes, señalado en ORGA.2008.035 - BASTANTEO Y VISADO DE PODERES. Para ello, se debe tener en cuenta que luego de generar este documento, Usted tiene      dias para solicitarla ejecución de la operación en la oficina :
 
@@ -72,12 +72,12 @@ Pasada la fecha, la validez del documento habrá caducado.]]></text>
 				<reportElement x="39" y="6" width="641" height="161"/>
 			</rectangle>
 			<textField>
-				<reportElement x="172" y="202" width="300" height="20"/>
+				<reportElement x="172" y="283" width="300" height="20"/>
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{oficina}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="477" y="192" width="65" height="20"/>
+				<reportElement x="477" y="273" width="65" height="20"/>
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{numeroDiasForEjecucion}]]></textFieldExpression>
 			</textField>
@@ -88,15 +88,15 @@ Pasada la fecha, la validez del documento habrá caducado.]]></text>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones}]]></textFieldExpression>
 			</textField>
-		</band>
-	</columnHeader>
-	<detail>
-		<band height="114">
 			<subreport>
 				<reportElement x="55" y="19" width="607" height="75"/>
+				<dataSourceExpression><![CDATA[$F{lstSolicitudOperban}]]></dataSourceExpression>
 				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "reportCartaAtencion_subreportOperaciones.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
+	</columnHeader>
+	<detail>
+		<band height="11"/>
 	</detail>
 	<columnFooter>
 		<band/>
