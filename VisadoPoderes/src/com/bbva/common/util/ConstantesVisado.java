@@ -269,9 +269,9 @@ public class ConstantesVisado {
 		public static final String SOLES = "SOLES";
 		public static final String DOLARES = "DOLARES";
 		public static final String EUROS = "EUROS";
-		public static final String PREFIJO_SOLES = "“PEN S/.”";
-		public static final String PREFIJO_DOLAR = "“USD $/.”";
-		public static final String PREFIJO_EURO = "“EUR /.”";
+		public static final String PREFIJO_SOLES = "PEN S/.";
+		public static final String PREFIJO_DOLAR = "USD $/.";
+		public static final String PREFIJO_EURO = "EUR /.";
 	}
 	
 		public static final int DOCUMENTO_OBLIGATORIO = 1;
