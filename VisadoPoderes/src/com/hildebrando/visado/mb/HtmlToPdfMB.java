@@ -28,6 +28,9 @@ import org.primefaces.model.StreamedContent;
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.bbva.common.util.ConstantesVisado;
+import com.bbva.persistencia.generica.util.Utilitarios;
+
 @ManagedBean(name = "htmlToPdfMB")
 @SessionScoped
 public class HtmlToPdfMB {
@@ -38,75 +41,68 @@ public class HtmlToPdfMB {
 	private String textoDocumento;
 	private String nombrePdf;
 		
-	
-	public HtmlToPdfMB(){
-		
-	}
-	
 	public void generarPdfListener(ActionEvent event){
-		logger.info("ejecutarListener");
-		
-	
+		logger.info("generarPdfListener");	
 		File fileTemp = null;
+		String nameFile="";
 		
 		try {
 			
-			String texto = (String) event.getComponent().getAttributes().get("texto");
-			logger.info("texto: " + texto);
-			
+			String texto = (String) event.getComponent().getAttributes().get("texto");			
 			StringBuffer buf = new StringBuffer();
-			buf.append("<html><head><title>Comentario</title></head><body>");    	       
+			String sUbicacionTemporal;
+			File fDirectory;
+			buf.append("<html><head><title>Comentario</title></head><body>");    	       			
+//			buf.append("<table>");
+//			buf.append("<tr>");
+//			buf.append("<td>");
+//			buf.append("<img src=\"bbva2.gif\" />");
+//			buf.append("</td>");
+//			buf.append("<td width=\"500\">");		
+//			buf.append("</td>");
+//			buf.append("<td>");
+//			buf.append("25/05/2012 10:20 AM");
+//			buf.append("</td>");
+//			buf.append("</tr>");
+//			buf.append("</table>");			
 	        if(texto!=null){
 	        	buf.append(texto);
 	        }
 	        buf.append("</body></html>");
-	        logger.info("pagina HTML: " + buf);
+	        logger.info("cadena HTML: " + buf);
 	        
-	        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();							
-			String sUbicacionTemporal = request.getRealPath(File.separator);  //+ File.separator + "files" + File.separator;
-			
-			logger.info("sUbicacionTemporal:" + sUbicacionTemporal);
-			     
 	        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 	        ByteArrayInputStream encXML = new ByteArrayInputStream(buf.toString().getBytes("UTF8"));
 	        Document doc = builder.parse(encXML);	       
 	        
-	        
+	        sUbicacionTemporal = Utilitarios.getProjectPath() + File.separator + ConstantesVisado.FILES + File.separator;			
+			fDirectory = new File(sUbicacionTemporal);
+			if(!fDirectory.exists())
+				fDirectory.mkdir();
+			
+			logger.info("UbicacionTemporal:" + sUbicacionTemporal);
 	        fileTemp = File.createTempFile("tmp", "htmlToPdf.pdf", new File(sUbicacionTemporal));
-	        
-//	        OutputStream os = new FileOutputStream(new File(sUbicacionTemporal + nameFile));
-	        
-	        OutputStream os = new FileOutputStream(fileTemp);
-	        
+	        if(fileTemp!=null){
+				nameFile = fileTemp.getName().substring(1 + fileTemp.getName().lastIndexOf(File.separator));				
+			}
+	        logger.info("Nombre de archivo comentarios: " + nameFile);
+	        	        
+	        OutputStream os = new FileOutputStream(fileTemp);	        
 			ITextRenderer renderer = new ITextRenderer();			
 			renderer.setDocument(doc,null);
 			renderer.layout();
 			renderer.createPDF(os);
 			os.close();
 			
-			
-			String nameFile = "";
-			
-			if(fileTemp!=null){
-				nameFile = fileTemp.getName().substring(1 + fileTemp.getName().lastIndexOf(File.separator));
-				
-			}
-			logger.info("nameFile: " + nameFile);
-			
-			this.nombrePdf = nameFile;
-
-			InputStream stream = ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream(nameFile);			
-	        this.file = new DefaultStreamedContent(stream, CONTENT_TYPE, "download_pdf.pdf");        
-	        logger.info("File:" + file);	
-			
 		} catch (Exception ex) {
 			ex.printStackTrace();
-
 		} finally {
-			if(fileTemp!=null){
-				fileTemp.deleteOnExit();
-			}			
+			fileTemp.deleteOnExit();					
 		}
+		
+		InputStream stream = ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream(File.separator + ConstantesVisado.FILES + File.separator + nameFile);			
+        this.file = new DefaultStreamedContent(stream, CONTENT_TYPE, "download_obs.pdf");        
+        logger.info("File:" + file);
 	}
 
 	public StreamedContent getFile() {
