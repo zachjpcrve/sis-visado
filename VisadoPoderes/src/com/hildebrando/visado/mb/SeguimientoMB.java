@@ -8,11 +8,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -1358,8 +1359,8 @@ public class SeguimientoMB
 		{
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_ENVIO)) // Es fecha de envio
 			{
-				DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss");
-				DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+				DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
+				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
 				
 				String tmpFecIni = formato.format(getFechaInicio());
 				String tmpFecFin = formato.format(getFechaFin());
@@ -1367,22 +1368,13 @@ public class SeguimientoMB
 				newFechaInicio=fmt.parseLocalDate(tmpFecIni);
 				newFechaFin= fmt.parseLocalDate(tmpFecFin);
 				
-				Date dateIni = newFechaInicio.toDateTimeAtStartOfDay().toDate();
-				Date dateFin = newFechaFin.toDateTimeAtStartOfDay().toDate();
+				Date dFechaIni = newFechaInicio.toDateTimeAtStartOfDay().toDate();
+				Date dFechaFin = newFechaFin.toDateTimeAtStartOfDay().toDate();
 				
-				logger.debug("Filtro por fecha de envio...");
-				logger.info("Fecha Inicio: " + dateIni);
-				logger.info("Fecha Fin: " + dateFin);
-				
-				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_ENVIO, dateIni,dateFin));
-				
-				String codEstado = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_ENVIADO);
-				
-				logger.info("Estado enviado: " + codEstado);
+				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_ENVIO, dFechaIni,dFechaFin));
 				
 				//Verificar que el campo estado no tenga espacios en blanco en BD
-				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codEstado));
-				//filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codEstado+ "   "));
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02));
 				filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 			}
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_RPTA)) // Sino es fecha de respuesta
@@ -1405,10 +1397,10 @@ public class SeguimientoMB
 				
 				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_RPTA, dateIni,	dateFin));
 
-				Collection<String> tmpEstados = null;
-				tmpEstados.add(buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_ACEPTADO));
-				tmpEstados.add(buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_RECHAZADO));
-				tmpEstados.add(buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_A));
+				List<String> tmpEstados = new ArrayList<String>();
+				tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+				tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
+				tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
 				
 				//Verificar que el campo estado no tenga espacios en blanco en BD
 				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,tmpEstados));
