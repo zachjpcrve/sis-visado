@@ -15,6 +15,7 @@ public class FormatosDTO {
 	private String oficina;
 	private List<TiivsSolicitudOperban> listaSolicitudOperban;
 	private JRDataSource lstSolicitudOperban ;
+	private String poderdantes;
 
 	
 	
@@ -72,13 +73,18 @@ public class FormatosDTO {
 		this.listaSolicitudOperban = listaSolicitudOperban;
 	}
 
-	
-
-	
 
 
-	
 
-	
+	public String getPoderdantes() {
+		return poderdantes;
+	}
+
+
+
+
+	public void setPoderdantes(String poderdantes) {
+		this.poderdantes = poderdantes;
+	}	
 	
 }
