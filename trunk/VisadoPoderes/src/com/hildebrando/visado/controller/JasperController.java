@@ -143,6 +143,47 @@ public class JasperController {
         return("pdfReportCartaRechazo");
 	}
 	
+	@RequestMapping(value="/download/pdfReportCartaImprocedente.htm", method=RequestMethod.GET)
+	public String generarReporteCartaImprocedente(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request)
+	{
+		log.info("generarReporteCartaImprocedente : ");
+		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
+		
+		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
+		FormatosDTO uno = new FormatosDTO();
+		uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
+		
+		if (SOLICITUD_TEMP.getObs()!=null)
+		{	
+			uno.setInstrucciones(SOLICITUD_TEMP.getObs());
+		}
+		else
+		{
+			uno.setInstrucciones("");
+		}
+		uno.setPoderdantes("VASQUEZ YAIPEN ALICIA MARIA");
+		
+	    cabecera.add(uno);
+    	   	
+        response.setHeader("Content-type", "application/pdf");
+        response.setHeader("Content-Disposition","attachment; filename=\"Carta_Improcedente.pdf\"");
+		
+        JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
+        
+        modelMap.put("dataKey", objCab);
+        modelMap.put("SUBREPORT_DIR", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\resources\\jasper\\");
+        
+        modelMap.put("IMG_CABECERA", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
+
+        try {
+        	OutputStream os = response.getOutputStream();
+        	os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        return("pdfReportCartaImprocedente");
+	}
+	
     @RequestMapping(value="/download/reportPDF.htm", method=RequestMethod.GET)
     public String generarReportePDF(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request) 
     {
