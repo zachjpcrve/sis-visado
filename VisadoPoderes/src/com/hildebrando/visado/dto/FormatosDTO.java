@@ -13,21 +13,17 @@ public class FormatosDTO {
 	private String instrucciones;
 	private String numeroDiasForEjecucion;
 	private String oficina;
-	private List<TiivsSolicitudOperban> lstSolicitudOperban;
-	private List<JRDataSource> lstDsSolicitudOperban;
-	private JRDataSource Operaciones ;
+	private List<TiivsSolicitudOperban> listaSolicitudOperban;
+	private JRDataSource lstSolicitudOperban ;
 
 	
 	
-	public JRDataSource getOperaciones() {
-		return new JRBeanCollectionDataSource(lstDsSolicitudOperban); 
+	public JRDataSource getLstSolicitudOperban() {
+		return new JRBeanCollectionDataSource(listaSolicitudOperban); 
 	}
 
 	
-	public void setOperaciones(JRDataSource operaciones) {
-		Operaciones = operaciones;
-	}
-
+	
 
 	public String getNumeroSolicitud() {
 		return numeroSolicitud;
@@ -61,24 +57,24 @@ public class FormatosDTO {
 		this.oficina = oficina;
 	}
 
-	public List<TiivsSolicitudOperban> getLstSolicitudOperban() {
-		return lstSolicitudOperban;
-	}
-
-	public void setLstSolicitudOperban(List<TiivsSolicitudOperban> lstSolicitudOperban) {
-		this.lstSolicitudOperban = lstSolicitudOperban;
-	}
 
 
-	public List<JRDataSource> getLstDsSolicitudOperban() {
-		return lstDsSolicitudOperban;
+
+	public List<TiivsSolicitudOperban> getListaSolicitudOperban() {
+		return listaSolicitudOperban;
 	}
 
 
-	public void setLstDsSolicitudOperban(List<JRDataSource> lstDsSolicitudOperban) {
-		this.lstDsSolicitudOperban = lstDsSolicitudOperban;
+
+
+	public void setListaSolicitudOperban(
+			List<TiivsSolicitudOperban> listaSolicitudOperban) {
+		this.listaSolicitudOperban = listaSolicitudOperban;
 	}
 
+	
+
+	
 
 
 	
