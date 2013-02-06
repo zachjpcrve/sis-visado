@@ -1,14 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Feb 5, 2013 11:36:20 AM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Feb 5, 2013 7:15:50 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsRevocado" table="TIIVS_REVOCADO">
         <id name="codRevocado" type="int">
             <column name="COD_REVOCADO" precision="8" scale="0" />
-            <generator class="sequence" >
-            	<param name="sequence">SEQ_REV</param>
-            </generator>
+            <generator class="assigned" />
         </id>
         <many-to-one name="tiivsPersonaByCodPer2" class="com.hildebrando.visado.modelo.TiivsPersona" fetch="select">
             <column name="COD_PER_2" precision="8" scale="0" />
@@ -24,6 +22,12 @@
         </property>
         <property name="estado" type="java.lang.Character">
             <column name="ESTADO" length="1" />
+        </property>
+        <property name="fechaRevocatoria" type="date">
+            <column name="FECHA_REVOCATORIA" length="7" />
+        </property>
+        <property name="codAgrup" type="java.lang.Integer">
+            <column name="COD_AGRUP" precision="8" scale="0" />
         </property>
     </class>
 </hibernate-mapping>
