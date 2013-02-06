@@ -51,33 +51,32 @@ public class JasperController {
 	@RequestMapping(value="/download/pdfReportCartaAtencion.htm", method=RequestMethod.GET)
 	public String generarReporteCartaAtencion(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
 		log.info("generarReporteCartaAtencion : ");
-		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getAttribute("SOLICITUD_TEMP");
-		//TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) Utilitarios.getObjectInSession("SOLICITUD_TEMP");
-	    //TiivsSolicitud solicitud=consultarSolicitudMB.getSolicitudRegistrarT();
+		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 		
-		log.info("solicitud : "+SOLICITUD_TEMP);
 		
 		
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
 		FormatosDTO uno = new FormatosDTO();
-		uno.setNumeroSolicitud("XXXXXX");
-		uno.setNumeroDiasForEjecucion("3");
-		uno.setInstrucciones(" INSTRUCCIONES SJSJJSJSJS");
-		uno.setOficina("OFICINA 123");
+		uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
+		uno.setNumeroDiasForEjecucion("NO DEFINIDO");
+		uno.setInstrucciones(SOLICITUD_TEMP.getObs());
+		uno.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getCodOfi()+" - " +SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
 		
 		
 		
 	    //Add lista datasource
 		List<TiivsSolicitudOperban> listaOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();
-		TiivsSolicitudOperban x =new TiivsSolicitudOperban();
+		listaOperacionesBancarias=SOLICITUD_TEMP.getLstSolicBancarias();
+		log.info("getLstSolicBancarias.size : "+SOLICITUD_TEMP.getLstSolicBancarias().size());
+	/*	TiivsSolicitudOperban x =new TiivsSolicitudOperban();
 		x.setImporte(35.0);
 		x.setsDescMoneda("soles");
 		x.setTipoCambio(2.0);
-		listaOperacionesBancarias.add(x);
-	    JRDataSource dsOperacion = new JRBeanCollectionDataSource(listaOperacionesBancarias);
+		listaOperacionesBancarias.add(x);*/
+	     JRDataSource dsOperacion = new JRBeanCollectionDataSource(listaOperacionesBancarias);
 	    List<JRDataSource> lstDsSolicitudOperban = new ArrayList<JRDataSource>();
 	    lstDsSolicitudOperban.add(dsOperacion);
-	    uno.setLstDsSolicitudOperban(lstDsSolicitudOperban);
+	    uno.setListaSolicitudOperban(listaOperacionesBancarias);
 	    cabecera.add(uno);
 	    
 	    
