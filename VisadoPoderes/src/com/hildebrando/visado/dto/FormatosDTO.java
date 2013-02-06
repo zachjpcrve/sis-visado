@@ -15,7 +15,7 @@ public class FormatosDTO {
 	private String oficina;
 	private List<TiivsSolicitudOperban> listaSolicitudOperban;
 	private JRDataSource lstSolicitudOperban ;
-	private List<JRDataSource> LstDsSolicitudOperban;
+
 	
 	
 	public JRDataSource getLstSolicitudOperban() {
@@ -72,26 +72,13 @@ public class FormatosDTO {
 		this.listaSolicitudOperban = listaSolicitudOperban;
 	}
 
+	
+
+	
 
 
+	
 
-	public void setLstSolicitudOperban(JRDataSource lstSolicitudOperban) {
-		this.lstSolicitudOperban = lstSolicitudOperban;
-	}
-
-
-
-
-	public List<JRDataSource> getLstDsSolicitudOperban() {
-		return LstDsSolicitudOperban;
-	}
-
-
-
-
-	public void setLstDsSolicitudOperban(List<JRDataSource> lstDsSolicitudOperban) {
-		LstDsSolicitudOperban = lstDsSolicitudOperban;
-	}
 	
 	
 }
