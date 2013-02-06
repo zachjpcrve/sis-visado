@@ -27,8 +27,22 @@ public class OficinaConverter implements Converter {
 				GenericDao<TiivsOficina1, Object> oficinaDAO = (GenericDao<TiivsOficina1, Object>) SpringInit
         				.getApplicationContext().getBean("genericoDao");
         		try {
-        			TiivsOficina1 oficina = oficinaDAO.buscarById(TiivsOficina1.class, number);
-        			return oficina;
+        			TiivsOficina1 tiivsOficina1 = oficinaDAO.buscarById(TiivsOficina1.class, number);
+        			
+        			if(tiivsOficina1.getCodOfi()!= ""
+    						&&  tiivsOficina1.getDesOfi() != ""
+    						  && tiivsOficina1.getTiivsTerritorio().getCodTer() != ""
+    						    && tiivsOficina1.getTiivsTerritorio().getDesTer()  != ""){
+    					
+    					String texto = tiivsOficina1.getCodOfi() + "-"
+    							+ tiivsOficina1.getDesOfi().toUpperCase() + "("
+    							+ tiivsOficina1.getTiivsTerritorio().getCodTer()
+    							+ tiivsOficina1.getTiivsTerritorio().getDesTer() + ")";
+
+    						tiivsOficina1.setNombreDetallado(texto);
+    				}
+        			
+        			return tiivsOficina1;
         		} catch (Exception e) {
         			e.printStackTrace();
         		}
