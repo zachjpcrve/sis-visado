@@ -1228,6 +1228,10 @@ public class SolicitudRegistroMB {
 		logger.info("**************************** Setear Comentario ****************************");
 		logger.info("Comentario : " + this.solicitudRegistrarT.getObs());
 	}
+	public void limpiarComentario() {
+		logger.info("**************************** Setear Comentario ****************************");
+		 this.solicitudRegistrarT.setObs("");
+	}
 
 	public void eliminarOperacionBancaria() {
 		logger.info("**************************** eliminarOperacionBancaria ****************************");
