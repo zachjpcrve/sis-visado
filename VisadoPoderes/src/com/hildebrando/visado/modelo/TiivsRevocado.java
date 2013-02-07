@@ -1,6 +1,6 @@
 package com.hildebrando.visado.modelo;
 
-// Generated Feb 5, 2013 7:15:49 PM by Hibernate Tools 3.4.0.CR1
+// Generated Feb 6, 2013 3:28:58 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -10,10 +10,8 @@ import java.util.Date;
 public class TiivsRevocado implements java.io.Serializable {
 
 	private int codRevocado;
-	private TiivsPersona tiivsPersonaByCodPer2;
-	private TiivsPersona tiivsPersonaByCodPer1;
-	private String codMultPer1;
-	private String codMultPer2;
+	private TiivsPersona tiivsPersonaByCodPerApoderado;
+	private TiivsPersona tiivsPersonaByCodPerPoderdante;
 	private Character estado;
 	private Date fechaRevocatoria;
 	private Integer codAgrup;
@@ -25,15 +23,13 @@ public class TiivsRevocado implements java.io.Serializable {
 		this.codRevocado = codRevocado;
 	}
 
-	public TiivsRevocado(int codRevocado, TiivsPersona tiivsPersonaByCodPer2,
-			TiivsPersona tiivsPersonaByCodPer1, String codMultPer1,
-			String codMultPer2, Character estado, Date fechaRevocatoria,
-			Integer codAgrup) {
+	public TiivsRevocado(int codRevocado,
+			TiivsPersona tiivsPersonaByCodPerApoderado,
+			TiivsPersona tiivsPersonaByCodPerPoderdante, Character estado,
+			Date fechaRevocatoria, Integer codAgrup) {
 		this.codRevocado = codRevocado;
-		this.tiivsPersonaByCodPer2 = tiivsPersonaByCodPer2;
-		this.tiivsPersonaByCodPer1 = tiivsPersonaByCodPer1;
-		this.codMultPer1 = codMultPer1;
-		this.codMultPer2 = codMultPer2;
+		this.tiivsPersonaByCodPerApoderado = tiivsPersonaByCodPerApoderado;
+		this.tiivsPersonaByCodPerPoderdante = tiivsPersonaByCodPerPoderdante;
 		this.estado = estado;
 		this.fechaRevocatoria = fechaRevocatoria;
 		this.codAgrup = codAgrup;
@@ -47,36 +43,22 @@ public class TiivsRevocado implements java.io.Serializable {
 		this.codRevocado = codRevocado;
 	}
 
-	public TiivsPersona getTiivsPersonaByCodPer2() {
-		return this.tiivsPersonaByCodPer2;
+	public TiivsPersona getTiivsPersonaByCodPerApoderado() {
+		return this.tiivsPersonaByCodPerApoderado;
 	}
 
-	public void setTiivsPersonaByCodPer2(TiivsPersona tiivsPersonaByCodPer2) {
-		this.tiivsPersonaByCodPer2 = tiivsPersonaByCodPer2;
+	public void setTiivsPersonaByCodPerApoderado(
+			TiivsPersona tiivsPersonaByCodPerApoderado) {
+		this.tiivsPersonaByCodPerApoderado = tiivsPersonaByCodPerApoderado;
 	}
 
-	public TiivsPersona getTiivsPersonaByCodPer1() {
-		return this.tiivsPersonaByCodPer1;
+	public TiivsPersona getTiivsPersonaByCodPerPoderdante() {
+		return this.tiivsPersonaByCodPerPoderdante;
 	}
 
-	public void setTiivsPersonaByCodPer1(TiivsPersona tiivsPersonaByCodPer1) {
-		this.tiivsPersonaByCodPer1 = tiivsPersonaByCodPer1;
-	}
-
-	public String getCodMultPer1() {
-		return this.codMultPer1;
-	}
-
-	public void setCodMultPer1(String codMultPer1) {
-		this.codMultPer1 = codMultPer1;
-	}
-
-	public String getCodMultPer2() {
-		return this.codMultPer2;
-	}
-
-	public void setCodMultPer2(String codMultPer2) {
-		this.codMultPer2 = codMultPer2;
+	public void setTiivsPersonaByCodPerPoderdante(
+			TiivsPersona tiivsPersonaByCodPerPoderdante) {
+		this.tiivsPersonaByCodPerPoderdante = tiivsPersonaByCodPerPoderdante;
 	}
 
 	public Character getEstado() {
