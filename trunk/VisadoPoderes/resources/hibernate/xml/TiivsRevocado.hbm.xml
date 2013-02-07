@@ -1,25 +1,19 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Feb 5, 2013 7:15:50 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Feb 6, 2013 3:29:00 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsRevocado" table="TIIVS_REVOCADO">
         <id name="codRevocado" type="int">
             <column name="COD_REVOCADO" precision="8" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="tiivsPersonaByCodPer2" class="com.hildebrando.visado.modelo.TiivsPersona" fetch="select">
-            <column name="COD_PER_2" precision="8" scale="0" />
+        <many-to-one name="tiivsPersonaByCodPerApoderado" class="com.hildebrando.visado.modelo.TiivsPersona" fetch="select">
+            <column name="COD_PER_APODERADO" precision="8" scale="0" />
         </many-to-one>
-        <many-to-one name="tiivsPersonaByCodPer1" class="com.hildebrando.visado.modelo.TiivsPersona" fetch="select">
-            <column name="COD_PER_1" precision="8" scale="0" />
+        <many-to-one name="tiivsPersonaByCodPerPoderdante" class="com.hildebrando.visado.modelo.TiivsPersona" fetch="select">
+            <column name="COD_PER_PODERDANTE" precision="8" scale="0" />
         </many-to-one>
-        <property name="codMultPer1" type="string">
-            <column name="COD_MULT_PER_1" length="3" />
-        </property>
-        <property name="codMultPer2" type="string">
-            <column name="COD_MULT_PER_2" length="3" />
-        </property>
         <property name="estado" type="java.lang.Character">
             <column name="ESTADO" length="1" />
         </property>
