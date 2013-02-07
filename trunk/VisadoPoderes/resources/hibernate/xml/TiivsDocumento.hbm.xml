@@ -14,6 +14,12 @@
         <property name="activo" type="string">
             <column name="ACTIVO" length="1" />
         </property>
+         <property name="nombre" type="string">
+            <column name="NOMBRE" length="200" unique="true" />                
+        </property>
+        <property name="formato" type="string">
+            <column name="FORMATO" length="20" />
+        </property>
         <set name="tiivsTipoSolicDocumentos" table="TIIVS_TIPO_SOLIC_DOCUMENTO" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="COD_DOC" length="7" not-null="true" unique="true" />
