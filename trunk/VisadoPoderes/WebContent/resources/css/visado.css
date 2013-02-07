@@ -1,4 +1,15 @@
 @CHARSET "ISO-8859-1";
+
+.btnDer {
+ position:absolute;
+ right:0px;
+}
+
+.btnIzq {
+ position:absolute;
+ left:200px;
+}
+
 .ui-widget-header ui-corner-all{
 background-color: #254077 !important;
 background-image :url("/VisadoPoderes/faces/javax.faces.resource/images/ui-bg_highlight-soft_100_deedf7_1x100.png?ln=primefaces-cupertino")
