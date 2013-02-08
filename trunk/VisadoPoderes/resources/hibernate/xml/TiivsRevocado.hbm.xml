@@ -1,18 +1,17 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Feb 6, 2013 3:29:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Feb 7, 2013 2:54:23 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsRevocado" table="TIIVS_REVOCADO">
         <id name="codRevocado" type="int">
             <column name="COD_REVOCADO" precision="8" scale="0" />
-            <generator class="assigned" />
+             <generator class="sequence" >
+             	<param name="sequence">SEQ_REV</param>
+             </generator>
         </id>
-        <many-to-one name="tiivsPersonaByCodPerApoderado" class="com.hildebrando.visado.modelo.TiivsPersona" fetch="select">
-            <column name="COD_PER_APODERADO" precision="8" scale="0" />
-        </many-to-one>
-        <many-to-one name="tiivsPersonaByCodPerPoderdante" class="com.hildebrando.visado.modelo.TiivsPersona" fetch="select">
-            <column name="COD_PER_PODERDANTE" precision="8" scale="0" />
+        <many-to-one name="tiivsPersona" class="com.hildebrando.visado.modelo.TiivsPersona" lazy="false" fetch="select">
+            <column name="COD_PER" precision="8" scale="0" />
         </many-to-one>
         <property name="estado" type="java.lang.Character">
             <column name="ESTADO" length="1" />
@@ -22,6 +21,9 @@
         </property>
         <property name="codAgrup" type="java.lang.Integer">
             <column name="COD_AGRUP" precision="8" scale="0" />
+        </property>
+        <property name="tipPartic" type="string">
+            <column name="TIP_PARTIC" length="4" />
         </property>
     </class>
 </hibernate-mapping>
