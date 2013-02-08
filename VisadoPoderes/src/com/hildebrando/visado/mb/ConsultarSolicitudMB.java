@@ -1702,7 +1702,6 @@ public class ConsultarSolicitudMB {
 				  logger.info("********************** agregarAgrupacion ********************* " +numGrupo);
 				  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 				  List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
-				  TiivsAgrupacionPersona tiivsAgrupacionPersona=null;
 				  
 				  for (TiivsPersona objTiivsPersonaResultado : lstTiivsPersona) 
 				  {
@@ -1711,17 +1710,17 @@ public class ConsultarSolicitudMB {
 					  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.APODERADO)){
 						  lstApoderdantes.add(objTiivsPersonaResultado);}
 					  logger.info("objTiivsPersonaResultado.getCodPer() : "+objTiivsPersonaResultado.getCodPer());
-					  tiivsAgrupacionPersona =new TiivsAgrupacionPersona();
+					 // tiivsAgrupacionPersona =new TiivsAgrupacionPersona();
 					  TiivsAgrupacionPersona  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersona();
 					  tiivsAgrupacionPersonaId.setNumGrupo(numGrupo);
 					  tiivsAgrupacionPersonaId.setCodSoli(solicitudRegistrarT.getCodSoli());
 					  tiivsAgrupacionPersonaId.setCodPer(objTiivsPersonaResultado.getCodPer());
 					  tiivsAgrupacionPersonaId.setClasifPer(objTiivsPersonaResultado.getClasifPer());
 					  tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado.getTipPartic());
-					  tiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
+					  tiivsAgrupacionPersonaId.setTiivsPersona(objTiivsPersonaResultado);
 					  //tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
 					  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
-					  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
+					  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersonaId);
 				  }
 				  
 				  logger.info("lstPoderdantes " +lstPoderdantes.size());
