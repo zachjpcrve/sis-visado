@@ -87,6 +87,21 @@ public abstract class GenericDaoImpl<K, T extends Serializable>
 	            }
 	        });
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public  List<Integer> buscarDinamicoInteger(final Busqueda filtro) throws Exception{
+		   return (List<Integer>)this.getHibernateTemplate().execute(new HibernateCallback() {
+	           
+	            public Object  doInHibernate(Session session) throws HibernateException, SQLException {
+	                Criteria busqueda = filtro.getExecutableCriteria(session);
+	                busqueda.setFirstResult(((Busqueda)filtro).getFirstResult());
+	                if (filtro.getMaxResults() > 0)
+	                    busqueda.setMaxResults(((Busqueda)filtro).getMaxResults());
+	                return (List<Integer>)busqueda.list(); 
+	            }
+	        });
+	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public  K buscarById(Class clazz, Serializable id) throws Exception{
 		return (K)getHibernateTemplate().get( clazz,  id);
