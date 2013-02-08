@@ -34,9 +34,8 @@ public class TiivsPersona implements java.io.Serializable {
 	private String sDesctipDoi;
 	
 	private String nombreCompletoMayuscula;
-	
-	private Set tiivsRevocadosForCodPer1 = new HashSet(0);
-	private Set tiivsRevocadosForCodPer2 = new HashSet(0);
+
+	private Set tiivsRevocados = new HashSet(0);
 	private Set<TiivsAgrupacionPersona> tiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
 
 	public TiivsPersona() {
@@ -217,20 +216,12 @@ public class TiivsPersona implements java.io.Serializable {
 		return nombreCompletoMayuscula;
 	}
 
-	public Set getTiivsRevocadosForCodPer1() {
-		return this.tiivsRevocadosForCodPer1;
+	public Set getTiivsRevocados() {
+		return tiivsRevocados;
 	}
 
-	public void setTiivsRevocadosForCodPer1(Set tiivsRevocadosForCodPer1) {
-		this.tiivsRevocadosForCodPer1 = tiivsRevocadosForCodPer1;
-	}
-
-	public Set getTiivsRevocadosForCodPer2() {
-		return this.tiivsRevocadosForCodPer2;
-	}
-
-	public void setTiivsRevocadosForCodPer2(Set tiivsRevocadosForCodPer2) {
-		this.tiivsRevocadosForCodPer2 = tiivsRevocadosForCodPer2;
+	public void setTiivsRevocados(Set tiivsRevocados) {
+		this.tiivsRevocados = tiivsRevocados;
 	}
 	
 }

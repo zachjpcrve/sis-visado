@@ -16,11 +16,16 @@ import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.hildebrando.visado.dto.Revocado;
+import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsRevocado;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 @ManagedBean(name = "revocadosMB")
@@ -54,6 +59,7 @@ public class RevocadosMB {
 		// combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC);
 
 		objTiivsPersonaBusqueda = new TiivsPersona();
+		objTiivsPersonaBusqueda2 = new TiivsPersona();
 		estadoRevocado= new Character('S');
 		//tiivsOficina1 = new TiivsOficina1();
 	}
@@ -144,6 +150,8 @@ public class RevocadosMB {
 	public void buscar() {
 		revocados = new ArrayList<Revocado>();
 		List<TiivsRevocado> tiivsrevocados = new ArrayList<TiivsRevocado>();
+		List<Integer> tiivsrevocados2 = new ArrayList<Integer>();
+		List<TiivsMultitabla> tiivsMultitablas = new ArrayList<TiivsMultitabla>();
 		//addRevocados();
 		
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit
@@ -152,138 +160,155 @@ public class RevocadosMB {
 		
 		if(objTiivsPersonaBusqueda.getTipPartic().compareTo("")!=0){
 			
-			if(objTiivsPersonaBusqueda.getTipPartic().compareTo(ConstantesVisado.APODERADO)!=0){
-				
-				
-				if(objTiivsPersonaBusqueda.getTipDoi().compareTo("")!=0){
-					
-					filtro.add(Restrictions.eq("tiivsPersonaByCodPerApoderado.tipDoi", objTiivsPersonaBusqueda.getTipDoi()));
-				}
-				
-				if(objTiivsPersonaBusqueda.getNumDoi().compareTo("")!=0){
-					
-					filtro.add(Restrictions.eq("tiivsPersonaByCodPerApoderado.numDoi", objTiivsPersonaBusqueda.getNumDoi()));
-				}
-				
-				if(objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().compareTo("")!=0){
-					
-					filtro.add(Restrictions.eq("tiivsPersonaByCodPerApoderado.nombre", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[0]));
-					filtro.add(Restrictions.eq("tiivsPersonaByCodPerApoderado.apePat", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[1]));
-					filtro.add(Restrictions.eq("tiivsPersonaByCodPerApoderado.apeMat", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[2]));
-					
-				}
-				if(estadoRevocado.compareTo('S')!=0){
-					
-					filtro.add(Restrictions.eq("estado", estadoRevocado));
-				}
-				
-				if(fechaInicio.compareTo(null)!=0  ||  fechaFin.compareTo(null)!=0){
-
-					filtro.add(Restrictions.between("fecha_revocatoria", fechaInicio, fechaFin));
-				}
-				
-				
-			}
+			filtro.add(Restrictions.eq("tipPartic", objTiivsPersonaBusqueda.getTipPartic()));
+		
+		}
+		
+		if(objTiivsPersonaBusqueda.getTipDoi().compareTo("")!=0){
 			
-			if(objTiivsPersonaBusqueda.getTipPartic().compareTo(ConstantesVisado.PODERDANTE)!=0){
-				
-				if(objTiivsPersonaBusqueda.getTipDoi().compareTo("")!=0){
-					
-					filtro.add(Restrictions.eq("tiivsPersonaByCodPerPoderdante.tipDoi", objTiivsPersonaBusqueda.getTipDoi()));
-				}
-				
-				if(objTiivsPersonaBusqueda.getNumDoi().compareTo("")!=0){
-					
-					filtro.add(Restrictions.eq("tiivsPersonaByCodPerPoderdante.numDoi", objTiivsPersonaBusqueda.getNumDoi()));
-				}
-				
-				if(objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().compareTo("")!=0){
-					
-					filtro.add(Restrictions.eq("tiivsPersonaByCodPerPoderdante.nombre", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[0]));
-					filtro.add(Restrictions.eq("tiivsPersonaByCodPerPoderdante.apePat", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[1]));
-					filtro.add(Restrictions.eq("tiivsPersonaByCodPerPoderdante.apeMat", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[2]));
-					
-				}
-				
-				if(estadoRevocado.compareTo('S')!=0){
-					
-					filtro.add(Restrictions.eq("estado", estadoRevocado));
-				}
-				
-				if(fechaInicio.compareTo(null)!=0  ||  fechaFin.compareTo(null)!=0){
-
-					filtro.add(Restrictions.between("fecha_revocatoria", fechaInicio, fechaFin));
-				}
-			}
+			filtro.add(Restrictions.eq("tiivsPersona.tipDoi", objTiivsPersonaBusqueda.getTipDoi()));
+		}
+		
+		
+		if(objTiivsPersonaBusqueda.getNumDoi().compareTo("")!=0){
 			
-		}else{
-			
-			
-			if(objTiivsPersonaBusqueda.getTipDoi().compareTo("")!=0){
-				
-				filtro.add(Restrictions.eq("tiivsPersonaByCodPerApoderado.tipDoi", objTiivsPersonaBusqueda.getTipDoi()));
-				filtro.add(Restrictions.eq("tiivsPersonaByCodPerPoderdante.tipDoi", objTiivsPersonaBusqueda.getTipDoi()));
-			}
-			
-			if(objTiivsPersonaBusqueda.getNumDoi().compareTo("")!=0){
-				
-				filtro.add(Restrictions.eq("tiivsPersonaByCodPerApoderado.numDoi", objTiivsPersonaBusqueda.getNumDoi()));
-				filtro.add(Restrictions.eq("tiivsPersonaByCodPerPoderdante.numDoi", objTiivsPersonaBusqueda.getNumDoi()));
-			}
+			filtro.add(Restrictions.eq("tiivsPersona.numDoi", objTiivsPersonaBusqueda.getNumDoi()));
+		}
+		
+		if(objTiivsPersonaBusqueda2 != null){
 			
 			if(objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().compareTo("")!=0){
 				
-				filtro.add(Restrictions.eq("tiivsPersonaByCodPerApoderado.nombre", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[0]));
-				filtro.add(Restrictions.eq("tiivsPersonaByCodPerApoderado.apePat", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[1]));
-				filtro.add(Restrictions.eq("tiivsPersonaByCodPerApoderado.apeMat", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[2]));
+				filtro.add(Restrictions.eq("tiivsPersona.nombre", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[0]));
+				filtro.add(Restrictions.eq("tiivsPersona.apePat", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[1]));
+				filtro.add(Restrictions.eq("tiivsPersona.apeMat", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[2]));
 				
-				filtro.add(Restrictions.eq("tiivsPersonaByCodPerPoderdante.nombre", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[0]));
-				filtro.add(Restrictions.eq("tiivsPersonaByCodPerPoderdante.apePat", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[1]));
-				filtro.add(Restrictions.eq("tiivsPersonaByCodPerPoderdante.apeMat", objTiivsPersonaBusqueda2.getNombreCompletoMayuscula().split(" ")[2]));
-				
-				
-			}
-			if(estadoRevocado.compareTo('S')!=0){
-				
-				filtro.add(Restrictions.eq("estado", estadoRevocado));
-			}
-			
-			if(fechaInicio.compareTo(null)!=0  ||  fechaFin.compareTo(null)!=0){
-
-				filtro.add(Restrictions.between("fechaRevocatoria", fechaInicio, fechaFin));
 			}
 			
 		}
+				
+		
+		if(estadoRevocado.compareTo('S')!=0){
+			
+			filtro.add(Restrictions.eq("estado", estadoRevocado));
+		}
+		
+		if(fechaInicio!= null ||  fechaFin!=null){
+
+			filtro.add(Restrictions.between("fecha_revocatoria", fechaInicio, fechaFin));
+		}
+		
 		
 		try {
-			tiivsrevocados = service.buscarDinamico(filtro);
+			tiivsrevocados = service.buscarDinamico(filtro.addOrder(Order.desc("codAgrup")));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		
+		GenericDao<TiivsRevocado, Object> service2 = (GenericDao<TiivsRevocado, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro2 = Busqueda.forClass(TiivsRevocado.class).setProjection(Projections.distinct(Projections.property("codAgrup")));
+		
+		try {
+			tiivsrevocados2 = service.buscarDinamicoInteger(filtro2.addOrder(Order.desc("codAgrup")));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		GenericDao<TiivsMultitabla, Object> service3 = (GenericDao<TiivsMultitabla, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro3 = Busqueda.forClass(TiivsMultitabla.class);
+		filtro3.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC));
+		
+		try {
+			tiivsMultitablas = service3.buscarDinamico(filtro3);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 		Revocado revocado;
-		for(TiivsRevocado tiivsRevocado:tiivsrevocados){
-			revocado = new Revocado(tiivsRevocado.getTiivsPersonaByCodPerApoderado().getTipDoi(),
-					                tiivsRevocado.getTiivsPersonaByCodPerApoderado().getNumDoi(),
-					                tiivsRevocado.getTiivsPersonaByCodPerApoderado().getNombre(),
-					                "",
-					                tiivsRevocado.getTiivsPersonaByCodPerPoderdante().getTipDoi(),
-					                tiivsRevocado.getTiivsPersonaByCodPerPoderdante().getNumDoi(),
-					                tiivsRevocado.getTiivsPersonaByCodPerPoderdante().getNombre(),
-					                "a",
-					                getDate(tiivsRevocado.getFechaRevocatoria()),
-					                "r");
+		String codAgrup="";
+		String nombreCompletoApoderados="";
+		String nombreCompletoPoderdantes="";
+		String fecha="";
+		String estado="";
+		int numCorrelativo=0;
+		
+		for(Integer tiivsRevocado2:tiivsrevocados2){
+			numCorrelativo++;
+			for(TiivsRevocado tiivsRevocado:tiivsrevocados){
+				
+				if(tiivsRevocado.getCodAgrup().compareTo(tiivsRevocado2)==0){
+					
+					fecha=getDate(tiivsRevocado.getFechaRevocatoria());
+					estado=Character.toString(tiivsRevocado.getEstado());
+					
+					if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
+						
+						nombreCompletoApoderados = nombreCompletoApoderados
+														+ " " + getValorDoc(tiivsRevocado.getTiivsPersona().getTipDoi(),tiivsMultitablas)
+														+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
+														+ " - " + tiivsRevocado.getTiivsPersona().getApePat() 
+														+ " " + tiivsRevocado.getTiivsPersona().getApeMat()
+														+ " " + tiivsRevocado.getTiivsPersona().getNombre() + "\n";
+					}
+						
+					if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+						
+						nombreCompletoPoderdantes = nombreCompletoPoderdantes 
+															+ " " + getValorDoc(tiivsRevocado.getTiivsPersona().getTipDoi(),tiivsMultitablas)
+															+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
+															+ " - " + tiivsRevocado.getTiivsPersona().getApePat() 
+															+ " " + tiivsRevocado.getTiivsPersona().getApeMat() 
+															+ " " + tiivsRevocado.getTiivsPersona().getNombre() + "\n";
+					}
+					
+				}
+				
+				
+			}
+			
+			revocado = new Revocado();
+			revocado.setCodAgrupacion(tiivsRevocado2+"");
+			revocado.setNombreCompletoApoderados(nombreCompletoApoderados.trim());
+			revocado.setNombreCompletoPoderdantes(nombreCompletoPoderdantes.trim());
+			revocado.setFechaRegistro(fecha);
+			revocado.setEstado(estado);
+			revocado.setCorrelativo(String.valueOf(numCorrelativo));
 			revocados.add(revocado);
+			
+			nombreCompletoApoderados="";
+			nombreCompletoPoderdantes="";
+			fecha="";
+			estado="";
 		}
 		
 		
 		
 	}
 	
+	private String getValorDoc(String tipDoc, List<TiivsMultitabla> multitabla){
+		
+		for(TiivsMultitabla obj:multitabla){
+			
+			if(obj.getId().getCodElem().compareTo(tipDoc)==0){
+				return obj.getValor1();
+			}
+			
+		}
+		
+		return "";
+	}
+	
+	
 	private String getDate(Date date)
     {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         try {
             return df.format(date);
         } catch (Exception ex) {
