@@ -13,8 +13,8 @@
         <many-to-one name="tiivsPersona" class="com.hildebrando.visado.modelo.TiivsPersona" lazy="false" fetch="select">
             <column name="COD_PER" precision="8" scale="0" />
         </many-to-one>
-        <property name="estado" type="java.lang.Character">
-            <column name="ESTADO" length="1" />
+        <property name="estado" type="string">
+            <column name="ESTADO" length="4" />
         </property>
         <property name="fechaRevocatoria" type="date">
             <column name="FECHA_REVOCATORIA" length="7" />
