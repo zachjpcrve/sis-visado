@@ -4,23 +4,27 @@
 <!-- Generated 05/12/2012 02:50:20 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsAgrupacionPersona" table="TIIVS_AGRUPACION_PERSONA" >
-        <composite-id name="id" class="com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId">
-            <key-property name="codSoli" type="string">
-                <column name="COD_SOLI" length="7" />
-            </key-property>
-            <key-property name="numGrupo" type="java.lang.Integer">
-                <column name="NUM_GRUPO" precision="8" scale="0" />
-            </key-property>
-            <key-property name="codPer" type="java.lang.Integer">
-                <column name="COD_PER" precision="8" scale="0" />
-            </key-property>
-            <key-property name="tipPartic" type="string">
-                <column name="TIP_PARTIC" length="4" />
-            </key-property>
-            <key-property name="clasifPer" type="string">
-                <column name="CLASIF_PER" length="4" />
-            </key-property>
-        </composite-id>
+    	<id name="idAgrupacion" type="integer">
+            <column name="ID_AGRUPACION" length="8" />
+            <generator class="sequence">
+            	<param name="sequence">ID_AGRUPACION_SEQ</param>
+            </generator>
+        </id>
+        <property name="codSoli" type="string">
+            <column name="COD_SOLI" length="7" />
+        </property>
+        <property name="numGrupo" type="java.lang.Integer">
+            <column name="NUM_GRUPO" precision="8" scale="0" />
+        </property>
+        <property name="codPer" type="java.lang.Integer">
+            <column name="COD_PER" precision="8" scale="0" />
+        </property>
+        <property name="tipPartic" type="string">
+            <column name="TIP_PARTIC" length="4" />
+        </property>
+        <property name="clasifPer" type="string">
+            <column name="CLASIF_PER" length="4" />
+        </property>
         <many-to-one name="tiivsSolicitudAgrupacion" class="com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion" not-found="ignore"  lazy="false" update="false" insert="false" fetch="select">
             <column name="COD_SOLI" length="7" />
             <column name="NUM_GRUPO" precision="8" scale="0" />

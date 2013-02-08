@@ -315,7 +315,7 @@ public class CombosMB {
 		// Carga data de Agrupacion de Personas
 		GenericDao<TiivsAgrupacionPersona, Object> agrupPerDAO = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroPer = Busqueda.forClass(TiivsAgrupacionPersona.class);
-		filtroPer.addOrder(Order.asc(ConstantesVisado.CAMPO_ID_CODIGO_SOLICITUD_ALIAS));
+		filtroPer.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 		
 		try {
 			lstTiposPersona = agrupPerDAO.buscarDinamico(filtroPer);

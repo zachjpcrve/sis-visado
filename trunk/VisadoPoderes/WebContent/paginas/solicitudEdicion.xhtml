@@ -160,9 +160,8 @@
 													<td></td>
 													<td></td>
 													<td style="width: 50px;"></td>
-													<td><p:commandButton value="+" actionListener="#{consultarSolicitudMB.agregarActionListenerAgrupacion}" 
-															oncomplete="dlgRegistrarPersona.show();"/>
-													</td>
+													<td><p:commandButton value="+" actionListener="#{consultarSolicitudMB.agregarActionListenerAgrupacion}"
+													         update=":formRegistrar:tlbPersonasPopup"   oncomplete="dlgRegistrarPersona.show();"/></td>
 												</tr>
 											</table>
 											<p:separator styleClass="fielset" />
