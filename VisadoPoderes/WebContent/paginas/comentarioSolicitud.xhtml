@@ -18,16 +18,20 @@
 			
 			</p:tabMenu>
 
+			
+			
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">
-					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"
-						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" update=":formSolicitudRegistro"/>
-					<p:commandButton value="Enviar" id="btnEnviar3" action="#{solicitudRegMB.registrarSolicitud}" update=":formSolicitudRegistro"
-						icon="ui-icon-document"  actionListener="#{solicitudRegMB.registrarSolicitudEnviado}"/>
+					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro"
+						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"/>
+					<p:commandButton value="Enviar" id="btnEnviar3"  
+						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>
 					<p:commandButton value="Imprimir" id="btnImprimir3"
 						icon="ui-icon-document" />
-					<p:commandButton value="Salir" id="btnSalir3"
+						
+					<p:commandButton value="Salir" id="btnSalir3" onclick="cfdCerrarSesion.show()"
 						icon="ui-icon-document" />
+						
 				</p:toolbarGroup>
 			</p:toolbar>
 
@@ -37,25 +41,25 @@
 		
 		<h:form id="formSolicitudRegistro">
 	      <p:messages id="idGrowlSolicitudRegistro"></p:messages>
-			<p:editor id="editor" value="#{solicitudRegMB.solicitudRegistrarT.obs}" width="600" />
+			<p:editor id="editor" value="#{solicitudRegMB.solicitudRegistrarT.obs}" width="400" height="400"/>
 
 			<h:panelGrid columns="2" style="margin-top:10px">
-				<p:commandButton id="submitButton" value="Guardar" update="display" actionListener="#{solicitudRegMB.seterComentario}"
+				<p:commandButton id="submitButton" value="Guardar" update="editor" actionListener="#{solicitudRegMB.seterComentario}"
 					 icon="ui-icon-disk" />
-				<p:commandButton id="clearButton" type="button" value="Limpiar"
-					onclick="editor.clear()" icon="ui-icon-close" />
+				<p:commandButton id="clearButton"  value="Limpiar" update="editor" actionListener="#{solicitudRegMB.limpiarComentario}"
+					icon="ui-icon-close" />
 			</h:panelGrid>
-<!-- oncomplete="dlg.show()" -->
-			<p:dialog header="Content" widgetVar="dlg" showEffect="fade"
-				hideEffect="fade" modal="true">
-				<h:outputText id="display" value="#{editorMB.value}"
-					escape="false" />
-			</p:dialog>
-
+		
 
 		</h:form>
 
-
+   <p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"  
+                header="Confirmación" severity="alert" widgetVar="confirmation" >  
+                  
+        <p:commandButton id="confirm" value="Si" update=":formSolicitudRegistro" oncomplete="confirmation.hide()"   
+                    action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />  
+        <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
+    </p:confirmDialog> 
 
 	</ui:define>
 </ui:composition>
