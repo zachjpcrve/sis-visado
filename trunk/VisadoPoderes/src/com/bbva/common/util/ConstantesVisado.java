@@ -210,6 +210,10 @@ public class ConstantesVisado {
 	static public class ESTADOS {
 		
 		
+		public static final String ESTADO_ACTIVO_REVOCADO="0018";
+		public static final String ESTADO_INACTIVO_REVOCADO="0019";
+		public static final String ESTADO_PENDIENTE_REVOCADO="0020";
+		
 		public static final String ESTADO_COD_Pendiente_T09="0001";
 		public static final String ESTADO_COD_Aprobado_T09="0002";
 		public static final String ESTADO_COD_Desaprobado_T09="0003";
