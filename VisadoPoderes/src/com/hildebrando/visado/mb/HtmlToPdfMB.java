@@ -40,15 +40,18 @@ public class HtmlToPdfMB {
 	private static final String CONTENT_TYPE="application/pdf;charset=UTF-8";
 	private String textoDocumento;
 	private String nombrePdf;
+	
 		
 	public void generarPdfListener(ActionEvent event){
 		logger.info("generarPdfListener");	
 		File fileTemp = null;
 		String nameFile="";
+		String estado_obs="";
 		
 		try {
 			
-			String texto = (String) event.getComponent().getAttributes().get("texto");			
+			String texto = (String) event.getComponent().getAttributes().get("texto");	
+			 estado_obs=(String) event.getComponent().getAttributes().get("estado_obs");	
 			StringBuffer buf = new StringBuffer();
 			String sUbicacionTemporal;
 			File fDirectory;
@@ -101,7 +104,7 @@ public class HtmlToPdfMB {
 		}
 		
 		InputStream stream = ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream(File.separator + ConstantesVisado.FILES + File.separator + nameFile);			
-        this.file = new DefaultStreamedContent(stream, CONTENT_TYPE, "download_obs.pdf");        
+        this.file = new DefaultStreamedContent(stream, CONTENT_TYPE, estado_obs+"_Observacion.pdf");        
         logger.info("File:" + file);
 	}
 
