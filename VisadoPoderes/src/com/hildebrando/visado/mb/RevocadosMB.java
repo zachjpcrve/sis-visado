@@ -152,6 +152,7 @@ public class RevocadosMB {
 		List<TiivsRevocado> tiivsrevocados = new ArrayList<TiivsRevocado>();
 		List<Integer> tiivsrevocados2 = new ArrayList<Integer>();
 		List<TiivsMultitabla> tiivsMultitablas = new ArrayList<TiivsMultitabla>();
+		List<TiivsMultitabla> tiivsMultitablas2 = new ArrayList<TiivsMultitabla>();
 		//addRevocados();
 		
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit
@@ -229,6 +230,18 @@ public class RevocadosMB {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		GenericDao<TiivsMultitabla, Object> service4 = (GenericDao<TiivsMultitabla, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro4 = Busqueda.forClass(TiivsMultitabla.class);
+		filtro3.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
+		
+		try {
+			tiivsMultitablas2 = service3.buscarDinamico(filtro4);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		
 		Revocado revocado;
@@ -246,12 +259,12 @@ public class RevocadosMB {
 				if(tiivsRevocado.getCodAgrup().compareTo(tiivsRevocado2)==0){
 					
 					fecha=getDate(tiivsRevocado.getFechaRevocatoria());
-					estado=Character.toString(tiivsRevocado.getEstado());
+					estado=getValor1(tiivsRevocado.getEstado(),tiivsMultitablas2);
 					
 					if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
 						
 						nombreCompletoApoderados = nombreCompletoApoderados
-														+ " " + getValorDoc(tiivsRevocado.getTiivsPersona().getTipDoi(),tiivsMultitablas)
+														+ " " + getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),tiivsMultitablas)
 														+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
 														+ " - " + tiivsRevocado.getTiivsPersona().getApePat() 
 														+ " " + tiivsRevocado.getTiivsPersona().getApeMat()
@@ -261,7 +274,7 @@ public class RevocadosMB {
 					if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 						
 						nombreCompletoPoderdantes = nombreCompletoPoderdantes 
-															+ " " + getValorDoc(tiivsRevocado.getTiivsPersona().getTipDoi(),tiivsMultitablas)
+															+ " " + getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),tiivsMultitablas)
 															+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
 															+ " - " + tiivsRevocado.getTiivsPersona().getApePat() 
 															+ " " + tiivsRevocado.getTiivsPersona().getApeMat() 
@@ -292,11 +305,11 @@ public class RevocadosMB {
 		
 	}
 	
-	private String getValorDoc(String tipDoc, List<TiivsMultitabla> multitabla){
+	private String getValor1(String codElem, List<TiivsMultitabla> multitabla){
 		
 		for(TiivsMultitabla obj:multitabla){
 			
-			if(obj.getId().getCodElem().compareTo(tipDoc)==0){
+			if(obj.getId().getCodElem().compareTo(codElem)==0){
 				return obj.getValor1();
 			}
 			
