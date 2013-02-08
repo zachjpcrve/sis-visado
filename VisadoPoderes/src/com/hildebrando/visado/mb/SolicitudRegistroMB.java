@@ -45,7 +45,6 @@ import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.Solicitud;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
-import com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitudId;
 import com.hildebrando.visado.modelo.TiivsEstudio;
@@ -664,17 +663,17 @@ public class SolicitudRegistroMB {
 		  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.APODERADO)){
 			  lstApoderdantes.add(objTiivsPersonaResultado);}
 		  logger.info("objTiivsPersonaResultado.getCodPer() : "+objTiivsPersonaResultado.getCodPer());
-		  tiivsAgrupacionPersona =new TiivsAgrupacionPersona();
-		  TiivsAgrupacionPersonaId  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersonaId();
+	
+		  TiivsAgrupacionPersona  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersona();
 		  tiivsAgrupacionPersonaId.setNumGrupo(numGrupo);
 		  tiivsAgrupacionPersonaId.setCodSoli(solicitudRegistrarT.getCodSoli());
 		  tiivsAgrupacionPersonaId.setCodPer(objTiivsPersonaResultado.getCodPer());
 		  tiivsAgrupacionPersonaId.setClasifPer(objTiivsPersonaResultado.getClasifPer());
 		  tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado.getTipPartic());
-		  tiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
-		  tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
+		  tiivsAgrupacionPersonaId.setTiivsPersona(objTiivsPersonaResultado);
+		  //tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
 		  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
-		  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
+		  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersonaId);
 	}  
 	  logger.info("lstPoderdantes " +lstPoderdantes.size());
 	  logger.info("lstApoderdantes " +lstApoderdantes.size());
@@ -707,14 +706,14 @@ public class SolicitudRegistroMB {
 					  lstApoderdantes.add(objTiivsPersonaResultado);}
 				  logger.info("objTiivsPersonaResultado.getCodPer() : "+objTiivsPersonaResultado.getCodPer());
 				  tiivsAgrupacionPersona =new TiivsAgrupacionPersona();
-				  TiivsAgrupacionPersonaId  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersonaId();
+				  TiivsAgrupacionPersona  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersona();
 				  tiivsAgrupacionPersonaId.setNumGrupo(numGrupo);
 				  tiivsAgrupacionPersonaId.setCodSoli(solicitudRegistrarT.getCodSoli());
 				  tiivsAgrupacionPersonaId.setCodPer(objTiivsPersonaResultado.getCodPer());
 				  tiivsAgrupacionPersonaId.setClasifPer(objTiivsPersonaResultado.getClasifPer());
 				  tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado.getTipPartic());
 				  tiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
-				  tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
+				 // tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
 				  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
 				  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
 			}  
@@ -740,9 +739,9 @@ public class SolicitudRegistroMB {
 				
 				
 				for (TiivsAgrupacionPersona c : lstTiivsAgrupacionPersonas) {
-					System.out.println(" c " +c.getId().getCodSoli());
+					System.out.println(" c " +c.getCodSoli());
 					   agrupacionSimpleDto =new AgrupacionSimpleDto();
-					   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(c.getId().getCodSoli(), c.getId().getNumGrupo()));
+					   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(c.getCodSoli(), c.getNumGrupo()));
 					   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
 					   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
 					   agrupacionSimpleDto.setsEstado("Activo");
@@ -1420,7 +1419,7 @@ public class SolicitudRegistroMB {
 	}
 
 	public void llamarComision() {
-		logger.info("************************** llamar Comusion *****************************");
+		logger.info("************************** llamar Comision *****************************");
 		this.solicitudRegistrarT.setComision(objRegistroUtilesMB.calcularComision(this.solicitudRegistrarT));
 		logger.info("COMISION : " + this.solicitudRegistrarT.getComision());
 
@@ -1437,7 +1436,7 @@ public class SolicitudRegistroMB {
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 	    TiivsPersona objPersonaRetorno=new TiivsPersona();
-	    TiivsAgrupacionPersonaId objAgruId=new TiivsAgrupacionPersonaId();
+	    TiivsAgrupacionPersona objAgruId=new TiivsAgrupacionPersona();
 		try {
 			logger.info("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getMoneda());
 			
@@ -1464,14 +1463,18 @@ public class SolicitudRegistroMB {
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
 				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
-					  logger.info("b.getTiivsPersona() " +b.getId().getCodPer());
+					  logger.info("b.getTiivsPersona() " +b.getCodPer());
 					     //b.setId
 					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
 					   logger.info("ccdcdcd : "+objPersonaRetorno.getCodPer());
 					     b.setTiivsPersona(null);
-					     objAgruId=b.getId();
+					     objAgruId.setClasifPer(b.getClasifPer());
+					     objAgruId.setCodSoli(b.getCodSoli());
+					     objAgruId.setNumGrupo(b.getNumGrupo());
+					     objAgruId.setTipPartic(b.getTipPartic());
+					     //objAgruId=b.getId();
 					     objAgruId.setCodPer(objPersonaRetorno.getCodPer());
-					     b.setId(objAgruId);
+					     //b.setId(objAgruId);
 					     serviceAgru.insertar(b);
 					     } 
 				  

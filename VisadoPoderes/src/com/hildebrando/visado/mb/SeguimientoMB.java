@@ -45,6 +45,8 @@ import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
+import com.hildebrando.visado.dto.AgrupacionSimpleDto;
+import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.Moneda;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
@@ -55,7 +57,10 @@ import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsParametros;
+import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
+import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
+import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
@@ -76,6 +81,7 @@ public class SeguimientoMB
 	private List<String> lstNivelSelected;
 	private List<String> lstSolicitudesSelected;
 	private List<String> lstSolicitudesxOpeBan;
+	private List<AgrupacionSimpleDto> lstAgrupacionSimpleDto;
 	private String codSolicitud;
 	private String textoTotalResultados;
 	private String idImporte;
@@ -128,7 +134,7 @@ public class SeguimientoMB
 		lstEstudioSelected = new ArrayList<String>();
 		lstTipoSolicitudSelected = new ArrayList<String>();
 		lstSolicitudesxOpeBan = new ArrayList<String>();
-
+		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
 				
 		oficina= new TiivsOficina1();
@@ -326,6 +332,40 @@ public class SeguimientoMB
 		cargarSolicitudes();
 	}
 
+	public String obtenerDescripcionClasificacion(String idTipoClasificacion) {
+		String descripcion = "";
+		for (ComboDto z : combosMB.getLstClasificacionPersona()) {
+			if (z.getKey().trim().equals(idTipoClasificacion)) {
+				descripcion = z.getDescripcion();
+				break;
+			}
+		}
+		return descripcion;
+	}
+
+	public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
+		String descripcion = "";
+		for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+			if (z.getKey().trim().equals(idTipoTipoRegistro)) {
+				descripcion = z.getDescripcion();
+				break;
+			}
+		}
+		return descripcion;
+	}
+	
+	public String obtenerDescripcionDocumentos(String idTipoDocumentos) {
+		String descripcion = "";
+		for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
+			if (z.getCodTipoDoc().trim().equals(idTipoDocumentos)) {
+				descripcion = z.getDescripcion();
+				break;
+			}
+		}
+		return descripcion;
+	}
+
+	
 	private void actualizarDatosGrilla() 
 	{	
 		String cadena="";
@@ -366,12 +406,12 @@ public class SeguimientoMB
 			}
 			
 			//Cargar data de poderdantes
-			cadena="";
+		/*	cadena="";
 			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
 			{
-				if (tmp.getId().getCodSoli().equals(tmpSol.getCodSoli()) && tmp.getId().getClasifPer().equals(ConstantesVisado.PODERDANTE))
+				if (tmp.getCodSoli().equals(tmpSol.getCodSoli()) && tmp.getClasifPer().equals(ConstantesVisado.PODERDANTE))
 				{
-					if (tmp.getId().getClasifPer().equals(combosMB.getLstTipoRegistroPersona().get(0).getKey()))
+					if (tmp.getClasifPer().equals(combosMB.getLstTipoRegistroPersona().get(0).getKey()))
 					{
 						cadena += devolverDesTipoDOI(tmp.getTiivsPersona().getTipDoi()) + ConstantesVisado.DOS_PUNTOS + tmp.getTiivsPersona().getNumDoi() +
 								  ConstantesVisado.GUION + tmp.getTiivsPersona().getApePat() + " " + tmp.getTiivsPersona().getApeMat() + " " + 
@@ -379,22 +419,89 @@ public class SeguimientoMB
 					}
 				}
 			}
-			tmpSol.setTxtPoderdante(cadena);
+			tmpSol.setTxtPoderdante(cadena);*/
+			
+			//Cargar data de poderdantes
+			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
+			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
+			AgrupacionSimpleDto agrupacionSimpleDto  =new AgrupacionSimpleDto(); 
+			 List<TiivsPersona>lstPersonas=new ArrayList<TiivsPersona>();
+			TiivsPersona objPersona=new TiivsPersona();
+			
+		    lstPoderdantes = new ArrayList<TiivsPersona>();
+		    lstApoderdantes = new ArrayList<TiivsPersona>();
+		   
+		    for (TiivsSolicitudAgrupacion x : tmpSol.getTiivsSolicitudAgrupacions()) 
+		    {
+			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) 
+			   {
+				    if (tmpSol.getCodSoli().equals(d.getCodSoli()) && tmpSol.getCodSoli().equals(x.getId().getCodSoli()))
+				    {
+				    	logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
+				    	lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
+					    objPersona=new TiivsPersona();
+					    objPersona=d.getTiivsPersona();
+					    objPersona.setTipPartic(d.getTipPartic());
+					    objPersona.setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
+					    objPersona.setClasifPer(d.getClasifPer());
+					    objPersona.setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getClasifPer().trim()));
+					    objPersona.setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
+					    lstPersonas.add(objPersona);
+						  
+					    if(d.getTipPartic().trim().equals(ConstantesVisado.PODERDANTE))
+					    {
+							lstPoderdantes.add(d.getTiivsPersona());
+					    }
+						else if(d.getTipPartic().trim().equals(ConstantesVisado.APODERADO))
+						{
+							lstApoderdantes.add(d.getTiivsPersona());
+						}
+					    
+					    agrupacionSimpleDto = new AgrupacionSimpleDto();
+						agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(
+								tmpSol.getCodSoli(), x.getId()
+										.getNumGrupo()));
+						agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
+						agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
+						agrupacionSimpleDto.setsEstado(Utilitarios
+								.obternerDescripcionEstado(x.getActivo().trim()));
+						agrupacionSimpleDto.setLstPersonas(lstPersonas);
+						lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+				    }
+			   }
+		    }
+		    
+		    cadena="";
+		    for (TiivsPersona tmpPoder: lstPoderdantes)
+		    {
+		    	cadena += devolverDesTipoDOI(tmpPoder.getTipDoi()) + ConstantesVisado.DOS_PUNTOS + tmpPoder.getNumDoi() +
+						  ConstantesVisado.GUION + tmpPoder.getApePat() + " " + tmpPoder.getApeMat() + " " + 
+						  tmpPoder.getNombre() + ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
+		    }
+		    
+		    tmpSol.setTxtPoderdante(cadena);
 			
 			// Cargar data de apoderados
 			cadena="";
-			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
+			/*for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
 			{
-				if (tmp.getId().getCodSoli().equals(tmpSol.getCodSoli()) && tmp.getId().getClasifPer().equals(ConstantesVisado.APODERADO))
+				if (tmp.getCodSoli().equals(tmpSol.getCodSoli()) && tmp.getClasifPer().equals(ConstantesVisado.APODERADO))
 				{
-					if (tmp.getId().getClasifPer().equals(combosMB.getLstTipoRegistroPersona().get(0).getKey()))
+					if (tmp.getClasifPer().equals(combosMB.getLstTipoRegistroPersona().get(0).getKey()))
 					{
 						cadena += devolverDesTipoDOI(tmp.getTiivsPersona().getTipDoi()) + ConstantesVisado.DOS_PUNTOS + tmp.getTiivsPersona().getNumDoi() +
 								  ConstantesVisado.GUION + tmp.getTiivsPersona().getApePat() + " " + tmp.getTiivsPersona().getApeMat() + " " + 
 								  tmp.getTiivsPersona().getNombre() + ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
 					}
 				}
-			}
+			}*/
+			
+			for (TiivsPersona tmpApor: lstApoderdantes)
+		    {
+		    	cadena += devolverDesTipoDOI(tmpApor.getTipDoi()) + ConstantesVisado.DOS_PUNTOS + tmpApor.getNumDoi() +
+						  ConstantesVisado.GUION + tmpApor.getApePat() + " " + tmpApor.getApeMat() + " " + 
+						  tmpApor.getNombre() + ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
+		    }
 			
 			tmpSol.setTxtApoderado(cadena);
 			
@@ -1458,9 +1565,9 @@ public class SeguimientoMB
 			
 			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
 			{
-				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIApoderado()) && tmp.getId().getClasifPer().equals(ConstantesVisado.APODERADO))
+				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIApoderado()) && tmp.getClasifPer().equals(ConstantesVisado.APODERADO))
 				{
-					codSol = tmp.getId().getCodSoli();
+					codSol = tmp.getCodSoli();
 					break;
 				}
 			}
@@ -1484,9 +1591,9 @@ public class SeguimientoMB
 					|| tmp.getTiivsPersona().getApeMat().indexOf(getTxtNomApoderado().toUpperCase())!=-1 
 					|| tmp.getTiivsPersona().getApePat().indexOf(getTxtNomApoderado().toUpperCase())!=-1)
 					
-					&& tmp.getId().getClasifPer().equals(ConstantesVisado.APODERADO))
+					&& tmp.getClasifPer().equals(ConstantesVisado.APODERADO))
 				{
-					codSol = tmp.getId().getCodSoli();
+					codSol = tmp.getCodSoli();
 					break;
 				}
 			}
@@ -1504,9 +1611,9 @@ public class SeguimientoMB
 			
 			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
 			{
-				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIPoderdante()) && tmp.getId().getClasifPer().equals(ConstantesVisado.PODERDANTE))
+				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIPoderdante()) && tmp.getClasifPer().equals(ConstantesVisado.PODERDANTE))
 				{
-					codSol = tmp.getId().getCodSoli();
+					codSol = tmp.getCodSoli();
 					break;
 				}
 			}
@@ -1529,9 +1636,9 @@ public class SeguimientoMB
 					|| tmp.getTiivsPersona().getApeMat().indexOf(getTxtNomPoderdante().toUpperCase())!=-1 
 					|| tmp.getTiivsPersona().getApePat().indexOf(getTxtNomPoderdante().toUpperCase())!=-1)
 					
-					&& tmp.getId().getClasifPer().equals(ConstantesVisado.PODERDANTE))
+					&& tmp.getClasifPer().equals(ConstantesVisado.PODERDANTE))
 				{
-					codSol = tmp.getId().getCodSoli();
+					codSol = tmp.getCodSoli();
 					break;
 				}
 			}
@@ -2735,5 +2842,14 @@ public class SeguimientoMB
 
 	public void setBloquearOficina(boolean bloquearOficina) {
 		this.bloquearOficina = bloquearOficina;
+	}
+
+	public List<AgrupacionSimpleDto> getLstAgrupacionSimpleDto() {
+		return lstAgrupacionSimpleDto;
+	}
+
+	public void setLstAgrupacionSimpleDto(
+			List<AgrupacionSimpleDto> lstAgrupacionSimpleDto) {
+		this.lstAgrupacionSimpleDto = lstAgrupacionSimpleDto;
 	}
 }

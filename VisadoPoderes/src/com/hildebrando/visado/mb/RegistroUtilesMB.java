@@ -1,9 +1,5 @@
 package com.hildebrando.visado.mb;
 
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,7 +11,6 @@ import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
@@ -25,7 +20,6 @@ import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
-import com.hildebrando.visado.modelo.TiivsAgrupacionPersonaId;
 import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsFeriado;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
@@ -34,8 +28,6 @@ import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
-
-
 
 @ManagedBean(name = "registroUtilesMB")
 @SessionScoped
@@ -56,52 +48,6 @@ public class RegistroUtilesMB {
 		this.resultado = estudioAsignado;
 	}
 	
-	
-    /**
-     * Metodo prueba calculo de comision
-     * */
-	public void calcularComision() {
-						
-		TiivsPersona persona = null;
-		GenericDao<TiivsPersona, Object> personaDAO = (GenericDao<TiivsPersona, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
-		filtro.add(Restrictions.eq("codPer", 1));
-		List<TiivsPersona> lstPersonas = new ArrayList<TiivsPersona>();
-		try {
-			lstPersonas = personaDAO.buscarDinamico(filtro);
-			persona = lstPersonas.get(0);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		TiivsSolicitud solicitud = new TiivsSolicitud();
-		solicitud.setCodSoli("1234567");
-		solicitud.setImporte((double) 40000);
-
-		TiivsSolicitudAgrupacion agrupacion = new TiivsSolicitudAgrupacion(
-				new TiivsSolicitudAgrupacionId(solicitud.getCodSoli(), 1),
-				solicitud);
-
-		TiivsAgrupacionPersona aPersona = new TiivsAgrupacionPersona(
-				new TiivsAgrupacionPersonaId(solicitud.getCodSoli(), agrupacion
-						.getId().getNumGrupo(), 1, "0001", "0002"), agrupacion,
-				persona);
-
-		List<TiivsAgrupacionPersona> lstAPersona = new ArrayList<TiivsAgrupacionPersona>();
-		lstAPersona.add(aPersona);	
-		Set<TiivsAgrupacionPersona> setAPersona = new HashSet<TiivsAgrupacionPersona>(lstAPersona);
-		agrupacion.setTiivsAgrupacionPersonas(setAPersona);
-		
-		List<TiivsSolicitudAgrupacion> lstAgrupacion = new ArrayList<TiivsSolicitudAgrupacion>();
-		lstAgrupacion.add(agrupacion);	
-		Set<TiivsSolicitudAgrupacion> setAgrupacion = new HashSet<TiivsSolicitudAgrupacion>(lstAgrupacion);
-		solicitud.setTiivsSolicitudAgrupacions(setAgrupacion);
-					
-		resultado = this.calcularComision(solicitud).toString();		
-		logger.debug("Fin metodo");
-	}
-
 	
 	/**
      * Metodo prueba obtener fecha respuesta
@@ -364,23 +310,26 @@ public class RegistroUtilesMB {
 		Set<TiivsSolicitudAgrupacion> setSolicitudAgrupacion;
 		setSolicitudAgrupacion = solicitud.getTiivsSolicitudAgrupacions();
 
+		logger.info("solicitud.getTiivsSolicitudAgrupacions()" + solicitud.getTiivsSolicitudAgrupacions().size());
+		
 		Iterator itAgrupacion = setSolicitudAgrupacion.iterator();
 
-		while (itAgrupacion.hasNext()) {
-			TiivsSolicitudAgrupacion valueAgrupacion = (TiivsSolicitudAgrupacion) itAgrupacion
-					.next();
+		while (itAgrupacion.hasNext()) 
+		{
+			TiivsSolicitudAgrupacion valueAgrupacion = (TiivsSolicitudAgrupacion) itAgrupacion.next();
 			Set<TiivsAgrupacionPersona> setAgruPersona;
 			setAgruPersona = valueAgrupacion.getTiivsAgrupacionPersonas();
+			
+			logger.info("valueAgrupacion.getTiivsAgrupacionPersonas()" + valueAgrupacion.getTiivsAgrupacionPersonas().size());
+			
 			Iterator itAgruPersona = setAgruPersona.iterator();
 
-			while (itAgruPersona.hasNext()) {
-				TiivsAgrupacionPersona valueAgruPersona = (TiivsAgrupacionPersona) itAgruPersona
-						.next();
-				if (valueAgruPersona
-						.getId()
-						.getTipPartic()
-						.equalsIgnoreCase(
-								ConstantesVisado.CODIGO_CAMPO_PODERDANTE)) {
+			while (itAgruPersona.hasNext()) 
+			{
+				TiivsAgrupacionPersona valueAgruPersona = (TiivsAgrupacionPersona) itAgruPersona.next();
+				
+				if (valueAgruPersona.getTipPartic().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_PODERDANTE)) 
+				{
 					lstPoderdantes.add(valueAgruPersona);
 				}
 			}
@@ -414,7 +363,7 @@ public class RegistroUtilesMB {
 				}
 			} else {
 				logger.debug("Atributo persona nulo para la agrupacion:"
-						+ agruPersona.getId().getNumGrupo());
+						+ agruPersona.getNumGrupo());
 			}
 		}
 		if (lstAgrupacionPersona.size() == cont) {
@@ -454,7 +403,7 @@ public class RegistroUtilesMB {
 					}
 				}
 			} else {
-				logger.debug("Atributo persona nulo para la agrupacion:" + agruPersona.getId().getNumGrupo());
+				logger.debug("Atributo persona nulo para la agrupacion:" + agruPersona.getNumGrupo());
 			}
 		}
 		if (lstAgrupacionPersona.size() == cont) {
@@ -474,7 +423,7 @@ public class RegistroUtilesMB {
 			List<TiivsAgrupacionPersona> lstAgrupacionPersona) {
 		boolean bRet = false;
 		for (TiivsAgrupacionPersona agruPersona : lstAgrupacionPersona) {
-			TiivsAgrupacionPersonaId agruPersonaId = agruPersona.getId();
+			TiivsAgrupacionPersona agruPersonaId = agruPersona;
 			TiivsMultitabla multi = getRowFromMultitabla(
 					ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA,
 					agruPersonaId.getClasifPer());
