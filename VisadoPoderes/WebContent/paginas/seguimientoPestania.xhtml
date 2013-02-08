@@ -92,6 +92,7 @@
 						<p:column headerText="Obs" width="55" exportable="false" style="font-size: 9px">								 					   							
 							<p:commandButton id="downloadLink" actionListener="#{htmlToPdfMB.generarPdfListener}" ajax="false" icon="ui-icon-search">							 			                     			                     	
 							 	<f:attribute name="texto" value="#{seg.obs}" />
+							 	<f:attribute name="estado_obs" value="#{seg.estado}"></f:attribute>
     							<p:fileDownload value="#{htmlToPdfMB.file}" />  
 							</p:commandButton>																				
 						</p:column>																		
