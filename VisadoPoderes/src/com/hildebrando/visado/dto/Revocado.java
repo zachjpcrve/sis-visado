@@ -15,10 +15,16 @@ public class Revocado {
 	private String codigoCentralAp;
 	private String tipoDoiPo;
 	private String nroDoiPo;
-	private String nombrePo;	
-	private String estado;
-	private Date fechaRegistro;
+	private String nombrePo;
 	private String codigoRegistro;
+	
+	private String correlativo;
+	private String codAgrupacion;
+	private String nombreCompletoApoderados;
+	private String nombreCompletoPoderdantes;
+	private String fechaRegistro;
+	private String estado;
+	
 	
 	public Revocado(){
 		
@@ -35,7 +41,7 @@ public class Revocado {
 		this.nroDoiPo = nroDoi2;
 		this.nombrePo = nombre2;
 		this.estado = estado;				
-		this.fechaRegistro = getDate(fechaRegistro);
+		this.fechaRegistro = fechaRegistro;
 		this.codigoRegistro = codRegistro;
 		
 	}
@@ -88,12 +94,7 @@ public class Revocado {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	public Date getFechaRegistro() {
-		return fechaRegistro;
-	}
-	public void setFechaRegistro(Date fechaRegistro) {
-		this.fechaRegistro = fechaRegistro;
-	}
+	
 	public String getCodigoRegistro() {
 		return codigoRegistro;
 	}
@@ -103,11 +104,52 @@ public class Revocado {
 	
 	private Date getDate(String date)
     {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         try {
             return df.parse(date);
         } catch (ParseException ex) {
         }
         return null;
     }
+
+	public String getNombreCompletoApoderados() {
+		return nombreCompletoApoderados;
+	}
+
+	public void setNombreCompletoApoderados(String nombreCompletoApoderados) {
+		this.nombreCompletoApoderados = nombreCompletoApoderados;
+	}
+
+	public String getNombreCompletoPoderdantes() {
+		return nombreCompletoPoderdantes;
+	}
+
+	public void setNombreCompletoPoderdantes(String nombreCompletoPoderdantes) {
+		this.nombreCompletoPoderdantes = nombreCompletoPoderdantes;
+	}
+
+	public String getCodAgrupacion() {
+		return codAgrupacion;
+	}
+
+	public void setCodAgrupacion(String codAgrupacion) {
+		this.codAgrupacion = codAgrupacion;
+	}
+
+	public String getFechaRegistro() {
+		return fechaRegistro;
+	}
+
+	public void setFechaRegistro(String fechaRegistro) {
+		this.fechaRegistro = fechaRegistro;
+	}
+
+	public String getCorrelativo() {
+		return correlativo;
+	}
+
+	public void setCorrelativo(String correlativo) {
+		this.correlativo = correlativo;
+	}
+
 }
