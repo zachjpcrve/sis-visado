@@ -82,10 +82,10 @@ function validaNumero(e, ent, obj, fn) {
 
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">
-					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro"
+					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro:idMsmSolicitudRegistro"
 						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"/>
 					<p:commandButton value="Enviar" id="btnEnviar3"  
-						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>
+						icon="ui-icon-document" update=":formSolicitudRegistro:idMsmSolicitudRegistro" onclick="confirmation.show()"/>
 					<p:commandButton value="Imprimir" id="btnImprimir3"
 						icon="ui-icon-document" />
 						
@@ -100,11 +100,12 @@ function validaNumero(e, ent, obj, fn) {
 	<h:outputScript library="js" name="visado.js" target="head" />			
   
 	<h:form id="formSolicitudRegistro" enctype="multipart/form-data">
-			<p:messages id="idMsmSolicitudRegistro"></p:messages>
+			
 
 
 
 		<table border="0" width="680">
+		
 			<tbody>
 				<tr>
 					<td class="styleLegend2" width="783">
@@ -112,11 +113,13 @@ function validaNumero(e, ent, obj, fn) {
 						<table border="0">
 							<tbody>
 								<tr>
+								
 									<td class="styleLegend2" width="203">
 										<fieldset style="width: 105%;" class="fielset">
 											<h:outputText title="Información General"
 												value="Información General" styleClass="outputText" />
 											<p:separator />
+											<p:messages id="idMsmSolicitudRegistro"></p:messages>
 											<table border="0">
 												<tbody>
 													<tr>
@@ -259,8 +262,8 @@ function validaNumero(e, ent, obj, fn) {
 														</th>
 														</tr>
                                                         
-                                                        <c:forEach items="#{solicitudRegMB.lstAgrupacionSimpleDto}" var="s">
-                                                        <tr class="ui-widget-content ui-datatable-even">
+                                                                                                                                                                                                                               <c:forEach items="#{solicitudRegMB.lstAgrupacionSimpleDto}" var="s">
+                                                                                                                                                                                                                                <tr class="ui-widget-content ui-datatable-even">
 															<td><c:forEach items="#{s.lstPoderdantes}" var="n">
 															   <div class="ui-dt-c">
 															     <SPAN>#{n.sDesctipDoi}:#{n.numDoi}/#{n.nombre} #{n.apePat} #{n.apeMat}</SPAN>
@@ -319,9 +322,9 @@ function validaNumero(e, ent, obj, fn) {
 								<tr>
 									<td class="styleLegend2" width="683">
 										<fieldset style="width: 105%" class="fielset">
-											<h:outputText title="Documentos por Tipo de Solicitud"
-												value="Documentos por Tipo de Solicitud" />
+											<h:outputText title="Documentos por Tipo de Solicitud" value="Documentos por Tipo de Solicitud" />
 											<p:separator styleClass="fielset" />
+											<p:messages id="idMsmSolicitudDocumentos"></p:messages>
 											<table border="0">
 												<tbody>
 													<tr>
@@ -379,7 +382,9 @@ function validaNumero(e, ent, obj, fn) {
   
 										                    </td>
 
-														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro" ajax="false"
+														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro:idMsmSolicitudDocumentos,
+														:formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:idfileUpload,
+														:formSolicitudRegistro:cboTipoSolicitud" ajax="false"
 														action="#{solicitudRegMB.agregarDocumentosXTipoSolicitud}"/>
 																												
 														</td>
@@ -467,19 +472,21 @@ function validaNumero(e, ent, obj, fn) {
 															</p:selectOneMenu></td>
 													<td><h:outputText styleClass="outputText" id="outImporte" value="Importe:" title="Importe"></h:outputText>
 													</td>
-													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importe}"/></td>
+													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importe}"  id="intImporte"/></td>
 												</tr>
 												<tr>
 													<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
-													<td><h:inputText id="intImporte" value="#{solicitudRegMB.objSolicBancaria.tipoCambio}" disabled="#{solicitudRegMB.bBooleanPopupTipoCambio}"/></td>
+													<td><h:inputText id="intTipoCambio" value="#{solicitudRegMB.objSolicBancaria.tipoCambio}" disabled="#{solicitudRegMB.bBooleanPopupTipoCambio}"/></td>
 													<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
-													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importeSoles}" readonly="true"/></td>
-													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solicitudRegMB.agregarOperacionBancaria}" actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}" update=":formSolicitudRegistro,:formSolicitudRegistro:idMsmOperacionBancaria"/></td>
+													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importeSoles}" readonly="true" id="txtImporteSoles"/></td>
+													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solicitudRegMB.agregarOperacionBancaria}" actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}"
+													 update=":formSolicitudRegistro:idMsmOperacionBancaria,:formSolicitudRegistro:tlbOperacionesBanca,
+													 :formSolicitudRegistro:txtImporteSoles,:formSolicitudRegistro:intImporte,:formSolicitudRegistro:intTipoCambio,:formSolicitudRegistro:cboMoneda,:formSolicitudRegistro:cboTipoOperacion" /></td>
 													<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria"  action="#{solicitudRegMB.limpiarListaSolicitudesBancarias}" update=":formSolicitudRegistro" /></td>
 												</tr>
 												<tr>
 													<td align="center" width="95%" colspan="11"><p:dataTable
-															var="o" rows="20"
+															var="o" rows="20" id="tlbOperacionesBanca"
 															value="#{solicitudRegMB.lstSolicBancarias}"
 															emptyMessage="No hay resultados en la bandeja"
 															paginatorPosition="bottom" paginator="true"
@@ -639,7 +646,7 @@ function validaNumero(e, ent, obj, fn) {
  
 		<p:dialog id="modalRegistrarPersona"
 			header="Busqueda Cliente/No Cliente" widgetVar="dlgRegistrarPersona"
-			modal="true" height="320" >
+			modal="true" height="420" >
 	    <h:form id="formRegistrar">
 			<p:messages id="idMsmModalPerona"></p:messages>
 			<table border="0" width="30px">
@@ -848,10 +855,15 @@ function validaNumero(e, ent, obj, fn) {
 										</f:setPropertyActionListener>
 									</p:commandButton>
 								</p:column>
-							</p:dataTable></td>
+							</p:dataTable>
+							
+							</td>
 					</tr>
+					
 					<tr><td>
-					<p:commandButton id="btnAgregarPersonaAgrupacion" action="#{solicitudRegMB.agregarAgrupacion}"
+					
+					<p:commandButton  
+					id="btnAgregarPersonaAgrupacion" action="#{solicitudRegMB.agregarAgrupacion}"
 					 value="Agregar Agrupacion" icon="ui-icon-search" onclick="dlgRegistrarPersona.hide()" update=":formRegistrar,:formSolicitudRegistro">
 					
 					</p:commandButton>
