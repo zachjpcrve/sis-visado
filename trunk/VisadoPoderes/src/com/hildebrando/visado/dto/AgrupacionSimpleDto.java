@@ -2,6 +2,9 @@ package com.hildebrando.visado.dto;
 
 import java.util.List;
 
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 
@@ -15,7 +18,13 @@ public class AgrupacionSimpleDto {
 	private String sEstado;
 	private int iEstado;
 	
+	private JRDataSource PERSONAS;
 	
+	public JRDataSource getPERSONAS() {
+		return new JRBeanCollectionDataSource(lstPersonas); 
+	}
+		
+		
 	public AgrupacionSimpleDto(TiivsSolicitudAgrupacionId id,
 			List<TiivsPersona> lstPoderdantes,
 			List<TiivsPersona> lstApoderdantes, String sEstado, int iEstado) {
