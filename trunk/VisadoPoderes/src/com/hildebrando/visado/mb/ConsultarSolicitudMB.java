@@ -328,27 +328,30 @@ public class ConsultarSolicitudMB {
 		
 		for (TiivsSolicitud tmpSol: solicitudes)
 		{
-			Date fechaSolicitud = tmpSol.getFecha();
-			Date fechaLimite = aumentarFechaxVen(fechaSolicitud, diasUtiles);
+			Date fechaSolicitud = tmpSol.getFechaEstado();
 
-			java.util.Date fechaActual = new java.util.Date();
-
-			if (fechaActual.after(fechaLimite)) 
+			if (tmpSol.getFechaEstado()!=null)
 			{
-				logger.info("Se supero el plazo. Cambiar la solicitud a estado vencido");
-				
-				try {
-					actualizarEstadoVencidoSolicitud(tmpSol);
-				} catch (Exception e) {
-					logger.info("No se pudo cambiar el estado de la solicitud: " + tmpSol.getCodSoli()	+ " a vencida");
-					logger.info(e.getStackTrace());
+				Date fechaLimite = aumentarFechaxVen(fechaSolicitud, diasUtiles);
+
+				java.util.Date fechaActual = new java.util.Date();
+
+				if (fechaActual.after(fechaLimite)) 
+				{
+					logger.info("Se supero el plazo. Cambiar la solicitud a estado vencido");
+					
+					try {
+						actualizarEstadoVencidoSolicitud(tmpSol);
+					} catch (Exception e) {
+						logger.info("No se pudo cambiar el estado de la solicitud: " + tmpSol.getCodSoli()	+ " a vencida");
+						logger.info(e.getStackTrace());
+					}
+				} 
+				else 
+				{
+					logger.info("No se supero el plazo. El estado de la solicitud se mantiene");
 				}
-			} 
-			else 
-			{
-				logger.info("No se supero el plazo. El estado de la solicitud se mantiene");
 			}
-			
 		}
 		
 	}
@@ -496,7 +499,7 @@ public class ConsultarSolicitudMB {
 			solicitudRegistrarT = solicitudService.obtenerTiivsSolicitud(solicitud);
 			solicitudRegistrarT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudRegistrarT.getEstado()));
 			if (solicitudRegistrarT.getTiivsEstudio() == null) {
-				solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
+			//	solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
 			}
 			
 			lstSolicBancarias = solicitudService.obtenerListarOperacionesBancarias(solicitud);
@@ -1460,7 +1463,7 @@ public class ConsultarSolicitudMB {
 		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		TiivsPersona objPersonaRetorno = new TiivsPersona();
-		TiivsAgrupacionPersona objAgruId = new TiivsAgrupacionPersona();
+		TiivsAgrupacionPersona objAgruPer = new TiivsAgrupacionPersona();
 		
 		try {
 			logger.info("this.solicitudRegistrarT.importe : " + this.solicitudRegistrarT.getMoneda());
@@ -1497,8 +1500,10 @@ public class ConsultarSolicitudMB {
 					actualizarBandeja=true;
 				}
 				
-				/*TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
-				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+				Set<TiivsSolicitudAgrupacion> listaTMP = this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
+				//solicitudRegistrarT.setTiivsSolicitudAgrupacions(new HashSet<TiivsSolicitudAgrupacion>());
+				TiivsSolicitud objResultado = service.insertarMerge(this.solicitudRegistrarT);
+				/*  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
 					  logger.info("b.getTiivsPersona() " +b.getId().getCodPer());
 					     //b.setId
@@ -1513,35 +1518,42 @@ public class ConsultarSolicitudMB {
 				  
 				  }*/
 
-				Set<TiivsSolicitudAgrupacion> listaTMP = this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
+				
 
 				solicitudRegistrarT.setTiivsEstudio(null);
-				solicitudRegistrarT.setTiivsSolicitudAgrupacions(null);
-				TiivsSolicitud objResultado = service.insertarMerge(this.solicitudRegistrarT);
+				//TiivsSolicitud objResultado = service.insertarMerge(this.solicitudRegistrarT);
 				
 				for (TiivsSolicitudAgrupacion x : listaTMP) 
 				{
 					for (TiivsAgrupacionPersona b : x.getTiivsAgrupacionPersonas()) 
 					{
-						logger.info("b.getTiivsPersona() " + b.getCodPer());
+						logger.info("b.getTiivsPersona() " + b.getCodPer() +" b.getNumGrupo() " +b.getNumGrupo());
 						// b.setId
 						objPersonaRetorno = servicePers.insertarMerge(b.getTiivsPersona());
 						logger.info("ccdcdcd : " + objPersonaRetorno.getCodPer());
 						b.setTiivsPersona(null);
-						objAgruId.setClasifPer(b.getClasifPer());
-					    objAgruId.setCodSoli(b.getCodSoli());
-					    objAgruId.setNumGrupo(b.getNumGrupo());
-					    objAgruId.setTipPartic(b.getTipPartic());
-						objAgruId.setCodPer(objPersonaRetorno.getCodPer());
+						objAgruPer.setClasifPer(b.getClasifPer());
+						objAgruPer.setCodSoli(b.getCodSoli());
+						objAgruPer.setNumGrupo(b.getNumGrupo());
+						objAgruPer.setTipPartic(b.getTipPartic());
+						objAgruPer.setCodPer(objPersonaRetorno.getCodPer());
 						//b.setId(objAgruId);
 						
-						if (existeAgrupacionPersona(b))
+						//serviceAgru.insertarMerge(b);
+						System.out.println("objAgruPer ****************** "+objAgruPer.getClasifPer());
+						System.out.println("objAgruPer ****************** "+objAgruPer.getTipPartic());
+						System.out.println("objAgruPer ****************** "+objAgruPer.getCodSoli());
+						System.out.println("objAgruPer ****************** "+objAgruPer.getCodPer());
+						System.out.println("objAgruPer ****************** "+objAgruPer.getIdAgrupacion());
+						System.out.println("objAgruPer ****************** "+objAgruPer.getNumGrupo());
+						
+						if (existeAgrupacionPersona(objAgruPer))
 						{
-							serviceAgru.modificar(b);
+							serviceAgru.modificar(objAgruPer);
 						}
 						else
 						{
-							serviceAgru.insertar(b);
+							serviceAgru.insertar(objAgruPer);
 						}
 					}
 				}
@@ -1586,7 +1598,7 @@ public class ConsultarSolicitudMB {
 				}
 
 				logger.info("objResultado.getCodSoli(); " + objResultado.getCodSoli());
-				logger.info("objResultado.getTiivsSolicitudAgrupacions() " 	+ listaTMP.size());
+				//logger.info("objResultado.getTiivsSolicitudAgrupacions() " 	+ listaTMP.size());
 				logger.info("this.solicitudRegistrarT.importe : " + this.solicitudRegistrarT.getImporte());
 				
 				if (actualizarBandeja)

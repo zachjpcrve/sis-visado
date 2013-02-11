@@ -25,7 +25,7 @@
         <property name="clasifPer" type="string">
             <column name="CLASIF_PER" length="4" />
         </property>
-        <many-to-one name="tiivsSolicitudAgrupacion" class="com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion" not-found="ignore"  lazy="false" update="false" insert="false" fetch="select">
+        <many-to-one name="tiivsSolicitudAgrupacion" class="com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion" not-found="ignore"  lazy="false" cascade="all" update="false" insert="false" fetch="select">
             <column name="COD_SOLI" length="7" />
             <column name="NUM_GRUPO" precision="8" scale="0" />
         </many-to-one>
