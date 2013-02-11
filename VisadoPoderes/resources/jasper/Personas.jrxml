@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Apoderado" pageWidth="555" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
-	<property name="ireport.zoom" value="1.1000000000000005"/>
-	<property name="ireport.x" value="0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Involucrados" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.0490403660952117"/>
+	<property name="ireport.x" value="1"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="numDOI" class="java.lang.String"/>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["D:\\WorkSpace\\VisadoPoderes\\resources\\jasper\\"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="personas" class="net.sf.jasperreports.engine.JRDataSource"/>
-	<parameter name="listaDsPersonas" class="java.util.List"/>
-	<field name="listaDsPersonas" class="java.util.List"/>
+	<field name="sDesctipDoi" class="java.lang.String"/>
+	<field name="numDoi" class="java.lang.String"/>
+	<field name="codCen" class="java.lang.String"/>
+	<field name="apePat" class="java.lang.String"/>
+	<field name="apeMat" class="java.lang.String"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="sDescclasifPer" class="java.lang.String"/>
+	<field name="sDesctipPartic" class="java.lang.String"/>
+	<field name="numCel" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="nombreCompletoMayuscula" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -20,39 +24,102 @@
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="140" splitType="Stretch">
-			<textField>
-				<reportElement x="140" y="13" width="310" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[""+$P{listaDsPersonas}.size()]]></textFieldExpression>
-			</textField>
-			<subreport>
-				<reportElement x="5" y="35" width="545" height="100"/>
-				<subreportParameter name="SUBREPORT_DIR"/>
-				<subreportParameter name="numDOI"/>
-				<subreportParameter name="listaDsPersonas"/>
-				<dataSourceExpression><![CDATA[$P{listaDsPersonas}.size() > 0 ? $P{listaDsPersonas}.remove(0) : null]]></dataSourceExpression>
-				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Apoderado.jasper"]]></subreportExpression>
-			</subreport>
+		<band height="24" splitType="Stretch">
 			<staticText>
-				<reportElement x="25" y="13" width="100" height="20"/>
-				<textElement/>
-				<text><![CDATA[Numero de listas:]]></text>
+				<reportElement x="0" y="2" width="108" height="20" forecolor="#003399"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Doi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="61" y="2" width="217" height="20" forecolor="#003399"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente/No Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="246" y="2" width="73" height="20" forecolor="#003399"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Registro]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="319" y="2" width="71" height="20" forecolor="#003399"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Clasificación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="2" width="57" height="20" forecolor="#003399"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro, Celular]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="441" y="2" width="114" height="20" forecolor="#003399"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-Mail]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="113" splitType="Stretch">
-			<subreport>
-				<reportElement x="5" y="8" width="545" height="100"/>
-				<subreportParameter name="numDOI"/>
-				<subreportParameter name="SUBREPORT_DIR"/>
-				<subreportParameter name="personas"/>
-				<subreportParameter name="listaDsPersonas">
-					<subreportParameterExpression><![CDATA[$P{listaDsPersonas}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Personas.jasper"]]></subreportExpression>
-			</subreport>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="67" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sDesctipDoi} + " " + $F{numDoi}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="61" y="0" width="26" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{codCen}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="246" y="0" width="73" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sDesctipPartic}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="319" y="0" width="71" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sDesctipPartic}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="390" y="0" width="57" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{numCel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="441" y="0" width="114" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="87" y="0" width="159" height="20" forecolor="#000000"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{apePat}.trim()+" "+$F{apeMat}.trim()+" "+$F{nombre}.trim()]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
