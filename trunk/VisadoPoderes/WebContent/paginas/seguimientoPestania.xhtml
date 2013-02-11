@@ -197,6 +197,14 @@
 				<td width="100%">
 					<h:outputText title="Documentos" value="Documentos" styleClass="outputText" />
 					<p:separator styleClass="fielset" />
+					<!-- c:if test="{consultarSolicitudMB.bMostrarSolicitudVisado}" -->
+						<a href="#{root}main/download/pdfReportSolicitudVisado.htm">
+							<font color="blue">
+								<u>Solicitud de Visado</u>
+							</font>
+						</a>
+
+					<!-- /c:if -->
 					<c:if test="#{consultarSolicitudMB.bMostrarCartaAtencion}">
 						<a href="#{root}main/download/pdfReportCartaAtencion.htm" onclick="confirmation2.show()">
 							<font color="blue">
