@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
+
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
@@ -15,19 +17,13 @@ public class SolicitudPDF implements Serializable
 	private String comision;
 	private String oficina;
 	private String importe;
-	private JRDataSource PERSONAS;
+	private String tipoServicio;
 	private JRDataSource DOCUMENTOS;
 	private JRDataSource OPERACIONES;
-	private List<PersonaPDF> lstPersonas=new ArrayList<PersonaPDF>();
-	private List<DocumentosPDF> lstDocumentos=new ArrayList<DocumentosPDF>();
-	private List<OperacionesPDF> lstOperaciones=new ArrayList<OperacionesPDF>();
-	
-	private List<JRDataSource> lstDsPersonas = new ArrayList<JRDataSource>();//er
-	
-	
-	public JRDataSource getPERSONAS() {
-		return new JRBeanCollectionDataSource(lstPersonas); 
-	}
+	private JRDataSource AGRUPACION;
+	private List<OperacionesPDF> lstOperaciones=new ArrayList<OperacionesPDF>();	
+	private List<DocumentoTipoSolicitudDTO> lstDocumentos=new ArrayList<DocumentoTipoSolicitudDTO>();
+	private List<AgrupacionSimpleDto> lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 	
 	public JRDataSource getDOCUMENTOS() {
 		return new JRBeanCollectionDataSource(lstDocumentos); 
@@ -36,6 +32,10 @@ public class SolicitudPDF implements Serializable
 	public JRDataSource getOPERACIONES() {
 		return new JRBeanCollectionDataSource(lstOperaciones); 
 	}	
+	
+	public JRDataSource getAGRUPACION(){
+		return new JRBeanCollectionDataSource(this.lstAgrupacionSimpleDto); 
+	}
 	
 	public String getCodSoli() {
 		return codSoli;
@@ -72,18 +72,13 @@ public class SolicitudPDF implements Serializable
 	}
 	public void setImporte(String importe) {
 		this.importe = importe;
-	}
-	public List<PersonaPDF> getLstPersonas() {
-		return lstPersonas;
-	}
-
-	public void setLstPersonas(List<PersonaPDF> lstPersonas) {
-		this.lstPersonas = lstPersonas;
-	}
-	public List<DocumentosPDF> getLstDocumentos() {
+	}	
+		
+	public List<DocumentoTipoSolicitudDTO> getLstDocumentos() {
 		return lstDocumentos;
 	}
-	public void setLstDocumentos(List<DocumentosPDF> lstDocumentos) {
+
+	public void setLstDocumentos(List<DocumentoTipoSolicitudDTO> lstDocumentos) {
 		this.lstDocumentos = lstDocumentos;
 	}
 
@@ -93,16 +88,17 @@ public class SolicitudPDF implements Serializable
 
 	public void setLstOperaciones(List<OperacionesPDF> lstOperaciones) {
 		this.lstOperaciones = lstOperaciones;
+	}	
+
+	public String getTipoServicio() {
+		return tipoServicio;
 	}
 
-	public List<JRDataSource> getLstDsPersonas() {
-		return lstDsPersonas;
+	public void setTipoServicio(String tipoServicio) {
+		this.tipoServicio = tipoServicio;
 	}
 
-	public void setLstDsPersonas(List<JRDataSource> lstDsPersonas) {
-		this.lstDsPersonas = lstDsPersonas;
+	public void setLstAgrupacionSimpleDto(List<AgrupacionSimpleDto> lstAgrupacionSimpleDto) {
+		this.lstAgrupacionSimpleDto = lstAgrupacionSimpleDto;		
 	}
-	
-	
-
 }
