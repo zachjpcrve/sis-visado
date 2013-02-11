@@ -21,17 +21,30 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.bbva.common.listener.SpringInit.SpringInit;
+import com.bbva.common.util.ConstantesVisado;
+import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
+import com.hildebrando.visado.dto.AgrupacionSimpleDto;
+import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
 import com.hildebrando.visado.dto.DocumentosPDF;
+import com.hildebrando.visado.dto.Estado;
 import com.hildebrando.visado.dto.FormatosDTO;
 import com.hildebrando.visado.dto.OperacionesPDF;
 import com.hildebrando.visado.dto.PersonaPDF;
 import com.hildebrando.visado.dto.SolicitudPDF;
 import com.hildebrando.visado.mb.CombosMB;
 import com.hildebrando.visado.mb.ConsultarSolicitudMB;
+import com.hildebrando.visado.mb.RegistroUtilesMB;
 import com.hildebrando.visado.mb.SolicitudRegistroMB;
+import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
+import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
+import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
+import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
+import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
+import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 
 @Controller
@@ -184,6 +197,78 @@ public class JasperController {
         return("pdfReportCartaImprocedente");
 	}
 	
+    @RequestMapping(value="/download/pdfReportSolicitudVisado.htm", method=RequestMethod.GET)
+    public String generarReporteSolicitudVisado(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request) 
+    {
+    	log.info("generarReporteSolicitudVisado");
+    	
+    	String sCodSolicitud = "";
+    	
+    	TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
+    	List<DocumentoTipoSolicitudDTO> lstDocumentos = SOLICITUD_TEMP.getLstDocumentos();
+    	List<TiivsSolicitudOperban> lstSolicBancarias =  SOLICITUD_TEMP.getLstSolicBancarias();
+    	
+    	List<AgrupacionSimpleDto> lstAgrupacionSimpleDto = SOLICITUD_TEMP.getLstAgrupacionSimpleDto();    	
+    	
+    	List<SolicitudPDF> cabecera = new ArrayList<SolicitudPDF>();
+    	SolicitudPDF solicitudPDF= new SolicitudPDF();
+    	
+    	
+    	//Cabecera del reporte
+    	if(SOLICITUD_TEMP!=null){
+    		solicitudPDF.setCodSoli(SOLICITUD_TEMP.getCodSoli());
+    		solicitudPDF.setNroVoucher(SOLICITUD_TEMP.getNroVoucher());    		
+
+    		TiivsMultitabla multi = RegistroUtilesMB.getRowFromMultitabla(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS, SOLICITUD_TEMP.getEstado());
+    		String sEstado = multi.getValor1();
+    		
+    		solicitudPDF.setEstado(sEstado);    		
+    		solicitudPDF.setComision(String.valueOf(SOLICITUD_TEMP.getComision()));
+    		solicitudPDF.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
+    		solicitudPDF.setImporte(String.valueOf(SOLICITUD_TEMP.getImporte()));    	
+    		solicitudPDF.setTipoServicio(SOLICITUD_TEMP.getTiivsTipoSolicitud().getDesTipServicio());
+    		
+    		solicitudPDF.setLstAgrupacionSimpleDto(lstAgrupacionSimpleDto); //agregar agrupaciones
+    		
+    		solicitudPDF.setLstDocumentos(lstDocumentos); //agregar documentos
+    		
+    		List<OperacionesPDF> lstOperaciones = new ArrayList<OperacionesPDF> ();
+    		
+    		for(TiivsSolicitudOperban op : lstSolicBancarias){    			
+    			OperacionesPDF oper = new OperacionesPDF(
+    					op.getsItem(), 
+    					op.getTiivsOperacionBancaria().getDesOperBan(), 
+    					op.getsDescMoneda(), 
+    					op.getImporte(),
+    					op.getTipoCambio(),
+    					op.getImporteSoles());    			
+    			lstOperaciones.add(oper);    					    			
+    		}
+    		
+    		solicitudPDF.setLstOperaciones(lstOperaciones); //agregar operaciones
+    		
+    		
+    	} 
+    	
+    	cabecera.add(solicitudPDF);
+    	
+        response.setHeader("Content-type", "application/pdf");
+        response.setHeader("Content-Disposition","attachment; filename=\"SolVisado.pdf\"");
+		
+        JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
+              
+        modelMap.put("dataKey", objCab);        
+
+        try {
+        	OutputStream os = response.getOutputStream();
+        	os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        return("pdfReport");
+    }
+    
+    
     @RequestMapping(value="/download/reportPDF.htm", method=RequestMethod.GET)
     public String generarReportePDF(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request) 
     {
@@ -208,96 +293,91 @@ public class JasperController {
     	cabecera.add(tmp);
     	
     	//Seccion Poderdantes / Apoderados
-    	 List<PersonaPDF> listPersonas = new ArrayList<PersonaPDF>();
-	    		    
-	    	listPersonas.add(new PersonaPDF("DNI: 43086804","Beneficiario","Apoderado","999851455","email@email.com","00430844  Vargas Diaz Cynthia/","Activo"));
-	  	    listPersonas.add(new PersonaPDF("DNI: 43082805","Fallecido","Poderdante","","","00430899  Torres Morales Carlos/","Activo"));
-	  	    
-	  	    listPersonas.add(new PersonaPDF("12345678","Beneficiario","Poderdante","1111","e@i","Alberto","Activo"));
-	  	    listPersonas.add(new PersonaPDF("22345678","Beneficiario","Poderdante","1111","e@i","Juan","Activo"));
-	  	    listPersonas.add(new PersonaPDF("32345678","Beneficiario","Poderdante","1111","e@i","Tirza","Activo"));
-	  	    listPersonas.add(new PersonaPDF("42345678","Beneficiario","Poderdante","1111","e@i","Julisa","Activo"));
-	  	    listPersonas.add(new PersonaPDF("52345678","Beneficiario","Poderdante","1111","e@i","Antonia","Activo"));
-	    	
-	    	
-	    List<PersonaPDF> listPersonas2 = new ArrayList<PersonaPDF>();
-	    	listPersonas2.add(new PersonaPDF("10000000","Fallecido","Apoderado","1111","e@i","Alberto","Activo"));
-	  	    listPersonas2.add(new PersonaPDF("20000000","Fallecido","Apoderado","1111","e@i","Juan","Activo"));
-	  	    listPersonas2.add(new PersonaPDF("30000000","Fallecido","Apoderado","1111","e@i","Tirza","Activo"));
-	  	    listPersonas2.add(new PersonaPDF("40000000","Fallecido","Apoderado","1111","e@i","Julisa","Activo"));
-	  	    listPersonas2.add(new PersonaPDF("50000000","Fallecido","Apoderado","1111","e@i","Antonia","Activo"));
-	  	    
-	  	    
-	  	List<PersonaPDF> listPersonas3 = new ArrayList<PersonaPDF>();
-	    	listPersonas3.add(new PersonaPDF("77777771","Fallecido","Apoderado","1111","e@i","Alberto","Activo"));
-	  	    listPersonas3.add(new PersonaPDF("77777772","Fallecido","Apoderado","1111","e@i","Juan","Activo"));
-	  	    listPersonas3.add(new PersonaPDF("77777773","Fallecido","Apoderado","1111","e@i","Tirza","Activo"));
-	  	    listPersonas3.add(new PersonaPDF("77777774","Fallecido","Apoderado","1111","e@i","Julisa","Activo"));
-	  	    listPersonas3.add(new PersonaPDF("77777775","Fallecido","Apoderado","1111","e@i","Antonia","Activo"));   
-	  	    
-	    List<PersonaPDF> listPersonas4 = new ArrayList<PersonaPDF>();
-	    	listPersonas4.add(new PersonaPDF("88888881","Fallecido","Apoderado","1111","e@i","Alberto","Activo"));
-	  	    listPersonas4.add(new PersonaPDF("88888882","Fallecido","Apoderado","1111","e@i","Juan","Activo"));
-	  	    listPersonas4.add(new PersonaPDF("88888883","Fallecido","Apoderado","1111","e@i","Tirza","Activo"));
-	  	    listPersonas4.add(new PersonaPDF("88888884","Fallecido","Apoderado","1111","e@i","Julisa","Activo"));
-	  	    listPersonas4.add(new PersonaPDF("88888885","Fallecido","Apoderado","1111","e@i","Antonia","Activo"));
-	  	    
-	   List<PersonaPDF> listPersonas5 = new ArrayList<PersonaPDF>();
-	    	listPersonas5.add(new PersonaPDF("55555551","Fallecido","Apoderado","1111","e@i","Alberto","Activo"));
-	  	    listPersonas5.add(new PersonaPDF("55555552","Fallecido","Apoderado","1111","e@i","Juan","Activo"));
-	  	    listPersonas5.add(new PersonaPDF("55555553","Fallecido","Apoderado","1111","e@i","Tirza","Activo"));
-	  	    listPersonas5.add(new PersonaPDF("55555554","Fallecido","Apoderado","1111","e@i","Julisa","Activo"));
-	  	    listPersonas5.add(new PersonaPDF("55555555","Fallecido","Apoderado","1111","e@i","Antonia","Activo"));
-	    	
-	  	    
-	    cabecera.get(0).setLstPersonas(listPersonas);
+//    	 List<PersonaPDF> listPersonas = new ArrayList<PersonaPDF>();
+//	    		    
+//	    	listPersonas.add(new PersonaPDF("DNI: 43086804","Beneficiario","Apoderado","999851455","email@email.com","00430844  Vargas Diaz Cynthia/","Activo"));
+//	  	    listPersonas.add(new PersonaPDF("DNI: 43082805","Fallecido","Poderdante","","","00430899  Torres Morales Carlos/","Activo"));
+//	  	    
+//	  	    listPersonas.add(new PersonaPDF("12345678","Beneficiario","Poderdante","1111","e@i","Alberto","Activo"));
+//	  	    listPersonas.add(new PersonaPDF("22345678","Beneficiario","Poderdante","1111","e@i","Juan","Activo"));
+//	  	    listPersonas.add(new PersonaPDF("32345678","Beneficiario","Poderdante","1111","e@i","Tirza","Activo"));
+//	  	    listPersonas.add(new PersonaPDF("42345678","Beneficiario","Poderdante","1111","e@i","Julisa","Activo"));
+//	  	    listPersonas.add(new PersonaPDF("52345678","Beneficiario","Poderdante","1111","e@i","Antonia","Activo"));
+//	    	
+//	    	
+//	    List<PersonaPDF> listPersonas2 = new ArrayList<PersonaPDF>();
+//	    	listPersonas2.add(new PersonaPDF("10000000","Fallecido","Apoderado","1111","e@i","Alberto","Activo"));
+//	  	    listPersonas2.add(new PersonaPDF("20000000","Fallecido","Apoderado","1111","e@i","Juan","Activo"));
+//	  	    listPersonas2.add(new PersonaPDF("30000000","Fallecido","Apoderado","1111","e@i","Tirza","Activo"));
+//	  	    listPersonas2.add(new PersonaPDF("40000000","Fallecido","Apoderado","1111","e@i","Julisa","Activo"));
+//	  	    listPersonas2.add(new PersonaPDF("50000000","Fallecido","Apoderado","1111","e@i","Antonia","Activo"));
+//	  	    
+//	  	    
+//	  	List<PersonaPDF> listPersonas3 = new ArrayList<PersonaPDF>();
+//	    	listPersonas3.add(new PersonaPDF("77777771","Fallecido","Apoderado","1111","e@i","Alberto","Activo"));
+//	  	    listPersonas3.add(new PersonaPDF("77777772","Fallecido","Apoderado","1111","e@i","Juan","Activo"));
+//	  	    listPersonas3.add(new PersonaPDF("77777773","Fallecido","Apoderado","1111","e@i","Tirza","Activo"));
+//	  	    listPersonas3.add(new PersonaPDF("77777774","Fallecido","Apoderado","1111","e@i","Julisa","Activo"));
+//	  	    listPersonas3.add(new PersonaPDF("77777775","Fallecido","Apoderado","1111","e@i","Antonia","Activo"));   
+//	  	    
+//	    List<PersonaPDF> listPersonas4 = new ArrayList<PersonaPDF>();
+//	    	listPersonas4.add(new PersonaPDF("88888881","Fallecido","Apoderado","1111","e@i","Alberto","Activo"));
+//	  	    listPersonas4.add(new PersonaPDF("88888882","Fallecido","Apoderado","1111","e@i","Juan","Activo"));
+//	  	    listPersonas4.add(new PersonaPDF("88888883","Fallecido","Apoderado","1111","e@i","Tirza","Activo"));
+//	  	    listPersonas4.add(new PersonaPDF("88888884","Fallecido","Apoderado","1111","e@i","Julisa","Activo"));
+//	  	    listPersonas4.add(new PersonaPDF("88888885","Fallecido","Apoderado","1111","e@i","Antonia","Activo"));
+//	  	    
+//	   List<PersonaPDF> listPersonas5 = new ArrayList<PersonaPDF>();
+//	    	listPersonas5.add(new PersonaPDF("55555551","Fallecido","Apoderado","1111","e@i","Alberto","Activo"));
+//	  	    listPersonas5.add(new PersonaPDF("55555552","Fallecido","Apoderado","1111","e@i","Juan","Activo"));
+//	  	    listPersonas5.add(new PersonaPDF("55555553","Fallecido","Apoderado","1111","e@i","Tirza","Activo"));
+//	  	    listPersonas5.add(new PersonaPDF("55555554","Fallecido","Apoderado","1111","e@i","Julisa","Activo"));
+//	  	    listPersonas5.add(new PersonaPDF("55555555","Fallecido","Apoderado","1111","e@i","Antonia","Activo"));
+//	    	
+//	  	    
+//	    cabecera.get(0).setLstPersonas(listPersonas);
 	    
 	    //Seccion documentos
-	    List<DocumentosPDF> lstDocumentos = new ArrayList<DocumentosPDF>();	    
-	    lstDocumentos.add(new DocumentosPDF("001","Documento 1"));
-	    lstDocumentos.add(new DocumentosPDF("002","DNI"));
-	    lstDocumentos.add(new DocumentosPDF("004","RUC"));
-	    lstDocumentos.add(new DocumentosPDF("005","Partida de fallecimiento"));
-	    
-	    cabecera.get(0).setLstDocumentos(lstDocumentos);
+//	    List<DocumentosPDF> lstDocumentos = new ArrayList<DocumentosPDF>();	    
+//	    lstDocumentos.add(new DocumentosPDF("001","Documento 1"));
+//	    lstDocumentos.add(new DocumentosPDF("002","DNI"));
+//	    lstDocumentos.add(new DocumentosPDF("004","RUC"));
+//	    lstDocumentos.add(new DocumentosPDF("005","Partida de fallecimiento"));
+//	    
+//	    cabecera.get(0).setLstDocumentos(lstDocumentos);
 	    
 	    
 	    //Sección operaciones bancarias
-	    List<OperacionesPDF> lstOperaciones = new ArrayList<OperacionesPDF>();
-	    lstOperaciones.add(new OperacionesPDF("001","Retiro","Soles","260","1","260"));
-	    lstOperaciones.add(new OperacionesPDF("002","Cobro","Dolares","100","2.60","260"));
-	    lstOperaciones.add(new OperacionesPDF("003","Pago","Euros","500","3.50","1725"));
-	    
-	    cabecera.get(0).setLstOperaciones(lstOperaciones);
-	    
+//	    List<OperacionesPDF> lstOperaciones = new ArrayList<OperacionesPDF>();
+//	    lstOperaciones.add(new OperacionesPDF("001","Retiro","Soles","260","1","260"));
+//	    lstOperaciones.add(new OperacionesPDF("002","Cobro","Dolares","100","2.60","260"));
+//	    lstOperaciones.add(new OperacionesPDF("003","Pago","Euros","500","3.50","1725"));
+//	    
+//	    cabecera.get(0).setLstOperaciones(lstOperaciones);
+//	    
 	    
 	    
 	    //Add lista datasource
-	    JRDataSource dsPersona1 = new JRBeanCollectionDataSource(listPersonas);
-	    JRDataSource dsPersona2 = new JRBeanCollectionDataSource(listPersonas2);
+//	    JRDataSource dsPersona1 = new JRBeanCollectionDataSource(listPersonas);
+//	    JRDataSource dsPersona2 = new JRBeanCollectionDataSource(listPersonas2);
 //	    JRDataSource dsPersona3 = new JRBeanCollectionDataSource(listPersonas3);
 //	    JRDataSource dsPersona4 = new JRBeanCollectionDataSource(listPersonas4);
 //	    JRDataSource dsPersona5 = new JRBeanCollectionDataSource(listPersonas5);
 	    
-	    List<JRDataSource> lstDsPersonas = new ArrayList<JRDataSource>();
-	    lstDsPersonas.add(dsPersona1);
-	    lstDsPersonas.add(dsPersona2);
+//	    List<JRDataSource> lstDsPersonas = new ArrayList<JRDataSource>();
+//	    lstDsPersonas.add(dsPersona1);
+//	    lstDsPersonas.add(dsPersona2);
 //	    lstDsPersonas.add(dsPersona3);
 //	    lstDsPersonas.add(dsPersona4);
 //	    lstDsPersonas.add(dsPersona5);
 	    
-	    cabecera.get(0).setLstDsPersonas(lstDsPersonas);
+//	    cabecera.get(0).setLstDsPersonas(lstDsPersonas);
 	    
-	    
-    	
-		   	
         response.setHeader("Content-type", "application/pdf");
         response.setHeader("Content-Disposition","attachment; filename=\"SolVisado.pdf\"");
 		
         JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
               
-
-        
         modelMap.put("dataKey", objCab);
         modelMap.put("SUBREPORT_DIR", "D:\\WorkSpace\\VisadoPoderes\\resources\\jasper\\");
         
@@ -318,11 +398,5 @@ public class JasperController {
 	public void setConsultarSolicitudMB(ConsultarSolicitudMB consultarSolicitudMB) {
 		this.consultarSolicitudMB = consultarSolicitudMB;
 	}
-
-	
-
-	
-    
-    
     
 }
