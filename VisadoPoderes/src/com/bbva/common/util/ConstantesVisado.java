@@ -98,6 +98,7 @@ public class ConstantesVisado {
 	public static final String CAMPO_ESTUDIO="cod_estudio";
 	public static final String CAMPO_FECHA_ENVIO="fechaEnvio";
 	public static final String CAMPO_FECHA_RPTA="fechaRespuesta";
+	public static final String CAMPO_FECHA_REGISTRO = "fecha";
 	public static final String CAMPO_COD_OFICINA="codOfi";
 	public static final String CAMPO_ESTADO="estado";
 	public static final String CAMPO_COD_MIEMBRO="codMiembro";
@@ -206,6 +207,45 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_COLUMNA_DELEGADO = "Delegado";
 	public static final String ETIQUETA_COLUMNA_EN_REVISION = "En revision";
 	public static final String ETIQUETA_COLUMNA_REVOCATORIA = "Revocatoria";
+	
+	//************Constantes para Reporte Extractor***********************************************
+	
+	//Columnas para hoja Nro 1
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_ITEM = "Item";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_CODIGO = "Codigo";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_ESTADO = "Estado Actual";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_SOL = "Tipo de Solicitud";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_COM = "Tipo de comisión";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_COD_OFICINA = "Cod Oficina";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_OFICINA = "Oficina";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_IMPORTE = "Importe Global";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_MONEDA = "Moneda";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_NRO_VOUCHER = "Nro. Voucher";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_TERRITORIO = "Territorio";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_COD_CENTRAL = "Código Central";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_PODERDANTE = "Poderdante";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_DOI = "Tipo de DOI";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_NRO_DOI = "Nro de DOI";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_PODERDANTE = "Tipo Poderdante";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_APODERADO = "Apoderado";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_CELULAR = "Nro de celular";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_FIJO = "Nro Fijo";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_APODERADO = "Tipo de Apoderado";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_COMISION = "Tipo de comision";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_ESTUDIO = "Estudio";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_RECLAMO = "Reclamo";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_NIVELES = "Niveles";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_DELEGACION = "Delegacion";
+	
+	//Columnas para hoja Nro 2
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_NRO_SOLICITUD = "Nro Solicitud";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_ESTADO_HOJA2 = "Estado";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_NIVEL = "Nivel";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_FECHA = "Fecha";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_USUARIO = "Usuario";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_OBS = "Observaciones";
+	
+	///******************************************************************************************
 	
 	static public class ESTADOS {
 		
