@@ -452,7 +452,8 @@ public class ConsultarSolicitudMB {
 			redirect = "/faces/paginas/solicitudEdicion.xhtml";
 			//obtenerSolicitud();
 		} else {
-			request.getSession(true).setAttribute("SOLICITUD_TEMP", solicitudRegistrarT);
+			request.getSession(true).setAttribute("SOLICITUD_TEMP", solicitudRegistrarT);			
+			
 			redirect = "/faces/paginas/detalleSolicitud.xhtml";
 		}
 
@@ -564,6 +565,8 @@ public class ConsultarSolicitudMB {
 				}
 			}
 			
+			solicitudRegistrarT.setLstDocumentos(lstdocumentos); //Para reportes
+			
 			if (lstdocumentos.size()==0)
 			{
 				GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
@@ -640,12 +643,14 @@ public class ConsultarSolicitudMB {
 			   }
 			   lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 		   }
+		   		   		   
+		   solicitudRegistrarT.setLstAgrupacionSimpleDto(lstAgrupacionSimpleDto); //reporte
 		   
 		   logger.info("Lista Poderdantes: " + lstPoderdantes.size());
 		   logger.info("Lista Apoderados: " + lstApoderdantes.size());
 		   logger.info("Obtener solicitud agrupaciones: " + solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
 		   logger.info("Size lstAgrupacionSimpleDto: " + lstAgrupacionSimpleDto.size());
-		   
+		  
 			this.actualizarEstadoReservadoSolicitud();
 			this.obtenerHistorialSolicitud();
 
