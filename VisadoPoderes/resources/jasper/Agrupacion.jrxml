@@ -241,7 +241,9 @@
 							</box>
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="75" height="20"/>
-								<textElement/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
 								<textFieldExpression class="java.lang.String"><![CDATA[$F{sDesctipDoi} + " " + $F{numDoi}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
