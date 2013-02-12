@@ -185,8 +185,63 @@ public class RegistroUtilesMB {
 		} else {
 			comisionFinal = new Double(0);
 			logger.debug("La solicitud no tiene Poderdantes");
-		}					
+		}				
+		solicitud.setTipoComision(sTipoComision);
+		solicitud.setComision(comisionFinal);
 		return comisionFinal;
+	}
+	
+	
+	/**
+	  * Obtiene el tipo de comisión de una solicitud.
+	  * @param solicitud.
+	  * @return Tipo de comisión de la comisión
+	  */
+	public String obtenerTipoComision(TiivsSolicitud solicitud){
+		
+		String sTipoComision=null; //Almacena el tipo de comision que se debe aplicar
+					
+		Double dMontoLimite;
+		try{
+			String sMontoLimite = getRowFromMultitabla(
+					ConstantesVisado.CODIGO_MULTITABLA_COMISION,
+					ConstantesVisado.CODIGO_CAMPO_COMISION_X).getValor2();	
+			dMontoLimite = Double.valueOf(sMontoLimite);
+				
+			//Obtenemos el listado de poderdantes de una solicitud
+			List<TiivsAgrupacionPersona> lstPoderdantes;
+			lstPoderdantes = getPoderdantesFromSolicitud(solicitud);//From consulta sql		
+			
+					
+			if(lstPoderdantes!=null && lstPoderdantes.size()>0){
+				if (existeFallecido(lstPoderdantes)) {
+					if (solicitud.getImporte() > dMontoLimite) {
+						sTipoComision = ConstantesVisado.CODIGO_CAMPO_FALLECIDO_MAYORA;
+					} else {
+						sTipoComision = ConstantesVisado.CODIGO_CAMPO_FALLECIDO_MENORA;
+					}
+				} else {
+					if (sonTodasNaturales(lstPoderdantes)) {
+						sTipoComision = ConstantesVisado.CODIGO_CAMPO_PERSONA_NATURAL;
+					} 
+					else if (sonTodasJuridicas(lstPoderdantes)) {
+						sTipoComision = ConstantesVisado.CODIGO_CAMPO_PERSONA_JURIDICA;
+					} else {
+						// Regla no permitida
+						logger.info("Regla no permitida");
+						logger.debug("Regla no permitida");
+						sTipoComision = null;
+					}
+				}				
+			} else {			
+				logger.debug("La solicitud no tiene Poderdantes");
+			}	
+		
+		}
+		catch(Exception e){
+			logger.error("No se pudo calcular la comisión:"+e.toString());							
+		}
+		return sTipoComision;
 	}
 
 
@@ -442,7 +497,7 @@ public class RegistroUtilesMB {
 	 * Devuelve la comisión según el tipo de comisión
 	 * @param tipo de comisión 
 	 * */
-	private Double obtenerComision(String sTipoComision) {
+	public Double obtenerComision(String sTipoComision) {
 		TiivsMultitabla multi = getRowFromMultitabla(
 				ConstantesVisado.CODIGO_MULTITABLA_COMISION,
 				sTipoComision);
