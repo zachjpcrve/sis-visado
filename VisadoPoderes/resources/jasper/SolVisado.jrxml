@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SolVisado" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.3310000000000008"/>
-	<property name="ireport.x" value="117"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
@@ -151,7 +151,7 @@
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{oficina} + " " + $F{territorio} + " " ]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{oficina} + " " + $F{territorio} + " "]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0,00">
 				<reportElement x="360" y="48" width="80" height="20"/>
@@ -179,14 +179,14 @@
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}+"  "]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="335" y="48" width="42" height="20"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}+"  "]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
