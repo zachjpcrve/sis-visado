@@ -144,9 +144,8 @@ public class JasperController {
         JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
         
         modelMap.put("dataKey", objCab);
-        modelMap.put("SUBREPORT_DIR", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\resources\\jasper\\");
-        
-        modelMap.put("IMG_CABECERA", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
+//        modelMap.put("SUBREPORT_DIR", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\resources\\jasper\\");        
+//        modelMap.put("IMG_CABECERA", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
 
         try {
         	OutputStream os = response.getOutputStream();
@@ -185,9 +184,8 @@ public class JasperController {
         JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
         
         modelMap.put("dataKey", objCab);
-        modelMap.put("SUBREPORT_DIR", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\resources\\jasper\\");
-        
-        modelMap.put("IMG_CABECERA", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
+//        modelMap.put("SUBREPORT_DIR", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\resources\\jasper\\");        
+//        modelMap.put("IMG_CABECERA", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
 
         try {
         	OutputStream os = response.getOutputStream();
@@ -202,8 +200,6 @@ public class JasperController {
     public String generarReporteSolicitudVisado(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request) 
     {
     	log.info("generarReporteSolicitudVisado");
-    	
-    	String sCodSolicitud = "";
     	
     	TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
     	List<DocumentoTipoSolicitudDTO> lstDocumentos = SOLICITUD_TEMP.getLstDocumentos();
