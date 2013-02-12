@@ -223,19 +223,19 @@ public class ConstantesVisado {
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_NRO_VOUCHER = "Nro. Voucher";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_TERRITORIO = "Territorio";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_COD_CENTRAL = "Código Central";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_PODERDANTE = "Poderdante";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_NOMBRES = "Nombre Completo";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_DOI = "Tipo de DOI";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_NRO_DOI = "Nro de DOI";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_PODERDANTE = "Tipo Poderdante";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_APODERADO = "Apoderado";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_PARTICIPACION = "Tipo Participacion";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_CLASIFICACION = "Clasificacion";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_CELULAR = "Nro de celular";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_FIJO = "Nro Fijo";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_APODERADO = "Tipo de Apoderado";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_COMISION = "Tipo de comision";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_ESTUDIO = "Estudio";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_RECLAMO = "Reclamo";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_NIVELES = "Niveles";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_DELEGACION = "Delegacion";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_GRUPO = "Grupo";
 	
 	//Columnas para hoja Nro 2
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_NRO_SOLICITUD = "Nro Solicitud";
@@ -244,6 +244,9 @@ public class ConstantesVisado {
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_FECHA = "Fecha";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_USUARIO = "Usuario";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_OBS = "Observaciones";
+	
+	public static final String RPT_NOMBRE_HOJA1="05.Extractor";
+	public static final String RPT_NOMBRE_HOJA2="05A.Seguimiento";
 	
 	///******************************************************************************************
 	

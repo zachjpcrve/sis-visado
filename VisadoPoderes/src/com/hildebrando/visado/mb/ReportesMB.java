@@ -43,12 +43,16 @@ import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
-import com.hildebrando.visado.dto.SeguimientoDTO;
+import com.hildebrando.visado.dto.ComboDto;
+import com.hildebrando.visado.dto.Moneda;
+import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
-import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsParametros;
+import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
+import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
+import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
 
@@ -63,6 +67,7 @@ public class ReportesMB
 	
 	private List<TiivsSolicitud> solicitudes;
 	private List<TiivsAgrupacionPersona> lstAgrupPer;
+	private List<AgrupacionSimpleDto> lstAgrupacionSimpleDto;
 	private List<TiivsHistSolicitud> lstHistorial;
 	private List<String> lstEstudioSelected;
 	private List<String> lstEstadoNivelSelected;
@@ -85,7 +90,7 @@ public class ReportesMB
 	{
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");	
 		PERFIL_USUARIO=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
-		
+		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		generarNombreArchivo();
 	}
 	
@@ -103,6 +108,56 @@ public class ReportesMB
 			logger.debug("Error al obtener datos del usuario de session para mostrar en el excel");
 		}
 		return resultado;
+	}
+	
+	public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
+		String descripcion = "";
+		for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+			if (z.getKey().trim().equals(idTipoTipoRegistro)) {
+				descripcion = z.getDescripcion();
+				break;
+			}
+		}
+		return descripcion;
+	}
+	
+	public String devolverDesTipoDOI(String codigo)
+	{
+		String resultado="";
+		if (codigo!= null) {
+			for (TipoDocumento tmp: combosMB.getLstTipoDocumentos())
+			{
+				if (codigo.equalsIgnoreCase(tmp.getCodTipoDoc())) 
+				{
+					resultado = tmp.getDescripcion();
+					break;
+				}
+			}
+		}
+		
+		return resultado;
+	}
+	
+	public String obtenerDescripcionDocumentos(String idTipoDocumentos) {
+		String descripcion = "";
+		for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
+			if (z.getCodTipoDoc().trim().equals(idTipoDocumentos)) {
+				descripcion = z.getDescripcion();
+				break;
+			}
+		}
+		return descripcion;
+	}
+	
+	public String obtenerDescripcionClasificacion(String idTipoClasificacion) {
+		String descripcion = "";
+		for (ComboDto z : combosMB.getLstClasificacionPersona()) {
+			if (z.getKey().trim().equals(idTipoClasificacion)) {
+				descripcion = z.getDescripcion();
+				break;
+			}
+		}
+		return descripcion;
 	}
 	
 	public String obtenerFechaHoraActual()
@@ -173,6 +228,8 @@ public class ReportesMB
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,lstEstadoSelected));
 		}
 		
+		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
+		
 		// Buscar solicitudes de acuerdo a criterios seleccionados
 		try {
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
@@ -180,35 +237,113 @@ public class ReportesMB
 			ex.printStackTrace();
 			logger.debug("Error al buscar las solicitudes: " + ex.getStackTrace());
 		}
+		
+		actualizarDatosDeBusqueda();
+	}
+	
+	private void actualizarDatosDeBusqueda() 
+	{	
+		String cadena="";
+		
+		// Se obtiene y setea la descripcion del Estado en la grilla
+		for (TiivsSolicitud tmpSol : solicitudes) 
+		{
+			//Cargar data de poderdantes
+			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
+			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
+			AgrupacionSimpleDto agrupacionSimpleDto  =new AgrupacionSimpleDto(); 
+			 List<TiivsPersona>lstPersonas=new ArrayList<TiivsPersona>();
+			TiivsPersona objPersona=new TiivsPersona();
+			
+		    lstPoderdantes = new ArrayList<TiivsPersona>();
+		    lstApoderdantes = new ArrayList<TiivsPersona>();
+		   
+		    for (TiivsSolicitudAgrupacion x : tmpSol.getTiivsSolicitudAgrupacions()) 
+		    {
+			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) 
+			   {
+				    if (tmpSol.getCodSoli().equals(d.getCodSoli()) && tmpSol.getCodSoli().equals(x.getId().getCodSoli()))
+				    {
+				    	logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
+				    	
+					    objPersona=new TiivsPersona();
+					    objPersona=d.getTiivsPersona();
+					    objPersona.setTipPartic(d.getTipPartic());
+					    objPersona.setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
+					    objPersona.setClasifPer(d.getClasifPer());
+					    objPersona.setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getClasifPer().trim()));
+					    objPersona.setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
+					    lstPersonas.add(objPersona);
+						  
+					    if(d.getTipPartic().trim().equals(ConstantesVisado.PODERDANTE))
+					    {
+							lstPoderdantes.add(d.getTiivsPersona());
+					    }
+						else if(d.getTipPartic().trim().equals(ConstantesVisado.APODERADO))
+						{
+							lstApoderdantes.add(d.getTiivsPersona());
+						}
+					    
+					    agrupacionSimpleDto = new AgrupacionSimpleDto();
+						agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(
+								tmpSol.getCodSoli(), x.getId()
+										.getNumGrupo()));
+						agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
+						agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
+						agrupacionSimpleDto.setsEstado(Utilitarios
+								.obternerDescripcionEstado(x.getActivo().trim()));
+						agrupacionSimpleDto.setLstPersonas(lstPersonas);
+						lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+				    }
+			   }
+		    }
+		    
+		    cadena="";
+		    for (TiivsPersona tmpPoder: lstPoderdantes)
+		    {
+		    	cadena += devolverDesTipoDOI(tmpPoder.getTipDoi()) + ConstantesVisado.DOS_PUNTOS + tmpPoder.getNumDoi() +
+						  ConstantesVisado.GUION + tmpPoder.getApePat() + " " + tmpPoder.getApeMat() + " " + 
+						  tmpPoder.getNombre() + ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
+		    }
+		    
+		    tmpSol.setTxtPoderdante(cadena);
+			
+			// Cargar data de apoderados
+			cadena="";
+			
+			for (TiivsPersona tmpApor: lstApoderdantes)
+		    {
+		    	cadena += devolverDesTipoDOI(tmpApor.getTipDoi()) + ConstantesVisado.DOS_PUNTOS + tmpApor.getNumDoi() +
+						  ConstantesVisado.GUION + tmpApor.getApePat() + " " + tmpApor.getApeMat() + " " + 
+						  tmpApor.getNombre() + ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
+		    }
+			
+			tmpSol.setTxtApoderado(cadena);		
+			
+			//logger.info("Tamanio total agrupaciones de Solicitud: " + tmpSol.getCodSoli() + ": " + lstAgrupacionSimpleDto.size());
+		}
+		
 	}
 	
 	public void generarNombreArchivo() 
 	{
-		String grupoSSJJ = (String) Utilitarios.getObjectInSession("GRUPO_JRD");
-		String grupoADM = (String) Utilitarios.getObjectInSession("GRUPO_ADM");
-		String grupoOFI = (String) Utilitarios.getObjectInSession("GRUPO_OFI");
-		String rol="";
-		
-		if (grupoSSJJ!=null)
-		{
-			rol="SSJJ";
-		}
-		else if (grupoADM!=null)
-		{
-			rol="ADM";
-		}
-		else if (grupoOFI!=null)
-		{
-			rol="OFI";
-		}
-		
-		setNombreArchivoExcel("Solicitudes_Visado "	+ obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + rol);
+		setNombreArchivoExcel("Extractor_"	+ obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + obtenerHoraArchivoExcel());
 	}
 
 	public String obtenerFechaArchivoExcel() 
 	{
 		java.util.Date date = new java.util.Date();
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+		String fecha = sdf.format(date);
+		String nuevaFecha = fecha.substring(0, 2) + "" + fecha.substring(3, 5) + "" + fecha.substring(6, fecha.length());
+
+		return nuevaFecha;
+	}
+	
+	public String obtenerHoraArchivoExcel() 
+	{
+		java.util.Date date = new java.util.Date();
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm:ss");
 		String fecha = sdf.format(date);
 		String nuevaFecha = fecha.substring(0, 2) + "" + fecha.substring(3, 5) + "" + fecha.substring(6, fecha.length());
 
@@ -223,12 +358,90 @@ public class ReportesMB
 			HSSFWorkbook wb = new HSSFWorkbook();
 
 			// Creo la Hoja en Excel
-			Sheet sheet = wb.createSheet(obtenerFechaArchivoExcel());
+			Sheet sheet = wb.createSheet(ConstantesVisado.RPT_NOMBRE_HOJA1);
 
 			// quito las lineas del libro para darle un mejor acabado
 			sheet.setDisplayGridlines(false);
 			//sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
-
+			
+			//Se crea la leyenda de quien genero el archivo y la hora respectiva
+			Row rowG = sheet.createRow((short) 2);
+			crearCell(wb, rowG, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false, false,false);
+			crearCell(wb, rowG, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerGenerador(),  true, false,true);
+			
+			Row rowG1 = sheet.createRow((short) 3);
+			crearCell(wb, rowG1, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false, false,false);
+			crearCell(wb, rowG1, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerFechaHoraActual(),  true, false,true);
+			
+			//Genera celdas con los filtros de busqueda
+			//Row rowFI = sheet.createRow((short) 2);
+			
+			crearCell(wb, rowG, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_INICIO, false, false,false);
+			if (getFechaInicio()!=null)
+			{
+				crearCell(wb, rowG, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getFechaInicio().toGMTString(), true, false,true);
+			}
+			else
+			{
+				crearCell(wb, rowG, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
+			//Row rowFF = sheet.createRow((short) 2);
+			
+			crearCell(wb, rowG, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_FIN, false, false,false);
+			if (getFechaFin()!=null)
+			{
+				crearCell(wb, rowG, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getFechaFin().toGMTString(), true, false,true);
+			}
+			else
+			{
+				crearCell(wb, rowG, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
+			Row rowEs = sheet.createRow((short) 4);
+			
+			crearCell(wb, rowEs, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_ESTADO, false, false,false);
+			if (lstEstadoSelected!=null)
+			{
+				/*String cadena = "";
+				int ind=0;
+				
+				for (; ind <= lstEstadoSelected.size() - 1; ind++) 
+				{
+					cadena+= buscarEstadoxCodigo(lstEstadoSelected.get(ind))+",";
+				}*/
+				String cadena="";
+				int j=0;
+				int cont=1;
+				
+				for (;j<=lstEstadoSelected.size()-1;j++)
+				{
+					if (lstEstadoSelected.size()>1)
+					{
+						if (cont==lstEstadoSelected.size())
+						{
+							cadena=cadena.concat(buscarEstadoxCodigo(lstEstadoSelected.get(j).toString()));
+						}
+						else
+						{
+							cadena=cadena.concat(buscarEstadoxCodigo(lstEstadoSelected.get(j).toString().concat(",")));
+							cont++;
+						}
+					}
+					else
+					{
+						cadena = buscarEstadoxCodigo(lstEstadoSelected.get(j)).toString();
+					}		
+				}
+				
+				crearCell(wb, rowEs, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+			}
+			else
+			{
+				crearCell(wb, rowEs, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+			}
+			
+			//Generando la estructura de las solicitudes
 			if (solicitudes.size()==0)
 			{
 				logger.info("Sin registros para exportar");
@@ -236,53 +449,62 @@ public class ReportesMB
 			else
 			{
 				// Se crea la cabecera de la tabla de resultados
-				Row rowT = sheet.createRow((short) 12);
+				Row rowT = sheet.createRow((short) 7);
 
 				// Creo las celdas de mi fila, se puede poner un diseño a la celda
 				crearCell(wb, rowT, 0, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_ITEM, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_ITEM, true, true,false);
 				crearCell(wb, rowT, 1, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_NRO_SOLICITUD, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_CODIGO, true, true,false);
 				crearCell(wb, rowT, 2, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_COD_OFICINA, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_ESTADO, true, true,false);
 				crearCell(wb, rowT, 3, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_OFICINA, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_TIPO_SOL, true, true,false);
 				crearCell(wb, rowT, 4, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_TERRITORIO, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_TIPO_COMISION, true, true,false);
 				crearCell(wb, rowT, 5, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_ESTADO, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_COD_OFICINA, true, true,false);
 				crearCell(wb, rowT, 6, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_IMPORTE, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_OFICINA, true, true,false);
 				crearCell(wb, rowT, 7, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_PODERDANTE, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_MONEDA, true, true,false);
 				crearCell(wb, rowT, 8, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_APODERADO, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_IMPORTE, true, true,false);
 				crearCell(wb, rowT, 9, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_TIPO_SOL, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_NRO_VOUCHER, true, true,false);
 				crearCell(wb, rowT, 10, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_TIPO_OPE, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_TERRITORIO, true, true,false);
 				crearCell(wb, rowT, 11, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_ESTUDIO, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_GRUPO, true, true,false);
 				crearCell(wb, rowT, 12, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_NIVEL, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_COD_CENTRAL, true, true,false);
 				crearCell(wb, rowT, 13, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_FECHA_ENVIO, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_NOMBRES, true, true,false);
 				crearCell(wb, rowT, 14, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_FECHA_RPTA, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_TIPO_DOI, true, true,false);
 				crearCell(wb, rowT, 15, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_FECHA_ESTADO, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_NRO_DOI, true, true,false);
 				crearCell(wb, rowT, 16, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_COMISION, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_CELULAR, true, true,false);
 				crearCell(wb, rowT, 17, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_LIBERADO, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_FIJO, true, true,false);
 				crearCell(wb, rowT, 18, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_DELEGADO, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_CLASIFICACION, true, true,false);
 				crearCell(wb, rowT, 19, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_EN_REVISION, true, true,false);
-				crearCell(wb, rowT, 20, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_REVOCATORIA, true, true,false);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_TIPO_PARTICIPACION, true, true,false);
 				
-				int numReg=13;
+				crearCell(wb, rowT, 20, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_TIPO_COMISION, true, true,false);
+				crearCell(wb, rowT, 21, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_ESTUDIO, true, true,false);
+				crearCell(wb, rowT, 22, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_RECLAMO, true, true,false);
+				crearCell(wb, rowT, 23, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_NIVELES, true, true,false);
+				crearCell(wb, rowT, 24, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_DELEGACION, true, true,false);
+				
+				int numReg=8;
 				int contador=0;
 				for (TiivsSolicitud tmp: solicitudes)
 				{
@@ -306,160 +528,153 @@ public class ReportesMB
 						crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(contador), true, false,true);
 					}
 					
-					//Columna Nro Solicitud en Excel
+					//Columna Codigo en Excel
 					crearCell(wb, row, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getCodSoli(), true, false,true);
-										
-					//Columna Cod Oficina en Excel
-					crearCell(wb, row, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsOficina1().getCodOfi()),true, false,true);
-					
-					//Columna Oficina en Excel
-					crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsOficina1().getDesOfi()),true, false,true);
-					
-					//Columna Territorio en Excel
-					crearCell(wb, row, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarDesTerritorio(tmp.getTiivsOficina1().getTiivsTerritorio().getCodTer()),true, false,true);
 					
 					//Columna Estado en Excel
-					crearCell(wb, row, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtEstado(), true, false,true);
-					
-					//Columna Importe en Excel
-					crearCell(wb, row, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtImporte(), true, false,true);
-					
-					//Columna Poderdante en Excel
-					crearCell(wb, row, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtPoderdante(), true, false,true);
-					
-					//Columna Apoderado en Excel
-					crearCell(wb, row, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtApoderado(), true, false,true);
+					crearCell(wb, row, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarEstadoxCodigo(tmp.getEstado()), true, false,true);
 					
 					//Columna Tipo Solicitud en Excel
-					crearCell(wb, row, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsTipoSolicitud().getDesTipServicio()), true, false,true);
+					crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsTipoSolicitud().getDesTipServicio()), true, false,true);
 					
-					//Columna Operaciones Bancarias en Excel
-					crearCell(wb, row, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtOpeBan(), true, false,true);
+					//Columna Tipo Comision en Excel
+					crearCell(wb, row, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+										
+					//Columna Cod Oficina en Excel
+					crearCell(wb, row, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsOficina1().getCodOfi()),true, false,true);
+					
+					//Columna Oficina en Excel
+					crearCell(wb, row, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsOficina1().getDesOfi()),true, false,true);
+					
+					//Columna Moneda en Excel
+					crearCell(wb, row, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarAbrevMoneda(validarCampoNull(tmp.getMoneda())), true, false,true);
+					
+					//Columna Importe en Excel
+					crearCell(wb, row, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getImporte().toString()), true, false,true);
+					
+					//Columna Nro Voucher en Excel
+					crearCell(wb, row, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getNroVoucher()), true, false,true);
+					
+					//Columna Territorio en Excel
+					crearCell(wb, row, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, 
+							buscarDesTerritorio(validarCampoNull(tmp.getTiivsOficina1().getTiivsTerritorio().getCodTer())), true, false,true);
+					
+					int fila=row.getRowNum();
+					int filaTmp=row.getRowNum();
+					List<AgrupacionSimpleDto> tmpListaAgrupaciones = buscarAgrupacionesxSolicitud(tmp.getCodSoli());
+					
+					for (AgrupacionSimpleDto tmpAgrup: tmpListaAgrupaciones)
+					{
+						if (tmpAgrup.getId().getCodSoli().equals(tmp.getCodSoli()))
+						{
+							//Columna Cod Central en Excel
+							crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(tmpAgrup.getId().getNumGrupo()), true, false,true);
+							
+							for (TiivsPersona tmpPersonaPod: tmpAgrup.getLstPoderdantes())
+							{
+								//Columna Cod Central en Excel
+								crearCell(wb, row, 12, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmpPersonaPod.getCodCen(), true, false,true);
+								
+								//Columna Poderdante en Excel
+								crearCell(wb, row, 13, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmpPersonaPod.getNombre() + " " + tmpPersonaPod.getApePat() + " " + tmpPersonaPod.getApeMat() , true, false,true);
+								
+								//Columna Tipo DOI en Excel
+								crearCell(wb, row, 14, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerDescripcionDocumentos(tmpPersonaPod.getTipDoi().trim()), true, false,true);
+								
+								//Columna Nro DOI en Excel
+								crearCell(wb, row, 15, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmpPersonaPod.getNumDoi(), true, false,true);
+								
+								//Columna Celular en Excel
+								crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmpPersonaPod.getNumCel(), true, false,true);
+								
+								//Columna Nro Fijo en Excel
+								crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+								
+								//Columna Clasificacion en Excel
+								crearCell(wb, row, 18, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_PODERDANTE, true, false,true);
+								
+								//Columna Particicacion en Excel
+								crearCell(wb, row, 19, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerDescripcionClasificacion(tmpPersonaPod.getTipPartic().trim()), true, false,true);
+								
+								filaTmp++;
+								
+								row.setRowNum(filaTmp);
+							}
+							
+							for (TiivsPersona tmpPersonaApod: tmpAgrup.getLstApoderdantes())
+							{
+								//Columna Cod Central en Excel
+								crearCell(wb, row, 12, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmpPersonaApod.getCodCen(), true, false,true);
+								
+								//Columna Poderdante en Excel
+								crearCell(wb, row, 13, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmpPersonaApod.getNombre() + " " + tmpPersonaApod.getApePat() + " " + tmpPersonaApod.getApeMat(), true, false,true);
+								
+								//Columna Tipo DOI en Excel
+								crearCell(wb, row, 14, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerDescripcionDocumentos(tmpPersonaApod.getTipDoi().trim()), true, false,true);
+								
+								//Columna Nro DOI en Excel
+								crearCell(wb, row, 15, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmpPersonaApod.getNumDoi(), true, false,true);
+								
+								//Columna Celular en Excel
+								crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmpPersonaApod.getNumCel(), true, false,true);
+								
+								//Columna Nro Fijo en Excel
+								crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+								
+								//Columna Clasificacion en Excel
+								crearCell(wb, row, 18, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_APODERADO, true, false,true);
+								
+								//Columna Particicacion en Excel
+								crearCell(wb, row, 19, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerDescripcionClasificacion(tmpPersonaApod.getTipPartic().trim()), true, false,true);
+								
+								filaTmp++;
+								
+								row.setRowNum(filaTmp);
+							}
+						}
+					}
+					
+					row.setRowNum(fila);
+					
+					//Columna Tipo Comision en Excel
+					crearCell(wb, row, 20, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
 					
 					//Columna Estudio en Excel
 					if (tmp.getTiivsEstudio()!=null)
 					{
-						crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsEstudio().getDesEstudio()) , true, false,true);
+						crearCell(wb, row, 21, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsEstudio().getDesEstudio()) , true, false,true);
 					}
 					else
 					{
-						crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(null),true,false,true);
+						crearCell(wb, row, 21, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(null),true,false,true);
 					}
 					
-					//Columna Nivel en Excel
-					crearCell(wb, row, 12, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtNivel(), true, false,true);
+					//Columna Reclamo en Excel
+					crearCell(wb, row, 22, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
 					
-					//Columna Fecha Envio en Excel
-					if (tmp.getFechaEnvio()!=null)
-					{
-						crearCell(wb, row, 13, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getFechaEnvio()), true, false,true);
-					}
-					else
-					{
-						crearCell(wb, row, 13, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-					}
-							
-					//Columna Fecha Rpta en Excel
-					if (tmp.getFechaRespuesta()!=null)
-					{
-						crearCell(wb, row, 14, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getFechaRespuesta()), true, false,true);
-					}
-					else
-					{
-						crearCell(wb, row, 14, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-					}
-					
-					//Columna Fecha Estado en Excel
-					if (tmp.getFechaEstado()!=null)
-					{
-						crearCell(wb, row, 15, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getFechaEstado()), true, false,true);
-					}
-					else
-					{
-						crearCell(wb, row, 15, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-					}
-					
-					//Columna Comision en Excel
-					if (tmp.getComision()!=null)
-					{
-						crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getComision()), true, false,true);
-					}
-					else
-					{
-						crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
-					}
-					
-					//Columna Liberado
-					if (tmp.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
-					{
-						crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
-					}
-					else
-					{
-						if (tmp.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02))
-						{
-							crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
-						}
-						else
-						{
-							crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
-						}
-					}
+					//Columna Niveles en Excel
+					crearCell(wb, row, 23, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
 					
 					//Columna Delegado
 					if (validarSolicitudConDelegacion(tmp.getCodSoli()))
 					{
-						crearCell(wb, row, 18, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+						crearCell(wb, row, 24, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
 					}
 					else
 					{
-						crearCell(wb, row, 18, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
-					}
-					
-					//Columna En Revision
-					if (validarSolicitudEnRevision(tmp.getCodSoli()))
-					{
-						crearCell(wb, row, 19, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
-					}
-					else
-					{
-						crearCell(wb, row, 19, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
-					}
-					
-					//Columna Revocatoria
-					if (validarSolicitudRevocada(tmp.getCodSoli()))
-					{
-						crearCell(wb, row, 20, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
-					}
-					else
-					{
-						crearCell(wb, row, 20, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+						crearCell(wb, row, 24, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
 					}
 					
 					numReg++;
 				}
 			}
 			
-			sheet.autoSizeColumn(0);
-			sheet.autoSizeColumn(1);
-			sheet.autoSizeColumn(2);
-			sheet.setColumnWidth(3,256*20);
-			sheet.setColumnWidth(4,256*20);
-			sheet.setColumnWidth(6,256*15);
-			sheet.setColumnWidth(7,256*20);
-			sheet.setColumnWidth(8,256*20);
-			sheet.autoSizeColumn(9);
-			sheet.setColumnWidth(10,256*20);
-			sheet.setColumnWidth(11,256*12);
-			sheet.autoSizeColumn(5);
-			sheet.autoSizeColumn(13);
-			sheet.autoSizeColumn(14);
-			sheet.autoSizeColumn(15);
-			sheet.autoSizeColumn(16);
-			sheet.autoSizeColumn(17);
-			sheet.autoSizeColumn(18);
-			sheet.autoSizeColumn(19);
-			sheet.autoSizeColumn(20);
+			//Arregla ancho de columnas
+			int pos=0;
+			for (;pos<=24;pos++)
+			{
+				sheet.autoSizeColumn(pos);
+			}
 						
 			//Se crea el archivo con la informacion y estilos definidos previamente
 			String strRuta="";
@@ -486,6 +701,53 @@ public class ReportesMB
 			e.printStackTrace();
 			//logger.info("Error al generar el archivo excel debido a: " + e.getStackTrace());
 		}	
+	}
+	
+	public List<AgrupacionSimpleDto> buscarAgrupacionesxSolicitud(String codSoli)
+	{
+		List<AgrupacionSimpleDto> tmpLista = new ArrayList<AgrupacionSimpleDto>();
+		
+		for (AgrupacionSimpleDto tmpAgrup: lstAgrupacionSimpleDto)
+		{
+			if (tmpAgrup.getId().getCodSoli().equals(codSoli))
+			{
+				tmpLista.add(tmpAgrup);
+			}
+		}
+		
+		logger.info("Agrupaciones encontradas de la solicitud: " + codSoli + ": " + tmpLista.size());
+		
+		return tmpLista;
+	}
+	
+	public String buscarAbrevMoneda(String codigo) {
+		int i = 0;
+		String descripcion = "";
+
+		for (; i <= combosMB.getLstMoneda().size() - 1; i++) 
+		{
+			if (combosMB.getLstMoneda().get(i).getCodMoneda().equalsIgnoreCase(codigo)) {
+				if (combosMB.getLstMoneda().get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_SOLES_TBL_MONEDA)) 
+				{
+					descripcion = ConstantesVisado.CAMPO_ABREV_SOLES;
+				} 
+				else if (combosMB.getLstMoneda().get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_DOLARES_TBL_MONEDA)) 
+				{
+					descripcion = ConstantesVisado.CAMPO_ABREV_DOLARES;
+				} 
+				else if (combosMB.getLstMoneda().get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_EUROS_TBL_MONEDA)) 
+				{
+					descripcion = ConstantesVisado.CAMPO_ABREV_EUROS;
+				} 
+				else 
+				{
+					descripcion = combosMB.getLstMoneda().get(i).getDesMoneda();
+				}
+				break;
+			}
+		}
+
+		return descripcion;
 	}
 	
 	public void abrirExcel()
@@ -638,7 +900,7 @@ public class ReportesMB
 	{
 		boolean bEncontrado=false;
 		
-		String codigoSolicVerA = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_A);
+		/*String codigoSolicVerA = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_A);
 		String codigoSolicVerB = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_B);
 
 		GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -651,7 +913,7 @@ public class ReportesMB
 			logger.debug("Error al buscar en historial de solicitudes");
 		}
 		
-		lstSolicitudesSelected.clear();
+		//lstSolicitudesSelected.clear();
 		if (lstHistorial.size() > 0) 
 		{
 			// Colocar aqui la logica para filtrar los niveles aprobados o rechazados
@@ -686,7 +948,7 @@ public class ReportesMB
 				bEncontrado=true;
 				break;
 			}
-		}
+		}*/
 		return bEncontrado;
 	}
 	
@@ -869,27 +1131,30 @@ public class ReportesMB
 	public String buscarDesTerritorio(String codigoTerritorio) 
 	{
 		String resultado = "";
-		logger.debug("Buscando Territorio por codigo: " + codigoTerritorio);
-		// System.out.println("Buscando Territorio por codigo: " +
-		// codigoTerritorio);
-
-		GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroTerr = Busqueda.forClass(TiivsTerritorio.class);
-		filtroTerr.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_TERRITORIO,
-				codigoTerritorio));
-
-		List<TiivsTerritorio> lstTmp = new ArrayList<TiivsTerritorio>();
-
-		try {
-			lstTmp = terrDAO.buscarDinamico(filtroTerr);
-		} catch (Exception exp) {
-			logger.debug("No se pudo encontrar el nombre del territorio");
+		
+		if (codigoTerritorio.compareTo("")!=0)
+		{
+			logger.debug("Buscando Territorio por codigo: " + codigoTerritorio);
+			
+			GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit
+					.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroTerr = Busqueda.forClass(TiivsTerritorio.class);
+			filtroTerr.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_TERRITORIO,
+					codigoTerritorio));
+	
+			List<TiivsTerritorio> lstTmp = new ArrayList<TiivsTerritorio>();
+	
+			try {
+				lstTmp = terrDAO.buscarDinamico(filtroTerr);
+			} catch (Exception exp) {
+				logger.debug("No se pudo encontrar el nombre del territorio");
+			}
+	
+			if (lstTmp.size() == 1) {
+				resultado = lstTmp.get(0).getDesTer();
+			}
 		}
-
-		if (lstTmp.size() == 1) {
-			resultado = lstTmp.get(0).getDesTer();
-		}
+		
 		return resultado;
 	}
 	
@@ -1043,5 +1308,14 @@ public class ReportesMB
 
 	public void setPERFIL_USUARIO(String pERFIL_USUARIO) {
 		PERFIL_USUARIO = pERFIL_USUARIO;
+	}
+
+	public List<AgrupacionSimpleDto> getLstAgrupacionSimpleDto() {
+		return lstAgrupacionSimpleDto;
+	}
+
+	public void setLstAgrupacionSimpleDto(
+			List<AgrupacionSimpleDto> lstAgrupacionSimpleDto) {
+		this.lstAgrupacionSimpleDto = lstAgrupacionSimpleDto;
 	}
 }
