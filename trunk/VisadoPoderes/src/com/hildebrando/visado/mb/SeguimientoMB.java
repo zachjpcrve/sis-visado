@@ -617,22 +617,6 @@ public class SeguimientoMB
 		return resultado;
 	}
 	
-	public String obtenerFechaHoraActual()
-	{
-		String fechaActualizacion="";
-		String horaActualizacion="";
-		
-		java.util.Date date = new java.util.Date();
-		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-		String fecha = sdf.format(date);
-		fechaActualizacion = fecha.substring(0, 2) + ConstantesVisado.SLASH + fecha.substring(3, 5) + ConstantesVisado.SLASH + fecha.substring(6, fecha.length());
-
-		java.text.SimpleDateFormat sdf2 = new java.text.SimpleDateFormat("HH:mm:ss");
-		horaActualizacion = sdf2.format(date);
-		
-		return fechaActualizacion + ConstantesVisado.GUION + horaActualizacion;		
-	}
-	
 	public void exportarExcelPOI()
 	{
 		crearExcel();
@@ -658,18 +642,9 @@ public class SeguimientoMB
 			rol="OFI";
 		}
 		
-		setNombreArchivoExcel("Solicitudes_Visado "	+ obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + rol);
+		setNombreArchivoExcel("Solicitudes_Visado "	+ Utilitarios.obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + rol);
 	}
 
-	public String obtenerFechaArchivoExcel() 
-	{
-		java.util.Date date = new java.util.Date();
-		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-		String fecha = sdf.format(date);
-		String nuevaFecha = fecha.substring(0, 2) + "" + fecha.substring(3, 5) + "" + fecha.substring(6, fecha.length());
-
-		return nuevaFecha;
-	}
 	
 	private void crearExcel() 
 	{
@@ -679,7 +654,7 @@ public class SeguimientoMB
 			HSSFWorkbook wb = new HSSFWorkbook();
 
 			// Creo la Hoja en Excel
-			Sheet sheet = wb.createSheet(obtenerFechaArchivoExcel());
+			Sheet sheet = wb.createSheet(Utilitarios.obtenerFechaArchivoExcel());
 
 			// quito las lineas del libro para darle un mejor acabado
 			sheet.setDisplayGridlines(false);
@@ -696,7 +671,7 @@ public class SeguimientoMB
 			
 			Row rowG1 = sheet.createRow((short) 2);
 			crearCell(wb, rowG1, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false, false,false);
-			crearCell(wb, rowG1, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerFechaHoraActual(),  true, false,true);
+			crearCell(wb, rowG1, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.obtenerFechaHoraActual(),  true, false,true);
 			
 			//Genera celdas con los filtros de busqueda
 			Row row2 = sheet.createRow((short) 4);
@@ -1055,10 +1030,10 @@ public class SeguimientoMB
 					crearCell(wb, row, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getCodSoli(), true, false,true);
 										
 					//Columna Cod Oficina en Excel
-					crearCell(wb, row, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsOficina1().getCodOfi()),true, false,true);
+					crearCell(wb, row, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsOficina1().getCodOfi()),true, false,true);
 					
 					//Columna Oficina en Excel
-					crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsOficina1().getDesOfi()),true, false,true);
+					crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsOficina1().getDesOfi()),true, false,true);
 					
 					//Columna Territorio en Excel
 					crearCell(wb, row, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarDesTerritorio(tmp.getTiivsOficina1().getTiivsTerritorio().getCodTer()),true, false,true);
@@ -1076,7 +1051,7 @@ public class SeguimientoMB
 					crearCell(wb, row, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtApoderado(), true, false,true);
 					
 					//Columna Tipo Solicitud en Excel
-					crearCell(wb, row, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsTipoSolicitud().getDesTipServicio()), true, false,true);
+					crearCell(wb, row, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsTipoSolicitud().getDesTipServicio()), true, false,true);
 					
 					//Columna Operaciones Bancarias en Excel
 					crearCell(wb, row, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtOpeBan(), true, false,true);
@@ -1084,11 +1059,11 @@ public class SeguimientoMB
 					//Columna Estudio en Excel
 					if (tmp.getTiivsEstudio()!=null)
 					{
-						crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsEstudio().getDesEstudio()) , true, false,true);
+						crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsEstudio().getDesEstudio()) , true, false,true);
 					}
 					else
 					{
-						crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(null),true,false,true);
+						crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(null),true,false,true);
 					}
 					
 					//Columna Nivel en Excel
@@ -1293,19 +1268,7 @@ public class SeguimientoMB
 		return res;
 	}
 	
-	private String validarCampoNull(String campo)
-	{
-		String resultado="";
-		if (campo==null)
-		{
-			resultado="";
-		}
-		else
-		{
-			resultado=campo;
-		}
-		return resultado;
-	}
+	
 	
 	private static void crearTituloCell(HSSFWorkbook wb, Row row, int column, short halign, short valign, String strContenido) 
 	{
