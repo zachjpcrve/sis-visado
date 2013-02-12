@@ -16,9 +16,7 @@ import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
@@ -198,8 +196,7 @@ public class SolicitudRegistroMB {
 		try {
 			
 			//Obteniendo ubicación del proyecto
-			HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();							
-			sUbicacionTemporal = request.getRealPath(File.separator)  + File.separator + "files" + File.separator;
+			sUbicacionTemporal = Utilitarios.getProjectPath()  + File.separator + ConstantesVisado.FILES + File.separator;			
 			this.setUbicacionTemporal(sUbicacionTemporal);
 			
 			logger.debug("ubicacion temporal "+ sUbicacionTemporal);
@@ -1411,7 +1408,9 @@ public class SolicitudRegistroMB {
 
 	public void llamarComision() {
 		logger.info("************************** llamar Comision *****************************");
-		this.solicitudRegistrarT.setComision(objRegistroUtilesMB.calcularComision(this.solicitudRegistrarT));
+		this.solicitudRegistrarT.setTipoComision(objRegistroUtilesMB.obtenerTipoComision(this.solicitudRegistrarT));
+		this.solicitudRegistrarT.setComision(objRegistroUtilesMB.obtenerComision(solicitudRegistrarT.getTipoComision()));
+		logger.info("TIPO COMISION : " + this.solicitudRegistrarT.getTipoComision());
 		logger.info("COMISION : " + this.solicitudRegistrarT.getComision());
 
 	}
