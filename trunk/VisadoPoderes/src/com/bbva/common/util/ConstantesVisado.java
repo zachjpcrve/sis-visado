@@ -41,6 +41,7 @@ public class ConstantesVisado {
 	public static final java.lang.String FILES="files";
 	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_RESPONSABLE="R";
 	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_DELEGADO="D";
+	public static final java.lang.String PREFIJO_NOMBRE_SOLICITUD_VISADO="SolVisado";
 	
 	/*clarosa*/
 	public static final java.lang.String CODIGO_MULTITABLA_DIAS_UTILES = "T14";
