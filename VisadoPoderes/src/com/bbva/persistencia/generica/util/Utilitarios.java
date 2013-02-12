@@ -299,4 +299,54 @@ public class Utilitarios {
 	        Matcher m = p.matcher(email);
 	        return m.matches();
 	  }
+	  
+	  public static String obtenerFechaArchivoExcel() 
+	  {
+		java.util.Date date = new java.util.Date();
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+		String fecha = sdf.format(date);
+		String nuevaFecha = fecha.substring(0, 2) + "" + fecha.substring(3, 5) + "" + fecha.substring(6, fecha.length());
+	
+		return nuevaFecha;
+	  }
+		
+	  public static String obtenerHoraArchivoExcel() 
+	  {
+		java.util.Date date = new java.util.Date();
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm:ss");
+		String fecha = sdf.format(date);
+		String nuevaFecha = fecha.substring(0, 2) + "" + fecha.substring(3, 5) + "" + fecha.substring(6, fecha.length());
+	
+		return nuevaFecha;
+	  }
+	  
+	  public static String obtenerFechaHoraActual()
+		{
+			String fechaActualizacion="";
+			String horaActualizacion="";
+			
+			java.util.Date date = new java.util.Date();
+			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+			String fecha = sdf.format(date);
+			fechaActualizacion = fecha.substring(0, 2) + ConstantesVisado.SLASH + fecha.substring(3, 5) + ConstantesVisado.SLASH + fecha.substring(6, fecha.length());
+
+			java.text.SimpleDateFormat sdf2 = new java.text.SimpleDateFormat("HH:mm:ss");
+			horaActualizacion = sdf2.format(date);
+			
+			return fechaActualizacion + ConstantesVisado.GUION + horaActualizacion;		
+		}
+	  
+	  public static String validarCampoNull(String campo)
+		{
+			String resultado="";
+			if (campo==null)
+			{
+				resultado="";
+			}
+			else
+			{
+				resultado=campo;
+			}
+			return resultado;
+		}
 }

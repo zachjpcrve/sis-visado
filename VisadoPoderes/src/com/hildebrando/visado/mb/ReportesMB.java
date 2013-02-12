@@ -19,7 +19,6 @@ import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
@@ -159,22 +158,6 @@ public class ReportesMB
 			}
 		}
 		return descripcion;
-	}
-	
-	public String obtenerFechaHoraActual()
-	{
-		String fechaActualizacion="";
-		String horaActualizacion="";
-		
-		java.util.Date date = new java.util.Date();
-		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-		String fecha = sdf.format(date);
-		fechaActualizacion = fecha.substring(0, 2) + ConstantesVisado.SLASH + fecha.substring(3, 5) + ConstantesVisado.SLASH + fecha.substring(6, fecha.length());
-
-		java.text.SimpleDateFormat sdf2 = new java.text.SimpleDateFormat("HH:mm:ss");
-		horaActualizacion = sdf2.format(date);
-		
-		return fechaActualizacion + ConstantesVisado.GUION + horaActualizacion;		
 	}
 	
 	public void exportarExcelPOI()
@@ -391,28 +374,10 @@ public class ReportesMB
 	
 	public void generarNombreArchivo() 
 	{
-		setNombreArchivoExcel("Extractor_"	+ obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + obtenerHoraArchivoExcel());
+		setNombreArchivoExcel("Extractor_"	+ Utilitarios.obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + Utilitarios.obtenerHoraArchivoExcel());
 	}
 
-	public String obtenerFechaArchivoExcel() 
-	{
-		java.util.Date date = new java.util.Date();
-		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-		String fecha = sdf.format(date);
-		String nuevaFecha = fecha.substring(0, 2) + "" + fecha.substring(3, 5) + "" + fecha.substring(6, fecha.length());
-
-		return nuevaFecha;
-	}
 	
-	public String obtenerHoraArchivoExcel() 
-	{
-		java.util.Date date = new java.util.Date();
-		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm:ss");
-		String fecha = sdf.format(date);
-		String nuevaFecha = fecha.substring(0, 2) + "" + fecha.substring(3, 5) + "" + fecha.substring(6, fecha.length());
-
-		return nuevaFecha;
-	}
 	
 	private void crearExcel() 
 	{
@@ -435,7 +400,7 @@ public class ReportesMB
 			
 			Row rowG1 = sheet.createRow((short) 3);
 			crearCell(wb, rowG1, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false, false,false);
-			crearCell(wb, rowG1, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerFechaHoraActual(),  true, false,true);
+			crearCell(wb, rowG1, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.obtenerFechaHoraActual(),  true, false,true);
 			
 			//Genera celdas con los filtros de busqueda
 			//Row rowFI = sheet.createRow((short) 2);
@@ -599,29 +564,29 @@ public class ReportesMB
 					crearCell(wb, row, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarEstadoxCodigo(tmp.getEstado()), true, false,true);
 					
 					//Columna Tipo Solicitud en Excel
-					crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsTipoSolicitud().getDesTipServicio()), true, false,true);
+					crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsTipoSolicitud().getDesTipServicio()), true, false,true);
 					
 					//Columna Tipo Comision en Excel
 					crearCell(wb, row, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
 										
 					//Columna Cod Oficina en Excel
-					crearCell(wb, row, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsOficina1().getCodOfi()),true, false,true);
+					crearCell(wb, row, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsOficina1().getCodOfi()),true, false,true);
 					
 					//Columna Oficina en Excel
-					crearCell(wb, row, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsOficina1().getDesOfi()),true, false,true);
+					crearCell(wb, row, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsOficina1().getDesOfi()),true, false,true);
 					
 					//Columna Moneda en Excel
-					crearCell(wb, row, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarAbrevMoneda(validarCampoNull(tmp.getMoneda())), true, false,true);
+					crearCell(wb, row, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarAbrevMoneda(Utilitarios.validarCampoNull(tmp.getMoneda())), true, false,true);
 					
 					//Columna Importe en Excel
-					crearCell(wb, row, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getImporte().toString()), true, false,true);
+					crearCell(wb, row, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getImporte().toString()), true, false,true);
 					
 					//Columna Nro Voucher en Excel
-					crearCell(wb, row, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getNroVoucher()), true, false,true);
+					crearCell(wb, row, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getNroVoucher()), true, false,true);
 					
 					//Columna Territorio en Excel
 					crearCell(wb, row, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, 
-							buscarDesTerritorio(validarCampoNull(tmp.getTiivsOficina1().getTiivsTerritorio().getCodTer())), true, false,true);
+							buscarDesTerritorio(Utilitarios.validarCampoNull(tmp.getTiivsOficina1().getTiivsTerritorio().getCodTer())), true, false,true);
 					
 					int fila=row.getRowNum();
 					int filaTmp=row.getRowNum();
@@ -706,11 +671,11 @@ public class ReportesMB
 					//Columna Estudio en Excel
 					if (tmp.getTiivsEstudio()!=null)
 					{
-						crearCell(wb, row, 21, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(tmp.getTiivsEstudio().getDesEstudio()) , true, false,true);
+						crearCell(wb, row, 21, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsEstudio().getDesEstudio()) , true, false,true);
 					}
 					else
 					{
-						crearCell(wb, row, 21, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, validarCampoNull(null),true,false,true);
+						crearCell(wb, row, 21, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(null),true,false,true);
 					}
 					
 					//Columna Reclamo en Excel
@@ -954,39 +919,6 @@ public class ReportesMB
 		return res;
 	}
 	
-	private String validarCampoNull(String campo)
-	{
-		String resultado="";
-		if (campo==null)
-		{
-			resultado="";
-		}
-		else
-		{
-			resultado=campo;
-		}
-		return resultado;
-	}
-	
-	private static void crearTituloCell(HSSFWorkbook wb, Row row, int column, short halign, short valign, String strContenido) 
-	{
-		CreationHelper ch = wb.getCreationHelper();
-		Cell cell = row.createCell(column);
-		cell.setCellValue(ch.createRichTextString(strContenido));
-
-		HSSFFont cellFont = wb.createFont();
-		cellFont.setFontHeightInPoints((short) 10);
-		cellFont.setFontName(HSSFFont.FONT_ARIAL);
-		cellFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-		cellFont.setUnderline((byte) 1);
-
-		CellStyle cellStyle = wb.createCellStyle();
-		cellStyle.setAlignment(halign);
-		cellStyle.setVerticalAlignment(valign);
-		cellStyle.setFont(cellFont);
-		cell.setCellStyle(cellStyle);
-	}
-
 	private static void crearCell(Workbook wb, Row row, int column, short halign, short valign, String strContenido, boolean booBorde,
 			boolean booCabecera, boolean booFiltrosBus) 
 	{
