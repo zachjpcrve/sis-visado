@@ -1849,8 +1849,9 @@ public class ConsultarSolicitudMB {
 
 	public void llamarComision() {
 		logger.info("************************** llamar Comision *****************************");
-		this.solicitudRegistrarT.setComision(objRegistroUtilesMB
-				.calcularComision(this.solicitudRegistrarT));
+		this.solicitudRegistrarT.setTipoComision(objRegistroUtilesMB.obtenerTipoComision(this.solicitudRegistrarT));
+		this.solicitudRegistrarT.setComision(objRegistroUtilesMB.obtenerComision(solicitudRegistrarT.getTipoComision()));
+		logger.info("TIPO COMISION : " + this.solicitudRegistrarT.getTipoComision());
 		logger.info("COMISION : " + this.solicitudRegistrarT.getComision());
 
 	}
