@@ -4,89 +4,29 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import com.hildebrando.visado.modelo.TiivsPersona;
 
 
 
 public class Revocado {
 	
-	private String tipoDoiAp;
-	private String nroDoiAp;
-	private String nombreAp;
-	private String codigoCentralAp;
-	private String tipoDoiPo;
-	private String nroDoiPo;
-	private String nombrePo;
-	private String codigoRegistro;
-	
 	private String correlativo;
 	private String codAgrupacion;
 	private String nombreCompletoApoderados;
+	private List<TiivsPersona> apoderados;
 	private String nombreCompletoPoderdantes;
+	private List<TiivsPersona> poderdantes;
 	private String fechaRegistro;
 	private String estado;
 	
-	
+	private boolean flagEditPend;
+	private boolean flagEditAct;
+	private boolean flagDelete;
+
 	public Revocado(){
 		
-	}
-	
-	public Revocado(String tipoDoi1, String nroDoi1, String nombre1,
-			String codigoCenral, String tipoDoi2, String nroDoi2, String nombre2,
-			String estado, String fechaRegistro, String codRegistro) {
-		this.tipoDoiAp = tipoDoi1;
-		this.nroDoiAp = nroDoi1;
-		this.nombreAp = nombre1;
-		this.codigoCentralAp = codigoCenral;
-		this.tipoDoiPo = tipoDoi2;
-		this.nroDoiPo = nroDoi2;
-		this.nombrePo = nombre2;
-		this.estado = estado;				
-		this.fechaRegistro = fechaRegistro;
-		this.codigoRegistro = codRegistro;
-		
-	}
-	public String getNombrePo() {
-		return nombrePo;
-	}
-	public void setNombrePo(String nombrePo) {
-		this.nombrePo = nombrePo;
-	}
-	
-	public String getTipoDoiAp() {
-		return tipoDoiAp;
-	}
-	public void setTipoDoiAp(String tipoDoiAp) {
-		this.tipoDoiAp = tipoDoiAp;
-	}
-	public String getNroDoiAp() {
-		return nroDoiAp;
-	}
-	public void setNroDoiAp(String nroDoiAp) {
-		this.nroDoiAp = nroDoiAp;
-	}
-	public String getNombreAp() {
-		return nombreAp;
-	}
-	public void setNombreAp(String nombreAp) {
-		this.nombreAp = nombreAp;
-	}
-	public String getCodigoCentralAp() {
-		return codigoCentralAp;
-	}
-	public void setCodigoCentralAp(String codigoCentralAp) {
-		this.codigoCentralAp = codigoCentralAp;
-	}
-	public String getTipoDoiPo() {
-		return tipoDoiPo;
-	}
-	public void setTipoDoiPo(String tipoDoiPo) {
-		this.tipoDoiPo = tipoDoiPo;
-	}
-	public String getNroDoiPo() {
-		return nroDoiPo;
-	}
-	public void setNroDoiPo(String nroDoiPo) {
-		this.nroDoiPo = nroDoiPo;
 	}
 	public String getEstado() {
 		return estado;
@@ -94,13 +34,6 @@ public class Revocado {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	
-	public String getCodigoRegistro() {
-		return codigoRegistro;
-	}
-	public void setCodigoRegistro(String codigoRegistro) {
-		this.codigoRegistro = codigoRegistro;
-	}		
 	
 	private Date getDate(String date)
     {
@@ -150,6 +83,42 @@ public class Revocado {
 
 	public void setCorrelativo(String correlativo) {
 		this.correlativo = correlativo;
+	}
+
+	public boolean isFlagEditPend() {
+		return flagEditPend;
+	}
+
+	public void setFlagEditPend(boolean flagEditPend) {
+		this.flagEditPend = flagEditPend;
+	}
+
+	public boolean isFlagEditAct() {
+		return flagEditAct;
+	}
+
+	public void setFlagEditAct(boolean flagEditAct) {
+		this.flagEditAct = flagEditAct;
+	}
+
+	public boolean isFlagDelete() {
+		return flagDelete;
+	}
+
+	public void setFlagDelete(boolean flagDelete) {
+		this.flagDelete = flagDelete;
+	}
+	public List<TiivsPersona> getApoderados() {
+		return apoderados;
+	}
+	public void setApoderados(List<TiivsPersona> apoderados) {
+		this.apoderados = apoderados;
+	}
+	public List<TiivsPersona> getPoderdantes() {
+		return poderdantes;
+	}
+	public void setPoderdantes(List<TiivsPersona> poderdantes) {
+		this.poderdantes = poderdantes;
 	}
 
 }
