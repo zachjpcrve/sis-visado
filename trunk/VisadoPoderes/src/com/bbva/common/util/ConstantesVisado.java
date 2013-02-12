@@ -245,6 +245,7 @@ public class ConstantesVisado {
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_FECHA = "Fecha";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_USUARIO = "Usuario";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_OBS = "Observaciones";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_DELEGADO = "Delegado";
 	
 	public static final String RPT_NOMBRE_HOJA1="05.Extractor";
 	public static final String RPT_NOMBRE_HOJA2="05A.Seguimiento";
