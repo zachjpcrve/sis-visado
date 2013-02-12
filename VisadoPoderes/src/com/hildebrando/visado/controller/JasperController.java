@@ -3,6 +3,7 @@ package com.hildebrando.visado.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -262,8 +263,13 @@ public class JasperController {
     	
     	cabecera.add(solicitudPDF);
     	
+    	
+		String nombreSalida = ConstantesVisado.PREFIJO_NOMBRE_SOLICITUD_VISADO
+				+ "_" + SOLICITUD_TEMP.getCodSoli() + "_"
+				+ Utilitarios.formatoFechaHora(new Date()) + ".pdf";
+    	
         response.setHeader("Content-type", "application/pdf");
-        response.setHeader("Content-Disposition","attachment; filename=\"SolVisado.pdf\"");
+        response.setHeader("Content-Disposition","attachment; filename=\"" + nombreSalida + "\"");
 		
         JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
               
