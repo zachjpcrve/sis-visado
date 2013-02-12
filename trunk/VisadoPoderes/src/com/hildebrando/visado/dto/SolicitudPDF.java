@@ -14,10 +14,12 @@ public class SolicitudPDF implements Serializable
 	private String codSoli;
 	private String estado;
 	private String nroVoucher;
-	private String comision;
+	private Double comision;
 	private String oficina;
-	private String importe;
+	private String territorio;
+	private Double importe;
 	private String tipoServicio;
+	private String moneda;
 	private JRDataSource DOCUMENTOS;
 	private JRDataSource OPERACIONES;
 	private JRDataSource AGRUPACION;
@@ -55,10 +57,10 @@ public class SolicitudPDF implements Serializable
 	public void setNroVoucher(String nroVoucher) {
 		this.nroVoucher = nroVoucher;
 	}
-	public String getComision() {
+	public Double getComision() {
 		return comision;
 	}
-	public void setComision(String comision) {
+	public void setComision(Double comision) {
 		this.comision = comision;
 	}
 	public String getOficina() {
@@ -66,14 +68,28 @@ public class SolicitudPDF implements Serializable
 	}
 	public void setOficina(String oficina) {
 		this.oficina = oficina;
+	}	
+	public String getTerritorio() {
+		return territorio;
 	}
-	public String getImporte() {
+	public void setTerritorio(String territorio) {
+		this.territorio = territorio;
+	}
+	public Double getImporte() {
 		return importe;
 	}
-	public void setImporte(String importe) {
+	public void setImporte(Double importe) {
 		this.importe = importe;
 	}	
 		
+	public String getMoneda() {
+		return moneda;
+	}
+
+	public void setMoneda(String moneda) {
+		this.moneda = moneda;
+	}
+
 	public List<DocumentoTipoSolicitudDTO> getLstDocumentos() {
 		return lstDocumentos;
 	}
