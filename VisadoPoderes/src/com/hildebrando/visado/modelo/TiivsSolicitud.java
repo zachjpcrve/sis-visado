@@ -33,6 +33,7 @@ public class TiivsSolicitud implements java.io.Serializable {
     private String sImporteMoneda;  
 	private Timestamp fechaRespuesta;
 // MODIFICACION 
+	private String tipoComision;
 	private Double comision;
 	private String nroVoucher;
 	private Set tiivsSolicitudNivels = new HashSet(0);
@@ -216,6 +217,14 @@ public class TiivsSolicitud implements java.io.Serializable {
 
 	public void setFechaRespuesta(Timestamp fechaRespuesta) {
 		this.fechaRespuesta = fechaRespuesta;
+	}
+	
+	public String getTipoComision(){
+		return tipoComision;
+	}
+	
+	public void setTipoComision(String tipoComision){
+		this.tipoComision = tipoComision;
 	}
 
 	public Double getComision() {
