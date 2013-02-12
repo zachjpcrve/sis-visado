@@ -25,6 +25,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -44,7 +45,7 @@ import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.ComboDto;
-import com.hildebrando.visado.dto.Moneda;
+import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
@@ -53,7 +54,6 @@ import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
-import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
 
 @ManagedBean(name = "reportesMB")
@@ -69,6 +69,7 @@ public class ReportesMB
 	private List<TiivsAgrupacionPersona> lstAgrupPer;
 	private List<AgrupacionSimpleDto> lstAgrupacionSimpleDto;
 	private List<TiivsHistSolicitud> lstHistorial;
+	private List<SeguimientoDTO> lstSeguimientoDTO;
 	private List<String> lstEstudioSelected;
 	private List<String> lstEstadoNivelSelected;
 	private List<String> lstTipoSolicitudSelected;
@@ -241,6 +242,69 @@ public class ReportesMB
 		actualizarDatosDeBusqueda();
 	}
 	
+	public void obtenerHistorialSolicitud(String codSoli) 
+	{
+		logger.info("Obteniendo Historial ");
+		logger.info("Codigo de solicitud : " + codSoli);
+
+		try {
+			GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
+			filtroHist.add(Restrictions.eq("id.codSoli", codSoli));
+			filtroHist.addOrder(Order.desc("fecha"));
+
+			List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
+			lstHist = histDAO.buscarDinamico(filtroHist);
+
+			logger.info("Numero de registros encontrados:" + lstHist.size());
+
+			if (lstHist != null && lstHist.size() > 0) {
+				lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
+
+				for (TiivsHistSolicitud h : lstHist) {
+					SeguimientoDTO seg = new SeguimientoDTO();
+
+					String estado = h.getEstado();
+					if (estado != null) {
+						seg.setEstado(buscarEstadoxCodigo(estado.trim()));
+					}
+
+					String desEstadoNivel = "";
+					String desRolNivel = "";
+					Integer iCodNivel = 0;
+					String descripcionNivel = "";
+
+					if (h.getNivel() != null) {
+						if (h.getNivelRol() != null && h.getNivelRol().trim().equals(ConstantesVisado.CODIGO_CAMPO_TIPO_ROL_RESPONSABLE)) {
+							desRolNivel = "Responsable";
+						}
+						if (h.getNivelRol() != null && h.getNivelRol().trim().equals(ConstantesVisado.CODIGO_CAMPO_TIPO_ROL_DELEGADO)) {
+							desRolNivel = "Delegado";
+						}
+						if (h.getNivelEstado() != null && h.getNivelEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_Desaprobado_T09)) {
+							desEstadoNivel = ConstantesVisado.ESTADOS.ESTADO_Desaprobado_T09;
+						}
+						if (h.getNivelEstado() != null && h.getNivelEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_Aprobado_T09)) {
+							desEstadoNivel = ConstantesVisado.ESTADOS.ESTADO_Aprobado_T09;
+						}
+						iCodNivel = Integer.parseInt(h.getNivel());
+						descripcionNivel = "Nivel " + iCodNivel + " " + desRolNivel + ": " + desEstadoNivel;
+					}
+					seg.setNivel(descripcionNivel);
+					seg.setFecha(h.getFecha());
+					seg.setUsuario(h.getNomUsuario());
+					seg.setRegUsuario(h.getRegUsuario());
+					seg.setObs(h.getObs());
+					lstSeguimientoDTO.add(seg);
+				}
+			}
+		} catch (Exception exp) {
+			logger.debug("No se pudo encontrar el historial de la solicitud");
+			exp.printStackTrace();
+		}
+
+	}
+	
 	private void actualizarDatosDeBusqueda() 
 	{	
 		String cadena="";
@@ -379,7 +443,7 @@ public class ReportesMB
 			crearCell(wb, rowG, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_INICIO, false, false,false);
 			if (getFechaInicio()!=null)
 			{
-				crearCell(wb, rowG, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getFechaInicio().toGMTString(), true, false,true);
+				crearCell(wb, rowG, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,Utilitarios.formatoFechaSinHora(getFechaInicio()), true, false,true);
 			}
 			else
 			{
@@ -391,7 +455,7 @@ public class ReportesMB
 			crearCell(wb, rowG, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_FIN, false, false,false);
 			if (getFechaFin()!=null)
 			{
-				crearCell(wb, rowG, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getFechaFin().toGMTString(), true, false,true);
+				crearCell(wb, rowG, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.formatoFechaSinHora(getFechaFin()), true, false,true);
 			}
 			else
 			{
@@ -675,6 +739,86 @@ public class ReportesMB
 			{
 				sheet.autoSizeColumn(pos);
 			}
+			
+			//Creacion de hoja para el historial de la solicitud
+			Sheet sheet2 = wb.createSheet(ConstantesVisado.RPT_NOMBRE_HOJA2);
+			
+			// quito las lineas del libro para darle un mejor acabado
+			sheet2.setDisplayGridlines(false);
+			
+			//Generando la estructura de las solicitudes
+			if (solicitudes.size()==0)
+			{
+				logger.info("Sin registros para exportar");
+			}
+			else
+			{
+				// Se crea la cabecera de la tabla de resultados
+				Row rowT = sheet2.createRow((short) 1);
+
+				// Creo las celdas de mi fila, se puede poner un diseño a la celda
+				crearCell(wb, rowT, 0, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_NRO_SOLICITUD, true, true,false);
+				crearCell(wb, rowT, 1, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_ESTADO_HOJA2, true, true,false);
+				crearCell(wb, rowT, 2, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_NIVEL, true, true,false);
+				crearCell(wb, rowT, 3, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_DELEGADO, true, true,false);
+				crearCell(wb, rowT, 4, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_FECHA, true, true,false);
+				crearCell(wb, rowT, 5, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_USUARIO, true, true,false);
+				crearCell(wb, rowT, 6, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_OBS, true, true,false);
+				
+				int numReg=2;
+				for (TiivsSolicitud tmp2: solicitudes)
+				{
+					Row row = sheet2.createRow((short) numReg);
+					
+					obtenerHistorialSolicitud(tmp2.getCodSoli());
+					
+					for (SeguimientoDTO seg: lstSeguimientoDTO)
+					{
+						//Columna Nro Solicitud en Excel
+						crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp2.getCodSoli(), true, false,true);
+						
+						//Columna Estado en Excel
+						crearCell(wb, row, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarEstadoxCodigo(seg.getEstado()), true, false,true);
+						
+						//Columna Nivel en Excel
+						crearCell(wb, row, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, seg.getNivel(), true, false,true);
+						
+						//Columna Delegado en Excel
+						if (validarSolicitudConDelegacion(tmp2.getCodSoli()))
+						{
+							crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+						}
+						else
+						{
+							crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+						}
+						
+						//Columna Fecha en Excel
+						crearCell(wb, row, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,Utilitarios.formatoFechaSinHora(seg.getFecha()), true, false,true);
+						
+						//Columna Usuario en Excel
+						crearCell(wb, row, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,seg.getUsuario(), true, false,true);
+						
+						//Columna Observaciones en Excel
+						crearCell(wb, row, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,seg.getObs(), true, false,true);
+					}
+					
+				}
+				
+				//Arregla ancho de columnas
+				int posHoj2=0;
+				for (;posHoj2<=24;posHoj2++)
+				{
+					sheet2.autoSizeColumn(posHoj2);
+				}
+			}
 						
 			//Se crea el archivo con la informacion y estilos definidos previamente
 			String strRuta="";
@@ -876,7 +1020,12 @@ public class ReportesMB
 			cellStyle.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
 			cellStyle.setTopBorderColor((short) 8);
 
-			cellStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			cellStyle.setFillForegroundColor(HSSFColor.DARK_BLUE.index);
+			
+			Font cellFont = wb.createFont();
+			cellFont.setColor((short) HSSFColor.WHITE.index);
+			cellStyle.setFont(cellFont);
+			
 			cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		}
 		
@@ -1317,5 +1466,13 @@ public class ReportesMB
 	public void setLstAgrupacionSimpleDto(
 			List<AgrupacionSimpleDto> lstAgrupacionSimpleDto) {
 		this.lstAgrupacionSimpleDto = lstAgrupacionSimpleDto;
+	}
+
+	public List<SeguimientoDTO> getLstSeguimientoDTO() {
+		return lstSeguimientoDTO;
+	}
+
+	public void setLstSeguimientoDTO(List<SeguimientoDTO> lstSeguimientoDTO) {
+		this.lstSeguimientoDTO = lstSeguimientoDTO;
 	}
 }
