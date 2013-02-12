@@ -425,9 +425,14 @@
 							<h:outputText value="#{seg.regUsuario} #{seg.usuario}" style="font-size: 9px"/>  							 
 						</p:column>
 						
-						<p:column headerText="Ver" width="55" exportable="false" style="font-size: 9px">							  
-							 <p:commandButton icon="ui-icon-document">		                       
-		                     </p:commandButton>
+						<p:column headerText="Ver" width="55" exportable="false" style="font-size: 9px">							  							 
+		                     <p:commandButton id="downloadSeguimientoLink" 
+		                     		actionListener="#{htmlToPdfMB.generarPdfListener}" 
+		                     		ajax="false" icon="ui-icon-search">							 			                     			                     	
+							 	<f:attribute name="texto" value="#{seg.obs}" />
+							 	<f:attribute name="estado_obs" value="#{seg.estado}"></f:attribute>
+    							<p:fileDownload value="#{htmlToPdfMB.file}" />  
+							</p:commandButton>	
 						</p:column>																		
 				</p:dataTable>
 			</p:dialog>
