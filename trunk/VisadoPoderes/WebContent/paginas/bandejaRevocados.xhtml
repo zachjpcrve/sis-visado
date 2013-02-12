@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
 <script src="jquery.js" type="text/javascript"></script>
 <script src="jquery.maskedinput.js" type="text/javascript"></script>
@@ -48,11 +49,9 @@
 								<h:outputLabel value="Nombre: " />
 								<p:autoComplete completeMethod="#{revocadosMB.completePersona}"
 									value="#{revocadosMB.objTiivsPersonaBusqueda2}"
-									forceSelection="true" 
-									var="p"
-									converter="personaCvtr"
-									itemLabel="#{p.nombreCompletoMayuscula}"
-									itemValue="#{p}" size="30">
+									forceSelection="true" var="p" converter="personaCvtr"
+									itemLabel="#{p.nombreCompletoMayuscula}" itemValue="#{p}"
+									size="30">
 								</p:autoComplete>
 
 
@@ -60,24 +59,26 @@
 
 							<h:panelGrid columns="8" style="width: 800px">
 								<h:outputLabel value="Estado: " />
-								<p:selectOneMenu id="cboEstado" value="#{revocadosMB.estadoRevocado}" style="width: 120px">
+								<p:selectOneMenu id="cboEstado"
+									value="#{revocadosMB.estadoRevocado}" style="width: 120px">
 									<f:selectItem itemLabel="Activo" itemValue="001" />
 									<f:selectItem itemLabel="Inactivo" itemValue="002" />
 									<f:selectItem itemLabel="Pendiente" itemValue="003" />
 									<f:selectItem itemLabel="--Seleccione--" itemValue="S" />
 								</p:selectOneMenu>
-								
+
 								<h:outputLabel for="calFecIni" value="Fecha de Inicio: " />
-								<p:calendar id="calFecIni" pattern="dd/MM/yyyy" value="#{revocadosMB.fechaInicio}"
-									label="Fecha de Inicio:" showOn="button" maxlength="10"
-									size="15">
-									<p:ajax event="dateSelect" update="calFecFin" />  
+								<p:calendar id="calFecIni" pattern="dd/MM/yyyy"
+									value="#{revocadosMB.fechaInicio}" label="Fecha de Inicio:"
+									showOn="button" maxlength="10" size="15">
+									<p:ajax event="dateSelect" update="calFecFin" />
 								</p:calendar>
 
 								<h:outputLabel for="calFecFin" value="Fecha de Fin:" />
-								<p:calendar id="calFecFin" pattern="dd/MM/yyyy" 
-									mindate="#{revocadosMB.fechaInicio}" value="#{revocadosMB.fechaFin}"
-									label="Fecha de Fin:" showOn="button" maxlength="10" size="15">
+								<p:calendar id="calFecFin" pattern="dd/MM/yyyy"
+									mindate="#{revocadosMB.fechaInicio}"
+									value="#{revocadosMB.fechaFin}" label="Fecha de Fin:"
+									showOn="button" maxlength="10" size="15">
 								</p:calendar>
 							</h:panelGrid>
 
@@ -87,13 +88,13 @@
 			</table>
 
 			<div class="btnIzq">
-				
+
 				<p:commandButton value="Nuevo" action="#{revocadosMB.reset}"
 					ajax="false" />
-				
+
 				<h:outputLabel id="outLblTotal"
 					value="Total de registros: #{revocadosMB.nroRegistros} Registros" />
-					
+
 				<p:commandButton value="Buscar" action="#{revocadosMB.buscar}"
 					ajax="false" update="tbl" />
 			</div>
@@ -121,23 +122,50 @@
 				<p:column headerText="Estado" style="width: 4px;">
 					<h:outputText value="#{revocado.estado}" />
 				</p:column>
+
 				<p:column headerText="Ver">
-					<p:commandButton id="idVer" action="#{revocadosMB.ver}"
-						icon="ui-icon-search" title="Ver Registro">
-						<f:setPropertyActionListener target="#{revocadosMB.revocado}" value="#{revocado}"></f:setPropertyActionListener>
+
+					<p:commandButton id="idVer" action="#{revocadosMB.verRevocado}"
+						update=":frmApodPodVer:gridTitulo :frmApodPodVer:dtClientes"
+						icon="ui-icon-search" title="Ver Registro"
+						oncomplete="dlgApoPodVer.show();">
+						<f:setPropertyActionListener target="#{revocadosMB.revocadoVer}"
+							value="#{revocado}"></f:setPropertyActionListener>
 					</p:commandButton>
+
 				</p:column>
+
 				<p:column headerText="Editar">
-					<p:commandButton id="idEdit" action="#{revocadosMB.editar}"
-						icon="ui-icon-pencil" title="Editar Registro">
-						<f:setPropertyActionListener target="#{revocadosMB.revocado}" value="#{revocado}"></f:setPropertyActionListener>
+
+					<p:commandButton id="idEditPend" action="#{revocadosMB.editPendRevocado}" 
+						rendered="#{revocado.flagEditPend}" icon="ui-icon-pencil"  
+						update=":frmPendEdit:dtClientes"
+						title="Editar Combinación" oncomplete="dlgApoPodPendEdit.show();">
+						<f:setPropertyActionListener target="#{revocadosMB.revocadoEdit}"
+							value="#{revocado}"></f:setPropertyActionListener>
 					</p:commandButton>
+
+					<p:commandButton id="idEditAct" action="#{revocadosMB.editActRevocado}"
+						rendered="#{revocado.flagEditAct}" icon="ui-icon-pencil"
+						update=":frmActEdit:dtClientes" 
+						title="Editar Combinación" oncomplete="dlgApoPodActEdit.show();">
+						<f:setPropertyActionListener target="#{revocadosMB.revocadoEdit}"
+							value="#{revocado}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+
 				</p:column>
+
 				<p:column headerText="Eliminar">
-					<p:commandButton id="idDel" action="#{revocadosMB.delete}"
-						icon="ui-icon-closethick" title="Eliminar Registro">
-						<f:setPropertyActionListener target="#{revocadosMB.revocado}" value="#{revocado}"></f:setPropertyActionListener>
+
+					<p:commandButton id="idDel"
+						action="#{revocadosMB.deleteCombinacion}"
+						rendered="#{revocado.flagDelete}" icon="ui-icon-closethick"
+						title="Eliminar Combinación">
+						<f:setPropertyActionListener target="#{revocadosMB.revocado}"
+							value="#{revocado}"></f:setPropertyActionListener>
 					</p:commandButton>
+
 				</p:column>
 			</p:dataTable>
 
@@ -147,6 +175,582 @@
 			</h:commandLink>
 
 		</h:form>
+
+		<!-- Buscar Clientes -->
+		<p:dialog widgetVar="dlgCliente" modal="true" id="idDlgCliente"
+			header="Buscar Cliente/Nro cliente">
+
+			<h:form id="frmCliente">
+
+				<h:panelGrid columns="1" id="gridMsj">
+					<p:messages globalOnly="true" />
+				</h:panelGrid>
+
+				<p:outputPanel id="dtClientes">
+
+					<p:dataTable value="#{revocadosMB.personaClientesPopUp}" var="cl"
+						rows="5" rowKey="#{cl.idPersona}" dblClickSelect="true"
+						selectionMode="single" paginatorPosition="bottom"
+						emptyMessage="No hay clientes" paginator="true"
+						selection="#{revocadosMB.selectPersonaBusqueda}"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						rowsPerPageTemplate="5,10,15">
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Codigo Central" />
+							</f:facet>
+							<h:outputText value="#{cl.codigoCentral}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Documento" />
+							</f:facet>
+							<h:outputText value="#{cl.tipoDocumento.descripcion}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Numero" />
+							</f:facet>
+							<h:outputText value="#{cl.numeroDocumento}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Nombre" />
+							</f:facet>
+							<h:outputText value="#{cl.nombre}" />
+						</p:column>
+
+						<p:column>
+							<p:commandButton id="btnAceptar" value="Aceptar" update="gridMsj"
+								actionListener="#{revocadosMB.aceptarCliente}" ajax="true"
+								process="@form" />
+						</p:column>
+
+
+					</p:dataTable>
+				</p:outputPanel>
+			</h:form>
+
+		</p:dialog>
+
+		<!-- Pendiente/Editar -->
+		<p:dialog widgetVar="dlgApoPodPendEdit" modal="true" id="idDlgApoPod"
+			header="Apoderado/Poderdante">
+
+			<h:form id="frmPendEdit">
+
+				<h:panelGrid columns="1" id="gridMsj">
+					<p:messages globalOnly="true" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="11" id="gridApodPod">
+
+					<h:outputLabel value="T.DOI/ C.Central*: " />
+					<p:selectOneMenu id="cboTipoDoi"
+						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.tipDoi}"
+						style="width: 120px">
+						<f:selectItem itemLabel="Codigo Central" itemValue="" />
+						<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
+							itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
+						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+					</p:selectOneMenu>
+
+					<h:outputLabel value="Nro*: " />
+					<p:inputText styleClass="inputText"
+						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.numDoi}"
+						maxlength="13" />
+
+					<p:commandButton id="btnBuscar" update=":frmCliente:dtClientes"
+						icon="ui-icon-seek-next" oncomplete="dlgCliente.show();"
+						actionListener="#{actSeguiExpe.buscarCliente}" ajax="true"
+						process="@form" />
+
+					<h:outputLabel value="T.DOI/ C.Central*: " />
+					<p:selectOneMenu id="cboTipoDoi2"
+						value="#{revocadosMB.objTiivsPersonaAgregar.tipDoi}"
+						style="width: 120px">
+						<f:selectItem itemLabel="Codigo Central" itemValue="" />
+						<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
+							itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
+						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+					</p:selectOneMenu>
+
+					<h:outputLabel value="Nro de DOI*: " />
+					<p:inputText styleClass="inputText"
+						value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}"
+						maxlength="13" />
+
+					<h:outputLabel value="C. Central: " />
+					<p:inputText styleClass="inputText"
+						value="#{revocadosMB.objTiivsPersonaAgregar.codCen}"
+						maxlength="13" />
+
+				</h:panelGrid>
+
+				<h:panelGrid columns="4" id="gridApodPod2">
+
+					<h:outputLabel value="Nombre: " />
+					<p:autoComplete completeMethod="#{revocadosMB.completePersona}"
+						value="#{revocadosMB.objTiivsPersonaAgregar2}"
+						forceSelection="true" var="p" converter="personaCvtr"
+						itemLabel="#{p.nombreCompletoMayuscula}" itemValue="#{p}"
+						size="30">
+					</p:autoComplete>
+
+					<h:outputLabel value="Tipo de Registro: " />
+					<p:selectOneMenu id="cboTipoRegistro"
+						value="#{revocadosMB.objTiivsPersonaAgregar.tipPartic}"
+						style="width: 120px">
+						<f:selectItems value="#{combosMB.lstTipoRegistroPersona}" var="t"
+							itemValue="#{t.key}" itemLabel="#{t.descripcion}" />
+						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+					</p:selectOneMenu>
+
+				</h:panelGrid>
+
+				<h:panelGrid columns="3">
+
+					<p:commandButton id="btnAgregar" value="Agregar"
+						icon="ui-icon-plus" update="gridMsj dtClientes"
+						actionListener="#{revocadosMB.agregarApodPod}" ajax="true"
+						process="@form" />
+
+					<p:spacer width="10" height="20" />
+
+					<p:commandButton id="btnLimpiar" value="Limpiar"
+						icon="ui-icon-trash"
+						actionListener="#{revocadosMB.limpiarApodPod}"
+						update="gridMsj gridApodPod gridApodPod2 dtClientes"
+						process="@form" ajax="true" />
+
+				</h:panelGrid>
+
+
+				<p:outputPanel id="dtClientes">
+
+					<table border="0" width="100%">
+						<tbody>
+
+							<tr>
+								<td>
+									<div class="ui-datatable ui-widget">
+										<table>
+											<tr>
+
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>DOI</SPAN>
+													</div>
+												</th>
+
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>C.C.</SPAN>
+													</div>
+												</th>
+
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>Cliente/No cliente</SPAN>
+													</div>
+												</th>
+
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>Tipo de Registro</SPAN>
+													</div>
+												</th>
+												
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>Eliminar</SPAN>
+													</div>
+												</th>
+
+											</tr>
+
+											<c:forEach items="#{revocadosMB.personaClientesPendEdit}" var="s">
+
+												<c:forEach items="#{s.apoderados}" var="n">
+
+													<tr class="ui-widget-content ui-datatable-even">
+														<td>
+															<div class="ui-dt-c">
+																<SPAN>#{n.sDesctipDoi}:#{n.numDoi}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN>#{n.codCen}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN> #{n.apePat} #{n.apeMat} #{n.nombre}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN> #{n.sDesctipPartic}</SPAN>
+															</div>
+														</td>
+														
+														<td>
+														
+															<p:commandButton icon="ui-icon-trash" 
+																			 action="#{revocadosMB.eliminarArupacion}" 
+																			 update=":frmPendEdit:dtClientes" >
+																<f:setPropertyActionListener target="#{revocadosMB.objAgrupacionSimpleDtoCapturado}"
+																							  value="#{n}" >
+																</f:setPropertyActionListener>
+															</p:commandButton>
+														
+														</td>
+
+													</tr>
+												</c:forEach>
+
+												<c:forEach items="#{s.poderdantes}" var="n">
+
+													<tr class="ui-widget-content ui-datatable-even">
+														<td>
+															<div class="ui-dt-c">
+																<SPAN>#{n.sDesctipDoi}:#{n.numDoi}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN>#{n.codCen}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN> #{n.apePat} #{n.apeMat} #{n.nombre}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN> #{n.sDesctipPartic}</SPAN>
+															</div>
+														</td>
+														
+														<td>
+														
+															<p:commandButton icon="ui-icon-trash" 
+																			 action="#{revocadosMB.eliminarArupacion}" 
+																			 update=":frmPendEdit:dtClientes" >
+																<f:setPropertyActionListener target="#{revocadosMB.deletePersonaEdit}"
+																							  value="#{n}" >
+																</f:setPropertyActionListener>
+															</p:commandButton>
+														
+														</td>
+
+													</tr>
+
+												</c:forEach>
+
+											</c:forEach>
+
+										</table>
+									</div>
+
+								</td>
+							</tr>
+
+
+						</tbody>
+					</table>
+
+					<h:panelGrid columns="1">
+
+						<p:commandButton id="btnRevocar" value="Revocar"
+							icon="ui-icon-plus"
+							actionListener="#{revocadosMB.revocarApodPod}" ajax="true"
+							process="@form" />
+
+					</h:panelGrid>
+				</p:outputPanel>
+			</h:form>
+
+		</p:dialog>
+
+		<!-- Activo/Editar -->
+		<p:dialog widgetVar="dlgApoPodActEdit" modal="true"
+			id="idDlgApoPodEdit" header="Apoderado/Poderdante">
+
+			<h:form id="frmActEdit">
+
+				<h:panelGrid columns="1" id="gridMsj">
+					<p:messages globalOnly="true" />
+				</h:panelGrid>
+				
+				<h:panelGrid columns="1" id="gridBtn">
+				
+					<p:commandButton id="btnInactivar" value="Inactivar" update="gridMsj"
+								actionListener="#{revocadosMB.inactivarCombinacion}" ajax="true"
+								process="@form" />
+				</h:panelGrid>
+
+				<p:outputPanel id="dtClientes">
+				
+					<table border="0" width="100%">
+						<tbody>
+
+							<tr>
+								<td>
+									<div class="ui-datatable ui-widget">
+										<table>
+											<tr>
+
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>DOI</SPAN>
+													</div>
+												</th>
+
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>C.C.</SPAN>
+													</div>
+												</th>
+
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>Cliente/No cliente</SPAN>
+													</div>
+												</th>
+
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>Tipo de Registro</SPAN>
+													</div>
+												</th>
+
+											</tr>
+
+											<c:forEach items="#{revocadosMB.personaClientesActivoEdit}" var="s">
+
+
+
+												<c:forEach items="#{s.apoderados}" var="n">
+
+													<tr class="ui-widget-content ui-datatable-even">
+														<td>
+															<div class="ui-dt-c">
+																<SPAN>#{n.sDesctipDoi}:#{n.numDoi}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN>#{n.codCen}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN> #{n.apePat} #{n.apeMat} #{n.nombre}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN> #{n.sDesctipPartic}</SPAN>
+															</div>
+														</td>
+
+													</tr>
+												</c:forEach>
+
+												<c:forEach items="#{s.poderdantes}" var="n">
+
+													<tr class="ui-widget-content ui-datatable-even">
+														<td>
+															<div class="ui-dt-c">
+																<SPAN>#{n.sDesctipDoi}:#{n.numDoi}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN>#{n.codCen}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN> #{n.apePat} #{n.apeMat} #{n.nombre}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN> #{n.sDesctipPartic}</SPAN>
+															</div>
+														</td>
+
+													</tr>
+
+												</c:forEach>
+
+											</c:forEach>
+
+										</table>
+									</div>
+
+								</td>
+							</tr>
+
+
+						</tbody>
+					</table>
+					
+				</p:outputPanel>
+			</h:form>
+
+		</p:dialog>
+
+		<!-- Ver -->
+		<p:dialog widgetVar="dlgApoPodVer" modal="true" id="idDlgApoPodVer"
+			header="Apoderado/Poderdante" showEffect="fade" hideEffect="explode">
+
+			<h:form id="frmApodPodVer">
+
+				<h:panelGrid columns="2" id="gridTitulo">
+					<p:outputLabel value="Estado:" />
+					<h:outputText value="#{revocadosMB.revocadoVer.estado}"></h:outputText>
+
+				</h:panelGrid>
+
+				<p:outputPanel id="dtClientes">
+
+					<table border="0" width="100%">
+						<tbody>
+
+							<tr>
+								<td>
+									<div class="ui-datatable ui-widget">
+										<table>
+											<tr>
+
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>DOI</SPAN>
+													</div>
+												</th>
+
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>C.C.</SPAN>
+													</div>
+												</th>
+
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>Cliente/No cliente</SPAN>
+													</div>
+												</th>
+
+												<th class="ui-state-default">
+													<div class="ui-dt-c">
+														<SPAN>Tipo de Registro</SPAN>
+													</div>
+												</th>
+
+											</tr>
+
+											<c:forEach items="#{revocadosMB.personaClientesVer}" var="s">
+
+
+
+												<c:forEach items="#{s.apoderados}" var="n">
+
+													<tr class="ui-widget-content ui-datatable-even">
+														<td>
+															<div class="ui-dt-c">
+																<SPAN>#{n.sDesctipDoi}:#{n.numDoi}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN>#{n.codCen}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN> #{n.apePat} #{n.apeMat} #{n.nombre}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN> #{n.sDesctipPartic}</SPAN>
+															</div>
+														</td>
+
+													</tr>
+												</c:forEach>
+
+												<c:forEach items="#{s.poderdantes}" var="n">
+
+													<tr class="ui-widget-content ui-datatable-even">
+														<td>
+															<div class="ui-dt-c">
+																<SPAN>#{n.sDesctipDoi}:#{n.numDoi}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN>#{n.codCen}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN> #{n.apePat} #{n.apeMat} #{n.nombre}</SPAN>
+															</div>
+														</td>
+
+														<td>
+															<div class="ui-dt-c">
+																<SPAN> #{n.sDesctipPartic}</SPAN>
+															</div>
+														</td>
+
+													</tr>
+
+												</c:forEach>
+
+											</c:forEach>
+
+										</table>
+									</div>
+
+								</td>
+							</tr>
+
+
+						</tbody>
+					</table>
+
+				</p:outputPanel>
+			</h:form>
+
+		</p:dialog>
 
 	</ui:define>
 	<br />

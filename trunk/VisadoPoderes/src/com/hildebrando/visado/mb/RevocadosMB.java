@@ -10,11 +10,13 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.ActionEvent;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
+import com.hildebrando.visado.dto.Persona;
 import com.hildebrando.visado.dto.Revocado;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOficina1;
@@ -36,12 +38,33 @@ public class RevocadosMB {
 
 	private List<Revocado> revocados;
 	private Revocado revocado;
+	private Revocado revocadoVer;
+	private Revocado revocadoEdit;
 	private String nroRegistros;
 
 	private TiivsPersona objTiivsPersonaBusqueda;
 	private TiivsPersona objTiivsPersonaBusqueda2;
+	
+	private TiivsPersona objTiivsPersonaBusquedaDlg;
+	
+	private TiivsPersona objTiivsPersonaAgregar;
+	private TiivsPersona objTiivsPersonaAgregar2;
+	
+	private TiivsPersona deletePersonaEdit;
+	
 	//private TiivsOficina1 tiivsOficina1;
 	private Character estadoRevocado;
+	
+	private List<TiivsPersona> personaClientes;
+	private List<Revocado> personaClientesActivoEdit;
+	private List<Revocado> personaClientesPendEdit;
+	private List<TiivsPersona> personaClientesPopUp;
+	private List<Revocado> personaClientesVer;
+	
+	private TiivsPersona selectPersonaBusqueda;
+	private TiivsPersona selectPersonaPendEdit;
+	private TiivsPersona selectPersonaActEdit;
+	
 	
 	private Date fechaInicio;
 	private Date fechaFin;
@@ -64,6 +87,32 @@ public class RevocadosMB {
 		//tiivsOficina1 = new TiivsOficina1();
 	}
 
+	public void verRevocado() {
+
+		personaClientesVer = new ArrayList<Revocado>();
+		personaClientesVer.add(revocadoVer);
+
+	}
+	
+	public void editPendRevocado() {
+
+		personaClientesPendEdit = new ArrayList<Revocado>();
+		personaClientesPendEdit.add(revocadoEdit);
+
+	}
+	
+	public void editActRevocado() {
+
+		personaClientesActivoEdit = new ArrayList<Revocado>();
+		personaClientesActivoEdit.add(revocadoEdit);
+
+	}
+	
+	public void inactivarCombinacion(ActionEvent actionEvent) {
+
+
+	}
+	
 	public List<TiivsPersona> completePersona(String query) {
 		List<TiivsPersona> lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
 		List<TiivsPersona> lstTiivsPersonaBusqueda = new ArrayList<TiivsPersona>();
@@ -153,6 +202,7 @@ public class RevocadosMB {
 		List<Integer> tiivsrevocados2 = new ArrayList<Integer>();
 		List<TiivsMultitabla> tiivsMultitablas = new ArrayList<TiivsMultitabla>();
 		List<TiivsMultitabla> tiivsMultitablas2 = new ArrayList<TiivsMultitabla>();
+		List<TiivsMultitabla> tiivsMultitablas3 = new ArrayList<TiivsMultitabla>();
 		//addRevocados();
 		
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit
@@ -219,8 +269,7 @@ public class RevocadosMB {
 			e.printStackTrace();
 		}
 
-		GenericDao<TiivsMultitabla, Object> service3 = (GenericDao<TiivsMultitabla, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsMultitabla, Object> service3 = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro3 = Busqueda.forClass(TiivsMultitabla.class);
 		filtro3.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC));
 		
@@ -231,13 +280,21 @@ public class RevocadosMB {
 			e.printStackTrace();
 		}
 		
-		GenericDao<TiivsMultitabla, Object> service4 = (GenericDao<TiivsMultitabla, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro4 = Busqueda.forClass(TiivsMultitabla.class);
-		filtro3.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
+		filtro4.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
 		
 		try {
 			tiivsMultitablas2 = service3.buscarDinamico(filtro4);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Busqueda filtro5 = Busqueda.forClass(TiivsMultitabla.class);
+		filtro5.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
+		
+		try {
+			tiivsMultitablas3 = service3.buscarDinamico(filtro5);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -251,9 +308,17 @@ public class RevocadosMB {
 		String fecha="";
 		String estado="";
 		int numCorrelativo=0;
+		List<TiivsPersona> apoderados;
+		TiivsPersona apoderado;
+		
+		List<TiivsPersona> poderdantes;
+		TiivsPersona poderdante;
+		
 		
 		for(Integer tiivsRevocado2:tiivsrevocados2){
 			numCorrelativo++;
+			apoderados= new ArrayList<TiivsPersona>();
+			poderdantes= new ArrayList<TiivsPersona>();
 			for(TiivsRevocado tiivsRevocado:tiivsrevocados){
 				
 				if(tiivsRevocado.getCodAgrup().compareTo(tiivsRevocado2)==0){
@@ -263,22 +328,45 @@ public class RevocadosMB {
 					
 					if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
 						
+						apoderado= new TiivsPersona();
+						apoderado = tiivsRevocado.getTiivsPersona();
+						
+						String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),tiivsMultitablas);
+						String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), tiivsMultitablas3);
+						
 						nombreCompletoApoderados = nombreCompletoApoderados
-														+ " " + getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),tiivsMultitablas)
+														+ " " + descDoiApod
 														+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
 														+ " - " + tiivsRevocado.getTiivsPersona().getApePat() 
 														+ " " + tiivsRevocado.getTiivsPersona().getApeMat()
 														+ " " + tiivsRevocado.getTiivsPersona().getNombre() + "\n";
+						
+						apoderado.setsDesctipDoi( descDoiApod);
+						apoderado.setsDesctipPartic(descTipPart);
+						
+						apoderados.add(apoderado);
 					}
 						
 					if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 						
+						poderdante = new TiivsPersona();
+						poderdante = tiivsRevocado.getTiivsPersona();
+						
+						String descDoiPod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),tiivsMultitablas);
+						String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), tiivsMultitablas3);
+						
+								
 						nombreCompletoPoderdantes = nombreCompletoPoderdantes 
-															+ " " + getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),tiivsMultitablas)
+															+ " " + descDoiPod
 															+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
 															+ " - " + tiivsRevocado.getTiivsPersona().getApePat() 
 															+ " " + tiivsRevocado.getTiivsPersona().getApeMat() 
 															+ " " + tiivsRevocado.getTiivsPersona().getNombre() + "\n";
+						
+						poderdante.setsDesctipDoi( descDoiPod);
+						poderdante.setsDesctipPartic(descTipPart);
+						
+						poderdantes.add(poderdante);
 					}
 					
 				}
@@ -289,10 +377,34 @@ public class RevocadosMB {
 			revocado = new Revocado();
 			revocado.setCodAgrupacion(tiivsRevocado2+"");
 			revocado.setNombreCompletoApoderados(nombreCompletoApoderados.trim());
+			revocado.setApoderados(apoderados);
 			revocado.setNombreCompletoPoderdantes(nombreCompletoPoderdantes.trim());
+			revocado.setPoderdantes(poderdantes);
 			revocado.setFechaRegistro(fecha);
 			revocado.setEstado(estado);
 			revocado.setCorrelativo(String.valueOf(numCorrelativo));
+			
+
+			if(estado.compareTo("Activo")==0){
+				revocado.setFlagEditAct(true);
+				revocado.setFlagEditPend(false);
+				revocado.setFlagDelete(false);
+			}
+			
+			if(estado.compareTo("Pendiente")==0){
+				revocado.setFlagEditPend(true);
+				revocado.setFlagEditAct(false);
+				revocado.setFlagDelete(true);
+			}
+			
+			if(estado.compareTo("Inactivo")==0){
+				revocado.setFlagEditPend(false);
+				revocado.setFlagEditAct(false);
+				revocado.setFlagDelete(false);
+				
+				
+			}
+			
 			revocados.add(revocado);
 			
 			nombreCompletoApoderados="";
@@ -449,6 +561,121 @@ public class RevocadosMB {
 
 	public void setNroRegistros(String nroRegistros) {
 		this.nroRegistros = nroRegistros;
+	}
+
+	public TiivsPersona getObjTiivsPersonaBusquedaDlg() {
+		return objTiivsPersonaBusquedaDlg;
+	}
+
+	public void setObjTiivsPersonaBusquedaDlg(
+			TiivsPersona objTiivsPersonaBusquedaDlg) {
+		this.objTiivsPersonaBusquedaDlg = objTiivsPersonaBusquedaDlg;
+	}
+
+	public TiivsPersona getObjTiivsPersonaAgregar() {
+		return objTiivsPersonaAgregar;
+	}
+
+	public void setObjTiivsPersonaAgregar(TiivsPersona objTiivsPersonaAgregar) {
+		this.objTiivsPersonaAgregar = objTiivsPersonaAgregar;
+	}
+
+	public TiivsPersona getObjTiivsPersonaAgregar2() {
+		return objTiivsPersonaAgregar2;
+	}
+
+	public void setObjTiivsPersonaAgregar2(TiivsPersona objTiivsPersonaAgregar2) {
+		this.objTiivsPersonaAgregar2 = objTiivsPersonaAgregar2;
+	}
+
+	public List<TiivsPersona> getPersonaClientes() {
+		return personaClientes;
+	}
+
+	public void setPersonaClientes(List<TiivsPersona> personaClientes) {
+		this.personaClientes = personaClientes;
+	}
+
+	public List<TiivsPersona> getPersonaClientesPopUp() {
+		return personaClientesPopUp;
+	}
+
+	public void setPersonaClientesPopUp(List<TiivsPersona> personaClientesPopUp) {
+		this.personaClientesPopUp = personaClientesPopUp;
+	}
+
+
+	public TiivsPersona getSelectPersonaBusqueda() {
+		return selectPersonaBusqueda;
+	}
+
+	public void setSelectPersonaBusqueda(TiivsPersona selectPersonaBusqueda) {
+		this.selectPersonaBusqueda = selectPersonaBusqueda;
+	}
+
+	public TiivsPersona getSelectPersonaPendEdit() {
+		return selectPersonaPendEdit;
+	}
+
+	public void setSelectPersonaPendEdit(TiivsPersona selectPersonaPendEdit) {
+		this.selectPersonaPendEdit = selectPersonaPendEdit;
+	}
+
+	public TiivsPersona getSelectPersonaActEdit() {
+		return selectPersonaActEdit;
+	}
+
+	public void setSelectPersonaActEdit(TiivsPersona selectPersonaActEdit) {
+		this.selectPersonaActEdit = selectPersonaActEdit;
+	}
+
+	public Revocado getRevocadoVer() {
+		return revocadoVer;
+	}
+
+	public void setRevocadoVer(Revocado revocadoVer) {
+		this.revocadoVer = revocadoVer;
+	}
+
+	public List<Revocado> getPersonaClientesVer() {
+		return personaClientesVer;
+	}
+
+	public void setPersonaClientesVer(List<Revocado> personaClientesVer) {
+		this.personaClientesVer = personaClientesVer;
+	}
+
+	public List<Revocado> getPersonaClientesActivoEdit() {
+		return personaClientesActivoEdit;
+	}
+
+	public void setPersonaClientesActivoEdit(
+			List<Revocado> personaClientesActivoEdit) {
+		this.personaClientesActivoEdit = personaClientesActivoEdit;
+	}
+
+	public List<Revocado> getPersonaClientesPendEdit() {
+		return personaClientesPendEdit;
+	}
+
+	public void setPersonaClientesPendEdit(List<Revocado> personaClientesPendEdit) {
+		this.personaClientesPendEdit = personaClientesPendEdit;
+	}
+
+	public Revocado getRevocadoEdit() {
+		return revocadoEdit;
+	}
+
+	public void setRevocadoEdit(Revocado revocadoEdit) {
+		this.revocadoEdit = revocadoEdit;
+	}
+
+	public TiivsPersona getDeletePersonaEdit() {
+		return deletePersonaEdit;
+	}
+
+	public void setDeletePersonaEdit(TiivsPersona deletePersonaEdit) {
+		this.deletePersonaEdit = deletePersonaEdit;
 	}
 
 	
