@@ -223,10 +223,20 @@ public class JasperController {
     		String sEstado = multi.getValor1();
     		
     		solicitudPDF.setEstado(sEstado);    		
-    		solicitudPDF.setComision(String.valueOf(SOLICITUD_TEMP.getComision()));
+    		solicitudPDF.setComision(SOLICITUD_TEMP.getComision());
     		solicitudPDF.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
-    		solicitudPDF.setImporte(String.valueOf(SOLICITUD_TEMP.getImporte()));    	
+    		solicitudPDF.setTerritorio(SOLICITUD_TEMP.getTiivsOficina1().getTiivsTerritorio().getCodTer() + SOLICITUD_TEMP.getTiivsOficina1().getTiivsTerritorio().getDesTer());
+    		solicitudPDF.setImporte(SOLICITUD_TEMP.getImporte());    	
     		solicitudPDF.setTipoServicio(SOLICITUD_TEMP.getTiivsTipoSolicitud().getDesTipServicio());
+    		
+    		if(SOLICITUD_TEMP.getMoneda().equalsIgnoreCase(ConstantesVisado.MONEDAS.COD_SOLES)){
+    			solicitudPDF.setMoneda(ConstantesVisado.MONEDAS.SIMBOLO_SOLES);
+    		} else if (SOLICITUD_TEMP.getMoneda().equalsIgnoreCase(ConstantesVisado.MONEDAS.COD_DOLAR)){
+    			solicitudPDF.setMoneda(ConstantesVisado.MONEDAS.SIMBOLO_DOLAR);
+    		} else if (SOLICITUD_TEMP.getMoneda().equalsIgnoreCase(ConstantesVisado.MONEDAS.COD_EUROS)){
+    			solicitudPDF.setMoneda(ConstantesVisado.MONEDAS.SIMBOLO_EURO);
+    		}
+    		
     		
     		solicitudPDF.setLstAgrupacionSimpleDto(lstAgrupacionSimpleDto); //agregar agrupaciones
     		
@@ -258,129 +268,6 @@ public class JasperController {
         JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
               
         modelMap.put("dataKey", objCab);        
-
-        try {
-        	OutputStream os = response.getOutputStream();
-        	os.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        return("pdfReport");
-    }
-    
-    
-    @RequestMapping(value="/download/reportPDF.htm", method=RequestMethod.GET)
-    public String generarReportePDF(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request) 
-    {
-    	log.info("generarReportePDF : ");
-    	/*List<Log4jdata> lista = new ArrayList<Log4jdata>();
-        HttpSession session=request.getSession(true);
-        
-	    if(session.getAttribute("lstLogger")!=null){
-	    	lista  = (List<Log4jdata>) session.getAttribute("lstLogger");
-		}*/
-    	
-    	//Cabecera del reporte
-    	List<SolicitudPDF> cabecera = new ArrayList<SolicitudPDF>();
-    	SolicitudPDF tmp= new SolicitudPDF();
-    	tmp.setCodSoli("5555555555555");
-    	tmp.setNroVoucher("1233-444444444");
-    	tmp.setEstado("Registrado");
-    	tmp.setComision(String.valueOf(150.00));
-    	tmp.setOficina("416-Oficina Larco Mar");
-    	tmp.setImporte(String.valueOf(550.00));
-    	
-    	cabecera.add(tmp);
-    	
-    	//Seccion Poderdantes / Apoderados
-//    	 List<PersonaPDF> listPersonas = new ArrayList<PersonaPDF>();
-//	    		    
-//	    	listPersonas.add(new PersonaPDF("DNI: 43086804","Beneficiario","Apoderado","999851455","email@email.com","00430844  Vargas Diaz Cynthia/","Activo"));
-//	  	    listPersonas.add(new PersonaPDF("DNI: 43082805","Fallecido","Poderdante","","","00430899  Torres Morales Carlos/","Activo"));
-//	  	    
-//	  	    listPersonas.add(new PersonaPDF("12345678","Beneficiario","Poderdante","1111","e@i","Alberto","Activo"));
-//	  	    listPersonas.add(new PersonaPDF("22345678","Beneficiario","Poderdante","1111","e@i","Juan","Activo"));
-//	  	    listPersonas.add(new PersonaPDF("32345678","Beneficiario","Poderdante","1111","e@i","Tirza","Activo"));
-//	  	    listPersonas.add(new PersonaPDF("42345678","Beneficiario","Poderdante","1111","e@i","Julisa","Activo"));
-//	  	    listPersonas.add(new PersonaPDF("52345678","Beneficiario","Poderdante","1111","e@i","Antonia","Activo"));
-//	    	
-//	    	
-//	    List<PersonaPDF> listPersonas2 = new ArrayList<PersonaPDF>();
-//	    	listPersonas2.add(new PersonaPDF("10000000","Fallecido","Apoderado","1111","e@i","Alberto","Activo"));
-//	  	    listPersonas2.add(new PersonaPDF("20000000","Fallecido","Apoderado","1111","e@i","Juan","Activo"));
-//	  	    listPersonas2.add(new PersonaPDF("30000000","Fallecido","Apoderado","1111","e@i","Tirza","Activo"));
-//	  	    listPersonas2.add(new PersonaPDF("40000000","Fallecido","Apoderado","1111","e@i","Julisa","Activo"));
-//	  	    listPersonas2.add(new PersonaPDF("50000000","Fallecido","Apoderado","1111","e@i","Antonia","Activo"));
-//	  	    
-//	  	    
-//	  	List<PersonaPDF> listPersonas3 = new ArrayList<PersonaPDF>();
-//	    	listPersonas3.add(new PersonaPDF("77777771","Fallecido","Apoderado","1111","e@i","Alberto","Activo"));
-//	  	    listPersonas3.add(new PersonaPDF("77777772","Fallecido","Apoderado","1111","e@i","Juan","Activo"));
-//	  	    listPersonas3.add(new PersonaPDF("77777773","Fallecido","Apoderado","1111","e@i","Tirza","Activo"));
-//	  	    listPersonas3.add(new PersonaPDF("77777774","Fallecido","Apoderado","1111","e@i","Julisa","Activo"));
-//	  	    listPersonas3.add(new PersonaPDF("77777775","Fallecido","Apoderado","1111","e@i","Antonia","Activo"));   
-//	  	    
-//	    List<PersonaPDF> listPersonas4 = new ArrayList<PersonaPDF>();
-//	    	listPersonas4.add(new PersonaPDF("88888881","Fallecido","Apoderado","1111","e@i","Alberto","Activo"));
-//	  	    listPersonas4.add(new PersonaPDF("88888882","Fallecido","Apoderado","1111","e@i","Juan","Activo"));
-//	  	    listPersonas4.add(new PersonaPDF("88888883","Fallecido","Apoderado","1111","e@i","Tirza","Activo"));
-//	  	    listPersonas4.add(new PersonaPDF("88888884","Fallecido","Apoderado","1111","e@i","Julisa","Activo"));
-//	  	    listPersonas4.add(new PersonaPDF("88888885","Fallecido","Apoderado","1111","e@i","Antonia","Activo"));
-//	  	    
-//	   List<PersonaPDF> listPersonas5 = new ArrayList<PersonaPDF>();
-//	    	listPersonas5.add(new PersonaPDF("55555551","Fallecido","Apoderado","1111","e@i","Alberto","Activo"));
-//	  	    listPersonas5.add(new PersonaPDF("55555552","Fallecido","Apoderado","1111","e@i","Juan","Activo"));
-//	  	    listPersonas5.add(new PersonaPDF("55555553","Fallecido","Apoderado","1111","e@i","Tirza","Activo"));
-//	  	    listPersonas5.add(new PersonaPDF("55555554","Fallecido","Apoderado","1111","e@i","Julisa","Activo"));
-//	  	    listPersonas5.add(new PersonaPDF("55555555","Fallecido","Apoderado","1111","e@i","Antonia","Activo"));
-//	    	
-//	  	    
-//	    cabecera.get(0).setLstPersonas(listPersonas);
-	    
-	    //Seccion documentos
-//	    List<DocumentosPDF> lstDocumentos = new ArrayList<DocumentosPDF>();	    
-//	    lstDocumentos.add(new DocumentosPDF("001","Documento 1"));
-//	    lstDocumentos.add(new DocumentosPDF("002","DNI"));
-//	    lstDocumentos.add(new DocumentosPDF("004","RUC"));
-//	    lstDocumentos.add(new DocumentosPDF("005","Partida de fallecimiento"));
-//	    
-//	    cabecera.get(0).setLstDocumentos(lstDocumentos);
-	    
-	    
-	    //Sección operaciones bancarias
-//	    List<OperacionesPDF> lstOperaciones = new ArrayList<OperacionesPDF>();
-//	    lstOperaciones.add(new OperacionesPDF("001","Retiro","Soles","260","1","260"));
-//	    lstOperaciones.add(new OperacionesPDF("002","Cobro","Dolares","100","2.60","260"));
-//	    lstOperaciones.add(new OperacionesPDF("003","Pago","Euros","500","3.50","1725"));
-//	    
-//	    cabecera.get(0).setLstOperaciones(lstOperaciones);
-//	    
-	    
-	    
-	    //Add lista datasource
-//	    JRDataSource dsPersona1 = new JRBeanCollectionDataSource(listPersonas);
-//	    JRDataSource dsPersona2 = new JRBeanCollectionDataSource(listPersonas2);
-//	    JRDataSource dsPersona3 = new JRBeanCollectionDataSource(listPersonas3);
-//	    JRDataSource dsPersona4 = new JRBeanCollectionDataSource(listPersonas4);
-//	    JRDataSource dsPersona5 = new JRBeanCollectionDataSource(listPersonas5);
-	    
-//	    List<JRDataSource> lstDsPersonas = new ArrayList<JRDataSource>();
-//	    lstDsPersonas.add(dsPersona1);
-//	    lstDsPersonas.add(dsPersona2);
-//	    lstDsPersonas.add(dsPersona3);
-//	    lstDsPersonas.add(dsPersona4);
-//	    lstDsPersonas.add(dsPersona5);
-	    
-//	    cabecera.get(0).setLstDsPersonas(lstDsPersonas);
-	    
-        response.setHeader("Content-type", "application/pdf");
-        response.setHeader("Content-Disposition","attachment; filename=\"SolVisado.pdf\"");
-		
-        JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
-              
-        modelMap.put("dataKey", objCab);
-        modelMap.put("SUBREPORT_DIR", "D:\\WorkSpace\\VisadoPoderes\\resources\\jasper\\");
-        
 
         try {
         	OutputStream os = response.getOutputStream();
