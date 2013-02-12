@@ -201,7 +201,12 @@ public class Utilitarios {
 
 		return fechaActualizacion ;
 	}
-
+	
+	public static String formatoFechaHora(Date fecha) {
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("ddMMyyyy_hhmmss");
+		String sFecha = sdf.format(fecha);		
+		return sFecha;
+	}
 
 	public static void mensaje(String titulo, String mensaje) {
 		FacesContext ct = FacesContext.getCurrentInstance();
