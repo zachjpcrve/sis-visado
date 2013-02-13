@@ -110,7 +110,49 @@ public class RevocadosMB {
 	
 	public void inactivarCombinacion(ActionEvent actionEvent) {
 
+		List<TiivsMultitabla> tiivsMultitablas2 = new ArrayList<TiivsMultitabla>();
+		
+		GenericDao<TiivsMultitabla, Object> service3 = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		
+		Busqueda filtro4 = Busqueda.forClass(TiivsMultitabla.class);
+		filtro4.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
+		
+		try {
+			tiivsMultitablas2 = service3.buscarDinamico(filtro4);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//aqui lo inactivamos
+		List<TiivsRevocado> tiivsrevocados = new ArrayList<TiivsRevocado>();
+		
+		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		
+		Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
+		filtro.add(Restrictions.eq("codAgrup", Integer.parseInt(revocadoEdit.getCodAgrupacion())));
+		
+		//String estadoInactivo = getValor1(ConstantesVisado.ESTADOS.ESTADO_INACTIVO_REVOCADO,tiivsMultitablas2);
+		
+		try {
+			tiivsrevocados = service.buscarDinamico(filtro);
+			
+			for(TiivsRevocado  tiivsRevocado:tiivsrevocados){
+				
+				tiivsRevocado.setEstado(ConstantesVisado.ESTADOS.ESTADO_INACTIVO_REVOCADO);
+				
+				service.modificar(tiivsRevocado);
+			}
+			
 
+			logger.debug("exitoso al inactivar revocados!");
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+
+			logger.debug("error al inactivar revocados!" + e.toString());
+		}
+		
 	}
 	
 	public List<TiivsPersona> completePersona(String query) {
