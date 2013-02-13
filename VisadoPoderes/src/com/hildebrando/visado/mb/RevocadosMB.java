@@ -83,6 +83,9 @@ public class RevocadosMB {
 
 		objTiivsPersonaBusqueda = new TiivsPersona();
 		objTiivsPersonaBusqueda2 = new TiivsPersona();
+		
+		objTiivsPersonaBusquedaDlg = new TiivsPersona();
+		
 		estadoRevocado= new Character('S');
 		//tiivsOficina1 = new TiivsOficina1();
 	}
@@ -95,6 +98,9 @@ public class RevocadosMB {
 	}
 	
 	public void editPendRevocado() {
+		
+		objTiivsPersonaBusquedaDlg= new TiivsPersona();
+		objTiivsPersonaAgregar = new TiivsPersona();
 
 		personaClientesPendEdit = new ArrayList<Revocado>();
 		personaClientesPendEdit.add(revocadoEdit);
@@ -106,6 +112,14 @@ public class RevocadosMB {
 		personaClientesActivoEdit = new ArrayList<Revocado>();
 		personaClientesActivoEdit.add(revocadoEdit);
 
+	}
+	
+	
+	public void  buscarCliente(ActionEvent actionEvent) {
+		
+		
+		
+		
 	}
 	
 	public void inactivarCombinacion(ActionEvent actionEvent) {
