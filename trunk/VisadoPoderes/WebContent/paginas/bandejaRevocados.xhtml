@@ -137,18 +137,20 @@
 
 				<p:column headerText="Editar">
 
-					<p:commandButton id="idEditPend" action="#{revocadosMB.editPendRevocado}" 
-						rendered="#{revocado.flagEditPend}" icon="ui-icon-pencil"  
-						update=":frmPendEdit:dtClientes"
-						title="Editar Combinación" oncomplete="dlgApoPodPendEdit.show();">
+					<p:commandButton id="idEditPend"
+						action="#{revocadosMB.editPendRevocado}"
+						rendered="#{revocado.flagEditPend}" icon="ui-icon-pencil"
+						update=":frmPendEdit:dtClientes" title="Editar Combinación"
+						oncomplete="dlgApoPodPendEdit.show();">
 						<f:setPropertyActionListener target="#{revocadosMB.revocadoEdit}"
 							value="#{revocado}"></f:setPropertyActionListener>
 					</p:commandButton>
 
-					<p:commandButton id="idEditAct" action="#{revocadosMB.editActRevocado}"
+					<p:commandButton id="idEditAct"
+						action="#{revocadosMB.editActRevocado}"
 						rendered="#{revocado.flagEditAct}" icon="ui-icon-pencil"
-						update=":frmActEdit:dtClientes" 
-						title="Editar Combinación" oncomplete="dlgApoPodActEdit.show();">
+						update=":frmActEdit:dtClientes" title="Editar Combinación"
+						oncomplete="dlgApoPodActEdit.show();">
 						<f:setPropertyActionListener target="#{revocadosMB.revocadoEdit}"
 							value="#{revocado}"></f:setPropertyActionListener>
 					</p:commandButton>
@@ -188,48 +190,34 @@
 
 				<p:outputPanel id="dtClientes">
 
-					<p:dataTable value="#{revocadosMB.personaClientesPopUp}" var="cl"
-						rows="5" rowKey="#{cl.idPersona}" dblClickSelect="true"
-						selectionMode="single" paginatorPosition="bottom"
-						emptyMessage="No hay clientes" paginator="true"
-						selection="#{revocadosMB.selectPersonaBusqueda}"
+					<p:dataTable var="s" rows="20"
+						emptyMessage="No hay resultados en la bandeja"
+						paginatorPosition="bottom" paginator="true"
+						value="#{revocadosMB.personaDataModal}"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-						rowsPerPageTemplate="5,10,15">
+						rowKey="#{s.codPer}"
+						selection="#{revocadosMB.objTiivsPersonaSeleccionado}"
+						selectionMode="single">
 
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Codigo Central" />
-							</f:facet>
-							<h:outputText value="#{cl.codigoCentral}" />
+						<p:column headerText="Codigo Central">
+							<h:outputText value="#{s.codCen}" />
 						</p:column>
-
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Documento" />
-							</f:facet>
-							<h:outputText value="#{cl.tipoDocumento.descripcion}" />
+						<p:column headerText="Tipo de DOI">
+							<h:outputText value="#{s.sDesctipDoi}" />
 						</p:column>
-
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Numero" />
-							</f:facet>
-							<h:outputText value="#{cl.numeroDocumento}" />
+						<p:column headerText="Nro de DOI">
+							<h:outputText value="#{s.numDoi}" />
 						</p:column>
-
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Nombre" />
-							</f:facet>
-							<h:outputText value="#{cl.nombre}" />
+						<p:column headerText="Nombre">
+							<h:outputText
+								value="#{s.codPer}  #{s.nombre} #{s.apePat} #{s.apeMat}" />
 						</p:column>
-
-						<p:column>
-							<p:commandButton id="btnAceptar" value="Aceptar" update="gridMsj"
-								actionListener="#{revocadosMB.aceptarCliente}" ajax="true"
-								process="@form" />
-						</p:column>
-
+						<f:facet name="footer">
+							<p:commandButton id="btnAgregarBusqueda" value="Agregar"
+								icon="ui-icon-check"
+								actionListener="#{revocadosMB.obtenerPersonaSeleccionada}"
+								onclick="dlgCliente.hide()" update=":frmPendEdit" />
+						</f:facet>
 
 					</p:dataTable>
 				</p:outputPanel>
@@ -264,9 +252,10 @@
 						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.numDoi}"
 						maxlength="13" />
 
-					<p:commandButton id="btnBuscar" update=":frmCliente:dtClientes"
+					<p:commandButton id="btnBuscar"
+						update=":frmCliente:dtClientes, :frmPendEdit"
 						icon="ui-icon-seek-next" oncomplete="dlgCliente.show();"
-						actionListener="#{actSeguiExpe.buscarCliente}" ajax="true"
+						actionListener="#{revocadosMB.buscarPersona}" ajax="true"
 						process="@form" />
 
 					<h:outputLabel value="T.DOI/ C.Central*: " />
@@ -291,16 +280,26 @@
 
 				</h:panelGrid>
 
-				<h:panelGrid columns="4" id="gridApodPod2">
-
-					<h:outputLabel value="Nombre: " />
-					<p:autoComplete completeMethod="#{revocadosMB.completePersona}"
-						value="#{revocadosMB.objTiivsPersonaAgregar2}"
-						forceSelection="true" var="p" converter="personaCvtr"
-						itemLabel="#{p.nombreCompletoMayuscula}" itemValue="#{p}"
-						size="30">
-					</p:autoComplete>
-
+				<h:panelGrid columns="6" id="gridApodPod2">
+					
+					<h:outputText styleClass="outputTextPopup" id="outApPaterno" value="Ap.Paterno:" />
+					<p:inputText styleClass="inputTextPopup"
+								id="txtApellidoPaterno" size="25"
+								 value="#{revocadosMB.objTiivsPersonaAgregar.apePat}" />
+						
+					<h:outputText styleClass="outputTextPopup" id="outApMaterno" value="Ap.Materno:" />
+					<p:inputText styleClass="inputTextPopup"
+								id="txtApellidoMaterno" size="25"
+								 value="#{revocadosMB.objTiivsPersonaAgregar.apeMat}"  />	
+					
+					<h:outputText styleClass="outputTextPopup" id="outNombres" value="Nombres:" />
+					<p:inputText styleClass="inputTextPopup" id="txtNombres" size="25"
+								value="#{revocadosMB.objTiivsPersonaAgregar.nombre}" />		 
+								
+				</h:panelGrid>
+				
+				<h:panelGrid columns="2" id="gridApodPod3">
+				
 					<h:outputLabel value="Tipo de Registro: " />
 					<p:selectOneMenu id="cboTipoRegistro"
 						value="#{revocadosMB.objTiivsPersonaAgregar.tipPartic}"
@@ -309,7 +308,7 @@
 							itemValue="#{t.key}" itemLabel="#{t.descripcion}" />
 						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 					</p:selectOneMenu>
-
+					
 				</h:panelGrid>
 
 				<h:panelGrid columns="3">
@@ -364,7 +363,7 @@
 														<SPAN>Tipo de Registro</SPAN>
 													</div>
 												</th>
-												
+
 												<th class="ui-state-default">
 													<div class="ui-dt-c">
 														<SPAN>Eliminar</SPAN>
@@ -373,7 +372,8 @@
 
 											</tr>
 
-											<c:forEach items="#{revocadosMB.personaClientesPendEdit}" var="s">
+											<c:forEach items="#{revocadosMB.personaClientesPendEdit}"
+												var="s">
 
 												<c:forEach items="#{s.apoderados}" var="n">
 
@@ -401,18 +401,15 @@
 																<SPAN> #{n.sDesctipPartic}</SPAN>
 															</div>
 														</td>
-														
-														<td>
-														
-															<p:commandButton icon="ui-icon-trash" 
-																			 action="#{revocadosMB.eliminarArupacion}" 
-																			 update=":frmPendEdit:dtClientes" >
-																<f:setPropertyActionListener target="#{revocadosMB.objAgrupacionSimpleDtoCapturado}"
-																							  value="#{n}" >
+
+														<td><p:commandButton icon="ui-icon-trash"
+																action="#{revocadosMB.eliminarArupacion}"
+																update=":frmPendEdit:dtClientes">
+																<f:setPropertyActionListener
+																	target="#{revocadosMB.objAgrupacionSimpleDtoCapturado}"
+																	value="#{n}">
 																</f:setPropertyActionListener>
-															</p:commandButton>
-														
-														</td>
+															</p:commandButton></td>
 
 													</tr>
 												</c:forEach>
@@ -443,18 +440,14 @@
 																<SPAN> #{n.sDesctipPartic}</SPAN>
 															</div>
 														</td>
-														
-														<td>
-														
-															<p:commandButton icon="ui-icon-trash" 
-																			 action="#{revocadosMB.eliminarArupacion}" 
-																			 update=":frmPendEdit:dtClientes" >
-																<f:setPropertyActionListener target="#{revocadosMB.deletePersonaEdit}"
-																							  value="#{n}" >
+
+														<td><p:commandButton icon="ui-icon-close"
+																action="#{revocadosMB.eliminarArupacion}"
+																update=":frmPendEdit:dtClientes">
+																<f:setPropertyActionListener
+																	target="#{revocadosMB.deletePersonaEdit}" value="#{n}">
 																</f:setPropertyActionListener>
-															</p:commandButton>
-														
-														</td>
+															</p:commandButton></td>
 
 													</tr>
 
@@ -494,16 +487,17 @@
 				<h:panelGrid columns="1" id="gridMsj">
 					<p:messages globalOnly="true" />
 				</h:panelGrid>
-				
+
 				<h:panelGrid columns="1" id="gridBtn">
-				
-					<p:commandButton id="btnInactivar" value="Inactivar" update="gridMsj"
-								actionListener="#{revocadosMB.inactivarCombinacion}" ajax="true"
-								process="@form" oncomplete="dlgApoPodActEdit.hide();" />
+
+					<p:commandButton id="btnInactivar" value="Inactivar"
+						update="gridMsj"
+						actionListener="#{revocadosMB.inactivarCombinacion}" ajax="true"
+						process="@form" oncomplete="dlgApoPodActEdit.hide();" />
 				</h:panelGrid>
 
 				<p:outputPanel id="dtClientes">
-				
+
 					<table border="0" width="100%">
 						<tbody>
 
@@ -539,7 +533,8 @@
 
 											</tr>
 
-											<c:forEach items="#{revocadosMB.personaClientesActivoEdit}" var="s">
+											<c:forEach items="#{revocadosMB.personaClientesActivoEdit}"
+												var="s">
 
 
 
@@ -615,7 +610,7 @@
 
 						</tbody>
 					</table>
-					
+
 				</p:outputPanel>
 			</h:form>
 

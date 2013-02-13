@@ -14,10 +14,15 @@ import javax.faces.event.ActionEvent;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
+import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
+import com.bbva.persistencia.generica.util.Utilitarios;
+import com.hildebrando.visado.converter.PersonaDataModal;
 import com.hildebrando.visado.dto.Persona;
 import com.hildebrando.visado.dto.Revocado;
+import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsPersona;
@@ -48,7 +53,6 @@ public class RevocadosMB {
 	private TiivsPersona objTiivsPersonaBusquedaDlg;
 	
 	private TiivsPersona objTiivsPersonaAgregar;
-	private TiivsPersona objTiivsPersonaAgregar2;
 	
 	private TiivsPersona deletePersonaEdit;
 	
@@ -61,10 +65,17 @@ public class RevocadosMB {
 	private List<TiivsPersona> personaClientesPopUp;
 	private List<Revocado> personaClientesVer;
 	
+	private TiivsPersona objTiivsPersonaSeleccionado;
+	
+	private PersonaDataModal personaDataModal;
+	
+	
+	
 	private TiivsPersona selectPersonaBusqueda;
 	private TiivsPersona selectPersonaPendEdit;
 	private TiivsPersona selectPersonaActEdit;
 	
+	boolean bBooleanPopup = false;
 	
 	private Date fechaInicio;
 	private Date fechaFin;
@@ -114,14 +125,143 @@ public class RevocadosMB {
 
 	}
 	
+	public void obtenerPersonaSeleccionada() {
+		logger.info(objTiivsPersonaSeleccionado.getCodPer());
+		this.objTiivsPersonaAgregar = this.objTiivsPersonaSeleccionado;
+	}
 	
-	public void  buscarCliente(ActionEvent actionEvent) {
+	
+	public void  buscarPersona(ActionEvent actionEvent) {
 		
+		try {
+			List<TiivsPersona> lstTiivsPersonaLocal = new ArrayList<TiivsPersona>();
+			lstTiivsPersonaLocal = this.buscarPersonaLocal();
+			logger.info("lstTiivsPersonaLocal  "+ lstTiivsPersonaLocal.size());
+			List<TiivsPersona> lstTiivsPersonaReniec = new ArrayList<TiivsPersona>();
+			if (lstTiivsPersonaLocal.size() == 0) {
+				lstTiivsPersonaReniec = this.buscarPersonaReniec();
+				if (lstTiivsPersonaReniec.size() == 0) {
+					objTiivsPersonaAgregar = new TiivsPersona();
+					this.bBooleanPopup = false;
+					 Utilitarios.mensajeInfo("INFO","No se encontro resultados para la busqueda.");
+				} else if (lstTiivsPersonaReniec.size() == 1) {
+					objTiivsPersonaAgregar = lstTiivsPersonaReniec.get(0);
+					this.bBooleanPopup = false;
+				} else if (lstTiivsPersonaReniec.size() > 1) {
+					this.bBooleanPopup = true;
+					personaClientesPopUp = lstTiivsPersonaReniec;
+				}
+			} else if (lstTiivsPersonaLocal.size() == 1) {
+				this.bBooleanPopup = false;
+				objTiivsPersonaAgregar = lstTiivsPersonaLocal.get(0);
+			} else if (lstTiivsPersonaLocal.size() > 1) {
+				this.bBooleanPopup = true;
+				personaClientesPopUp = lstTiivsPersonaLocal;
+
+				personaDataModal = new PersonaDataModal(
+						personaClientesPopUp);
+			} else {
+				this.bBooleanPopup = true;
+			}
 		
+		} catch (Exception e) {
+			Utilitarios.mensajeError("ERROR", e.getMessage());
+			e.printStackTrace();
+		}
 		
 		
 	}
 	
+	public List<TiivsPersona> buscarPersonaLocal() throws Exception {
+		boolean busco = false;
+		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
+		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
+
+		if ((objTiivsPersonaBusquedaDlg.getCodCen() == null || objTiivsPersonaBusquedaDlg.getCodCen().equals(""))
+				&& (objTiivsPersonaBusquedaDlg.getTipDoi() == null || objTiivsPersonaBusquedaDlg
+						.getTipDoi().equals(""))
+				&& (objTiivsPersonaBusquedaDlg.getNumDoi() == null || objTiivsPersonaBusquedaDlg
+						.getNumDoi().equals(""))) {
+			Utilitarios.mensajeInfo("INFO",
+					"Ingrese al menos un criterio de busqueda");
+
+		} else if (objTiivsPersonaBusquedaDlg.getNumDoi() == null
+				|| objTiivsPersonaBusquedaDlg.getNumDoi().equals("")) {
+			Utilitarios.mensajeInfo("INFO", "Ingrese el Número de Doi");
+		} else if (objTiivsPersonaBusquedaDlg.getTipDoi() == null
+				|| objTiivsPersonaBusquedaDlg.getTipDoi().equals("")) {
+			Utilitarios.mensajeInfo("INFO", "Ingrese el Tipo de Doi");
+		} else {
+			if (objTiivsPersonaBusquedaDlg.getTipDoi() != null
+					&& objTiivsPersonaBusquedaDlg.getNumDoi() != null
+					&& objTiivsPersonaBusquedaDlg.getTipDoi().compareTo("") != 0
+					&& objTiivsPersonaBusquedaDlg.getNumDoi().compareTo("") != 0) {
+				filtro.add(Restrictions.eq("tipDoi",
+						objTiivsPersonaBusquedaDlg.getTipDoi()));
+				filtro.add(Restrictions.eq("numDoi",
+						objTiivsPersonaBusquedaDlg.getNumDoi()));
+				busco = true;
+			}
+			if (objTiivsPersonaBusquedaDlg.getCodCen() != null
+					&& objTiivsPersonaBusquedaDlg.getCodCen().compareTo("") != 0) {
+				filtro.add(Restrictions.eq("codCen",
+						objTiivsPersonaBusquedaDlg.getCodCen()));
+				busco = true;
+			}
+			lstTiivsPersona = service.buscarDinamico(filtro);
+		
+			for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+					if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+						tiivsPersona.setsDesctipDoi(p.getDescripcion());
+					}
+				}
+			}
+
+			if (lstTiivsPersona.size() == 0 && busco) {
+				//Utilitarios.mensajeInfo("INFO","No se han encontrado resultados para los criterios de busqueda seleccionados");
+			}
+		}
+
+		return lstTiivsPersona;
+	}
+	
+	public List<TiivsPersona> buscarPersonaReniec() throws Exception {
+		logger.debug("==== inicia buscarPersonaReniec() ==== ");
+		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
+		BResult resultado = null;
+		TiivsPersona objPersona = null;
+		com.bbva.consulta.reniec.util.Persona persona = null;
+		if (objTiivsPersonaBusquedaDlg.getNumDoi() != null) {
+			logger.info("[RENIEC]-Dni:"+ objTiivsPersonaBusquedaDlg.getNumDoi());
+
+			//ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
+			//logger.debug("reniecService="+reniecService);
+			ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
+			resultado = reniecService.devolverPersonaReniecDNI("P013371", "0553",objTiivsPersonaBusquedaDlg.getNumDoi());
+			logger.debug("[RENIEC]-resultado: "+resultado);
+			
+			if (resultado.getCode() == 0) {
+				
+				persona = (com.bbva.consulta.reniec.util.Persona) resultado.getObject();
+				logger.info("PERSONA : " + persona.getNombreCompleto()
+						+ "\nDNI: " + persona.getNumerodocIdentidad());
+				objPersona = new TiivsPersona();
+				objPersona.setNumDoi(persona.getNumerodocIdentidad());
+				objPersona.setNombre(persona.getNombre());
+				objPersona.setApePat(persona.getApellidoPaterno());
+				objPersona.setApeMat(persona.getApellidoMaterno());
+				objPersona.setTipDoi(objTiivsPersonaBusquedaDlg.getTipDoi());
+				objPersona.setCodCen(objTiivsPersonaBusquedaDlg.getCodCen());
+				lstTiivsPersona.add(objPersona);
+			}
+		}
+		
+		logger.debug("==== saliendo de buscarPersonaReniec() ==== ");
+		return lstTiivsPersona;
+	}
 	public void inactivarCombinacion(ActionEvent actionEvent) {
 
 		List<TiivsMultitabla> tiivsMultitablas2 = new ArrayList<TiivsMultitabla>();
@@ -636,14 +776,6 @@ public class RevocadosMB {
 		this.objTiivsPersonaAgregar = objTiivsPersonaAgregar;
 	}
 
-	public TiivsPersona getObjTiivsPersonaAgregar2() {
-		return objTiivsPersonaAgregar2;
-	}
-
-	public void setObjTiivsPersonaAgregar2(TiivsPersona objTiivsPersonaAgregar2) {
-		this.objTiivsPersonaAgregar2 = objTiivsPersonaAgregar2;
-	}
-
 	public List<TiivsPersona> getPersonaClientes() {
 		return personaClientes;
 	}
@@ -732,6 +864,31 @@ public class RevocadosMB {
 
 	public void setDeletePersonaEdit(TiivsPersona deletePersonaEdit) {
 		this.deletePersonaEdit = deletePersonaEdit;
+	}
+
+	public boolean isbBooleanPopup() {
+		return bBooleanPopup;
+	}
+
+	public void setbBooleanPopup(boolean bBooleanPopup) {
+		this.bBooleanPopup = bBooleanPopup;
+	}
+
+	public PersonaDataModal getPersonaDataModal() {
+		return personaDataModal;
+	}
+
+	public void setPersonaDataModal(PersonaDataModal personaDataModal) {
+		this.personaDataModal = personaDataModal;
+	}
+
+	public TiivsPersona getObjTiivsPersonaSeleccionado() {
+		return objTiivsPersonaSeleccionado;
+	}
+
+	public void setObjTiivsPersonaSeleccionado(
+			TiivsPersona objTiivsPersonaSeleccionado) {
+		this.objTiivsPersonaSeleccionado = objTiivsPersonaSeleccionado;
 	}
 
 	
