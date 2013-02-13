@@ -239,6 +239,7 @@ public class SeguimientoMB
 		else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
 		{
 			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
+			setBloquearOficina(true);
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, usuario.getBancoOficina().getCodigo().trim()));
 		}
 		
