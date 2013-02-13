@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SolVisado" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.3310000000000008"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="87"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
@@ -125,21 +125,21 @@
 				</textElement>
 				<text><![CDATA[Importe Total:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="78" y="48" width="71" height="20"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{nroVoucher}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="190" y="27" width="80" height="20"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{estado} + " "]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0,00">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="214" y="48" width="56" height="20"/>
 				<textElement>
 					<font size="9"/>
@@ -153,14 +153,14 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{oficina} + " " + $F{territorio} + " "]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0,00">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="360" y="48" width="80" height="20"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{importe}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="77" y="27" width="72" height="20"/>
 				<textElement>
 					<font size="9"/>
@@ -174,14 +174,14 @@
 				</textElement>
 				<text><![CDATA[1. Información General]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="190" y="48" width="38" height="20"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}+"  "]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="335" y="48" width="42" height="20"/>
 				<textElement>
 					<font size="9"/>
