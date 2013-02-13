@@ -499,7 +499,7 @@
 				
 					<p:commandButton id="btnInactivar" value="Inactivar" update="gridMsj"
 								actionListener="#{revocadosMB.inactivarCombinacion}" ajax="true"
-								process="@form" />
+								process="@form" oncomplete="dlgApoPodActEdit.hide();" />
 				</h:panelGrid>
 
 				<p:outputPanel id="dtClientes">
