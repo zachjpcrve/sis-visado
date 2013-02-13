@@ -80,7 +80,7 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{descripcion}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0,00" isBlankWhenNull="true">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="272" y="3" width="72" height="20"/>
 				<textElement>
 					<font size="8"/>
