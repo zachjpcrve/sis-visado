@@ -730,8 +730,8 @@ public class SolicitudRegistroMB {
 					   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(c.getCodSoli(), c.getNumGrupo()));
 					   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
 					   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
-					   agrupacionSimpleDto.setsEstado("Activo");
-					   agrupacionSimpleDto.setiEstado(1);
+					   agrupacionSimpleDto.setsEstado(ConstantesVisado.ESTADOS.ESTADO_ACTIVO);
+					   agrupacionSimpleDto.setiEstado(Integer.parseInt(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
 					   agrupacionSimpleDto.setLstPersonas(this.lstTiivsPersona);
 					   this.lstAgrupacionSimpleDto.set(indexUpdatePoderdanteApoderado, agrupacionSimpleDto);
 				}
@@ -1340,7 +1340,12 @@ public class SolicitudRegistroMB {
            if(lstAgrupacionSimpleDto.get(i).equals(objAgrupacionSimpleDtoCapturado)){
         	   indexUpdatePoderdanteApoderado=i;
         	   numGrupoUpdatePoderdanteApoderado=lstAgrupacionSimpleDto.get(i).getId().getNumGrupo();
-        	 // lstTiivsAgrupacionPersonas=lstAgrupacionSimpleDto.get(i).
+        	  /* for (TiivsSolicitudAgrupacion a : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+				for (TiivsAgrupacionPersona b : a.getTiivsAgrupacionPersonas()) {
+					if(b.get)
+				}
+			   }*/
+        	   //lstTiivsAgrupacionPersonas=lstAgrupacionSimpleDto.get(i).
         	   break;
 			}
 		}
