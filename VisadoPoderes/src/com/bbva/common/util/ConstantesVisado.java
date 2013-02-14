@@ -3,6 +3,19 @@ package com.bbva.common.util;
 
 public class ConstantesVisado {
 	
+	public static final String CODIGO_MULTITABLA_DOCUMENTO = "T04";
+	public static final String CODIGO_MULTITABLA_TIPO_DOCUMENTO = "T15";
+	public static final String VALOR4_OBLIGATORIO_SI = "1";
+	public static final String VALOR4_OBLIGATORIO_SI_LISTA = "Si";
+	public static final String VALOR4_OBLIGATORIO_NO = "0";
+	public static final String VALOR4_OBLIGATORIO_NO_LISTA = "No";
+	public static final String VALOR2_ESTADO_ACTIVO ="1";
+	public static final String VALOR2_ESTADO_ACTIVO_LISTA ="Activo";
+	public static final String VALOR2_ESTADO_INACTIVO ="0";	
+	public static final String VALOR2_ESTADO_INACTIVO_LISTA ="Inactivo";
+	
+
+	
 	public static final String USUARIO_ID = "usuarioId";
 	public static final String USUARIO_NOMBRE = "usuarioNombre";
 	public static final String USUARIO_CODIGO = "usuarioCodigo";
