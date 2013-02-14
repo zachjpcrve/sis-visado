@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+		<!-- Mantenimiento Documentos -->
+		<h:form id="frmMantenimientoDocumentos">
+			<p:panel header="Documentos">
+			<p:messages id="idMsmDocumento"></p:messages>
+				<table>
+					<tr>
+						<td><h:outputText value="Codigo:  " /></td>
+						<td><p:inputText id="txtCodigo" disabled="true"
+								value="#{documentoMB.documento.id.codElem}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Descripcion:  " /></td>
+						<td><p:inputText id="txtDescripcion" 
+								value="#{documentoMB.documento.valor1}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Estado" /></td>
+						<td><p:selectOneMenu value="#{documentoMB.documento.valor2}">
+								<f:selectItem itemLabel="Activo" itemValue="1" />
+								<f:selectItem itemLabel="Inactivo" itemValue="0" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Tipo de Documento: " /></td>
+						<td><p:selectOneMenu value="#{documentoMB.documento.valor3}">
+								<f:selectItems value="#{documentoMB.tipoDocumento}"
+									itemLabel="#{t.valor1}" itemValue="#{t.id.codElem}" var="t"></f:selectItems>
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Obligatorio: " /></td>
+						<td><p:selectBooleanCheckbox value="#{documentoMB.bValor4}" /></td>
+					</tr>
+				</table>
+				<p:commandButton id="registrarDocumento" value="Guardar" ajax="true"
+					action="#{documentoMB.listarDocumentos}"
+					actionListener="#{documentoMB.registrar}"
+					update=":frmDataTableDocumentos :frmMantenimientoDocumentos">
+				</p:commandButton>
+				<p:commandButton id="limpiarDocumento" value="Limpiar" ajax="true"
+					action="#{documentoMB.limpiarCampos}"
+					update=":frmMantenimientoDocumentos">
+				</p:commandButton>
+			</p:panel>
+		</h:form>
+		<!--Fin Mantenimiento Documentos -->
+		<!-- Data Table Documentos -->
+		<h:form id="frmDataTableDocumentos">
+			<p:panel header="Documentos">
+				<p:dataTable id="dtbUsuarios" value="#{documentoMB.documentos}"
+					var="doc" paginator="true" rows="50" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+					emptyMessage="No hay documentos">
+
+					<p:column headerText="Codigo">
+						<h:outputText value="#{doc.id.codElem}" />
+					</p:column>
+					<p:column headerText="Descripcion">
+						<h:outputText value="#{doc.valor1}" />
+					</p:column>
+					<p:column headerText="Tipo de Documento">
+						<h:outputText value="#{doc.valor3}" />
+					</p:column>
+					<p:column headerText="Obligatorio">
+						<h:outputText value="#{doc.valor4}" />
+					</p:column>
+					<p:column headerText="Estado">
+						<h:outputText value="#{doc.valor2}" />
+					</p:column>
+					<p:column headerText="Accion">
+						<p:commandLink id="clinkEditar" ajax="true" update=":frmMantenimientoDocumentos"
+							actionListener="#{documentoMB.editarDocumento}">
+							<f:param name="codMultitabla" value="#{doc.id.codMult}"></f:param>
+							<f:param name="codElemento" value="#{doc.id.codElem}"></f:param>
+							<h:outputText value="Editar" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+
+		</h:form>
+		<!--Fin Data Table Documentos -->
+	</ui:define>
+</ui:composition>
+
+</html>
