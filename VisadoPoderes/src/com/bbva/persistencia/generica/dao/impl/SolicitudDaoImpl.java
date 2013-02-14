@@ -12,26 +12,16 @@ import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
-import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
-import com.bbva.persistencia.generica.util.Utilitarios;
-import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
-import com.hildebrando.visado.dto.MiembroDto;
 import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
-import com.hildebrando.visado.modelo.TiivsGrupo;
-import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
-import com.sun.org.apache.bcel.internal.generic.LSTORE;
 
 public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		GenericDaoImpl<K, Serializable> implements
