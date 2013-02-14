@@ -3,6 +3,9 @@ package com.bbva.common.util;
 
 public class ConstantesVisado {
 	
+	public static final String CODIGO_MULTITABLA_CLASIFICACION = "T13";
+	
+	
 	public static final String CODIGO_MULTITABLA_DOCUMENTO = "T04";
 	public static final String CODIGO_MULTITABLA_TIPO_DOCUMENTO = "T15";
 	public static final String VALOR4_OBLIGATORIO_SI = "1";
