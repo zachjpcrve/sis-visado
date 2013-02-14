@@ -237,10 +237,10 @@
 		                header="Generar Reporte Extractor" severity="alert" widgetVar="confirmation">  
 	            <h:form>      
 			        <p:commandButton id="confirm" value="Abrir"  oncomplete="confirmation.hide()"  
-			                    actionListener="#{reportesMB.abrirExcelExtractor}" />  
+			                    actionListener="#{reportesMB.abrirExcelEstadoSolicitud}" />  
 			        
 			        <p:commandButton id="decline" value="Grabar" onclick="PrimeFaces.monitorDownload(start, stop)" ajax="false"   
-					        icon="ui-icon-arrowthichk-s" oncomplete="confirmation.hide()" actionListener="#{reportesMB.descargarArchivo}" >
+					        icon="ui-icon-arrowthichk-s" oncomplete="confirmation.hide()" actionListener="#{reportesMB.descargarArchivoEstadoSolicitud}" >
 					    <p:fileDownload value="#{reportesMB.file}" />  
 					</p:commandButton>  
 			   </h:form>
