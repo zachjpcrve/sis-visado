@@ -82,7 +82,8 @@ public class ReportesMB
 	private List<SolicitudesOficina> lstSolicitudesOficina;
 	private Date fechaInicio;
 	private Date fechaFin;
-	private String nombreArchivoExcel;
+	private String nombreExtractor;
+	private String nombreEstadoSolicitud;
 	private String rutaArchivoExcel;
 	private String PERFIL_USUARIO ;
 	private String idTerr;
@@ -92,6 +93,7 @@ public class ReportesMB
 	private StreamedContent file;  
 	private IILDPeUsuario usuario;
 	private Boolean noHabilitarExportar;
+	private Boolean mostrarDialogo=false;
 		
 	public static Logger logger = Logger.getLogger(ReportesMB.class);
 	
@@ -101,7 +103,8 @@ public class ReportesMB
 		PERFIL_USUARIO=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		lstSolicitudesOficina = new ArrayList<SolicitudesOficina>();
-		generarNombreArchivo();
+		generarNombreArchivoExtractor();
+		generarNombreArchivoEstadoSolicitud();
 		
 		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + lstSolicitudesOficina.size() + ConstantesVisado.MSG_REGISTROS,lstSolicitudesOficina.size());
 		if (lstSolicitudesOficina.size()>0)
@@ -189,9 +192,14 @@ public class ReportesMB
 		return descripcion;
 	}
 	
-	public void exportarExcelPOI()
+	public void exportarExcelExtractor()
 	{
-		crearExcel();
+		rptExtractor();
+	}
+	
+	public void exportarExcelEstadoSolicitud()
+	{
+		rptEstadoSolicitud();
 	}
 	
 	public void buscarSolicitudesxOficina()
@@ -253,7 +261,7 @@ public class ReportesMB
 	// @Version: 1.0
 	// @param: -
 	@SuppressWarnings("unchecked")
-	public void buscarSolicitudes() 
+	public void buscarSolicitudesExtractor() 
 	{
 		logger.info("Buscando solicitudes a exportar");
 		
@@ -313,6 +321,7 @@ public class ReportesMB
 		logger.info("Codigo de solicitud : " + codSoli);
 
 		try {
+			lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
 			GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
 			filtroHist.add(Restrictions.eq("id.codSoli", codSoli));
@@ -324,8 +333,7 @@ public class ReportesMB
 			logger.info("Numero de registros encontrados:" + lstHist.size());
 
 			if (lstHist != null && lstHist.size() > 0) {
-				lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
-
+				
 				for (TiivsHistSolicitud h : lstHist) {
 					SeguimientoDTO seg = new SeguimientoDTO();
 
@@ -454,14 +462,22 @@ public class ReportesMB
 		
 	}
 	
-	public void generarNombreArchivo() 
+	public void generarNombreArchivoExtractor() 
 	{
-		setNombreArchivoExcel("Extractor_"	+ Utilitarios.obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + Utilitarios.obtenerHoraArchivoExcel());
+		setNombreExtractor("Extractor_"	+ Utilitarios.obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + Utilitarios.obtenerHoraArchivoExcel());
+	}
+	
+	public void generarNombreArchivoEstadoSolicitud() 
+	{
+		setNombreEstadoSolicitud("Estados_"	+ Utilitarios.obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + Utilitarios.obtenerHoraArchivoExcel());
 	}
 
+	private void rptEstadoSolicitud() 
+	{
+		
+	}
 	
-	
-	private void crearExcel() 
+	private void rptExtractor() 
 	{
 		try 
 		{
@@ -874,9 +890,9 @@ public class ReportesMB
 				
 				logger.info("Parametros recogidos para exportar");
 				logger.info("Ruta: " + obtenerRutaExcel());
-				logger.info("Nombre Archivo Excel: " + getNombreArchivoExcel());
+				logger.info("Nombre Archivo Excel: " + getNombreExtractor());
 				
-				strRuta = obtenerRutaExcel() + getNombreArchivoExcel() + ConstantesVisado.EXTENSION_XLS;
+				strRuta = obtenerRutaExcel() + getNombreExtractor() + ConstantesVisado.EXTENSION_XLS;
 				logger.info("Nombre strRuta: " + strRuta);
 				FileOutputStream fileOut = new FileOutputStream(strRuta);
 				wb.write(fileOut);
@@ -941,10 +957,10 @@ public class ReportesMB
 		return descripcion;
 	}
 	
-	public void abrirExcel()
+	public void abrirExcelEstadoSolicitud()
 	{
 		try {
-			exportarExcelPOI();
+			exportarExcelEstadoSolicitud();
 			//Abrir archivo excel
 				
 			if (rutaArchivoExcel!=null && rutaArchivoExcel.length()>0)
@@ -962,12 +978,26 @@ public class ReportesMB
 	
 	public void abrirExcelExtractor()
 	{
-		
+		try {
+			exportarExcelExtractor();
+			//Abrir archivo excel
+				
+			if (rutaArchivoExcel!=null && rutaArchivoExcel.length()>0)
+			{
+				Desktop.getDesktop().open(new File(rutaArchivoExcel));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.debug("Error al abrir archivo excel debido a: " + e.getMessage());
+		} catch (Exception e1)
+		{
+			e1.printStackTrace();
+		}
 	}
 	
-	public void descargarArchivo()
+	public void descargarArchivoExtractor()
 	{
-		exportarExcelPOI();
+		exportarExcelExtractor();
 		InputStream stream=null;
 		try {
 			stream = new FileInputStream(rutaArchivoExcel);
@@ -977,7 +1007,23 @@ public class ReportesMB
 		
 		if (stream!=null)
 		{
-			file = new DefaultStreamedContent(stream, "application/excel", nombreArchivoExcel+ConstantesVisado.EXTENSION_XLS);
+			file = new DefaultStreamedContent(stream, "application/excel", nombreExtractor+ConstantesVisado.EXTENSION_XLS);
+		}
+	}
+	
+	public void descargarArchivoEstadoSolicitud()
+	{
+		exportarExcelEstadoSolicitud();
+		InputStream stream=null;
+		try {
+			stream = new FileInputStream(rutaArchivoExcel);
+		} catch (FileNotFoundException e) {
+			logger.debug("Error al obtener archivo excel debido a: " + e.getMessage());
+		}
+		
+		if (stream!=null)
+		{
+			file = new DefaultStreamedContent(stream, "application/excel", nombreEstadoSolicitud+ConstantesVisado.EXTENSION_XLS);
 		}
 	}
 	
@@ -1422,14 +1468,6 @@ public class ReportesMB
 		this.lstSolicitudesxOpeBan = lstSolicitudesxOpeBan;
 	}
 
-	public String getNombreArchivoExcel() {
-		return nombreArchivoExcel;
-	}
-
-	public void setNombreArchivoExcel(String nombreArchivoExcel) {
-		this.nombreArchivoExcel = nombreArchivoExcel;
-	}
-
 	public List<TiivsHistSolicitud> getLstHistorial() {
 		return lstHistorial;
 	}
@@ -1542,5 +1580,29 @@ public class ReportesMB
 
 	public void setNoHabilitarExportar(Boolean noHabilitarExportar) {
 		this.noHabilitarExportar = noHabilitarExportar;
+	}
+
+	public String getNombreExtractor() {
+		return nombreExtractor;
+	}
+
+	public void setNombreExtractor(String nombreExtractor) {
+		this.nombreExtractor = nombreExtractor;
+	}
+
+	public String getNombreEstadoSolicitud() {
+		return nombreEstadoSolicitud;
+	}
+
+	public void setNombreEstadoSolicitud(String nombreEstadoSolicitud) {
+		this.nombreEstadoSolicitud = nombreEstadoSolicitud;
+	}
+
+	public Boolean getMostrarDialogo() {
+		return mostrarDialogo;
+	}
+
+	public void setMostrarDialogo(Boolean mostrarDialogo) {
+		this.mostrarDialogo = mostrarDialogo;
 	}	
 }
