@@ -19,7 +19,6 @@ import com.bbva.consulta.reniec.util.Constantes;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
-import com.hildebrando.visado.dto.MultitablaDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
