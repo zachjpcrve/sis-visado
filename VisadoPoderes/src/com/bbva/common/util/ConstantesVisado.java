@@ -269,6 +269,11 @@ public class ConstantesVisado {
 	
 	///******************************************************************************************
 	
+	public static final String TITULO_REPORTE_RPT_SOLICITUD ="ESTADO DE SOLICITUDES POR OFICINAS";
+	public static final String RPT_SOLICITUD_COLUMNA_TOTAL ="Total";
+		
+	//*******************************************************************************************
+	
 	static public class ESTADOS {
 		
 		
