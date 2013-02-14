@@ -145,7 +145,7 @@
 				<tr>
 			<td width="100%">
 					
-					<h:panelGrid width="100%" columns="1" rendered="#{consultarSolicitudMB.verPnlEvaluarNivel}">
+					<h:panelGrid width="100%" columns="1" rendered="#{consultarSolicitudMB.bSeccionEvaluarNivel}">
 					 	<p:messages id="idGrowlSolicitudAccion"></p:messages>
 						<h:outputText title="Acción" value="Acción" styleClass="outputText" />
 						<p:separator styleClass="fielset" />						
@@ -196,50 +196,52 @@
 				</tr>
 			<tr>
 				<td width="100%">
-					<h:outputText title="Documentos" value="Documentos" styleClass="outputText" />
-					<p:separator styleClass="fielset" />
-					<!-- c:if test="{consultarSolicitudMB.bMostrarSolicitudVisado}" -->
-						<a href="#{root}main/download/pdfReportSolicitudVisado.htm">
-							<font color="blue">
-								<u>Solicitud de Visado</u>
+					<h:panelGrid width="100%" columns="1" rendered="#{consultarSolicitudMB.bSeccionDocumentos}">					
+						<h:outputText title="Documentos" value="Documentos" styleClass="outputText" />
+						<p:separator styleClass="fielset" />
+						<!-- c:if test="{consultarSolicitudMB.bMostrarSolicitudVisado}" -->
+							<a href="#{root}main/download/pdfReportSolicitudVisado.htm">
+								<font color="blue">
+									<u>Solicitud de Visado</u>
+								</font>
+							</a>
+	
+						<!-- /c:if -->
+						<c:if test="#{consultarSolicitudMB.bMostrarCartaAtencion}">
+							<a href="#{root}main/download/pdfReportCartaAtencion.htm" onclick="confirmation2.show()">
+								<font color="blue">
+									<u>Carta de atención</u>
+								</font>
+							</a>
+	
+						</c:if>
+						<c:if test="#{consultarSolicitudMB.bMostrarCartaRevision}">
+							<font color="red">
+								Obtener la firma del cliente en la Carta de solicitud de revisión
 							</font>
-						</a>
-
-					<!-- /c:if -->
-					<c:if test="#{consultarSolicitudMB.bMostrarCartaAtencion}">
-						<a href="#{root}main/download/pdfReportCartaAtencion.htm" onclick="confirmation2.show()">
-							<font color="blue">
-								<u>Carta de atención</u>
-							</font>
-						</a>
-
-					</c:if>
-					<c:if test="#{consultarSolicitudMB.bMostrarCartaRevision}">
-						<font color="red">
-							Obtener la firma del cliente en la Carta de solicitud de revisión
-						</font>
-						<br/>
-						<a href="#{root}main/download/pdfReportCartaSolicitudRevision.htm" >
-							<font color="blue">
-								<u>Carta de solicitud de revisión</u>
-							</font>
-						</a>
-					</c:if>
-					<c:if test="#{consultarSolicitudMB.bMostrarCartaRechazo}">
-						<a href="#{root}main/download/pdfReportCartaRechazo.htm"  style="color:#0073EA;font-weight:bold; ">Carta Rechazo</a><br/>
-					</c:if>
-										
-					
-					<c:if test="#{consultarSolicitudMB.bMostrarCartaImprocedente}">
-						<a href="#{root}main/download/pdfReportCartaImprocedente.htm"  style="color:#0073EA;font-weight:bold; ">Carta Improcedente</a><br/>
-					</c:if>
-					<c:if test="#{consultarSolicitudMB.bMostrarCartaRespuesta}">
-						<a href="">
-							<font color="blue">
-								<u>Carta Respuesta</u>
-							</font>
-						</a>
-					</c:if>
+							<br/>
+							<a href="#{root}main/download/pdfReportCartaSolicitudRevision.htm" >
+								<font color="blue">
+									<u>Carta de solicitud de revisión</u>
+								</font>
+							</a>
+						</c:if>
+						<c:if test="#{consultarSolicitudMB.bMostrarCartaRechazo}">
+							<a href="#{root}main/download/pdfReportCartaRechazo.htm"  style="color:#0073EA;font-weight:bold; ">Carta Rechazo</a><br/>
+						</c:if>
+											
+						
+						<c:if test="#{consultarSolicitudMB.bMostrarCartaImprocedente}">
+							<a href="#{root}main/download/pdfReportCartaImprocedente.htm"  style="color:#0073EA;font-weight:bold; ">Carta Improcedente</a><br/>
+						</c:if>
+						<c:if test="#{consultarSolicitudMB.bMostrarCartaRespuesta}">
+							<a href="">
+								<font color="blue">
+									<u>Carta Respuesta</u>
+								</font>
+							</a>
+						</c:if>
+					</h:panelGrid>
 				</td>
 			</tr>
 			</table>
