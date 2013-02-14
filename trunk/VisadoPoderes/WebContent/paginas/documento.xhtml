@@ -9,7 +9,7 @@
 	<ui:define name="contenido">
 		<!-- Mantenimiento Documentos -->
 		<h:form id="frmMantenimientoDocumentos">
-			<p:panel header="Documentos">
+			<p:panel header="Documentos" style="width: 85%">
 			<p:messages id="idMsmDocumento"></p:messages>
 				<table>
 					<tr>
@@ -55,8 +55,8 @@
 		<!--Fin Mantenimiento Documentos -->
 		<!-- Data Table Documentos -->
 		<h:form id="frmDataTableDocumentos">
-			<p:panel header="Documentos">
-				<p:dataTable id="dtbUsuarios" value="#{documentoMB.documentos}"
+			<p:panel header="Documentos" style="width: 85%">
+				<p:dataTable id="dtbUsuarios" value="#{documentoMB.documentos}" 
 					var="doc" paginator="true" rows="50" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
 					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
