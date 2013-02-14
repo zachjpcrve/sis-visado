@@ -10,8 +10,11 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
-
+		
 		<h:form id="frm">
+			
+			<p:growl life="10000" globalOnly="false" showDetail="true" id="growl" />
+			
 			<p:spacer height="5"/>
 			
 			<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
@@ -55,27 +58,29 @@
 			<table border="0">
 				<tr>
 					<td>
-						<p:commandButton value="Generar" actionListener="#{reportesMB.buscarSolicitudes}"  oncomplete="confirmation.show()"/>
+						<p:commandButton value="Generar" actionListener="#{reportesMB.buscarSolicitudesExtractor}" oncomplete="confirmation.show()" update=":frm"
+						 />
 					</td>
 				</tr>	
 			</table>	
-			
-			
-			<p:confirmDialog id="confirmDialog" message="Que desea hacer?"  
-                header="Generar Reporte Extractor" severity="alert" widgetVar="confirmation">  
-                  
-		        <p:commandButton id="confirm" value="Abrir"  oncomplete="confirmation.hide()"  
-		                    actionListener="#{reportesMB.abrirExcel}" />  
-		        
-		        <p:commandButton id="decline" value="Grabar" onclick="PrimeFaces.monitorDownload(start, stop)" ajax="false"   
-				        icon="ui-icon-arrowthichk-s" oncomplete="confirmation.hide()" actionListener="#{reportesMB.descargarArchivo}" >
-				    <p:fileDownload value="#{reportesMB.file}" />  
-				</p:commandButton>  
-		                  
-		    </p:confirmDialog>  
-    
+    		
+    		<p:panel id="pnlExportar" rendered="#{reportesMB.mostrarDialogo}" >
+				<p:confirmDialog id="confirmDialog" message="Que desea hacer?" 
+		                header="Generar Reporte Extractor" severity="alert" widgetVar="confirmation">  
+		            <h:form>      
+				        <p:commandButton id="confirm" value="Abrir"  oncomplete="confirmation.hide()"  
+				                    actionListener="#{reportesMB.abrirExcelExtractor}" />  
+				        
+				        <p:commandButton id="decline" value="Grabar" onclick="PrimeFaces.monitorDownload(start, stop)" ajax="false"   
+						        icon="ui-icon-arrowthichk-s" oncomplete="confirmation.hide()" actionListener="#{reportesMB.descargarArchivo}" >
+						    <p:fileDownload value="#{reportesMB.file}" />  
+						</p:commandButton>  
+				   </h:form>
+				</p:confirmDialog>  
+			</p:panel>
 		</h:form>
-
+		
+		
 	</ui:define>
 </ui:composition>
 
