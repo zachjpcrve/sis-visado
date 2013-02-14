@@ -1340,12 +1340,11 @@ public class SolicitudRegistroMB {
            if(lstAgrupacionSimpleDto.get(i).equals(objAgrupacionSimpleDtoCapturado)){
         	   indexUpdatePoderdanteApoderado=i;
         	   numGrupoUpdatePoderdanteApoderado=lstAgrupacionSimpleDto.get(i).getId().getNumGrupo();
-        	  /* for (TiivsSolicitudAgrupacion a : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
-				for (TiivsAgrupacionPersona b : a.getTiivsAgrupacionPersonas()) {
-					if(b.get)
+        	   for (TiivsSolicitudAgrupacion a : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+				if(a.getId().getNumGrupo()==numGrupoUpdatePoderdanteApoderado){
+					lstTiivsAgrupacionPersonas=a.getTiivsAgrupacionPersonas();
 				}
-			   }*/
-        	   //lstTiivsAgrupacionPersonas=lstAgrupacionSimpleDto.get(i).
+			   }
         	   break;
 			}
 		}
