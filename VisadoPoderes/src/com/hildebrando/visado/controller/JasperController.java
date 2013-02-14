@@ -6,16 +6,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.faces.bean.ManagedProperty;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRField;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -34,7 +29,6 @@ import com.hildebrando.visado.dto.FormatosDTO;
 import com.hildebrando.visado.dto.OperacionesPDF;
 import com.hildebrando.visado.dto.PersonaPDF;
 import com.hildebrando.visado.dto.SolicitudPDF;
-import com.hildebrando.visado.mb.CombosMB;
 import com.hildebrando.visado.mb.ConsultarSolicitudMB;
 import com.hildebrando.visado.mb.RegistroUtilesMB;
 import com.hildebrando.visado.mb.SolicitudRegistroMB;
@@ -82,11 +76,6 @@ public class JasperController {
 		List<TiivsSolicitudOperban> listaOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();
 		listaOperacionesBancarias=SOLICITUD_TEMP.getLstSolicBancarias();
 		log.info("getLstSolicBancarias.size : "+SOLICITUD_TEMP.getLstSolicBancarias().size());
-	/*	TiivsSolicitudOperban x =new TiivsSolicitudOperban();
-		x.setImporte(35.0);
-		x.setsDescMoneda("soles");
-		x.setTipoCambio(2.0);
-		listaOperacionesBancarias.add(x);*/
 	     JRDataSource dsOperacion = new JRBeanCollectionDataSource(listaOperacionesBancarias);
 	    List<JRDataSource> lstDsSolicitudOperban = new ArrayList<JRDataSource>();
 	    lstDsSolicitudOperban.add(dsOperacion);
@@ -115,7 +104,33 @@ public class JasperController {
 		}
         return("pdfReportCartaAtencion");
 	}
-	
+	@RequestMapping(value="/download/pdfReportCartaSolicitudRevision.htm", method=RequestMethod.GET)
+	public String generarReporteCartaSolicitudRevision(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
+		log.info("generarReporteCartaAtencion : ");
+		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
+		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
+		FormatosDTO uno = new FormatosDTO();
+		uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
+		uno.setInstrucciones(SOLICITUD_TEMP.getObs());
+	    cabecera.add(uno);
+        response.setHeader("Content-type", "application/pdf");
+        response.setHeader("Content-Disposition","attachment; filename=\"Solicitud_Revision.pdf\"");
+		
+        JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
+              
+
+        
+        modelMap.put("dataKey", objCab);
+        modelMap.put("IMG_CABECERA", "C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
+
+        try {
+        	OutputStream os = response.getOutputStream();
+        	os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        return("pdfReportCartaSolicitudRevision");
+	}
 	@RequestMapping(value="/download/pdfReportCartaRechazo.htm", method=RequestMethod.GET)
 	public String generarReporteCartaRechazo(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request)
 	{
@@ -144,8 +159,10 @@ public class JasperController {
         JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
         
         modelMap.put("dataKey", objCab);
+
 //        modelMap.put("SUBREPORT_DIR", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\resources\\jasper\\");        
 //        modelMap.put("IMG_CABECERA", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
+
 
         try {
         	OutputStream os = response.getOutputStream();
@@ -184,8 +201,10 @@ public class JasperController {
         JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
         
         modelMap.put("dataKey", objCab);
+
 //        modelMap.put("SUBREPORT_DIR", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\resources\\jasper\\");        
 //        modelMap.put("IMG_CABECERA", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
+
 
         try {
         	OutputStream os = response.getOutputStream();
