@@ -649,7 +649,7 @@ public class SolicitudEdicionMB
 				  objHistorial.setEstado(this.solicitudEdicionT.getEstado());
 				  objHistorial.setNomUsuario(this.solicitudEdicionT.getNomUsuario());
 				  objHistorial.setObs(this.solicitudEdicionT.getObs());
-				  objHistorial.setFecha(new Timestamp(new Date().getDate()));
+				  objHistorial.setFecha(new Timestamp(new Date().getTime()));
 				  objHistorial.setRegUsuario(this.solicitudEdicionT.getRegUsuario());
 				  serviceHistorialSolicitud.insertar(objHistorial);
 				  //Carga ficheros al FTP
