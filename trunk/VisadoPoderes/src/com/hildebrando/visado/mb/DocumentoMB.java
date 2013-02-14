@@ -1,6 +1,5 @@
 package com.hildebrando.visado.mb;
 
-import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Map;
 
@@ -9,18 +8,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
-import org.hibernate.criterion.Restrictions;
-
-import sun.security.action.GetBooleanAction;
-
-import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
-import com.bbva.consulta.reniec.util.Constantes;
-import com.bbva.persistencia.generica.dao.Busqueda;
-import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
-import com.hildebrando.visado.dto.TipoDocumento;
-import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.service.DocumentoService;
