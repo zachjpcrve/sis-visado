@@ -247,8 +247,8 @@ public class ConsultarSolicitudMB {
 						&& PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 					setbMostrarCartaAtencion(false);
 					logger.info("No Se debe mostrar el link de carta de atencion");
-				} else if(sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02) ||
-						sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
+				} else if(sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02) ||
+						sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02) ) {
 					setbMostrarCartaAtencion(true);
 					logger.info("Se debe mostrar el link de carta de atencion");
 				}
@@ -813,8 +813,8 @@ public class ConsultarSolicitudMB {
 		logger.info("****************** obtenerDictamen ********************** "
 				+ e.getNewValue());
 
-		if (e.getNewValue() != null) 
-		{
+		if (e.getNewValue() != null){
+			
 			valorDictamen = e.getNewValue().toString();
 			if (e.getNewValue().toString().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02))
 				descValorDictamen = ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02;
@@ -824,6 +824,11 @@ public class ConsultarSolicitudMB {
 				descValorDictamen = ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02;
 			else if (e.getNewValue().toString().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02))
 				descValorDictamen = ConstantesVisado.ESTADOS.ESTADO_IMPROCEDENTE_T02;
+			
+		} else {
+			
+			descValorDictamen = "";
+			
 		}
 	}
 
