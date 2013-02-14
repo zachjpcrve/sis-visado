@@ -41,7 +41,7 @@
 			</frame>
 			<image>
 				<reportElement x="0" y="1" width="234" height="77"/>
-				<imageExpression class="java.lang.String"><![CDATA[$P{IMG_CABECERA}]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["../../resources/images/bbva2.gif"]]></imageExpression>
 			</image>
 		</band>
 	</title>
