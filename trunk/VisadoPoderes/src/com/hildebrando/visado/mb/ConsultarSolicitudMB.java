@@ -98,12 +98,14 @@ public class ConsultarSolicitudMB {
 	private List<TiivsTipoSolicDocumento> lstDocumentosXTipoSolTemp;
 	private TiivsSolicitudOperban objSolicitudOperacionCapturado;
 	private TiivsSolicitudOperban objSolicitudOperacionCapturadoOld = new TiivsSolicitudOperban();
-	private List<String> aliasFilesToDelete;
+	private List<String> aliasFilesToDelete;	
 	private boolean bSeccionDictaminar = false;
 	private boolean bSeccionReasignacion = false;
 	private boolean bSeccionCartaAtencion = false;
 	private boolean bSeccionComentario = false;
 	private boolean bSeccionAccion = false;
+	private boolean bSeccionDocumentos = false;
+	private boolean bSeccionEvaluarNivel = false;
 	private int indexUpdatePoderdanteApoderado=0;
 	private boolean flagUpdatePoderdanteApoderados=false;
 	private String valorDictamen = "";
@@ -130,7 +132,7 @@ public class ConsultarSolicitudMB {
 	private String ubicacionTemporal;
 	private String sEstadoSolicitud = "";
 	String cadenaEscanerFinal = "";
-	private boolean verPnlEvaluarNivel = false;
+//	private boolean verPnlEvaluarNivel = false;
 	private EvaluacionNivelesMB evaluacionNivelesMB;
 	private TiivsSolicitudOperban objSolicBancaria;
 	private PersonaDataModal personaDataModal;
@@ -174,30 +176,26 @@ public class ConsultarSolicitudMB {
 						.trim()
 						.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
 			setbMostrarComentario(false);
+			setbSeccionEvaluarNivel(false);
+			setbSeccionDocumentos(false);
 		}
 
 		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
-
-			if (this.solicitudRegistrarT
-					.getEstado()
-					.trim()
-					.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)
-					|| this.solicitudRegistrarT
-							.getEstado()
-							.trim()
-							.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)) {
-
-				evaluacionNivelesMB = new EvaluacionNivelesMB(
-						this.solicitudRegistrarT);
-				TiivsSolicitudNivel solNivel = evaluacionNivelesMB
-						.obtenerNivelSolicitud();
+			String sEstado = solicitudRegistrarT.getEstado().trim();
+			if (sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02) || 
+					sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)) {
+				evaluacionNivelesMB = new EvaluacionNivelesMB(solicitudRegistrarT);
+				TiivsSolicitudNivel solNivel = evaluacionNivelesMB.obtenerNivelSolicitud();
 				if (solNivel != null) {
 					this.sNivelSolicitud = solNivel.getCodNiv();
 				}
-
-				verPnlEvaluarNivel = true;
+				setbSeccionEvaluarNivel(true);								
 			}
-
+			setbSeccionDocumentos(true);
+		}
+		
+		if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+			setbSeccionDocumentos(true);
 		}
 
 		combosMB = new CombosMB();
@@ -221,6 +219,7 @@ public class ConsultarSolicitudMB {
 		PERFIL_USUARIO = (String) Utilitarios
 				.getObjectInSession("PERFIL_USUARIO");
 		String codigoSolicitud = Utilitarios.capturarParametro("prm_codSoli");
+		String sEstado="";
 
 		if (codigoSolicitud != null) {
 			try {
@@ -234,24 +233,22 @@ public class ConsultarSolicitudMB {
 				solicitudRegistrarT.setDescEstado(Utilitarios
 						.obternerDescripcionEstado(solicitudRegistrarT
 								.getEstado()));
+				sEstado = this.solicitudRegistrarT
+						.getEstado()
+						.trim();
 			} catch (Exception e) {
 				logger.info("No se pueden obtener los datos de la solicitud");
 			}
 
 			if ((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO
 					.equals(ConstantesVisado.OFICINA))
-					&& (!this.solicitudRegistrarT
-							.getEstado()
-							.trim()
-							.equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02))) {
-				if (this.solicitudRegistrarT
-						.getEstado()
-						.trim()
-						.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02)
+					&& (!sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02))) {
+				if (sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02)
 						&& PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 					setbMostrarCartaAtencion(false);
 					logger.info("No Se debe mostrar el link de carta de atencion");
-				} else {
+				} else if(sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02) ||
+						sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
 					setbMostrarCartaAtencion(true);
 					logger.info("Se debe mostrar el link de carta de atencion");
 				}
@@ -370,9 +367,10 @@ public class ConsultarSolicitudMB {
 		PERFIL_USUARIO = (String) Utilitarios
 				.getObjectInSession("PERFIL_USUARIO");
 
-		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)
+				|| PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
 			setbMostrarComentario(false);
-		}
+		}		
 	}
 
 	public void ocultarComentario() {
@@ -500,7 +498,7 @@ public class ConsultarSolicitudMB {
 			solicitudRegistrarT = solicitudService.obtenerTiivsSolicitud(solicitud);
 			solicitudRegistrarT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudRegistrarT.getEstado()));
 			if (solicitudRegistrarT.getTiivsEstudio() == null) {
-			//	solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
+			//solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
 			}
 			
 			lstSolicBancarias = solicitudService.obtenerListarOperacionesBancarias(solicitud);
@@ -1038,7 +1036,7 @@ public class ConsultarSolicitudMB {
 		objHistorial.setEstado(solicitud.getEstado());
 		objHistorial.setNomUsuario(solicitud.getNomUsuario());
 		objHistorial.setObs(solicitud.getObs());
-		objHistorial.setFecha(new Timestamp(new Date().getDate()));
+		objHistorial.setFecha(new Timestamp(new Date().getTime()));
 		objHistorial.setRegUsuario(solicitud.getRegUsuario());
 		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
@@ -3059,6 +3057,22 @@ public class ConsultarSolicitudMB {
 	public void setbSeccionReasignacion(boolean bSeccionReasignacion) {
 		this.bSeccionReasignacion = bSeccionReasignacion;
 	}
+	
+	public boolean isbSeccionDocumentos() {
+		return bSeccionDocumentos;
+	}
+
+	public void setbSeccionDocumentos(boolean bSeccionDocumentos) {
+		this.bSeccionDocumentos = bSeccionDocumentos;
+	}		
+
+	public boolean isbSeccionEvaluarNivel() {
+		return bSeccionEvaluarNivel;
+	}
+
+	public void setbSeccionEvaluarNivel(boolean bSeccionEvaluarNivel) {
+		this.bSeccionEvaluarNivel = bSeccionEvaluarNivel;
+	}
 
 	public List<ComboDto> getLstComboDictamen() {
 		return lstComboDictamen;
@@ -3202,15 +3216,7 @@ public class ConsultarSolicitudMB {
 
 	public void setPERFIL_USUARIO(String pERFIL_USUARIO) {
 		PERFIL_USUARIO = pERFIL_USUARIO;
-	}
-
-	public boolean isVerPnlEvaluarNivel() {
-		return verPnlEvaluarNivel;
-	}
-
-	public void setVerPnlEvaluarNivel(boolean verPnlEvaluarNivel) {
-		this.verPnlEvaluarNivel = verPnlEvaluarNivel;
-	}
+	}	
 
 	public boolean isbMostrarCartaImprocedente() {
 		return bMostrarCartaImprocedente;
