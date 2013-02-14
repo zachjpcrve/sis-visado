@@ -33,6 +33,7 @@ import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -90,10 +91,11 @@ public class ReportesMB
 	private String idOfi;
 	private String idOfi1;
 	private String textoTotalResultados;
+	private String txtMsgDialog;
 	private StreamedContent file;  
 	private IILDPeUsuario usuario;
 	private Boolean noHabilitarExportar;
-	private Boolean mostrarDialogo=false;
+	private Boolean mostrarBotones=false;
 		
 	public static Logger logger = Logger.getLogger(ReportesMB.class);
 	
@@ -312,7 +314,20 @@ public class ReportesMB
 			logger.debug("Error al buscar las solicitudes: " + ex.getStackTrace());
 		}
 		
-		actualizarDatosDeBusqueda();
+		if (solicitudes.size()>0)
+		{
+			actualizarDatosDeBusqueda();
+			setTxtMsgDialog("Que desea hacer?");
+			mostrarBotones=true;
+		}
+		else
+		{
+			//FacesContext.getCurrentInstance().addMessage("growl",new FacesMessage(FacesMessage.SEVERITY_INFO,
+				//	"Sin registros para exportar","No se encontraron registros que coinciden con los criterios de búsqueda ingresados"));
+			setTxtMsgDialog("No se encontraron registros que coinciden con los criterios de búsqueda ingresados");
+			mostrarBotones=false;
+		}
+
 	}
 	
 	public void obtenerHistorialSolicitud(String codSoli) 
@@ -1598,11 +1613,19 @@ public class ReportesMB
 		this.nombreEstadoSolicitud = nombreEstadoSolicitud;
 	}
 
-	public Boolean getMostrarDialogo() {
-		return mostrarDialogo;
+	public Boolean getMostrarBotones() {
+		return mostrarBotones;
 	}
 
-	public void setMostrarDialogo(Boolean mostrarDialogo) {
-		this.mostrarDialogo = mostrarDialogo;
-	}	
+	public void setMostrarBotones(Boolean mostrarBotones) {
+		this.mostrarBotones = mostrarBotones;
+	}
+
+	public String getTxtMsgDialog() {
+		return txtMsgDialog;
+	}
+
+	public void setTxtMsgDialog(String txtMsgDialog) {
+		this.txtMsgDialog = txtMsgDialog;
+	}
 }
