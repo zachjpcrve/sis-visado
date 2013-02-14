@@ -663,31 +663,31 @@ public class SeguimientoMB
 
 			// creo una nueva fila
 			Row trow = sheet.createRow((short) 0);
-			crearTituloCell(wb, trow, 4, CellStyle.ALIGN_CENTER, CellStyle.VERTICAL_CENTER, ConstantesVisado.TITULO_CABECERA_EXCEL);
+			Utilitarios.crearTituloCell(wb, trow, 4, CellStyle.ALIGN_CENTER, CellStyle.VERTICAL_CENTER, ConstantesVisado.TITULO_CABECERA_EXCEL,10);
 			
 			//Se crea la leyenda de quien genero el archivo y la hora respectiva
 			Row rowG = sheet.createRow((short) 1);
-			crearCell(wb, rowG, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false, false,false);
-			crearCell(wb, rowG, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerGenerador(),  true, false,true);
+			Utilitarios.crearCell(wb, rowG, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false, false,false,HSSFColor.GREY_25_PERCENT.index);
+			Utilitarios.crearCell(wb, rowG, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerGenerador(),  true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			
 			Row rowG1 = sheet.createRow((short) 2);
-			crearCell(wb, rowG1, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false, false,false);
-			crearCell(wb, rowG1, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.obtenerFechaHoraActual(),  true, false,true);
+			Utilitarios.crearCell(wb, rowG1, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false, false,false,HSSFColor.GREY_25_PERCENT.index);
+			Utilitarios.crearCell(wb, rowG1, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.obtenerFechaHoraActual(),  true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			
 			//Genera celdas con los filtros de busqueda
 			Row row2 = sheet.createRow((short) 4);
 			
-			crearCell(wb, row2, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_NRO_SOL, false, false,false);
+			Utilitarios.crearCell(wb, row2, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_NRO_SOL, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			if (getCodSolicitud()!=null)
 			{
-				crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getCodSolicitud(), true, false,true);
+				Utilitarios.crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getCodSolicitud(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row2, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_ESTADO, false, false,false);
+			Utilitarios.crearCell(wb, row2, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_ESTADO, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			if (lstEstadoSelected!=null)
 			{
 				String cadena = "";
@@ -698,37 +698,37 @@ public class SeguimientoMB
 					cadena+= buscarEstadoxCodigo(lstEstadoSelected.get(ind))+",";
 				}
 				
-				crearCell(wb, row2, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+				Utilitarios.crearCell(wb, row2, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row2, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row2, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row2, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_IMPORTE, false, false,false);
+			Utilitarios.crearCell(wb, row2, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_IMPORTE, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
 			{
-				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "<50", true, false,true);
+				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "<50", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE)) 
 			{
-				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">50 y <120", true, false,true);
+				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">50 y <120", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA)) 
 			{
-				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">120 y <250", true, false,true);
+				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">120 y <250", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA)) 
 			{
-				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">250", true, false,true);
+				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">250", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row2, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TIPO_SOL, false, false,false);
+			Utilitarios.crearCell(wb, row2, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TIPO_SOL, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (lstTipoSolicitudSelected!=null)
 			{
@@ -740,126 +740,126 @@ public class SeguimientoMB
 					cadena+= buscarTipoSolxCodigo(lstTipoSolicitudSelected.get(ind))+",";
 				}
 				
-				crearCell(wb, row2, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+				Utilitarios.crearCell(wb, row2, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row2, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row2, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
 			Row row3 = sheet.createRow((short) 5);
-			crearCell(wb, row3, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TIPO_FECHA, false, false,false);
+			Utilitarios.crearCell(wb, row3, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TIPO_FECHA, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getIdTiposFecha().compareTo("")!=0)
 			{
 				String cadena = "";
 				cadena= buscarTipoFechaxCodigo(getIdTiposFecha());
 								
-				crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+				Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row3, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_INICIO, false, false,false);
+			Utilitarios.crearCell(wb, row3, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_INICIO, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getFechaInicio()!=null)
 			{
 				SimpleDateFormat sf1 = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 				String sFechaInicio = sf1.format(getFechaInicio());
 				
-				crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, sFechaInicio, true, false,true);
+				Utilitarios.crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, sFechaInicio, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row3, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_FIN, false, false,false);
+			Utilitarios.crearCell(wb, row3, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_FIN, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getFechaFin()!=null)
 			{
 				SimpleDateFormat sf1 = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 				String sFechaFin = sf1.format(getFechaFin());
 				
-				crearCell(wb, row3, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,sFechaFin, true, false,true);
+				Utilitarios.crearCell(wb, row3, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,sFechaFin, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row3, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row3, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row3, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TIPO_OPE, false, false,false);
+			Utilitarios.crearCell(wb, row3, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TIPO_OPE, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getIdOpeBan().compareTo("")!=0)
 			{
-				crearCell(wb, row3, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarOpeBanxCodigo(getIdOpeBan()), true, false,true);
+				Utilitarios.crearCell(wb, row3, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarOpeBanxCodigo(getIdOpeBan()), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row3, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row3, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
 			Row row5 = sheet.createRow((short) 7);
 			
-			crearCell(wb, row5, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_DOI_APODERADO, false, false,false);
+			Utilitarios.crearCell(wb, row5, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_DOI_APODERADO, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getNroDOIApoderado()!=null)
 			{
-				crearCell(wb, row5, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getNroDOIApoderado(), true, false,true);
+				Utilitarios.crearCell(wb, row5, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getNroDOIApoderado(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row5, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row5, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row5, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_APODERADO, false, false,false);
+			Utilitarios.crearCell(wb, row5, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_APODERADO, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getTxtNomApoderado()!=null)
 			{
-				crearCell(wb, row5, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getTxtNomApoderado(), true, false,true);
+				Utilitarios.crearCell(wb, row5, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getTxtNomApoderado(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row5, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row5, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row5, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_DOI_PODERDANTE, false, false,false);
+			Utilitarios.crearCell(wb, row5, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_DOI_PODERDANTE, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getNroDOIPoderdante()!=null)
 			{
-				crearCell(wb, row5, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getNroDOIPoderdante(), true, false,true);
+				Utilitarios.crearCell(wb, row5, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getNroDOIPoderdante(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row5, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row5, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row5, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_PODERDANTE, false, false,false);
+			Utilitarios.crearCell(wb, row5, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_PODERDANTE, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getTxtNomPoderdante()!=null)
 			{
-				crearCell(wb, row5, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getTxtNomPoderdante(), true, false,true);
+				Utilitarios.crearCell(wb, row5, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getTxtNomPoderdante(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row5, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row5, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
 			Row row6 = sheet.createRow((short) 8);
-			crearCell(wb, row6, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_OFICINA, false, false,false);
+			Utilitarios.crearCell(wb, row6, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_OFICINA, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getOficina()!=null)
 			{
-				crearCell(wb, row6, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getOficina().getDesOfi(), true, false,true);
+				Utilitarios.crearCell(wb, row6, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getOficina().getDesOfi(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row6, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row6, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row6, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_NIVEL, false, false,false);
+			Utilitarios.crearCell(wb, row6, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_NIVEL, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getLstNivelSelected()!=null)
 			{
@@ -871,14 +871,14 @@ public class SeguimientoMB
 					cadena+= buscarNivelxCodigo(getLstNivelSelected().get(ind))+",";
 				}
 				
-				crearCell(wb, row6, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+				Utilitarios.crearCell(wb, row6, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row6, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row6, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row6, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_ESTADO_NIVEL, false, false,false);
+			Utilitarios.crearCell(wb, row6, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_ESTADO_NIVEL, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getLstEstadoNivelSelected()!=null)
 			{
@@ -890,14 +890,14 @@ public class SeguimientoMB
 					cadena+= buscarEstNivelxCodigo(getLstEstadoNivelSelected().get(ind))+",";
 				}
 				
-				crearCell(wb, row6, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+				Utilitarios.crearCell(wb, row6, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row6, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row6, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row6, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_ESTUDIO,false, false,false);
+			Utilitarios.crearCell(wb, row6, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_ESTUDIO,false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (getLstEstudioSelected()!=null)
 			{
@@ -909,45 +909,45 @@ public class SeguimientoMB
 					cadena+= buscarEstudioxCodigo(getLstEstudioSelected().get(ind))+",";
 				}
 				
-				crearCell(wb, row6, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true);
+				Utilitarios.crearCell(wb, row6, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row6, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+				Utilitarios.crearCell(wb, row6, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
 			Row row7 = sheet.createRow((short) 9);
-			crearCell(wb, row7, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_REVISION, false, false,false);
+			Utilitarios.crearCell(wb, row7, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_REVISION, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (bRevision)
 			{
-				crearCell(wb, row7, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+				Utilitarios.crearCell(wb, row7, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row7, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+				Utilitarios.crearCell(wb, row7, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row7, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_DELEGADO, false, false,false);
+			Utilitarios.crearCell(wb, row7, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_DELEGADO, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (bDelegados)
 			{
-				crearCell(wb, row7, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+				Utilitarios.crearCell(wb, row7, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row7, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+				Utilitarios.crearCell(wb, row7, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			
-			crearCell(wb, row7, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_REVOCATORIA, false, false,false);
+			Utilitarios.crearCell(wb, row7, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_REVOCATORIA, false, false,false,HSSFColor.GREY_25_PERCENT.index);
 			
 			if (bRevocatoria)
 			{
-				crearCell(wb, row7, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+				Utilitarios.crearCell(wb, row7, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
-				crearCell(wb, row7, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+				Utilitarios.crearCell(wb, row7, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 		
 			if (solicitudes.size()==0)
@@ -960,48 +960,48 @@ public class SeguimientoMB
 				Row rowT = sheet.createRow((short) 12);
 
 				// Creo las celdas de mi fila, se puede poner un diseño a la celda
-				crearCell(wb, rowT, 0, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_ITEM, true, true,false);
-				crearCell(wb, rowT, 1, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_NRO_SOLICITUD, true, true,false);
-				crearCell(wb, rowT, 2, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_COD_OFICINA, true, true,false);
-				crearCell(wb, rowT, 3, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_OFICINA, true, true,false);
-				crearCell(wb, rowT, 4, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_TERRITORIO, true, true,false);
-				crearCell(wb, rowT, 5, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_ESTADO, true, true,false);
-				crearCell(wb, rowT, 6, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_IMPORTE, true, true,false);
-				crearCell(wb, rowT, 7, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_PODERDANTE, true, true,false);
-				crearCell(wb, rowT, 8, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_APODERADO, true, true,false);
-				crearCell(wb, rowT, 9, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_TIPO_SOL, true, true,false);
-				crearCell(wb, rowT, 10, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_TIPO_OPE, true, true,false);
-				crearCell(wb, rowT, 11, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_ESTUDIO, true, true,false);
-				crearCell(wb, rowT, 12, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_NIVEL, true, true,false);
-				crearCell(wb, rowT, 13, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_FECHA_ENVIO, true, true,false);
-				crearCell(wb, rowT, 14, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_FECHA_RPTA, true, true,false);
-				crearCell(wb, rowT, 15, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_FECHA_ESTADO, true, true,false);
-				crearCell(wb, rowT, 16, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_COMISION, true, true,false);
-				crearCell(wb, rowT, 17, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_LIBERADO, true, true,false);
-				crearCell(wb, rowT, 18, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_DELEGADO, true, true,false);
-				crearCell(wb, rowT, 19, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_EN_REVISION, true, true,false);
-				crearCell(wb, rowT, 20, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_REVOCATORIA, true, true,false);
+				Utilitarios.crearCell(wb, rowT, 0, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_ITEM, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 1, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_NRO_SOLICITUD, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 2, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_COD_OFICINA, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 3, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_OFICINA, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 4, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_TERRITORIO, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 5, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_ESTADO, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 6, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_IMPORTE, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 7, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_PODERDANTE, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 8, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_APODERADO, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 9, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_TIPO_SOL, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 10, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_TIPO_OPE, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 11, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_ESTUDIO, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 12, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_NIVEL, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 13, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_FECHA_ENVIO, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 14, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_FECHA_RPTA, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 15, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_FECHA_ESTADO, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 16, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_COMISION, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 17, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_LIBERADO, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 18, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_DELEGADO, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 19, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_EN_REVISION, true, true,false,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, rowT, 20, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_REVOCATORIA, true, true,false,HSSFColor.GREY_25_PERCENT.index);
 				
 				int numReg=13;
 				int contador=0;
@@ -1012,149 +1012,149 @@ public class SeguimientoMB
 					Row row = sheet.createRow((short) numReg);
 					if (contador<=9)
 					{
-						crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.TRES_CEROS + contador, true, false,true);
+						Utilitarios.crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.TRES_CEROS + contador, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					else if (contador<=99 && contador >9)
 					{
-						crearCell(wb, row, 0, CellStyle.ALIGN_LEFT, CellStyle.VERTICAL_CENTER, ConstantesVisado.DOS_CEROS + contador, true, false,true);
+						Utilitarios.crearCell(wb, row, 0, CellStyle.ALIGN_LEFT, CellStyle.VERTICAL_CENTER, ConstantesVisado.DOS_CEROS + contador, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					else if(contador>=99 && contador<999)
 					{
-						crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.CERO + contador, true, false,true);
+						Utilitarios.crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.CERO + contador, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					else
 					{
-						crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(contador), true, false,true);
+						Utilitarios.crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(contador), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					
 					//Columna Nro Solicitud en Excel
-					crearCell(wb, row, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getCodSoli(), true, false,true);
+					Utilitarios.crearCell(wb, row, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getCodSoli(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 										
 					//Columna Cod Oficina en Excel
-					crearCell(wb, row, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsOficina1().getCodOfi()),true, false,true);
+					Utilitarios.crearCell(wb, row, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsOficina1().getCodOfi()),true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					
 					//Columna Oficina en Excel
-					crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsOficina1().getDesOfi()),true, false,true);
+					Utilitarios.crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsOficina1().getDesOfi()),true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					
 					//Columna Territorio en Excel
-					crearCell(wb, row, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarDesTerritorio(tmp.getTiivsOficina1().getTiivsTerritorio().getCodTer()),true, false,true);
+					Utilitarios.crearCell(wb, row, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarDesTerritorio(tmp.getTiivsOficina1().getTiivsTerritorio().getCodTer()),true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					
 					//Columna Estado en Excel
-					crearCell(wb, row, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtEstado(), true, false,true);
+					Utilitarios.crearCell(wb, row, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtEstado(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					
 					//Columna Importe en Excel
-					crearCell(wb, row, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtImporte(), true, false,true);
+					Utilitarios.crearCell(wb, row, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtImporte(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					
 					//Columna Poderdante en Excel
-					crearCell(wb, row, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtPoderdante(), true, false,true);
+					Utilitarios.crearCell(wb, row, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtPoderdante(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					
 					//Columna Apoderado en Excel
-					crearCell(wb, row, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtApoderado(), true, false,true);
+					Utilitarios.crearCell(wb, row, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtApoderado(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					
 					//Columna Tipo Solicitud en Excel
-					crearCell(wb, row, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsTipoSolicitud().getDesTipServicio()), true, false,true);
+					Utilitarios.crearCell(wb, row, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsTipoSolicitud().getDesTipServicio()), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					
 					//Columna Operaciones Bancarias en Excel
-					crearCell(wb, row, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtOpeBan(), true, false,true);
+					Utilitarios.crearCell(wb, row, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtOpeBan(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					
 					//Columna Estudio en Excel
 					if (tmp.getTiivsEstudio()!=null)
 					{
-						crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsEstudio().getDesEstudio()) , true, false,true);
+						Utilitarios.crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsEstudio().getDesEstudio()) , true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					else
 					{
-						crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(null),true,false,true);
+						Utilitarios.crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(null),true,false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					
 					//Columna Nivel en Excel
-					crearCell(wb, row, 12, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtNivel(), true, false,true);
+					Utilitarios.crearCell(wb, row, 12, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTxtNivel(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					
 					//Columna Fecha Envio en Excel
 					if (tmp.getFechaEnvio()!=null)
 					{
-						crearCell(wb, row, 13, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getFechaEnvio()), true, false,true);
+						Utilitarios.crearCell(wb, row, 13, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getFechaEnvio()), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					else
 					{
-						crearCell(wb, row, 13, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+						Utilitarios.crearCell(wb, row, 13, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 							
 					//Columna Fecha Rpta en Excel
 					if (tmp.getFechaRespuesta()!=null)
 					{
-						crearCell(wb, row, 14, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getFechaRespuesta()), true, false,true);
+						Utilitarios.crearCell(wb, row, 14, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getFechaRespuesta()), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					else
 					{
-						crearCell(wb, row, 14, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+						Utilitarios.crearCell(wb, row, 14, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					
 					//Columna Fecha Estado en Excel
 					if (tmp.getFechaEstado()!=null)
 					{
-						crearCell(wb, row, 15, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getFechaEstado()), true, false,true);
+						Utilitarios.crearCell(wb, row, 15, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getFechaEstado()), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					else
 					{
-						crearCell(wb, row, 15, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+						Utilitarios.crearCell(wb, row, 15, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					
 					//Columna Comision en Excel
 					if (tmp.getComision()!=null)
 					{
-						crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getComision()), true, false,true);
+						Utilitarios.crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(tmp.getComision()), true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					else
 					{
-						crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true);
+						Utilitarios.crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					
 					//Columna Liberado
 					if (tmp.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
 					{
-						crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+						Utilitarios.crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					else
 					{
 						if (tmp.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02))
 						{
-							crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+							Utilitarios.crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 						}
 						else
 						{
-							crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+							Utilitarios.crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 						}
 					}
 					
 					//Columna Delegado
 					if (validarSolicitudConDelegacion(tmp.getCodSoli()))
 					{
-						crearCell(wb, row, 18, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+						Utilitarios.crearCell(wb, row, 18, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					else
 					{
-						crearCell(wb, row, 18, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+						Utilitarios.crearCell(wb, row, 18, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					
 					//Columna En Revision
 					if (validarSolicitudEnRevision(tmp.getCodSoli()))
 					{
-						crearCell(wb, row, 19, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+						Utilitarios.crearCell(wb, row, 19, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					else
 					{
-						crearCell(wb, row, 19, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+						Utilitarios.crearCell(wb, row, 19, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					
 					//Columna Revocatoria
 					if (validarSolicitudRevocada(tmp.getCodSoli()))
 					{
-						crearCell(wb, row, 20, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true);
+						Utilitarios.crearCell(wb, row, 20, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Si", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					else
 					{
-						crearCell(wb, row, 20, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true);
+						Utilitarios.crearCell(wb, row, 20, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "No", true, false,true,HSSFColor.GREY_25_PERCENT.index);
 					}
 					
 					numReg++;
@@ -1268,82 +1268,7 @@ public class SeguimientoMB
 		
 		return res;
 	}
-	
-	
-	
-	private static void crearTituloCell(HSSFWorkbook wb, Row row, int column, short halign, short valign, String strContenido) 
-	{
-		CreationHelper ch = wb.getCreationHelper();
-		Cell cell = row.createCell(column);
-		cell.setCellValue(ch.createRichTextString(strContenido));
-
-		HSSFFont cellFont = wb.createFont();
-		cellFont.setFontHeightInPoints((short) 10);
-		cellFont.setFontName(HSSFFont.FONT_ARIAL);
-		cellFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-		cellFont.setUnderline((byte) 1);
-
-		CellStyle cellStyle = wb.createCellStyle();
-		cellStyle.setAlignment(halign);
-		cellStyle.setVerticalAlignment(valign);
-		cellStyle.setFont(cellFont);
-		cell.setCellStyle(cellStyle);
-	}
-
-	private static void crearCell(Workbook wb, Row row, int column, short halign, short valign, String strContenido, boolean booBorde,
-			boolean booCabecera, boolean booFiltrosBus) 
-	{
-		CreationHelper ch = wb.getCreationHelper();
-		Cell cell = row.createCell(column);
-		cell.setCellValue(ch.createRichTextString(strContenido));
-		CellStyle cellStyle = wb.createCellStyle();
-		cellStyle.setAlignment(halign);
-		cellStyle.setVerticalAlignment(valign);
 		
-		if (booBorde) 
-		{
-			cellStyle.setBorderBottom(HSSFCellStyle.BORDER_DOTTED);
-			cellStyle.setBottomBorderColor((short) 8);
-			cellStyle.setBorderLeft(HSSFCellStyle.BORDER_DOTTED);
-			cellStyle.setLeftBorderColor((short) 8);
-			cellStyle.setBorderRight(HSSFCellStyle.BORDER_DOTTED);
-			cellStyle.setRightBorderColor((short) 8);
-			cellStyle.setBorderTop(HSSFCellStyle.BORDER_DOTTED);
-			cellStyle.setTopBorderColor((short) 8);
-		}
-		
-		if (booCabecera) 
-		{
-			cellStyle.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
-			cellStyle.setBottomBorderColor((short) 8);
-			cellStyle.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
-			cellStyle.setLeftBorderColor((short) 8);
-			cellStyle.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
-			cellStyle.setRightBorderColor((short) 8);
-			cellStyle.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
-			cellStyle.setTopBorderColor((short) 8);
-
-			cellStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-			cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		}
-		
-		if (booFiltrosBus) 
-		{
-			cellStyle.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
-			cellStyle.setBottomBorderColor((short) 8);
-			cellStyle.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
-			cellStyle.setLeftBorderColor((short) 8);
-			cellStyle.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
-			cellStyle.setRightBorderColor((short) 8);
-			cellStyle.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
-			cellStyle.setTopBorderColor((short) 8);
-			//cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		}
-		
-		cell.setCellStyle(cellStyle);
-	}
-
-	
 	// Descripcion: Metodo que se encarga de buscar las solicitudes de acuerdo a
 	// los filtros seleccionados.
 	// @Autor: Cesar La Rosa

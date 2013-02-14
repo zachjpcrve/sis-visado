@@ -79,9 +79,10 @@
 						<td>
 							<p:commandButton value="Buscar" actionListener="#{reportesMB.buscarSolicitudesxOficina}" update=":frm"/>
 						</td>
-						
 						<td>
-							<p:commandButton id="exportar" value="Exportar"  disabled="#{reportesMB.noHabilitarExportar}"/>
+							<p:commandButton value="Exportar"  disabled="#{reportesMB.noHabilitarExportar}" 
+								actionListener="#{reportesMB.abrirExcelEstadoSolicitud}">
+							</p:commandButton>
 						</td>
 					</tr>
 						

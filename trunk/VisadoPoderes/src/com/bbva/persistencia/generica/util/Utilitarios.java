@@ -23,6 +23,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import com.bbva.common.util.ConstantesVisado;
 
@@ -187,6 +197,84 @@ public class Utilitarios {
 				+ calFechaAct.get(Calendar.SECOND);
 
 		return fechaActualizacion + " " + horaActualizacion;
+	}
+	
+	public static void crearTituloCell(HSSFWorkbook wb, Row row, int column, short halign, short valign, String strContenido, int iTamanioTitulo) 
+	{
+		CreationHelper ch = wb.getCreationHelper();
+		Cell cell = row.createCell(column);
+		cell.setCellValue(ch.createRichTextString(strContenido));
+		
+		HSSFFont cellFont = wb.createFont();
+		cellFont.setFontHeightInPoints((short) iTamanioTitulo);
+		cellFont.setFontName(HSSFFont.FONT_ARIAL);
+		cellFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		cellFont.setUnderline((byte) 1);
+		
+		CellStyle cellStyle = wb.createCellStyle();
+		cellStyle.setAlignment(halign);
+		cellStyle.setVerticalAlignment(valign);
+		cellStyle.setFont(cellFont);
+		cellStyle.setWrapText(true);
+		cell.setCellStyle(cellStyle);
+	}
+	
+	public static void crearCell(Workbook wb, Row row, int column, short halign, short valign, String strContenido, boolean booBorde,
+			boolean booCabecera, boolean booFiltrosBus, Short color) 
+	{
+		CreationHelper ch = wb.getCreationHelper();
+		Cell cell = row.createCell(column);
+		cell.setCellValue(ch.createRichTextString(strContenido));
+		CellStyle cellStyle = wb.createCellStyle();
+		cellStyle.setAlignment(halign);
+		cellStyle.setVerticalAlignment(valign);
+		
+		if (booBorde) 
+		{
+			cellStyle.setBorderBottom(HSSFCellStyle.BORDER_DOTTED);
+			cellStyle.setBottomBorderColor((short) 8);
+			cellStyle.setBorderLeft(HSSFCellStyle.BORDER_DOTTED);
+			cellStyle.setLeftBorderColor((short) 8);
+			cellStyle.setBorderRight(HSSFCellStyle.BORDER_DOTTED);
+			cellStyle.setRightBorderColor((short) 8);
+			cellStyle.setBorderTop(HSSFCellStyle.BORDER_DOTTED);
+			cellStyle.setTopBorderColor((short) 8);
+		}
+		
+		if (booCabecera) 
+		{
+			cellStyle.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setBottomBorderColor((short) 8);
+			cellStyle.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setLeftBorderColor((short) 8);
+			cellStyle.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setRightBorderColor((short) 8);
+			cellStyle.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setTopBorderColor((short) 8);
+
+			cellStyle.setFillForegroundColor(color);
+			
+			Font cellFont = wb.createFont();
+			cellFont.setColor((short) HSSFColor.WHITE.index);
+			cellStyle.setFont(cellFont);
+			
+			cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		}
+		
+		if (booFiltrosBus) 
+		{
+			cellStyle.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setBottomBorderColor((short) 8);
+			cellStyle.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setLeftBorderColor((short) 8);
+			cellStyle.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setRightBorderColor((short) 8);
+			cellStyle.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setTopBorderColor((short) 8);
+			//cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		}
+		
+		cell.setCellStyle(cellStyle);
 	}
 	
 	public static String formatoFechaSinHora(Date fecha) {
