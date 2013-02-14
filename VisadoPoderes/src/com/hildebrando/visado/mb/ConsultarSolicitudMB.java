@@ -1330,6 +1330,28 @@ public class ConsultarSolicitudMB {
 			mensaje = "Ingrese la sección Apoderado y Poderdante";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
+		}else{
+			Set<TiivsAgrupacionPersona> lstAgrupacionPersona=null;
+			int conuntNumAgru=0;
+			
+			for (TiivsSolicitudAgrupacion a : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+				conuntNumAgru=a.getId().getNumGrupo();
+				logger.info("conuntNumAgru : " +conuntNumAgru);
+				lstAgrupacionPersona=a.getTiivsAgrupacionPersonas();
+				int contPoderdante=0, contApoderado=0;
+				for (TiivsAgrupacionPersona xa : lstAgrupacionPersona) {
+					if(xa.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+					   contPoderdante++;
+					
+					}else if(xa.getTipPartic().equals(ConstantesVisado.APODERADO)){
+						contApoderado++;
+						
+					}
+				}
+				logger.info("contPoderdante : " +contPoderdante);
+				logger.info("contApoderado : " +contApoderado);
+			}
+			
 		}
 		if (solicitudRegistrarT.getTiivsTipoSolicitud() == (null)) {
 			mensaje = "Seleccione el Tipo de Solicitud ";
