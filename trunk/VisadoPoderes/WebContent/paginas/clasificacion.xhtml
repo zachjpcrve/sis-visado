@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+		<!-- Mantenimiento Clasificacion -->
+		<h:form id="frmMantenimientoClasificacion">
+			<p:panel header="Documentos">
+			<p:messages id="idMsmDocumento"></p:messages>
+				<table>
+					<tr>
+						<td><h:outputText value="Codigo:  " /></td>
+						<td><p:inputText id="txtCodigo" disabled="true"
+								value="#{clasificacionMB.clasificacion.id.codElem}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Descripcion:  " /></td>
+						<td><p:inputText id="txtDescripcion" 
+								value="#{clasificacionMB.clasificacion.valor1}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Estado" /></td>
+						<td><p:selectOneMenu value="#{clasificacionMB.clasificacion.valor2}">
+								<f:selectItem itemLabel="Activo" itemValue="1" />
+								<f:selectItem itemLabel="Inactivo" itemValue="0" />
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
+				<p:commandButton id="registrarClasificacion" value="Guardar" ajax="true"
+					action="#{clasificacionMB.listarClasificaciones}"
+					actionListener="#{clasificacionMB.registrar}"
+					update=":frmDataTableClasificacion :frmMantenimientoClasificacion">
+				</p:commandButton>
+				<p:commandButton id="limpiarDocumento" value="Limpiar" ajax="true"
+					action="#{clasificacionMB.limpiarCampos}"
+					update=":frmMantenimientoClasificacion">
+				</p:commandButton>
+			</p:panel>
+		</h:form>
+		<!--Fin Mantenimiento Clasificacion -->
+		<!-- Data Table Clasificacion -->
+		<h:form id="frmDataTableClasificacion">
+			<p:panel header="Tipo de Clasificacion">
+				<p:dataTable id="dtbClasificacion" value="#{clasificacionMB.clasificaciones}"
+					var="cla" paginator="true" rows="50" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+					emptyMessage="No hay documentos">
+
+					<p:column headerText="Codigo">
+						<h:outputText value="#{cla.id.codElem}" />
+					</p:column>
+					<p:column headerText="Clasificacion">
+						<h:outputText value="#{cla.valor1}" />
+					</p:column>
+					<p:column headerText="Estado">
+						<h:outputText value="#{cla.valor2}" />
+					</p:column>
+					<p:column headerText="Accion">
+						<p:commandLink id="clinkEditar" ajax="true" update=":frmMantenimientoClasificacion"
+							actionListener="#{clasificacionMB.editarClasificacion}">
+							<f:param name="codMultitabla" value="#{cla.id.codMult}"></f:param>
+							<f:param name="codElemento" value="#{cla.id.codElem}"></f:param>
+							<h:outputText value="Editar" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+
+		</h:form>
+		<!--Fin Data Table Documentos -->
+	</ui:define>
+</ui:composition>
+
+</html>

@@ -148,10 +148,7 @@ public class DocumentoMB {
 		bMsgActualizar = false;
 	}
 	
-/*	public void validarCampos(){
-		logger.info("DocumentoMB : limpiarCampos");
-	
-	}*/
+
 	public void editarDocumento() {
 		logger.info("DocumentoMB : listarDocumentos");
 		Map<String, String> params = FacesContext.getCurrentInstance()
