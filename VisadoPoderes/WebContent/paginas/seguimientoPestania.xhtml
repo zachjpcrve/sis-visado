@@ -183,12 +183,13 @@
 			
 			<h:outputText  value="Dictamen : " styleClass="outputText"/>
 			<p:selectOneMenu id="cboDictamen" value="#{consultarSolicitudMB.valorDictamen}"
+				widgetVar="varCboDictamen"
 			valueChangeListener="#{consultarSolicitudMB.obtenerDictamen}" > 
 			<p:ajax event="change" update=":formSolicitudSeguimiento:confirmDialogDictamen"></p:ajax>
 					<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 					 <f:selectItems  value="#{consultarSolicitudMB.lstComboDictamen}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" /> 
 			</p:selectOneMenu>
-				<p:commandButton id="btnAceptarDictamen" value="Aceptar" onclick="confirmation.show()" />
+				<p:commandButton id="btnAceptarDictamen" value="Aceptar" onclick="varCboDictamen.getSelectedValue()=='' ? 1 : confirmation.show()" />				
 			</h:panelGrid>
 			
 			</p:panel>
@@ -208,7 +209,7 @@
 	
 						<!-- /c:if -->
 						<c:if test="#{consultarSolicitudMB.bMostrarCartaAtencion}">
-							<a href="#{root}main/download/pdfReportCartaAtencion.htm" onclick="confirmation2.show()">
+							<a href="#" onclick="confirmation2.show()">
 								<font color="blue">
 									<u>Carta de atención</u>
 								</font>
@@ -261,10 +262,12 @@
     <p:confirmDialog id="confirmDialog" message="#{consultarSolicitudMB.textoMensajeCartaAtencion}"  
               header="Carta de Atencion" severity="alert" widgetVar="confirmation2" visible="true">  
                 
-	        <p:commandButton id="confirm" value="Si"  oncomplete="confirmation2.hide()" update=":formSolicitudSeguimiento" 
-	                    actionListener="#{consultarSolicitudMB.actualizarEstadoEjecutadoSolicitud}" />  
-	        
-	        <p:commandButton id="decline" value="No" oncomplete="confirmation2.hide()" />  
+	       	<p:commandButton id="confirm" value="Si" 
+	        			onclick="window.location.href='#{root}main/download/pdfReportCartaAtencion.htm'" 
+	        			oncomplete="confirmation2.hide()" update=":formSolicitudSeguimiento" 
+	                    actionListener="#{consultarSolicitudMB.actualizarEstadoEjecutadoSolicitud}" />	
+	                    	                    
+	       	<p:commandButton id="decline" value="No" oncomplete="confirmation2.hide()" />  
                   
     </p:confirmDialog>
     
