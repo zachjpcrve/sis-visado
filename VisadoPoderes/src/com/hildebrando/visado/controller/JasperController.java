@@ -93,8 +93,8 @@ public class JasperController {
 
         
         modelMap.put("dataKey", objCab);
-        modelMap.put("SUBREPORT_DIR", "C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\resources\\jasper\\");
-        modelMap.put("IMG_CABECERA", "C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
+        //modelMap.put("SUBREPORT_DIR", "C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\resources\\jasper\\");
+        //modelMap.put("IMG_CABECERA", "C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
 
         try {
         	OutputStream os = response.getOutputStream();
