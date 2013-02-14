@@ -9,7 +9,7 @@
 	<ui:define name="contenido">
 		<!-- Mantenimiento Clasificacion -->
 		<h:form id="frmMantenimientoClasificacion">
-			<p:panel header="Documentos">
+			<p:panel header="Tipo de Clasificacion" style="width: 85%">
 			<p:messages id="idMsmDocumento"></p:messages>
 				<table>
 					<tr>
@@ -44,7 +44,7 @@
 		<!--Fin Mantenimiento Clasificacion -->
 		<!-- Data Table Clasificacion -->
 		<h:form id="frmDataTableClasificacion">
-			<p:panel header="Tipo de Clasificacion">
+			<p:panel header="Tipo de Clasificacion" style="width: 85%">
 				<p:dataTable id="dtbClasificacion" value="#{clasificacionMB.clasificaciones}"
 					var="cla" paginator="true" rows="50" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
