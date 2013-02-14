@@ -71,6 +71,7 @@ public class ConstantesVisado {
 	public static final String TOOLTIP_TIPO_FECHA_RPTA="-Fecha de respuesta";
 	
 	public static final String MSG_TOTAL_SIN_REGISTROS="No se encontraron coincidencias con los criterios ingresados";
+	public static final String MSG_TOTAL_SIN_REGISTROS_RPT_EXTRACTOR="No se encontraron registros que coinciden con los criterios de búsqueda ingresados";
 	public static final String MSG_TOTAL_REGISTROS="Total de registros: ";
 	public static final String MSG_REGISTROS=" registros.";
 	public static final String MSG_REGISTRO=" registro.";

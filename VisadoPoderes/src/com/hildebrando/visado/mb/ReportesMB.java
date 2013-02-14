@@ -30,6 +30,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.mapping.Array;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -40,14 +41,17 @@ import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
+import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
+import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
+import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
@@ -76,14 +80,20 @@ public class ReportesMB
 	private List<String> lstNivelSelected;
 	private List<String> lstSolicitudesSelected;
 	private List<String> lstSolicitudesxOpeBan;
+	private List<SolicitudesOficina> lstSolicitudesOficina;
 	private Date fechaInicio;
 	private Date fechaFin;
 	private String nombreArchivoExcel;
 	private String rutaArchivoExcel;
+	private String PERFIL_USUARIO ;
+	private String idTerr;
+	private String idOfi;
+	private String idOfi1;
+	private String textoTotalResultados;
 	private StreamedContent file;  
 	private IILDPeUsuario usuario;
-	private String PERFIL_USUARIO ;
-	
+	private Boolean noHabilitarExportar;
+		
 	public static Logger logger = Logger.getLogger(ReportesMB.class);
 	
 	public ReportesMB()
@@ -91,7 +101,27 @@ public class ReportesMB
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");	
 		PERFIL_USUARIO=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
+		lstSolicitudesOficina = new ArrayList<SolicitudesOficina>();
 		generarNombreArchivo();
+		
+		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + lstSolicitudesOficina.size() + ConstantesVisado.MSG_REGISTROS,lstSolicitudesOficina.size());
+		if (lstSolicitudesOficina.size()>0)
+		{
+			setNoHabilitarExportar(false);
+		}
+		else
+		{
+			setNoHabilitarExportar(true);
+		}
+	}
+	
+	private void setearTextoTotalResultados(String cadena, int total) {
+		if (total == 1) {
+			setTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS
+					+ total + ConstantesVisado.MSG_REGISTRO);
+		} else {
+			setTextoTotalResultados(cadena);
+		}
 	}
 	
 	public String obtenerGenerador()
@@ -163,6 +193,59 @@ public class ReportesMB
 	public void exportarExcelPOI()
 	{
 		crearExcel();
+	}
+	
+	public void buscarSolicitudesxOficina()
+	{
+		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+		Date fechaIni=null;
+		Date fechaFin=null;
+		
+		if (getFechaInicio()!=null && getFechaFin()!=null)
+		{
+			fechaIni=getFechaInicio();
+			fechaFin=getFechaFin();
+		}
+		
+		TiivsSolicitud tmpSolicitud = new TiivsSolicitud();
+		TiivsTerritorio tmpTerr = new TiivsTerritorio();
+		TiivsOficina1 tmpOficina = new TiivsOficina1();
+		
+		if (getIdTerr()!=null && getIdTerr().compareTo("")!=0)
+		{
+			tmpTerr.setCodTer(getIdTerr());
+		}
+		
+		if (getIdOfi()!=null && getIdOfi().compareTo("")!=0)
+		{
+			tmpOficina.setCodOfi(getIdOfi());
+		}
+		
+		if (getIdOfi1()!=null && getIdOfi1().compareTo("")!=0)
+		{
+			tmpOficina.setCodOfi(getIdOfi1());
+		}
+		
+		tmpOficina.setTiivsTerritorio(tmpTerr);
+		tmpSolicitud.setTiivsOficina1(tmpOficina);
+		
+		try {
+			this.lstSolicitudesOficina = solicitudService.obtenerListarTotalSolicitudesxEstado(tmpSolicitud, fechaIni, fechaFin);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		int iNuevoTotal =lstSolicitudesOficina.size()-1;
+		
+		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + iNuevoTotal + ConstantesVisado.MSG_REGISTROS,iNuevoTotal);
+		if (lstSolicitudesOficina.size()>0)
+		{
+			setNoHabilitarExportar(false);
+		}
+		else
+		{
+			setNoHabilitarExportar(true);
+		}
 	}
 	
 	// Descripcion: Metodo que se encarga de buscar las solicitudes de acuerdo a
@@ -878,6 +961,11 @@ public class ReportesMB
 		}
 	}
 	
+	public void abrirExcelExtractor()
+	{
+		
+	}
+	
 	public void descargarArchivo()
 	{
 		exportarExcelPOI();
@@ -1407,4 +1495,53 @@ public class ReportesMB
 	public void setLstSeguimientoDTO(List<SeguimientoDTO> lstSeguimientoDTO) {
 		this.lstSeguimientoDTO = lstSeguimientoDTO;
 	}
+
+	public String getIdTerr() {
+		return idTerr;
+	}
+
+	public void setIdTerr(String idTerr) {
+		this.idTerr = idTerr;
+	}
+
+	public List<SolicitudesOficina> getLstSolicitudesOficina() {
+		return lstSolicitudesOficina;
+	}
+
+	public void setLstSolicitudesOficina(
+			List<SolicitudesOficina> lstSolicitudesOficina) {
+		this.lstSolicitudesOficina = lstSolicitudesOficina;
+	}
+
+	public String getIdOfi() {
+		return idOfi;
+	}
+
+	public void setIdOfi(String idOfi) {
+		this.idOfi = idOfi;
+	}
+
+	public String getIdOfi1() {
+		return idOfi1;
+	}
+
+	public void setIdOfi1(String idOfi1) {
+		this.idOfi1 = idOfi1;
+	}
+
+	public String getTextoTotalResultados() {
+		return textoTotalResultados;
+	}
+
+	public void setTextoTotalResultados(String textoTotalResultados) {
+		this.textoTotalResultados = textoTotalResultados;
+	}
+
+	public Boolean getNoHabilitarExportar() {
+		return noHabilitarExportar;
+	}
+
+	public void setNoHabilitarExportar(Boolean noHabilitarExportar) {
+		this.noHabilitarExportar = noHabilitarExportar;
+	}	
 }
