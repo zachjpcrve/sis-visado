@@ -48,7 +48,7 @@
 
 								<h:outputLabel value="Nombre: " />
 								<p:autoComplete completeMethod="#{revocadosMB.completePersona}"
-									value="#{revocadosMB.objTiivsPersonaBusqueda2}"
+									value="#{revocadosMB.objTiivsPersonaBusquedaNombre}"
 									forceSelection="true" var="p" converter="personaCvtr"
 									itemLabel="#{p.nombreCompletoMayuscula}" itemValue="#{p}"
 									size="30">
@@ -89,13 +89,16 @@
 
 			<div class="btnIzq">
 
-				<p:commandButton value="Nuevo" action="#{revocadosMB.reset}"
-					ajax="false" />
+				<p:commandButton value="Nuevo"
+					actionListener="#{revocadosMB.editPendRevocadoNuevo}"
+					oncomplete="dlgApoPodPendEdit.show();" 
+					update=":frmPendEdit" 
+					ajax="true" />
 
 				<h:outputLabel id="outLblTotal"
 					value="Total de registros: #{revocadosMB.nroRegistros} Registros" />
 
-				<p:commandButton value="Buscar" action="#{revocadosMB.buscar}"
+				<p:commandButton value="Buscar" action="#{revocadosMB.buscarRevocado}"
 					ajax="false" update="tbl" />
 			</div>
 
@@ -315,15 +318,15 @@
 
 					<p:commandButton id="btnAgregar" value="Agregar"
 						icon="ui-icon-plus" update="gridMsj dtClientes"
-						actionListener="#{revocadosMB.agregarApodPod}" ajax="true"
+						actionListener="#{revocadosMB.agregarRevocado}" ajax="true"
 						process="@form" />
 
 					<p:spacer width="10" height="20" />
 
 					<p:commandButton id="btnLimpiar" value="Limpiar"
 						icon="ui-icon-trash"
-						actionListener="#{revocadosMB.limpiarApodPod}"
-						update="gridMsj gridApodPod gridApodPod2 dtClientes"
+						actionListener="#{revocadosMB.limpiarCriteriosBusqueda}"
+						update=":frmPendEdit"
 						process="@form" ajax="true" />
 
 				</h:panelGrid>
@@ -402,11 +405,11 @@
 															</div>
 														</td>
 
-														<td><p:commandButton icon="ui-icon-trash"
-																action="#{revocadosMB.eliminarArupacion}"
+														<td><p:commandButton icon="ui-icon-close"
+																action="#{revocadosMB.eliminarRevocado}"
 																update=":frmPendEdit:dtClientes">
 																<f:setPropertyActionListener
-																	target="#{revocadosMB.objAgrupacionSimpleDtoCapturado}"
+																	target="#{revocadosMB.deletePersonaEdit}"
 																	value="#{n}">
 																</f:setPropertyActionListener>
 															</p:commandButton></td>
@@ -442,7 +445,7 @@
 														</td>
 
 														<td><p:commandButton icon="ui-icon-close"
-																action="#{revocadosMB.eliminarArupacion}"
+																action="#{revocadosMB.eliminarRevocado}"
 																update=":frmPendEdit:dtClientes">
 																<f:setPropertyActionListener
 																	target="#{revocadosMB.deletePersonaEdit}" value="#{n}">
@@ -467,13 +470,25 @@
 
 					<h:panelGrid columns="1">
 
-						<p:commandButton id="btnRevocar" value="Revocar"
+						<p:commandButton id="btnRevocar" value="Revocar" rendered="#{revocadosMB.flagRevocar}"
 							icon="ui-icon-plus"
-							actionListener="#{revocadosMB.revocarApodPod}" ajax="true"
-							process="@form" />
+							onclick="cfdRevocar.show();">
+						</p:commandButton>
 
 					</h:panelGrid>
+					
 				</p:outputPanel>
+				
+				<p:confirmDialog widgetVar="cfdRevocar" message="¿Está seguro de revocar los poderes? ">
+					
+					<p:commandButton  value="Sí" actionListener="#{revocadosMB.revocarApodPod}" ajax="true"
+										 >
+					</p:commandButton>
+					
+					<p:commandButton  value="No" onclick="cfdRevocar.hide();" >
+					</p:commandButton>
+				</p:confirmDialog>
+				
 			</h:form>
 
 		</p:dialog>
