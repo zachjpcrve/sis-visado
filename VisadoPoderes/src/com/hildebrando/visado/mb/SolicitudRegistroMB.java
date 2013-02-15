@@ -652,7 +652,8 @@ public class SolicitudRegistroMB {
 	  if(validarAgregarAgrupacion()){
 		  logger.info("***************************** agregarAgrupacion ***************************************");
 		  if(!flagUpdatePoderdanteApoderados){// INDICA QUE ES UN REGISTRO NUEVO
-			  
+			 /* numGrupoUpdatePoderdanteApoderado=0;
+			  numGrupo=0;*/
 	  numGrupo=numGrupo+1;
 	  logger.info("********************** agregarAgrupacion ********************* " +numGrupo);
 	  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
@@ -686,6 +687,7 @@ public class SolicitudRegistroMB {
 	   agrupacionSimpleDto.setLstPersonas(this.lstTiivsPersona);
 	  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 	  solicitudRegistrarT.setTiivsSolicitudAgrupacions(this.agregarSolicitudArupacion(solicitudRegistrarT,numGrupo,lstTiivsAgrupacionPersonas ));
+	  //solicitudRegistrarT.setTiivsSolicitudAgrupacions(lstTiivsAgrupacionPersonas );
 	  logger.info("tamanio de lstTiivsAgrupacionPersonas "+lstTiivsAgrupacionPersonas.size());
 	  lstTiivsPersona=new ArrayList<TiivsPersona>();
 	  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
@@ -700,6 +702,7 @@ public class SolicitudRegistroMB {
 			 
 			  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 			  List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
+			  Set<TiivsAgrupacionPersona> lstTempAgrupacion=null;
 			  for (TiivsPersona objTiivsPersonaResultado : lstTiivsPersona) {
 				  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 					  lstPoderdantes.add(objTiivsPersonaResultado);}
@@ -714,9 +717,17 @@ public class SolicitudRegistroMB {
 				  tiivsAgrupacionPersonaId.setClasifPer(objTiivsPersonaResultado.getClasifPer());
 				  tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado.getTipPartic());
 				  tiivsAgrupacionPersonaId.setTiivsPersona(objTiivsPersonaResultado);
-				  
-				  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersonaId);
+				  lstTempAgrupacion=new HashSet<TiivsAgrupacionPersona>();
+				  //lstTempAgrupacion.addAll(lstTiivsAgrupacionPersonas);
+				  for (TiivsAgrupacionPersona  x : lstTiivsAgrupacionPersonas) {
+					  if(!x.equals(tiivsAgrupacionPersonaId)){
+						  System.out.println("nononon");
+						  lstTempAgrupacion.add(tiivsAgrupacionPersonaId);}
+				}
 			}  
+			  
+			  lstTiivsAgrupacionPersonas.addAll(lstTempAgrupacion);
+			  
 			  logger.info("lstPoderdantes " +lstPoderdantes.size());
 			  logger.info("lstApoderdantes " +lstApoderdantes.size());
 
