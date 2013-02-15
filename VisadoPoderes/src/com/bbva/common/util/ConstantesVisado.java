@@ -141,7 +141,7 @@ public class ConstantesVisado {
 	//ASIG AUTOMATICA
 	public static final java.lang.String CODIGO_ESTADO_ENVIADO="0007";
 	public static final java.lang.String CODIGO_TABLA_HORA_CORTE="T06";
-	public static final java.lang.String CODIGO_CAMPO_HORA_CORTE="0002";
+	public static final java.lang.String CODIGO_CAMPO_HORA_CORTE="0001";
 	public static final java.lang.String CODIGO_GRUPO_ABOGADOS="0000002";
 	
 	public static final String CAMPO_ESTADO_VERIFICACION_B="En Verificación B";
