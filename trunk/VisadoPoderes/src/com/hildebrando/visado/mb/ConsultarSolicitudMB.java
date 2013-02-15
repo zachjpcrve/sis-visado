@@ -233,13 +233,36 @@ public class ConsultarSolicitudMB {
 				solicitudRegistrarT.setDescEstado(Utilitarios
 						.obternerDescripcionEstado(solicitudRegistrarT
 								.getEstado()));
-				sEstado = this.solicitudRegistrarT
-						.getEstado()
-						.trim();
+				sEstado = this.solicitudRegistrarT.getEstado().trim();
 			} catch (Exception e) {
-				logger.info("No se pueden obtener los datos de la solicitud");
+				logger.error("No se pueden obtener los datos de la solicitud",e);
 			}
 
+			
+			
+			boolean bMostrarCarta = false;
+						
+			if(sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
+				if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+					bMostrarCarta = true;
+				}
+				if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
+					bMostrarCarta = true;
+				}
+			} else if(sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)){
+				if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+					bMostrarCarta = true;
+				}
+				
+			} else if(sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02)){
+				if(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+					bMostrarCarta = true;
+				}				
+			}
+						
+			setbMostrarCartaAtencion(bMostrarCarta);
+			
+			/*
 			if ((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO
 					.equals(ConstantesVisado.OFICINA))
 					&& (!sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02))) {
@@ -256,6 +279,8 @@ public class ConsultarSolicitudMB {
 				setbMostrarCartaAtencion(false);
 				logger.info("No Se debe mostrar el link de carta de atencion");
 			}
+			*/
+			
 		} else {
 			logger.info("Solicitud no valida o nula");
 		}
