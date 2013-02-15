@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+		<!-- Oficina -->
+		<h:form id="frmMantenimientoOficina">
+			<p:panel header="Oficina" style="width: 85%">
+				<p:messages id="idMsmDocumento"></p:messages>
+				<table>
+					<tr>
+						<td><h:outputText value="Territorio: " /></td>
+						<td><p:selectOneMenu id="cboTerritorios"
+								value="#{oficinaMB.territorio.codTer}">
+								<f:selectItem itemLabel="SELECCIONAR TERRITORIO" itemValue="-1" />
+								<f:selectItems value="#{oficinaMB.comboTerritorios}"
+									itemLabel="#{cboTer.desTer}" itemValue="#{cboTer.codTer}"
+									var="cboTer"></f:selectItems>
+								<p:ajax update="cboOficinas"
+									listener="#{oficinaMB.selecTerritorioOficina}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Oficina: " /></td>
+						<td><p:selectOneMenu id="cboOficinas"
+								value="#{oficinaMB.oficina.codOfi}">
+								<f:selectItem itemLabel="SELECCIONAR OFICINA" itemValue="-2" />
+								<f:selectItems value="#{oficinaMB.comboOficinas}"
+									itemLabel="#{cboOfi.desOfi}" itemValue="#{cboOfi.codOfi}"
+									var="cboOfi"></f:selectItems>
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:commandButton id="buscarOficina" value="Buscar"
+								ajax="true" action="#{oficinaMB.listarOficinasCombo}"
+								update=":frmDataTableOficina">
+							</p:commandButton></td>
+					</tr>
+
+				</table>
+			</p:panel>
+		</h:form>
+		<!-- Fin Oficina -->
+		<!-- Data Table Oficina -->
+		<h:form id="frmDataTableOficina">
+			<p:panel header="Habilitar Oficina" style="width: 85%">
+				<p:messages id="idMsmDocumento"></p:messages>
+				<p:dataTable id="dtbOficina" value="#{oficinaMB.oficinas}" var="ofi"
+					paginator="true" rows="50" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+					emptyMessage="No hay documentos">
+
+					<p:column headerText="Codigo">
+						<h:outputText value="#{ofi.codOfi}" />
+					</p:column>
+					<p:column headerText="Oficina">
+						<h:outputText value="#{ofi.desOfi}" />
+					</p:column>
+					<p:column headerText="Territorio">
+						<h:outputText value="#{ofi.descTerritorio}" />
+					</p:column>
+					<p:column headerText="Estado">
+						<h:outputText value="#{ofi.descEstado}" />
+					</p:column>
+					<p:column headerText="Accion">
+						<p:commandLink id="clinkEditar" ajax="true"
+							update=":frmDataTableOficina"
+							actionListener="#{oficinaMB.editarOficina}"
+							action="#{oficinaMB.cambiarEstado}">
+							<f:param name="codOficina" value="#{ofi.codOfi}"></f:param>
+							<h:outputText value="#{ofi.estado}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+
+		</h:form>
+		<!--Fin Data Table Oficina -->
+	</ui:define>
+</ui:composition>
+
+</html>
