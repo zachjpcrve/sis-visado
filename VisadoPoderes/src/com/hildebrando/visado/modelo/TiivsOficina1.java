@@ -15,6 +15,11 @@ public class TiivsOficina1 implements java.io.Serializable {
 	private String desOfi;
 	private Character activo;
 	private Set<TiivsSolicitud> tiivsSolicituds = new HashSet<TiivsSolicitud>();
+	/**/
+	private String descTerritorio;
+	private String estado;
+	private String descEstado;
+	/**/
 	
 	private String nombreDetallado;
 
@@ -81,5 +86,31 @@ public class TiivsOficina1 implements java.io.Serializable {
 	public void setNombreDetallado(String nombreDetallado) {
 		this.nombreDetallado = nombreDetallado;
 	}
+
+	public String getDescTerritorio() {
+		return descTerritorio;
+	}
+
+	public void setDescTerritorio(String descTerritorio) {
+		this.descTerritorio = descTerritorio;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public String getDescEstado() {
+		return descEstado;
+	}
+
+	public void setDescEstado(String descEstado) {
+		this.descEstado = descEstado;
+	}
+	
+	
 
 }
