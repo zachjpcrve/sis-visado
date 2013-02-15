@@ -50,12 +50,12 @@ public abstract class SeguridadDaoImpl<K, T extends Serializable>
 				for(int i=0;i<=ResultList.size()-1;i++){
 				  Object[] row =  (Object[]) ResultList.get(i);
 				   nuevo = new MiembroDto();
-				nuevo.setCOD_MIEMBRO(row[0].toString());
-				nuevo.setDESCRIPCION(row[1].toString());
-				nuevo.setCRITERIO(row[2].toString());
-				nuevo.setCOD_GRUPO(row[3].toString());
-				nuevo.setDES_CRITERIO(row[4].toString());
-				nuevo.setESTUDIO(row[5].toString());
+				nuevo.setCOD_MIEMBRO(row[0]==null?null:row[0].toString());
+				nuevo.setDESCRIPCION(row[1]==null?null:row[1].toString());
+				nuevo.setCRITERIO(row[2]==null?null:row[2].toString());
+				nuevo.setCOD_GRUPO(row[3]==null?null:row[3].toString());
+				nuevo.setDES_CRITERIO(row[4]==null?null:row[4].toString());
+				nuevo.setESTUDIO(row[5]==null?null:row[5].toString());
 				listaMiembro.add(nuevo);
 				}
 	           }
