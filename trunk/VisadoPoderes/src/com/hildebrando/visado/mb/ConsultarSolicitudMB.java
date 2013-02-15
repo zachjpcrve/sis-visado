@@ -561,66 +561,21 @@ public class ConsultarSolicitudMB {
 			
 			obtenerImporteTotalxSolicitud(lstSolicBancarias);
 			
-			this.lstAnexosSolicitudes = solicitudService.obtenerListarAnexosSolicitud(solicitud);
-			
+			this.lstAnexosSolicitudes = solicitudService.obtenerListarAnexosSolicitud(solicitud);			
 			this.iTipoSolicitud =solicitudRegistrarT.getTiivsTipoSolicitud().getCodTipSolic(); 
 			
-			// descargar anexos
-			// descargarAnexosFileServer();
+			//descargar anexos
+			descargarAnexosFileServer();			
 			
-			lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
-			int i = 0;
-			for (TiivsAnexoSolicitud v : this.lstAnexosSolicitudes) 
-			{
-				i++;
-				
-				if (v.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS))
-				{
-					lstdocumentos.add(new DocumentoTipoSolicitudDTO(v.getId().getCodDoc(), 
-							obtenerDescripcionDocumento(v.getId().getCodDoc()),false+"",
-							v.getAliasArchivo(),v.getAliasTemporal()));
-				}
-				else
-				{
-					lstdocumentos.add(new DocumentoTipoSolicitudDTO(v.getId().getCodDoc(), 
-									obtenerDescripcionDocumento(v.getId().getCodDoc()),obtenerFlagObligatorioxDoc(v.getId().getCodDoc())+"",
-									v.getAliasArchivo(),v.getAliasTemporal()));
-				}
+			boolean isEditar=false;
+			if(this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)){
+				isEditar=true;
+			} else {
+				isEditar=false;
 			}
+			llenarListaDocumentosSolicitud(isEditar);
 			
 			solicitudRegistrarT.setLstDocumentos(lstdocumentos); //Para reportes
-			
-			if (lstdocumentos.size()==0)
-			{
-				GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
-						.getApplicationContext().getBean("genericoDao");
-				Busqueda filtroTipoSolcDoc = Busqueda
-						.forClass(TiivsTipoSolicDocumento.class);
-				filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic",
-						iTipoSolicitud));
-				filtroTipoSolcDoc.addOrder(Order.desc("obligatorio"));
-				
-				try {
-					lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO
-							.buscarDinamico(filtroTipoSolcDoc);
-					lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstDocumentosXTipoSolTemp)
-							.clone();
-	
-					logger.info("lstDocumentosXTipoSolTemp.size()"
-							+ lstDocumentosXTipoSolTemp.size());
-					logger.info("lstTipoSolicitudDocumentos.size()"
-							+ lstTipoSolicitudDocumentos.size());
-	
-					actualizarListadoDocumentos();
-	
-					// logger.info(" e.getNewValue()  " + (String) e.getNewValue()+
-					// "  lstTipoSolicitudDocumentos.size : "+
-					// lstTipoSolicitudDocumentos.size());
-				} catch (Exception ex) {
-					logger.info("Error al cargar el listado de documentos por tipo de soliciitud");
-					ex.printStackTrace();
-				}
-			}
 			
 			// PODERDANTES Y APODERADOS
 			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
@@ -681,6 +636,63 @@ public class ConsultarSolicitudMB {
 			listarComboDictamen();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void llenarListaDocumentosSolicitud(boolean isEditar){
+		
+		String sEstado = this.solicitudRegistrarT.getEstado();
+		
+		//En caso de editar una solicitud
+		if(isEditar){ 
+			
+			String scodTipoSolicitud = solicitudRegistrarT.getTiivsTipoSolicitud().getCodTipSolic();
+			listarDocumentosXSolicitud(scodTipoSolicitud);
+			
+			
+			logger.info("lstAnexosSolicitudes:" + this.lstAnexosSolicitudes);
+
+			for(TiivsAnexoSolicitud anexo : lstAnexosSolicitudes){
+				if(anexo.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS)){
+					lstdocumentos.add(new DocumentoTipoSolicitudDTO(anexo.getId().getCodDoc(), 
+							obtenerDescripcionDocumento(anexo.getId().getCodDoc()),false+"",
+							anexo.getAliasArchivo(),anexo.getAliasTemporal()));
+				} else {
+					for(DocumentoTipoSolicitudDTO doc : lstdocumentos){
+						if(doc.getItem().equals(anexo.getId().getCodDoc())){
+							doc.setAlias(anexo.getAliasArchivo());
+							doc.setAliasTemporal(anexo.getAliasTemporal());
+							TiivsTipoSolicDocumento solDocRemover=new TiivsTipoSolicDocumento();
+							for(TiivsTipoSolicDocumento solDoc : lstTipoSolicitudDocumentos){
+								if(solDoc.getId().getCodDoc().equals(doc.getItem())){
+									solDocRemover = solDoc;
+									break;
+								}
+							}
+							lstTipoSolicitudDocumentos.remove(solDocRemover);
+						} 
+					}
+				}				
+			}
+			
+		} else {	//Para consulta		
+			lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+			for (TiivsAnexoSolicitud v : this.lstAnexosSolicitudes) 
+			{				
+				if (v.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS))
+				{
+					lstdocumentos.add(new DocumentoTipoSolicitudDTO(v.getId().getCodDoc(), 
+							obtenerDescripcionDocumento(v.getId().getCodDoc()),false+"",
+							v.getAliasArchivo(),v.getAliasTemporal()));
+				}
+				else
+				{
+					lstdocumentos.add(new DocumentoTipoSolicitudDTO(v.getId().getCodDoc(), 
+									obtenerDescripcionDocumento(v.getId().getCodDoc()),obtenerFlagObligatorioxDoc(v.getId().getCodDoc())+"",
+									v.getAliasArchivo(),v.getAliasTemporal()));
+				}
+			}			
+						
 		}
 	}
 	
@@ -1932,33 +1944,30 @@ public class ConsultarSolicitudMB {
 	}
 
 	public void listarDocumentosXSolicitud(ValueChangeEvent e) {
-		// logger.info("ValuechanceEvent :  " + e.getNewValue());
+		// logger.info("ValuechanceEvent :  " + e.getNewValue());		
+		String sCodTipoSol = (String) e.getNewValue();		
+		listarDocumentosXSolicitud(sCodTipoSol);				
+	}
+	
+	public void listarDocumentosXSolicitud(String sCodTipoSol){
+		
 		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroTipoSolcDoc = Busqueda
 				.forClass(TiivsTipoSolicDocumento.class);
-		filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic",
-				(String) e.getNewValue()));
+		filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic",sCodTipoSol));
 		filtroTipoSolcDoc.addOrder(Order.desc("obligatorio"));
 		try {
-			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO
-					.buscarDinamico(filtroTipoSolcDoc);
-			lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstDocumentosXTipoSolTemp)
-					.clone();
-
-			logger.info("lstDocumentosXTipoSolTemp.size()"
-					+ lstDocumentosXTipoSolTemp.size());
-			logger.info("lstTipoSolicitudDocumentos.size()"
-					+ lstTipoSolicitudDocumentos.size());
-
+			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
+			lstTipoSolicitudDocumentos = new ArrayList<TiivsTipoSolicDocumento>();
+			lstTipoSolicitudDocumentos.addAll(lstDocumentosXTipoSolTemp);
+			
+			logger.info("lstDocumentosXTipoSolTemp.size():" + lstDocumentosXTipoSolTemp.size());
+			logger.info("lstTipoSolicitudDocumentos.size():" + lstTipoSolicitudDocumentos.size());
 			actualizarListadoDocumentos();
 
-			// logger.info(" e.getNewValue()  " + (String) e.getNewValue()+
-			// "  lstTipoSolicitudDocumentos.size : "+
-			// lstTipoSolicitudDocumentos.size());
 		} catch (Exception ex) {
-			logger.info("Error al cargar el listado de documentos por tipo de soliciitud");
-			ex.printStackTrace();
+			logger.info("Error al cargar el listado de documentos:",ex);			
 		}
 	}
 
