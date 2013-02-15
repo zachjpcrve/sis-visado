@@ -629,11 +629,13 @@ public class ConsultarSolicitudMB {
 		   List<TiivsPersona>lstPersonas=new ArrayList<TiivsPersona>();
 		   TiivsPersona objPersona=new TiivsPersona();
 		   
-		   lstPoderdantes = new ArrayList<TiivsPersona>();
-		   lstApoderdantes = new ArrayList<TiivsPersona>();
+		   lstPoderdantes =null;
+		   lstApoderdantes = null;
 		   
 		   for (TiivsSolicitudAgrupacion x : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) 
 		   {
+			   lstPoderdantes = new ArrayList<TiivsPersona>();
+			   lstApoderdantes = new ArrayList<TiivsPersona>();
 			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) 
 			   {
 				    logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
@@ -655,15 +657,13 @@ public class ConsultarSolicitudMB {
 						lstApoderdantes.add(d.getTiivsPersona());
 					}
 					
-					agrupacionSimpleDto = new AgrupacionSimpleDto();
-					agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), x.getId().getNumGrupo()));
-					agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
-					agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
-					agrupacionSimpleDto.setsEstado(Utilitarios
-							.obternerDescripcionEstado(x.getActivo().trim()));
-					agrupacionSimpleDto.setLstPersonas(lstPersonas);
-					
 			   }
+			    agrupacionSimpleDto = new AgrupacionSimpleDto();
+				agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), x.getId().getNumGrupo()));
+				agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
+				agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
+				agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionEstado(x.getActivo().trim()));
+				agrupacionSimpleDto.setLstPersonas(lstPersonas);
 			   lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 		   }
 		   		   		   
