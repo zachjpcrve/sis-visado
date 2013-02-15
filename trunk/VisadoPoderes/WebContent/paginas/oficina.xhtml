@@ -35,6 +35,14 @@
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
+						<td><h:outputText value="Estado" /></td>
+						<td><p:selectOneMenu value="#{oficinaMB.estado}">
+								<f:selectItem itemLabel="TODOS" itemValue="-1" />
+								<f:selectItem itemLabel="ACTIVO" itemValue="1" />
+								<f:selectItem itemLabel="INACTIVO" itemValue="0" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
 						<td><p:commandButton id="buscarOficina" value="Buscar"
 								ajax="true" action="#{oficinaMB.listarOficinasCombo}"
 								update=":frmDataTableOficina">
