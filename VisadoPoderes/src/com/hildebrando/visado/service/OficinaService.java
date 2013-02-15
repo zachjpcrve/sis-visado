@@ -163,25 +163,45 @@ public class OficinaService {
 		return oficinas;
 	}
 
-	public List<TiivsOficina1> listarOficinasCombo(TiivsTerritorio territorio, TiivsOficina1 oficina1) {
+	public List<TiivsOficina1> listarOficinasCombo(TiivsTerritorio territorio, TiivsOficina1 oficina1, String estado1) {
 		logger.info("OficinaService : listarOficinasCombo");
 		List<TiivsOficina1> oficinas = new ArrayList<TiivsOficina1>();
-
+		char estado1Char = estado1.charAt(0);
+		Character estadoCharacter1 = Character.valueOf(estado1Char);
+		
 		GenericDao<TiivsOficina1, Object> service = (GenericDao<TiivsOficina1, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsOficina1.class);
 
 		try {
 			if(territorio.getCodTer().equals("-1") && oficina1.getCodOfi().equals("-2")){
-				oficinas = service.buscarDinamico(filtro);
+				if(estado1.equals("-1")){
+					oficinas = service.buscarDinamico(filtro);
+				}else{
+					oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("activo", estadoCharacter1)));
+				}
+				
 			}else{
 				if(territorio.getCodTer().equals("-1") && !oficina1.getCodOfi().equals("-2")){
-					oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("codOfi", oficina1.getCodOfi())));
+					if(estado1.equals("-1")){
+						oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("codOfi", oficina1.getCodOfi())));
+					}else{
+						oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("codOfi", oficina1.getCodOfi())).add(Restrictions.eq("activo", estadoCharacter1)));
+					}				
 				}else{
 					if(!territorio.getCodTer().equals("-1") && oficina1.getCodOfi().equals("-2")){
-						oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("tiivsTerritorio.codTer", territorio.getCodTer())));
+						if(estado1.equals("-1")){
+							oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("tiivsTerritorio.codTer", territorio.getCodTer())));
+						}else{
+							oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("tiivsTerritorio.codTer", territorio.getCodTer())).add(Restrictions.eq("activo", estadoCharacter1)));
+						}
 					}else{
-						oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("codOfi", oficina1.getCodOfi())).add(Restrictions.eq("tiivsTerritorio.codTer", territorio.getCodTer())));
+						if(estado1.equals("-1")){
+							oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("codOfi", oficina1.getCodOfi())).add(Restrictions.eq("tiivsTerritorio.codTer", territorio.getCodTer())));	
+						}else{
+							
+						}
+						oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("codOfi", oficina1.getCodOfi())).add(Restrictions.eq("tiivsTerritorio.codTer", territorio.getCodTer())).add(Restrictions.eq("activo", estadoCharacter1)));
 					}
 				}
 				

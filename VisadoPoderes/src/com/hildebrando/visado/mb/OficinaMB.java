@@ -25,7 +25,10 @@ public class OficinaMB {
 	private List<TiivsOficina1> comboOficinas;
 	private List<TiivsTerritorio> comboTerritorios;
 	private List<TiivsOficina1> oficinaEditar;
+	private String estado;
+	
 	public OficinaMB(){
+		estado="";
 		oficina = new TiivsOficina1();
 		territorio = new TiivsTerritorio();
 		oficinaService = new OficinaService();
@@ -116,7 +119,7 @@ public class OficinaMB {
 	public void listarOficinasCombo(){
 		logger.info("OficinaMB: listarOficinasCombo");
 		try{
-			oficinas= oficinaService.listarOficinasCombo(territorio, oficina);
+			oficinas= oficinaService.listarOficinasCombo(territorio, oficina, estado);
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.error("OficinaMB : listarOficinasCombo : " + e.getLocalizedMessage());
@@ -167,6 +170,13 @@ public class OficinaMB {
 	public void setTerritorio(TiivsTerritorio territorio) {
 		this.territorio = territorio;
 	}
-	
-	
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
 }
