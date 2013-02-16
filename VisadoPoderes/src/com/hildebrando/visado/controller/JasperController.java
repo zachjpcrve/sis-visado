@@ -46,22 +46,24 @@ import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 @RequestMapping("/main")
 public class JasperController {
 	
-	private static Logger log =  Logger.getLogger(JasperController.class);
+	private static Logger logger =  Logger.getLogger(JasperController.class);
 	
 	@ManagedProperty(value = "#{consultarSolicitudMB}")
 	private ConsultarSolicitudMB consultarSolicitudMB;
 	
 	public JasperController() {
-		log.info("Estoy en el Constructor JasperController");
-	
+
 	}
 	
 	@RequestMapping(value="/download/pdfReportCartaAtencion.htm", method=RequestMethod.GET)
 	public String generarReporteCartaAtencion(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
-		log.info("generarReporteCartaAtencion : ");
+		logger.info("generarReporteCartaAtencion : ");
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 		
-		
+		if(SOLICITUD_TEMP==null){
+			logger.info("Solicitud nula");
+			return null;
+		}
 		
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
 		FormatosDTO uno = new FormatosDTO();
@@ -75,7 +77,7 @@ public class JasperController {
 	    //Add lista datasource
 		List<TiivsSolicitudOperban> listaOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();
 		listaOperacionesBancarias=SOLICITUD_TEMP.getLstSolicBancarias();
-		log.info("getLstSolicBancarias.size : "+SOLICITUD_TEMP.getLstSolicBancarias().size());
+		logger.info("getLstSolicBancarias.size : "+SOLICITUD_TEMP.getLstSolicBancarias().size());
 	     JRDataSource dsOperacion = new JRBeanCollectionDataSource(listaOperacionesBancarias);
 	    List<JRDataSource> lstDsSolicitudOperban = new ArrayList<JRDataSource>();
 	    lstDsSolicitudOperban.add(dsOperacion);
@@ -106,7 +108,7 @@ public class JasperController {
 	}
 	@RequestMapping(value="/download/pdfReportCartaSolicitudRevision.htm", method=RequestMethod.GET)
 	public String generarReporteCartaSolicitudRevision(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
-		log.info("generarReporteCartaAtencion : ");
+		logger.info("generarReporteCartaAtencion : ");
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
 		FormatosDTO uno = new FormatosDTO();
@@ -134,7 +136,7 @@ public class JasperController {
 	@RequestMapping(value="/download/pdfReportCartaRechazo.htm", method=RequestMethod.GET)
 	public String generarReporteCartaRechazo(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request)
 	{
-		log.info("generarReporteCartaRechazo : ");
+		logger.info("generarReporteCartaRechazo : ");
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 		
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
@@ -176,7 +178,7 @@ public class JasperController {
 	@RequestMapping(value="/download/pdfReportCartaImprocedente.htm", method=RequestMethod.GET)
 	public String generarReporteCartaImprocedente(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request)
 	{
-		log.info("generarReporteCartaImprocedente : ");
+		logger.info("generarReporteCartaImprocedente : ");
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 		
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
@@ -218,7 +220,7 @@ public class JasperController {
     @RequestMapping(value="/download/pdfReportSolicitudVisado.htm", method=RequestMethod.GET)
     public String generarReporteSolicitudVisado(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request) 
     {
-    	log.info("generarReporteSolicitudVisado");
+    	logger.info("generarReporteSolicitudVisado");
     	
     	TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
     	List<DocumentoTipoSolicitudDTO> lstDocumentos = SOLICITUD_TEMP.getLstDocumentos();
@@ -254,12 +256,9 @@ public class JasperController {
     		}
     		
     		
-    		solicitudPDF.setLstAgrupacionSimpleDto(lstAgrupacionSimpleDto); //agregar agrupaciones
-    		
-    		solicitudPDF.setLstDocumentos(lstDocumentos); //agregar documentos
-    		
-    		List<OperacionesPDF> lstOperaciones = new ArrayList<OperacionesPDF> ();
-    		
+    		solicitudPDF.setLstAgrupacionSimpleDto(lstAgrupacionSimpleDto); //agregar agrupaciones    		
+    		solicitudPDF.setLstDocumentos(lstDocumentos); //agregar documentos    		
+    		List<OperacionesPDF> lstOperaciones = new ArrayList<OperacionesPDF> ();    		
     		for(TiivsSolicitudOperban op : lstSolicBancarias){    			
     			OperacionesPDF oper = new OperacionesPDF(
     					op.getsItem(), 
@@ -271,31 +270,31 @@ public class JasperController {
     			lstOperaciones.add(oper);    					    			
     		}
     		
-    		solicitudPDF.setLstOperaciones(lstOperaciones); //agregar operaciones
+    		solicitudPDF.setLstOperaciones(lstOperaciones); //agregar operaciones    		    		
+    		cabecera.add(solicitudPDF);
+        	        	
+    		String nombreSalida = ConstantesVisado.PREFIJO_NOMBRE_SOLICITUD_VISADO
+    				+ "_" + SOLICITUD_TEMP.getCodSoli() + "_"
+    				+ Utilitarios.formatoFechaHora(new Date()) + ".pdf";
+        	
+            response.setHeader("Content-type", "application/pdf");
+            response.setHeader("Content-Disposition","attachment; filename=\"" + nombreSalida + "\"");
     		
+            JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
+                  
+            modelMap.put("dataKey", objCab);
+            
+            try {
+            	OutputStream os = response.getOutputStream();
+            	os.flush();
+    		} catch (IOException ioe) {
+    			logger.error("Error al generar documento",ioe);
+    		}
     		
     	} 
     	
-    	cabecera.add(solicitudPDF);
-    	
-    	
-		String nombreSalida = ConstantesVisado.PREFIJO_NOMBRE_SOLICITUD_VISADO
-				+ "_" + SOLICITUD_TEMP.getCodSoli() + "_"
-				+ Utilitarios.formatoFechaHora(new Date()) + ".pdf";
-    	
-        response.setHeader("Content-type", "application/pdf");
-        response.setHeader("Content-Disposition","attachment; filename=\"" + nombreSalida + "\"");
-		
-        JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
-              
-        modelMap.put("dataKey", objCab);        
 
-        try {
-        	OutputStream os = response.getOutputStream();
-        	os.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+       
         return("pdfReport");
     }
 
