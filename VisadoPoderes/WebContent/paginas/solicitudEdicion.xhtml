@@ -417,7 +417,7 @@
 												</tr>
 												<tr>
 													<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
-													<td><h:inputText id="intImporte" value="#{consultarSolicitudMB.objSolicBancaria.tipoCambio}" disabled="#{consultarSolicitudMB.bBooleanPopupTipoCambio}"/></td>
+													<td><h:inputText id="intImporte" value="#{consultarSolicitudMB.objSolicBancaria.tipoCambio}" /></td>
 													<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
 													<td><h:inputText value="#{consultarSolicitudMBobjSolicBancaria.importeSoles}" readonly="true"/></td>
 													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{consultarSolicitudMB.agregarOperacionBancaria}" actionListener="#{consultarSolicitudMB.obtenerAccionAgregarOperacionBancaria}" update=":formSolicitudRegistro,:formSolicitudRegistro:idMsmOperacionBancaria"/></td>
@@ -585,7 +585,7 @@
  
 		<p:dialog id="modalRegistrarPersona"
 			header="Busqueda Cliente/No Cliente" widgetVar="dlgRegistrarPersona"
-			modal="true" height="320" >
+			modal="true" height="420" >
 	    <h:form id="formRegistrar">
 			<p:messages id="idMsmModalPerona"></p:messages>
 			<table border="0" width="30px">
