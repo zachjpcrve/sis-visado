@@ -43,7 +43,6 @@
 	<h:outputScript library="js" name="visado.js" target="head" />			
   
 	<h:form id="formSolicitudRegistro" enctype="multipart/form-data">
-			<p:messages id="idMsmSolicitudRegistro"></p:messages>
 
 <!-- <a href="#{root}main/download/reportPDF.htm"  style="color:#0073EA;font-weight:bold; ">Download PDF</a> -->
 
@@ -61,6 +60,7 @@
 											<h:outputText title="Información General"
 												value="Información General" styleClass="outputText" />
 											<p:separator />
+											<p:messages id="idMsmSolicitudRegistro"></p:messages>
 											<table border="0">
 												<tbody>
 													<tr>
@@ -267,6 +267,7 @@
 											<h:outputText title="Documentos por Tipo de Solicitud"
 												value="Documentos por Tipo de Solicitud" />
 											<p:separator styleClass="fielset" />
+											<p:messages id="idMsmSolicitudDocumentos"></p:messages>
 											<table border="0">
 												<tbody>
 													<tr>
@@ -599,6 +600,7 @@
 				</tbody>
 			</table>
 			<p:separator styleClass="fielset"  />
+			
 			<table border="0" width="50px;" id="tableRegistrar">
 				<tbody>
 					<tr>
