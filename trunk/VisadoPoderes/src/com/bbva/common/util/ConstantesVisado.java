@@ -272,7 +272,7 @@ public class ConstantesVisado {
 	public static final String TITULO_REPORTE_RPT_SOLICITUD ="ESTADO DE SOLICITUDES POR OFICINAS";
 	public static final String RPT_SOLICITUD_COLUMNA_TOTAL ="Total";
 		
-	///****************************Constantes para Reporte de Estado de Solicitudes por Oficinas********************************
+	///****************************Constantes para Reporte de Solicitudes por Tipo de Servicio********************************
 	
 	public static final String TITULO_REPORTE_RPT_TIPO_SERV ="SOLICITUDES ATENDIDAS POR TIPO DE SERVICIO";
 	public static final String RPT_TIPO_SERV_FILTRO_COD_SOL = "Codigo Sol";
@@ -284,6 +284,24 @@ public class ConstantesVisado {
 	public static final String RPT_TIPO_SERV_FILTRO_ESTUDIO = "Estudio";
 	public static final String RPT_TIPO_SERV_FILTRO_FECHA_INICIO = "Fecha Inicio (dd/mm/aaaa)";
 	public static final String RPT_TIPO_SERV_FILTRO_FECHA_FIN	 = "Fecha Fin (dd/mm/aaaa)";
+	
+	public static final String RPT_TIPO_SERV_COLUMNA_COD_SOL = "Codigo Solicitud";
+	public static final String RPT_TIPO_SERV_COLUMNA_ESTUDIO = "Estudio";
+	public static final String RPT_TIPO_SERV_COLUMNA_TIPO_SERVICIO = "Tipo de Servicio";
+	public static final String RPT_TIPO_SERV_COLUMNA_TIPO_OPERACION = "Tipo de Operacion";
+	public static final String RPT_TIPO_SERV_COLUMNA_MONEDA = "Moneda";
+	public static final String RPT_TIPO_SERV_COLUMNA_IMPORTE = "Importe";
+	public static final String RPT_TIPO_SERV_COLUMNA_TIPO_CAMBIO = "Tipo de Cambio";
+	public static final String RPT_TIPO_SERV_COLUMNA_IMPORTE_SOLES = "Importe en Soles";
+	
+	//**************************************************************************************************************************
+	
+	static public class RANGOS_IMPORTE{
+		public static final String RANGO_IMPORTE_NRO_1 = "Menor a 50";
+		public static final String RANGO_IMPORTE_NRO_2 = "Mayor a 50 y menor a 120";
+		public static final String RANGO_IMPORTE_NRO_3 = "Mayor a 120 y menor a 250";
+		public static final String RANGO_IMPORTE_NRO_4 = "Mayor a 250";
+	}
 	
 	//**************************************************************************************************************************
 	
