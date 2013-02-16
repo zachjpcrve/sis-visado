@@ -34,7 +34,13 @@ import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
 import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
 
-//@Autor Samira Benazar
+/**
+ * Clase que se encarga de cargar el listado general de combos de la Multitabla como 
+ * po ejm: TipoSolicitud, Operaciones bancarias, Nivel, etc.
+ * @author samira
+ * @version 1.0
+ */
+
 @ManagedBean(name = "combosMB")
 @SessionScoped
 public class CombosMB {
@@ -118,7 +124,7 @@ public class CombosMB {
 		try {
 			lstMultitabla = multiDAO.buscarDinamico(filtroMultitabla);
 		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de multitablas");
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de multitablas: "+e);
 		}
 	}
 
@@ -255,7 +261,7 @@ public class CombosMB {
 		filtroMiembro.add(Restrictions.eq("tiivsGrupo.codGrupo", ConstantesVisado.CODIGO_GRUPO_ABOGADOS));
 		lstAbogados=serviceMiembro.buscarDinamico(filtroMiembro);
 		}catch (Exception e) {
-			logger.debug("Error al cargar el listado de abogados - miembro");
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de abogados - miembro: "+e);
 		}
 		
 		// Carga combo de Operacion Bancaria
@@ -265,7 +271,7 @@ public class CombosMB {
 			lstOpeBancaria = openBanDAO.buscarDinamico(filtroOpenBan);
 			logger.debug("lstOpeBancaria size " + lstOpeBancaria.size());
 		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de operaciones bancarias");
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de operaciones bancarias: "+e);
 		}
        
         // Carga combo de Tipo de Solicitud
@@ -277,7 +283,7 @@ public class CombosMB {
 			logger.debug(" lstTipoSolicitud.size() " +lstTipoSolicitud.size());
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug("Error al cargar el listado de tipos de solicitud ");
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de solicitud: "+e);
 		}
 		
 		int x = 0;
@@ -294,7 +300,7 @@ public class CombosMB {
 			lstTerritorio = terrDAO.buscarDinamico(filtroTerr);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug("Error al cargar el listado de territorios");
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de territorios :"+e);
 		}
 
 		// Carga combo de Oficinas
@@ -309,7 +315,7 @@ public class CombosMB {
 			logger.info("TAMANIOO DE LA LSTOFICIN EN EL COMBOMB " +lstOficina.size());
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug("Error al cargar el listado de oficinas");
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de oficinas: "+e);
 		}
 		
 		// Carga data de Agrupacion de Personas
@@ -322,7 +328,7 @@ public class CombosMB {
 			logger.debug("TAMANIOO DE LOS TIPOS DE PERSONA EN EL COMBOMB " +lstTiposPersona.size());
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug("Error al cargar el listado de tipos de persona");
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de persona: "+e);
 		}
 		
 		// Carga data de Operaciones Bancarias por Solicitud
@@ -335,7 +341,7 @@ public class CombosMB {
 			logger.debug("TAMANIOO DE LAS OPERACIONES BANCARIAS POR SOLICITUD EN EL COMBOMB " +lstSolOperBan.size());
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug("Error al cargar el listado de tipos de persona");
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de persona: "+e);
 		}
 		
 		// Carga combo Nivel
@@ -347,7 +353,7 @@ public class CombosMB {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug("Error al cargar el listado de niveles");
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de niveles :"+e);
 		}
 		
 		int w = 0;
@@ -367,7 +373,7 @@ public class CombosMB {
 		try {
 			lstEstudio = estudioDAO.buscarDinamico(filtroEstudio);
 		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de estudios");
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de estudios: "+e);
 		}
 
 		int j = 0;
