@@ -8,20 +8,15 @@
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
 
-				<h:panelGrid columns="5">
+		<h:panelGrid columns="5">
 
-			<p:tabMenu activeIndex="0" style="width:350px;">
-				<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml"
-					icon="ui-icon-star" />
-				<p:menuitem value="Instrucciones"
-					url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
-			
-			</p:tabMenu>
+		<p:tabMenu activeIndex="0" style="width:350px;">
+	                           <p:menuitem value="Solicitud" url="/faces/paginas/solicitudEdicion.xhtml" icon="ui-icon-star" />
+		           <p:menuitem value="Instrucciones" url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
+		</p:tabMenu>
 
-			
-			
-			<p:toolbar>
-				<p:toolbarGroup align="rigth">
+		<p:toolbar>
+		    <p:toolbarGroup align="rigth">
 					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro"
 						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"/>
 					<p:commandButton value="Enviar" id="btnEnviar3"  
