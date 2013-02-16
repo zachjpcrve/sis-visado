@@ -72,7 +72,7 @@
 			</textField>
 			<image>
 				<reportElement x="1" y="0" width="227" height="39"/>
-				<imageExpression class="java.lang.String"><![CDATA["../../resources/images/bbva2.gif"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["./resources/images/bbva2.gif"]]></imageExpression>
 			</image>
 			<textField pattern="dd/MM/yyyy h.mm.ss a">
 				<reportElement x="418" y="0" width="128" height="20"/>
