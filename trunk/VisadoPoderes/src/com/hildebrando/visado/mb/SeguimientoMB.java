@@ -688,11 +688,34 @@ public class SeguimientoMB
 			if (lstEstadoSelected!=null)
 			{
 				String cadena = "";
-				int ind=0;
+				/*int ind=0;
 				
 				for (; ind <= lstEstadoSelected.size() - 1; ind++) 
 				{
 					cadena+= buscarEstadoxCodigo(lstEstadoSelected.get(ind))+",";
+				}*/
+				
+				int j=0;
+				int cont=1;
+				
+				for (;j<=lstEstadoSelected.size()-1;j++)
+				{
+					if (lstEstadoSelected.size()>1)
+					{
+						if (cont==lstEstadoSelected.size())
+						{
+							cadena=cadena.concat(buscarEstadoxCodigo((lstEstadoSelected.get(j).toString())));
+						}
+						else
+						{
+							cadena=cadena.concat(buscarEstadoxCodigo((lstEstadoSelected.get(j).toString().concat(","))));
+							cont++;
+						}
+					}
+					else
+					{
+						cadena = buscarEstadoxCodigo(lstEstadoSelected.get(j).toString());
+					}		
 				}
 				
 				Utilitarios.crearCell(wb, row2, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
@@ -730,11 +753,34 @@ public class SeguimientoMB
 			if (lstTipoSolicitudSelected!=null)
 			{
 				String cadena = "";
-				int ind=0;
+				/*int ind=0;
 				
 				for (; ind <= lstTipoSolicitudSelected.size() - 1; ind++) 
 				{
 					cadena+= buscarTipoSolxCodigo(lstTipoSolicitudSelected.get(ind))+",";
+				}*/
+				
+				int j=0;
+				int cont=1;
+				
+				for (;j<=lstTipoSolicitudSelected.size()-1;j++)
+				{
+					if (lstTipoSolicitudSelected.size()>1)
+					{
+						if (cont==lstTipoSolicitudSelected.size())
+						{
+							cadena=cadena.concat(buscarTipoSolxCodigo((lstTipoSolicitudSelected.get(j).toString())));
+						}
+						else
+						{
+							cadena=cadena.concat(buscarTipoSolxCodigo((lstTipoSolicitudSelected.get(j).toString().concat(","))));
+							cont++;
+						}
+					}
+					else
+					{
+						cadena = buscarTipoSolxCodigo(lstTipoSolicitudSelected.get(j).toString());
+					}		
 				}
 				
 				Utilitarios.crearCell(wb, row2, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
@@ -861,11 +907,34 @@ public class SeguimientoMB
 			if (getLstNivelSelected()!=null)
 			{
 				String cadena = "";
-				int ind=0;
+				/*int ind=0;
 				
 				for (; ind <= getLstNivelSelected().size() - 1; ind++) 
 				{
 					cadena+= buscarNivelxCodigo(getLstNivelSelected().get(ind))+",";
+				}*/
+				
+				int j=0;
+				int cont=1;
+				
+				for (;j<=getLstNivelSelected().size()-1;j++)
+				{
+					if (getLstNivelSelected().size()>1)
+					{
+						if (cont==getLstNivelSelected().size())
+						{
+							cadena=cadena.concat(buscarNivelxCodigo((getLstNivelSelected().get(j).toString())));
+						}
+						else
+						{
+							cadena=cadena.concat(buscarNivelxCodigo((getLstNivelSelected().get(j).toString().concat(","))));
+							cont++;
+						}
+					}
+					else
+					{
+						cadena = buscarNivelxCodigo(getLstNivelSelected().get(j).toString());
+					}		
 				}
 				
 				Utilitarios.crearCell(wb, row6, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
@@ -880,11 +949,34 @@ public class SeguimientoMB
 			if (getLstEstadoNivelSelected()!=null)
 			{
 				String cadena = "";
-				int ind=0;
+				/*int ind=0;
 				
 				for (; ind <= getLstEstadoNivelSelected().size() - 1; ind++) 
 				{
 					cadena+= buscarEstNivelxCodigo(getLstEstadoNivelSelected().get(ind))+",";
+				}*/
+				
+				int j=0;
+				int cont=1;
+				
+				for (;j<=getLstEstadoNivelSelected().size()-1;j++)
+				{
+					if (getLstEstadoNivelSelected().size()>1)
+					{
+						if (cont==getLstEstadoNivelSelected().size())
+						{
+							cadena=cadena.concat(buscarEstNivelxCodigo((getLstEstadoNivelSelected().get(j).toString())));
+						}
+						else
+						{
+							cadena=cadena.concat(buscarEstNivelxCodigo((getLstEstadoNivelSelected().get(j).toString().concat(","))));
+							cont++;
+						}
+					}
+					else
+					{
+						cadena = buscarEstNivelxCodigo(getLstEstadoNivelSelected().get(j).toString());
+					}		
 				}
 				
 				Utilitarios.crearCell(wb, row6, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
@@ -899,11 +991,34 @@ public class SeguimientoMB
 			if (getLstEstudioSelected()!=null)
 			{
 				String cadena = "";
-				int ind=0;
+				/*int ind=0;
 				
 				for (; ind <= getLstEstudioSelected().size() - 1; ind++) 
 				{
 					cadena+= buscarEstudioxCodigo(getLstEstudioSelected().get(ind))+",";
+				}*/
+				
+				int j=0;
+				int cont=1;
+				
+				for (;j<=getLstEstudioSelected().size()-1;j++)
+				{
+					if (getLstEstudioSelected().size()>1)
+					{
+						if (cont==getLstEstudioSelected().size())
+						{
+							cadena=cadena.concat(buscarEstudioxCodigo((getLstEstudioSelected().get(j).toString())));
+						}
+						else
+						{
+							cadena=cadena.concat(buscarEstudioxCodigo((getLstEstudioSelected().get(j).toString().concat(","))));
+							cont++;
+						}
+					}
+					else
+					{
+						cadena = buscarEstudioxCodigo(getLstEstudioSelected().get(j).toString());
+					}		
 				}
 				
 				Utilitarios.crearCell(wb, row6, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
@@ -1634,8 +1749,7 @@ public class SeguimientoMB
 					lstSolicitudesSelected.add(tmp.getId().getCodSoli());
 				}
 			}
-			
-			
+						
 			if (lstSolicitudesSelected.size() > 0) 
 			{
 				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudesSelected));

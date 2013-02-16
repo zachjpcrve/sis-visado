@@ -18,24 +18,16 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -48,9 +40,11 @@ import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.ComboDto;
+import com.hildebrando.visado.dto.Moneda;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.SolicitudesOficina;
+import com.hildebrando.visado.modelo.SolicitudesTipoServicio;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsOficina1;
@@ -60,6 +54,7 @@ import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
+import com.sun.org.apache.bcel.internal.generic.LSTORE;
 
 @ManagedBean(name = "reportesMB")
 @SessionScoped
@@ -83,6 +78,8 @@ public class ReportesMB
 	private List<String> lstSolicitudesSelected;
 	private List<String> lstSolicitudesxOpeBan;
 	private List<SolicitudesOficina> lstSolicitudesOficina;
+	private List<SolicitudesTipoServicio> lstSolicitudesTipoServicio;
+	private List<Moneda> lstMoneda;
 	private Date fechaInicio;
 	private Date fechaFin;
 	private String nombreExtractor;
@@ -94,6 +91,12 @@ public class ReportesMB
 	private String idOfi1;
 	private String textoTotalResultados;
 	private String txtMsgDialog;
+	private String codSolicitud;
+	private String idOpeBan;
+	private String idImporte;
+	private String idMoneda;
+	private Double importeIni;
+	private Double importeFin;
 	private StreamedContent file;  
 	private IILDPeUsuario usuario;
 	private Boolean noHabilitarExportar;
@@ -107,6 +110,39 @@ public class ReportesMB
 		PERFIL_USUARIO=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		lstSolicitudesOficina = new ArrayList<SolicitudesOficina>();
+		
+		/*// Carga lista de monedas
+		combosMB = new CombosMB(); 
+		combosMB.getLstMoneda().clear();
+		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_MONEDA);
+		
+		lstMoneda = new ArrayList<Moneda>();
+		
+		for (Moneda lst: combosMB.getLstMoneda())
+		{
+			if (lst!=null)
+			{
+				lstMoneda.add(lst);
+			}
+		}*/
+		
+		/*
+		combosMB= new CombosMB();
+		combosMB.cargarMultitabla();
+		// Carga combo Rango Importes
+		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES);
+		// Carga combo Estados
+		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS);
+		// Carga combo Estados Nivel
+		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS_NIVEL);
+		// Carga combo Tipos de Fecha
+		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPOS_FECHA);
+		// Carga lista de monedas
+		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_MONEDA);
+		// Carga lista de tipos de persona
+		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
+		combosMB.cargarCombosNoMultitabla();	*/
+		
 		generarNombreArchivoExtractor();
 		generarNombreArchivoEstadoSolicitud();
 		
@@ -206,6 +242,11 @@ public class ReportesMB
 		rptEstadoSolicitud();
 	}
 	
+	public void exportarExcelSolicitudTipoServ()
+	{
+		rptSolicitudTipoServ();
+	}
+	
 	public void buscarSolicitudesxOficina()
 	{
 		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
@@ -250,6 +291,132 @@ public class ReportesMB
 		
 		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + iNuevoTotal + ConstantesVisado.MSG_REGISTROS,iNuevoTotal);
 		if (lstSolicitudesOficina.size()>0)
+		{
+			setNoHabilitarExportar(false);
+		}
+		else
+		{
+			setNoHabilitarExportar(true);
+		}
+	}
+	
+	public void buscarSolicitudesxTipoServicio()
+	{
+		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+		Date fechaIni=null;
+		Date fechaFin=null;
+				
+		//Busqueda de solicitudes por rango de fechas
+		if (getFechaInicio()!=null && getFechaFin()!=null)
+		{
+			fechaIni=getFechaInicio();
+			fechaFin=getFechaFin();
+		}
+		
+		TiivsSolicitud tmpSolicitud = new TiivsSolicitud();
+				
+		//Busqueda de solicitudes por codigo
+		if (getCodSolicitud()!=null)
+		{
+			tmpSolicitud.setCodSoli(getCodSolicitud());
+		}
+		
+		//Busqueda de solicitudes por tipo de servicio
+		String cadTipoServ = "";
+		if (lstTipoSolicitudSelected.size()>0)
+		{
+			int j=0;
+			int cont=1;
+			
+			for (;j<=lstTipoSolicitudSelected.size()-1;j++)
+			{
+				if (lstTipoSolicitudSelected.size()>1)
+				{
+					if (cont==lstTipoSolicitudSelected.size())
+					{
+						cadTipoServ=cadTipoServ.concat(lstTipoSolicitudSelected.get(j).toString());
+					}
+					else
+					{
+						cadTipoServ=cadTipoServ.concat(lstTipoSolicitudSelected.get(j).toString().concat(","));
+						cont++;
+					}
+				}
+				else
+				{
+					cadTipoServ = lstTipoSolicitudSelected.get(j).toString();
+				}	
+			}
+		}	
+		
+		//Busqueda por rangos de importe (Rango Global)
+		String rangoImpG="";
+		
+		if (getIdImporte().compareTo("") != 0) 
+		{
+			logger.info("Filtro por importe: " + getIdImporte());
+
+			rangoImpG=getIdImporte();
+		}
+		
+
+		//Busqueda por rangos de importe (Importe Minimo y Maximo)
+		Double rangoIni=0.0;
+		Double rangoFin=0.0;
+		
+		if (getImporteIni()!=0 && getImporteFin()!=0)
+		{
+			logger.info("Rango de Inicio: " + rangoIni);
+			logger.info("Rango de Fin: " + rangoFin);
+
+			rangoIni = getImporteIni();
+			rangoFin = getImporteFin();
+		}
+		
+		//Busqueda por estudio
+		String cadEstudio = "";
+		if (lstEstudioSelected.size()>0)
+		{
+			int j=0;
+			int cont=1;
+			
+			for (;j<=lstEstudioSelected.size()-1;j++)
+			{
+				if (lstEstudioSelected.size()>1)
+				{
+					if (cont==lstEstudioSelected.size())
+					{
+						cadEstudio=cadTipoServ.concat(lstEstudioSelected.get(j).toString());
+					}
+					else
+					{
+						cadEstudio=cadTipoServ.concat(lstEstudioSelected.get(j).toString().concat(","));
+						cont++;
+					}
+				}
+				else
+				{
+					cadEstudio = lstEstudioSelected.get(j).toString();
+				}	
+			}
+		}	
+		
+		if (getIdMoneda()!=null)
+		{
+			tmpSolicitud.setMoneda(getIdMoneda());
+		}
+				
+		try {
+			this.lstSolicitudesTipoServicio = solicitudService.obtenerSolicitudesxTipoServicio(tmpSolicitud,
+							Utilitarios.validarCampoNull(getIdOpeBan()),cadTipoServ,cadEstudio,rangoImpG,rangoIni ,rangoFin,fechaIni, fechaFin);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		int iNuevoTotal =lstSolicitudesTipoServicio.size();
+		
+		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + iNuevoTotal + ConstantesVisado.MSG_REGISTROS,iNuevoTotal);
+		if (lstSolicitudesTipoServicio.size()>0)
 		{
 			setNoHabilitarExportar(false);
 		}
@@ -505,6 +672,11 @@ public class ReportesMB
 			}
 		}
 	}*/
+	
+	private void rptSolicitudTipoServ() 
+	{
+			
+	}
 	
 	private void rptEstadoSolicitud() 
 	{
@@ -1240,6 +1412,25 @@ public class ReportesMB
 		}
 	}
 	
+	public void abrirExcelSolicitudesxTpoServ()
+	{
+		try {
+			exportarExcelSolicitudTipoServ();
+			//Abrir archivo excel
+				
+			if (rutaArchivoExcel!=null && rutaArchivoExcel.length()>0)
+			{
+				Desktop.getDesktop().open(new File(rutaArchivoExcel));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.debug("Error al abrir archivo excel debido a: " + e.getMessage());
+		} catch (Exception e1)
+		{
+			e1.printStackTrace();
+		}
+	}
+	
 	public void abrirExcelExtractor()
 	{
 		try {
@@ -1818,5 +2009,70 @@ public class ReportesMB
 
 	public void setTxtMsgDialog(String txtMsgDialog) {
 		this.txtMsgDialog = txtMsgDialog;
+	}
+
+	public String getCodSolicitud() {
+		return codSolicitud;
+	}
+
+	public void setCodSolicitud(String codSolicitud) {
+		this.codSolicitud = codSolicitud;
+	}
+
+	public String getIdOpeBan() {
+		return idOpeBan;
+	}
+
+	public void setIdOpeBan(String idOpeBan) {
+		this.idOpeBan = idOpeBan;
+	}
+
+	public String getIdImporte() {
+		return idImporte;
+	}
+
+	public void setIdImporte(String idImporte) {
+		this.idImporte = idImporte;
+	}
+
+	public Double getImporteIni() {
+		return importeIni;
+	}
+
+	public void setImporteIni(Double importeIni) {
+		this.importeIni = importeIni;
+	}
+
+	public Double getImporteFin() {
+		return importeFin;
+	}
+
+	public void setImporteFin(Double importeFin) {
+		this.importeFin = importeFin;
+	}
+
+	public String getIdMoneda() {
+		return idMoneda;
+	}
+
+	public void setIdMoneda(String idMoneda) {
+		this.idMoneda = idMoneda;
+	}
+
+	public List<SolicitudesTipoServicio> getLstSolicitudesTipoServicio() {
+		return lstSolicitudesTipoServicio;
+	}
+
+	public void setLstSolicitudesTipoServicio(
+			List<SolicitudesTipoServicio> lstSolicitudesTipoServicio) {
+		this.lstSolicitudesTipoServicio = lstSolicitudesTipoServicio;
+	}
+
+	public List<Moneda> getLstMoneda() {
+		return lstMoneda;
+	}
+
+	public void setLstMoneda(List<Moneda> lstMoneda) {
+		this.lstMoneda = lstMoneda;
 	}
 }
