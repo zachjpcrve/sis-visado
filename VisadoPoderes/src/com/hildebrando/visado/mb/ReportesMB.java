@@ -674,7 +674,7 @@ public class ReportesMB
 	
 	private void rptSolicitudTipoServ() 
 	{
-			
+		
 	}
 	
 	private void rptEstadoSolicitud() 
