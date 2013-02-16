@@ -130,7 +130,12 @@ public class SolicitudRegistroMB {
 	//http://172.31.9.41:9080/NAEWeb/pages/escaner/InvocaEscaner.xhtml?idEmpresa=1&idSistema=98&txLogin=P014773
 	private UploadedFile file;
 	private String sMonedaImporteGlobal;  
-	  
+	
+	/*private boolean boleanoMensajeInfoGeneral=true;
+	private boolean boleanoMensajeApoderdantePoderdante=true;
+	private boolean boleanoMensajeOperacionesBancarias=true;
+	private boolean boleanoMensajeDocumentos=true;
+	*/
     public UploadedFile getFile() {  
         return file;  
     }  
@@ -389,8 +394,7 @@ public class SolicitudRegistroMB {
 	public List<TiivsPersona> buscarPersonaLocal() throws Exception {
 		boolean busco = false;
 		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
-		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
 
 		if ((objTiivsPersonaBusqueda.getCodCen() == null || objTiivsPersonaBusqueda.getCodCen().equals(""))
@@ -460,7 +464,7 @@ public class SolicitudRegistroMB {
 		tiivsSolicitudAgrupacionId.setNumGrupo(iNumGrupo);
 		tiivsSolicitudAgrupacion.setId(tiivsSolicitudAgrupacionId);
 		tiivsSolicitudAgrupacion.setTiivsAgrupacionPersonas(lstTiivsAgrupacionPersonas);
-		tiivsSolicitudAgrupacion.setActivo("1");
+		tiivsSolicitudAgrupacion.setActivo(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO);
 
 		lstSolicitudArupacion.add(tiivsSolicitudAgrupacion);
 		logger.info("TAMANIO DE LA SOLICI AGRUPA " + lstSolicitudArupacion.size());
@@ -575,8 +579,8 @@ public class SolicitudRegistroMB {
 				+ objTiivsPersonaResultado.getTipPartic());
 		boolean bResult = true;
 		String sMensaje = "";
-		logger.info("objTiivsPersonaResultado.getClasifPer() "
-				+ objTiivsPersonaResultado.getClasifPer());
+		logger.info("objTiivsPersonaResultado.getClasifPer() " + objTiivsPersonaResultado.getClasifPer());
+		
 		if (objTiivsPersonaResultado.getTipDoi().equals("")) {
 			sMensaje = "Seleccione el Tipo de Documento";
 			bResult = false;
@@ -718,7 +722,6 @@ public class SolicitudRegistroMB {
 				  tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado.getTipPartic());
 				  tiivsAgrupacionPersonaId.setTiivsPersona(objTiivsPersonaResultado);
 				  lstTempAgrupacion=new HashSet<TiivsAgrupacionPersona>();
-				  //lstTempAgrupacion.addAll(lstTiivsAgrupacionPersonas);
 				  for (TiivsAgrupacionPersona  x : lstTiivsAgrupacionPersonas) {
 					  if(!x.equals(tiivsAgrupacionPersonaId)){
 						  lstTempAgrupacion.add(tiivsAgrupacionPersonaId);}
@@ -889,6 +892,10 @@ public class SolicitudRegistroMB {
 	}
 
 	public void agregarDocumentosXTipoSolicitud() {
+	/*	boleanoMensajeInfoGeneral=false;
+		 boleanoMensajeApoderdantePoderdante=false;
+		 boleanoMensajeOperacionesBancarias=false;
+		 boleanoMensajeDocumentos=true;*/
 		logger.info(" ************************** agrearDocumentosXTipoSolicitud  ****************************** ");
 		logger.info("iTipoSolicitud  : " + iTipoSolicitud);
 		if(selectedTipoDocumento!=null){
@@ -901,7 +908,10 @@ public class SolicitudRegistroMB {
 
 		if(sCodDocumento == null || sCodDocumento.isEmpty()){
 			Utilitarios.mensajeInfo("", "Debe seleccionar un documento");
-			return;
+			
+			 
+			 
+			 return;
 		}
 
 		if (this.ValidarDocumentosDuplicados()) {
@@ -937,7 +947,9 @@ public class SolicitudRegistroMB {
 			}
 			
 		}
-		// solicitudRegistrarT.getTiivsTipoSolicitud().setTiivsTipoSolicDocumentos(tiivsTipoSolicDocumentos);
+		
+		
+	
 	}
 
 	public void quitarDocumentosXTipoSolicitud() {
@@ -1453,6 +1465,10 @@ public class SolicitudRegistroMB {
 
 	@SuppressWarnings({ "unused", "unchecked" })
 	public void registrarSolicitud() {
+	/*	boleanoMensajeInfoGeneral=true;
+		 boleanoMensajeApoderdantePoderdante=true;
+		 boleanoMensajeOperacionesBancarias=true;
+		 boleanoMensajeDocumentos=false;*/
 		String mensaje = "";
 		logger.info("*********************** registrarSolicitud ************************");
 		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -1609,6 +1625,8 @@ public class SolicitudRegistroMB {
 	}
 
 	public boolean validarRegistroSolicitud() throws Exception {
+		
+		 
 		boolean retorno = true;
 		String mensaje = "";
 		System.out.println("solicitudRegistrarT.getTiivsOficina1() "+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
@@ -2064,6 +2082,40 @@ public class SolicitudRegistroMB {
 	public void setUbicacionTemporal(String ubicacionTemporal) {
 		this.ubicacionTemporal = ubicacionTemporal;
 	}
+
+	/*public boolean isBoleanoMensajeInfoGeneral() {
+		return this.boleanoMensajeInfoGeneral;
+	}
+
+	public void setBoleanoMensajeInfoGeneral(boolean boleanoMensajeInfoGeneral) {
+		this.boleanoMensajeInfoGeneral = boleanoMensajeInfoGeneral;
+	}
+
+	public boolean isBoleanoMensajeApoderdantePoderdante() {
+		return this.boleanoMensajeApoderdantePoderdante;
+	}
+
+	public void setBoleanoMensajeApoderdantePoderdante(
+			boolean boleanoMensajeApoderdantePoderdante) {
+		this.boleanoMensajeApoderdantePoderdante = boleanoMensajeApoderdantePoderdante;
+	}
+
+	public boolean isBoleanoMensajeOperacionesBancarias() {
+		return this.boleanoMensajeOperacionesBancarias;
+	}
+
+	public void setBoleanoMensajeOperacionesBancarias(
+			boolean boleanoMensajeOperacionesBancarias) {
+		this.boleanoMensajeOperacionesBancarias = boleanoMensajeOperacionesBancarias;
+	}
+
+	public boolean isBoleanoMensajeDocumentos() {
+		return this.boleanoMensajeDocumentos;
+	}
+
+	public void setBoleanoMensajeDocumentos(boolean boleanoMensajeDocumentos) {
+		this.boleanoMensajeDocumentos = boleanoMensajeDocumentos;
+	}*/
 	
 	
 
