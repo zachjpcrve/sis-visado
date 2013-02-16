@@ -23,6 +23,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
@@ -83,6 +84,7 @@ public class ReportesMB
 	private Date fechaFin;
 	private String nombreExtractor;
 	private String nombreEstadoSolicitud;
+	private String nombreTipoServicio;
 	private String rutaArchivoExcel;
 	private String PERFIL_USUARIO ;
 	private String idTerr;
@@ -109,41 +111,10 @@ public class ReportesMB
 		PERFIL_USUARIO=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		lstSolicitudesOficina = new ArrayList<SolicitudesOficina>();
-		
-		/*// Carga lista de monedas
-		combosMB = new CombosMB(); 
-		combosMB.getLstMoneda().clear();
-		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_MONEDA);
-		
-		lstMoneda = new ArrayList<Moneda>();
-		
-		for (Moneda lst: combosMB.getLstMoneda())
-		{
-			if (lst!=null)
-			{
-				lstMoneda.add(lst);
-			}
-		}*/
-		
-		/*
-		combosMB= new CombosMB();
-		combosMB.cargarMultitabla();
-		// Carga combo Rango Importes
-		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES);
-		// Carga combo Estados
-		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS);
-		// Carga combo Estados Nivel
-		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS_NIVEL);
-		// Carga combo Tipos de Fecha
-		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPOS_FECHA);
-		// Carga lista de monedas
-		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_MONEDA);
-		// Carga lista de tipos de persona
-		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
-		combosMB.cargarCombosNoMultitabla();	*/
-		
+			
 		generarNombreArchivoExtractor();
 		generarNombreArchivoEstadoSolicitud();
+		generarNombreArchivoTipoServicio();
 		
 		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + lstSolicitudesOficina.size() + ConstantesVisado.MSG_REGISTROS,lstSolicitudesOficina.size());
 		if (lstSolicitudesOficina.size()>0)
@@ -655,6 +626,13 @@ public class ReportesMB
 		setNombreEstadoSolicitud("Estados_"	+ Utilitarios.obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + Utilitarios.obtenerHoraArchivoExcel());
 	}
 	
+	public void generarNombreArchivoTipoServicio() 
+	{
+		setNombreTipoServicio("TipoServicio_"	+ Utilitarios.obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + Utilitarios.obtenerHoraArchivoExcel());
+	}
+	
+	
+	
 	/*public void postProcessXLS(Object document) 
 	{
 		HSSFWorkbook wb = (HSSFWorkbook) document;
@@ -674,7 +652,289 @@ public class ReportesMB
 	
 	private void rptSolicitudTipoServ() 
 	{
+		try{
+		// Defino el Libro de Excel
+			HSSFWorkbook wb = new HSSFWorkbook();
+
+			// Creo la Hoja en Excel
+			Sheet sheet = wb.createSheet(Utilitarios.obtenerFechaArchivoExcel());
+
+			// quito las lineas del libro para darle un mejor acabado
+			sheet.setDisplayGridlines(false);
+			//sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
+
+			// creo una nueva fila
+			Row trow = sheet.createRow((short) 0);
+			Utilitarios.crearTituloCell(wb, trow, 2, CellStyle.ALIGN_CENTER, CellStyle.VERTICAL_CENTER, ConstantesVisado.TITULO_REPORTE_RPT_TIPO_SERV,12);
+			sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 4));
+						
+			//Se crea la leyenda de quien genero el archivo y la hora respectiva
+			//Row rowG = sheet.createRow((short) 1);
+			Utilitarios.crearCell(wb, trow, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false, false,false,HSSFColor.DARK_BLUE.index);
+			Utilitarios.crearCell(wb, trow, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerGenerador(),  true, false,true,HSSFColor.DARK_BLUE.index);
+			
+			Row rowG1 = sheet.createRow((short) 1);
+			Utilitarios.crearCell(wb, rowG1, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false, false,false,HSSFColor.DARK_BLUE.index);
+			Utilitarios.crearCell(wb, rowG1, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.obtenerFechaHoraActual(),  true, false,true,HSSFColor.DARK_BLUE.index);
+			
+			//Genera celdas con los filtros de busqueda
+			
+			//Cod Solicitud
+			Row row2 = sheet.createRow((short) 4);
+			Utilitarios.crearCell(wb, row2, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_FILTRO_COD_SOL, false, false,false,HSSFColor.GREY_25_PERCENT.index);
+			if (getCodSolicitud()!=null)
+			{
+				Utilitarios.crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getCodSolicitud(), true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			
+			//Tipo de Servicio
+			Utilitarios.crearCell(wb, row2, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_FILTRO_TIPO_SERV, false, false,false,HSSFColor.GREY_25_PERCENT.index);
+			
+			if (lstTipoSolicitudSelected!=null)
+			{
+				String cadena = "";
+					
+				int j=0;
+				int cont=1;
+				
+				for (;j<=lstTipoSolicitudSelected.size()-1;j++)
+				{
+					if (lstTipoSolicitudSelected.size()>1)
+					{
+						if (cont==lstTipoSolicitudSelected.size())
+						{
+							cadena=cadena.concat(buscarTipoSolxCodigo((lstTipoSolicitudSelected.get(j).toString())));
+						}
+						else
+						{
+							cadena=cadena.concat(buscarTipoSolxCodigo((lstTipoSolicitudSelected.get(j).toString().concat(","))));
+							cont++;
+						}
+					}
+					else
+					{
+						cadena = buscarTipoSolxCodigo(lstTipoSolicitudSelected.get(j).toString());
+					}		
+				}
+				
+				Utilitarios.crearCell(wb, row2, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row2, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			
+			//Tipo de Operacion
+			Utilitarios.crearCell(wb, row2, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_FILTRO_TIPO_OP, false, false,false,HSSFColor.GREY_25_PERCENT.index);
+			
+			if (getIdOpeBan().compareTo("")!=0)
+			{
+				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarOpeBanxCodigo(getIdOpeBan()), true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			
+			//Rango Global
+			Row row3 = sheet.createRow((short) 6);
+			Utilitarios.crearCell(wb, row3, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_FILTRO_RANGO_GLO, false, false,false,HSSFColor.GREY_25_PERCENT.index);
+			
+			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
+			{
+				Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.RANGOS_IMPORTE.RANGO_IMPORTE_NRO_1, true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			else if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE)) 
+			{
+				Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,  ConstantesVisado.RANGOS_IMPORTE.RANGO_IMPORTE_NRO_2, true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			else if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA)) 
+			{
+				Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,  ConstantesVisado.RANGOS_IMPORTE.RANGO_IMPORTE_NRO_3, true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			else if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA)) 
+			{
+				Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,  ConstantesVisado.RANGOS_IMPORTE.RANGO_IMPORTE_NRO_4, true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			
+			//Importe Operacion Inicio
+			Utilitarios.crearCell(wb, row3, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_FILTRO_IMP_OP_INI, false, false,false,HSSFColor.GREY_25_PERCENT.index);
+			Utilitarios.crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(getImporteIni()), true, false,true,HSSFColor.GREY_25_PERCENT.index);
+					
+			//Importe Operacion Fin
+			Utilitarios.crearCell(wb, row3, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_FILTRO_IMP_OP_FIN, false, false,false,HSSFColor.GREY_25_PERCENT.index);
+			Utilitarios.crearCell(wb, row3, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, String.valueOf(getImporteFin()), true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			
+			//Estudio
+			Row row4 = sheet.createRow((short) 8);
+			Utilitarios.crearCell(wb, row4, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_FILTRO_ESTUDIO,false, false,false,HSSFColor.GREY_25_PERCENT.index);
+			
+			if (lstEstudioSelected!=null)
+			{
+				String cadena = "";
+				/*int ind=0;
+				
+				for (; ind <= getLstEstudioSelected().size() - 1; ind++) 
+				{
+					cadena+= buscarEstudioxCodigo(getLstEstudioSelected().get(ind))+",";
+				}*/
+				
+				int j=0;
+				int cont=1;
+				
+				for (;j<=lstEstudioSelected.size()-1;j++)
+				{
+					if (lstEstudioSelected.size()>1)
+					{
+						if (cont==lstEstudioSelected.size())
+						{
+							cadena=cadena.concat(buscarEstudioxCodigo((lstEstudioSelected.get(j).toString())));
+						}
+						else
+						{
+							cadena=cadena.concat(buscarEstudioxCodigo((lstEstudioSelected.get(j).toString().concat(","))));
+							cont++;
+						}
+					}
+					else
+					{
+						cadena = buscarEstudioxCodigo(lstEstudioSelected.get(j).toString());
+					}		
+				}
+				
+				Utilitarios.crearCell(wb, row4, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadena, true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row4, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.GREY_25_PERCENT.index);
+			}
+			
+			
+			Utilitarios.crearCell(wb, row4, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_FILTRO_FECHA_INICIO, false, false,false,HSSFColor.DARK_BLUE.index);
+			if (getFechaInicio()!=null)
+			{
+				Utilitarios.crearCell(wb, row4, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.formatoFechaSinHora(getFechaInicio()), true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row4, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			Utilitarios.crearCell(wb, row4, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_FILTRO_FECHA_FIN, false, false,false,HSSFColor.DARK_BLUE.index);
+			if (getFechaFin()!=null)
+			{
+				Utilitarios.crearCell(wb, row4, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.formatoFechaSinHora(getFechaFin()), true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row4, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			Row rowTot = sheet.createRow((short) 10);
+			Utilitarios.crearCell(wb, rowTot, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Total de Registros: " + (lstSolicitudesTipoServicio.size()) , false, false,false,HSSFColor.DARK_BLUE.index);
+			
 		
+			if (lstSolicitudesTipoServicio.size()==0)
+			{
+				logger.info("Sin registros para exportar");
+			}
+			else
+			{
+				// Se crea la cabecera de la tabla de resultados
+				Row rowT = sheet.createRow((short) 12);
+
+				// Creo las celdas de mi fila, se puede poner un diseño a la celda
+				Utilitarios.crearCell(wb, rowT, 0, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_COLUMNA_COD_SOL, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 1, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_COLUMNA_ESTUDIO, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 2, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_COLUMNA_TIPO_SERVICIO, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 3, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_COLUMNA_TIPO_OPERACION, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 4, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_COLUMNA_MONEDA, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 5, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_COLUMNA_IMPORTE, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 6, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_COLUMNA_TIPO_CAMBIO, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 7, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.RPT_TIPO_SERV_COLUMNA_IMPORTE_SOLES, true, true,false,HSSFColor.DARK_BLUE.index);
+								
+				int numReg=13;
+				
+				for (SolicitudesTipoServicio tmp: lstSolicitudesTipoServicio)
+				{
+					Row row = sheet.createRow((short) numReg);
+					
+					//Columna Cod Solicitud en Excel
+					Utilitarios.crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getCodSolicitud(),true, false,true,HSSFColor.DARK_BLUE.index);
+										
+					//Columna Estudio en Excel
+					Utilitarios.crearCell(wb, row, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getEstudio(),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Tipo de Servicio en Excel
+					Utilitarios.crearCell(wb, row, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,tmp.getTipoServicio(),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Tipo de Operacion en Excel
+					Utilitarios.crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(tmp.getTipoOperacion()),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Moneda en Excel
+					Utilitarios.crearCell(wb, row, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(tmp.getMoneda()),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Importe en Excel
+					Utilitarios.crearCell(wb, row, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,tmp.getImporte(),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Tipo de Cambio en Excel
+					Utilitarios.crearCell(wb, row, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,tmp.getTipoCambio(),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Importe en Soles en Excel
+					Utilitarios.crearCell(wb, row, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,tmp.getImporteSoles(),true, false,true,HSSFColor.DARK_BLUE.index);
+						
+					numReg++;
+				}
+			}
+			
+			//Arregla ancho de columnas
+			int pos=0;
+			for (;pos<=7;pos++)
+			{
+				sheet.autoSizeColumn(pos);
+			}
+						
+			//Se crea el archivo con la informacion y estilos definidos previamente
+			String strRuta="";
+			if (obtenerRutaExcel().compareTo("")!=0)
+			{
+				
+				logger.info("Parametros recogidos para exportar");
+				logger.info("Ruta: " + obtenerRutaExcel());
+				logger.info("Nombre Archivo Excel: " + getNombreTipoServicio());
+				
+				strRuta = obtenerRutaExcel() + getNombreTipoServicio() + ConstantesVisado.EXTENSION_XLS;
+				logger.info("Nombre strRuta: " + strRuta);
+				FileOutputStream fileOut = new FileOutputStream(strRuta);
+				wb.write(fileOut);
+				
+				fileOut.close();
+				
+				logger.debug("Ruta final donde encontrar el archivo excel: " + strRuta);
+				
+				setRutaArchivoExcel(strRuta);
+			}
+						
+		} catch (Exception e) {
+			e.printStackTrace();
+			//logger.info("Error al generar el archivo excel debido a: " + e.getStackTrace());
+		}	
 	}
 	
 	private void rptEstadoSolicitud() 
@@ -2073,5 +2333,13 @@ public class ReportesMB
 
 	public void setLstMoneda(List<Moneda> lstMoneda) {
 		this.lstMoneda = lstMoneda;
+	}
+
+	public String getNombreTipoServicio() {
+		return nombreTipoServicio;
+	}
+
+	public void setNombreTipoServicio(String nombreTipoServicio) {
+		this.nombreTipoServicio = nombreTipoServicio;
 	}
 }

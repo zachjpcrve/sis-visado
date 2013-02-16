@@ -729,19 +729,19 @@ public class SeguimientoMB
 			
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
 			{
-				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "<50", true, false,true,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,  ConstantesVisado.RANGOS_IMPORTE.RANGO_IMPORTE_NRO_1, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE)) 
 			{
-				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">50 y <120", true, false,true,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,  ConstantesVisado.RANGOS_IMPORTE.RANGO_IMPORTE_NRO_2, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA)) 
 			{
-				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">120 y <250", true, false,true,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,  ConstantesVisado.RANGOS_IMPORTE.RANGO_IMPORTE_NRO_3, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA)) 
 			{
-				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ">250", true, false,true,HSSFColor.GREY_25_PERCENT.index);
+				Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,  ConstantesVisado.RANGOS_IMPORTE.RANGO_IMPORTE_NRO_4, true, false,true,HSSFColor.GREY_25_PERCENT.index);
 			}
 			else
 			{
