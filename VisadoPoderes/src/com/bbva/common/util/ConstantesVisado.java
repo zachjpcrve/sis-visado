@@ -294,6 +294,26 @@ public class ConstantesVisado {
 	public static final String RPT_TIPO_SERV_COLUMNA_TIPO_CAMBIO = "Tipo de Cambio";
 	public static final String RPT_TIPO_SERV_COLUMNA_IMPORTE_SOLES = "Importe en Soles";
 	
+	///****************************Constantes para Reporte de Recaudacion x Tipo Comision********************************
+	
+		public static final String TITULO_REPORTE_RPT_RECAUDACION="RECAUDACION POR TIPO DE COMISION";
+		
+		
+		static public class COLUMNAS_RPT_RECAUDACION{
+			public static final String COLUMNA_TERRITORIO = "Territorio";
+			public static final String COLUMNA_CODIGO_OFICINA = "Codigo oficina";
+			public static final String COLUMNA_OFICINA = "Oficina";
+			public static final String COLUMNA_PERSONA_NATURAL = "Persona Natural";
+			public static final String COLUMNA_RECAUDACION_PN ="Recaudacion";
+			public static final String COLUMNA_PERSONA_JURIDICA ="Persona Juridica";
+			public static final String COLUMNA_RECAUDACION_PJ ="Recaudacion";
+			public static final String COLUMNA_PERSONA_FALLECIDA_MAYOR_X ="Persona Fallecida > X";
+			public static final String COLUMNA_RECAUDACION_FALLECIDA_X ="Recaudacion";
+			public static final String COLUMNA_PERSONA_FALLECIDA_MENOR_X ="Persona Fallecida < X";
+			public static final String COLUMNA_RECAUDACION_FALLECIDA_X1 ="Recaudacion";
+			public static final String COLUMNA_RECAUDACION_RECAUDACION_TOTAL ="Recaudacion Total";
+		}
+	
 	//**************************************************************************************************************************
 	
 	static public class RANGOS_IMPORTE{
