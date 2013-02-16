@@ -188,10 +188,10 @@
 		                header="Generar Reporte Solicitudes por Tipo Servicio" severity="alert" widgetVar="confirmation">  
 	            <h:form>      
 			        <p:commandButton id="confirm" value="Abrir"  oncomplete="confirmation.hide()"  
-			                    actionListener="#{reportesMB.abrirExcelEstadoSolicitud}" />  
+			                    actionListener="#{reportesMB.abrirExcelSolicitudesxTpoServ}" />  
 			        
 			        <p:commandButton id="decline" value="Grabar" onclick="PrimeFaces.monitorDownload(start, stop)" ajax="false"   
-					        icon="ui-icon-arrowthichk-s" oncomplete="confirmation.hide()" actionListener="#{reportesMB.descargarArchivoEstadoSolicitud}" >
+					        icon="ui-icon-arrowthichk-s" oncomplete="confirmation.hide()" actionListener="#{reportesMB.descargarArchivoSolicitudesxTpoServ}" >
 					    <p:fileDownload value="#{reportesMB.file}" />  
 					</p:commandButton>  
 			   </h:form>

@@ -19,6 +19,7 @@ import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
+import com.hildebrando.visado.modelo.RecaudacionTipoServ;
 import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.SolicitudesTipoServicio;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
@@ -404,6 +405,220 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		}
 		
 		return abrev;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<RecaudacionTipoServ> obtenerListarRecaudacionxTipoServicio(TiivsSolicitud solicitud, Date dFechaInicio, Date dFechaFin) throws Exception
+	{	
+		logger.info("***************En el obtenerListarTotalSolicitudesxEstado*************************");
+		String sql ="";
+		//String sCadFecha="";
+		List<RecaudacionTipoServ> tmpLista = new ArrayList<RecaudacionTipoServ>();
+		
+		if (solicitud!=null)
+		{
+			//Aplicando filtros
+			String sWhere = "";
+			
+			if (solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer()!=null)
+			{
+				if (sWhere.compareTo("")!=0)
+				{
+					sWhere += " and ofi.cod_terr = '" + solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer() + "' ";
+				}
+				else
+				{
+					sWhere = " where ofi.cod_terr = '" + solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer() + "' ";
+				}
+			}
+			
+			if (solicitud.getTiivsOficina1().getCodOfi()!=null)
+			{
+				if (solicitud.getTiivsOficina1().getCodOfi()!=null && solicitud.getTiivsOficina1().getCodOfi().compareTo("")!=0)
+				{
+					if (sWhere.compareTo("")!=0)
+					{
+						sWhere += " and ofi.cod_ofi= '" + solicitud.getTiivsOficina1().getCodOfi() + "' " ; 
+					}
+					else
+					{
+						sWhere = " where ofi.cod_ofi= '" + solicitud.getTiivsOficina1().getCodOfi() + "' " ;
+					}
+				}
+			}
+			
+			if (dFechaInicio!=null && dFechaFin!=null)
+			{
+				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
+				
+				String tmpFecIni = formato.format(dFechaInicio);
+				String tmpFecFin = formato.format(dFechaFin);
+				
+				if (sWhere.compareTo("")!=0)
+				{
+					sWhere += " and so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+				}
+				else
+				{
+					sWhere = " where so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+				}				
+			}
+			
+			sql="select distinct terr.des_ter, so.cod_ofi, ofi.des_ofi, NVL(PN.cont,0) Persona_Natural, " +
+				"NVL((PN.cont*PN.valor2),0) Recaudacion, NVL(PJ.cont,0) Persona_Juridica,NVL((PJ.cont*PJ.valor2),0) Recaudacion, " +
+				"NVL(PF.cont,0) Persona_FallecidaX, NVL((PF.cont*PF.valor2),0) Recaudacion, " +
+				"NVL(PFX.cont,0) Persona_FallecidaX1, NVL((PFX.cont*PFX.valor2),0) Recaudacion, " +
+				"NVL((PN.cont*PN.valor2),0) + NVL((PJ.cont*PJ.valor2),0) + NVL((PF.cont*PF.valor2),0) + " +
+				"NVL((PFX.cont*PFX.valor2),0) as Recaudacion_Total " +
+				"from tiivs_solicitud so " +
+				"left join tiivs_oficina1 ofi on so.cod_ofi = ofi.cod_ofi " +
+				"join tiivs_territorio terr on ofi.cod_terr = terr.cod_ter " +
+				"left join (select cod_ofi,multPN.valor2, count(so.tipo_comision) cont " + 
+				"          from tiivs_solicitud so " +
+				"          join tiivs_multitabla multPN on multPN.cod_elem = so.tipo_comision and multPN.cod_mult = 'T11' and " +
+				"          multPN.cod_elem='0001' group by cod_ofi,multPN.valor2 " +
+				"          ) PN on so.cod_ofi = PN.cod_ofi " +
+				"left join (select cod_ofi,multPJ.valor2, count(so.tipo_comision) cont " +
+				"          from tiivs_solicitud so " +
+				"          join tiivs_multitabla multPJ on multPJ.cod_elem = so.tipo_comision and multPJ.cod_mult = 'T11' and " +
+				"          multPJ.cod_elem='0002' group by cod_ofi,multPJ.valor2 " +
+				"          ) PJ on so.cod_ofi = PJ.cod_ofi " +
+				"left join (select cod_ofi,multPF.valor2, count(so.tipo_comision) cont " +
+				"          from tiivs_solicitud so " +
+				"          join tiivs_multitabla multPF on multPF.cod_elem = so.tipo_comision and multPF.cod_mult = 'T11' and " +
+				"          multPF.cod_elem='0003' group by cod_ofi,multPF.valor2 " +
+				"          ) PF on so.cod_ofi = PF.cod_ofi " +
+				"left join (select cod_ofi,multPFX.valor2, count(so.tipo_comision) cont " +
+				"          from tiivs_solicitud so " +
+				"          join tiivs_multitabla multPFX on multPFX.cod_elem = so.tipo_comision and multPFX.cod_mult = 'T11' and " +
+				"          multPFX.cod_elem='0004' group by cod_ofi,multPFX.valor2 " +
+				"          ) PFX on so.cod_ofi = PFX.cod_ofi " + sWhere +
+				"order by so.cod_ofi " ;
+			 
+			
+			 logger.info("SQL : "+sql);
+			 
+			 final String sSQL=sql;
+			
+			 RecaudacionTipoServ nuevo;
+			 List ResultList = (ArrayList<RecaudacionTipoServ>)getHibernateTemplate().execute(new HibernateCallback() 
+			 {
+					public List<Object> doInHibernate(Session session) throws HibernateException 
+					{
+						SQLQuery sq =session.createSQLQuery(sSQL);
+						return sq.list();
+					}
+			 });
+
+			if(ResultList.size()>0)
+			{
+				logger.info("ResultList.size "+ResultList.size());
+				for(int i=0;i<=ResultList.size()-1;i++)
+				{
+				    Object[] row =  (Object[]) ResultList.get(i);
+				    nuevo = new RecaudacionTipoServ();
+				    
+				    nuevo.setTerritorio(row[0].toString());
+				    nuevo.setCodOficina(row[1].toString());
+				    nuevo.setOficina(row[2].toString());
+				    nuevo.setiContPersonasNaturales(Integer.valueOf(row[3].toString()));
+				    nuevo.setsTotalPersonasNat(Double.valueOf(row[4].toString()));
+				    nuevo.setiContPersonasJuridicas(Integer.valueOf(row[5].toString()));
+				    nuevo.setsTotalPersonasJurd(Double.valueOf(row[6].toString()));
+				    nuevo.setiContPersonasFallecX(Integer.valueOf(row[7].toString()));
+				    nuevo.setsTotalPersonasFallecX(Double.valueOf(row[8].toString()));
+				    nuevo.setiContPersonasFallecX1(Integer.valueOf(row[9].toString()));
+				    nuevo.setsTotalPersonasFallecX1(Double.valueOf(row[10].toString()));
+				    nuevo.setsRecaudacionTotal(Double.valueOf(row[11].toString()));
+				    
+					tmpLista.add(nuevo);
+				}
+		     }
+		}
+		
+		logger.info("Tamanio Lista "+tmpLista.size());
+		
+		RecaudacionTipoServ subTotales=new RecaudacionTipoServ();
+		subTotales.setTerritorio("");
+		subTotales.setCodOficina("");
+		subTotales.setOficina("SUBTOTAL");
+		
+		int iContPN=0;
+		Double iTotalPN=0.0;
+		int iContPJ=0;
+		Double iTotalPJ=0.0;
+		int iContPFX=0;
+		Double iTotalPFX=0.0;
+		int iContPFX1=0;
+		Double iTotalPX1=0.0;
+		Double totalReca=0.0;
+		
+		for (RecaudacionTipoServ tmpR: tmpLista)
+		{
+			if (tmpR.getiContPersonasNaturales()>0)
+			{
+				iContPN+=tmpR.getiContPersonasNaturales();
+			}
+			
+			if (tmpR.getsTotalPersonasNat()>0)
+			{
+				iTotalPN+=tmpR.getsTotalPersonasNat();
+			}
+			
+			if (tmpR.getiContPersonasJuridicas()>0)
+			{
+				iContPJ+=tmpR.getiContPersonasJuridicas();
+			}
+			
+			if (tmpR.getsTotalPersonasJurd()>0)
+			{
+				iTotalPJ+=tmpR.getsTotalPersonasJurd();
+			}
+			
+			if (tmpR.getiContPersonasFallecX()>0)
+			{
+				iContPFX+=tmpR.getiContPersonasFallecX();
+			}
+			
+			if (tmpR.getsTotalPersonasFallecX()>0)
+			{
+				iTotalPFX+=tmpR.getsTotalPersonasFallecX();
+			}
+			
+			if (tmpR.getiContPersonasFallecX1()>0)
+			{
+				iContPFX1+=tmpR.getiContPersonasFallecX1();
+			}
+			
+			if (tmpR.getsTotalPersonasFallecX1()>0)
+			{
+				iTotalPX1+=tmpR.getsTotalPersonasFallecX1();
+			}
+			
+			if (tmpR.getsRecaudacionTotal()>0)
+			{
+				totalReca+=tmpR.getsRecaudacionTotal();
+			}
+		}
+		
+		subTotales.setiContPersonasNaturales(iContPN);
+		subTotales.setsTotalPersonasNat(iTotalPN);
+		
+		subTotales.setiContPersonasJuridicas(iContPJ);
+		subTotales.setsTotalPersonasJurd(iTotalPJ);
+		
+		subTotales.setiContPersonasFallecX(iContPFX);
+		subTotales.setsTotalPersonasFallecX(iTotalPFX);
+		
+		subTotales.setiContPersonasFallecX1(iContPFX1);
+		subTotales.setsTotalPersonasFallecX1(iTotalPX1);
+		
+		subTotales.setsRecaudacionTotal(totalReca);
+		
+		tmpLista.add(subTotales);
+
+		return tmpLista;
+		
 	}
 	
 	@SuppressWarnings("unchecked")

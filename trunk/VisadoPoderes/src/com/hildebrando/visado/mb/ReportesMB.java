@@ -44,6 +44,7 @@ import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.Moneda;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
+import com.hildebrando.visado.modelo.RecaudacionTipoServ;
 import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.SolicitudesTipoServicio;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
@@ -79,12 +80,14 @@ public class ReportesMB
 	private List<String> lstSolicitudesxOpeBan;
 	private List<SolicitudesOficina> lstSolicitudesOficina;
 	private List<SolicitudesTipoServicio> lstSolicitudesTipoServicio;
+	private List<RecaudacionTipoServ> lstRecaudacionTipoServ;
 	private List<Moneda> lstMoneda;
 	private Date fechaInicio;
 	private Date fechaFin;
 	private String nombreExtractor;
 	private String nombreEstadoSolicitud;
 	private String nombreTipoServicio;
+	private String nombreRecaudacion;
 	private String rutaArchivoExcel;
 	private String PERFIL_USUARIO ;
 	private String idTerr;
@@ -111,10 +114,12 @@ public class ReportesMB
 		PERFIL_USUARIO=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		lstSolicitudesOficina = new ArrayList<SolicitudesOficina>();
+		lstRecaudacionTipoServ = new ArrayList<RecaudacionTipoServ>();
 			
 		generarNombreArchivoExtractor();
 		generarNombreArchivoEstadoSolicitud();
 		generarNombreArchivoTipoServicio();
+		generarNombreRecaudacion();
 		
 		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + lstSolicitudesOficina.size() + ConstantesVisado.MSG_REGISTROS,lstSolicitudesOficina.size());
 		if (lstSolicitudesOficina.size()>0)
@@ -212,9 +217,67 @@ public class ReportesMB
 		rptEstadoSolicitud();
 	}
 	
+	public void exportarExcelRecaudacion()
+	{
+		rptRecaudacion();
+	}
+	
 	public void exportarExcelSolicitudTipoServ()
 	{
 		rptSolicitudTipoServ();
+	}
+	
+	public void buscarRecaudacionxTipoServ()
+	{
+		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+		Date fechaIni=null;
+		Date fechaFin=null;
+		
+		if (getFechaInicio()!=null && getFechaFin()!=null)
+		{
+			fechaIni=getFechaInicio();
+			fechaFin=getFechaFin();
+		}
+		
+		TiivsSolicitud tmpSolicitud = new TiivsSolicitud();
+		TiivsTerritorio tmpTerr = new TiivsTerritorio();
+		TiivsOficina1 tmpOficina = new TiivsOficina1();
+		
+		if (getIdTerr()!=null && getIdTerr().compareTo("")!=0)
+		{
+			tmpTerr.setCodTer(getIdTerr());
+		}
+		
+		if (getIdOfi()!=null && getIdOfi().compareTo("")!=0)
+		{
+			tmpOficina.setCodOfi(getIdOfi());
+		}
+		
+		if (getIdOfi1()!=null && getIdOfi1().compareTo("")!=0)
+		{
+			tmpOficina.setCodOfi(getIdOfi1());
+		}
+		
+		tmpOficina.setTiivsTerritorio(tmpTerr);
+		tmpSolicitud.setTiivsOficina1(tmpOficina);
+		
+		try {
+			this.lstRecaudacionTipoServ = solicitudService.obtenerListarRecaudacionxTipoServicio(tmpSolicitud, fechaIni, fechaFin);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		int iNuevoTotal =lstRecaudacionTipoServ.size()-1;
+		
+		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + iNuevoTotal + ConstantesVisado.MSG_REGISTROS,iNuevoTotal);
+		if (lstRecaudacionTipoServ.size()>1)
+		{
+			setNoHabilitarExportar(false);
+		}
+		else
+		{
+			setNoHabilitarExportar(true);
+		}
 	}
 	
 	public void buscarSolicitudesxOficina()
@@ -260,7 +323,7 @@ public class ReportesMB
 		int iNuevoTotal =lstSolicitudesOficina.size()-1;
 		
 		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + iNuevoTotal + ConstantesVisado.MSG_REGISTROS,iNuevoTotal);
-		if (lstSolicitudesOficina.size()>0)
+		if (lstSolicitudesOficina.size()>1)
 		{
 			setNoHabilitarExportar(false);
 		}
@@ -631,7 +694,10 @@ public class ReportesMB
 		setNombreTipoServicio("TipoServicio_"	+ Utilitarios.obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + Utilitarios.obtenerHoraArchivoExcel());
 	}
 	
-	
+	public void generarNombreRecaudacion() 
+	{
+		setNombreRecaudacion("Recaudacion_"	+ Utilitarios.obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + Utilitarios.obtenerHoraArchivoExcel());
+	}
 	
 	/*public void postProcessXLS(Object document) 
 	{
@@ -920,6 +986,210 @@ public class ReportesMB
 				logger.info("Nombre Archivo Excel: " + getNombreTipoServicio());
 				
 				strRuta = obtenerRutaExcel() + getNombreTipoServicio() + ConstantesVisado.EXTENSION_XLS;
+				logger.info("Nombre strRuta: " + strRuta);
+				FileOutputStream fileOut = new FileOutputStream(strRuta);
+				wb.write(fileOut);
+				
+				fileOut.close();
+				
+				logger.debug("Ruta final donde encontrar el archivo excel: " + strRuta);
+				
+				setRutaArchivoExcel(strRuta);
+			}
+						
+		} catch (Exception e) {
+			e.printStackTrace();
+			//logger.info("Error al generar el archivo excel debido a: " + e.getStackTrace());
+		}	
+	}
+	
+	private void rptRecaudacion() 
+	{
+		try 
+		{
+			// Defino el Libro de Excel
+			HSSFWorkbook wb = new HSSFWorkbook();
+
+			// Creo la Hoja en Excel
+			Sheet sheet = wb.createSheet(Utilitarios.obtenerFechaArchivoExcel());
+
+			// quito las lineas del libro para darle un mejor acabado
+			sheet.setDisplayGridlines(false);
+			//sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
+
+			// creo una nueva fila
+			Row trow = sheet.createRow((short) 0);
+			Utilitarios.crearTituloCell(wb, trow, 4, CellStyle.ALIGN_CENTER, CellStyle.VERTICAL_CENTER, ConstantesVisado.TITULO_REPORTE_RPT_RECAUDACION,12);
+						
+			//Se crea la leyenda de quien genero el archivo y la hora respectiva
+			Row rowG = sheet.createRow((short) 1);
+			Utilitarios.crearCell(wb, rowG, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false, false,false,HSSFColor.DARK_BLUE.index);
+			Utilitarios.crearCell(wb, rowG, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerGenerador(),  true, false,true,HSSFColor.DARK_BLUE.index);
+			
+			Row rowG1 = sheet.createRow((short) 2);
+			Utilitarios.crearCell(wb, rowG1, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false, false,false,HSSFColor.DARK_BLUE.index);
+			Utilitarios.crearCell(wb, rowG1, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.obtenerFechaHoraActual(),  true, false,true,HSSFColor.DARK_BLUE.index);
+			
+			//Genera celdas con los filtros de busqueda
+			Row row2 = sheet.createRow((short) 4);
+			
+			Utilitarios.crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_TERRITORIO, false, false,false,HSSFColor.DARK_BLUE.index);
+			
+			if (getIdTerr()!=null)
+			{
+				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getIdTerr(), true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			Row row3 = sheet.createRow((short) 6);
+			
+			Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_COD_OFICINA, false, false,false,HSSFColor.DARK_BLUE.index);
+			
+			if (getIdOfi().compareTo("")!=0)
+			{
+				Utilitarios.crearCell(wb, row3, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getIdOfi(), true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row3, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			Utilitarios.crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_OFICINA, false, false,false,HSSFColor.DARK_BLUE.index);
+			if (getIdOfi1().compareTo("")!=0)
+			{
+				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getIdOfi1(), true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			Row row4 = sheet.createRow((short) 8);
+			
+			Utilitarios.crearCell(wb, row4, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_INICIO, false, false,false,HSSFColor.DARK_BLUE.index);
+			if (getFechaInicio()!=null)
+			{
+				Utilitarios.crearCell(wb, row4, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.formatoFechaSinHora(getFechaInicio()), true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row4, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			Utilitarios.crearCell(wb, row4, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_FIN, false, false,false,HSSFColor.DARK_BLUE.index);
+			if (getFechaFin()!=null)
+			{
+				Utilitarios.crearCell(wb, row4, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.formatoFechaSinHora(getFechaFin()), true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row4, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			Row rowTot = sheet.createRow((short) 10);
+			Utilitarios.crearCell(wb, rowTot, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Total de Registros: " + (lstRecaudacionTipoServ.size()-1) , false, false,false,HSSFColor.DARK_BLUE.index);
+		
+			if (lstRecaudacionTipoServ.size()==0)
+			{
+				logger.info("Sin registros para exportar");
+			}
+			else
+			{
+				// Se crea la cabecera de la tabla de resultados
+				Row rowT = sheet.createRow((short) 12);
+
+				// Creo las celdas de mi fila, se puede poner un diseño a la celda
+				Utilitarios.crearCell(wb, rowT, 0, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_TERRITORIO, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 1, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_CODIGO_OFICINA, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 2, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_OFICINA, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 3, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_PERSONA_NATURAL, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 4, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_RECAUDACION_PN, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 5, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_PERSONA_JURIDICA, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 6, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_RECAUDACION_PJ, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 7, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_PERSONA_FALLECIDA_MAYOR_X, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 8, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_RECAUDACION_FALLECIDA_X, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 9, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_PERSONA_FALLECIDA_MENOR_X, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 10, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_RECAUDACION_FALLECIDA_X1, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 11, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_RECAUDACION_RECAUDACION_TOTAL, true, true,false,HSSFColor.DARK_BLUE.index);
+				
+				int numReg=13;
+				
+				for (RecaudacionTipoServ tmp: lstRecaudacionTipoServ)
+				{
+					Row row = sheet.createRow((short) numReg);
+					
+					//Columna Territorio en Excel
+					Utilitarios.crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getTerritorio(),true, false,true,HSSFColor.DARK_BLUE.index);
+										
+					//Columna Cod Oficina en Excel
+					Utilitarios.crearCell(wb, row, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getCodOficina(),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Oficina en Excel
+					Utilitarios.crearCell(wb, row, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,tmp.getOficina(),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Persona Natural en Excel
+					Utilitarios.crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(tmp.getiContPersonasNaturales()),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Recaudacion en Excel
+					Utilitarios.crearCell(wb, row, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(tmp.getsTotalPersonasNat()),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Persona Juridica en Excel
+					Utilitarios.crearCell(wb, row, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(tmp.getiContPersonasJuridicas()),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Recaudacion en Excel
+					Utilitarios.crearCell(wb, row, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(tmp.getsTotalPersonasJurd()),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Persona Fallecida > X en Excel
+					Utilitarios.crearCell(wb, row, 7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(tmp.getiContPersonasFallecX()),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Recaudacion en Excel
+					Utilitarios.crearCell(wb, row, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(tmp.getsTotalPersonasFallecX()),true, false,true,HSSFColor.DARK_BLUE.index);
+
+					//Columna Persona Fallecida < X en Excel
+					Utilitarios.crearCell(wb, row, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(tmp.getiContPersonasFallecX1()),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Recaudacion en Excel
+					Utilitarios.crearCell(wb, row, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(tmp.getsTotalPersonasFallecX1()),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Recaudacion en Excel
+					Utilitarios.crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(tmp.getsRecaudacionTotal()),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					numReg++;
+				}
+			}
+			
+			//Arregla ancho de columnas
+			int pos=0;
+			for (;pos<=18;pos++)
+			{
+				sheet.autoSizeColumn(pos);
+			}
+						
+			//Se crea el archivo con la informacion y estilos definidos previamente
+			String strRuta="";
+			if (obtenerRutaExcel().compareTo("")!=0)
+			{
+				
+				logger.info("Parametros recogidos para exportar");
+				logger.info("Ruta: " + obtenerRutaExcel());
+				logger.info("Nombre Archivo Excel: " + getNombreRecaudacion());
+				
+				strRuta = obtenerRutaExcel() + getNombreRecaudacion() + ConstantesVisado.EXTENSION_XLS;
 				logger.info("Nombre strRuta: " + strRuta);
 				FileOutputStream fileOut = new FileOutputStream(strRuta);
 				wb.write(fileOut);
@@ -1671,6 +1941,25 @@ public class ReportesMB
 		}
 	}
 	
+	public void abrirExcelRecaudacion()
+	{
+		try {
+			exportarExcelRecaudacion();
+			//Abrir archivo excel
+				
+			if (rutaArchivoExcel!=null && rutaArchivoExcel.length()>0)
+			{
+				Desktop.getDesktop().open(new File(rutaArchivoExcel));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.debug("Error al abrir archivo excel debido a: " + e.getMessage());
+		} catch (Exception e1)
+		{
+			e1.printStackTrace();
+		}
+	}
+	
 	public void abrirExcelSolicitudesxTpoServ()
 	{
 		try {
@@ -1738,6 +2027,38 @@ public class ReportesMB
 		if (stream!=null)
 		{
 			file = new DefaultStreamedContent(stream, "application/excel", nombreEstadoSolicitud+ConstantesVisado.EXTENSION_XLS);
+		}
+	}
+	
+	public void descargarArchivoSolicitudesxTpoServ()
+	{
+		exportarExcelSolicitudTipoServ();
+		InputStream stream=null;
+		try {
+			stream = new FileInputStream(rutaArchivoExcel);
+		} catch (FileNotFoundException e) {
+			logger.debug("Error al obtener archivo excel debido a: " + e.getMessage());
+		}
+		
+		if (stream!=null)
+		{
+			file = new DefaultStreamedContent(stream, "application/excel", nombreTipoServicio+ConstantesVisado.EXTENSION_XLS);
+		}
+	}
+	
+	public void descargarArchivoRecaudacion()
+	{
+		exportarExcelRecaudacion();
+		InputStream stream=null;
+		try {
+			stream = new FileInputStream(rutaArchivoExcel);
+		} catch (FileNotFoundException e) {
+			logger.debug("Error al obtener archivo excel debido a: " + e.getMessage());
+		}
+		
+		if (stream!=null)
+		{
+			file = new DefaultStreamedContent(stream, "application/excel", nombreRecaudacion+ConstantesVisado.EXTENSION_XLS);
 		}
 	}
 	
@@ -2341,5 +2662,22 @@ public class ReportesMB
 
 	public void setNombreTipoServicio(String nombreTipoServicio) {
 		this.nombreTipoServicio = nombreTipoServicio;
+	}
+
+	public List<RecaudacionTipoServ> getLstRecaudacionTipoServ() {
+		return lstRecaudacionTipoServ;
+	}
+
+	public void setLstRecaudacionTipoServ(
+			List<RecaudacionTipoServ> lstRecaudacionTipoServ) {
+		this.lstRecaudacionTipoServ = lstRecaudacionTipoServ;
+	}
+
+	public String getNombreRecaudacion() {
+		return nombreRecaudacion;
+	}
+
+	public void setNombreRecaudacion(String nombreRecaudacion) {
+		this.nombreRecaudacion = nombreRecaudacion;
 	}
 }
