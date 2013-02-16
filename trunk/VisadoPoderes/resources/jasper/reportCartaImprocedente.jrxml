@@ -22,7 +22,7 @@
 			</textField>
 			<image>
 				<reportElement x="39" y="9" width="249" height="41"/>
-				<imageExpression class="java.lang.String"><![CDATA["../../resources/images/bbva2.gif"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["./resources/images/bbva2.gif"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement mode="Transparent" x="561" y="50" width="19" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
