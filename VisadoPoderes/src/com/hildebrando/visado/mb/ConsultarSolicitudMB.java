@@ -1364,7 +1364,6 @@ public class ConsultarSolicitudMB {
 		{
 			this.obtenerSolicitud();
 		}*/
-		
 		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
 			mensaje = "Ingrese la sección Apoderado y Poderdante";
 			retorno = false;
@@ -1377,6 +1376,7 @@ public class ConsultarSolicitudMB {
 				conuntNumAgru=a.getId().getNumGrupo();
 				logger.info("conuntNumAgru : " +conuntNumAgru);
 				lstAgrupacionPersona=a.getTiivsAgrupacionPersonas();
+				logger.info("lstAgrupacionPersona : " +lstAgrupacionPersona.size());
 				int contPoderdante=0, contApoderado=0;
 				for (TiivsAgrupacionPersona xa : lstAgrupacionPersona) {
 					if(xa.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
@@ -1387,11 +1387,18 @@ public class ConsultarSolicitudMB {
 						
 					}
 				}
+				if(contPoderdante==0||contApoderado==0){
+					retorno= false;
+					Utilitarios.mensajeInfo("INFO", "Ingrese por lo menos un Poderdante y un Apoderado, por cada Combinación");
+					break;
+					
+				}
 				logger.info("contPoderdante : " +contPoderdante);
 				logger.info("contApoderado : " +contApoderado);
 			}
 			
 		}
+		
 		if (solicitudRegistrarT.getTiivsTipoSolicitud() == (null)) {
 			mensaje = "Seleccione el Tipo de Solicitud ";
 			retorno = false;
@@ -1566,7 +1573,7 @@ public class ConsultarSolicitudMB {
 				
 				Set<TiivsSolicitudAgrupacion> listaTMP = this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
 				//solicitudRegistrarT.setTiivsSolicitudAgrupacions(new HashSet<TiivsSolicitudAgrupacion>());
-				TiivsSolicitud objResultado = service.insertarMerge(this.solicitudRegistrarT);
+				TiivsSolicitud objResultado = service.save(this.solicitudRegistrarT);
 				/*  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
 					  logger.info("b.getTiivsPersona() " +b.getId().getCodPer());
@@ -1937,7 +1944,7 @@ public class ConsultarSolicitudMB {
 				break;
 			}
 		}
-		numGrupo--;
+		//numGrupo--;
 
 		// lstTiivsAgrupacionPersonas.remove(objAgrupacionSimpleDtoCapturado.g)
 		logger.info("Tamanio de la lista Solicitud Agrupacion : " + lstSolicitudAgrupacion.size());
@@ -2763,8 +2770,179 @@ public class ConsultarSolicitudMB {
 		valorFinal = 0;
 		
 	}
+	// METODO SAMIRA
+	public void agregarOperacionBancaria() {
+		logger.info(" ************************** agrearOperacionBancaria  ****************************** ");
+		
+		if (this.validarOperacionBancaria()) {
+			for (TiivsOperacionBancaria n : combosMB.getLstOpeBancaria()) {
+				if (n.getCodOperBan().equals(objSolicBancaria.getId().getCodOperBan())) {
+					this.objSolicBancaria.setTiivsOperacionBancaria(n);
+					break;
+				}
+			}
+			if (!this.flagUpdateOperacionSolic) {
+				if (objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+					objSolicBancaria.setImporteSoles(objSolicBancaria.getImporte());
+					this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.SOLES);
+				}
+				if (objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) {
+					objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+					this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.DOLARES);
+				}
+				if (objSolicBancaria.getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) {
+					objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+					this.objSolicBancaria.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
+				}
 
-	public void agregarOperacionBancaria() 
+				item++;
+				objSolicBancaria.setsItem("00" + item);
+				this.lstSolicBancarias.add(objSolicBancaria);
+				for (TiivsSolicitudOperban x : lstSolicBancarias) {
+					if(x.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+						icontSoles++;
+					}else 
+						if(x.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+						icontDolares++;
+					}else 
+						if(x.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+						icontEuros++;
+					}
+					
+				}
+				
+				
+				if (icontDolares == 0 && icontEuros == 0 && icontSoles > 0) {
+					//ONLI SOLES
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporte();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+				}
+				if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) {
+					//ONLI DOLARES
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporte();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+valorFinal);
+	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
+				}
+				if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) {
+					//ONLI EUROS
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporte();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+valorFinal);
+	                this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_EUROS);
+				}
+				if (       icontDolares  > 0 && icontEuros > 0 && icontSoles == 0
+						|| icontDolares  > 0 && icontEuros == 0&& icontSoles > 0 
+						|| icontDolares == 0 && icontEuros > 0 && icontSoles > 0
+						|| icontDolares > 0  && icontEuros > 0 && icontSoles > 0) {
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporteSoles();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+				}
+
+				
+			}else {
+				
+				logger.info("objSolicitudOperacionCapturadoOld"+objSolicBancaria.getImporte());
+				
+				if (objSolicitudOperacionCapturado.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+					objSolicitudOperacionCapturado.setImporteSoles(objSolicitudOperacionCapturado.getImporte());
+					objSolicitudOperacionCapturado.setTipoCambio(0.0);
+					this.objSolicitudOperacionCapturado.setsDescMoneda(ConstantesVisado.MONEDAS.SOLES);
+				}
+				if (objSolicitudOperacionCapturado.getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) {
+					objSolicitudOperacionCapturado.setImporteSoles(objSolicitudOperacionCapturado.getTipoCambio()* objSolicitudOperacionCapturado.getImporte());
+					this.objSolicitudOperacionCapturado.setsDescMoneda(ConstantesVisado.MONEDAS.DOLARES);
+				}
+				if (objSolicitudOperacionCapturado.getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) {
+					objSolicitudOperacionCapturado.setImporteSoles(objSolicitudOperacionCapturado.getTipoCambio()* objSolicitudOperacionCapturado.getImporte());
+					this.objSolicitudOperacionCapturado.setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
+				}
+				//actualizar registro 
+				this.lstSolicBancarias.set(indexUpdateOperacion,objSolicitudOperacionCapturado);
+				
+				for (TiivsSolicitudOperban x : lstSolicBancarias) {
+					if(x.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+						icontSoles++;
+					}else 
+						if(x.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+						icontDolares++;
+					}else 
+						if(x.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+						icontEuros++;
+					}
+				}
+				
+				if (icontDolares == 0 && icontEuros == 0 && icontSoles > 0) {
+					//ONLI SOLES
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporte();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+				}
+				if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) {
+					//ONLI DOLARES
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporte();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+valorFinal);
+	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
+				}
+				if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) {
+					//ONLI EUROS
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporte();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+valorFinal);
+	                this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_EUROS);
+				}
+				if (       icontDolares  > 0 && icontEuros > 0 && icontSoles == 0
+						|| icontDolares  > 0 && icontEuros == 0&& icontSoles > 0 
+						|| icontDolares == 0 && icontEuros > 0 && icontSoles > 0
+						|| icontDolares > 0  && icontEuros > 0 && icontSoles > 0) {
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporteSoles();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+				}
+
+				
+			}
+		  icontDolares=0;icontEuros=0;icontSoles=0;valorFinal=0;
+          objSolicBancaria=new TiivsSolicitudOperban();
+          objSolicBancaria.setId(new TiivsSolicitudOperbanId());
+          objSolicBancaria.setTipoCambio(0.0);
+          this.flagUpdateOperacionSolic=false;
+          this.objSolicitudOperacionCapturado=new TiivsSolicitudOperban();
+          this.objSolicitudOperacionCapturado.setId(new TiivsSolicitudOperbanId());
+          this.valorFinal=0;
+          this.llamarComision();
+		}
+  
+			
+
+		
+
+	}
+// METODO CESAR ANTIGUO
+	/*public void agregarOperacionBancaria() 
 	{
 		logger.info(" ************************** agrearOperacionBancaria  ****************************** ");
 
@@ -2968,7 +3146,7 @@ public class ConsultarSolicitudMB {
 			this.llamarComision();
 		}
 	}
-
+*/
 	public void validarTipoCambioDisabled(ValueChangeEvent e) {
 		if (e.getNewValue() != null) {
 			logger.info(" validarTipoCambioDisabled " + e.getNewValue());
