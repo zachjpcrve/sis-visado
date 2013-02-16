@@ -20,7 +20,7 @@
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{numeroSolicitud}]]></textFieldExpression>
 			</textField>
-			<image>
+			<image onErrorType="Blank">
 				<reportElement x="39" y="9" width="249" height="41"/>
 				<imageExpression class="java.lang.String"><![CDATA["./resources/images/bbva2.gif"]]></imageExpression>
 			</image>

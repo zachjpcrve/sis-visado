@@ -70,7 +70,7 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["SOLICITUD DE VISADO DE PODERES Y/O DOCUMENTOS - " + $F{codSoli}]]></textFieldExpression>
 			</textField>
-			<image>
+			<image onErrorType="Blank">
 				<reportElement x="1" y="0" width="227" height="39"/>
 				<imageExpression class="java.lang.String"><![CDATA["./resources/images/bbva2.gif"]]></imageExpression>
 			</image>
