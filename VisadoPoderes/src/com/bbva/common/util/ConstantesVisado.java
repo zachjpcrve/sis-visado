@@ -374,7 +374,7 @@ public class ConstantesVisado {
 		public static final String REGISTRO_OK = "Se ha registrado correctamente ";		
 		public static final String NO_RESULTADOS = "No se han encontrado resultados ";
 		public static final String TAMANHIO_LISTA = "El tamaño de la lista ";
-		
+		public static final String OCURRE_ERROR_CARGA_LISTA = "Ha ocurrido un error al cargar la lista";
 	}
 }
 
