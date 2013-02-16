@@ -273,6 +273,25 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				}
 			}
 			
+			//Filtros de estados a buscar por RN048 del Doc Funcional
+			if (sWhere.compareTo("")!=0)
+			{
+				sWhere += " and so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
+											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02 + "'," +
+											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
+											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_T02 + "'," +
+											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02 + "')" ;
+						
+			}
+			else
+			{
+				sWhere += " where so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02 + "'," +
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_T02 + "'," +
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02 + "')" ;
+			}
+			
 			if (idOpeBan.trim().compareTo("")!=0)
 			{
 				sql = "select so.cod_soli,NVL(es.des_estudio,' ') Estudio, " +
