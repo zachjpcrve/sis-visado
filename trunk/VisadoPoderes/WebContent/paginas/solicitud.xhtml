@@ -119,49 +119,39 @@ function validaNumero(e, ent, obj, fn) {
 											<h:outputText title="Información General"
 												value="Información General" styleClass="outputText" />
 											<p:separator />
-											<p:messages id="idMsmSolicitudRegistro"></p:messages>
+											<p:messages id="idMsmSolicitudRegistro" ></p:messages>
 											<table border="0">
-												<tbody>
-													<tr>
-														<td><h:outputText styleClass="outputText"
-																id="txtCodNumSol" value="Nro Solicitud:" /></td>
-														<td><h:inputText styleClass="inputText" id="text1"
-																style="width:100px;"
-																value="#{solicitudRegMB.solicitudRegistrarT.codSoli}"
-																disabled="false" readonly="true" /></td>
-														<td><p:graphicImage
-																value="/resources/images/pregunta.jpg"
-																id="tooltxtCodNumSol" /></td>
-														<td><p:tooltip for="tooltxtCodNumSol"
-																value="Nro Solicitud" showEffect="slide" /></td>
+											<tbody>
+											<tr>
+											<td><h:outputText styleClass="outputText" id="txtCodNumSol" value="Nro Solicitud:" /></td>
+											<td><h:inputText  styleClass="inputText" id="text1"
+												  style="width:100px;"
+												  value="#{solicitudRegMB.solicitudRegistrarT.codSoli}"
+												  disabled="false" readonly="true" /></td>
+											<td><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtCodNumSol" /></td>
+											<td><p:tooltip for="tooltxtCodNumSol" value="Nro Solicitud" showEffect="slide" /></td>
 
-														<td><h:outputText styleClass="outputText" id="text3"
-																value="Estado:" /></td>
-														<td><h:inputText styleClass="inputText"
-																id="txtEstado" style="width:100px;"
-																value="#{solicitudRegMB.solicitudRegistrarT.descEstado}"
-																disabled="false" readonly="true" /></td>
-														<td><p:graphicImage
-																value="/resources/images/pregunta.jpg"
-																id="tooltxtEstado" /></td>
-														<td><p:tooltip for="tooltxtEstado"
-																value="Estado solicitud" showEffect="slide" /></td>
+											<td><h:outputText styleClass="outputText" id="text3" value="Estado:" /></td>
+											<td><h:inputText  styleClass="inputText" id="txtEstado" style="width:100px;"
+												  value="#{solicitudRegMB.solicitudRegistrarT.descEstado}"
+												  disabled="false" readonly="true" /></td>
+											<td><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtEstado" /></td>
+											<td><p:tooltip for="tooltxtEstado" value="Estado solicitud" showEffect="slide" /></td>
 
-														<td><h:outputText styleClass="outputText"
-																id="txtOficina" value="Oficina:" /></td>
-														<td style="font-size:0.9em"><p:selectOneMenu id="cboOficina" value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
-																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-																 <f:selectItems  value="#{combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.tiivsTerritorio.codTer}-#{lOf.tiivsTerritorio.desTer})" /> 
-															</p:selectOneMenu></td>
-														<td><p:message for="cboOficina" />
-														<p:graphicImage
-																value="/resources/images/pregunta.jpg"
-																id="toolcboOficina" /></td>
-														<td><p:tooltip for="toolcboOficina" value="Oficina"
-																showEffect="slide" /></td>
+											<td><h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
+											<td style="font-size:0.9em"><p:selectOneMenu id="cboOficina" value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
+												<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+												<f:selectItems  value="#{combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.tiivsTerritorio.codTer}-#{lOf.tiivsTerritorio.desTer})" /> 
+												</p:selectOneMenu></td>
+										                <td><p:message for="cboOficina" />
+											<p:graphicImage
+												value="/resources/images/pregunta.jpg"
+												id="toolcboOficina" /></td>
+											<td><p:tooltip for="toolcboOficina" value="Oficina"
+												showEffect="slide" /></td>
 
-													</tr>
-													<tr>
+											</tr>
+											<tr>
 														<td><h:outputText styleClass="outputText"
 																id="outNroVaucher" value="Nro Voucher *" /></td>
 														<td><h:inputText styleClass="inputText" immediate="false"  required="false" requiredMessage="Ingrese el Nro Voucher"
@@ -205,75 +195,75 @@ function validaNumero(e, ent, obj, fn) {
 										</fieldset>
 									</td>
 								</tr>
+								<tr><td class="styleLegend2" width="783">
+								<fieldset style="width: 105%;" class="fielset">
+								<table>
 								<tr>
-									<td class="styleLegend2" width="783">
-										<fieldset style="width: 105%;" class="fielset">
-											<table>
-												<tr>
-													<td style="width: 380px;"><h:outputText
-															title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
-															value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" /></td>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td style="width: 50px;"></td>
-													<td><p:commandButton value="+" actionListener="#{solicitudRegMB.agregarActionListenerAgrupacion}"
-													         update=":formRegistrar:tlbPersonasPopup"   oncomplete="dlgRegistrarPersona.show();"/></td>
-												</tr>
-											</table>
-											<p:separator styleClass="fielset" />
-											<table border="0" width="95%">
-												<tbody>
+								<td style="width: 380px;">
+								<h:outputText
+								title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
+								value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" /></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td style="width: 50px;"></td>
+								<td><p:commandButton value="+" actionListener="#{solicitudRegMB.agregarActionListenerAgrupacion}"
+								update=":formRegistrar:tlbPersonasPopup"   oncomplete="dlgRegistrarPersona.show();"/></td>
+								</tr>
+								</table>
+								<p:separator styleClass="fielset" />
+								<table border="0" width="95%">
+								<tbody>
 
-													<tr>
-													<td>
-													<div class="ui-datatable ui-widget">
-													<table> 
-														<tr>
-														<th class="ui-state-default">
-														<div class="ui-dt-c">
-														<SPAN>Poderdante</SPAN>
-														</div>
-														</th>
-														<th class="ui-state-default">
-														<div class="ui-dt-c">
-														<SPAN>Apoderado</SPAN>
-														</div>
-														</th>
-														<th class="ui-state-default">
-														<div class="ui-dt-c">
-														<SPAN>Estado</SPAN>
-														</div>
-														</th>
-														<th class="ui-state-default">
-														<div class="ui-dt-c">
-														<SPAN>Ver</SPAN>
-														</div>
-														</th>
-														<th class="ui-state-default">
-														<div class="ui-dt-c">
-														<SPAN>Editar</SPAN>
-														</div>
-														</th>
-														<th class="ui-state-default">
-														<div class="ui-dt-c">
-														<SPAN>Eliminar</SPAN>
-														</div>
-														</th>
-														</tr>
+							                <tr>
+								<td>
+								<div class="ui-datatable ui-widget">
+								<table> 
+								<tr>
+								<th class="ui-state-default">
+								<div class="ui-dt-c">
+								<SPAN>Poderdante</SPAN>
+								</div>
+								</th>
+								<th class="ui-state-default">
+								<div class="ui-dt-c">
+								<SPAN>Apoderado</SPAN>
+								</div>
+								</th>
+								<th class="ui-state-default">
+								<div class="ui-dt-c">
+								<SPAN>Estado</SPAN>
+								</div>
+								</th>
+								<th class="ui-state-default">
+								<div class="ui-dt-c">
+								<SPAN>Ver</SPAN>
+								</div>
+								</th>
+								<th class="ui-state-default">
+								<div class="ui-dt-c">
+								<SPAN>Editar</SPAN>
+								</div>
+								</th>
+								<th class="ui-state-default">
+								<div class="ui-dt-c">
+								<SPAN>Eliminar</SPAN>
+								</div>
+								</th>
+								</tr>
                                                         
-                                                                                                                                                                                                                               <c:forEach items="#{solicitudRegMB.lstAgrupacionSimpleDto}" var="s">
-                                                                                                                                                                                                                                <tr class="ui-widget-content ui-datatable-even">
-															<td><c:forEach items="#{s.lstPoderdantes}" var="n">
-															   <div class="ui-dt-c">
-															     <SPAN>#{n.sDesctipDoi}:#{n.numDoi}/#{n.nombre} #{n.apePat} #{n.apeMat}</SPAN>
-														         </div>
-															     </c:forEach>
-															</td>
-															<td><c:forEach items="#{s.lstApoderdantes}" var="n">
-															   <div class="ui-dt-c">
-															     <SPAN>#{n.sDesctipDoi}:#{n.numDoi}/#{n.nombre} #{n.apePat} #{n.apeMat}</SPAN>
-														         </div>
+                                                                                                                                  <c:forEach items="#{solicitudRegMB.lstAgrupacionSimpleDto}" var="s">
+                                                                                                                                  <tr class="ui-widget-content ui-datatable-even">
+								  <td><c:forEach items="#{s.lstPoderdantes}" var="n">
+								  <div class="ui-dt-c">
+								  <SPAN>#{n.sDesctipDoi}:#{n.numDoi}/#{n.nombre} #{n.apePat} #{n.apeMat}</SPAN>
+							                  </div>
+								  </c:forEach>
+								  </td>
+								  <td><c:forEach items="#{s.lstApoderdantes}" var="n">
+								  <div class="ui-dt-c">
+								  <SPAN>#{n.sDesctipDoi}:#{n.numDoi}/#{n.nombre} #{n.apePat} #{n.apeMat}</SPAN>
+								  </div>
 															     </c:forEach>
 															</td>
 															<td><h:outputText value="#{s.sEstado}"/></td>
@@ -324,7 +314,7 @@ function validaNumero(e, ent, obj, fn) {
 										<fieldset style="width: 105%" class="fielset">
 											<h:outputText title="Documentos por Tipo de Solicitud" value="Documentos por Tipo de Solicitud" />
 											<p:separator styleClass="fielset" />
-											<p:messages id="idMsmSolicitudDocumentos"></p:messages>
+											<p:messages id="idMsmSolicitudDocumentos" ></p:messages>
 											<table border="0">
 												<tbody>
 													<tr>
@@ -442,7 +432,7 @@ function validaNumero(e, ent, obj, fn) {
 												value="Operaciones Bancarias">
 											</h:outputText>
 											<p:separator styleClass="fielset" />
-											<p:messages id="idMsmOperacionBancaria"></p:messages>
+											<p:messages id="idMsmOperacionBancaria" ></p:messages>
 											<table border="0">
 												<tr>
 													<td><h:outputText styleClass="outputText"
