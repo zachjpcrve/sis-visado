@@ -15,10 +15,12 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
+import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.hildebrando.visado.modelo.SolicitudesOficina;
+import com.hildebrando.visado.modelo.SolicitudesTipoServicio;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
@@ -117,6 +119,255 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<SolicitudesTipoServicio> obtenerSolicitudesxTipoServicio(TiivsSolicitud solicitud, String idOpeBan,String cadTipoServ,String cadEstudio,String rangoImpG,
+			Double importeIni,Double importeFin,Date dFechaInicio, Date dFechaFin) throws Exception
+	{	
+		logger.info("***************En el obtenerSolicitudesxTipoServicio*************************");
+		String sql ="";
+		String sCadFecha="";
+		String sWhere=" ";
+		List<SolicitudesTipoServicio> tmpLista = new ArrayList<SolicitudesTipoServicio>();
+		
+		if (solicitud!=null)
+		{
+			if (solicitud.getCodSoli()!="")
+			{
+				if (sWhere.compareTo("")!=0)
+				{
+					sWhere += " and so.cod_soli = '" + solicitud.getCodSoli() + "'";
+				}
+				else
+				{
+					sWhere = "where so.cod_soli = '" + solicitud.getCodSoli() + "'";
+				}
+ 			}
+			
+			if (cadTipoServ.compareTo("")!=0)
+			{
+				if (sWhere.compareTo("")!=0)
+				{
+					sWhere += " and ts.cod_tipo_solic in (" + cadTipoServ + ")";
+				}
+				else
+				{
+					sWhere = "where ts.cod_tipo_solic in (" + cadTipoServ + ")";
+				}
+			}
+			
+			if (idOpeBan.compareTo("")!=0)
+			{
+				
+			}
+			
+			if (rangoImpG.compareTo("")!=0)
+			{
+				if (sWhere.compareTo("")!=0)
+				{
+					if (rangoImpG.equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
+					{
+						logger.info("Filtro por importe: " + rangoImpG);
+						
+						sWhere += " and so.importe <= 50";
+					}
+
+					if (rangoImpG.equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE)) 
+					{
+						logger.debug("Filtro por importe: " + rangoImpG);
+						
+						sWhere += " and so.importe >50 and so.importe<=120";
+					}
+
+					if (rangoImpG.equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA)) 
+					{
+						logger.debug("Filtro por importe: " + rangoImpG);
+						
+						sWhere += " and so.importe >=120 and so.importe<=250";
+					}
+
+					if (rangoImpG.equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA)) 
+					{
+						logger.debug("Filtro por importe: " + rangoImpG);
+						
+						sWhere += " and so.importe >250";
+					}
+				}
+				else
+				{
+					if (rangoImpG.equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
+					{
+						logger.info("Filtro por importe: " + rangoImpG);
+						
+						sWhere = "where so.importe <= 50";
+					}
+
+					if (rangoImpG.equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE)) 
+					{
+						logger.debug("Filtro por importe: " + rangoImpG);
+						
+						sWhere = "where so.importe >50 and so.importe<=120";
+					}
+
+					if (rangoImpG.equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA)) 
+					{
+						logger.debug("Filtro por importe: " + rangoImpG);
+						
+						sWhere = "where so.importe >=120 and so.importe<=250";
+					}
+
+					if (rangoImpG.equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA)) 
+					{
+						logger.debug("Filtro por importe: " + rangoImpG);
+						
+						sWhere = "where so.importe >250";
+					}
+				}
+			}
+			
+			if (importeIni != null && importeFin != null)
+			{
+				if (sWhere.compareTo("")!=0)
+				{
+					sWhere += " and ob.importe between " + importeIni + " and " + importeFin;
+				}
+				else
+				{
+					sWhere = " where ob.importe between " + importeIni + " and " + importeFin;
+				}
+			}
+			
+			if (cadEstudio.compareTo("")!=0)
+			{
+				if (sWhere.compareTo("")!=0)
+				{
+					sWhere += " and so.cod_estudio in (" + cadEstudio + ")";
+				}
+				else
+				{
+					sWhere = " where so.cod_estudio in (" + cadEstudio + ")";
+				}
+			}
+			
+			if (dFechaInicio!=null && dFechaFin!=null)
+			{
+				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
+				
+				String tmpFecIni = formato.format(dFechaInicio);
+				String tmpFecFin = formato.format(dFechaFin);
+				
+				sCadFecha = " and so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+				
+				if (sWhere.compareTo("")!=0)
+				{
+					sWhere += sCadFecha;
+				}
+				else
+				{
+					sWhere = "where so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+				}
+			}
+			
+			if (solicitud.getMoneda()!=null)
+			{
+				if (sWhere.compareTo("")!=0)
+				{
+					sWhere += " and so.moneda = '" + solicitud.getMoneda() + "'";
+				}
+				else
+				{
+					sWhere = " where so.moneda = '" + solicitud.getMoneda() + "'";
+				}
+			}
+						
+			//Aplicando filtros
+			sql = "select distinct so.cod_soli,NVL(es.des_estudio,' ') Estudio, " +
+				  "ts.des_tip_servicio tipo_servicio, op.des_oper_ban tipo_operacion, " +
+				  "case  when mul.valor2 = 'PEN' then 'Soles' " +
+				  "      when  mul.valor2 = 'USD' then 'Dolares' " +
+				  "      when mul.valor2 = 'EUR' then 'Euros' " +
+				  "end Moneda,	NVL(ob.importe,0) Importe, NVL(ob.tipo_cambio,0.0) Tipo_cambio, " +
+				  "NVL((ob.tipo_cambio * ob.importe),0) Importe_Soles " +
+				  "from tiivs_solicitud so " +
+				  "left join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
+				  "left join tiivs_tipo_solicitud ts on so.cod_tipo_solic=ts.cod_tip_solic " +
+				  "left join tiivs_solicitud_operban ob on so.cod_soli = ob.cod_soli " +
+				  "left join tiivs_multitabla mul on so.moneda = mul.cod_elem and mul.cod_mult='T08' " +
+				  "join tiivs_operacion_bancaria op on ob.cod_oper_ban = op.cod_oper_ban " + sWhere + 
+				  " order by so.cod_soli";
+			
+			logger.info("SQL : "+sql);
+			 
+			 final String sSQL=sql;
+			
+			 SolicitudesTipoServicio nuevo;
+			 List ResultList = (ArrayList<SolicitudesTipoServicio>)getHibernateTemplate().execute(new HibernateCallback() 
+			 {
+					public List<Object> doInHibernate(Session session) throws HibernateException 
+					{
+						SQLQuery sq =session.createSQLQuery(sSQL);
+						return sq.list();
+					}
+			 });
+			 
+			 if(ResultList.size()>0)
+			 {
+				logger.info("ResultList.size "+ResultList.size());
+				for(int i=0;i<=ResultList.size()-1;i++)
+				{
+				    Object[] row =  (Object[]) ResultList.get(i);
+				    nuevo = new SolicitudesTipoServicio();
+				    
+				    nuevo.setCodSolicitud(row[0].toString());
+				    nuevo.setEstudio(row[1].toString());
+				    nuevo.setTipoServicio(row[2].toString());
+				    nuevo.setTipoOperacion(row[3].toString());
+				    nuevo.setMoneda(row[4].toString());
+				    
+				    if (row[4].toString().toLowerCase().equals("soles") || row[4].toString().toLowerCase().equals("dolares"))
+				    {
+				    	nuevo.setImporte(buscarAbrevMoneda(row[4].toString()) + row[5].toString());
+				    }
+				    else
+				    {
+				    	nuevo.setImporte(row[5].toString() + buscarAbrevMoneda(row[4].toString()));
+				    }
+				    
+				    nuevo.setTipoCambio(row[6].toString());
+				    nuevo.setImporteSoles(row[7].toString());
+				    
+				    tmpLista.add(nuevo);
+				}
+				
+				logger.info("Tamanio Lista "+tmpLista.size());
+			 }
+			 
+		}
+		
+		return tmpLista;
+	}
+	
+	private String buscarAbrevMoneda(String moneda)
+	{
+		String abrev="";
+		
+		if (moneda.toLowerCase().equals("soles"))
+		{
+			abrev="S/.";
+		}
+		
+		if (moneda.toLowerCase().equals("dolares"))
+		{
+			abrev="$";
+		}
+		
+		if (moneda.toLowerCase().equals("euros"))
+		{
+			abrev="€";
+		}
+		
+		return abrev;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<SolicitudesOficina> obtenerListarTotalSolicitudesxEstado(TiivsSolicitud solicitud, Date dFechaInicio, Date dFechaFin) throws Exception
 	{	
 		logger.info("***************En el obtenerListarTotalSolicitudesxEstado*************************");
@@ -126,6 +377,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		
 		if (solicitud!=null)
 		{
+			//Aplicando filtros
 			String sWhere = "where d.cod_mult='T02'";
 			
 			if (solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer()!=null)
@@ -153,19 +405,19 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				sWhere += sCadFecha;
 			}
 			
-			sql="select distinct c.des_ter,a.cod_ofi,b.des_ofi,NVL(regis.total,0) as Registrado, " + 
-					"NVL(env.total,0) as Enviado, NVL(res.total,0) as Reservado, NVL(acep.total,0) as Aceptado," + 
-					"NVL(verA.total,0) as Verificacion_A, NVL(rechaz.total,0) as Rechazado, " + 
-					"NVL(rev.total,0) as En_Revision,NVL(preEj.total,0) as Pre_Ejecutado," + 
-					"NVL(ej.total,0) as Ejecutado,NVL(proc.total,0) as Procedente," + 
-					"NVL(verB.total,0) as Verificacion_B,NVL(improc.total,0) as Improcedente," + 
-					"NVL(ven.total,0) as Vencido, NVL(revo.total,0) as Revocado, " + 
+			sql="select distinct c.des_ter,a.cod_ofi,b.des_ofi,NVL(regis.total,0) Registrado, " + 
+					"NVL(env.total,0) Enviado, NVL(res.total,0) Reservado, NVL(acep.total,0) Aceptado," + 
+					"NVL(verA.total,0) Verificacion_A, NVL(rechaz.total,0) Rechazado, " + 
+					"NVL(rev.total,0) En_Revision,NVL(preEj.total,0) Pre_Ejecutado," + 
+					"NVL(ej.total,0) Ejecutado,NVL(proc.total,0) Procedente," + 
+					"NVL(verB.total,0) Verificacion_B,NVL(improc.total,0) Improcedente," + 
+					"NVL(ven.total,0) Vencido, NVL(revo.total,0) Revocado, " + 
 					"(NVL(regis.total,0)+NVL(env.total,0)+ NVL(res.total,0) + NVL(acep.total,0)+" + 
 					"NVL(verA.total,0)+ NVL(rechaz.total,0) +" + 
 					"NVL(rev.total,0)+ NVL(preEj.total,0) +" + 
 					"NVL(ej.total,0) + NVL(proc.total,0)+" + 
 					"NVL(verB.total,0) + NVL(improc.total,0)+" + 
-					"NVL(ven.total,0)+ NVL(revo.total,0)) as totalFila " + 
+					"NVL(ven.total,0)+ NVL(revo.total,0)) totalFila " + 
 					"from tiivs_solicitud a " + 
 					"join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"join tiivs_territorio c on b.cod_terr= c.cod_ter " + 
