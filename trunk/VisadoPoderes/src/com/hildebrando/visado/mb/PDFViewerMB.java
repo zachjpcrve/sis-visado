@@ -727,6 +727,7 @@ public class PDFViewerMB {
 		boolean iRet = true; 
 		
 		
+		int iResultCargaParametros = 0;
 		if (lstParametros!=null) 
 		{
 			logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
@@ -742,6 +743,7 @@ public class PDFViewerMB {
 				loginServer=tmp.getLoginServer();
 				passServer=tmp.getPassServer();	
 				carpetaRemota=tmp.getCarpetaRemota();
+				iResultCargaParametros = 1;
 			}
 		}		
 		
@@ -755,22 +757,29 @@ public class PDFViewerMB {
 		logger.debug("Carpeta Remota: " + carpetaRemota);
 		
 		
-		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
-		try {
-			cliente.setDirectorio(carpetaRemota);
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		if(iResultCargaParametros == 0){
+			logger.debug("No se ha logrado cargar los parámetros de conexión al FTP");
+			iRet = false;
+		} else {			
+			ClienteFTP cliente = null;
+			try {
+				cliente = new ClienteFTP(server, loginServer, passServer);
+				cliente.setDirectorio(carpetaRemota);
+			} catch (IOException e1) {
+				logger.error("Error al instanciar clienteFTP ",e1);			
+			}
+			
+			if (cliente!=null)
+			{			
+				iRet = cliente.downloadFile(ubicacionLocal,aliasArchivo);						
+			}
+			
 		}
-		
-		if (cliente!=null)
-		{
-			
-			iRet = cliente.downloadFile(ubicacionLocal,aliasArchivo);
-			
-			
-		}
-		
+
 		return iRet;
 		
 	}
+	
+	
+	
 }
