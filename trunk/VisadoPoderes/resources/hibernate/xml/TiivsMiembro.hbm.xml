@@ -8,7 +8,7 @@
             <column name="COD_MIEMBRO" length="7" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="tiivsGrupo" class="com.hildebrando.visado.modelo.TiivsGrupo" fetch="select">
+        <many-to-one name="tiivsGrupo" class="com.hildebrando.visado.modelo.TiivsGrupo" fetch="select" lazy="false">
             <column name="COD_GRUPO" length="7" />
         </many-to-one>
         <property name="descripcion" type="string">
@@ -19,6 +19,9 @@
         </property>
         <property name="estudio" type="string">
             <column name="ESTUDIO" length="7" />
+        </property>
+              <property name="activo" type="string">
+            <column name="ACTIVO" length="1" />
         </property>
         <set name="tiivsMiembroNivels" table="TIIVS_MIEMBRO_NIVEL" inverse="true" lazy="true" fetch="select">
             <key>
