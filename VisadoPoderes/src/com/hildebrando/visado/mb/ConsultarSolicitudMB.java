@@ -169,11 +169,14 @@ public class ConsultarSolicitudMB {
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 
-		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)
-				&& this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
-			setbMostrarComentario(false);
-			setbSeccionEvaluarNivel(false);
-			setbSeccionDocumentos(false);
+		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
+			if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)){
+				setbMostrarComentario(false);
+				setbSeccionEvaluarNivel(false);
+				setbSeccionDocumentos(false);
+			} else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
+				setbSeccionDocumentos(true);
+			}			
 		}
 
 		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
@@ -1101,6 +1104,10 @@ public class ConsultarSolicitudMB {
 			this.registrarHistorial(solicitudRegistrarT);
 			this.obtenerHistorialSolicitud();
 			this.seguimientoMB.busquedaSolicitudes();
+			
+			if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
+				this.setbMostrarCartaAtencion(false);
+			}
 		}
 	}
 
@@ -1264,10 +1271,7 @@ public class ConsultarSolicitudMB {
 					bSaved = true;
 
 				} catch (IOException e) {
-					logger.debug("Error al descargar archivo: "
-							+ a.getAliasArchivo());
-					logger.debug(e.toString());
-					e.printStackTrace();
+					logger.error("Error al descargar archivo: " + a.getAliasArchivo() , e);					
 					bSaved = false;
 				} finally {
 					fichTemp.deleteOnExit(); // Delete the file when the
@@ -1279,8 +1283,7 @@ public class ConsultarSolicitudMB {
 					try {
 						anexoDAO.modificar(a);
 					} catch (Exception ex) {
-						logger.debug("No se actualizará el anexo "
-								+ ex.getMessage());
+						logger.error("No se actualizará el anexo ",ex);
 					}
 					iRet = iRet && true;
 				} else {
