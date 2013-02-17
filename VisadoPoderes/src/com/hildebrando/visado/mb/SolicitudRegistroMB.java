@@ -1536,7 +1536,7 @@ public class SolicitudRegistroMB {
 				  eliminarArchivosTemporales();
 				  
 				  for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
-					  logger.info("nnnnnnnnnnnnnnnnnnnnnnn "+n.getAliasArchivo());
+					  
 					  serviceAnexos.insertar(n);
 				   }
 				 
