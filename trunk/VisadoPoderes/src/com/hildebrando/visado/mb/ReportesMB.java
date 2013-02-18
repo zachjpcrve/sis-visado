@@ -50,6 +50,7 @@ import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.SolicitudesTipoServicio;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
+import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
@@ -374,6 +375,56 @@ public class ReportesMB
 			setIdOfi1(lstTmp.get(0).getCodOfi());
 			setIdTerr(lstTmp.get(0).getTiivsTerritorio().getCodTer());
 		}
+	}
+	
+	public String buscarNomOficinaPorCodigo(String codigo) 
+	{
+		String resultado="";
+		logger.debug("Buscando oficina por codigo: " + codigo);
+		
+		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
+		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,codigo));
+
+		List<TiivsOficina1> lstTmp = new ArrayList<TiivsOficina1>();
+
+		try {
+			lstTmp = ofiDAO.buscarDinamico(filtroOfic);
+		} catch (Exception exp) {
+			logger.debug("No se pudo encontrar el nombre de la oficina");
+		}
+		
+		if (lstTmp.size() ==1) 
+		{
+			resultado=lstTmp.get(0).getDesOfi();
+		}
+		
+		return resultado;
+	}
+	
+	public String buscarNomTerrPorCodigo(String codigo) 
+	{
+		String resultado="";
+		logger.debug("Buscando oficina por codigo: " + codigo);
+		
+		GenericDao<TiivsTerritorio, Object> tDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroT = Busqueda.forClass(TiivsTerritorio.class);
+		filtroT.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_TERRITORIO,codigo));
+
+		List<TiivsTerritorio> lstTmp = new ArrayList<TiivsTerritorio>();
+
+		try {
+			lstTmp = tDAO.buscarDinamico(filtroT);
+		} catch (Exception exp) {
+			logger.error("No se pudo encontrar el nombre del territorio",exp);
+		}
+		
+		if (lstTmp.size() ==1) 
+		{
+			resultado=lstTmp.get(0).getDesTer();
+		}
+		
+		return resultado;
 	}
 	
 	public void buscarOficinaPorNombre() 
@@ -1116,9 +1167,33 @@ public class ReportesMB
 			}
 						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error al exportar datos a excel del Rpt SolicitudTipoServ",e);
 			//logger.info("Error al generar el archivo excel debido a: " + e.getStackTrace());
 		}	
+	}
+	
+	public String buscarEstudioxAbogado()
+	{
+		String codEstudio ="";
+		GenericDao<TiivsMiembro, Object> mDAO = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroM = Busqueda.forClass(TiivsMiembro.class);
+		filtroM.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_MIEMBRO, usuario.getUID()));
+		List<TiivsMiembro> result = new ArrayList<TiivsMiembro>();
+		
+		try {
+			result = mDAO.buscarDinamico(filtroM);
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.debug("Error el estudio asociado al abogado");
+		}
+		
+		if (result!=null)
+		{
+			codEstudio = result.get(0).getEstudio();
+		}
+		
+		return codEstudio;
 	}
 	
 	private void rptRecaudacion() 
@@ -1155,7 +1230,7 @@ public class ReportesMB
 			
 			if (getIdTerr()!=null)
 			{
-				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getIdTerr(), true, false,true,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarNomTerrPorCodigo(getIdTerr()), true, false,true,HSSFColor.DARK_BLUE.index);
 			}
 			else
 			{
@@ -1178,7 +1253,7 @@ public class ReportesMB
 			Utilitarios.crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_OFICINA, false, false,false,HSSFColor.DARK_BLUE.index);
 			if (getIdOfi1().compareTo("")!=0)
 			{
-				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getIdOfi1(), true, false,true,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarNomOficinaPorCodigo(getIdOfi1()), true, false,true,HSSFColor.DARK_BLUE.index);
 			}
 			else
 			{
@@ -1320,7 +1395,7 @@ public class ReportesMB
 			}
 						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error al exportar datos a excel del Rpt Recaudacion",e);
 			//logger.info("Error al generar el archivo excel debido a: " + e.getStackTrace());
 		}	
 	}
@@ -1359,7 +1434,7 @@ public class ReportesMB
 			
 			if (getIdTerr()!=null)
 			{
-				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getIdTerr(), true, false,true,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarNomTerrPorCodigo(getIdTerr()), true, false,true,HSSFColor.DARK_BLUE.index);
 			}
 			else
 			{
@@ -1382,7 +1457,7 @@ public class ReportesMB
 			Utilitarios.crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_OFICINA, false, false,false,HSSFColor.DARK_BLUE.index);
 			if (getIdOfi1().compareTo("")!=0)
 			{
-				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, getIdOfi1(), true, false,true,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, buscarNomOficinaPorCodigo(getIdOfi1()), true, false,true,HSSFColor.DARK_BLUE.index);
 			}
 			else
 			{
@@ -1555,7 +1630,7 @@ public class ReportesMB
 			}
 						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error al exportar datos a excel del Rpt Estado de Solicitud",e);
 			//logger.info("Error al generar el archivo excel debido a: " + e.getStackTrace());
 		}	
 	}
@@ -1988,7 +2063,7 @@ public class ReportesMB
 			}
 						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error al exportar datos a excel del Rpt Extractor",e);
 			//logger.info("Error al generar el archivo excel debido a: " + e.getStackTrace());
 		}	
 	}

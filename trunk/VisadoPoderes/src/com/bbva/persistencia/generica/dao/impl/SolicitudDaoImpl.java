@@ -465,7 +465,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			}
 			
 			//Filtros de estados a buscar por RN054 del Doc Funcional
-			if (sWhere.compareTo("")!=0)
+			/*if (sWhere.compareTo("")!=0)
 			{
 				sWhere += " and so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
 											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
@@ -477,7 +477,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				sWhere = " where so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "')" ;
-			}
+			}*/
 			
 			sql="select distinct terr.des_ter, so.cod_ofi, ofi.des_ofi, NVL(PN.cont,0) Persona_Natural, " +
 				"NVL((PN.cont*PN.valor2),0) Recaudacion, NVL(PJ.cont,0) Persona_Juridica,NVL((PJ.cont*PJ.valor2),0) Recaudacion, " +
@@ -515,7 +515,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			 
 			 final String sSQL=sql;
 			
-			 RecaudacionTipoServ nuevo;
+			 RecaudacionTipoServ objRecaudacion;
 			 List ResultList = (ArrayList<RecaudacionTipoServ>)getHibernateTemplate().execute(new HibernateCallback() 
 			 {
 					public List<Object> doInHibernate(Session session) throws HibernateException 
@@ -531,22 +531,22 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				for(int i=0;i<=ResultList.size()-1;i++)
 				{
 				    Object[] row =  (Object[]) ResultList.get(i);
-				    nuevo = new RecaudacionTipoServ();
+				    objRecaudacion = new RecaudacionTipoServ();
 				    
-				    nuevo.setTerritorio(row[0].toString());
-				    nuevo.setCodOficina(row[1].toString());
-				    nuevo.setOficina(row[2].toString());
-				    nuevo.setiContPersonasNaturales(Integer.valueOf(row[3].toString()));
-				    nuevo.setsTotalPersonasNat(Double.valueOf(row[4].toString()));
-				    nuevo.setiContPersonasJuridicas(Integer.valueOf(row[5].toString()));
-				    nuevo.setsTotalPersonasJurd(Double.valueOf(row[6].toString()));
-				    nuevo.setiContPersonasFallecX(Integer.valueOf(row[7].toString()));
-				    nuevo.setsTotalPersonasFallecX(Double.valueOf(row[8].toString()));
-				    nuevo.setiContPersonasFallecX1(Integer.valueOf(row[9].toString()));
-				    nuevo.setsTotalPersonasFallecX1(Double.valueOf(row[10].toString()));
-				    nuevo.setsRecaudacionTotal(Double.valueOf(row[11].toString()));
+				    objRecaudacion.setTerritorio(row[0].toString());
+				    objRecaudacion.setCodOficina(row[1].toString());
+				    objRecaudacion.setOficina(row[2].toString());
+				    objRecaudacion.setiContPersonasNaturales(Integer.valueOf(row[3].toString()));
+				    objRecaudacion.setsTotalPersonasNat(Double.valueOf(row[4].toString()));
+				    objRecaudacion.setiContPersonasJuridicas(Integer.valueOf(row[5].toString()));
+				    objRecaudacion.setsTotalPersonasJurd(Double.valueOf(row[6].toString()));
+				    objRecaudacion.setiContPersonasFallecX(Integer.valueOf(row[7].toString()));
+				    objRecaudacion.setsTotalPersonasFallecX(Double.valueOf(row[8].toString()));
+				    objRecaudacion.setiContPersonasFallecX1(Integer.valueOf(row[9].toString()));
+				    objRecaudacion.setsTotalPersonasFallecX1(Double.valueOf(row[10].toString()));
+				    objRecaudacion.setsRecaudacionTotal(Double.valueOf(row[11].toString()));
 				    
-					tmpLista.add(nuevo);
+					tmpLista.add(objRecaudacion);
 				}
 		     }
 		}
