@@ -26,6 +26,7 @@ public class AbogadoMB {
 	public static Logger logger = Logger.getLogger(AbogadoMB.class);
 
 	private TiivsMiembro abogado = new TiivsMiembro();
+	private TiivsMiembro abogadoEliminar = new TiivsMiembro();
 	private List<TiivsEstudio> estudios = new ArrayList<TiivsEstudio>();
 	private List<TiivsEstudio> estudiosFiltro = new ArrayList<TiivsEstudio>();
 	private TiivsEstudio estudioFiltro = new TiivsEstudio();
@@ -39,6 +40,7 @@ public class AbogadoMB {
 	private boolean mostrarComboEstudio;
 	private boolean mostrarComboEstudioGuardar;
 	private boolean editarAbogado;
+	private boolean mostrarCodigoEditar;
 	
 	public AbogadoMB() {
 		abogadoService = new AbogadoService();
@@ -46,9 +48,12 @@ public class AbogadoMB {
 		grupoFiltro = new TiivsGrupo();
 		estudioFiltro = new TiivsEstudio();
 		abogado.setTiivsGrupo(grupoFiltro);
+		abogadoEliminar= new TiivsMiembro();
+		abogadoEliminar.setTiivsGrupo(grupoFiltro);
 		mostrarComboEstudio = false;
 		mostrarComboEstudioGuardar = false;
 		editarAbogado = false;
+		mostrarCodigoEditar = false;
 		listarEstudios();
 		listarCriterios();
 		listarGrupos();
@@ -59,13 +64,42 @@ public class AbogadoMB {
 
 	public void registrar(){
 		logger.info("AbogadoMB : registrar");
+		
+		String contador ="";
+		abogado.setActivo("1");
+		if(abogado.getEstudio()== null || abogado.getEstudio().equals("-1")){		
+			abogado.setEstudio("");
+		}
 		try{
-			abogadoService.registrar(abogado);
-			Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
+		if(abogado.getCodMiembro().isEmpty()==false){
+			if(abogado.getDescripcion().isEmpty()==false){
+				if(isEditarAbogado()==true){
+					abogadoService.registrar(abogado);
+					Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
+				}else{
+					contador = abogadoService.validarCodigo(abogado);
+					if(contador.equals("0")){
+						abogadoService.registrar(abogado);
+						Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
+					}else{
+						Utilitarios.mensajeError("ERROR", "El codigo ya ha sido registrado");
+					}
+				}
+			}else{
+				Utilitarios.mensajeError("ERROR", "La descripcion es obligatoria");
+			}
+		}else{
+			Utilitarios.mensajeError("ERROR", "El codigo es obligatorio");
+		}
+		
+			
+			
 			abogado = new TiivsMiembro();
 			grupoFiltro = new TiivsGrupo();
 			abogado.setTiivsGrupo(grupoFiltro);
 			mostrarComboEstudioGuardar = false;
+			mostrarCodigoEditar = false;
+			editarAbogado=false;
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.error("AbogadoMB : registrar : "
@@ -74,6 +108,7 @@ public class AbogadoMB {
 		}
 		
 	}
+	
 	private void cargarCombosFiltro() {
 		logger.info("AbogadoMB : cargarCombosFiltro");
 		comboGrupos();
@@ -142,6 +177,7 @@ public class AbogadoMB {
 			}
 			
 			editarAbogado = true;
+			mostrarCodigoEditar = true;
 			if(abogado.getTiivsGrupo().getCodGrupo().equals("0000002")){
 				mostrarComboEstudioGuardar = true;
 			}else{
@@ -209,6 +245,37 @@ public class AbogadoMB {
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.error("OficinaMB : listarOficinasCombo : " + e.getLocalizedMessage());
+		}
+	}
+	
+	public void eliminarAbogado(){
+		logger.info("OficinaMB: eliminarAbogado");
+		Map<String, String> params = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap();
+		String codAbogado;
+		codAbogado = params.get("codAbogado");
+		try {
+			abogadoEditar = abogadoService.editarAbogado(codAbogado);
+			for (int i = 0; i < abogadoEditar.size(); i++) {
+				abogadoEliminar.setCodMiembro(abogadoEditar.get(i).getCodMiembro());
+				abogadoEliminar.setDescripcion(abogadoEditar.get(i).getDescripcion());
+				abogadoEliminar.setTiivsGrupo(abogadoEditar.get(i).getTiivsGrupo());
+				abogadoEliminar.setCriterio(abogadoEditar.get(i).getCriterio());
+				abogadoEliminar.setEstudio(abogadoEditar.get(i).getEstudio());
+				abogadoEliminar.setTiivsMiembroNivels(abogadoEditar.get(i).getTiivsMiembroNivels());
+				abogadoEliminar.setActivo("0");
+			}
+			
+			abogadoService.eliminarAbogado(abogadoEliminar);
+			Utilitarios.mensajeInfo("NIVEL", "Se elimino correctamente");
+			editarAbogado = false;
+			mostrarCodigoEditar = false;
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("DocumentoMB : eliminarAbogado: "
+					+ ex.getLocalizedMessage());
+			Utilitarios.mensajeError("ERROR", "No se pudo eliminar el registro");
 		}
 	}
 	//
@@ -315,6 +382,21 @@ public class AbogadoMB {
 	public void setEditarAbogado(boolean editarAbogado) {
 		this.editarAbogado = editarAbogado;
 	}
-	
+
+	public boolean isMostrarCodigoEditar() {
+		return mostrarCodigoEditar;
+	}
+
+	public void setMostrarCodigoEditar(boolean mostrarCodigoEditar) {
+		this.mostrarCodigoEditar = mostrarCodigoEditar;
+	}
+
+	public TiivsMiembro getAbogadoEliminar() {
+		return abogadoEliminar;
+	}
+
+	public void setAbogadoEliminar(TiivsMiembro abogadoEliminar) {
+		this.abogadoEliminar = abogadoEliminar;
+	}
 	
 }
