@@ -297,8 +297,7 @@ public class ConstantesVisado {
 	
 	///****************************Constantes para Reporte de Recaudacion x Tipo Comision********************************
 	
-		public static final String TITULO_REPORTE_RPT_RECAUDACION="RECAUDACION POR TIPO DE COMISION";
-		
+		public static final String TITULO_REPORTE_RPT_RECAUDACION="RECAUDACION POR TIPO DE COMISION";		
 		
 		static public class COLUMNAS_RPT_RECAUDACION{
 			public static final String COLUMNA_TERRITORIO = "Territorio";
