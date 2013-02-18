@@ -169,27 +169,23 @@ public class ConsultarSolicitudMB {
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 
-		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
-			if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)){
-				setbMostrarComentario(false);
-				setbSeccionEvaluarNivel(false);
-				setbSeccionDocumentos(false);
-			} else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
-				setbSeccionDocumentos(true);
-			}			
+		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)
+				&& this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
+			setbMostrarComentario(false);
+			setbSeccionEvaluarNivel(false);
+			setbSeccionDocumentos(false);
 		}
 
-		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) { //Confirmar que los delegados|responsables solo pertenecen a SSJJ
+		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 			String sEstado = solicitudRegistrarT.getEstado().trim();
 			if (sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02) || 
 					sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)) {
 				evaluacionNivelesMB = new EvaluacionNivelesMB(solicitudRegistrarT);
 				TiivsSolicitudNivel solNivel = evaluacionNivelesMB.obtenerNivelSolicitud();
-//				boolean esUsuario =  evaluacionNivelesMB.usuarioTienePermiso(this.usuario.getUID());
 				if (solNivel != null) {
 					this.sNivelSolicitud = solNivel.getCodNiv();
-					setbSeccionEvaluarNivel(true);
-				}												
+				}
+				setbSeccionEvaluarNivel(true);								
 			}
 			setbSeccionDocumentos(true);
 		}
@@ -594,7 +590,6 @@ public class ConsultarSolicitudMB {
 			   lstPersonas=new ArrayList<TiivsPersona>();
 			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) 
 			   {
-				    logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
 				    objPersona=new TiivsPersona();
 				    objPersona=d.getTiivsPersona();
 				    objPersona.setTipPartic(d.getTipPartic());
@@ -636,7 +631,7 @@ public class ConsultarSolicitudMB {
 			// Listar ComboDictamen
 			listarComboDictamen();
 		} catch (Exception e) {
-			logger.error("Obtener datos de solicitud: ",e);
+			e.printStackTrace();
 		}
 	}
 	
@@ -883,82 +878,49 @@ public class ConsultarSolicitudMB {
 				if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) 
 				{
 					// Llamada a los Niveles
+
 					this.agregarNiveles(solicitudRegistrarT);
-					this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
+					this.bSeccionDictaminar = false;
+					this.solicitudRegistrarT = serviceS
+							.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
+
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
+
 					this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
 					solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
-					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");					
+					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
+
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
 
 					this.agregarNiveles(solicitudRegistrarT);
+					this.bSeccionDictaminar = false;
 					this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
+
 					this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
 					solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
+
 				}
-				
-				//-17-02-13: Refrescar controles - INICIO
-				if (this.PERFIL_USUARIO.trim().equals(ConstantesVisado.ABOGADO)){
-					if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
-						this.bSeccionDictaminar = false;
-						this.bSeccionComentario = false;						
-					} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
-						this.bSeccionDictaminar = false;
+				if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
+					bSeccionCartaAtencion = true;
+					bSeccionComentario = false;
+				} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
+					if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 						this.bMostrarCartaRechazo = true;
-						this.bSeccionComentario = false;
-						
-					} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
-						this.bSeccionDictaminar = false;
-					} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)) {
-						this.bSeccionComentario = false;
-						this.bSeccionDictaminar = false;						
-					}
-				}
-				if (this.PERFIL_USUARIO.trim().equals(ConstantesVisado.SSJJ)){
-					if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
-						this.bSeccionDictaminar = false;
-						this.bMostrarCartaAtencion = true;
-						this.bSeccionComentario = false;						
-					} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
-						this.bSeccionDictaminar = false;
-						this.bMostrarCartaRechazo = true;
-						this.bSeccionComentario = true;
-						this.bSeccionAccion = true;						
-					} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
-						this.bSeccionDictaminar = false;
 						this.bMostrarCartaRevision = true;
 						this.bMostrarCartaAtencion = true;
 						this.bSeccionComentario = false;
-					} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)) {
-						this.bSeccionComentario = false;
-						this.bSeccionDictaminar = false;
-						//pendinte en caso de niveles
 					}
-					
 				}
-				//--FIN
-				
-//				if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
-//					bSeccionCartaAtencion = true;
-//					bSeccionComentario = false;
-//				} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
-//					if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
-//						this.bMostrarCartaRechazo = true;
-//						this.bMostrarCartaRevision = true;
-//						this.bMostrarCartaAtencion = true;
-//						this.bSeccionComentario = false;
-//					}
-//				}
 
 				this.obtenerHistorialSolicitud();
 
@@ -1070,7 +1032,8 @@ public class ConsultarSolicitudMB {
 				soliNivel.setCodNiv(codNivel);
 				soliNivel.setEstadoSolicitud(solicitud.getEstado());
 				soliNivel.setTiivsSolicitud(solicitud);
-//				soliNivel.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
+				soliNivel
+						.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
 				soliNivel.setUsuarioRegistro(usuario.getUID());
 				soliNivel.setFechaRegistro(new Timestamp(Calendar.DATE));
 				serviceSolicitud.insertar(soliNivel);
@@ -1137,10 +1100,6 @@ public class ConsultarSolicitudMB {
 			this.registrarHistorial(solicitudRegistrarT);
 			this.obtenerHistorialSolicitud();
 			this.seguimientoMB.busquedaSolicitudes();
-			
-			if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
-				this.setbMostrarCartaAtencion(false);
-			}
 		}
 	}
 
@@ -1304,7 +1263,10 @@ public class ConsultarSolicitudMB {
 					bSaved = true;
 
 				} catch (IOException e) {
-					logger.error("Error al descargar archivo: " + a.getAliasArchivo() , e);					
+					logger.debug("Error al descargar archivo: "
+							+ a.getAliasArchivo());
+					logger.debug(e.toString());
+					e.printStackTrace();
 					bSaved = false;
 				} finally {
 					fichTemp.deleteOnExit(); // Delete the file when the
@@ -1316,7 +1278,8 @@ public class ConsultarSolicitudMB {
 					try {
 						anexoDAO.modificar(a);
 					} catch (Exception ex) {
-						logger.error("No se actualizará el anexo ",ex);
+						logger.debug("No se actualizará el anexo "
+								+ ex.getMessage());
 					}
 					iRet = iRet && true;
 				} else {
@@ -1344,7 +1307,8 @@ public class ConsultarSolicitudMB {
 		try {
 			lstTiivsDocumentos = documentoDAO.buscarDinamico(filtroDocumento);
 		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de territorios",e);
+			e.printStackTrace();
+			logger.debug("Error al cargar el listado de territorios");
 		}
 
 	}
@@ -1573,12 +1537,6 @@ public class ConsultarSolicitudMB {
 		
 		try {
 			logger.info("this.solicitudRegistrarT.importe : " + this.solicitudRegistrarT.getMoneda());
-			
-			if (this.solicitudRegistrarT.getMoneda() == null) 
-			{
-				this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
-			}
-			
 			this.solicitudRegistrarT.setFecha(new Date());
 			this.solicitudRegistrarT.setEstado(this.solicitudRegistrarT.getEstado().trim());
 
@@ -1606,64 +1564,40 @@ public class ConsultarSolicitudMB {
 					actualizarBandeja=true;
 				}
 				
+		
+				
+				// CESARRRRRRRRRRRRRRRRR
 				Set<TiivsSolicitudAgrupacion> listaTMP = this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
+				logger.info("listaTMP listaTMP "+listaTMP.size());
 				//solicitudRegistrarT.setTiivsSolicitudAgrupacions(new HashSet<TiivsSolicitudAgrupacion>());
-				TiivsSolicitud objResultado = service.save(this.solicitudRegistrarT);
-				/*  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+				TiivsSolicitud objResultado = service.modificar(this.solicitudRegistrarT);
+				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
-					  logger.info("b.getTiivsPersona() " +b.getId().getCodPer());
-					     //b.setId
 					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
 					   logger.info("ccdcdcd : "+objPersonaRetorno.getCodPer());
 					     b.setTiivsPersona(null);
-					     objAgruId=b.getId();
-					     objAgruId.setCodPer(objPersonaRetorno.getCodPer());
-					     b.setId(objAgruId);
-					     serviceAgru.insertar(b);
+					     b.setCodPer(objPersonaRetorno.getCodPer());
+					     
+					     if (existeAgrupacionPersona(b))
+							{
+								serviceAgru.modificar(b);
+							}
+							else
+							{
+								serviceAgru.insertar(b);
+							}
 					     } 
 				  
-				  }*/
+				  }
 
 				
 
 				solicitudRegistrarT.setTiivsEstudio(null);
-				//TiivsSolicitud objResultado = service.insertarMerge(this.solicitudRegistrarT);
 				
-				for (TiivsSolicitudAgrupacion x : listaTMP) 
-				{
-					for (TiivsAgrupacionPersona b : x.getTiivsAgrupacionPersonas()) 
-					{
-						logger.info("b.getTiivsPersona() " + b.getCodPer() +" b.getNumGrupo() " +b.getNumGrupo());
-						// b.setId
-						objPersonaRetorno = servicePers.insertarMerge(b.getTiivsPersona());
-						logger.info("ccdcdcd : " + objPersonaRetorno.getCodPer());
-						b.setTiivsPersona(null);
-						objAgruPer.setClasifPer(b.getClasifPer());
-						objAgruPer.setCodSoli(b.getCodSoli());
-						objAgruPer.setNumGrupo(b.getNumGrupo());
-						objAgruPer.setTipPartic(b.getTipPartic());
-						objAgruPer.setCodPer(objPersonaRetorno.getCodPer());
-						//b.setId(objAgruId);
-						
-						//serviceAgru.insertarMerge(b);
-						System.out.println("objAgruPer ****************** "+objAgruPer.getClasifPer());
-						System.out.println("objAgruPer ****************** "+objAgruPer.getTipPartic());
-						System.out.println("objAgruPer ****************** "+objAgruPer.getCodSoli());
-						System.out.println("objAgruPer ****************** "+objAgruPer.getCodPer());
-						System.out.println("objAgruPer ****************** "+objAgruPer.getIdAgrupacion());
-						System.out.println("objAgruPer ****************** "+objAgruPer.getNumGrupo());
-						
-						if (existeAgrupacionPersona(objAgruPer))
-						{
-							serviceAgru.modificar(objAgruPer);
-						}
-						else
-						{
-							serviceAgru.insertar(objAgruPer);
-						}
-					}
-				}
-
+			
+				  
+				  
+				  
 				// Carga ficheros al FTP
 				boolean bRet = cargarArchivosFTP();
 				logger.info("Resultado de carga de archivos al FTP:" + bRet);
@@ -1714,6 +1648,8 @@ public class ConsultarSolicitudMB {
 				// instanciarSolicitudRegistro();
 			}
 		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage());
+			Utilitarios.mensajeError("ERROR", "Ocurrio un Error al grabar la Solicitud");
 			e.printStackTrace();
 
 		}
@@ -1924,7 +1860,7 @@ public class ConsultarSolicitudMB {
 					}
 					 
 				} 
-				
+				logger.info("tamanioo lstAgrupacionSimpleDto: " +lstAgrupacionSimpleDto.size());
 			  }
 		  
 		  
@@ -2530,6 +2466,30 @@ public class ConsultarSolicitudMB {
 		logger.info("**************************** eliminarPersona ****************************");
 		logger.info(objTiivsPersonaCapturado.getCodPer());
 		lstTiivsPersona.remove(objTiivsPersonaCapturado);
+	//	lstTiivsAgrupacionPersonas.remove(objTiivsPersonaCapturado.get)
+	/*	Set lstTempAgrupacion=null;
+		 for (TiivsPersona objTiivsPersonaResultado : lstTiivsPersona) {
+			 
+			  logger.info("objTiivsPersonaResultado.getCodPer() : "+objTiivsPersonaResultado.getCodPer());
+			  TiivsAgrupacionPersona  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersona();
+			  tiivsAgrupacionPersonaId.setNumGrupo(numGrupoUpdatePoderdanteApoderado);
+			  tiivsAgrupacionPersonaId.setCodSoli(solicitudRegistrarT.getCodSoli());
+			  tiivsAgrupacionPersonaId.setCodPer(objTiivsPersonaResultado.getCodPer());
+			  tiivsAgrupacionPersonaId.setClasifPer(objTiivsPersonaResultado.getClasifPer());
+			  tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado.getTipPartic());
+			  tiivsAgrupacionPersonaId.setTiivsPersona(objTiivsPersonaResultado);
+			  lstTempAgrupacion=new HashSet<TiivsAgrupacionPersona>();
+			  for (TiivsAgrupacionPersona  x : lstTiivsAgrupacionPersonas) {
+				  if(!x.equals(tiivsAgrupacionPersonaId)){
+					  System.out.println("fff");
+					  lstTempAgrupacion.remove(tiivsAgrupacionPersonaId);}
+			}
+		}  
+		  
+		  lstTiivsAgrupacionPersonas.addAll(lstTempAgrupacion);*/
+		  
+		
+		
 		objTiivsPersonaCapturado = new TiivsPersona();
 		this.flagUpdatePersona = false;
 	}
