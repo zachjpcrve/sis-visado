@@ -16,6 +16,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.ValueChangeEvent;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -115,6 +116,8 @@ public class ReportesMB
 		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		lstSolicitudesOficina = new ArrayList<SolicitudesOficina>();
 		lstRecaudacionTipoServ = new ArrayList<RecaudacionTipoServ>();
+		
+		inicializarCampos();
 			
 		generarNombreArchivoExtractor();
 		generarNombreArchivoEstadoSolicitud();
@@ -130,6 +133,21 @@ public class ReportesMB
 		{
 			setNoHabilitarExportar(true);
 		}
+	}
+	
+	public void inicializarCampos()
+	{
+		setIdOfi1("");
+		setIdOfi1("");
+		setIdTerr("");
+		setFechaInicio(null);
+		setFechaFin(null);
+		setCodSolicitud("");
+		setIdOpeBan("");
+		setIdImporte("");
+		setIdMoneda("");
+		setImporteIni(0.0);
+		setImporteFin(0.0);	
 	}
 	
 	private void setearTextoTotalResultados(String cadena, int total) {
@@ -277,6 +295,106 @@ public class ReportesMB
 		else
 		{
 			setNoHabilitarExportar(true);
+		}
+	}
+	
+	public void buscarOficinaPorTerritorio() 
+	{
+		if (getIdTerr() != null) 
+		{
+			logger.debug("Buscando oficina por territorio: " + getIdTerr());
+			
+			GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
+			filtroOfic.createAlias(ConstantesVisado.NOM_TBL_TERRITORIO,	ConstantesVisado.ALIAS_TBL_TERRITORIO);
+			filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_TERR_ALIAS, getIdTerr()));
+
+			List<TiivsOficina1> lstTmp = new ArrayList<TiivsOficina1>();
+
+			try {
+				lstTmp = ofiDAO.buscarDinamico(filtroOfic);
+				combosMB.setLstOficina(ofiDAO.buscarDinamico(filtroOfic));
+				combosMB.setLstOficina1(ofiDAO.buscarDinamico(filtroOfic));
+
+			} catch (Exception exp) {
+				logger.debug("No se pudo encontrar la oficina");
+			}
+			
+			if (lstTmp.size()>0)
+			{
+				setIdOfi(lstTmp.get(0).getCodOfi());
+				setIdOfi1(lstTmp.get(0).getCodOfi());
+			}
+			
+		} 
+		else 
+		{
+			// Carga combo de Territorio
+			GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroTerr = Busqueda.forClass(TiivsTerritorio.class);
+
+			try {
+				combosMB.setLstTerritorio(terrDAO.buscarDinamico(filtroTerr));
+			} catch (Exception e1) {
+				logger.debug("Error al cargar el listado de territorios");
+			}
+
+			// Cargar combos de oficina
+			GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
+
+			try {
+				combosMB.setLstOficina(ofiDAO.buscarDinamico(filtroOfic));
+				combosMB.setLstOficina1(ofiDAO.buscarDinamico(filtroOfic));
+
+			} catch (Exception exp) {
+				logger.debug("No se pudo encontrar la oficina");
+			}
+		}
+	}
+	
+	public void buscarOficinaPorCodigo() 
+	{
+		logger.debug("Buscando oficina por codigo: " + getIdOfi());
+		
+		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
+		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,getIdOfi()));
+
+		List<TiivsOficina1> lstTmp = new ArrayList<TiivsOficina1>();
+
+		try {
+			lstTmp = ofiDAO.buscarDinamico(filtroOfic);
+		} catch (Exception exp) {
+			logger.debug("No se pudo encontrar el nombre de la oficina");
+		}
+		
+		if (lstTmp.size() > 0) 
+		{
+			setIdOfi1(lstTmp.get(0).getCodOfi());
+			setIdTerr(lstTmp.get(0).getTiivsTerritorio().getCodTer());
+		}
+	}
+	
+	public void buscarOficinaPorNombre() 
+	{
+		logger.debug("Buscando oficina por nombre: " + getIdOfi1());
+		
+		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
+		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,getIdOfi1()));
+
+		List<TiivsOficina1> lstTmp = new ArrayList<TiivsOficina1>();
+
+		try {
+			lstTmp = ofiDAO.buscarDinamico(filtroOfic);
+		} catch (Exception exp) {
+			logger.debug("No se pudo encontrar el codigo de la oficina");
+		}
+
+		if (lstTmp.size() == 1) {
+			setIdOfi(lstTmp.get(0).getCodOfi());
+			setIdTerr(lstTmp.get(0).getTiivsTerritorio().getCodTer());
 		}
 	}
 	
