@@ -20,5 +20,8 @@
             </key>
             <one-to-many class="com.hildebrando.visado.modelo.TiivsSolicitud" />
         </set>
+        <property name="costo" type="java.lang.Double">
+            <column name="COSTO" precision="10"   />
+        </property>
     </class>
 </hibernate-mapping>
