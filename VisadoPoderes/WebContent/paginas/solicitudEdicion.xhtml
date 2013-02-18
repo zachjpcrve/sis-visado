@@ -25,8 +25,9 @@
 
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">
-					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro"
+				                <p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro:idMsmSolicitudRegistro"
 						icon="ui-icon-document" action="#{consultarSolicitudMB.registrarSolicitud}" actionListener="#{consultarSolicitudMB.registrarSolicitudBorrador}"/>
+					
 					<p:commandButton value="Enviar" id="btnEnviar3"  
 						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>
 					<p:commandButton value="Imprimir" id="btnImprimir3"
@@ -325,7 +326,9 @@
   
 										                    </td>
 
-														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro" ajax="false"
+														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro:idMsmSolicitudDocumentos,
+														:formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:idfileUpload,
+														:formSolicitudRegistro:cboTipoSolicitud" ajax="false"
 														action="#{consultarSolicitudMB.agregarDocumentosXTipoSolicitud}"/>
 																												
 														</td>
@@ -414,19 +417,23 @@
 															</p:selectOneMenu></td>
 													<td><h:outputText styleClass="outputText" id="outImporte" value="Importe:" title="Importe"></h:outputText>
 													</td>
-													<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importe}"/></td>
+													<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importe}" id="intImporte"/></td>
 												</tr>
 												<tr>
 													<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
-													<td><h:inputText id="intImporte" value="#{consultarSolicitudMB.objSolicBancaria.tipoCambio}" /></td>
+													<td><h:inputText id="intTipoCambio"  value="#{consultarSolicitudMB.objSolicBancaria.tipoCambio}" /></td>
 													<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
-													<td><h:inputText value="#{consultarSolicitudMBobjSolicBancaria.importeSoles}" readonly="true"/></td>
-													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{consultarSolicitudMB.agregarOperacionBancaria}" actionListener="#{consultarSolicitudMB.obtenerAccionAgregarOperacionBancaria}" update=":formSolicitudRegistro,:formSolicitudRegistro:idMsmOperacionBancaria"/></td>
+													<td><h:inputText value="#{consultarSolicitudMBobjSolicBancaria.importeSoles}" id="txtImporteSoles" readonly="true"/></td>
+													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{consultarSolicitudMB.agregarOperacionBancaria}" actionListener="#{consultarSolicitudMB.obtenerAccionAgregarOperacionBancaria}"
+													 update=":formSolicitudRegistro:idMsmOperacionBancaria,:formSolicitudRegistro:tlbOperacionesBanca,
+													 :formSolicitudRegistro:txtImporteSoles,:formSolicitudRegistro:intImporte,
+													 :formSolicitudRegistro:intTipoCambio,:formSolicitudRegistro:cboMoneda,
+													 :formSolicitudRegistro:cboTipoOperacion, :formSolicitudRegistro:txtImpTotal" /></td>
 													<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria"  action="#{consultarSolicitudMB.limpiarListaSolicitudesBancarias}" update=":formSolicitudRegistro" /></td>
 												</tr>
 												<tr>
 													<td align="center" width="95%" colspan="11"><p:dataTable
-															var="o" rows="20"
+															var="o" rows="20" id="tlbOperacionesBanca"
 															value="#{consultarSolicitudMB.lstSolicBancarias}"
 															emptyMessage="No hay resultados en la bandeja"
 															paginatorPosition="bottom" paginator="true"
@@ -463,11 +470,10 @@
 															</p:column>
 															<p:column headerText="Eliminar">
 															<p:commandButton icon="ui-icon-trash" id="del"
-																			 action="#{consultarSolicitudMB.eliminarOperacionBancaria}" 
-																			 update=":formSolicitudRegistro" >
+																 action="#{consultarSolicitudMB.eliminarOperacionBancaria}" 
+																update=":formSolicitudRegistro" >
 																<f:setPropertyActionListener target="#{consultarSolicitudMB.objSolicitudOperacionCapturado}"
-																							  value="#{o}" for="del">
-																</f:setPropertyActionListener>
+																	 value="#{o}" for="del"/>
 															</p:commandButton>
 															</p:column>
 														</p:dataTable></td>
