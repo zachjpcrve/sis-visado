@@ -434,7 +434,7 @@ public class SeguimientoMB
 			   {
 				    if (tmpSol.getCodSoli().equals(d.getCodSoli()) && tmpSol.getCodSoli().equals(x.getId().getCodSoli()))
 				    {
-				    	logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
+				    	//logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
 				    	lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 					    objPersona=new TiivsPersona();
 					    objPersona=d.getTiivsPersona();
@@ -521,7 +521,7 @@ public class SeguimientoMB
 				{
 					String txtNivelTMP = "";
 					String descripcion = buscarDescripcionMoneda(tmpSol.getMoneda());
-					logger.debug("Moneda encontrada: " + descripcion);
+					//logger.debug("Moneda encontrada: " + descripcion);
 
 					for (TiivsNivel tmp : combosMB.getLstNivel()) 
 					{

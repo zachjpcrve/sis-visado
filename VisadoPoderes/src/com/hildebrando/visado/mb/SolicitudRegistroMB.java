@@ -1505,18 +1505,10 @@ public class SolicitudRegistroMB {
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
 				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
-					  logger.info("b.getTiivsPersona() " +b.getCodPer());
-					     //b.setId
 					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
 					   logger.info("ccdcdcd : "+objPersonaRetorno.getCodPer());
 					     b.setTiivsPersona(null);
-					     objAgruId.setClasifPer(b.getClasifPer());
-					     objAgruId.setCodSoli(b.getCodSoli());
-					     objAgruId.setNumGrupo(b.getNumGrupo());
-					     objAgruId.setTipPartic(b.getTipPartic());
-					     //objAgruId=b.getId();
-					     objAgruId.setCodPer(objPersonaRetorno.getCodPer());
-					     //b.setId(objAgruId);
+					     b.setCodPer(objPersonaRetorno.getCodPer());
 					     serviceAgru.insertar(b);
 					     } 
 				  
@@ -1568,6 +1560,8 @@ public class SolicitudRegistroMB {
 				instanciarSolicitudRegistro();
 			}
 		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage());
+			Utilitarios.mensajeError("ERROR", "Ocurrio un Error al grabar la Solicitud");
 			e.printStackTrace();
 
 		}
