@@ -57,11 +57,11 @@ public class JasperController {
 	
 	@RequestMapping(value="/download/pdfReportCartaAtencion.htm", method=RequestMethod.GET)
 	public String generarReporteCartaAtencion(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
-		logger.info("generarReporteCartaAtencion : ");
+		logger.info("==== generarReporteCartaAtencion ==== ");
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 		
 		if(SOLICITUD_TEMP==null){
-			logger.info("Solicitud nula");
+			logger.info("La solicitud es nula");
 			return null;
 		}
 		
@@ -103,6 +103,7 @@ public class JasperController {
         	os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
 		}
         return("pdfReportCartaAtencion");
 	}
@@ -220,7 +221,7 @@ public class JasperController {
     @RequestMapping(value="/download/pdfReportSolicitudVisado.htm", method=RequestMethod.GET)
     public String generarReporteSolicitudVisado(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request) 
     {
-    	logger.info("generarReporteSolicitudVisado");
+    	logger.info("==== generarReporteSolicitudVisado() ====");
     	
     	TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
     	List<DocumentoTipoSolicitudDTO> lstDocumentos = SOLICITUD_TEMP.getLstDocumentos();
@@ -234,19 +235,21 @@ public class JasperController {
     	
     	//Cabecera del reporte
     	if(SOLICITUD_TEMP!=null){
+    		logger.debug("Solicitidu-CodSolicitud: "+SOLICITUD_TEMP.getCodSoli());
+    		logger.debug("Solicitidu-NroVoucher: "+SOLICITUD_TEMP.getNroVoucher());
     		solicitudPDF.setCodSoli(SOLICITUD_TEMP.getCodSoli());
     		solicitudPDF.setNroVoucher(SOLICITUD_TEMP.getNroVoucher());    		
 
     		TiivsMultitabla multi = RegistroUtilesMB.getRowFromMultitabla(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS, SOLICITUD_TEMP.getEstado());
     		String sEstado = multi.getValor1();
-    		
+    		logger.debug("Solicitidu-Estado: "+sEstado);
     		solicitudPDF.setEstado(sEstado);    		
     		solicitudPDF.setComision(SOLICITUD_TEMP.getComision());
     		solicitudPDF.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
     		solicitudPDF.setTerritorio(SOLICITUD_TEMP.getTiivsOficina1().getTiivsTerritorio().getCodTer() + SOLICITUD_TEMP.getTiivsOficina1().getTiivsTerritorio().getDesTer());
     		solicitudPDF.setImporte(SOLICITUD_TEMP.getImporte());    	
     		solicitudPDF.setTipoServicio(SOLICITUD_TEMP.getTiivsTipoSolicitud().getDesTipServicio());
-    		
+    		logger.debug("Solicitidu-Moneda: "+SOLICITUD_TEMP.getMoneda());
     		if(SOLICITUD_TEMP.getMoneda().equalsIgnoreCase(ConstantesVisado.MONEDAS.COD_SOLES)){
     			solicitudPDF.setMoneda(ConstantesVisado.MONEDAS.SIMBOLO_SOLES);
     		} else if (SOLICITUD_TEMP.getMoneda().equalsIgnoreCase(ConstantesVisado.MONEDAS.COD_DOLAR)){
@@ -254,8 +257,8 @@ public class JasperController {
     		} else if (SOLICITUD_TEMP.getMoneda().equalsIgnoreCase(ConstantesVisado.MONEDAS.COD_EUROS)){
     			solicitudPDF.setMoneda(ConstantesVisado.MONEDAS.SIMBOLO_EURO);
     		}
-    		
-    		
+    		    		
+    		logger.debug("Solicitid-Lista Agrupacion-size: "+lstAgrupacionSimpleDto.size());
     		solicitudPDF.setLstAgrupacionSimpleDto(lstAgrupacionSimpleDto); //agregar agrupaciones    		
     		solicitudPDF.setLstDocumentos(lstDocumentos); //agregar documentos    		
     		List<OperacionesPDF> lstOperaciones = new ArrayList<OperacionesPDF> ();    		
@@ -276,6 +279,7 @@ public class JasperController {
     		String nombreSalida = ConstantesVisado.PREFIJO_NOMBRE_SOLICITUD_VISADO
     				+ "_" + SOLICITUD_TEMP.getCodSoli() + "_"
     				+ Utilitarios.formatoFechaHora(new Date()) + ".pdf";
+        	logger.debug("nombreSalida: "+nombreSalida);
         	
             response.setHeader("Content-type", "application/pdf");
             response.setHeader("Content-Disposition","attachment; filename=\"" + nombreSalida + "\"");
@@ -288,12 +292,13 @@ public class JasperController {
             	OutputStream os = response.getOutputStream();
             	os.flush();
     		} catch (IOException ioe) {
-    			logger.error("Error al generar documento",ioe);
+    			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe);
     		}
     		
-    	} 
-    	
-
+    	}else{
+    		logger.debug("La solicitud es NULA ");
+    	}
+    	logger.debug("=== saliendo de generarReporteSolicitudVisado() ==");
        
         return("pdfReport");
     }
