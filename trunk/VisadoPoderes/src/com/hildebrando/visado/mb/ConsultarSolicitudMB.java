@@ -179,16 +179,17 @@ public class ConsultarSolicitudMB {
 			}			
 		}
 
-		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) { //Confirmar que los delegados|responsables solo pertenecen a SSJJ
 			String sEstado = solicitudRegistrarT.getEstado().trim();
 			if (sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02) || 
 					sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)) {
 				evaluacionNivelesMB = new EvaluacionNivelesMB(solicitudRegistrarT);
 				TiivsSolicitudNivel solNivel = evaluacionNivelesMB.obtenerNivelSolicitud();
+//				boolean esUsuario =  evaluacionNivelesMB.usuarioTienePermiso(this.usuario.getUID());
 				if (solNivel != null) {
 					this.sNivelSolicitud = solNivel.getCodNiv();
-				}
-				setbSeccionEvaluarNivel(true);								
+					setbSeccionEvaluarNivel(true);
+				}												
 			}
 			setbSeccionDocumentos(true);
 		}
@@ -635,7 +636,7 @@ public class ConsultarSolicitudMB {
 			// Listar ComboDictamen
 			listarComboDictamen();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Obtener datos de solicitud: ",e);
 		}
 	}
 	
@@ -882,49 +883,82 @@ public class ConsultarSolicitudMB {
 				if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) 
 				{
 					// Llamada a los Niveles
-
 					this.agregarNiveles(solicitudRegistrarT);
-					this.bSeccionDictaminar = false;
-					this.solicitudRegistrarT = serviceS
-							.modificar(solicitudRegistrarT);
+					this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
-
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
-
 					this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
 					solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
-					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
-
+					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");					
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
 
 					this.agregarNiveles(solicitudRegistrarT);
-					this.bSeccionDictaminar = false;
 					this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
-
 					this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
 					solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
-
 				}
-				if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
-					bSeccionCartaAtencion = true;
-					bSeccionComentario = false;
-				} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
-					if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+				
+				//-17-02-13: Refrescar controles - INICIO
+				if (this.PERFIL_USUARIO.trim().equals(ConstantesVisado.ABOGADO)){
+					if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
+						this.bSeccionDictaminar = false;
+						this.bSeccionComentario = false;						
+					} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
+						this.bSeccionDictaminar = false;
 						this.bMostrarCartaRechazo = true;
+						this.bSeccionComentario = false;
+						
+					} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
+						this.bSeccionDictaminar = false;
+					} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)) {
+						this.bSeccionComentario = false;
+						this.bSeccionDictaminar = false;						
+					}
+				}
+				if (this.PERFIL_USUARIO.trim().equals(ConstantesVisado.SSJJ)){
+					if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
+						this.bSeccionDictaminar = false;
+						this.bMostrarCartaAtencion = true;
+						this.bSeccionComentario = false;						
+					} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
+						this.bSeccionDictaminar = false;
+						this.bMostrarCartaRechazo = true;
+						this.bSeccionComentario = true;
+						this.bSeccionAccion = true;						
+					} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
+						this.bSeccionDictaminar = false;
 						this.bMostrarCartaRevision = true;
 						this.bMostrarCartaAtencion = true;
 						this.bSeccionComentario = false;
+					} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)) {
+						this.bSeccionComentario = false;
+						this.bSeccionDictaminar = false;
+						//pendinte en caso de niveles
 					}
+					
 				}
+				//--FIN
+				
+//				if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
+//					bSeccionCartaAtencion = true;
+//					bSeccionComentario = false;
+//				} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
+//					if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+//						this.bMostrarCartaRechazo = true;
+//						this.bMostrarCartaRevision = true;
+//						this.bMostrarCartaAtencion = true;
+//						this.bSeccionComentario = false;
+//					}
+//				}
 
 				this.obtenerHistorialSolicitud();
 
@@ -1036,8 +1070,7 @@ public class ConsultarSolicitudMB {
 				soliNivel.setCodNiv(codNivel);
 				soliNivel.setEstadoSolicitud(solicitud.getEstado());
 				soliNivel.setTiivsSolicitud(solicitud);
-				soliNivel
-						.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
+//				soliNivel.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
 				soliNivel.setUsuarioRegistro(usuario.getUID());
 				soliNivel.setFechaRegistro(new Timestamp(Calendar.DATE));
 				serviceSolicitud.insertar(soliNivel);
@@ -1311,8 +1344,7 @@ public class ConsultarSolicitudMB {
 		try {
 			lstTiivsDocumentos = documentoDAO.buscarDinamico(filtroDocumento);
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug("Error al cargar el listado de territorios");
+			logger.debug("Error al cargar el listado de territorios",e);
 		}
 
 	}
