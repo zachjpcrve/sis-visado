@@ -95,9 +95,7 @@ public class JasperController {
 
         
         modelMap.put("dataKey", objCab);
-        //modelMap.put("SUBREPORT_DIR", "C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\resources\\jasper\\");
-        //modelMap.put("IMG_CABECERA", "C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
-
+       
         try {
         	OutputStream os = response.getOutputStream();
         	os.flush();
@@ -131,6 +129,7 @@ public class JasperController {
         	os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
 		}
         return("pdfReportCartaSolicitudRevision");
 	}
@@ -139,7 +138,7 @@ public class JasperController {
 	{
 		logger.info("generarReporteCartaRechazo : ");
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
-		
+		logger.debug("SOLICITUD_TEMP.getLstAgrupacionSimpleDto() "+SOLICITUD_TEMP.getLstAgrupacionSimpleDto().size() );
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
 		FormatosDTO uno = new FormatosDTO();
 		uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
@@ -163,15 +162,12 @@ public class JasperController {
         
         modelMap.put("dataKey", objCab);
 
-//        modelMap.put("SUBREPORT_DIR", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\resources\\jasper\\");        
-//        modelMap.put("IMG_CABECERA", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
-
-
         try {
         	OutputStream os = response.getOutputStream();
         	os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
 		}
         return("pdfReportCartaRechazo");
 	}
@@ -181,7 +177,7 @@ public class JasperController {
 	{
 		logger.info("generarReporteCartaImprocedente : ");
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
-		
+		logger.debug("SOLICITUD_TEMP.getLstAgrupacionSimpleDto() "+SOLICITUD_TEMP.getLstAgrupacionSimpleDto().size() );
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
 		FormatosDTO uno = new FormatosDTO();
 		uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
@@ -205,20 +201,19 @@ public class JasperController {
         
         modelMap.put("dataKey", objCab);
 
-//        modelMap.put("SUBREPORT_DIR", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\resources\\jasper\\");        
-//        modelMap.put("IMG_CABECERA", "C:\\hildebrando\\BBVA\\ws_visado\\VisadoPoderes\\WebContent\\resources\\images\\bbva2.gif");
-
 
         try {
         	OutputStream os = response.getOutputStream();
         	os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
 		}
         return("pdfReportCartaImprocedente");
 	}
 	
-    @RequestMapping(value="/download/pdfReportSolicitudVisado.htm", method=RequestMethod.GET)
+    @SuppressWarnings("unused")
+	@RequestMapping(value="/download/pdfReportSolicitudVisado.htm", method=RequestMethod.GET)
     public String generarReporteSolicitudVisado(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request) 
     {
     	logger.info("==== generarReporteSolicitudVisado() ====");
