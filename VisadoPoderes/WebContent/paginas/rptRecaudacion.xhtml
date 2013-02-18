@@ -23,6 +23,8 @@
 										<f:selectItem itemLabel="--Todos--" itemValue="" />
 										<f:selectItems value="#{reportesMB.combosMB.lstTerritorio}" var="ter"
 											itemValue="#{ter.codTer}" itemLabel="#{ter.desTer}" />
+										<p:ajax event="change" update=":frm:somOfi :frm:somNOfi" process="@this"
+									      listener="#{reportesMB.buscarOficinaPorTerritorio}" />
 								</p:selectOneMenu>
 							</td>
 						</tr>
@@ -36,6 +38,8 @@
 										<f:selectItem itemLabel="--Todos--" itemValue="" />
 										<f:selectItems value="#{reportesMB.combosMB.lstOficina1}" var="of"
 											itemValue="#{of.codOfi}" itemLabel="#{of.codOfi}" />
+									<p:ajax event="change" update=":frm:somNOfi :frm:somTerr" process="@this"
+									      listener="#{reportesMB.buscarOficinaPorCodigo}" />
 								</p:selectOneMenu>
 							</td>
 													
@@ -47,6 +51,8 @@
 										<f:selectItem itemLabel="--Todos--" itemValue="" />
 										<f:selectItems value="#{reportesMB.combosMB.lstOficina1}" var="of"
 											itemValue="#{of.codOfi}" itemLabel="#{of.desOfi}" />
+										<p:ajax event="change" update=":frm:somOfi :frm:somTerr" process="@this"
+									      listener="#{reportesMB.buscarOficinaPorNombre}" />
 								</p:selectOneMenu>
 							</td>						
 						</tr>

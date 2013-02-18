@@ -286,7 +286,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			}
 			else
 			{
-				sWhere += " where so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
+				sWhere = " where so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_T02 + "'," +
@@ -462,6 +462,21 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				{
 					sWhere = " where so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
 				}				
+			}
+			
+			//Filtros de estados a buscar por RN054 del Doc Funcional
+			if (sWhere.compareTo("")!=0)
+			{
+				sWhere += " and so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
+											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
+											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "')" ;
+						
+			}
+			else
+			{
+				sWhere = " where so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "')" ;
 			}
 			
 			sql="select distinct terr.des_ter, so.cod_ofi, ofi.des_ofi, NVL(PN.cont,0) Persona_Natural, " +
