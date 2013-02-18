@@ -58,6 +58,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public String obtenerMaximoMovimiento(String codSolicitud) throws Exception {
 
 		final String sql = "select max(cast(movimiento as number))movimiento from tiivs_hist_solicitud where cod_soli='"
