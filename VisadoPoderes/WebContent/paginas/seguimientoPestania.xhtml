@@ -262,9 +262,9 @@
                 header="Confirmación" severity="alert" widgetVar="confirmation" >  
                   
         <center>
-        <p:commandButton id="confirmSiDic" value="Aceptar" update=":formSolicitudSeguimiento" oncomplete="confirmation.hide()"   
+        <p:commandButton id="confirmSiDic" value="Si" update=":formSolicitudSeguimiento" oncomplete="confirmation.hide()"   
                     action="#{consultarSolicitudMB.dictaminarSolicitud}"  />  
-        <p:commandButton id="declineNoDic" value="Cancelar" onclick="confirmation.hide()" type="button" />
+        <p:commandButton id="declineNoDic" value="No" onclick="confirmation.hide()" type="button" />
         </center>   
                   
     </p:confirmDialog> 
@@ -273,12 +273,12 @@
               header="Carta de Atencion" severity="alert" widgetVar="confirmation2" visible="true">  
                 
             <center>
-	       	<p:commandButton id="confirm" value="Aceptar" 
+	       	<p:commandButton id="confirm" value="Si" 
 	        			onclick="window.location.href='#{root}main/download/pdfReportCartaAtencion.htm'" 
 	        			oncomplete="confirmation2.hide()" update=":formSolicitudSeguimiento" 
 	                    actionListener="#{consultarSolicitudMB.actualizarEstadoEjecutadoSolicitud}" />	
 	                    	                    
-	       	<p:commandButton id="decline" value="Cancelar" oncomplete="confirmation2.hide()" />
+	       	<p:commandButton id="decline" value="No" oncomplete="confirmation2.hide()" />
 	       	</center>  
                   
     </p:confirmDialog>
@@ -287,10 +287,10 @@
               header="Revision" severity="alert" widgetVar="confirmation3" visible="true">  
             
             <center>    
-	        <p:commandButton id="confirmRev" value="Aceptar"  oncomplete="confirmation3.hide()" update=":formSolicitudSeguimiento" 
+	        <p:commandButton id="confirmRev" value="Si"  oncomplete="confirmation3.hide()" update=":formSolicitudSeguimiento" 
 	            action="#{consultarSolicitudMB.mostrarCartaRevision}" actionListener="#{consultarSolicitudMB.actualizarEstadoEnRevisionSolicitud}" />  
 	        
-	        <p:commandButton id="declineRev" value="Cancelar" oncomplete="confirmation3.hide()" />
+	        <p:commandButton id="declineRev" value="No" oncomplete="confirmation3.hide()" />
 	        </center>  
                   
     </p:confirmDialog>
@@ -300,9 +300,9 @@
                 header="Confirmación" severity="alert" widgetVar="confirmationNivel" >  
         
         <center>          
-        <p:commandButton id="confirmSiDicNiv" value="Aceptar" update=":formSolicitudSeguimiento:growlSolicitudSeguimiento" oncomplete="confirmationNivel.hide()"   
+        <p:commandButton id="confirmSiDicNiv" value="Si" update=":formSolicitudSeguimiento:growlSolicitudSeguimiento" oncomplete="confirmationNivel.hide()"   
                  action="#{consultarSolicitudMB.registrarEvaluacionNivel}"     />  
-        <p:commandButton id="declineNoDicNiv" value="Cancelar" onclick="confirmationNivel.hide()" type="button" />
+        <p:commandButton id="declineNoDicNiv" value="No" onclick="confirmationNivel.hide()" type="button" />
         </center>   
                   
     </p:confirmDialog>
