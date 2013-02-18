@@ -72,7 +72,7 @@ public class EvaluacionNivelesMB {
 			return;
 		}	
 		
-		if(!PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+		if(!PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){ //confirmar que solo los usuarios de SSJJ pueden ser d|r
 			Utilitarios.mensajeInfo("INFO", "No se permite el cambio de estado para el perfil");
 			logger.info("No se permite el cambio de estado para el perfil");		
 			return;
@@ -154,19 +154,18 @@ public class EvaluacionNivelesMB {
 			this.lstSolicitudNivel = soliNivelDAO.buscarDinamico(filtroNivel);
 			
 			for(TiivsSolicitudNivel n : this.lstSolicitudNivel){
-				if(n.getEstadoNivel()==null || n.getEstadoNivel().trim().equals("")){
+				if(n.getEstadoNivel()==null || 
+						n.getEstadoNivel().trim().equals("") || 
+						n.getEstadoNivel().equals(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09)){
 					solNivel = n;				
 					break;
 				}
 					
 			} 
 		} catch (Exception e) {
-			e.printStackTrace();
 			this.lstSolicitudNivel = null;
-			logger.error("Error al obtener datos de nivel");
+			logger.error("Error al obtener datos de nivel",e);
 		}        
-		
-		       		
 		return solNivel;
 	}
 	
