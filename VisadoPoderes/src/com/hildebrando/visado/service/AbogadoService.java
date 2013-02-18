@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
@@ -39,7 +40,7 @@ public class AbogadoService {
 			List<TiivsMultitabla> criterios) {
 		logger.info("AbogadoService : listarAbogados");
 		List<TiivsMiembro> abogados = new ArrayList<TiivsMiembro>();
-/*		String codigoGrupo = "0000002";*/
+		/* String codigoGrupo = "0000002"; */
 		String codCriterio = "";
 
 		GenericDao<TiivsMiembro, Object> service = (GenericDao<TiivsMiembro, Object>) SpringInit
@@ -47,8 +48,7 @@ public class AbogadoService {
 		Busqueda filtro = Busqueda.forClass(TiivsMiembro.class);
 
 		try {
-			abogados = service.buscarDinamico(filtro/*.add(Restrictions.eq(
-					"tiivsGrupo.codGrupo", codigoGrupo))*/);
+			abogados = service.buscarDinamico(filtro.add(Restrictions.eq("activo", "1")));
 
 			for (int i = 0; i < abogados.size(); i++) {
 
@@ -60,12 +60,12 @@ public class AbogadoService {
 								criterios.get(h).getValor1());
 					}
 				}
-				
-				if(abogados.get(i).getEstudio()==null){
+
+				if (abogados.get(i).getEstudio() == null) {
 					abogados.get(i).setEstudio(" ");
 
-				}else{
-				
+				} else {
+
 					for (int j = 0; j < estudios.size(); j++) {
 						if (abogados.get(i).getTiivsGrupo().getCodGrupo()
 								.equals(estudios.get(j).getCodEstudio())) {
@@ -74,7 +74,6 @@ public class AbogadoService {
 						}
 					}
 				}
-
 
 			}
 		} catch (Exception ex) {
@@ -115,8 +114,7 @@ public class AbogadoService {
 		Busqueda filtro = Busqueda.forClass(TiivsGrupo.class);
 
 		try {
-			grupos = service
-					.buscarDinamico(filtro);
+			grupos = service.buscarDinamico(filtro);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -126,7 +124,9 @@ public class AbogadoService {
 		return grupos;
 	}
 
-	public List<TiivsMiembro> listarAbogadosCombo(TiivsGrupo grupoFiltro, List<TiivsMultitabla> criterios,  List<TiivsEstudio> estudios, TiivsMiembro abogado) {
+	public List<TiivsMiembro> listarAbogadosCombo(TiivsGrupo grupoFiltro,
+			List<TiivsMultitabla> criterios, List<TiivsEstudio> estudios,
+			TiivsMiembro abogado) {
 		logger.info("AbogadoService : listarOficinasCombo");
 		List<TiivsMiembro> abogados = new ArrayList<TiivsMiembro>();
 		String codCriterio = "";
@@ -136,24 +136,28 @@ public class AbogadoService {
 		Busqueda filtro = Busqueda.forClass(TiivsMiembro.class);
 
 		try {
-			if(grupoFiltro.getCodGrupo().equals("-1")){
-				abogados = service.buscarDinamico(filtro);			
-			}else{
-				if(abogado.getEstudio()== null){
-					abogados = service.buscarDinamico(filtro.add(Restrictions.eq(
-							"tiivsGrupo.codGrupo", grupoFiltro.getCodGrupo())));
-				}else{
-					if(abogado.getEstudio().equals("-1")){
-						abogados = service.buscarDinamico(filtro.add(Restrictions.eq(
-								"tiivsGrupo.codGrupo", grupoFiltro.getCodGrupo())));
-					}else{
-						abogados = service.buscarDinamico(filtro.add(Restrictions.eq(
-								"tiivsGrupo.codGrupo", grupoFiltro.getCodGrupo())).add(Restrictions.eq("estudio", abogado.getEstudio())));
+			if (grupoFiltro.getCodGrupo().equals("-1")) {
+				abogados = service.buscarDinamico(filtro.add(Restrictions.eq("activo", "1")));
+			} else {
+				if (abogado.getEstudio() == null) {
+					abogados = service.buscarDinamico(filtro.add(Restrictions
+							.eq("tiivsGrupo.codGrupo",
+									grupoFiltro.getCodGrupo())).add(Restrictions.eq("activo", "1")));
+				} else {
+					if (abogado.getEstudio().equals("-1")) {
+						abogados = service.buscarDinamico(filtro
+								.add(Restrictions.eq("tiivsGrupo.codGrupo",
+										grupoFiltro.getCodGrupo())).add(Restrictions.eq("activo", "1")));
+					} else {
+						abogados = service.buscarDinamico(filtro.add(
+								Restrictions.eq("tiivsGrupo.codGrupo",
+										grupoFiltro.getCodGrupo()))
+								.add(Restrictions.eq("estudio",
+										abogado.getEstudio())).add(Restrictions.eq("activo", "1")));
 					}
-					
+
 				}
 			}
-			
 
 			for (int i = 0; i < abogados.size(); i++) {
 
@@ -165,19 +169,19 @@ public class AbogadoService {
 								criterios.get(h).getValor1());
 					}
 				}
-				
-				if(!(abogados.get(i).getEstudio()==null)){
-					
+
+				if (!(abogados.get(i).getEstudio() == null)) {
+
 					for (int j = 0; j < estudios.size(); j++) {
-						if (abogados.get(i).getEstudio().equals(estudios.get(j).getCodEstudio())) {
+						if (abogados.get(i).getEstudio()
+								.equals(estudios.get(j).getCodEstudio())) {
 							abogados.get(i).setEstudio(
 									estudios.get(j).getDesEstudio());
 						}
 					}
-				}else{
+				} else {
 					abogados.get(i).setEstudio(" ");
 				}
-
 
 			}
 		} catch (Exception ex) {
@@ -189,24 +193,34 @@ public class AbogadoService {
 	}
 
 	public void registrar(TiivsMiembro abogado) {
-			logger.info("AbogadoService : registrar");
-			GenericDao<TiivsMiembro, Object> service = (GenericDao<TiivsMiembro, Object>) SpringInit
-					.getApplicationContext().getBean("genericoDao");
-			String criterioG = "";
-			try {
-				abogado.setActivo("1");
-				criterioG = abogado.getCriterio();
-				criterioG = ConstantesVisado.CODIGO_MULTITABLA_CRITERIO + criterioG;
-				abogado.setCriterio(criterioG);
-				service.insertarMerge(abogado);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				logger.error("AbogadoService : : "
-						+ ex.getLocalizedMessage());
-			}
-
+		logger.info("AbogadoService : registrar");
+		GenericDao<TiivsMiembro, Object> service = (GenericDao<TiivsMiembro, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		String criterioG = "";
+		try {
+			criterioG = abogado.getCriterio();
+			criterioG = ConstantesVisado.CODIGO_MULTITABLA_CRITERIO + criterioG;
+			abogado.setCriterio(criterioG);
+			service.insertarMerge(abogado);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("AbogadoService : : " + ex.getLocalizedMessage());
 		}
 
+	}
+	
+	public void eliminarAbogado(TiivsMiembro abogado) {
+		logger.info("AbogadoService : registrar");
+		GenericDao<TiivsMiembro, Object> service = (GenericDao<TiivsMiembro, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		try {
+			service.insertarMerge(abogado);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("AbogadoService : : " + ex.getLocalizedMessage());
+		}
+
+	}
 	public List<TiivsMiembro> editarAbogado(String codAbogado) {
 		logger.info("AbogadoService : editarAbogado");
 		List<TiivsMiembro> abogadoEditar = new ArrayList<TiivsMiembro>();
@@ -215,8 +229,8 @@ public class AbogadoService {
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsMiembro.class);
 		try {
-			abogadoEditar = service.buscarDinamico(filtro.add(
-					Restrictions.eq("codMiembro", codAbogado)));
+			abogadoEditar = service.buscarDinamico(filtro.add(Restrictions.eq(
+					"codMiembro", codAbogado)));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("AbogadoService : editarAbogado: "
@@ -224,5 +238,29 @@ public class AbogadoService {
 		}
 		return abogadoEditar;
 	}
-	
+
+	public <E> String validarCodigo(TiivsMiembro abogado) {
+		logger.info("AbogadoService : validarCodigo");
+		List<TiivsMiembro> existeCodigo = new ArrayList<TiivsMiembro>();
+		String contador = "0";
+		
+		GenericDao<TiivsMiembro, Object> service = (GenericDao<TiivsMiembro, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMiembro.class);
+		try {
+			existeCodigo = service.buscarDinamico(filtro.add(
+					Restrictions.eq("codMiembro", abogado.getCodMiembro()))
+					.setProjection(Projections.rowCount()));
+			
+			List<E> parse = new ArrayList<E>();
+			parse = (List<E>) existeCodigo;
+			contador = parse.get(0).toString();
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("AbogadoService : validarCodigo: "
+					+ ex.getLocalizedMessage());
+		}
+		return contador;
+	}
 }
