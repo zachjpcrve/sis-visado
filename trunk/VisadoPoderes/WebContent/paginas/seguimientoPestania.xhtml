@@ -35,10 +35,14 @@
 			rendered="false"  actionListener="#{consultarSolicitudMB.validarCambioEstadoVencido}"/>	
 		
 		<h:form id="formSolicitudSeguimiento">
+		
+		  <p:growl id="growlSolicitudSeguimiento" sticky="true" />		  		  
+		
 	      <p:spacer></p:spacer>
 	      <h:panelGrid columns="2">
 	      <h:panelGrid rendered="#{consultarSolicitudMB.bSeccionComentario}">
-	        <p:messages id="idGrowlSolicitudRegistro"></p:messages>
+	      
+	        <!-- <p:messages id="idGrowlSolicitudRegistro"></p:messages>  -->
 	        
 	        <p:commandButton id="comentar" value="Comentar" update=":formSolicitudSeguimiento" actionListener="#{consultarSolicitudMB.habilitarComentario}"/>
 											
@@ -61,7 +65,9 @@
 	
 			
 			<table>
-			<p:messages id="idGrowlSolicitudSeguimiento"></p:messages>
+			
+			<!-- <p:messages id="idGrowlSolicitudSeguimiento"></p:messages>  -->
+			
 			<tr>
 			<td width="100%">
 			
@@ -128,8 +134,8 @@
 					 
 			</p:selectOneMenu>
 			</h:panelGrid>
-			
-			<p:commandButton id="btnAceptar" value="Aceptar" action="#{consultarSolicitudMB.reasignacionManual}" update=":formSolicitudSeguimiento:idGrowlSolicitudSeguimiento"/>
+						
+			<p:commandButton id="btnAceptar" value="Aceptar" action="#{consultarSolicitudMB.reasignacionManual}" update=":formSolicitudSeguimiento:growlSolicitudSeguimiento"/>
 			<h:panelGrid columns="2">
 			<h:outputText  value="Abogado" styleClass="outputText"/>
 			<p:selectOneMenu id="cboAbogado" value="#{consultarSolicitudMB.solicitudRegistrarT.regAbogado}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
@@ -146,12 +152,14 @@
 			<td width="100%">
 					
 					<h:panelGrid width="100%" columns="1" rendered="#{consultarSolicitudMB.bSeccionEvaluarNivel}">
-					 	<p:messages id="idGrowlSolicitudAccion"></p:messages>
+					
+					 	 <!-- <p:messages id="idGrowlSolicitudAccion"></p:messages>  -->
+					
 						<h:outputText title="Acción" value="Acción" styleClass="outputText" />
 						<p:separator styleClass="fielset" />						
 						<!-- Panel Evaluar x Nivel -->
 						<h:panelGrid columns="4"
-							rendered="#{consultarSolicitudMB.verPnlEvaluarNivel}">
+							rendered="#{consultarSolicitudMB.bSeccionEvaluarNivel}">
 							<h:outputText value="Evaluar Nivel:" styleClass="outputText" />
 							<p:selectOneMenu id="cboEvalNivel" value="#{consultarSolicitudMB.sCodigoEstadoNivel}" required="false"
 								widgetVar="varCboNivel"
@@ -209,13 +217,13 @@
 	
 						<!-- /c:if -->
 						<c:if test="#{consultarSolicitudMB.bMostrarCartaAtencion}">
-							<a href="#" onclick="confirmation2.show()">
+							<a href="#" onclick="confirmation2.show()">						
 								<font color="blue">
 									<u>Carta de atención</u>
 								</font>
 							</a>
-	
-						</c:if>
+						</c:if>						
+						
 						<c:if test="#{consultarSolicitudMB.bMostrarCartaRevision}">
 							<font color="red">
 								Obtener la firma del cliente en la Carta de solicitud de revisión
@@ -253,43 +261,53 @@
  	<p:confirmDialog id="confirmDialogDictamen" message="¿Está seguro de pasar a estado #{consultarSolicitudMB.descValorDictamen} la solicitud de visado?"  
                 header="Confirmación" severity="alert" widgetVar="confirmation" >  
                   
-        <p:commandButton id="confirmSiDic" value="Si" update=":formSolicitudSeguimiento" oncomplete="confirmation.hide()"   
+        <center>
+        <p:commandButton id="confirmSiDic" value="Aceptar" update=":formSolicitudSeguimiento" oncomplete="confirmation.hide()"   
                     action="#{consultarSolicitudMB.dictaminarSolicitud}"  />  
-        <p:commandButton id="declineNoDic" value="No" onclick="confirmation.hide()" type="button" />   
+        <p:commandButton id="declineNoDic" value="Cancelar" onclick="confirmation.hide()" type="button" />
+        </center>   
                   
     </p:confirmDialog> 
     
     <p:confirmDialog id="confirmDialog" message="#{consultarSolicitudMB.textoMensajeCartaAtencion}"  
               header="Carta de Atencion" severity="alert" widgetVar="confirmation2" visible="true">  
                 
-	       	<p:commandButton id="confirm" value="Si" 
+            <center>
+	       	<p:commandButton id="confirm" value="Aceptar" 
 	        			onclick="window.location.href='#{root}main/download/pdfReportCartaAtencion.htm'" 
 	        			oncomplete="confirmation2.hide()" update=":formSolicitudSeguimiento" 
 	                    actionListener="#{consultarSolicitudMB.actualizarEstadoEjecutadoSolicitud}" />	
 	                    	                    
-	       	<p:commandButton id="decline" value="No" oncomplete="confirmation2.hide()" />  
+	       	<p:commandButton id="decline" value="Cancelar" oncomplete="confirmation2.hide()" />
+	       	</center>  
                   
     </p:confirmDialog>
     
-    <p:confirmDialog id="confirmDialogRevision" message="¿está seguro de generar una  revisión?"  
+    <p:confirmDialog id="confirmDialogRevision" message="¿Está seguro de generar una  revisión?"  
               header="Revision" severity="alert" widgetVar="confirmation3" visible="true">  
-                
+            
+            <center>    
 	        <p:commandButton id="confirmRev" value="Aceptar"  oncomplete="confirmation3.hide()" update=":formSolicitudSeguimiento" 
 	            action="#{consultarSolicitudMB.mostrarCartaRevision}" actionListener="#{consultarSolicitudMB.actualizarEstadoEnRevisionSolicitud}" />  
 	        
-	        <p:commandButton id="declineRev" value="Cancelar" oncomplete="confirmation3.hide()" />  
+	        <p:commandButton id="declineRev" value="Cancelar" oncomplete="confirmation3.hide()" />
+	        </center>  
                   
     </p:confirmDialog>
     
     <!-- Pregunta Evaluación por nivel -->
     <p:confirmDialog id="confirmDialogDictamenNivel" message="¿Está seguro de pasar a estado #{consultarSolicitudMB.descValorDictamen} la solicitud de visado?"  
                 header="Confirmación" severity="alert" widgetVar="confirmationNivel" >  
-                  
-        <p:commandButton id="confirmSiDicNiv" value="Si" update=":formSolicitudSeguimiento:idGrowlSolicitudAccion" oncomplete="confirmationNivel.hide()"   
+        
+        <center>          
+        <p:commandButton id="confirmSiDicNiv" value="Aceptar" update=":formSolicitudSeguimiento:growlSolicitudSeguimiento" oncomplete="confirmationNivel.hide()"   
                  action="#{consultarSolicitudMB.registrarEvaluacionNivel}"     />  
-        <p:commandButton id="declineNoDicNiv" value="No" onclick="confirmationNivel.hide()" type="button" />   
+        <p:commandButton id="declineNoDicNiv" value="Cancelar" onclick="confirmationNivel.hide()" type="button" />
+        </center>   
                   
     </p:confirmDialog>
+    
+    
     
 </h:form>
 
