@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+		<!-- Mantenimiento Estudio -->
+		<h:form id="frmMantenimientoEstudio">
+			<p:panel header="Estudio de Abogados" style="width: 85%">
+			<p:messages id="idMsmDocumento"></p:messages>
+				<table>
+					<tr>
+						<td><h:outputText value="Codigo:  " /></td>
+						<td><p:inputText id="txtCodigo" disabled="#{estudioMB.bMostrarCodigo}"
+								value="#{estudioMB.estudio.codEstudio}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Descripcion:  " /></td>
+						<td><p:inputText id="txtDescripcion" 
+								value="#{estudioMB.estudio.desEstudio}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Costo:  " /></td>
+						<td><p:inputText id="txtCosto" 
+								value="#{estudioMB.estudio.costo}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Estado" /></td>
+						<td><p:selectOneMenu value="#{estudioMB.estudio.desActivo}">
+								<f:selectItem itemLabel="Activo" itemValue="1" />
+								<f:selectItem itemLabel="Inactivo" itemValue="0" />
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
+				<p:commandButton id="registrarEstudio" value="Guardar" ajax="true"
+					action="#{estudioMB.listarEstudios}"
+					actionListener="#{estudioMB.registrar}"
+					update=":frmDataTableEstudio :frmMantenimientoEstudio">
+				</p:commandButton>
+				<p:commandButton id="limpiarDocumento" value="Limpiar" ajax="true"
+					action="#{estudioMB.limpiarCampos}"
+					update=":frmMantenimientoEstudio">
+				</p:commandButton>
+			</p:panel>
+		</h:form>
+		<!--Fin Mantenimiento Estudio de Abogados -->
+		<!-- Data Table Estudio de Abogados -->
+		<h:form id="frmDataTableEstudio">
+			<p:panel header="Estudio de Abogados" style="width: 85%">
+				<p:dataTable id="dtbEstudios" value="#{estudioMB.estudios}"
+					var="est" paginator="true" rows="50" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+					emptyMessage="No hay estudios">
+
+					<p:column headerText="Codigo">
+						<h:outputText value="#{est.codEstudio}" />
+					</p:column>
+					<p:column headerText="Descripcion">
+						<h:outputText value="#{est.desEstudio}" />
+					</p:column>
+					<p:column headerText="Costo">
+						<h:outputText value="#{est.costo}" />
+					</p:column>
+					<p:column headerText="Estado">
+						<h:outputText value="#{est.desActivo}" />
+					</p:column>
+					<p:column headerText="Accion">
+						<p:commandLink id="clinkEditar" ajax="true" update=":frmMantenimientoEstudio"
+							actionListener="#{estudioMB.editarEstudio}">
+							<f:param name="codEstudio" value="#{est.codEstudio}"></f:param>
+							<h:outputText value="Editar" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+
+		</h:form>
+		<!--Fin Data Table Estudios -->
+	</ui:define>
+</ui:composition>
+
+</html>
