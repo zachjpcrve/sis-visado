@@ -65,7 +65,7 @@
             </key>
             <one-to-many class="com.hildebrando.visado.modelo.TiivsSolicitudNivel" />
         </set>
-        <set name="tiivsSolicitudAgrupacions" table="TIIVS_SOLICITUD_AGRUPACION" cascade="all" inverse="true" lazy="false"   fetch="select"  >
+        <set name="tiivsSolicitudAgrupacions" table="TIIVS_SOLICITUD_AGRUPACION"  cascade="all" inverse="true" lazy="false"   fetch="select"  >
             <key> 
                 <column name="COD_SOLI" length="7" not-null="true" />
             </key>
