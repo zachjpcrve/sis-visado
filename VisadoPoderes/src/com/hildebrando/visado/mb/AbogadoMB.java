@@ -34,6 +34,7 @@ public class AbogadoMB {
 	private List<TiivsGrupo> grupos = new ArrayList<TiivsGrupo>();
 	private List<TiivsGrupo> gruposFiltro = new ArrayList<TiivsGrupo>();
 	private TiivsGrupo grupoFiltro = new TiivsGrupo();
+	private TiivsGrupo grupoFiltro2 = new TiivsGrupo();
 	private List<TiivsMultitabla> criterios = new ArrayList<TiivsMultitabla>();
 	private List<TiivsMiembro> abogados = new ArrayList<TiivsMiembro>();
 	private List<TiivsMiembro> abogadoEditar = new ArrayList<TiivsMiembro>();
@@ -52,7 +53,7 @@ public class AbogadoMB {
 		abogadoEliminar= new TiivsMiembro();
 		abogadoEliminar.setTiivsGrupo(grupoFiltro);
 		abogadoLista = new TiivsMiembro();
-		abogadoLista.setTiivsGrupo(grupoFiltro);
+		abogadoLista.setTiivsGrupo(grupoFiltro2);
 		mostrarComboEstudio = false;
 		mostrarComboEstudioGuardar = false;
 		editarAbogado = false;
@@ -244,11 +245,20 @@ public class AbogadoMB {
 	public void listarAbogadosCombo(){
 		logger.info("OficinaMB: listarOficinasCombo");
 		try{
-			abogados= abogadoService.listarAbogadosCombo(grupoFiltro, criterios, estudios, abogadoLista);
+			abogados= abogadoService.listarAbogadosCombo(grupoFiltro2, criterios, estudios, abogadoLista);
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.error("OficinaMB : listarOficinasCombo : " + e.getLocalizedMessage());
 		}
+	}
+	public void limpiarCampos(){
+		logger.info("OficinaMB: limpiarCampos");
+		abogado = new TiivsMiembro();
+		grupoFiltro = new TiivsGrupo();
+		abogado.setTiivsGrupo(grupoFiltro);
+		mostrarComboEstudioGuardar = false;
+		mostrarCodigoEditar = false;
+		editarAbogado=false;
 	}
 	
 	public void eliminarAbogado(){
@@ -408,6 +418,14 @@ public class AbogadoMB {
 
 	public void setAbogadoLista(TiivsMiembro abogadoLista) {
 		this.abogadoLista = abogadoLista;
+	}
+
+	public TiivsGrupo getGrupoFiltro2() {
+		return grupoFiltro2;
+	}
+
+	public void setGrupoFiltro2(TiivsGrupo grupoFiltro2) {
+		this.grupoFiltro2 = grupoFiltro2;
 	}
 	
 	
