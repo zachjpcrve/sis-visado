@@ -4,42 +4,30 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import javax.faces.bean.ManagedProperty;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
-import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
-import com.hildebrando.visado.dto.DocumentosPDF;
-import com.hildebrando.visado.dto.Estado;
 import com.hildebrando.visado.dto.FormatosDTO;
 import com.hildebrando.visado.dto.OperacionesPDF;
-import com.hildebrando.visado.dto.PersonaPDF;
 import com.hildebrando.visado.dto.SolicitudPDF;
-import com.hildebrando.visado.mb.ConsultarSolicitudMB;
 import com.hildebrando.visado.mb.RegistroUtilesMB;
-import com.hildebrando.visado.mb.SolicitudRegistroMB;
-import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
-import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
-import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
-import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
-import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
-import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 
 @Controller
@@ -48,9 +36,6 @@ public class JasperController {
 	
 	private static Logger logger =  Logger.getLogger(JasperController.class);
 	
-	@ManagedProperty(value = "#{consultarSolicitudMB}")
-	private ConsultarSolicitudMB consultarSolicitudMB;
-	
 	public JasperController() {
 
 	}
@@ -58,6 +43,7 @@ public class JasperController {
 	@RequestMapping(value="/download/pdfReportCartaAtencion.htm", method=RequestMethod.GET)
 	public String generarReporteCartaAtencion(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
 		logger.info("==== generarReporteCartaAtencion ==== ");
+		  try {
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 		
 		if(SOLICITUD_TEMP==null){
@@ -96,10 +82,13 @@ public class JasperController {
         
         modelMap.put("dataKey", objCab);
        
-        try {
+      
         	OutputStream os = response.getOutputStream();
         	os.flush();
 		} catch (IOException e) {
+			e.printStackTrace();
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
+		}catch (Exception e) {
 			e.printStackTrace();
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
 		}
@@ -107,6 +96,7 @@ public class JasperController {
 	}
 	@RequestMapping(value="/download/pdfReportCartaSolicitudRevision.htm", method=RequestMethod.GET)
 	public String generarReporteCartaSolicitudRevision(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
+		try{
 		logger.info("generarReporteCartaAtencion : ");
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
@@ -124,18 +114,19 @@ public class JasperController {
         modelMap.put("dataKey", objCab);
         
 
-        try {
+       
         	OutputStream os = response.getOutputStream();
         	os.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
+    	} catch (IOException ioe) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe);
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
 		}
         return("pdfReportCartaSolicitudRevision");
 	}
 	@RequestMapping(value="/download/pdfReportCartaRechazo.htm", method=RequestMethod.GET)
 	public String generarReporteCartaRechazo(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request)
-	{
+	{   try{
 		logger.info("generarReporteCartaRechazo : ");
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 		logger.debug("SOLICITUD_TEMP.getLstAgrupacionSimpleDto() "+SOLICITUD_TEMP.getLstAgrupacionSimpleDto().size() );
@@ -162,12 +153,13 @@ public class JasperController {
         
         modelMap.put("dataKey", objCab);
 
-        try {
+        
         	OutputStream os = response.getOutputStream();
         	os.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
+    	} catch (IOException ioe) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe);
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
 		}
         return("pdfReportCartaRechazo");
 	}
@@ -175,6 +167,7 @@ public class JasperController {
 	@RequestMapping(value="/download/pdfReportCartaImprocedente.htm", method=RequestMethod.GET)
 	public String generarReporteCartaImprocedente(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request)
 	{
+		try{
 		logger.info("generarReporteCartaImprocedente : ");
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 		logger.debug("SOLICITUD_TEMP.getLstAgrupacionSimpleDto() "+SOLICITUD_TEMP.getLstAgrupacionSimpleDto().size() );
@@ -202,12 +195,13 @@ public class JasperController {
         modelMap.put("dataKey", objCab);
 
 
-        try {
+      
         	OutputStream os = response.getOutputStream();
         	os.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
+    	} catch (IOException ioe) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe);
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
 		}
         return("pdfReportCartaImprocedente");
 	}
@@ -230,6 +224,7 @@ public class JasperController {
     	
     	//Cabecera del reporte
     	if(SOLICITUD_TEMP!=null){
+    		 try {
     		logger.debug("Solicitidu-CodSolicitud: "+SOLICITUD_TEMP.getCodSoli());
     		logger.debug("Solicitidu-NroVoucher: "+SOLICITUD_TEMP.getNroVoucher());
     		solicitudPDF.setCodSoli(SOLICITUD_TEMP.getCodSoli());
@@ -283,12 +278,14 @@ public class JasperController {
                   
             modelMap.put("dataKey", objCab);
             
-            try {
+           
             	OutputStream os = response.getOutputStream();
             	os.flush();
     		} catch (IOException ioe) {
     			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe);
-    		}
+    		}catch (Exception e) {
+    			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
+			}
     		
     	}else{
     		logger.debug("La solicitud es NULA ");
@@ -298,12 +295,6 @@ public class JasperController {
         return("pdfReport");
     }
 
-	public ConsultarSolicitudMB getConsultarSolicitudMB() {
-		return consultarSolicitudMB;
-	}
 
-	public void setConsultarSolicitudMB(ConsultarSolicitudMB consultarSolicitudMB) {
-		this.consultarSolicitudMB = consultarSolicitudMB;
-	}
     
 }
