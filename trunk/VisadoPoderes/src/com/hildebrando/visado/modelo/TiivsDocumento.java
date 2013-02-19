@@ -15,7 +15,7 @@ public class TiivsDocumento implements java.io.Serializable {
 	private String activo;
 	private String nombre;
 	private String formato;
-	private Set tiivsTipoSolicDocumentos = new HashSet(0);
+	private Set<TiivsTipoSolicDocumento> tiivsTipoSolicDocumentos = new HashSet<TiivsTipoSolicDocumento>();
 
 	public TiivsDocumento() {
 	}
