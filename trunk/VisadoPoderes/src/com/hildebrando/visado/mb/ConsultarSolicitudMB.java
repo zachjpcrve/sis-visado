@@ -1666,8 +1666,10 @@ public class ConsultarSolicitudMB {
 						  serviceSolAgru.insertar(x1);
 					  }
 					
+					logger.debug("Tamanio agrupaciones: " + x1.getTiivsAgrupacionPersonas().size());
+					
 					for (TiivsAgrupacionPersona b :x1.getTiivsAgrupacionPersonas()) 
-				   { 
+				    { 
 					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
 					  logger.info("ccdcdcd : "+objPersonaRetorno.getCodPer());
 					  b.setTiivsPersona(null);
@@ -1706,6 +1708,9 @@ public class ConsultarSolicitudMB {
 					logger.info("a.getId().getCodSoli() **** " + a.getId().getCodSoli());
 					serviceSoli.insertarMerge(a);
 				}
+				
+				depurarTablas();
+				
 				if (objResultado.getCodSoli() != "" || objResultado != null) 
 				{
 					if (this.sEstadoSolicitud.equals("BORRADOR")) 
@@ -1747,7 +1752,39 @@ public class ConsultarSolicitudMB {
 	
 	public void depurarTablas()
 	{
+		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		
+		List<TiivsAgrupacionPersona> tmpListBD = buscarAgrupacionesBD(this.solicitudRegistrarT.getCodSoli());
+		Set<TiivsSolicitudAgrupacion> tmpVista = this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
+		
+		logger.info("Tamanio Lista Agrupaciones BD: " + tmpListBD.size());
+		logger.info("Tamanio Lista Agrupaciones Solicitud: " + tmpVista.size());
+		
+		//if (tmpVista.size()!=tmpListBD.size())
+		//{
+			logger.info("Depurando registros de BD de Agrupaciones de persona");
+			for (TiivsSolicitudAgrupacion x : tmpVista) 
+			{
+				for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) 
+				{ 
+					for (TiivsAgrupacionPersona bd: tmpListBD)
+					{
+						if (!b.getCodSoli().equals(bd.getCodSoli()) && b.getNumGrupo().equals(bd.getNumGrupo()))
+						{
+							logger.info("Eliminando grupo Nro: " + b.getNumGrupo() + " de la solicitud: " + b.getCodSoli());
+							
+							try {
+								serviceAgru.eliminar(bd);
+							} catch (Exception e) {
+								logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage());
+								Utilitarios.mensajeError("ERROR", "Ocurrio un Error al depurar la base de datos de agrupaciones!!");
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+		//}
 	}
 	
 	public Boolean existeAgrupacionPersona(TiivsAgrupacionPersona objAgrupacion)
@@ -1756,6 +1793,7 @@ public class ConsultarSolicitudMB {
 		
 		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
+		
 		List<TiivsAgrupacionPersona> lista = new ArrayList<TiivsAgrupacionPersona>();
 		
 		Busqueda filtroAgrPer = Busqueda.forClass(TiivsAgrupacionPersona.class);
