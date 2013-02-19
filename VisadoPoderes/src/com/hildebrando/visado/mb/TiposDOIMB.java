@@ -13,12 +13,13 @@ import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.service.DocumentoService;
+import com.hildebrando.visado.service.TiposDoiService;
 
 @ManagedBean(name = "tiposDOIMB")
 @SessionScoped
 public class TiposDOIMB {
 	public static Logger logger = Logger.getLogger(DocumentoMB.class);
-	private DocumentoService documentoService;
+	private TiposDoiService documentoService;
 	private TiivsMultitabla documento;
 	private List<TiivsMultitabla> documentos;
 	private List<TiivsMultitabla> tipoDocumento;
@@ -34,7 +35,7 @@ public class TiposDOIMB {
 		bValor4 = false;
 		bMsgActualizar = false;
 		bValidacion = false;
-		documentoService = new DocumentoService();
+		documentoService = new TiposDoiService();
 		cargarComboTipoDocumento();
 		listarDocumentos();
 		obtenerMaximo();
