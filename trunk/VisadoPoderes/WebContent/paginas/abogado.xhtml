@@ -73,7 +73,7 @@
 					<tr>
 						<td><h:outputText value="Perfil " /></td>
 						<td><p:selectOneMenu id="cboGrupo"
-								value="#{abogadoMB.abogado.tiivsGrupo.codGrupo}">
+								value="#{abogadoMB.abogadoLista.tiivsGrupo.codGrupo}">
 								<f:selectItem itemLabel="SELECCIONAR PERFIL" itemValue="-1" />
 								<f:selectItems value="#{abogadoMB.gruposFiltro}"
 									itemLabel="#{cboGru.desGrupo}" itemValue="#{cboGru.codGrupo}"
@@ -87,7 +87,7 @@
 								rendered="#{abogadoMB.mostrarComboEstudio}" /></td>
 						<td><p:selectOneMenu id="cboEstudio"
 								rendered="#{abogadoMB.mostrarComboEstudio}"
-								value="#{abogadoMB.abogado.estudio}">
+								value="#{abogadoMB.abogadoLista.estudio}">
 								<f:selectItem itemLabel="SELECCIONAR ESTUDIO" itemValue="-1" />
 								<f:selectItems value="#{abogadoMB.estudiosFiltro}"
 									itemLabel="#{cboEst.desEstudio}"
