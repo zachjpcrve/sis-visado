@@ -6,8 +6,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
 
-import sun.print.resources.serviceui;
-
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
