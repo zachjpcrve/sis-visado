@@ -107,7 +107,7 @@ public class SolicitudRegistroMB {
 	private List<TiivsTipoSolicDocumento> lstTipoSolicitudDocumentos;
 	private List<TiivsTipoSolicDocumento> lstDocumentosXTipoSolTemp;
 	boolean bBooleanPopup = false;
-	boolean bBooleanPopupTipoCambio = true;
+	//boolean bBooleanPopupTipoCambio = true;
 	boolean bBooleanPopupEmail = true;
 	private boolean flagUpdatePoderdanteApoderados=false;
 	private boolean flagUpdateOperacionSolic = false;
@@ -1042,10 +1042,9 @@ public class SolicitudRegistroMB {
 		if(e.getNewValue()!=null){
 		logger.info(" validarTipoCambioDisabled " +e.getNewValue());
 		if (e.getNewValue().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
-			bBooleanPopupTipoCambio=true;
 			this.objSolicBancaria.setTipoCambio(0.0);
 		}else{
-			bBooleanPopupTipoCambio=false;
+			//bBooleanPopupTipoCambio=false;
 		
 		}
 		}
@@ -2061,13 +2060,13 @@ public class SolicitudRegistroMB {
 		this.cadenaEscanerFinal = cadenaEscanerFinal;
 	}
 
-	public boolean isbBooleanPopupTipoCambio() {
+	/*public boolean isbBooleanPopupTipoCambio() {
 		return bBooleanPopupTipoCambio;
 	}
 
 	public void setbBooleanPopupTipoCambio(boolean bBooleanPopupTipoCambio) {
 		this.bBooleanPopupTipoCambio = bBooleanPopupTipoCambio;
-	}
+	}*/
 
 	public String getUbicacionTemporal() {
 		return ubicacionTemporal;
