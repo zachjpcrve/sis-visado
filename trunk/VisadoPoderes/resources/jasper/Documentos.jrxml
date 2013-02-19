@@ -19,14 +19,14 @@
 			<staticText>
 				<reportElement x="2" y="0" width="57" height="20" forecolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="11" isBold="true" isUnderline="true"/>
+					<font fontName="SansSerif" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Item]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="59" y="0" width="301" height="20" forecolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="11" isBold="true" isUnderline="true"/>
+					<font fontName="SansSerif" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Descripción]]></text>
 			</staticText>
