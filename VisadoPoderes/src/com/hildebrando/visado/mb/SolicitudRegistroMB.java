@@ -1619,7 +1619,7 @@ public class SolicitudRegistroMB {
 
 	public boolean validarRegistroSolicitud() throws Exception {
 		
-		 
+		  
 		boolean retorno = true;
 		String mensaje = "";
 		System.out.println("solicitudRegistrarT.getTiivsOficina1() "+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
