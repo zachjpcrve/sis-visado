@@ -19,10 +19,9 @@ import com.hildebrando.visado.service.TiposDoiService;
 @SessionScoped
 public class TiposDOIMB {
 	public static Logger logger = Logger.getLogger(DocumentoMB.class);
-	private TiposDoiService documentoService;
+	private TiposDoiService tiposDoiService;
 	private TiivsMultitabla documento;
 	private List<TiivsMultitabla> documentos;
-	private List<TiivsMultitabla> tipoDocumento;
 	private List<TiivsMultitabla> documentoEditar;
 	private boolean bValor4;
 	private boolean bMsgActualizar;
@@ -35,24 +34,11 @@ public class TiposDOIMB {
 		bValor4 = false;
 		bMsgActualizar = false;
 		bValidacion = false;
-		documentoService = new TiposDoiService();
-		cargarComboTipoDocumento();
+		tiposDoiService = new TiposDoiService();
 		listarDocumentos();
 		obtenerMaximo();
 
 	}
-
-	public void cargarComboTipoDocumento() {
-		logger.info("DocumentoMB : cargarComboTipoDocumento");
-		try {
-			tipoDocumento = documentoService.cargarComboTipoDocumento();
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("DocumentoMB :" + e.getLocalizedMessage());
-		}
-
-	}
-
 	
 	public void obtenerMaximo() {
 		logger.info("DocumentoMB : obtenerMaximo");
@@ -60,7 +46,7 @@ public class TiposDOIMB {
 		int parseSecuencial = 0;
 		try {
 
-			secuencial = documentoService.obtenerMaximo();
+			secuencial = tiposDoiService.obtenerMaximo();
 			parseSecuencial = Integer.parseInt(secuencial) + 1;
 			secuencial = String.valueOf(parseSecuencial);
 
@@ -102,7 +88,7 @@ public class TiposDOIMB {
 				} else {
 					documento.setValor4(ConstantesVisado.VALOR4_OBLIGATORIO_NO);
 				}
-				documentoService.registrar(documento);
+				tiposDoiService.registrar(documento);
 				if (isbMsgActualizar() == true) {
 					Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
 				} else {
@@ -131,7 +117,7 @@ public class TiposDOIMB {
 	public void listarDocumentos() {
 		logger.info("DocumentoMB : listarDocumentos");
 		try {
-			documentos = documentoService.listarDocumentos(tipoDocumento);
+			documentos = tiposDoiService.listarDocumentos(/*tipoDocumento*/);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("DocumentoMB :" + e.getLocalizedMessage());
@@ -159,13 +145,12 @@ public class TiposDOIMB {
 		codMultitabla = params.get("codMultitabla");
 		codElemento = params.get("codElemento");
 		try {
-			documentoEditar = documentoService.editarDocumento(codMultitabla,
+			documentoEditar = tiposDoiService.editarDocumento(codMultitabla,
 					codElemento);
 			for (int i = 0; i < documentoEditar.size(); i++) {
 				documento.setId(documentoEditar.get(i).getId());
 				documento.setValor1(documentoEditar.get(i).getValor1());
 				documento.setValor2(documentoEditar.get(i).getValor2());
-				documento.setValor3(documentoEditar.get(i).getValor3());
 				documento.setValor4(documentoEditar.get(i).getValor4());
 			}
 			if (documento.getValor4().equals(
@@ -204,14 +189,6 @@ public class TiposDOIMB {
 
 	public void setDocumentos(List<TiivsMultitabla> documentos) {
 		this.documentos = documentos;
-	}
-
-	public List<TiivsMultitabla> getTipoDocumento() {
-		return tipoDocumento;
-	}
-
-	public void setTipoDocumento(List<TiivsMultitabla> tipoDocumento) {
-		this.tipoDocumento = tipoDocumento;
 	}
 
 	public List<TiivsMultitabla> getDocumentoEditar() {
