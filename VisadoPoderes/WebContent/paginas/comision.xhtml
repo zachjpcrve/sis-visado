@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+		<!-- Mantenimiento Tipo de Comision -->
+		<h:form id="frmMantenimientoComision">
+		<p:panel header="Tipo de Comision" style="width: 85%">
+				<p:messages id="idMsmDocumento"></p:messages>
+			
+		<table>
+		<tr>
+		<td><h:outputText value="Persona Natural: " /></td>
+		<td><p:inputText id="txtNatural" value="#{comisionMB.comisiones[0].valor2}" maxlength="11" >
+		<f:validateDoubleRange minimum="0.0" maximum="9999999999.9"></f:validateDoubleRange>
+		</p:inputText></td>
+		</tr>
+		<tr>
+		<td><h:outputText value="Persona Juridica: " /></td>
+		<td><p:inputText id="txtJuridica" value="#{comisionMB.comisiones[1].valor2}" maxlength="11">
+			<f:validateDoubleRange minimum="0.0" maximum="999999999.9"></f:validateDoubleRange> </p:inputText>
+		</td>
+		</tr>
+		
+		<tr>
+		<td><h:outputText value="Personas Fallecidas Mayor X: " /></td>
+		<td><p:inputText id="txtFallecidasMayor" value="#{comisionMB.comisiones[2].valor2}" maxlength="11" >
+			<f:validateDoubleRange minimum="0.0" maximum="999999999.9"></f:validateDoubleRange>
+		</p:inputText>
+		</td>
+		</tr>
+		
+		<tr>
+		<td><h:outputText value="Personas Fallecidas Menor X: " /></td>
+		<td><p:inputText id="txtFallecidasMenor" value="#{comisionMB.comisiones[3].valor2}" maxlength="11" >
+			<f:validateDoubleRange minimum="0.0" maximum="999999999.9"></f:validateDoubleRange>
+		</p:inputText></td>
+		</tr>
+		
+		<tr>
+		<td><h:outputText value="X: " /></td>
+		<td><p:inputText id="txtX" value="#{comisionMB.comisiones[4].valor2}" maxlength="11" >
+			<f:validateDoubleRange minimum="0.0" maximum="999999999.9"></f:validateDoubleRange>
+		</p:inputText></td>
+		</tr>
+		
+		<tr>
+		<td><h:outputText value="IGV: " /></td>
+		<td><p:inputText id="txtIgv" value="#{comisionMB.comisiones[5].valor2}" maxlength="11" >		
+			<f:validateDoubleRange minimum="0.0" maximum="999999999.9"></f:validateDoubleRange>
+		</p:inputText></td>
+		</tr>
+		
+		</table>
+		
+				<p:commandButton id="actualizarComision2" value="Actualizar" 
+						onclick="cfdActualizar.show();" >
+				</p:commandButton>
+		
+				<p:commandButton id="limpiarDocumento" value="Limpiar" ajax="true"
+					action="#{comisionMB.listarComisiones}"
+					update=":frmMantenimientoComision">
+				</p:commandButton>
+				
+				<p:confirmDialog  widgetVar="cfdActualizar" modal="true" header="Mensaje de Informacion"
+					message="¿Esta seguro de actualizar el tipo de comision?" >
+				
+					<p:commandButton id="actualizarComision" value="Sí" ajax="true"
+					action="#{comisionMB.listarComisiones}"
+					actionListener="#{comisionMB.actualizar}"
+					update=":frmMantenimientoComision">
+					
+					</p:commandButton>
+					
+					<p:commandButton value="No" onclick="cfdActualizar.hide();">
+					</p:commandButton>
+					
+						
+				</p:confirmDialog>
+				
+				
+			</p:panel>	
+		</h:form>
+		<!--Fin Mantenimiento Tipo de Comision -->
+	</ui:define>
+</ui:composition>
+</html>
