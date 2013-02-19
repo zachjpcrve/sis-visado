@@ -72,8 +72,8 @@
 			</textField>
 			<image onErrorType="Blank">
 				<reportElement x="1" y="0" width="227" height="39"/>
-                <imageExpression class="java.lang.String"><![CDATA["./resources/images/bbva2.gif"]]></imageExpression>
-            </image>
+				<imageExpression class="java.lang.String"><![CDATA["./resources/images/bbva2.gif"]]></imageExpression>
+			</image>
 			<textField pattern="dd/MM/yyyy h.mm.ss a">
 				<reportElement x="418" y="0" width="128" height="20"/>
 				<textElement/>
@@ -86,42 +86,42 @@
 			<staticText>
 				<reportElement x="13" y="27" width="77" height="20" forecolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nro Solicitud:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="13" y="48" width="77" height="20" forecolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nro Voucher *]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="139" y="27" width="48" height="20" forecolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Estado:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="139" y="48" width="53" height="20" forecolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Comision:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="271" y="27" width="48" height="20" forecolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Oficina:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="271" y="48" width="76" height="20" forecolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Importe Total:]]></text>
 			</staticText>
@@ -170,7 +170,7 @@
 			<staticText>
 				<reportElement mode="Opaque" x="13" y="0" width="520" height="20" forecolor="#FFFFFF" backcolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="11" isBold="true"/>
+					<font fontName="SansSerif" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[1. Información General]]></text>
 			</staticText>
@@ -198,7 +198,7 @@
 			<staticText>
 				<reportElement mode="Opaque" x="13" y="1" width="520" height="20" forecolor="#FFFFFF" backcolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="11" isBold="true"/>
+					<font fontName="SansSerif" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[2. Apoderado (Solicitante) / Poderdante (Usuario/Cliente)]]></text>
 			</staticText>
@@ -212,7 +212,7 @@
 			<staticText>
 				<reportElement mode="Opaque" x="13" y="2" width="194" height="20" forecolor="#FFFFFF" backcolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="11" isBold="true"/>
+					<font fontName="SansSerif" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[3. Documento por Tipo de Servicio]]></text>
 			</staticText>
@@ -238,7 +238,7 @@
 			<staticText>
 				<reportElement mode="Opaque" x="13" y="2" width="520" height="20" forecolor="#FFFFFF" backcolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="11" isBold="true"/>
+					<font fontName="SansSerif" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[4. Operaciones bancarias que desea realizar el apoderado]]></text>
 			</staticText>
@@ -249,7 +249,7 @@
 			<staticText>
 				<reportElement x="14" y="32" width="520" height="32" forecolor="#003399"/>
 				<textElement textAlignment="Justified">
-					<font fontName="Arial" size="10" isBold="false"/>
+					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Por la presente solicito la revisión de poderes y/o documentos, así mismo adjunto el pago de la comisión por revisión de poderes.]]></text>
 			</staticText>
@@ -262,14 +262,14 @@
 			<staticText>
 				<reportElement x="73" y="146" width="90" height="20" forecolor="#000000"/>
 				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[SOLICITANTE (S)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="377" y="146" width="90" height="20" forecolor="#000000"/>
 				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[SOLICITANTE (S)]]></text>
 			</staticText>
@@ -286,7 +286,7 @@
 			<staticText>
 				<reportElement x="90" y="0" width="353" height="20" forecolor="#003399"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[BBVA Banco Continental © Copyright - Todos los Derechos Reservados]]></text>
 			</staticText>
