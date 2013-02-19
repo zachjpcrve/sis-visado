@@ -814,7 +814,7 @@ public class ReportesMB
 						agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
 						agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
 						agrupacionSimpleDto.setsEstado(Utilitarios
-								.obternerDescripcionEstado(x.getActivo().trim()));
+								.obternerDescripcionEstado(x.getEstado().trim()));
 						agrupacionSimpleDto.setLstPersonas(lstPersonas);
 						lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 				    }

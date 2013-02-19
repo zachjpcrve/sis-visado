@@ -464,7 +464,7 @@ public class SolicitudRegistroMB {
 		tiivsSolicitudAgrupacionId.setNumGrupo(iNumGrupo);
 		tiivsSolicitudAgrupacion.setId(tiivsSolicitudAgrupacionId);
 		tiivsSolicitudAgrupacion.setTiivsAgrupacionPersonas(lstTiivsAgrupacionPersonas);
-		tiivsSolicitudAgrupacion.setActivo(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO);
+		tiivsSolicitudAgrupacion.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO);
 
 		lstSolicitudArupacion.add(tiivsSolicitudAgrupacion);
 		logger.info("TAMANIO DE LA SOLICI AGRUPA " + lstSolicitudArupacion.size());

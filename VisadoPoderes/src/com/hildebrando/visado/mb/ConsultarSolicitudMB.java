@@ -644,7 +644,7 @@ public class ConsultarSolicitudMB {
 				agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), x.getId().getNumGrupo()));
 				agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
 				agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
-				agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionEstado(x.getActivo().trim()));
+				agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionEstado(x.getEstado().trim()));
 				agrupacionSimpleDto.setLstPersonas(lstPersonas);
 			   lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 		   }
@@ -1418,7 +1418,7 @@ public class ConsultarSolicitudMB {
 					}
 				}
 				if(contPoderdante==0||contApoderado==0){
-					retorno= false;
+					//retorno= false;
 					Utilitarios.mensajeInfo("INFO", "Ingrese por lo menos un Poderdante y un Apoderado, por cada Combinación");
 					break;
 					
@@ -1553,6 +1553,9 @@ public class ConsultarSolicitudMB {
 		logger.info("*********************** registrarSolicitud ************************");
 		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
+		
+		GenericDao<TiivsSolicitudAgrupacion, Object> serviceSolAgru = (GenericDao<TiivsSolicitudAgrupacion, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit
@@ -1594,41 +1597,67 @@ public class ConsultarSolicitudMB {
 					logger.info(solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
 					actualizarBandeja=true;
 				}
-				
-		
-				
-				// CESARRRRRRRRRRRRRRRRR
+								
 				Set<TiivsSolicitudAgrupacion> listaTMP = this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
 				logger.info("listaTMP listaTMP "+listaTMP.size());
 				//solicitudRegistrarT.setTiivsSolicitudAgrupacions(new HashSet<TiivsSolicitudAgrupacion>());
-				TiivsSolicitud objResultado = service.modificar(this.solicitudRegistrarT);
-				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
-				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
-					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
-					   logger.info("ccdcdcd : "+objPersonaRetorno.getCodPer());
-					     b.setTiivsPersona(null);
-					     b.setCodPer(objPersonaRetorno.getCodPer());
-					     
-					     if (existeAgrupacionPersona(b))
-							{
-								serviceAgru.modificar(b);
-							}
-							else
-							{
-								serviceAgru.insertar(b);
-							}
-					     } 
+				TiivsSolicitudAgrupacion objSoliAgruEliminar=null;
+				for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) 
+				{
+				  if (objAgrupacionSimpleDtoCapturado.getId()!=null)
+				  {
+					   logger.info("x.getId().getNumGrupo():" + x.getId().getNumGrupo());
 				  
-				  }
-
+					   logger.info("objAgrupacionSimpleDtoCapturado.getId().getNumGrupo():" + objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
+					  
+						if (x.getId().getNumGrupo()==objAgrupacionSimpleDtoCapturado.getId().getNumGrupo())
+						{
+							objSoliAgruEliminar=x;
+							for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) {
+							
+								 if (existeAgrupacionPersona(b))
+								 {
+									 serviceAgru.eliminar(b);
+									
+								 }
+							}
+						}
+				   }
+				}
 				
+				if(objSoliAgruEliminar!=null){
+				 serviceSolAgru.eliminar(objSoliAgruEliminar);
+				}
+				
+				TiivsSolicitud objResultado = service.insertarMerge(this.solicitudRegistrarT);
+				List<TiivsAgrupacionPersona> tmpListBD = buscarAgrupacionesBD(this.solicitudRegistrarT.getCodSoli());
+				
+				for (TiivsSolicitudAgrupacion x1 : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) 
+				{
+				   for (TiivsAgrupacionPersona b :x1.getTiivsAgrupacionPersonas()) 
+				  { 
+					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
+					  logger.info("ccdcdcd : "+objPersonaRetorno.getCodPer());
+					  b.setTiivsPersona(null);
+					  b.setCodPer(objPersonaRetorno.getCodPer());
+					     
+					  if (existeAgrupacionPersona(b))
+					  {
+						  serviceAgru.modificar(b);
+					  }
+					  else
+					  {
+						  serviceAgru.insertar(b);
+					  }
+				  }
+				}
+				
+				
+				  
+				  
 
 				solicitudRegistrarT.setTiivsEstudio(null);
-				
-			
-				  
-				  
-				  
+								  
 				// Carga ficheros al FTP
 				boolean bRet = cargarArchivosFTP();
 				logger.info("Resultado de carga de archivos al FTP:" + bRet);
@@ -1669,14 +1698,13 @@ public class ConsultarSolicitudMB {
 				}
 
 				logger.info("objResultado.getCodSoli(); " + objResultado.getCodSoli());
-				//logger.info("objResultado.getTiivsSolicitudAgrupacions() " 	+ listaTMP.size());
 				logger.info("this.solicitudRegistrarT.importe : " + this.solicitudRegistrarT.getImporte());
 				
 				if (actualizarBandeja)
 				{
 					this.seguimientoMB.busquedaSolicitudes();
 				}
-				// instanciarSolicitudRegistro();
+				
 			}
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage());
@@ -1717,6 +1745,39 @@ public class ConsultarSolicitudMB {
 		
 		return existe;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TiivsAgrupacionPersona> buscarAgrupacionesBD(String codSoli)
+	{
+		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		
+		List<TiivsAgrupacionPersona> listaP = new ArrayList<TiivsAgrupacionPersona>();
+		List<TiivsAgrupacionPersona> listaF = new ArrayList<TiivsAgrupacionPersona>();
+		
+		Busqueda filtroAgrPer = Busqueda.forClass(TiivsAgrupacionPersona.class);
+		filtroAgrPer.add(Restrictions.eq("codSoli", codSoli));
+				
+		try {
+			listaP = serviceAgru.buscarDinamico(filtroAgrPer);
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.debug("Error al buscar la agrupacion de personas");
+		}
+		
+		for (TiivsAgrupacionPersona b: listaP)
+		{
+			if (b.getNumGrupo()>0)
+			{
+				listaF.add(b);
+			}
+		}
+			
+		return listaF;
+	}
+	
+	
+	
 	
 	//metodo de cesar
 	 /*public void verEditarAgrupacion(){
@@ -1788,7 +1849,7 @@ public class ConsultarSolicitudMB {
 		tiivsSolicitudAgrupacionId.setNumGrupo(iNumGrupo);
 		tiivsSolicitudAgrupacion.setId(tiivsSolicitudAgrupacionId);
 		tiivsSolicitudAgrupacion.setTiivsAgrupacionPersonas(lstTiivsAgrupacionPersonas);
-		tiivsSolicitudAgrupacion.setActivo("1");
+		tiivsSolicitudAgrupacion.setEstado("1");
 
 		lstSolicitudArupacion.add(tiivsSolicitudAgrupacion);
 		logger.info("TAMANIO DE LA SOLICI AGRUPA " + lstSolicitudArupacion.size());
@@ -1797,16 +1858,21 @@ public class ConsultarSolicitudMB {
 
 	
 
-	 public void agregarAgrupacion(){
+	public void agregarAgrupacion(){
 		  if(validarAgregarAgrupacion()){
 			  logger.info("***************************** agregarAgrupacion ***************************************");
 			  if(!flagUpdatePoderdanteApoderados){// INDICA QUE ES UN REGISTRO NUEVO
-				 /* numGrupoUpdatePoderdanteApoderado=0;
-				  numGrupo=0;*/
+				
 		  numGrupo=numGrupo+1;
 		  logger.info("********************** agregarAgrupacion ********************* " +numGrupo);
 		  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 		  List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
+		  
+		  if (lstTiivsAgrupacionPersonas == null)
+		  {
+			  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
+		  }
+		  
 		  for (TiivsPersona n : lstTiivsPersona) {
 			  if(n.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 				  lstPoderdantes.add(n);}
@@ -1821,6 +1887,8 @@ public class ConsultarSolicitudMB {
 			  tiivsAgrupacionPersonaId.setClasifPer(n.getClasifPer());
 			  tiivsAgrupacionPersonaId.setTipPartic(n.getTipPartic());
 			  tiivsAgrupacionPersonaId.setTiivsPersona(n);
+			  //tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
+			  
 			  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersonaId);
 		}  
 		  logger.info("lstPoderdantes " +lstPoderdantes.size());
@@ -1832,14 +1900,19 @@ public class ConsultarSolicitudMB {
 		   agrupacionSimpleDto.setsEstado(ConstantesVisado.ESTADOS.ESTADO_ACTIVO);
 		   agrupacionSimpleDto.setiEstado(Integer.parseInt(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
 		   agrupacionSimpleDto.setLstPersonas(this.lstTiivsPersona);
+		   logger.info("Tamanio Lista Personas: " + lstTiivsPersona.size());
+		   logger.info("Tamanio Lista Agrupacion Personas: " + lstTiivsAgrupacionPersonas.size());
 		  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+		  
 		  solicitudRegistrarT.setTiivsSolicitudAgrupacions(this.agregarSolicitudArupacion(solicitudRegistrarT,numGrupo,lstTiivsAgrupacionPersonas ));
+		  //solicitudRegistrarT.setTiivsSolicitudAgrupacions(lstTiivsAgrupacionPersonas );
 		  logger.info("tamanio de lstTiivsAgrupacionPersonas "+lstTiivsAgrupacionPersonas.size());
 		  lstTiivsPersona=new ArrayList<TiivsPersona>();
 		  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
 			logger.info("Tamanio de la lista Solicitud Agrupacion : " +solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
 		  this.llamarComision();
-		
+		   numGrupoUpdatePoderdanteApoderado=0;
+		  numGrupo=0;
 
 		  
 		  bBooleanPopup=false;
@@ -1891,7 +1964,7 @@ public class ConsultarSolicitudMB {
 					}
 					 
 				} 
-				logger.info("tamanioo lstAgrupacionSimpleDto: " +lstAgrupacionSimpleDto.size());
+				
 			  }
 		  
 		  
@@ -1912,7 +1985,7 @@ public class ConsultarSolicitudMB {
 		tiivsSolicitudAgrupacion.setId(tiivsSolicitudAgrupacionId);
 		tiivsSolicitudAgrupacion
 				.setTiivsAgrupacionPersonas(lstTiivsAgrupacionPersonas);
-		tiivsSolicitudAgrupacion.setActivo("1");
+		tiivsSolicitudAgrupacion.setEstado("1");
 
 		lstSolicitudArupacion.add(tiivsSolicitudAgrupacion);
 		logger.info("TAMANIO DE LA SOLICI AGRUPA "
