@@ -60,6 +60,10 @@
 								actionListener="#{abogadoMB.registrar}"
 								update=":frmDataTableAbogado :frmMantenimientoAbogado">
 							</p:commandButton></td>
+							<td><p:commandButton id="limpiar" value="Limpiar" ajax="true"
+								action="#{abogadoMB.limpiarCampos}"
+								update=":frmMantenimientoAbogado">
+							</p:commandButton></td>
 					</tr>
 
 				</table>
@@ -130,7 +134,8 @@
 					</p:column>
 					<p:column headerText="Eliminar">
 						<p:commandLink id="clinkEliminar" ajax="false"
-							update=":frmDataTableAbogado" action="#{abogadoMB.listarAbogados}"
+							update=":frmDataTableAbogado"
+							action="#{abogadoMB.listarAbogados}"
 							actionListener="#{abogadoMB.eliminarAbogado}">
 							<f:param name="codAbogado" value="#{abo.codMiembro}"></f:param>
 							<h:outputText value="Eliminar" />
