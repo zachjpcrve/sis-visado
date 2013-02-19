@@ -508,7 +508,7 @@ public class SolicitudEdicionMB
 			tiivsSolicitudAgrupacion.setId(tiivsSolicitudAgrupacionId);
 			tiivsSolicitudAgrupacion
 					.setTiivsAgrupacionPersonas(lstTiivsAgrupacionPersonas);
-			tiivsSolicitudAgrupacion.setActivo("1");
+			tiivsSolicitudAgrupacion.setEstado("1");
 
 			lstSolicitudArupacion.add(tiivsSolicitudAgrupacion);
 			logger.info("TAMANIO DE LA SOLICI AGRUPA "
