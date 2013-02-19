@@ -71,7 +71,7 @@
 	</session-config>
 	<resource-ref>
 		<description></description>
-		<res-ref-name>java:comp/env/jdbc/VISPOD</res-ref-name>
+		<res-ref-name>jdbc/VISPOD</res-ref-name>
 
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
