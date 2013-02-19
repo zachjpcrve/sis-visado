@@ -91,15 +91,14 @@
 
 				<p:commandButton value="Nuevo"
 					actionListener="#{revocadosMB.editPendRevocadoNuevo}"
-					oncomplete="dlgApoPodPendEdit.show();" 
-					update=":frmPendEdit" 
+					oncomplete="dlgApoPodPendEdit.show();" update=":frmPendEdit"
 					ajax="true" />
 
 				<h:outputLabel id="outLblTotal"
 					value="Total de registros: #{revocadosMB.nroRegistros} Registros" />
 
-				<p:commandButton value="Buscar" action="#{revocadosMB.buscarRevocado}"
-					ajax="false" update="tbl" />
+				<p:commandButton value="Buscar"
+					action="#{revocadosMB.buscarRevocado}" ajax="false" update="tbl" />
 			</div>
 
 			<br></br>
@@ -235,7 +234,7 @@
 			<h:form id="frmPendEdit">
 
 				<h:panelGrid columns="1" id="gridMsj">
-					<p:messages globalOnly="true" />
+					<p:messages globalOnly="true"  showDetail="true" />
 				</h:panelGrid>
 
 				<h:panelGrid columns="11" id="gridApodPod">
@@ -284,25 +283,26 @@
 				</h:panelGrid>
 
 				<h:panelGrid columns="6" id="gridApodPod2">
-					
-					<h:outputText styleClass="outputTextPopup" id="outApPaterno" value="Ap.Paterno:" />
-					<p:inputText styleClass="inputTextPopup"
-								id="txtApellidoPaterno" size="25"
-								 value="#{revocadosMB.objTiivsPersonaAgregar.apePat}" />
-						
-					<h:outputText styleClass="outputTextPopup" id="outApMaterno" value="Ap.Materno:" />
-					<p:inputText styleClass="inputTextPopup"
-								id="txtApellidoMaterno" size="25"
-								 value="#{revocadosMB.objTiivsPersonaAgregar.apeMat}"  />	
-					
-					<h:outputText styleClass="outputTextPopup" id="outNombres" value="Nombres:" />
+
+					<h:outputText styleClass="outputTextPopup" id="outApPaterno"
+						value="Ap.Paterno:" />
+					<p:inputText styleClass="inputTextPopup" id="txtApellidoPaterno"
+						size="25" value="#{revocadosMB.objTiivsPersonaAgregar.apePat}" />
+
+					<h:outputText styleClass="outputTextPopup" id="outApMaterno"
+						value="Ap.Materno:" />
+					<p:inputText styleClass="inputTextPopup" id="txtApellidoMaterno"
+						size="25" value="#{revocadosMB.objTiivsPersonaAgregar.apeMat}" />
+
+					<h:outputText styleClass="outputTextPopup" id="outNombres"
+						value="Nombres:" />
 					<p:inputText styleClass="inputTextPopup" id="txtNombres" size="25"
-								value="#{revocadosMB.objTiivsPersonaAgregar.nombre}" />		 
-								
+						value="#{revocadosMB.objTiivsPersonaAgregar.nombre}" />
+
 				</h:panelGrid>
-				
+
 				<h:panelGrid columns="2" id="gridApodPod3">
-				
+
 					<h:outputLabel value="Tipo de Registro: " />
 					<p:selectOneMenu id="cboTipoRegistro"
 						value="#{revocadosMB.objTiivsPersonaAgregar.tipPartic}"
@@ -311,7 +311,7 @@
 							itemValue="#{t.key}" itemLabel="#{t.descripcion}" />
 						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 					</p:selectOneMenu>
-					
+
 				</h:panelGrid>
 
 				<h:panelGrid columns="3">
@@ -326,7 +326,7 @@
 					<p:commandButton id="btnLimpiar" value="Limpiar"
 						icon="ui-icon-trash"
 						actionListener="#{revocadosMB.limpiarCriteriosBusqueda}"
-						update=":frmPendEdit"
+						update=":frmPendEdit:gridMsj :frmPendEdit:gridApodPod :frmPendEdit:gridApodPod2 :frmPendEdit:gridApodPod3"
 						process="@form" ajax="true" />
 
 				</h:panelGrid>
@@ -407,10 +407,10 @@
 
 														<td><p:commandButton icon="ui-icon-close"
 																action="#{revocadosMB.eliminarRevocado}"
-																update=":frmPendEdit:dtClientes">
+																update=":frmPendEdit:dtClientes"
+																rendered="#{revocadosMB.flagRevocar}">
 																<f:setPropertyActionListener
-																	target="#{revocadosMB.deletePersonaEdit}"
-																	value="#{n}">
+																	target="#{revocadosMB.deletePersonaEdit}" value="#{n}">
 																</f:setPropertyActionListener>
 															</p:commandButton></td>
 
@@ -446,7 +446,8 @@
 
 														<td><p:commandButton icon="ui-icon-close"
 																action="#{revocadosMB.eliminarRevocado}"
-																update=":frmPendEdit:dtClientes">
+																update=":frmPendEdit:dtClientes"
+																rendered="#{revocadosMB.flagRevocar}">
 																<f:setPropertyActionListener
 																	target="#{revocadosMB.deletePersonaEdit}" value="#{n}">
 																</f:setPropertyActionListener>
@@ -470,25 +471,50 @@
 
 					<h:panelGrid columns="1">
 
-						<p:commandButton id="btnRevocar" value="Revocar" rendered="#{revocadosMB.flagRevocar}"
-							icon="ui-icon-plus"
+						<p:commandButton id="btnRevocar" value="Revocar"
+							rendered="#{revocadosMB.flagRevocar}" icon="ui-icon-plus"
 							onclick="cfdRevocar.show();">
 						</p:commandButton>
 
+						<p:commandButton id="btnGuardar" value="Guardar"
+							rendered="#{revocadosMB.flagGuardar}" icon="ui-icon-plus"
+							onclick="cfdGuardar.show();">
+						</p:commandButton>
+
 					</h:panelGrid>
-					
+
 				</p:outputPanel>
-				
-				<p:confirmDialog widgetVar="cfdRevocar" message="¿Está seguro de revocar los poderes? ">
-					
-					<p:commandButton  value="Sí" actionListener="#{revocadosMB.revocarApodPod}" ajax="true"
-										 >
+
+				<p:confirmDialog widgetVar="cfdRevocar"
+					message="¿Está seguro de revocar los poderes? "
+					header="Mensaje de Información" appendToBody="true"
+					showEffect="explode" hideEffect="explode" severity="alert"
+					modal="true">
+
+					<p:commandButton value="Sí" process="dtClientes"
+						actionListener="#{revocadosMB.revocarApodPod}" update="gridMsj" ajax="true"
+						oncomplete="cfdRevocar.hide();">
 					</p:commandButton>
-					
-					<p:commandButton  value="No" onclick="cfdRevocar.hide();" >
+
+					<p:commandButton value="No" onclick="cfdRevocar.hide();">
 					</p:commandButton>
 				</p:confirmDialog>
-				
+
+				<p:confirmDialog widgetVar="cfdGuardar"
+					message="¿Está seguro de guardar los apoderados/poderdantes? "
+					header="Mensaje de Información" appendToBody="true"
+					showEffect="explode" hideEffect="explode" severity="alert"
+					modal="true">
+
+					<p:commandButton value="Sí" process="dtClientes"
+						actionListener="#{revocadosMB.guardarApodPod}" ajax="true"
+						oncomplete="cfdGuardar.hide();">
+					</p:commandButton>
+
+					<p:commandButton value="No" onclick="cfdGuardar.hide();">
+					</p:commandButton>
+				</p:confirmDialog>
+
 			</h:form>
 
 		</p:dialog>
