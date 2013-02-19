@@ -25,6 +25,8 @@ public interface GenericDao<K, T> {
 	public abstract List<K> buscarDinamico(final Busqueda filtro) throws Exception;
 	
 	public abstract List<Integer> buscarDinamicoInteger(final Busqueda filtro) throws Exception;
+	
+	public abstract List<String> buscarDinamicoString(final Busqueda filtro) throws Exception;
 
 	@SuppressWarnings("unchecked")
 	public abstract K buscarById(Class clazz, Serializable id) throws Exception;
