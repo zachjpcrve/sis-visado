@@ -169,11 +169,18 @@ public class ConsultarSolicitudMB {
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 
-		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)
-				&& this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
-			setbMostrarComentario(false);
-			setbSeccionEvaluarNivel(false);
-			setbSeccionDocumentos(false);
+		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
+			if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)){
+				setbMostrarComentario(false);
+				setbSeccionEvaluarNivel(false);
+				setbSeccionDocumentos(false);
+			} else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
+				setbSeccionDocumentos(true);
+			} else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)){
+				setbSeccionDocumentos(true);
+				setbMostrarCartaRevision(true);
+				setbMostrarCartaAtencion(false);				
+			}
 		}
 
 		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
@@ -301,17 +308,41 @@ public class ConsultarSolicitudMB {
 		PERFIL_USUARIO = (String) Utilitarios
 				.getObjectInSession("PERFIL_USUARIO");
 
-		if ((PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO
-				.equals(ConstantesVisado.OFICINA))
-				&& (this.solicitudRegistrarT.getEstado().trim()
-						.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02))) {
-			setbMostrarCartaRevision(true);
-			setbMostrarCartaAtencion(false);
-			setbMostrarGenerarRevision(false);
-		} else {
-			setbMostrarCartaRevision(false);
-			setbMostrarCartaAtencion(false);
+		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+			if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)){
+				setbMostrarCartaRevision(true);
+				setbMostrarCartaAtencion(false);
+				setbMostrarGenerarRevision(false);
+			} else {
+				setbMostrarCartaRevision(false);
+				setbMostrarCartaAtencion(false);
+			}
+			 
+		} else if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
+			if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)){
+				setbMostrarCartaRevision(true);
+				setbMostrarCartaAtencion(false);
+				setbMostrarGenerarRevision(false);
+				setbSeccionDocumentos(true);
+				setbSeccionAccion(false);
+				
+			} else {
+				setbMostrarCartaRevision(false);
+				setbMostrarCartaAtencion(false);
+			}
 		}
+		
+		
+//				PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
+//				&& (this.solicitudRegistrarT.getEstado().trim()
+//						.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02))) {
+//			setbMostrarCartaRevision(true);
+//			setbMostrarCartaAtencion(false);
+//			setbMostrarGenerarRevision(false);
+//		} else {
+//			setbMostrarCartaRevision(false);
+//			setbMostrarCartaAtencion(false);
+//		}
 	}
 
 	@SuppressWarnings("unchecked")
