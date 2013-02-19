@@ -6,13 +6,70 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-<SCRIPT type="text/javascript">
 
-</SCRIPT>
 		
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 <ui:param name="root" value="#{request.contextPath}/" />
 	<ui:define name="contenido">
+		<SCRIPT type="text/javascript">
+function validaNumero(e, ent, obj, fn) {
+	//Se captura la tecla presionada             
+	var tecla = (document.all) ? e.keyCode : e.which;
+	var patron;
+	var te;
+	var result;
+	//Tecla de retroceso (para poder borrar)       
+	if (tecla == 8) {
+		return true;
+	}
+	if (ent == '0') {
+		if (fn == '1') {
+			if (obj.value == '') {
+				return true;
+			}
+			var puntos = obj.value.split('.');
+			if (puntos.length > 2) {
+				obj.value = '';
+				obj.focus();
+			}
+		}
+		if (tecla == 46) {
+			if (obj.value.indexOf('.') != -1) {
+				return false;
+			}
+			return true;
+		}
+	} else {
+		if (fn == '1') {
+			if (obj.value.indexOf('.') != -1) {
+				obj.value = '';
+				obj.focus();
+			}
+		}
+	}
+		//Dejar la línea de patron que se necesite y borrar el resto             
+	//patron =/[A-Za-z]/; // Solo acepta letras             
+	patron = /\d/; // Solo acepta números             
+	//patron = /\w/; // Acepta números y letras             
+	//patron = /\D/; // No acepta números             
+	//
+	te = String.fromCharCode(tecla);
+	if (fn == '1') {
+		te = obj.value;
+	}
+	result = patron.test(te);
+	if (result == false) {
+		if (fn == '1') {
+			if (obj.value == '') {
+				return true;
+			}
+			obj.value = '';
+			obj.focus();
+		}
+	}
+	return result;
+}
+</SCRIPT>
 		<h:panelGrid columns="5">
 
 			<p:tabMenu activeIndex="0" style="width:350px;">
@@ -110,8 +167,10 @@
 																id="outNroVaucher" value="Nro Voucher *" /></td>
 														<td><h:inputText styleClass="inputText" immediate="false"  required="false" 
 																requiredMessage="Ingrese el Nro Voucher"
-																id="txtNroVaucher" style="width:100px;" 
+																id="txtNroVaucher" style="width:100px;" maxlength="11"
 																value="#{consultarSolicitudMB.solicitudRegistrarT.nroVoucher}"
+																onkeypress="return validaNumero(event,'0',this,'0');"
+															                onblur="validaNumero(event,'0',this,'1');"
 																 /></td>
 														<td><p:message for="txtNroVaucher"></p:message><p:graphicImage
 																value="/resources/images/pregunta.jpg"
