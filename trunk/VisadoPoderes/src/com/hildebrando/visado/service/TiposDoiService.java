@@ -33,7 +33,7 @@ public class TiposDoiService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<TiivsMultitabla> listarDocumentos(List<TiivsMultitabla> tipoDocumento) {
+	public List<TiivsMultitabla> listarDocumentos(/*List<TiivsMultitabla> tipoDocumento*/) {
 		logger.info("DocumentoService : listarDocumentos");
 		List<TiivsMultitabla> documentos = new ArrayList<TiivsMultitabla>();
 
@@ -62,13 +62,6 @@ public class TiposDoiService {
 					documentos.get(i).setValor4(
 							ConstantesVisado.VALOR4_OBLIGATORIO_NO_LISTA);
 				}
-				
-				for(int j = 0; j < tipoDocumento.size(); j++){
-					if(documentos.get(i).getValor3().equals(tipoDocumento.get(j).getId().getCodElem())){
-						documentos.get(i).setValor3(tipoDocumento.get(j).getValor1());
-					}
-				}
-
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -91,7 +84,7 @@ public class TiposDoiService {
 			secuencial = service.buscarDinamico(filtro.add(
 					Restrictions.eq("id.codMult",
 							ConstantesVisado.CODIGO_MULTITABLA_DOCUMENTO))
-					.setProjection(Projections.rowCount()));
+					.setProjection(Projections.max("id.codElem")));
 
 			List<E> parse = new ArrayList<E>();
 			parse = (List<E>) secuencial;
