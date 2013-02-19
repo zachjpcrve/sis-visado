@@ -3,10 +3,6 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="IMG_CABECERA" class="java.lang.String"/>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["C:\\ARCHIVOS_SAMIRA_HILDE\\WORKSPACES\\VISADO_01\\VisadoPoderes\\resources\\jasper\\"]]></defaultValueExpression>
-	</parameter>
 	<field name="oficina" class="java.lang.String"/>
 	<field name="numeroSolicitud" class="java.lang.String"/>
 	<field name="instrucciones" class="java.lang.String"/>

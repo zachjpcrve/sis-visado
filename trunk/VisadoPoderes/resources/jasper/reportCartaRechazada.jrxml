@@ -4,9 +4,6 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["../../WEB-INF/classes/jasper/"]]></defaultValueExpression>
-	</parameter>
 	<field name="numeroSolicitud" class="java.lang.String"/>
 	<field name="instrucciones" class="java.lang.String"/>
 	<field name="poderdantes" class="java.lang.String"/>
