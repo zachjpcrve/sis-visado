@@ -211,7 +211,7 @@
 			<staticText>
 				<reportElement x="0" y="15" width="43" height="20" forecolor="#003399"/>
 				<textElement>
-					<font fontName="Arial" size="11" isBold="true" isUnderline="false"/>
+					<font fontName="SansSerif" size="11" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Estadoo]]></text>
 			</staticText>
