@@ -29,13 +29,7 @@
 								<f:selectItem itemLabel="Inactivo" itemValue="0" />
 							</p:selectOneMenu></td>
 					</tr>
-					<tr>
-						<td><h:outputText value="Tipo de Documento: " /></td>
-						<td><p:selectOneMenu value="#{tiposDOIMB.documento.valor3}">
-								<f:selectItems value="#{tiposDOIMB.tipoDocumento}"
-									itemLabel="#{t.valor1}" itemValue="#{t.id.codElem}" var="t"></f:selectItems>
-							</p:selectOneMenu></td>
-					</tr>
+					
 					<tr>
 						<td><h:outputText value="Obligatorio: " /></td>
 						<td><p:selectBooleanCheckbox value="#{tiposDOIMB.bValor4}" /></td>
@@ -68,9 +62,7 @@
 					<p:column headerText="Descripcion">
 						<h:outputText value="#{doc.valor1}" />
 					</p:column>
-					<p:column headerText="Tipo de Documento">
-						<h:outputText value="#{doc.valor3}" />
-					</p:column>
+					
 					<p:column headerText="Obligatorio">
 						<h:outputText value="#{doc.valor4}" />
 					</p:column>
