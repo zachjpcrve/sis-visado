@@ -597,8 +597,10 @@ public class ConsultarSolicitudMB {
 			boolean isEditar=false;
 			if(this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)){
 				isEditar=true;
+				bBooleanPopup=false;
 			} else {
 				isEditar=false;
+				bBooleanPopup=false;
 			}
 			llenarListaDocumentosSolicitud(isEditar);
 			
@@ -1601,46 +1603,76 @@ public class ConsultarSolicitudMB {
 				Set<TiivsSolicitudAgrupacion> listaTMP = this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
 				logger.info("listaTMP listaTMP "+listaTMP.size());
 				//solicitudRegistrarT.setTiivsSolicitudAgrupacions(new HashSet<TiivsSolicitudAgrupacion>());
-				TiivsSolicitudAgrupacion objSoliAgruEliminar=null;
+				
+				/*TiivsSolicitudAgrupacion objSoliAgruEliminar=null;
+				
 				for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) 
 				{
-				  if (objAgrupacionSimpleDtoCapturado.getId()!=null)
-				  {
-					   logger.info("x.getId().getNumGrupo():" + x.getId().getNumGrupo());
-				  
-					   logger.info("objAgrupacionSimpleDtoCapturado.getId().getNumGrupo():" + objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
-					  
-						if (x.getId().getNumGrupo()==objAgrupacionSimpleDtoCapturado.getId().getNumGrupo())
-						{
-							objSoliAgruEliminar=x;
-							for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) {
+					  if (objAgrupacionSimpleDtoCapturado.getId()!=null)
+					  {
+						    logger.info("x.getId().getNumGrupo():" + x.getId().getNumGrupo());
+							  
+						    logger.info("objAgrupacionSimpleDtoCapturado.getId().getNumGrupo():" + objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
+						  
+							if (x.getId().getNumGrupo()==objAgrupacionSimpleDtoCapturado.getId().getNumGrupo())
+							{
+								objSoliAgruEliminar=x;
+								
+								for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) 
+								{
+									 if (existeAgrupacionPersona(b))
+									 {
+										 serviceAgru.eliminar(b);
+									 }
+								}
+							}
+					  }
+					  else
+					  {
+						  	objSoliAgruEliminar=x;
 							
+							for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) 
+							{
 								 if (existeAgrupacionPersona(b))
 								 {
 									 serviceAgru.eliminar(b);
-									
 								 }
 							}
-						}
-				   }
+					  }
 				}
 				
-				if(objSoliAgruEliminar!=null){
-				 serviceSolAgru.eliminar(objSoliAgruEliminar);
+				if(objSoliAgruEliminar!=null)
+				{
+					if (existeSolicitudAgrupacion(objSoliAgruEliminar))
+					{
+						serviceSolAgru.eliminar(objSoliAgruEliminar);
+					}
 				}
 				
-				TiivsSolicitud objResultado = service.insertarMerge(this.solicitudRegistrarT);
+				
 				List<TiivsAgrupacionPersona> tmpListBD = buscarAgrupacionesBD(this.solicitudRegistrarT.getCodSoli());
+				
+				if (!existeSolicitudAgrupacion(objSoliAgruEliminar))
+				  {
+					  serviceSolAgru.insertar(objSoliAgruEliminar);
+				  }*/
+				
+				
 				
 				for (TiivsSolicitudAgrupacion x1 : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) 
 				{
-				   for (TiivsAgrupacionPersona b :x1.getTiivsAgrupacionPersonas()) 
-				  { 
+					if (!existeSolicitudAgrupacion(x1))
+					  {
+						  serviceSolAgru.insertar(x1);
+					  }
+					
+					for (TiivsAgrupacionPersona b :x1.getTiivsAgrupacionPersonas()) 
+				   { 
 					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
 					  logger.info("ccdcdcd : "+objPersonaRetorno.getCodPer());
 					  b.setTiivsPersona(null);
 					  b.setCodPer(objPersonaRetorno.getCodPer());
-					     
+					  
 					  if (existeAgrupacionPersona(b))
 					  {
 						  serviceAgru.modificar(b);
@@ -1649,14 +1681,11 @@ public class ConsultarSolicitudMB {
 					  {
 						  serviceAgru.insertar(b);
 					  }
-				  }
+				   }
 				}
 				
-				
-				  
-				  
-
 				solicitudRegistrarT.setTiivsEstudio(null);
+				TiivsSolicitud objResultado = service.insertarMerge(this.solicitudRegistrarT);
 								  
 				// Carga ficheros al FTP
 				boolean bRet = cargarArchivosFTP();
@@ -1683,11 +1712,13 @@ public class ConsultarSolicitudMB {
 					{
 						mensaje = "Se registro correctamente la Solicitud con codigo : " + objResultado.getCodSoli() + " en Borrador";
 						Utilitarios.mensajeInfo("INFO", mensaje);
+						actualizarBandeja=true;
 					} 
 					else 
 					{
 						mensaje = "Se envio a SSJJ correctamente la Solicitud con codigo : " + objResultado.getCodSoli();
 						Utilitarios.mensajeInfo("INFO", mensaje);
+						actualizarBandeja=true;
 					}
 
 				} 
@@ -1712,7 +1743,11 @@ public class ConsultarSolicitudMB {
 			e.printStackTrace();
 
 		}
-
+	}
+	
+	public void depurarTablas()
+	{
+		
 	}
 	
 	public Boolean existeAgrupacionPersona(TiivsAgrupacionPersona objAgrupacion)
@@ -1726,9 +1761,9 @@ public class ConsultarSolicitudMB {
 		Busqueda filtroAgrPer = Busqueda.forClass(TiivsAgrupacionPersona.class);
 		filtroAgrPer.add(Restrictions.eq("codSoli", objAgrupacion.getCodSoli()));
 		filtroAgrPer.add(Restrictions.eq("numGrupo",objAgrupacion.getNumGrupo()));
-		filtroAgrPer.add(Restrictions.eq("codPer", objAgrupacion.getCodPer()));
-		filtroAgrPer.add(Restrictions.eq("tipPartic", objAgrupacion.getTipPartic()));
-		filtroAgrPer.add(Restrictions.eq("clasifPer", objAgrupacion.getClasifPer()));
+		filtroAgrPer.add(Restrictions.eq("codPer",objAgrupacion.getCodPer()));
+		filtroAgrPer.add(Restrictions.eq("tipPartic",objAgrupacion.getTipPartic()));
+		filtroAgrPer.add(Restrictions.eq("clasifPer",objAgrupacion.getClasifPer()));
 				
 		try {
 			lista = serviceAgru.buscarDinamico(filtroAgrPer);
@@ -1736,6 +1771,35 @@ public class ConsultarSolicitudMB {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.debug("Error al buscar la agrupacion de personas");
+		}
+		
+		if (lista.size()>0)
+		{
+			existe=true;
+		}
+		
+		return existe;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Boolean existeSolicitudAgrupacion(TiivsSolicitudAgrupacion objSolAgrupacion)
+	{
+		Boolean existe=false;
+		
+		GenericDao<TiivsSolicitudAgrupacion, Object> serviceAgru = (GenericDao<TiivsSolicitudAgrupacion, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		List<TiivsSolicitudAgrupacion> lista = new ArrayList<TiivsSolicitudAgrupacion>();
+		
+		Busqueda filtroSolAgrp = Busqueda.forClass(TiivsSolicitudAgrupacion.class);
+		
+		filtroSolAgrp.add(Restrictions.eq("id.codSoli", objSolAgrupacion.getId().getCodSoli()));
+		filtroSolAgrp.add(Restrictions.eq("id.numGrupo",objSolAgrupacion.getId().getNumGrupo()));
+				
+		try {
+			lista = serviceAgru.buscarDinamico(filtroSolAgrp);
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.debug("Error al buscar la solicitud agrupacion");
 		}
 		
 		if (lista.size()>0)
