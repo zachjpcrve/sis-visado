@@ -122,7 +122,7 @@ public class ConsultarSolicitudMB {
 	private boolean bMostrarCartaRechazo = false;
 	private boolean bMostrarCartaImprocedente = false;
 	private boolean bMostrarCartaRespuesta = false;
-	boolean bBooleanPopupTipoCambio = true;
+	//boolean bBooleanPopupTipoCambio = true;
 	boolean bBooleanPopup = false;
 	private String PERFIL_USUARIO;
 	private String sCodigoEstadoNivel;
@@ -3146,9 +3146,9 @@ public class ConsultarSolicitudMB {
 		if (e.getNewValue() != null) {
 			logger.info(" validarTipoCambioDisabled " + e.getNewValue());
 			if (e.getNewValue().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
-				bBooleanPopupTipoCambio = true;
+				//bBooleanPopupTipoCambio = true;
 			} else {
-				bBooleanPopupTipoCambio = false;
+				//bBooleanPopupTipoCambio = false;
 
 			}
 		}
@@ -3478,13 +3478,13 @@ public class ConsultarSolicitudMB {
 		this.objSolicBancaria = objSolicBancaria;
 	}
 
-	public boolean isbBooleanPopupTipoCambio() {
+	/*public boolean isbBooleanPopupTipoCambio() {
 		return bBooleanPopupTipoCambio;
 	}
 
 	public void setbBooleanPopupTipoCambio(boolean bBooleanPopupTipoCambio) {
 		this.bBooleanPopupTipoCambio = bBooleanPopupTipoCambio;
-	}
+	}*/
 
 	public PersonaDataModal getPersonaDataModal() {
 		return personaDataModal;
