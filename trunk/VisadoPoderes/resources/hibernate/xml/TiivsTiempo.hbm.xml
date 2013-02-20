@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 08/02/2013 11:00:00 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsTiempo" table="TIIVS_TIEMPO">
+        <id name="tiempoId" type="int">
+            <column name="TIEMPO_ID" precision="8" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="numeroDia" type="int">
+            <column name="NUMERO_DIA" precision="22" scale="0" />
+        </property>
+        <property name="numeroMes" type="int">
+            <column name="NUMERO_MES" precision="22" scale="0" />
+        </property>
+        <property name="nombreMes" type="string">
+            <column name="NOMBRE_MES" length="20" />
+        </property>
+        <property name="anio" type="int">
+            <column name="ANIO" precision="22" scale="0" />
+        </property>
+        <property name="fechaFormato" type="date">
+            <column name="FECHA_FORMATO" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>
