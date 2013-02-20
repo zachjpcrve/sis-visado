@@ -98,99 +98,100 @@
 				
 				<p:spacer height="30"/>
 				
-				<p:dataTable value="#{reportesMB.lstRecaudacionTipoServ}" var="tbl" rows="3" id="datosSol"
-						paginatorPosition="bottom" scrollable="true" scrollHeight="200"
-						paginator="true"
-						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-						rowsPerPageTemplate="5,10,15"
-						emptyMessage="">
-					
-						<p:column width="38">
-							<f:facet name="header">  
-						         <h:outputText value="Territorio" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.territorio}" style="font-size: 9px"/>	
-						</p:column>
-					
-						<p:column width="15">
-							<f:facet name="header">  
-						         <h:outputText value="Cod" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.codOficina}" style="font-size: 9px"/>	
-						</p:column>
+				<p:panel header="Resultados" id="panelRes" style="width: 1090px" >
+					<p:dataTable value="#{reportesMB.lstRecaudacionTipoServ}" var="tbl" rows="3" id="datosSol"
+							paginatorPosition="bottom" scrollable="true" scrollHeight="200"
+							paginator="true"
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+							rowsPerPageTemplate="5,10,15"
+							emptyMessage="">
 						
-						<p:column width="40">
-							<f:facet name="header">  
-						         <h:outputText value="Oficina" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.oficina}" style="font-size: 9px"/>	
-						</p:column>
+							<p:column width="38">
+								<f:facet name="header">  
+							         <h:outputText value="Territorio" style="font-size: 9px"/>  
+							    </f:facet>  
+								<h:outputText value="#{tbl.territorio}" style="font-size: 9px"/>	
+							</p:column>
 						
-						<p:column width="75">
-							<f:facet name="header">  
-						         <h:outputText value="Persona Natural" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.iContPersonasNaturales}" style="font-size: 9px"/>	
-						</p:column>
+							<p:column width="15">
+								<f:facet name="header">  
+							         <h:outputText value="Cod" style="font-size: 9px"/>  
+							    </f:facet>  
+								<h:outputText value="#{tbl.codOficina}" style="font-size: 9px"/>	
+							</p:column>
+							
+							<p:column width="40">
+								<f:facet name="header">  
+							         <h:outputText value="Oficina" style="font-size: 9px"/>  
+							    </f:facet>  
+								<h:outputText value="#{tbl.oficina}" style="font-size: 9px"/>	
+							</p:column>
+							
+							<p:column width="75">
+								<f:facet name="header">  
+							         <h:outputText value="Persona Natural" style="font-size: 9px"/>  
+							    </f:facet>  
+								<h:outputText value="#{tbl.iContPersonasNaturales}" style="font-size: 9px"/>	
+							</p:column>
+							
+							<p:column width="45">
+								<f:facet name="header">  
+							         <h:outputText value="Recaudacion" style="font-size: 9px"/>  
+							    </f:facet>  
+								<h:outputText value="#{tbl.sTotalPersonasNat}" style="font-size: 9px"/>	
+							</p:column>
+							
+							<p:column width="85">
+								<f:facet name="header">  
+							         <h:outputText value="Persona Juridica" style="font-size: 9px"/>  
+							    </f:facet>  
+								<h:outputText value="#{tbl.iContPersonasJuridicas}" style="font-size: 9px"/>	
+							</p:column>
+							
+							<p:column width="50">
+								<f:facet name="header">  
+							         <h:outputText value="Recaudacion" style="font-size: 9px"/>  
+							    </f:facet>  
+								<h:outputText value="#{tbl.sTotalPersonasJurd}" style="font-size: 9px"/>	
+							</p:column>
+							
+							<p:column width="120">
+								<f:facet name="header">  
+							         <h:outputText value="Persona Fallecida Mayor X" style="font-size: 9px"/>  
+							    </f:facet>  
+								<h:outputText value="#{tbl.iContPersonasFallecX}" style="font-size: 9px"/>	
+							</p:column>
+							
+							<p:column width="48">
+								<f:facet name="header">  
+							         <h:outputText value="Recaudacion" style="font-size: 9px"/>  
+							    </f:facet>  
+								<h:outputText value="#{tbl.sTotalPersonasFallecX}" style="font-size: 9px"/>	
+							</p:column>
+							
+							<p:column width="75">
+								<f:facet name="header">  
+							         <h:outputText value="Persona Fallecida Menor X" style="font-size: 9px"/>  
+							    </f:facet>  
+								<h:outputText value="#{tbl.iContPersonasFallecX1}" style="font-size: 9px"/>	
+							</p:column>
+							
+							<p:column width="52">
+								<f:facet name="header">  
+							         <h:outputText value="Recaudacion" style="font-size: 9px"/>  
+							    </f:facet>  
+								<h:outputText value="#{tbl.sTotalPersonasFallecX1}" style="font-size: 9px"/>	
+							</p:column>
+							
+							<p:column width="70">
+								<f:facet name="header">  
+							         <h:outputText value="Recaudacion Total" style="font-size: 9px"/>  
+							    </f:facet>  
+								<h:outputText value="#{tbl.sRecaudacionTotal}" style="font-size: 9px"/>	
+							</p:column>
 						
-						<p:column width="45">
-							<f:facet name="header">  
-						         <h:outputText value="Recaudacion" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.sTotalPersonasNat}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="85">
-							<f:facet name="header">  
-						         <h:outputText value="Persona Juridica" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.iContPersonasJuridicas}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="50">
-							<f:facet name="header">  
-						         <h:outputText value="Recaudacion" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.sTotalPersonasJurd}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="120">
-							<f:facet name="header">  
-						         <h:outputText value="Persona Fallecida Mayor X" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.iContPersonasFallecX}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="48">
-							<f:facet name="header">  
-						         <h:outputText value="Recaudacion" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.sTotalPersonasFallecX}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="75">
-							<f:facet name="header">  
-						         <h:outputText value="Persona Fallecida Menor X" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.iContPersonasFallecX1}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="52">
-							<f:facet name="header">  
-						         <h:outputText value="Recaudacion" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.sTotalPersonasFallecX1}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="70">
-							<f:facet name="header">  
-						         <h:outputText value="Recaudacion Total" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.sRecaudacionTotal}" style="font-size: 9px"/>	
-						</p:column>
-					
-				</p:dataTable>
-				
+					</p:dataTable>
+				</p:panel>
 		</h:form>
 			
 		<p:confirmDialog id="confirmDialog" message="Que desea hacer?" 

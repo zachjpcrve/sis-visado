@@ -118,70 +118,71 @@
 			
 			<p:spacer height="30"/>
 			
-			<p:dataTable value="#{reportesMB.lstSolicitudesTipoServicio}" var="tbl" rows="3" id="datosSol"
-					paginatorPosition="bottom" scrollable="true" scrollHeight="200"
-					paginator="true"
-					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-					rowsPerPageTemplate="5,10,15" emptyMessage="">
-				
-					<p:column width="65">
-						<f:facet name="header">  
-					         <h:outputText value="Codigo Solicitud" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.codSolicitud}" style="font-size: 9px"/>	
-					</p:column>
-				
-					<p:column width="35">
-						<f:facet name="header">  
-					         <h:outputText value="Estudio" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.estudio}" style="font-size: 9px"/>	
-					</p:column>
+			<p:panel header="Resultados" id="panelRes" style="width: 1090px" >
+				<p:dataTable value="#{reportesMB.lstSolicitudesTipoServicio}" var="tbl" rows="3" id="datosSol"
+						paginatorPosition="bottom" scrollable="true" scrollHeight="200"
+						paginator="true"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						rowsPerPageTemplate="5,10,15" emptyMessage="">
 					
-					<p:column width="62">
-						<f:facet name="header">  
-					         <h:outputText value="Tipo de Servicio" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.tipoServicio}" style="font-size: 9px"/>	
-					</p:column>
+						<p:column width="65">
+							<f:facet name="header">  
+						         <h:outputText value="Codigo Solicitud" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.codSolicitud}" style="font-size: 9px"/>	
+						</p:column>
 					
-					<p:column width="70">
-						<f:facet name="header">  
-					         <h:outputText value="Tipo de Operacion" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.tipoOperacion}" style="font-size: 9px"/>	
-					</p:column>
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Estudio" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.estudio}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="62">
+							<f:facet name="header">  
+						         <h:outputText value="Tipo de Servicio" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.tipoServicio}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="70">
+							<f:facet name="header">  
+						         <h:outputText value="Tipo de Operacion" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.tipoOperacion}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="32">
+							<f:facet name="header">  
+						         <h:outputText value="Moneda" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.moneda}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="37">
+							<f:facet name="header">  
+						         <h:outputText value="Importe" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.importe}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="62">
+							<f:facet name="header">  
+						         <h:outputText value="Tipo de Cambio" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.tipoCambio}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="68">
+							<f:facet name="header">  
+						         <h:outputText value="Importe en Soles" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.importeSoles}" style="font-size: 9px"/>	
+						</p:column>
 					
-					<p:column width="32">
-						<f:facet name="header">  
-					         <h:outputText value="Moneda" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.moneda}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="37">
-						<f:facet name="header">  
-					         <h:outputText value="Importe" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.importe}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="62">
-						<f:facet name="header">  
-					         <h:outputText value="Tipo de Cambio" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.tipoCambio}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="68">
-						<f:facet name="header">  
-					         <h:outputText value="Importe en Soles" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.importeSoles}" style="font-size: 9px"/>	
-					</p:column>
-				
-			</p:dataTable>	
-    		
+				</p:dataTable>	
+    		</p:panel>
 		</h:form>
 		
 		<p:confirmDialog id="confirmDialog" message="Que desea hacer?" 
