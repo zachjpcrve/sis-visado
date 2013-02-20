@@ -20,40 +20,58 @@ public class ComisionMB {
 	private TiivsMultitabla comision;
 	private List<TiivsMultitabla> comisiones;
 	private ComisionService comisionService;
-	
-	public ComisionMB(){
+
+	public ComisionMB() {
 		comision = new TiivsMultitabla();
 		TiivsMultitablaId comisionId = new TiivsMultitablaId();
 		comision.setId(comisionId);
 		comisionService = new ComisionService();
 		listarComisiones();
 	}
-	
+
 	public void listarComisiones() {
 		logger.info("ComisionMB : listarComisiones");
-		try{
+		try {
 			comisiones = comisionService.listarComisiones();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("ComisionMB : listarComisiones :" + e.getLocalizedMessage());
+			logger.error("ComisionMB : listarComisiones :"
+					+ e.getLocalizedMessage());
 		}
 	}
-	
-	public void actualizar(){
+
+	public void actualizar() {
 		logger.info("ComisionMB : actualizar");
-		try{
-			for(int i = 0; i <comisiones.size(); i ++){
-				
-				comisionService.Actualizar(comisiones.get(i));
+		String valor = "0";
+		try {
+			for (int j = 0; j < comisiones.size(); j++) {
+				if (comisiones.get(j).getValor2().isEmpty() == false) {
+					valor = "0";
+				} else {
+					valor = "1";
+					break;
+				}
 			}
-			Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
-		}catch(Exception e){
+			if (valor.equals("0")) {
+				for (int i = 0; i < comisiones.size(); i++) {
+
+					comisionService.Actualizar(comisiones.get(i));
+
+				}
+				Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
+			} else {
+				Utilitarios.mensajeError("Error", "El campo es Obligatorio");
+
+			}
+
+		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("ComisionMB : actualizar :" + e.getLocalizedMessage());	
+			logger.error("ComisionMB : actualizar :" + e.getLocalizedMessage());
 			Utilitarios.mensajeError("Error", "No se pudo actualizar");
 		}
-		
+
 	}
+
 	public TiivsMultitabla getComision() {
 		return comision;
 	}
