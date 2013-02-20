@@ -15,6 +15,7 @@ public class TiivsDocumento implements java.io.Serializable {
 	private String activo;
 	private String nombre;
 	private String formato;
+	private String codBarra;
 	private Set<TiivsTipoSolicDocumento> tiivsTipoSolicDocumentos = new HashSet<TiivsTipoSolicDocumento>();
 
 	public TiivsDocumento() {
@@ -70,6 +71,14 @@ public class TiivsDocumento implements java.io.Serializable {
 
 	public void setFormato(String formato) {
 		this.formato = formato;
+	}		
+
+	public String getCodBarra() {
+		return codBarra;
+	}
+
+	public void setCodBarra(String codBarra) {
+		this.codBarra = codBarra;
 	}
 
 	public Set getTiivsTipoSolicDocumentos() {
