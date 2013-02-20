@@ -525,13 +525,13 @@ public class SeguimientoMB
 
 					for (TiivsNivel tmp : combosMB.getLstNivel()) 
 					{
-						if (tmp.getId().getMoneda().equalsIgnoreCase(tmpSol.getMoneda())) 
+						if (tmp.getMoneda().equalsIgnoreCase(tmpSol.getMoneda())) 
 						{
-							if (tmp.getId().getDesNiv().equalsIgnoreCase(ConstantesVisado.CAMPO_NIVEL1)) 
+							if (tmp.getDesNiv().equalsIgnoreCase(ConstantesVisado.CAMPO_NIVEL1)) 
 							{
 								importeTMP = tmpSol.getImporte();
-								rangoIni = Double.valueOf(tmp.getId().getRangoInicio());
-								rangoFin = Double.valueOf(tmp.getId().getRangoFin());
+								rangoIni = Double.valueOf(tmp.getRangoInicio());
+								rangoFin = Double.valueOf(tmp.getRangoFin());
 
 								if (importeTMP.compareTo(rangoIni) >= 0 && importeTMP.compareTo(rangoFin) <= 0) 
 								{
@@ -539,11 +539,11 @@ public class SeguimientoMB
 								}
 							}
 
-							if (tmp.getId().getDesNiv().equalsIgnoreCase(ConstantesVisado.CAMPO_NIVEL2)) 
+							if (tmp.getDesNiv().equalsIgnoreCase(ConstantesVisado.CAMPO_NIVEL2)) 
 							{
 								importeTMP = tmpSol.getImporte();
-								rangoIni =  Double.valueOf(tmp.getId().getRangoInicio());
-								rangoFin =  Double.valueOf(tmp.getId().getRangoFin());
+								rangoIni =  Double.valueOf(tmp.getRangoInicio());
+								rangoFin =  Double.valueOf(tmp.getRangoFin());
 
 								if (importeTMP.compareTo(rangoIni) >= 0 && importeTMP.compareTo(rangoFin) <= 0) 
 								{
@@ -558,11 +558,11 @@ public class SeguimientoMB
 								}
 							}
 
-							if (tmp.getId().getDesNiv().equalsIgnoreCase(ConstantesVisado.CAMPO_NIVEL3)) 
+							if (tmp.getDesNiv().equalsIgnoreCase(ConstantesVisado.CAMPO_NIVEL3)) 
 							{
 								importeTMP = tmpSol.getImporte();
-								rangoIni = Double.valueOf(tmp.getId().getRangoInicio());
-								rangoFin = Double.valueOf(tmp.getId().getRangoFin());
+								rangoIni = Double.valueOf(tmp.getRangoInicio());
+								rangoFin = Double.valueOf(tmp.getRangoFin());
 
 								if (importeTMP.compareTo(rangoIni) >= 0 && importeTMP.compareTo(rangoFin) <= 0) 
 								{
@@ -2037,8 +2037,8 @@ public class SeguimientoMB
 		int i = 0;
 		String res = "";
 		for (; i < combosMB.getLstNivel().size(); i++) {
-			if (combosMB.getLstNivel().get(i).getId().getCodNiv().equalsIgnoreCase(codigo)) {
-				res = combosMB.getLstNivel().get(i).getId().getDesNiv();
+			if (combosMB.getLstNivel().get(i).getCodNiv().equalsIgnoreCase(codigo)) {
+				res = combosMB.getLstNivel().get(i).getDesNiv();
 				break;
 			}
 		}
