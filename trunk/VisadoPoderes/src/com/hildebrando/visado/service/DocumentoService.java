@@ -11,17 +11,35 @@ import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
-import com.hildebrando.visado.mb.DocumentoMB;
-import com.hildebrando.visado.modelo.TiivsMultitabla;
+import com.hildebrando.visado.modelo.TiivsDocumento;
+import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
+import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
 
-public class DocumentoService {
+public class DocumentoService<E> {
 	public static Logger logger = Logger.getLogger(DocumentoService.class);
+	String estadoString = "1";
+	char estadoChar = estadoString.charAt(0);
+	Character estadoSi = Character.valueOf(estadoChar);
+	String estadoNoString = "0";
+	char estadoNoChar = estadoNoString.charAt(0);
+	Character estadoNo = Character.valueOf(estadoNoChar);
 
 	@SuppressWarnings("unchecked")
-	public void registrar(TiivsMultitabla documento) {
+	public void registrar(TiivsTipoSolicDocumento documento) {
 		logger.info("DocumentoService : registrar");
-		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit
+		GenericDao<TiivsTipoSolicDocumento, Object> service = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
+
+		documento.setTiivsDocumento(new TiivsDocumento(documento.getId()
+				.getCodDoc()));
+		documento.setTiivsTipoSolicitud(new TiivsTipoSolicitud(documento
+				.getId().getCodTipoSolic()));
+
+		if (documento.getDesActivo().equals("1")) {
+			documento.setActivo(estadoSi);
+		} else {
+			documento.setActivo(estadoNo);
+		}
 		try {
 			service.insertarMerge(documento);
 		} catch (Exception ex) {
@@ -33,43 +51,43 @@ public class DocumentoService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<TiivsMultitabla> listarDocumentos(List<TiivsMultitabla> tipoDocumento) {
+	public List<TiivsTipoSolicDocumento> listarDocumentos() {
 		logger.info("DocumentoService : listarDocumentos");
-		List<TiivsMultitabla> documentos = new ArrayList<TiivsMultitabla>();
+		List<TiivsTipoSolicDocumento> documentos = new ArrayList<TiivsTipoSolicDocumento>();
 
-		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit
+		GenericDao<TiivsTipoSolicDocumento, Object> service = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		Busqueda filtro = Busqueda.forClass(TiivsTipoSolicDocumento.class);
 		try {
-			documentos = service
-					.buscarDinamico(filtro.add(Restrictions.eq("id.codMult",
-							ConstantesVisado.CODIGO_MULTITABLA_DOCUMENTO)));
+			documentos = service.buscarDinamico(filtro);
 			for (int i = 0; i < documentos.size(); i++) {
-				
-				if (documentos.get(i).getValor2()
+
+				if (documentos.get(i).getObligatorio()
 						.equals(ConstantesVisado.VALOR2_ESTADO_ACTIVO)) {
-					documentos.get(i).setValor2(
-							ConstantesVisado.VALOR2_ESTADO_ACTIVO_LISTA);
-				} else {
-					documentos.get(i).setValor2(
-							ConstantesVisado.VALOR2_ESTADO_INACTIVO_LISTA);
-				}
-				if (documentos.get(i).getValor4()
-						.equals(ConstantesVisado.VALOR4_OBLIGATORIO_SI)) {
-					documentos.get(i).setValor4(
+					documentos.get(i).setObligatorio(
 							ConstantesVisado.VALOR4_OBLIGATORIO_SI_LISTA);
 				} else {
-					documentos.get(i).setValor4(
+					documentos.get(i).setObligatorio(
 							ConstantesVisado.VALOR4_OBLIGATORIO_NO_LISTA);
 				}
-				
-				for(int j = 0; j < tipoDocumento.size(); j++){
-					if(documentos.get(i).getValor3().equals(tipoDocumento.get(j).getId().getCodElem())){
-						documentos.get(i).setValor3(tipoDocumento.get(j).getValor1());
-					}
-				}
 
+				if (documentos.get(i).getActivo() == estadoSi) {
+					documentos.get(i).setDesActivo(
+							ConstantesVisado.VALOR2_ESTADO_ACTIVO_LISTA);
+				} else {
+					documentos.get(i).setDesActivo(
+							ConstantesVisado.VALOR2_ESTADO_INACTIVO_LISTA);
+				}
 			}
+			/*
+			 * for(int j = 0; j < tipoDocumento.size(); j++){
+			 * if(documentos.get(i
+			 * ).getValor3().equals(tipoDocumento.get(j).getId().getCodElem())){
+			 * documentos.get(i).setValor3(tipoDocumento.get(j).getValor1()); }
+			 * }
+			 * 
+			 * }
+			 */
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("DocumentoService : listarDocumentos: "
@@ -81,17 +99,15 @@ public class DocumentoService {
 	@SuppressWarnings("unchecked")
 	public <E> String obtenerMaximo() {
 		logger.info("DocumentoService : obtenerMaximo");
-		List<TiivsMultitabla> secuencial = new ArrayList<TiivsMultitabla>();
+		List<TiivsDocumento> secuencial = new ArrayList<TiivsDocumento>();
 		String contador = "0";
 
-		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit
+		GenericDao<TiivsDocumento, Object> service = (GenericDao<TiivsDocumento, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		Busqueda filtro = Busqueda.forClass(TiivsDocumento.class);
 		try {
-			secuencial = service.buscarDinamico(filtro.add(
-					Restrictions.eq("id.codMult",
-							ConstantesVisado.CODIGO_MULTITABLA_DOCUMENTO))
-					.setProjection(Projections.rowCount()));
+			secuencial = service.buscarDinamico(filtro
+					.setProjection(Projections.max("codDocumento")));
 
 			List<E> parse = new ArrayList<E>();
 			parse = (List<E>) secuencial;
@@ -106,17 +122,17 @@ public class DocumentoService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<TiivsMultitabla> cargarComboTipoDocumento() {
+	public List<TiivsTipoSolicitud> cargarComboTipoDocumento() {
 		logger.info("DocumentoService : cargarComboTipoDocumento");
-		List<TiivsMultitabla> documentos = new ArrayList<TiivsMultitabla>();
+		List<TiivsTipoSolicitud> documentos = new ArrayList<TiivsTipoSolicitud>();
 
-		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit
+		GenericDao<TiivsTipoSolicitud, Object> service = (GenericDao<TiivsTipoSolicitud, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		Busqueda filtro = Busqueda.forClass(TiivsTipoSolicitud.class);
 		try {
 			documentos = service.buscarDinamico(filtro.add(Restrictions.eq(
-					"id.codMult",
-					ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOCUMENTO)));
+					"activo", estadoSi)));
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("DocumentoService : cargarComboTipoDocumento: "
@@ -126,25 +142,89 @@ public class DocumentoService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<TiivsMultitabla> editarDocumento(String codMultitabla,
-			String codElemento) {
-		
-		logger.info("DocumentoService : editarDocumento");
-		List<TiivsMultitabla> documentoEditar = new ArrayList<TiivsMultitabla>();
-
-		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit
+	public List<TiivsDocumento> cargarComboDocumento() {
+		logger.info("DocumentoService : cargarComboDocumento");
+		List<TiivsDocumento> listaDocumentos = new ArrayList<TiivsDocumento>();
+		GenericDao<TiivsDocumento, Object> service = (GenericDao<TiivsDocumento, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		Busqueda filtro = Busqueda.forClass(TiivsDocumento.class);
+
+		try {
+			listaDocumentos = service.buscarDinamico(filtro/*
+															 * .add(Restrictions.
+															 * eq( "activo",
+															 * estadoSi))
+															 */);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("DocumentoService : cargarComboDocumento: "
+					+ ex.getLocalizedMessage());
+		}
+
+		return listaDocumentos;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<TiivsTipoSolicDocumento> editarDocumento(String codDocumento,
+			String codTipoSolicitud) {
+
+		logger.info("DocumentoService : editarDocumento");
+		List<TiivsTipoSolicDocumento> documentoEditar = new ArrayList<TiivsTipoSolicDocumento>();
+
+		GenericDao<TiivsTipoSolicDocumento, Object> service = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsTipoSolicDocumento.class);
 		try {
 			documentoEditar = service.buscarDinamico(filtro.add(
-					Restrictions.eq("id.codMult", codMultitabla)).add(
-					Restrictions.eq("id.codElem", codElemento)));
+					Restrictions.eq("id.codDoc", codDocumento)).add(
+					Restrictions.eq("id.codTipoSolic", codTipoSolicitud)));
+			for(int i = 0; i< documentoEditar.size(); i ++){
+				if(documentoEditar.get(i).getActivo() == estadoSi){
+					documentoEditar.get(i).setDesActivo("1");
+				}else{
+					documentoEditar.get(i).setDesActivo("0");
+				}
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("DocumentoService : editarDocumento: "
 					+ ex.getLocalizedMessage());
 		}
 		return documentoEditar;
+	}
+
+	public boolean validarRegistro(String codDoc, String codTipoSolic) {
+		logger.info("DocumentoService : validarRegistro");
+		boolean validacion = false;
+		int contador = 0;
+
+		List<TiivsDocumento> secuencial = new ArrayList<TiivsDocumento>();
+		GenericDao<TiivsDocumento, Object> service = (GenericDao<TiivsDocumento, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsDocumento.class);
+		try {
+			secuencial = service.buscarDinamico(filtro
+					.add(Restrictions.eq("id.codDoc", codDoc))
+					.add(Restrictions.eq("id.codTipoSolic", codTipoSolic))
+					.setProjection(Projections.rowCount()));
+
+			List<E> parse = new ArrayList<E>();
+			parse = (List<E>) secuencial;
+			contador = (Integer) parse.get(0);
+			if (contador == 0) {
+				validacion = true;
+			} else {
+				validacion = false;
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("DocumentoService : obtenerMaximo: "
+					+ ex.getLocalizedMessage());
+		}
+
+		return validacion;
 	}
 
 }

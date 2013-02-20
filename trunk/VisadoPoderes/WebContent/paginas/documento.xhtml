@@ -9,31 +9,32 @@
 	<ui:define name="contenido">
 		<!-- Mantenimiento Documentos -->
 		<h:form id="frmMantenimientoDocumentos">
-			<p:panel header="Documentos" style="width: 85%">
-			<p:messages id="idMsmDocumento"></p:messages>
+			<p:panel header="Documentos por Tipo de Solicitud" style="width: 85%">
+				<p:messages id="idMsmDocumento"></p:messages>
 				<table>
 					<tr>
-						<td><h:outputText value="Codigo:  " /></td>
-						<td><p:inputText id="txtCodigo" disabled="true"
-								value="#{documentoMB.documento.id.codElem}" maxlength="50" /></td>
-					</tr>
-					<tr>
-						<td><h:outputText value="Descripcion:  " /></td>
-						<td><p:inputText id="txtDescripcion" 
-								value="#{documentoMB.documento.valor1}" maxlength="50" /></td>
-					</tr>
-					<tr>
-						<td><h:outputText value="Estado" /></td>
-						<td><p:selectOneMenu value="#{documentoMB.documento.valor2}">
-								<f:selectItem itemLabel="Activo" itemValue="1" />
-								<f:selectItem itemLabel="Inactivo" itemValue="0" />
+						<td><h:outputText value="Documento:  " /></td>
+						<td><p:selectOneMenu
+								value="#{documentoMB.tipoSolicDocumento.id.codDoc}">
+								<f:selectItems value="#{documentoMB.listaDocumentos}"
+									itemLabel="#{d.descripcion}" itemValue="#{d.codDocumento}"
+									var="d"></f:selectItems>
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
-						<td><h:outputText value="Tipo de Documento: " /></td>
-						<td><p:selectOneMenu value="#{documentoMB.documento.valor3}">
-								<f:selectItems value="#{documentoMB.tipoDocumento}"
-									itemLabel="#{t.valor1}" itemValue="#{t.id.codElem}" var="t"></f:selectItems>
+						<td><h:outputText value="Tipo de Solicitud:  " /></td>
+						<td><p:selectOneMenu
+								value="#{documentoMB.tipoSolicDocumento.id.codTipoSolic}">
+								<f:selectItems value="#{documentoMB.tipoSolicitud}"
+									itemLabel="#{t.desTipServicio}" itemValue="#{t.codTipSolic}"
+									var="t"></f:selectItems>
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Estado" /></td>
+						<td><p:selectOneMenu value="#{documentoMB.tipoSolicDocumento.desActivo}">
+								<f:selectItem itemLabel="Activo" itemValue="1" />
+								<f:selectItem itemLabel="Inactivo" itemValue="0" />
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
@@ -56,32 +57,32 @@
 		<!-- Data Table Documentos -->
 		<h:form id="frmDataTableDocumentos">
 			<p:panel header="Documentos" style="width: 85%">
-				<p:dataTable id="dtbUsuarios" value="#{documentoMB.documentos}" 
+				<p:dataTable id="dtbUsuarios" value="#{documentoMB.documentos}"
 					var="doc" paginator="true" rows="50" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
 					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
 					emptyMessage="No hay documentos">
 
 					<p:column headerText="Codigo">
-						<h:outputText value="#{doc.id.codElem}" />
+						<h:outputText value="#{doc.tiivsDocumento.codDocumento}" />
 					</p:column>
 					<p:column headerText="Descripcion">
-						<h:outputText value="#{doc.valor1}" />
+						<h:outputText value="#{doc.tiivsDocumento.descripcion}" />
 					</p:column>
 					<p:column headerText="Tipo de Documento">
-						<h:outputText value="#{doc.valor3}" />
+						<h:outputText value="#{doc.tiivsTipoSolicitud.desTipServicio}" />
 					</p:column>
 					<p:column headerText="Obligatorio">
-						<h:outputText value="#{doc.valor4}" />
+						<h:outputText value="#{doc.obligatorio}" />
 					</p:column>
 					<p:column headerText="Estado">
-						<h:outputText value="#{doc.valor2}" />
+						<h:outputText value="#{doc.desActivo}" />
 					</p:column>
 					<p:column headerText="Accion">
 						<p:commandLink id="clinkEditar" ajax="true" update=":frmMantenimientoDocumentos"
 							actionListener="#{documentoMB.editarDocumento}">
-							<f:param name="codMultitabla" value="#{doc.id.codMult}"></f:param>
-							<f:param name="codElemento" value="#{doc.id.codElem}"></f:param>
+							<f:param name="codDocumento" value="#{doc.id.codDoc}"></f:param>
+							<f:param name="codTipoSolicitud" value="#{doc.id.codTipoSolic}"></f:param>
 							<h:outputText value="Editar" />
 						</p:commandLink>
 					</p:column>

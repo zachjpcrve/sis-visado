@@ -10,8 +10,11 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.util.Utilitarios;
-import com.hildebrando.visado.modelo.TiivsMultitabla;
-import com.hildebrando.visado.modelo.TiivsMultitablaId;
+import com.hildebrando.visado.modelo.TiivsDocumento;
+import com.hildebrando.visado.modelo.TiivsSolicitud;
+import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
+import com.hildebrando.visado.modelo.TiivsTipoSolicDocumentoId;
+import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
 import com.hildebrando.visado.service.DocumentoService;
 
 @ManagedBean(name = "documentoMB")
@@ -19,41 +22,61 @@ import com.hildebrando.visado.service.DocumentoService;
 public class DocumentoMB {
 	public static Logger logger = Logger.getLogger(DocumentoMB.class);
 	private DocumentoService documentoService;
-	private TiivsMultitabla documento;
-	private List<TiivsMultitabla> documentos;
-	private List<TiivsMultitabla> tipoDocumento;
-	private List<TiivsMultitabla> documentoEditar;
+	private TiivsTipoSolicDocumento tipoSolicDocumento;
+	private List<TiivsTipoSolicDocumento> documentos;
+	private List<TiivsTipoSolicDocumento> documentosEditar;
+	private List<TiivsTipoSolicitud> tipoSolicitud;
+	private List<TiivsDocumento> listaDocumentos;
 	private boolean bValor4;
 	private boolean bMsgActualizar;
 	private boolean bValidacion;
 
 	public DocumentoMB() {
-		documento = new TiivsMultitabla();
-		TiivsMultitablaId documentoId = new TiivsMultitablaId();
-		documento.setId(documentoId);
+		TiivsDocumento documento = new TiivsDocumento();
+		TiivsTipoSolicitud tipoSol = new TiivsTipoSolicitud();
+		TiivsTipoSolicDocumentoId tipoSolcDocumentoId = new TiivsTipoSolicDocumentoId();
+		
+		tipoSolicDocumento = new TiivsTipoSolicDocumento();
+	
+		tipoSolicDocumento.setId(tipoSolcDocumentoId);
+		tipoSolicDocumento.setTiivsDocumento(documento);
+		tipoSolicDocumento.setTiivsTipoSolicitud(tipoSol);
 		bValor4 = false;
 		bMsgActualizar = false;
 		bValidacion = false;
 		documentoService = new DocumentoService();
+		
+		
 		cargarComboTipoDocumento();
+		cargarComboDocumento();
 		listarDocumentos();
-		obtenerMaximo();
+/*		obtenerMaximo();*/
 
 	}
 
 	public void cargarComboTipoDocumento() {
 		logger.info("DocumentoMB : cargarComboTipoDocumento");
 		try {
-			tipoDocumento = documentoService.cargarComboTipoDocumento();
+			tipoSolicitud = documentoService.cargarComboTipoDocumento();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("DocumentoMB :" + e.getLocalizedMessage());
 		}
 
 	}
+	public void cargarComboDocumento() {
+		logger.info("DocumentoMB : cargarComboDocumento");
+		try {
+			listaDocumentos = documentoService.cargarComboDocumento();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("DocumentoMB : cargarComboDocumento" + e.getLocalizedMessage());
+		}
+
+	}
 
 	
-	public void obtenerMaximo() {
+	/*public void obtenerMaximo() {
 		logger.info("DocumentoMB : obtenerMaximo");
 		String secuencial = null;
 		int parseSecuencial = 0;
@@ -63,55 +86,65 @@ public class DocumentoMB {
 			parseSecuencial = Integer.parseInt(secuencial) + 1;
 			secuencial = String.valueOf(parseSecuencial);
 
+
 			if (secuencial.length() == 1) {
-				secuencial = "000" + secuencial;
+				secuencial = "000000" + secuencial;
 			} else {
 				if (secuencial.length() == 2) {
-					secuencial = "00" + secuencial;
+					secuencial = "00000" + secuencial;
 				} else {
 					if (secuencial.length() == 3) {
-						secuencial = "0" + secuencial;
+						secuencial = "0000" + secuencial;
 					} else {
-						secuencial = secuencial;
+						if (secuencial.length() == 4) {
+							secuencial = "000" + secuencial;
+						} else {
+							if (secuencial.length() == 5) {
+								secuencial = "00" + secuencial;
+							} else {
+								if (secuencial.length() == 6) {
+									secuencial = "0" + secuencial;
+								} else {
+									secuencial = secuencial;
+								}
+							}
+						}
 					}
 				}
-
 			}
+
 			logger.info("DocumentoMB : secuencial" + " " + secuencial);
-			documento.getId().setCodElem(secuencial);
+			documento.setCodDocumento(secuencial);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("DocumentoMB :" + e.getLocalizedMessage());
 		}
-	}
+	}*/
 
 	public void registrar() {
 		logger.info("DocumentoMB : Registrar");
-		if(documento.getValor1().isEmpty()){
-			bValidacion = false;
-		}else{
-			bValidacion=true;
-		}
-		if(isbValidacion()==true){
-			try {
-				documento.getId().setCodMult(
-						ConstantesVisado.CODIGO_MULTITABLA_DOCUMENTO);
-				if (isbValor4() == true) {
-					documento.setValor4(ConstantesVisado.VALOR4_OBLIGATORIO_SI);
+		boolean validacion;
+		
+		validacion =validarRegistro(tipoSolicDocumento.getId().getCodDoc(), tipoSolicDocumento.getId().getCodTipoSolic());
+		try{
+			
+			if (isbValor4() == true) {
+				tipoSolicDocumento.setObligatorio(ConstantesVisado.VALOR4_OBLIGATORIO_SI);
 				} else {
-					documento.setValor4(ConstantesVisado.VALOR4_OBLIGATORIO_NO);
+					tipoSolicDocumento.setObligatorio(ConstantesVisado.VALOR4_OBLIGATORIO_NO);
 				}
-				documentoService.registrar(documento);
-				if (isbMsgActualizar() == true) {
+				documentoService.registrar(tipoSolicDocumento);
+				if (validacion == false) {
 					Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
 				} else {
 					Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
 				}
-				documento = new TiivsMultitabla();
+				
+				/*documento = new TiivsDocumento();*/
 				setbValor4(false);
-				TiivsMultitablaId documentoId = new TiivsMultitablaId();
-				documento.setId(documentoId);
-				obtenerMaximo();
+			/*	TiivsMultitablaId documentoId = new TiivsMultitablaId();
+				documento.setId(documentoId);*/
+			/*	obtenerMaximo();*/
 				bMsgActualizar = false;
 				bValidacion = false;
 			} catch (Exception e) {
@@ -119,18 +152,25 @@ public class DocumentoMB {
 				logger.error("DocumentoMB :" + e.getLocalizedMessage());
 				Utilitarios
 						.mensajeError("Error", "Error al registrar el Documento");
-			}
-		}else{
-			Utilitarios
-			.mensajeError("Error", "El campo descripcion es requerido");
+			}		
+	}
+
+	private boolean validarRegistro(String codDoc, String codTipoSolic) {
+		logger.info("DocumentoMB : validarRegistro");
+		boolean validacion= false;
+		try{
+			validacion = documentoService.validarRegistro(codDoc, codTipoSolic);
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.error("DocumentoMB : validarRegistro :" + e.getLocalizedMessage());
 		}
-		
+		return validacion;
 	}
 
 	public void listarDocumentos() {
 		logger.info("DocumentoMB : listarDocumentos");
 		try {
-			documentos = documentoService.listarDocumentos(tipoDocumento);
+			documentos = documentoService.listarDocumentos();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("DocumentoMB :" + e.getLocalizedMessage());
@@ -140,12 +180,15 @@ public class DocumentoMB {
 	
 	public void limpiarCampos() {
 		logger.info("DocumentoMB : limpiarCampos");
-		documento = new TiivsMultitabla();
+		tipoSolicDocumento = new TiivsTipoSolicDocumento();
+		TiivsDocumento documento = new TiivsDocumento();
+		TiivsTipoSolicitud tipoSol = new TiivsTipoSolicitud();
+		TiivsTipoSolicDocumentoId tipoSolcDocumentoId = new TiivsTipoSolicDocumentoId();
+		
 		setbValor4(false);
-		TiivsMultitablaId documentoId = new TiivsMultitablaId();
-		documento.setId(documentoId);
-		obtenerMaximo();
-		bMsgActualizar = false;
+		tipoSolicDocumento.setId(tipoSolcDocumentoId);
+		tipoSolicDocumento.setTiivsDocumento(documento);
+		tipoSolicDocumento.setTiivsTipoSolicitud(tipoSol);
 	}
 	
 
@@ -153,21 +196,21 @@ public class DocumentoMB {
 		logger.info("DocumentoMB : listarDocumentos");
 		Map<String, String> params = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap();
-		String codMultitabla;
-		String codElemento;
-		codMultitabla = params.get("codMultitabla");
-		codElemento = params.get("codElemento");
+		String codDocumento;
+		String codTipoSolicitud;
+		codDocumento = params.get("codDocumento");
+		codTipoSolicitud = params.get("codTipoSolicitud");
 		try {
-			documentoEditar = documentoService.editarDocumento(codMultitabla,
-					codElemento);
-			for (int i = 0; i < documentoEditar.size(); i++) {
-				documento.setId(documentoEditar.get(i).getId());
-				documento.setValor1(documentoEditar.get(i).getValor1());
-				documento.setValor2(documentoEditar.get(i).getValor2());
-				documento.setValor3(documentoEditar.get(i).getValor3());
-				documento.setValor4(documentoEditar.get(i).getValor4());
+			documentosEditar = documentoService.editarDocumento(codDocumento,
+					codTipoSolicitud);
+			for (int i = 0; i < documentosEditar.size(); i++) {
+				tipoSolicDocumento.getId().setCodDoc(documentosEditar.get(i).getId().getCodDoc());
+				tipoSolicDocumento.getId().setCodTipoSolic(documentosEditar.get(i).getId().getCodTipoSolic());
+				tipoSolicDocumento.setActivo(documentosEditar.get(i).getActivo());
+				tipoSolicDocumento.setObligatorio(documentosEditar.get(i).getObligatorio());
+				tipoSolicDocumento.setDesActivo(documentosEditar.get(i).getDesActivo());
 			}
-			if (documento.getValor4().equals(
+			if (tipoSolicDocumento.getObligatorio().equals(
 					ConstantesVisado.VALOR4_OBLIGATORIO_SI)) {
 				bValor4 = true;
 			} else {
@@ -180,45 +223,12 @@ public class DocumentoMB {
 					+ ex.getLocalizedMessage());
 		}
 	}
-
-	public TiivsMultitabla getDocumento() {
-		return documento;
-	}
-
-	public void setDocumento(TiivsMultitabla documento) {
-		this.documento = documento;
-	}
-
 	public boolean isbValor4() {
 		return bValor4;
 	}
 
 	public void setbValor4(boolean bValor4) {
 		this.bValor4 = bValor4;
-	}
-
-	public List<TiivsMultitabla> getDocumentos() {
-		return documentos;
-	}
-
-	public void setDocumentos(List<TiivsMultitabla> documentos) {
-		this.documentos = documentos;
-	}
-
-	public List<TiivsMultitabla> getTipoDocumento() {
-		return tipoDocumento;
-	}
-
-	public void setTipoDocumento(List<TiivsMultitabla> tipoDocumento) {
-		this.tipoDocumento = tipoDocumento;
-	}
-
-	public List<TiivsMultitabla> getDocumentoEditar() {
-		return documentoEditar;
-	}
-
-	public void setDocumentoEditar(List<TiivsMultitabla> documentoEditar) {
-		this.documentoEditar = documentoEditar;
 	}
 
 	public boolean isbMsgActualizar() {
@@ -235,6 +245,63 @@ public class DocumentoMB {
 
 	public void setbValidacion(boolean bValidacion) {
 		this.bValidacion = bValidacion;
+	}
+
+/*	public List<TiivsDocumento> getDocumentos() {
+		return documentos;
+	}
+
+	public void setDocumentos(List<TiivsDocumento> documentos) {
+		this.documentos = documentos;
+	}*/
+
+/*	public TiivsDocumento getDocumento() {
+		return documento;
+	}*/
+
+/*
+	public void setDocumento(TiivsDocumento documento) {
+		this.documento = documento;
+	}*/
+
+	public List<TiivsTipoSolicitud> getTipoSolicitud() {
+		return tipoSolicitud;
+	}
+
+	public void setTipoSolicitud(List<TiivsTipoSolicitud> tipoSolicitud) {
+		this.tipoSolicitud = tipoSolicitud;
+	}
+
+	public TiivsTipoSolicDocumento getTipoSolicDocumento() {
+		return tipoSolicDocumento;
+	}
+
+	public void setTipoSolicDocumento(TiivsTipoSolicDocumento tipoSolicDocumento) {
+		this.tipoSolicDocumento = tipoSolicDocumento;
+	}
+
+	public List<TiivsTipoSolicDocumento> getDocumentos() {
+		return documentos;
+	}
+
+	public void setDocumentos(List<TiivsTipoSolicDocumento> documentos) {
+		this.documentos = documentos;
+	}
+
+	public List<TiivsDocumento> getListaDocumentos() {
+		return listaDocumentos;
+	}
+
+	public void setListaDocumentos(List<TiivsDocumento> listaDocumentos) {
+		this.listaDocumentos = listaDocumentos;
+	}
+
+	public DocumentoService getDocumentoService() {
+		return documentoService;
+	}
+
+	public void setDocumentoService(DocumentoService documentoService) {
+		this.documentoService = documentoService;
 	}
 	
 	

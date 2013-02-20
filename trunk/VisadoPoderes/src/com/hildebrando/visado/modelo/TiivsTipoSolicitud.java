@@ -15,8 +15,14 @@ public class TiivsTipoSolicitud implements java.io.Serializable {
 	private char activo;
 	private Set<TiivsSolicitud> tiivsSolicituds = new HashSet<TiivsSolicitud>();
 	private Set<TiivsTipoSolicDocumento> tiivsTipoSolicDocumentos = new HashSet<TiivsTipoSolicDocumento>();
+	private String desActivo;
 
 	public TiivsTipoSolicitud() {
+
+	}
+
+	public TiivsTipoSolicitud(String codTipSolic) {
+		this.codTipSolic= codTipSolic;
 	}
 
 	public TiivsTipoSolicitud(String codTipSolic, String desTipServicio,
@@ -76,5 +82,12 @@ public class TiivsTipoSolicitud implements java.io.Serializable {
 		this.tiivsTipoSolicDocumentos = tiivsTipoSolicDocumentos;
 	}
 
-	
+	public String getDesActivo() {
+		return desActivo;
+	}
+
+	public void setDesActivo(String desActivo) {
+		this.desActivo = desActivo;
+	}
+
 }
