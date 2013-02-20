@@ -360,9 +360,9 @@ public class CombosMB {
 		String tmp = "";
 
 		for (; w <= lstNivel.size() - 1; w++) {
-			if (tmp.compareTo(lstNivel.get(w).getId().getDesNiv()) != 0) {
-				niveles.put(lstNivel.get(w).getId().getDesNiv(), lstNivel.get(w).getId().getDesNiv());
-				tmp = lstNivel.get(w).getId().getCodNiv();
+			if (tmp.compareTo(lstNivel.get(w).getDesNiv()) != 0) {
+				niveles.put(lstNivel.get(w).getDesNiv(), lstNivel.get(w).getDesNiv());
+				tmp = lstNivel.get(w).getCodNiv();
 			}
 		}
 		
