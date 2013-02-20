@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+
+		<fieldset>
+			<legend class="fielset">Responsables por niveles</legend>
+			<!-- Responsable Por Nivel de Aprobacion -->
+			<h:form id="frmMantenimientoRespNivelAprob">
+
+				<p:messages id="idMsmRespNivelAprob"></p:messages>
+
+				<table>
+					<tr>
+						<td><h:outputText value="Registro: " /></td>
+						<td><p:inputText id="txtRegistro"
+								value="#{respNivel.miembroNivelDto.registro}" maxlength="10" size="10" /></td>
+						
+						<td><h:outputText value="Descripcion:" /></td>
+						<td><p:inputText id="txtDescrip"
+								value="#{respNivel.miembroNivelDto.descripcion}" maxlength="60" size="60" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Estado:" /></td>
+						<td><p:selectOneMenu value="#{respNivel.miembroNivelDto.estado}">
+								<f:selectItem itemLabel="ACTIVO" itemValue="1" />
+								<f:selectItem itemLabel="INACTIVO" itemValue="0" />
+								<f:selectItem itemLabel="--TODOS--" itemValue="-1" />
+							</p:selectOneMenu></td>
+
+						<td><h:outputText value="Perfil:" /></td>
+						<td><p:selectOneMenu value="#{respNivel.miembroNivelDto.codGrupo}">
+								<f:selectItems  var="c" value="#{respNivel.grupos}" itemLabel="#{c.des}"  itemValue="#{c.cod}"  >
+								</f:selectItems>
+								<f:selectItem itemLabel="--TODOS--" itemValue="-1" />
+							</p:selectOneMenu></td>
+
+						<td><h:outputText value="Nivel: " /></td>
+						<td><p:selectOneMenu value="#{respNivel.miembroNivelDto.codNivel}">
+								<f:selectItems  var="n" value="#{respNivel.niveles}" itemLabel="#{n.des}"  itemValue="#{n.cod}"  >
+								</f:selectItems>
+								<f:selectItem itemLabel="--TODOS--" itemValue="-1" />
+							</p:selectOneMenu>
+						</td>
+
+					</tr>
+
+					<tr>
+						<td><p:commandButton id="bsResp" value="Buscar" ajax="true"
+								action="#{respNivel.listarRespxNivel}"
+								update=":frmDataTableRespNivel">
+							</p:commandButton></td>
+
+						<td><p:commandButton id="nwResp" value="Nuevo" ajax="true"
+								action="#{respNivel.nuevoRespxNivel}"
+								update=":frmDataTableRespNivel">
+							</p:commandButton></td>
+					</tr>
+
+
+				</table>
+			</h:form>
+
+			<h:form id="frmDataTableRespNivel">
+
+				<p:messages id="idMsmRespNivelAprob"></p:messages>
+				<p:dataTable id="dtbRespNivel" value="#{respNivel.respNiveles}"
+					var="r" paginator="true" rows="50" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+					emptyMessage="No hay responsables por niveles">
+
+					<p:column headerText="Nivel">
+						<h:outputText value="#{r.codOfi}" />
+					</p:column>
+					<p:column headerText="Registro">
+						<h:outputText value="#{r.desOfi}" />
+					</p:column>
+					<p:column headerText="Descripción">
+						<h:outputText value="#{r.descTerritorio}" />
+					</p:column>
+					<p:column headerText="Perfil">
+						<h:outputText value="#{r.descEstado}" />
+					</p:column>
+					<p:column headerText="Fecha de Reg.">
+						<h:outputText value="#{r.descEstado}" />
+					</p:column>
+					<p:column headerText="Usuario de Reg.">
+						<h:outputText value="#{r.descEstado}" />
+					</p:column>
+					<p:column headerText="Estado">
+						<h:outputText value="#{r.descEstado}" />
+					</p:column>
+					<p:column headerText="Accion">
+						<p:commandLink id="clinkEditar" ajax="true"
+							update=":frmDataTableRespNivel"
+							actionListener="#{respNivel.editarRespNivelAprob}"
+							action="#{respNivel.modificarRespNivelAprob}">
+							<f:param name="codOficina" value="#{r.codOfi}"></f:param>
+							<h:outputText value="#{r.estado}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+
+			</h:form>
+			<!--Fin Data Table Oficina -->
+	
+		</fieldset>
+	
+	</ui:define>
+</ui:composition>
+
+</html>
