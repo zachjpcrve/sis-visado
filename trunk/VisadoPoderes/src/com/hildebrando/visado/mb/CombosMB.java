@@ -32,6 +32,7 @@ import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
+import com.hildebrando.visado.modelo.TiivsTiempo;
 import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
 
 /**
@@ -70,8 +71,8 @@ public class CombosMB {
 	private List<ComboDto> lstClasificacionPersona;
 	private List<ComboDto> lstTipoRegistroPersona;
 	private List<TiivsMiembro> lstAbogados;
-
 	private List<TiivsTipoSolicitud> lstTipoSolicitud;
+	private List<TiivsTiempo> lstTiempo;
 	
 	public CombosMB() {
 		lstMultitabla = new ArrayList<TiivsMultitabla>();
@@ -254,6 +255,7 @@ public class CombosMB {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public void cargarCombosNoMultitabla(){
 		try {
 		GenericDao<TiivsMiembro, Object> serviceMiembro = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -382,12 +384,17 @@ public class CombosMB {
 			estudios.put(lstEstudio.get(j).getDesEstudio(), lstEstudio.get(j)
 					.getCodEstudio());
 		}
+		
+		//Carga datos de anio, mes, dia
+		GenericDao<TiivsTiempo, Object> tDAO = (GenericDao<TiivsTiempo, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroTiempo = Busqueda.forClass(TiivsTiempo.class);
+
+		try {
+			lstTiempo = tDAO.buscarDinamico(filtroTiempo);
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de anio, mes y dia: "+e);
+		}		
 	}
-
-	
-	
-  
-
 
 	public void setLstMultitabla(List<TiivsMultitabla> lstMultitabla) {
 		this.lstMultitabla = lstMultitabla;
@@ -601,5 +608,13 @@ public class CombosMB {
 
 	public List<TiivsMultitabla> getLstMultitabla() {
 		return lstMultitabla;
-	}	
+	}
+
+	public List<TiivsTiempo> getLstTiempo() {
+		return lstTiempo;
+	}
+
+	public void setLstTiempo(List<TiivsTiempo> lstTiempo) {
+		this.lstTiempo = lstTiempo;
+	}
 }
