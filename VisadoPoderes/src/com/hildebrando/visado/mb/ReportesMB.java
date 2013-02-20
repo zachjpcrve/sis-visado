@@ -2438,8 +2438,8 @@ public class ReportesMB
 		int i = 0;
 		String res = "";
 		for (; i < combosMB.getLstNivel().size(); i++) {
-			if (combosMB.getLstNivel().get(i).getId().getCodNiv().equalsIgnoreCase(codigo)) {
-				res = combosMB.getLstNivel().get(i).getId().getDesNiv();
+			if (combosMB.getLstNivel().get(i).getCodNiv().equalsIgnoreCase(codigo)) {
+				res = combosMB.getLstNivel().get(i).getDesNiv();
 				break;
 			}
 		}
