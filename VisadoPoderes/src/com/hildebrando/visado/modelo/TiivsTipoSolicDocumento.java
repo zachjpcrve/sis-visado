@@ -12,6 +12,7 @@ public class TiivsTipoSolicDocumento implements java.io.Serializable {
 	private TiivsTipoSolicitud tiivsTipoSolicitud;
 	private char activo;
 	private String obligatorio;
+	private String desActivo;
 
 	public TiivsTipoSolicDocumento() {
 	}
@@ -74,6 +75,16 @@ public class TiivsTipoSolicDocumento implements java.io.Serializable {
 
 	public void setObligatorio(String obligatorio) {
 		this.obligatorio = obligatorio;
+	}
+	
+	
+	
+	public String getDesActivo() {
+		return desActivo;
+	}
+
+	public void setDesActivo(String desActivo) {
+		this.desActivo = desActivo;
 	}
 
 	public boolean equals(Object object) {
