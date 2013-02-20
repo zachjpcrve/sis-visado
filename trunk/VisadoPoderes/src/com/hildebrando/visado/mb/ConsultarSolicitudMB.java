@@ -976,21 +976,21 @@ public class ConsultarSolicitudMB {
 
 			List<TiivsNivel> lstNiveles = service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda",ConstantesVisado.MONEDAS.COD_SOLES)));
 			
-			if (solicitud.getImporte() >= lstNiveles.get(0).getId().getRangoInicio()) 
+			if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) 
 			{
-				logger.info("a" + lstNiveles.get(0).getId().getDesNiv());
+				logger.info("a" + lstNiveles.get(0).getDesNiv());
 
-				if (this.solicitudRegistrarT.getImporte() > lstNiveles.get(lstNiveles.size() - 1).getId().getRangoFin()) 
+				if (this.solicitudRegistrarT.getImporte() > lstNiveles.get(lstNiveles.size() - 1).getRangoFin()) 
 				{
 					// System.out.println("c");
 				} else {
 					// System.out.println("d");
 					for (TiivsNivel x : lstNiveles) 
 					{
-						if (solicitud.getImporte() >= x.getId().getRangoInicio()) 
+						if (solicitud.getImporte() >= x.getRangoInicio()) 
 						{
-							logger.info("g " + x.getId().getDesNiv());
-							lstCodNivel.add(x.getId().getCodNiv());
+							logger.info("g " + x.getDesNiv());
+							lstCodNivel.add(x.getCodNiv());
 						}
 					}
 				}
@@ -1000,19 +1000,19 @@ public class ConsultarSolicitudMB {
 			logger.info("*********************************** COD_DOLAR ********************************************");
 			List<TiivsNivel> lstNiveles = service.buscarDinamico(Busqueda
 					.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda",ConstantesVisado.MONEDAS.COD_DOLAR)));
-			if (solicitud.getImporte() >= lstNiveles.get(0).getId().getRangoInicio()) {
-				logger.info("a" + lstNiveles.get(0).getId().getDesNiv());
+			if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) {
+				logger.info("a" + lstNiveles.get(0).getDesNiv());
 
-				if (this.solicitudRegistrarT.getImporte() > lstNiveles.get(lstNiveles.size() - 1).getId().getRangoFin()) {
+				if (this.solicitudRegistrarT.getImporte() > lstNiveles.get(lstNiveles.size() - 1).getRangoFin()) {
 					// System.out.println("c");
 				} else {
 					// System.out.println("d");
 					for (TiivsNivel x : lstNiveles) 
 					{
-						if (solicitud.getImporte() >= x.getId().getRangoInicio()) 
+						if (solicitud.getImporte() >= x.getRangoInicio()) 
 						{
-							logger.info("g " + x.getId().getDesNiv());
-							lstCodNivel.add(x.getId().getCodNiv());
+							logger.info("g " + x.getDesNiv());
+							lstCodNivel.add(x.getCodNiv());
 						}
 					}
 				}
@@ -1021,19 +1021,18 @@ public class ConsultarSolicitudMB {
 			logger.info("*********************************** COD_EUROS ********************************************");
 			List<TiivsNivel> lstNiveles = service.buscarDinamico(Busqueda
 					.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda",ConstantesVisado.MONEDAS.COD_EUROS)));
-			if (solicitud.getImporte() >= lstNiveles.get(0).getId().getRangoInicio()) {
-				logger.info("a" + lstNiveles.get(0).getId().getDesNiv());
+			if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) {
+				logger.info("a" + lstNiveles.get(0).getDesNiv());
 
 				if (this.solicitudRegistrarT.getImporte() > lstNiveles
-						.get(lstNiveles.size() - 1).getId().getRangoFin()) {
+						.get(lstNiveles.size() - 1).getRangoFin()) {
 					// System.out.println("c");
 				} else {
 					// System.out.println("d");
 					for (TiivsNivel x : lstNiveles) {
-						if (solicitud.getImporte() >= x.getId()
-								.getRangoInicio()) {
-							logger.info("g " + x.getId().getDesNiv());
-							lstCodNivel.add(x.getId().getCodNiv());
+						if (solicitud.getImporte() >= x.getRangoInicio()) {
+							logger.info("g " + x.getDesNiv());
+							lstCodNivel.add(x.getCodNiv());
 
 						}
 
