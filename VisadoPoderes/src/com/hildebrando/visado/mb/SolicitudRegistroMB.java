@@ -1022,12 +1022,39 @@ public class SolicitudRegistroMB {
 		}
 		if (!flagUpdateOperacionSolic) {
 			for (TiivsSolicitudOperban x : lstSolicBancarias) {
-				if (x.getId().getCodOperBan()
-						.equals(objSolicBancaria.getId().getCodOperBan())) {
-					sMensaje = "Tipo de Operación ya registrado, Ingrese otro Tipo de Operación. ";
+				if (x.getId().getCodOperBan().equals(objSolicBancaria.getId().getCodOperBan())
+						&& x.getMoneda().trim().equals(objSolicBancaria.getMoneda().trim())) {
+					sMensaje = "Tipo de Operación con la misma moneda ya registrado, Ingrese otra moneda";
 					Utilitarios.mensajeInfo("", sMensaje);
 					result = false;
 					break;
+				}
+			}
+		}else{
+			int conunt =0, index=0;
+			for (TiivsSolicitudOperban x : lstSolicBancarias) {
+				index++;
+				if (x.getId().getCodOperBan().equals(objSolicBancaria.getId().getCodOperBan())){
+					System.out.println("x.getMoneda().trim() " +x.getMoneda().trim());
+					System.out.println("objSolicBancaria.getMoneda().trim()) " +objSolicBancaria.getMoneda().trim());
+					
+					if(x.getMoneda().trim().equals(objSolicBancaria.getMoneda().trim())) {
+						conunt++;
+						logger.info("conunt "+conunt);
+						System.out.println("x.getMoneda() " +x.getMoneda());
+						System.out.println("objSolicBancaria.getMoneda() " + objSolicBancaria.getMoneda());
+						
+							System.out.println("lo deja ");
+							break;
+						
+				}/*else if(!x.getMoneda().trim().equals(objSolicBancaria.getMoneda().trim())) {
+					System.out.println(" no lo deja ");
+					sMensaje = "Tipo de Operación con la misma moneda ya registrado, Ingrese otra moneda";
+					Utilitarios.mensajeInfo("", sMensaje);
+					result = false;
+					break;
+				}*/
+					
 				}
 			}
 		}
