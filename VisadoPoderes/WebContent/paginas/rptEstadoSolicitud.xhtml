@@ -99,142 +99,142 @@
 			
 			<p:spacer height="30"/>
 			
-			<p:dataTable value="#{reportesMB.lstSolicitudesOficina}" var="tbl" rows="4" id="datosSol"
-					paginatorPosition="bottom" scrollable="true" scrollHeight="200"
-					paginator="true"
-					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-					rowsPerPageTemplate="5,10,15"
-					emptyMessage="">
-				
-					<p:column width="38">
-						<f:facet name="header">  
-					         <h:outputText value="Territorio" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.territorio}" style="font-size: 9px"/>	
-					</p:column>
-				
-					<p:column width="15">
-						<f:facet name="header">  
-					         <h:outputText value="Cod" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.codOficina}" style="font-size: 9px"/>	
-					</p:column>
+			<p:panel header="Resultados" id="panelRes" style="width: 1090px" >
+				<p:dataTable value="#{reportesMB.lstSolicitudesOficina}" var="tbl" rows="4" id="datosSol"
+						paginatorPosition="bottom" scrollable="true" scrollHeight="200"
+						paginator="true"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						rowsPerPageTemplate="5,10,15"
+						emptyMessage="">
 					
-					<p:column width="40">
-						<f:facet name="header">  
-					         <h:outputText value="Oficina" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.oficina}" style="font-size: 9px"/>	
-					</p:column>
+						<p:column width="38">
+							<f:facet name="header">  
+						         <h:outputText value="Territorio" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.territorio}" style="font-size: 9px"/>	
+						</p:column>
 					
-					<p:column width="37">
-						<f:facet name="header">  
-					         <h:outputText value="Registrado" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalRegistrados}" style="font-size: 9px"/>	
-					</p:column>
+						<p:column width="15">
+							<f:facet name="header">  
+						         <h:outputText value="Cod" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.codOficina}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="40">
+							<f:facet name="header">  
+						         <h:outputText value="Oficina" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.oficina}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="37">
+							<f:facet name="header">  
+						         <h:outputText value="Registrado" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalRegistrados}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="32">
+							<f:facet name="header">  
+						         <h:outputText value="Enviado" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalEnviados}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="37">
+							<f:facet name="header">  
+						         <h:outputText value="Reservado" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalReservado}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Aceptado" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalAceptado}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="68">
+							<f:facet name="header">  
+						         <h:outputText value="En Verificacion A" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalVerificacionA}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="39">
+							<f:facet name="header">  
+						         <h:outputText value="Rechazado" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalRechazado}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="42">
+							<f:facet name="header">  
+						         <h:outputText value="En revision" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalEnRevision}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="52">
+							<f:facet name="header">  
+						         <h:outputText value="Pre-Ejecutado" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalPreEjecutado}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Ejecutado" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalEjecutado}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="44">
+							<f:facet name="header">  
+						         <h:outputText value="Procedente" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalProcedente}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="65">
+							<f:facet name="header">  
+						         <h:outputText value="En Verificacion B" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalVerificacionB}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="52">
+							<f:facet name="header">  
+						         <h:outputText value="Improcedente" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalImprocedente}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Vencido" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalVencido}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Revocado" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalRevocado}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Total" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalFila}" style="font-size: 9px"/>	
+						</p:column>
 					
-					<p:column width="32">
-						<f:facet name="header">  
-					         <h:outputText value="Enviado" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalEnviados}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="37">
-						<f:facet name="header">  
-					         <h:outputText value="Reservado" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalReservado}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="35">
-						<f:facet name="header">  
-					         <h:outputText value="Aceptado" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalAceptado}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="68">
-						<f:facet name="header">  
-					         <h:outputText value="En Verificacion A" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalVerificacionA}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="39">
-						<f:facet name="header">  
-					         <h:outputText value="Rechazado" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalRechazado}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="42">
-						<f:facet name="header">  
-					         <h:outputText value="En revision" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalEnRevision}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="52">
-						<f:facet name="header">  
-					         <h:outputText value="Pre-Ejecutado" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalPreEjecutado}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="35">
-						<f:facet name="header">  
-					         <h:outputText value="Ejecutado" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalEjecutado}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="44">
-						<f:facet name="header">  
-					         <h:outputText value="Procedente" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalProcedente}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="65">
-						<f:facet name="header">  
-					         <h:outputText value="En Verificacion B" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalVerificacionB}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="52">
-						<f:facet name="header">  
-					         <h:outputText value="Improcedente" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalImprocedente}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="35">
-						<f:facet name="header">  
-					         <h:outputText value="Vencido" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalVencido}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="35">
-						<f:facet name="header">  
-					         <h:outputText value="Revocado" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalRevocado}" style="font-size: 9px"/>	
-					</p:column>
-					
-					<p:column width="35">
-						<f:facet name="header">  
-					         <h:outputText value="Total" style="font-size: 9px"/>  
-					    </f:facet>  
-						<h:outputText value="#{tbl.totalFila}" style="font-size: 9px"/>	
-					</p:column>
-				
-			</p:dataTable>
-			
-    		
+				</p:dataTable>
+			</p:panel>
     		
 		</h:form>
 		
