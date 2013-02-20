@@ -55,6 +55,7 @@ import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
+import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
@@ -181,6 +182,8 @@ public class SolicitudEdicionMB
 		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_MONEDA);
 		
 		//cargarDocumentos();
+		
+		this.cadenaEscanerFinal = this.prepararURLEscaneo();
 	}
 	
 	public void obtenerAccionAgregarOperacionBancaria()
@@ -1679,6 +1682,21 @@ public void agregarPersona() {
 	// return objTiivsPersonaBusqueda;
 
 }
+
+	public String prepararURLEscaneo() {			
+		logger.info("***********prepararURLEscaneo***************");		
+		String sCadena = "";		
+		try{
+			//usuario.setUID("P014773");				
+			pdfViewerMB = new PDFViewerMB();	
+			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID());
+		}catch(Exception e){
+			logger.error("Error al obtener parámetros de APPLET",e);
+		}
+		return sCadena;		
+	}
+	
+
 	public TiivsSolicitud getSolicitudEdicionT() {
 		return solicitudEdicionT;
 	}
