@@ -84,15 +84,17 @@ public class PDFViewerMB {
 	
 	public String prepararURLEscaneo(String usuario)
 	{
-		String cadFinal="";
-		
+		String cadFinal="";	
 		for (TiivsParametros tmp: lstParametros)
 		{
-			cadFinal=tmp.getUrlAPP()+"?"+"idEmpresa="+tmp.getIdEmpresa()+"&"+"idSistema="+tmp.getIdSistema()+"&"+"txtLogin="+usuario;
-		}
-		
-		logger.debug("URL: " + cadFinal);
-		
+			cadFinal = tmp.getUrlAPP() + "?" + "idEmpresa="
+					+ tmp.getIdEmpresa() + "&amp;" + "idSistema="
+					+ tmp.getIdSistema() + "&amp;" + "txLogin=" +usuario;
+//			cadFinal = tmp.getUrlAPP() + "?" + "idEmpresa="
+//					+ tmp.getIdEmpresa() + "&" + "idSistema="
+//					+ tmp.getIdSistema() + "&" + "txLogin=" +usuario;
+		}		
+		logger.debug("URL: " + cadFinal);		
 		return cadFinal;
 	}
 	
@@ -110,8 +112,8 @@ public class PDFViewerMB {
 			lstParametros = paramDAO.buscarDinamico(filtroParam);
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug("Error al cargar el listado de parametros");
+			
+			logger.debug("Error al cargar el listado de parametros",e);
 		}
 		
 		logger.debug("Lista de parametros encontrados: " + lstParametros.size());
