@@ -49,6 +49,80 @@ public class Utilitarios {
 	public static String ERROR =  "ERROR";
 	public static String FATAL =  "FATAL";
 	
+	public static String buscarMesxCodigo(int codigo)
+	{
+		String mes="";
+		
+		switch (codigo) 
+		{
+			case 1: 
+				mes = "ENERO";
+				break;
+			case 2: 
+				mes = "FEBRERO";
+				break;
+			case 3: 
+				mes = "MARZO";
+				break;	
+			case 4: 
+				mes = "ABRIL";
+				break;
+			case 5: 
+				mes = "MAYO";
+				break;
+			case 6: 
+				mes = "JUNIO";
+				break;
+			case 7: 
+				mes = "JULIO";
+				break;
+			case 8: 
+				mes = "AGOSTO";
+				break;
+			case 9: 
+				mes = "SEPTIEMBRE";
+				break;
+			case 10: 
+				mes = "OCTUBRE";
+				break;
+			case 11: 
+				mes = "NOVIEMBRE";
+				break;
+			case 12: 
+				mes = "DICIEMBRE";
+				break;
+			default:
+				break;
+		}
+		
+		return mes;
+	}
+	
+	public static String buscarAnioxCodigo(int codigo)
+	{
+		String anio="";
+		
+		switch (codigo) 
+		{
+			case 1: 
+				anio = "2013";
+				break;
+			case 2: 
+				anio = "2014";
+				break;
+			case 3: 
+				anio = "2015";
+				break;	
+			case 4: 
+				anio = "2016";
+				break;
+			default:
+				break;
+		}
+		
+		return anio;
+	}
+	
 	public static String obternerDescripcionEstado(String estado){
 		String descEstado="";
 		if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO)){
@@ -288,6 +362,32 @@ public class Utilitarios {
 				+ calFechaAct.get(Calendar.YEAR);
 
 		return fechaActualizacion ;
+	}
+	
+	public static String obtenerParteFecha(Date fecha, String tipo)
+	{
+		String tipoRes="";
+		
+		if (fecha !=null)
+		{
+			Calendar calFechaAct = Calendar.getInstance();
+			calFechaAct.setTimeInMillis(fecha.getTime());
+			
+			if (tipo.equals("d"))
+			{
+				tipoRes = String.valueOf(calFechaAct.get(Calendar.DAY_OF_MONTH));
+			}
+			if (tipo.equals("m"))
+			{
+				tipoRes = String.valueOf(calFechaAct.get(Calendar.MONTH));
+			}
+			if (tipo.equals("y"))
+			{
+				tipoRes = String.valueOf(calFechaAct.get(Calendar.YEAR));
+			}
+		}	
+		
+		return tipoRes;
 	}
 	
 	public static String formatoFechaHora(Date fecha) {
