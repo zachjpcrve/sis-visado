@@ -172,6 +172,8 @@ public class SolicitudRegistroMB {
 		
 		selectedTipoDocumento = new TiivsTipoSolicDocumento();
 		mapSolicitudes=new HashMap<Integer, TiivsSolicitudOperban>();
+		
+		this.cadenaEscanerFinal = this.prepararURLEscaneo();
 
 	}
 
@@ -1728,19 +1730,19 @@ public class SolicitudRegistroMB {
 		return retorno;
 	}
 
-	public String prepararURLEscaneo() {
-
+	public String prepararURLEscaneo() {			
+		logger.info("***********prepararURLEscaneo***************");
 		
-        usuario.setUID("P014773");
-		for (TiivsParametros tmp : pdfViewerMB.getLstParametros()) {
-			cadenaEscanerFinal = tmp.getUrlAPP() + "?" + "idEmpresa="
-					+ tmp.getIdEmpresa() + "&" + "idSistema="
-					+ tmp.getIdSistema() + "&" + "txLogin=" + usuario.getUID();
+		String sCadena = "";		
+		try{
+//			usuario.setUID("P014773");				
+			pdfViewerMB = new PDFViewerMB();	
+			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID());			
+		}catch(Exception e){
+			logger.error("Error al obtener parámetros de APPLET",e);
 		}
-
-		logger.info("URL APPLET: " + cadenaEscanerFinal);
-
-		return cadenaEscanerFinal;
+		return sCadena;
+		
 	}
 	 
 	public boolean cargarArchivosFTP(){
