@@ -69,6 +69,17 @@ function validaNumero(e, ent, obj, fn) {
 	}
 	return result;
 }
+
+//Funcion que se encarga de la invocacion del nuevo applet de escaneo (NAE) 05.02.2013
+function invocarEscaner(urlApplet){
+	var winId1;
+	//alert("urlApplet==> "+urlApplet);
+	//var rutaAppletFinal = document.getElementById("formSolicitudRegistro:linkEscaner").value;
+	winId1 = window.open(urlApplet,'NAE', "status=yes,menubar=no,scrollbars=yes,resizable=yes,toolbar=no,screenX=0,screenY=0,left=0,top=0,width=100,height=100" );
+	return false;
+}
+
+
 </SCRIPT>
 		<h:panelGrid columns="5">
 
@@ -337,11 +348,13 @@ function validaNumero(e, ent, obj, fn) {
 														     onclick="window.open('#{solicitudRegMB.cadenaEscanerFinal}')" value="Escaner"  >
 														     Escaner
 														     </h:outputLink> -->
-														     <p:commandButton value="Escaner" ajax="true" 
-														     actionListener="#{solicitudRegMB.prepararURLEscaneo}" id="btnEscanerId" update="btnEscanerIdButton"  />
-														     <p:button id="btnEscanerIdButton" href="#{solicitudRegMB.cadenaEscanerFinal}"  value="Escaner" rendered="false">
 														     
-														     </p:button>
+															   <p:commandButton id="btnEscanear" 
+															   		value="Escanear" 
+															   		onclick="return invocarEscaner('#{solicitudRegMB.cadenaEscanerFinal}');">
+															   </p:commandButton>
+
+														     
 														</td>
 														
 													</tr>
