@@ -1053,7 +1053,7 @@ public class ConsultarSolicitudMB {
 		} else {
 			logger.info("*********************************** NO ENTRO EN NINGUNO ********************************************");
 		}
-		logger.info("Tamanio de la lista de Niveles : " + lstCodNivel.size());
+		logger.info(" ******************** Tamanio de la lista de Niveles *************** para probar: " + lstCodNivel.size());
 		if (lstCodNivel.size() > 0) {
 			// SI LA SOLICITUD SOPERA ALGUN NIVEL, ENTONCES PASA A ESTADO EN
 			// VERIFICACION A, SI NO A ACEPTADO
