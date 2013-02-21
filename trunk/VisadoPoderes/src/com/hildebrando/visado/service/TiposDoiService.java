@@ -54,14 +54,14 @@ public class TiposDoiService {
 					documentos.get(i).setValor2(
 							ConstantesVisado.VALOR2_ESTADO_INACTIVO_LISTA);
 				}
-				if (documentos.get(i).getValor4()
+			/*	if (documentos.get(i).getValor4()
 						.equals(ConstantesVisado.VALOR4_OBLIGATORIO_SI)) {
 					documentos.get(i).setValor4(
 							ConstantesVisado.VALOR4_OBLIGATORIO_SI_LISTA);
 				} else {
 					documentos.get(i).setValor4(
 							ConstantesVisado.VALOR4_OBLIGATORIO_NO_LISTA);
-				}
+				}*/
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
