@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+		<!-- Abogado -->
+		<h:form id="frmMantenimientoNivel">
+			<p:panel header="Nivel de Aprobacion" style="width: 85%">
+				<p:messages id="idMsmDocumento"></p:messages>
+				<table>
+					<tr>
+						<td><h:outputText value="Codigo:  " /></td>
+						<td><p:inputText id="txtCodigo" disabled="true"
+								value="#{nivelMB.nivelesMant[0].id.codNiv}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Descripcion:  " /></td>
+						<td><p:inputText id="txtDescripcion"
+								value="#{nivelMB.nivelesMant[0].id.desNiv}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Estado" /></td>
+						<td><p:selectOneMenu
+								value="#{nivelMB.nivelesMant[0].id.desEstado}">
+								<f:selectItem itemLabel="ACTIVO" itemValue="1" />
+								<f:selectItem itemLabel="INACTIVO" itemValue="0" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Soles:   " /></td>
+						<td><h:outputText value="Rango Inicio:  " /></td>
+						<td><p:inputText id="txtSolesRangInic"
+								value="#{nivelMB.nivelesMant[0].id.rangoInicio}" maxlength="50" /></td>
+						<td><h:outputText value="Rango Fin:  " /></td>
+						<td><p:inputText id="txtSolesRangFin"
+								value="#{nivelMB.nivelesMant[0].id.rangoFin}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Dolares:    " /></td>
+						<td><h:outputText value="Rango Inicio:  " /></td>
+						<td><p:inputText id="txtDolarRangInic"
+								value="#{nivelMB.nivelesMant[1].id.rangoInicio}" maxlength="50" /></td>
+						<td><h:outputText value="Rango Fin:  " /></td>
+						<td><p:inputText id="txtDolarRangFin"
+								value="#{nivelMB.nivelesMant[1].id.rangoFin}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Euros :   " /></td>
+						<td><h:outputText value="Rango Inicio:  " /></td>
+						<td><p:inputText id="txtEuroRangInic"
+								value="#{nivelMB.nivelesMant[0].id.rangoInicio}" maxlength="50" /></td>
+						<td><h:outputText value="Rango Fin:  " /></td>
+						<td><p:inputText id="txtEuroRangFin"
+								value="#{nivelMB.nivelesMant[0].id.rangoFin}" maxlength="50" /></td>
+					</tr>
+				</table>
+
+					<p:commandButton id="guardarNivel" value="Guardar" ajax="true"
+					action="#{nivelMB.listarNiveles}"
+					actionListener="#{nivelMB.registrar}"
+					update=":frmDataTableNivel :frmMantenimientoNivel ">
+					
+					</p:commandButton>
+
+				<p:commandButton id="limpiarNivel" value="Limpiar" ajax="true"
+					action="#{comisionMB.listarComisiones}"
+					update=":frmMantenimientoNivel">
+				</p:commandButton>
+			</p:panel>
+		</h:form>
+		<!-- Fin Abogado -->
+		<!-- Data Table Nivel -->
+		<h:form id="frmDataTableNivel">
+			<p:panel header="Niveles de Aprobacion" style="width: 85%">
+				<p:dataTable id="dtbNivel" value="#{nivelMB.niveles}" var="niv"
+					paginator="true" rows="50" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+					emptyMessage="No hay registros">
+
+					<p:column headerText="Nivel">
+						<h:outputText value="#{niv.id.desNiv}" />
+					</p:column>
+					<p:column headerText="Rango Inicio">
+						<h:outputText value="#{niv.id.rangoInicio}" />
+					</p:column>
+					<p:column headerText="Rango Fin">
+						<h:outputText value="#{niv.id.rangoFin}" />
+					</p:column>
+					<p:column headerText="Moneda">
+						<h:outputText value="#{niv.id.moneda}" />
+					</p:column>
+					<p:column headerText="Fecha de Registro">
+						<h:outputText value="#{niv.id.fechaReg}" />
+					</p:column>
+					<p:column headerText="Usuario de Registro">
+						<h:outputText value="#{niv.id.usuarioReg}" />
+					</p:column>
+					<p:column headerText="Fecha de Actualizacion">
+						<h:outputText value="#{niv.id.fechaAct}" />
+					</p:column>
+					<p:column headerText="Usuario de Actualizacion">
+						<h:outputText value="#{niv.id.usuarioAct}" />
+					</p:column>
+					<p:column headerText="Estado">
+						<h:outputText value="#{niv.id.desEstado}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+
+		</h:form>
+		<!--Fin Data Table Oficina -->
+	</ui:define>
+</ui:composition>
+
+</html>
