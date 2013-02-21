@@ -974,7 +974,7 @@ public class ConsultarSolicitudMB {
 		{
 			logger.info("****************** COD_SOLES ******************** " + solicitud.getMoneda());
 
-			List<TiivsNivel> lstNiveles = service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda",ConstantesVisado.MONEDAS.COD_SOLES)));
+			List<TiivsNivel> lstNiveles = service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("moneda",ConstantesVisado.MONEDAS.COD_SOLES)));
 			
 			if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) 
 			{
@@ -999,7 +999,7 @@ public class ConsultarSolicitudMB {
 		} else if (solicitud.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) {
 			logger.info("*********************************** COD_DOLAR ********************************************");
 			List<TiivsNivel> lstNiveles = service.buscarDinamico(Busqueda
-					.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda",ConstantesVisado.MONEDAS.COD_DOLAR)));
+					.forClass(TiivsNivel.class).add(Restrictions.eq("moneda",ConstantesVisado.MONEDAS.COD_DOLAR)));
 			if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) {
 				logger.info("a" + lstNiveles.get(0).getDesNiv());
 
@@ -1020,7 +1020,7 @@ public class ConsultarSolicitudMB {
 		} else if (solicitud.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_EUROS)) {
 			logger.info("*********************************** COD_EUROS ********************************************");
 			List<TiivsNivel> lstNiveles = service.buscarDinamico(Busqueda
-					.forClass(TiivsNivel.class).add(Restrictions.eq("id.moneda",ConstantesVisado.MONEDAS.COD_EUROS)));
+					.forClass(TiivsNivel.class).add(Restrictions.eq("moneda",ConstantesVisado.MONEDAS.COD_EUROS)));
 			if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) {
 				logger.info("a" + lstNiveles.get(0).getDesNiv());
 
