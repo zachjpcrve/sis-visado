@@ -134,7 +134,7 @@ public class EvaluacionNivelesMB {
 		if(bRegistro){
 			Utilitarios.mensajeInfo("INFO", "Evaluación registrada correctamente");
 		} else {
-			Utilitarios.mensajeInfo("INFO", "No se permite el registro de la evaluación");
+			Utilitarios.mensajeInfo("INFO", "Acción restringida para el usuario " + this.usuario.getUID());
 		}
 		logger.info("***********registrarEvaluacionNivel():FIN ****************");		
 	}
