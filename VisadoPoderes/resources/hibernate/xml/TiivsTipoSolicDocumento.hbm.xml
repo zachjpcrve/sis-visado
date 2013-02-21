@@ -15,7 +15,7 @@
         <many-to-one name="tiivsDocumento" class="com.hildebrando.visado.modelo.TiivsDocumento" update="false" insert="false" fetch="select" lazy="false">
             <column name="COD_DOC" length="7" not-null="true" unique="true" />
         </many-to-one>
-        <many-to-one name="tiivsTipoSolicitud" class="com.hildebrando.visado.modelo.TiivsTipoSolicitud" update="false" insert="false" fetch="select">
+        <many-to-one name="tiivsTipoSolicitud" class="com.hildebrando.visado.modelo.TiivsTipoSolicitud" lazy="false" update="false" insert="false" fetch="select">
             <column name="COD_TIPO_SOLIC" length="7" not-null="true" />
         </many-to-one>
         <property name="activo" type="char">
