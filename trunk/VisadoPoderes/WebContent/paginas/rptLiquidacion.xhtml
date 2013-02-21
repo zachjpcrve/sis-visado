@@ -12,7 +12,386 @@
 	<ui:define name="contenido">
 		
 		<h:form id="frm">
+			<p:growl life="10000" globalOnly="false" showDetail="true" id="growl" />
 			
+			<p:spacer height="5"/>
+			
+			<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
+				<tbody>
+					<tr bordercolor="white">
+						<td><h:outputText styleClass="outputText" id="txtAnio" value="Anio"/></td>
+						<td>
+							<p:selectOneMenu id="somAnio" value="#{reportesMB.anio}" required="true">
+								<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+								<f:selectItem itemLabel="2013" itemValue="1" />
+								<f:selectItem itemLabel="2014" itemValue="2" />
+								<f:selectItem itemLabel="2015" itemValue="3" />
+								<f:selectItem itemLabel="2016" itemValue="4" />
+							</p:selectOneMenu>
+						</td>
+						
+						<td>
+							<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio" />
+						</td>
+						<td>
+							<p:selectCheckboxMenu id="scmEstudio" label="--Todos--" value="#{reportesMB.lstEstudioSelected}" 
+								panelStyle="width:150px;" style="width:150px;">  
+						        <f:selectItems value="#{reportesMB.combosMB.estudios}" />  
+						    </p:selectCheckboxMenu>  
+						</td>
+					</tr>
+					
+					<tr bordercolor="white">
+						<td ><h:outputText styleClass="outputText" id="txtMes" value="Mes" /></td>
+						<td >
+							<p:selectOneMenu id="somMes" value="#{reportesMB.mes}" required="true">
+								<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+								<f:selectItem itemLabel="Enero" itemValue="1" />
+								<f:selectItem itemLabel="Febrero" itemValue="2" />
+								<f:selectItem itemLabel="Marzo" itemValue="3" />
+								<f:selectItem itemLabel="Abril" itemValue="4" />
+								<f:selectItem itemLabel="Mayo" itemValue="5" />
+								<f:selectItem itemLabel="Junio" itemValue="6" />
+								<f:selectItem itemLabel="Julio" itemValue="7" />
+								<f:selectItem itemLabel="Agosto" itemValue="8" />
+								<f:selectItem itemLabel="Septiembre" itemValue="9" />
+								<f:selectItem itemLabel="Octubre" itemValue="10" />
+								<f:selectItem itemLabel="Noviembre" itemValue="11" />
+								<f:selectItem itemLabel="Diciembre" itemValue="12" />
+								
+								<p:ajax event="change" update=":frm:lblTextoAnioMes" process="@this" listener="#{reportesMB.actualizarTextoAnioMes}"/>
+							</p:selectOneMenu>
+						</td>
+					</tr>
+					
+					<tr bordercolor="white">
+						<td>
+							<p:commandButton value="Buscar" actionListener="#{reportesMB.buscarLiquidacion}" update=":frm"/>
+						</td>
+						<td>
+							<p:commandButton value="Exportar"  disabled="#{reportesMB.noHabilitarExportar}" actionListener="#{reportesMB.abrirExcelLiquidacion}"/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<p:spacer height="20"/>
+			
+			<h:outputLabel id="lblTextoAnioMes" value="#{reportesMB.textoAnioMes}" style="width: 250px" />
+			
+			<p:spacer height="30"/>
+			
+			
+			<div class="ui-datatable ui-widget">
+			<table> 
+				<tr>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>Estudio</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>Plazo</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>1</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>2</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>3</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>4</SPAN>
+						</div>
+					</th>
+				</tr>
+			</table>
+			</div>
+			
+			<p:panel header="Resultados" id="panelRes" style="width: 1090px" >
+				<p:dataTable value="#{reportesMB.lstLiquidacion}" var="tbl" rows="3" id="datosSol"
+						paginatorPosition="bottom" scrollable="true" scrollHeight="200"
+						paginator="true" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						rowsPerPageTemplate="5,10,15" emptyMessage="">
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Estudio" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.estudio}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Plazo" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.plazo}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="1" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia1}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="2" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia2}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="3" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia3}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="4" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia4}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="5" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia5}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="6" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia6}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="7" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia7}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="8" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia8}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="9" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia9}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="10" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia10}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="11" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia11}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="12" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia12}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="13" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia13}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="14" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia14}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="15" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia15}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="16" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia16}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="17" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia17}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="18" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia18}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="19" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia19}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="20" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia20}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="21" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia21}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="22" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia22}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="23" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia23}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="24" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia24}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="25" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia25}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="26" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia26}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="27" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia27}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="28" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia28}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="29" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia29}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="30" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia30}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="31" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalDia31}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Total Mes" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.totalMes}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Costo" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.costo}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Honorarios" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.honorarios}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Impuesto" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.impuesto}" style="font-size: 9px"/>	
+						</p:column>
+						
+						<p:column width="35">
+							<f:facet name="header">  
+						         <h:outputText value="Total" style="font-size: 9px"/>  
+						    </f:facet>  
+							<h:outputText value="#{tbl.total}" style="font-size: 9px"/>	
+						</p:column>
+				</p:dataTable>
+			</p:panel>
 		</h:form>  
 		
 	</ui:define>

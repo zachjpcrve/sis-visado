@@ -44,12 +44,14 @@ import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.Moneda;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
+import com.hildebrando.visado.modelo.Liquidacion;
 import com.hildebrando.visado.modelo.RecaudacionTipoServ;
 import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.SolicitudesTipoServicio;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsMiembro;
+import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
@@ -83,6 +85,7 @@ public class ReportesMB
 	private List<SolicitudesTipoServicio> lstSolicitudesTipoServicio;
 	private List<RecaudacionTipoServ> lstRecaudacionTipoServ;
 	private List<Moneda> lstMoneda;
+	private List<Liquidacion> lstLiquidacion;
 	private Date fechaInicio;
 	private Date fechaFin;
 	private String nombreExtractor;
@@ -100,12 +103,16 @@ public class ReportesMB
 	private String idOpeBan;
 	private String idImporte;
 	private String idMoneda;
+	private String textoAnioMes;
 	private Double importeIni;
 	private Double importeFin;
 	private StreamedContent file;  
 	private IILDPeUsuario usuario;
 	private Boolean noHabilitarExportar;
 	private Boolean mostrarBotones=false;
+	private int anio;
+	private int mes;
+	private double impuesto=0.0;
 		
 	public static Logger logger = Logger.getLogger(ReportesMB.class);
 	
@@ -133,6 +140,35 @@ public class ReportesMB
 		{
 			setNoHabilitarExportar(true);
 		}
+		
+		impuesto=obtenerImpuesto();
+	}
+	
+	public double obtenerImpuesto()
+	{
+		double impuesto=0.0;
+		
+		//Se obtiene los dias utiles de la Multitabla
+		for (TiivsMultitabla tmp : combosMB.getLstMultitabla()) 
+		{
+			if (tmp.getId().getCodMult().trim().equals(ConstantesVisado.CODIGO_MULTITABLA_COMISION)) 
+			{
+				if (tmp.getId().getCodElem().equals(ConstantesVisado.CODIGO_CAMPO_IMPUESTO))
+				{
+					impuesto = Double.valueOf(tmp.getValor2());
+				}
+			}
+		}
+		
+		return impuesto;
+	}
+	
+	public void actualizarTextoAnioMes()
+	{
+		logger.info("Mes seleccionado: " + getMes());
+		logger.info("Anio seleccionado: " + getAnio());
+		
+		setTextoAnioMes(Utilitarios.buscarMesxCodigo(getMes()) + ConstantesVisado.ESPACIO_BLANCO + Utilitarios.buscarAnioxCodigo(getAnio()));
 	}
 	
 	public void inicializarCampos()
@@ -243,6 +279,61 @@ public class ReportesMB
 	public void exportarExcelSolicitudTipoServ()
 	{
 		rptSolicitudTipoServ();
+	}
+	
+	public void buscarLiquidacion()
+	{
+		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+	
+		//Busqueda por estudio
+		String cadEstudio = "";
+		if (lstEstudioSelected.size()>0)
+		{
+			int j=0;
+			int cont=1;
+			
+			for (;j<=lstEstudioSelected.size()-1;j++)
+			{
+				if (lstEstudioSelected.size()>1)
+				{
+					if (cont==lstEstudioSelected.size())
+					{
+						cadEstudio=cadEstudio.concat(lstEstudioSelected.get(j).toString());
+					}
+					else
+					{
+						cadEstudio=cadEstudio.concat(lstEstudioSelected.get(j).toString().concat(","));
+						cont++;
+					}
+				}
+				else
+				{
+					cadEstudio = lstEstudioSelected.get(j).toString();
+				}	
+			}
+		}	
+		
+		//Busqueda por anio
+		int anio=0;
+		
+		if (getAnio()!=0)
+		{
+			anio = getAnio();
+		}
+		
+		//Busqueda por mes
+		int mes=0;
+		
+		if (getMes()!=0)
+		{
+			mes = getMes();
+		}		
+		
+		try {
+			this.lstLiquidacion = solicitudService.obtenerLiquidacion(cadEstudio, anio, mes,impuesto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void buscarRecaudacionxTipoServ()
@@ -587,11 +678,11 @@ public class ReportesMB
 				{
 					if (cont==lstEstudioSelected.size())
 					{
-						cadEstudio=cadTipoServ.concat(lstEstudioSelected.get(j).toString());
+						cadEstudio=cadEstudio.concat(lstEstudioSelected.get(j).toString());
 					}
 					else
 					{
-						cadEstudio=cadTipoServ.concat(lstEstudioSelected.get(j).toString().concat(","));
+						cadEstudio=cadEstudio.concat(lstEstudioSelected.get(j).toString().concat(","));
 						cont++;
 					}
 				}
@@ -2133,6 +2224,11 @@ public class ReportesMB
 		}
 	}
 	
+	public void abrirExcelLiquidacion()
+	{
+		
+	}
+	
 	public void abrirExcelRecaudacion()
 	{
 		try {
@@ -2871,5 +2967,49 @@ public class ReportesMB
 
 	public void setNombreRecaudacion(String nombreRecaudacion) {
 		this.nombreRecaudacion = nombreRecaudacion;
+	}
+
+	public String getTextoAnioMes() {
+		return textoAnioMes;
+	}
+
+	public void setTextoAnioMes(String textoAnioMes) {
+		this.textoAnioMes = textoAnioMes;
+	}
+
+	public int getAnio() {
+		return anio;
+	}
+
+	public void setAnio(int anio) {
+		this.anio = anio;
+	}
+
+	public int getMes() {
+		return mes;
+	}
+
+	public void setMes(int mes) {
+		this.mes = mes;
+	}
+
+	public List<Liquidacion> getLstLiquidacion() {
+		return lstLiquidacion;
+	}
+
+	public void setLstLiquidacion(List<Liquidacion> lstLiquidacion) {
+		this.lstLiquidacion = lstLiquidacion;
+	}
+
+	public String getRutaArchivoExcel() {
+		return rutaArchivoExcel;
+	}
+
+	public double getImpuesto() {
+		return impuesto;
+	}
+
+	public void setImpuesto(double impuesto) {
+		this.impuesto = impuesto;
 	}
 }
