@@ -263,9 +263,9 @@ function invocarEscaner(urlApplet){
 								</th>
 								</tr>
                                                         
-                                                                                                                                  <c:forEach items="#{solicitudRegMB.lstAgrupacionSimpleDto}" var="s">
-                                                                                                                                  <tr class="ui-widget-content ui-datatable-even">
-								  <td><c:forEach items="#{s.lstPoderdantes}" var="n">
+                             <c:forEach items="#{solicitudRegMB.lstAgrupacionSimpleDto}" var="s">
+                             <tr class="ui-widget-content ui-datatable-even">
+							  <td><c:forEach items="#{s.lstPoderdantes}" var="n">
 								  <div class="ui-dt-c">
 								  <SPAN>#{n.sDesctipDoi}:#{n.numDoi}/#{n.nombre} #{n.apePat} #{n.apeMat}</SPAN>
 							                  </div>

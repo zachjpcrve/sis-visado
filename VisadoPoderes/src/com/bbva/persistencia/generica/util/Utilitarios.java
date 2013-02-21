@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -364,30 +366,70 @@ public class Utilitarios {
 		return fechaActualizacion ;
 	}
 	
-	public static String obtenerParteFecha(Date fecha, String tipo)
+	public static String obtenerParteFecha(String fecha, String tipo)
 	{
 		String tipoRes="";
 		
-		if (fecha !=null)
+		if (fecha.compareTo("")!=0)
 		{
-			Calendar calFechaAct = Calendar.getInstance();
-			calFechaAct.setTimeInMillis(fecha.getTime());
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			
-			if (tipo.equals("d"))
-			{
-				tipoRes = String.valueOf(calFechaAct.get(Calendar.DAY_OF_MONTH));
+			Date nFecha=null;
+			try {
+				nFecha = sdf.parse(fecha);
+			} catch (ParseException e) {
+				e.printStackTrace();
 			}
-			if (tipo.equals("m"))
+			
+			if (nFecha!=null)
 			{
-				tipoRes = String.valueOf(calFechaAct.get(Calendar.MONTH));
-			}
-			if (tipo.equals("y"))
-			{
-				tipoRes = String.valueOf(calFechaAct.get(Calendar.YEAR));
+				Calendar calFechaAct = Calendar.getInstance();
+				calFechaAct.setTimeInMillis(nFecha.getTime());
+				
+				if (tipo.equals("d"))
+				{
+					tipoRes = String.valueOf(calFechaAct.get(Calendar.DAY_OF_MONTH));
+				}
+				if (tipo.equals("m"))
+				{
+					tipoRes = String.valueOf(calFechaAct.get(Calendar.MONTH));
+				}
+				if (tipo.equals("y"))
+				{
+					tipoRes = String.valueOf(calFechaAct.get(Calendar.YEAR));
+				}
 			}
 		}	
 		
 		return tipoRes;
+	}
+	
+	public static boolean comparadorFechas(String fecha1, String fecha2)
+	{
+		boolean aTiempo=true;
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Date nFecha=null;
+		try {
+			nFecha = sdf.parse(fecha1);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		Date nFecha1=null;
+		try {
+			nFecha1 = sdf.parse(fecha2);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		if (nFecha.after(nFecha1))
+		{
+			aTiempo=false;
+		}
+		
+		return aTiempo;
 	}
 	
 	public static String formatoFechaHora(Date fecha) {
