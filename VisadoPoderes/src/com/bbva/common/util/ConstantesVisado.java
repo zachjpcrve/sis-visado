@@ -169,6 +169,11 @@ public class ConstantesVisado {
 	public static final String CAMPO_NIVEL3 = "N3";
 	public static final String CAMPO_NIVEL4 = "N4";
 	
+	public static final String COD_NIVEL1 = "0001";
+	public static final String COD_NIVEL2 = "0002";
+	public static final String COD_NIVEL3 = "0003";
+	public static final String COD_NIVEL4 = "0004";
+	
 	public static final String DOS_PUNTOS = ": ";
 	public static final String GUION = " - ";
 	public static final String ARROBA = "@";

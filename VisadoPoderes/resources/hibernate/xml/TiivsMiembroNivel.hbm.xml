@@ -8,7 +8,7 @@
             <column name="ID" precision="8" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="tiivsMiembro" class="com.hildebrando.visado.modelo.TiivsMiembro" fetch="select">
+        <many-to-one name="tiivsMiembro" class="com.hildebrando.visado.modelo.TiivsMiembro" lazy="false" fetch="select">
             <column name="COD_MIEMBRO" length="7" />
         </many-to-one>
         <property name="codNiv" type="string">
