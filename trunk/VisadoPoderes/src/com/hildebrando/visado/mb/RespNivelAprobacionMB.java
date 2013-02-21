@@ -12,12 +12,14 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
+import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.hildebrando.visado.dto.GrupoDto;
 import com.hildebrando.visado.dto.MiembroNivelDTO;
 import com.hildebrando.visado.dto.NivelDto;
 import com.hildebrando.visado.modelo.TiivsGrupo;
+import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsRevocado;
@@ -38,8 +40,10 @@ public class RespNivelAprobacionMB {
 	
 	public RespNivelAprobacionMB(){
 		
+		miembroNivelDto= new MiembroNivelDTO();
 		grupos = new ArrayList<GrupoDto>();
 		niveles = new ArrayList<NivelDto>();
+		respNiveles = new ArrayList<MiembroNivelDTO>();
 		cargarCombos();
 	}
 	
@@ -81,6 +85,96 @@ public class RespNivelAprobacionMB {
 	} 
 	
 	public void listarRespxNivel(){
+		
+		GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		
+		Busqueda filtroTiivsMiembroNivel = Busqueda.forClass(TiivsMiembroNivel.class);
+		List<TiivsMiembroNivel> list= new ArrayList<TiivsMiembroNivel>();
+		
+		GenericDao<TiivsMiembro, Object> serviceTiivsMiembro = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		
+		GenericDao<TiivsGrupo, Object> serviceTiivsGrupo = (GenericDao<TiivsGrupo, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		
+		
+		if(miembroNivelDto.getRegistro() != ""){
+			filtroTiivsMiembroNivel.add(Restrictions.eq("tiivsMiembro.codMiembro", miembroNivelDto.getRegistro()));
+		}
+		
+		if(miembroNivelDto.getDescripcion() != ""){
+			filtroTiivsMiembroNivel.add(Restrictions.eq("tiivsMiembro.descripcion", miembroNivelDto.getDescripcion()));
+		}
+		
+		if(miembroNivelDto.getEstado() != "" && miembroNivelDto.getEstado().compareTo("-1") != 0 ){
+			filtroTiivsMiembroNivel.add(Restrictions.eq("estado", miembroNivelDto.getEstado()));
+		}
+		
+
+		if(miembroNivelDto.getCodGrupo() != "" && miembroNivelDto.getCodGrupo().compareTo("-1") != 0 ){
+			
+			Busqueda filtroTiivsMiembro= Busqueda.forClass(TiivsMiembro.class);
+			filtroTiivsMiembro.add(Restrictions.eq("tiivsGrupo.codGrupo", miembroNivelDto.getCodGrupo()));
+			List<TiivsMiembro> miembros= new ArrayList<TiivsMiembro>();
+			try {
+				miembros = serviceTiivsMiembro.buscarDinamico(filtroTiivsMiembro);
+			} catch (Exception e) {
+				logger.error("error al obtener miembros");
+			}
+			List<String> codigos= new ArrayList<String>();
+			for(TiivsMiembro tiivsMiembro: miembros){
+				codigos.add(tiivsMiembro.getCodMiembro());
+			}
+			
+			
+			filtroTiivsMiembroNivel.add(Restrictions.in("tiivsMiembro.codMiembro", codigos));
+		}
+		
+		if(miembroNivelDto.getCodNivel() != "" && miembroNivelDto.getCodNivel().compareTo("-1") != 0 ){
+			filtroTiivsMiembroNivel.add(Restrictions.eq("codNiv", miembroNivelDto.getCodNivel()));
+		}
+		
+		try {
+			list = serviceTiivsMiembroNivel.buscarDinamico(filtroTiivsMiembroNivel);
+			
+		} catch (Exception e) {
+			
+			logger.error("error al obtener la lista de resp x nivel "+ e.getMessage());
+		}
+		
+		for(TiivsMiembroNivel  e:list){
+			TiivsGrupo grupo= new TiivsGrupo();
+			TiivsMiembro miembro= new TiivsMiembro();
+			try {
+				grupo = serviceTiivsGrupo.buscarById(TiivsGrupo.class, e.getTiivsMiembro().getTiivsGrupo().getCodGrupo());
+				miembro = serviceTiivsMiembro.buscarById(TiivsMiembro.class, e.getTiivsMiembro().getCodMiembro());
+				
+			} catch (Exception ex) {
+				logger.error("error al obtener grupo "+ ex.getMessage());
+			}
+			
+			String descEstado="" ;
+			String desNivel="";
+			
+			if(e.getEstado().compareTo(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO)==0)
+				descEstado= ConstantesVisado.ESTADOS.ESTADO_ACTIVO;
+			
+			if(e.getEstado().compareTo(ConstantesVisado.ESTADOS.ESTADO_COD_DESACTIVO)==0)
+				descEstado = ConstantesVisado.ESTADOS.ESTADO_DESACTIVO;
+			
+			if(e.getCodNiv().compareTo(ConstantesVisado.COD_NIVEL1)==0)
+				desNivel = ConstantesVisado.CAMPO_NIVEL1;
+				
+			if(e.getCodNiv().compareTo(ConstantesVisado.COD_NIVEL2)==0)
+				desNivel = ConstantesVisado.CAMPO_NIVEL2;
+			
+			if(e.getCodNiv().compareTo(ConstantesVisado.COD_NIVEL3)==0)
+				desNivel = ConstantesVisado.CAMPO_NIVEL3;
+			
+			if(e.getCodNiv().compareTo(ConstantesVisado.COD_NIVEL4)==0)
+				desNivel = ConstantesVisado.CAMPO_NIVEL4;
+				
+			respNiveles.add(new MiembroNivelDTO(e.getId(), e.getCodNiv(),desNivel,e.getTiivsMiembro().getCodMiembro(),e.getTiivsMiembro().getDescripcion(),e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(),
+					grupo.getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),descEstado));
+		}
 		
 	}
 	
