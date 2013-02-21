@@ -549,9 +549,7 @@ public class ConsultarSolicitudMB {
 			SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 			solicitudRegistrarT = solicitudService.obtenerTiivsSolicitud(solicitud);
 			solicitudRegistrarT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudRegistrarT.getEstado()));
-			if (solicitudRegistrarT.getTiivsEstudio() == null) {
-			//solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
-			}
+			
 			
 			lstSolicBancarias = solicitudService.obtenerListarOperacionesBancarias(solicitud);
 			// BY SAMIRA 
@@ -660,7 +658,19 @@ public class ConsultarSolicitudMB {
 		  
 			this.actualizarEstadoReservadoSolicitud();
 			this.obtenerHistorialSolicitud();
-
+			
+			if (solicitudRegistrarT.getTiivsEstudio() == null) {
+				solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
+				}else{
+					List<TiivsMiembro> lstAbogadosMiembro = combosMB.getLstAbogados();
+					lstAbogados = new ArrayList<TiivsMiembro>();
+					for (TiivsMiembro x : lstAbogadosMiembro) {
+						if (x.getEstudio().trim().equals(this.solicitudRegistrarT.getTiivsEstudio().getCodEstudio())) {
+							lstAbogados.add(x);
+						}
+				}
+			
+			}
 			// Listar ComboDictamen
 			listarComboDictamen();
 		} catch (Exception e) {
@@ -964,6 +974,7 @@ public class ConsultarSolicitudMB {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void agregarNiveles(TiivsSolicitud solicitud) throws Exception 
 	{
 		logger.info("*********************************** agregarNiveles ********************************************");
@@ -982,9 +993,9 @@ public class ConsultarSolicitudMB {
 
 				if (this.solicitudRegistrarT.getImporte() > lstNiveles.get(lstNiveles.size() - 1).getRangoFin()) 
 				{
-					// System.out.println("c");
+					 System.out.println("c");
 				} else {
-					// System.out.println("d");
+					 System.out.println("d");
 					for (TiivsNivel x : lstNiveles) 
 					{
 						if (solicitud.getImporte() >= x.getRangoInicio()) 
@@ -1046,17 +1057,13 @@ public class ConsultarSolicitudMB {
 		if (lstCodNivel.size() > 0) {
 			// SI LA SOLICITUD SOPERA ALGUN NIVEL, ENTONCES PASA A ESTADO EN
 			// VERIFICACION A, SI NO A ACEPTADO
-			if (this.valorDictamen.trim().equals(
-					ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
-				solicitud
-						.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
-			} else if (this.valorDictamen.trim().equals(
-					ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
-				solicitud
-						.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02);
+			if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
+				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
+			} else if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
+				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02);
 			}
 			GenericDao<TiivsSolicitudNivel, Object> serviceSolicitud = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit
-					.getApplicationContext().getBean("genericoDao");
+					                                                    .getApplicationContext().getBean("genericoDao");
 			TiivsSolicitudNivel soliNivel = null;
 			logger.info("Calendar.DATE " + Calendar.DATE);
 			for (String codNivel : lstCodNivel) {
@@ -1104,10 +1111,10 @@ public class ConsultarSolicitudMB {
 		objHistorial.setId(new TiivsHistSolicitudId(solicitud.getCodSoli(),
 				numeroMovimiento));
 		objHistorial.setEstado(solicitud.getEstado());
-		objHistorial.setNomUsuario(solicitud.getNomUsuario());
+		objHistorial.setNomUsuario(usuario.getNombre());
 		objHistorial.setObs(solicitud.getObs());
 		objHistorial.setFecha(new Timestamp(new Date().getTime()));
-		objHistorial.setRegUsuario(solicitud.getRegUsuario());
+		objHistorial.setRegUsuario(usuario.getUID());
 		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		serviceHistorialSolicitud.insertar(objHistorial);
@@ -1595,7 +1602,7 @@ public class ConsultarSolicitudMB {
 				if (!this.sEstadoSolicitud.equals("BORRADOR")) 
 				{
 					this.enviarSolicitudSSJJ();
-					logger.info(solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
+					logger.info("ESTUDIOOOO : " +solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
 					actualizarBandeja=true;
 				}
 								
@@ -1685,7 +1692,7 @@ public class ConsultarSolicitudMB {
 				   }
 				}
 				
-				solicitudRegistrarT.setTiivsEstudio(null);
+				
 				TiivsSolicitud objResultado = service.insertarMerge(this.solicitudRegistrarT);
 								  
 				// Carga ficheros al FTP
