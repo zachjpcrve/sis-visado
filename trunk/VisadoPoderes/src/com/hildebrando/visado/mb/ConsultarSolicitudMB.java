@@ -986,7 +986,9 @@ public class ConsultarSolicitudMB {
 			logger.info("****************** COD_SOLES ******************** " + solicitud.getMoneda());
 
 			List<TiivsNivel> lstNiveles = service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("moneda",ConstantesVisado.MONEDAS.COD_SOLES)));
-			
+			logger.info("************** lstNiveles T_T : " +lstNiveles.size());
+			logger.info("************** solicitud.getImporte(): " +solicitud.getImporte());
+			logger.info("************** lstNiveles.get(0).getRangoInicio() : " +lstNiveles.get(0).getRangoInicio());
 			if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) 
 			{
 				logger.info("a" + lstNiveles.get(0).getDesNiv());
