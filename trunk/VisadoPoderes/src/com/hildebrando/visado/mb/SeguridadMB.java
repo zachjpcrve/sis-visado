@@ -23,6 +23,11 @@ import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.grupobbva.bc.per.tele.seguridad.ServiciosSeguridadBbva;
 import com.hildebrando.visado.dto.MiembroDto;
 
+/**
+ * Clase que se encarga de manejar la seguridad de la aplicacion, 
+ * comprende metodos como el logueo, cerrar sesion, etc.
+ * @author 
+ * */
 
 @ManagedBean(name = "seguridadMB")
 @SessionScoped
@@ -99,11 +104,13 @@ public class SeguridadMB {
 			request.getSession(true).setAttribute("strMensaje","Usuario no Encontrado");
 			response.sendRedirect("./sinAcceso.jsp");
 		}else{
-			logger.info("==== [USU_LDAP] encontrado === ");
-			logger.info("[USU_LDAP]-Codcargo: "+usuarioIILD.getCargo().getCodigo());
-			logger.info("[USU_LDAP]-Codofi: "+usuarioIILD.getBancoOficina().getCodigo());
-			logger.info("[USU_LDAP]-Codusu: "+usuarioIILD.getUID());
-			logger.info("[USU_LDAP]-Nombres: "+usuarioIILD.getNombre()+" "+usuarioIILD.getApellido1());
+			if(logger.isInfoEnabled()){
+				logger.info("==== [USU_LDAP] encontrado === ");
+				logger.info("[USU_LDAP]-Codcargo: "+usuarioIILD.getCargo().getCodigo());
+				logger.info("[USU_LDAP]-Codofi: "+usuarioIILD.getBancoOficina().getCodigo());
+				logger.info("[USU_LDAP]-Codusu: "+usuarioIILD.getUID());
+				logger.info("[USU_LDAP]-Nombres: "+usuarioIILD.getNombre()+" "+usuarioIILD.getApellido1());
+			}
 			
 			this.bNoLogeado = false;
 			
@@ -140,14 +147,17 @@ public class SeguridadMB {
 			SeguridadDao<MiembroDto, Object> miembroService = (SeguridadDao<MiembroDto, Object>) SpringInit.getApplicationContext().getBean("miembroEspDao");
 			logger.info("**************** miembroService : "+miembroService);
 			if(miembroService==null){
-				logger.info("Nullo");
+				logger.info("miembroService - Nullo");
 			}else{
-				logger.info("No Nullo");
+				logger.info("miembroService - No Nullo");
 			}
 			
 			 List<MiembroDto> ListaMiembros= miembroService.buscarMiembroSql(usuarioIILD);
 				
-			 logger.info(" ***************** ListaMiembros **************" +ListaMiembros.size());
+			 logger.info(" ***************** ListaMiembros **************");
+			 if(ListaMiembros!=null){
+				logger.debug("Hay ["+ListaMiembros.size()+"] miembro(s) en la BD.");
+			 }
         	for (Iterator iterator = ListaMiembros.iterator(); iterator.hasNext();) {
         		MiembroDto object = (MiembroDto) iterator.next();
 				logger.info("Grupo: " + object.getCOD_GRUPO()+", criterio: "+ object.getCRITERIO()+", miembro: "+object.getCOD_MIEMBRO() );
@@ -192,9 +202,10 @@ public class SeguridadMB {
         	}
         	
         	if(ListaMiembros.size()>0){
+        		logger.debug(ConstantesVisado.SEGURIDAD.USER_ACCESO_OK);
         		response.sendRedirect("./paginas/bienvenido.xhtml");
         	}else{
-            	request.getSession().setAttribute("strMensaje","Usuario no se encuentra registrado en el sistema.");
+            	request.getSession().setAttribute("strMensaje",ConstantesVisado.SEGURIDAD.USER_NO_REGISTR);
             	response.sendRedirect("./sinAcceso.jsp");
         	}
         	
@@ -202,7 +213,6 @@ public class SeguridadMB {
     	logger.info("IIVP --fin de autenticación---");
 
     } catch (Exception e) {
-    	e.printStackTrace();
     	logger.error(e.getMessage(),e);
     	request.getSession().setAttribute("strMensaje","Excepcion al procesar la validacion:" + e.getMessage());
     }   
@@ -212,20 +222,18 @@ public class SeguridadMB {
 	
 	
 	public String cerrarSesion() {
-		logger.info("*********************************cerrarSesion **********************************" +idSesion);
+		logger.info(" === cerrarSesion() ==> " +idSesion);
 		Sesion.cerrarSesion(Integer.parseInt(idSesion));
 		this.idSesion = "";
 		this.usuarioCodigo = "";
 		try {
-		
-		FacesContext context = FacesContext.getCurrentInstance();
-		ExternalContext externalContext = context.getExternalContext();
-		Object session = externalContext.getSession(false);
-		HttpSession httpSession = (HttpSession) session;
-		httpSession.invalidate();
-		
+			FacesContext context = FacesContext.getCurrentInstance();
+			ExternalContext externalContext = context.getExternalContext();
+			Object session = externalContext.getSession(false);
+			HttpSession httpSession = (HttpSession) session;
+			httpSession.invalidate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.SEGURIDAD.ERROR_CERRAR_SESION +": "+e);
 		}
 		return "/faces/paginas/seguridad.xhtml";
 	}
