@@ -545,7 +545,7 @@ public class SeguimientoMB
 			tmpSol.setTxtOpeBan(cadena);
 			
 			//Proceso para obtener los niveles de cada solicitud
-			if (tmpSol.getImporte() != 0) 
+		/*	if (tmpSol.getImporte() != 0) 
 			{
 				if (combosMB.getLstNivel().size() > 0) 
 				{
@@ -633,16 +633,16 @@ public class SeguimientoMB
 				}
 				else
 				{
-					/*
+					
 					 * txtNivelTMP+=ConstantesVisado.CAMPO_NIVEL4;
 					 * tmpSol.setTxtNivel(txtNivelTMP);
-					 */
+					 
 				}
-			}
-			else 
+			}*/
+			/*else 
 			{
 				logger.debug("No se pudo obtener los rangos de los niveles para la solicitud. Verificar base de datos!!");
-			}
+			}*/
 		}
 		
 	}
