@@ -1369,6 +1369,23 @@ public class ConsultarSolicitudMB {
 		// evaluacionNivelesMB.setRegistroUsuario(this.registroUsuario);
 		evaluacionNivelesMB.registrarEvaluacionNivel(sCodigoEstadoNivel);
 	}
+			
+	public void obtenerDictamenNivel(ValueChangeEvent e) 
+	{
+		logger.info("****************** obtenerDictamen Nivel ********************** "
+				+ e.getNewValue());
+
+		if (e.getNewValue() != null){
+			
+			valorDictamen = e.getNewValue().toString();
+			if (e.getNewValue().toString().equals(ConstantesVisado.ESTADOS.ESTADO_COD_APROBADO_T09))
+				descValorDictamen = ConstantesVisado.ESTADOS.ESTADO_Aprobado_T09;
+			else if (e.getNewValue().toString().equals(ConstantesVisado.ESTADOS.ESTADO_COD_DESAPROBADO_T09))
+				descValorDictamen = ConstantesVisado.ESTADOS.ESTADO_Desaprobado_T09;						
+		} else {			
+			descValorDictamen = "";			
+		}
+	}
 
 	/* Metodos del registro - Refactorizar 04/02/13 */
 
