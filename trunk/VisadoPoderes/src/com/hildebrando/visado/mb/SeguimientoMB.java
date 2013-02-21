@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
+import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
@@ -319,6 +321,8 @@ public class SeguimientoMB
 					  solicitud.setDescEstado(Utilitarios.obternerDescripcionEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02));
 					  					  
 					  solicitudService.modificar(solicitud);
+					  
+					  registrarHistorial(solicitud);
 				} catch (BeansException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -328,7 +332,33 @@ public class SeguimientoMB
 		}
 		cargarSolicitudes();
 	}
+	public void registrarHistorial(TiivsSolicitud solicitud) throws Exception {
+		SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit
+				.getApplicationContext().getBean("solicitudEspDao");
+		String numeroMovimiento = serviceMaxMovi
+				.obtenerMaximoMovimiento(solicitud.getCodSoli());
 
+		int num = 0;
+		if (!numeroMovimiento.equals("")) {
+			num = Integer.parseInt(numeroMovimiento) + 1;
+		} else {
+			num = 1;
+		}
+		numeroMovimiento = num + "";
+		logger.info("Numero de Movimiento a registrar para el CodSolicitud : "
+				+ solicitud.getCodSoli());
+		TiivsHistSolicitud objHistorial = new TiivsHistSolicitud();
+		objHistorial.setId(new TiivsHistSolicitudId(solicitud.getCodSoli(),
+				numeroMovimiento));
+		objHistorial.setEstado(solicitud.getEstado());
+		objHistorial.setNomUsuario(usuario.getNombre());
+		objHistorial.setObs(solicitud.getObs());
+		objHistorial.setFecha(new Timestamp(new Date().getTime()));
+		objHistorial.setRegUsuario(usuario.getUID());
+		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		serviceHistorialSolicitud.insertar(objHistorial);
+	}
 	public String obtenerDescripcionClasificacion(String idTipoClasificacion) {
 		String descripcion = "";
 		for (ComboDto z : combosMB.getLstClasificacionPersona()) {
@@ -573,6 +603,25 @@ public class SeguimientoMB
 									else 
 									{
 										txtNivelTMP += ConstantesVisado.CAMPO_NIVEL3;
+									}
+								}
+							}
+							
+							if (tmp.getDesNiv().equalsIgnoreCase(ConstantesVisado.CAMPO_NIVEL4)) 
+							{
+								importeTMP = tmpSol.getImporte();
+								rangoIni = Double.valueOf(tmp.getRangoInicio());
+								rangoFin = Double.valueOf(tmp.getRangoFin());
+
+								if (importeTMP.compareTo(rangoIni) >= 0 && importeTMP.compareTo(rangoFin) <= 0) 
+								{
+									if (txtNivelTMP.length() > 0) 
+									{
+										txtNivelTMP += "," 	+ ConstantesVisado.CAMPO_NIVEL4;
+									} 
+									else 
+									{
+										txtNivelTMP += ConstantesVisado.CAMPO_NIVEL4;
 									}
 								}
 							}

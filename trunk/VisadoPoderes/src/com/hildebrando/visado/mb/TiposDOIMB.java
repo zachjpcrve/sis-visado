@@ -23,7 +23,7 @@ public class TiposDOIMB {
 	private TiivsMultitabla documento;
 	private List<TiivsMultitabla> documentos;
 	private List<TiivsMultitabla> documentoEditar;
-	private boolean bValor4;
+	//private boolean bValor4;
 	private boolean bMsgActualizar;
 	private boolean bValidacion;
 
@@ -31,7 +31,7 @@ public class TiposDOIMB {
 		documento = new TiivsMultitabla();
 		TiivsMultitablaId documentoId = new TiivsMultitablaId();
 		documento.setId(documentoId);
-		bValor4 = false;
+		//bValor4 = false;
 		bMsgActualizar = false;
 		bValidacion = false;
 		tiposDoiService = new TiposDoiService();
@@ -83,11 +83,11 @@ public class TiposDOIMB {
 			try {
 				documento.getId().setCodMult(
 						ConstantesVisado.CODIGO_MULTITABLA_DOCUMENTO);
-				if (isbValor4() == true) {
+				/*if (isbValor4() == true) {
 					documento.setValor4(ConstantesVisado.VALOR4_OBLIGATORIO_SI);
 				} else {
 					documento.setValor4(ConstantesVisado.VALOR4_OBLIGATORIO_NO);
-				}
+				}*/
 				tiposDoiService.registrar(documento);
 				if (isbMsgActualizar() == true) {
 					Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
@@ -95,7 +95,7 @@ public class TiposDOIMB {
 					Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
 				}
 				documento = new TiivsMultitabla();
-				setbValor4(false);
+				
 				TiivsMultitablaId documentoId = new TiivsMultitablaId();
 				documento.setId(documentoId);
 				obtenerMaximo();
@@ -128,7 +128,6 @@ public class TiposDOIMB {
 	public void limpiarCampos() {
 		logger.info("DocumentoMB : limpiarCampos");
 		documento = new TiivsMultitabla();
-		setbValor4(false);
 		TiivsMultitablaId documentoId = new TiivsMultitablaId();
 		documento.setId(documentoId);
 		obtenerMaximo();
@@ -153,12 +152,12 @@ public class TiposDOIMB {
 				documento.setValor2(documentoEditar.get(i).getValor2());
 				documento.setValor4(documentoEditar.get(i).getValor4());
 			}
-			if (documento.getValor4().equals(
+			/*if (documento.getValor4().equals(
 					ConstantesVisado.VALOR4_OBLIGATORIO_SI)) {
 				bValor4 = true;
 			} else {
 				bValor4 = false;
-			}
+			}*/
 			bMsgActualizar = true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -175,13 +174,7 @@ public class TiposDOIMB {
 		this.documento = documento;
 	}
 
-	public boolean isbValor4() {
-		return bValor4;
-	}
-
-	public void setbValor4(boolean bValor4) {
-		this.bValor4 = bValor4;
-	}
+	
 
 	public List<TiivsMultitabla> getDocumentos() {
 		return documentos;

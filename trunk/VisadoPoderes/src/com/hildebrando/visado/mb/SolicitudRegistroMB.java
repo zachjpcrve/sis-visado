@@ -1544,10 +1544,10 @@ public class SolicitudRegistroMB {
 				  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 				  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),1+""));
 				  objHistorial.setEstado(this.solicitudRegistrarT.getEstado());
-				  objHistorial.setNomUsuario(this.solicitudRegistrarT.getNomUsuario());
+				  objHistorial.setNomUsuario(usuario.getNombre());
 				  objHistorial.setObs(this.solicitudRegistrarT.getObs());
 				  objHistorial.setFecha(new Timestamp(new Date().getTime()));
-				  objHistorial.setRegUsuario(this.solicitudRegistrarT.getRegUsuario());
+				  objHistorial.setRegUsuario(usuario.getUID());
 				  serviceHistorialSolicitud.insertar(objHistorial);
 				  //Carga ficheros al FTP
 				  boolean bRet = cargarArchivosFTP();
