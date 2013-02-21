@@ -1613,14 +1613,18 @@ public class ConsultarSolicitudMB {
 			}
 
 			logger.info("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : " + solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
+			logger.info("this.sEstadoSolicitud " + this.sEstadoSolicitud);
 			
 			if (this.validarRegistroSolicitud()) 
 			{
-				if (!this.sEstadoSolicitud.equals("BORRADOR")) 
+				if (!this.sEstadoSolicitud.equals("BORRADOR"))  //ssjj
 				{
 					this.enviarSolicitudSSJJ();
 					logger.info("ESTUDIOOOO : " +solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
 					actualizarBandeja=true;
+				}else{
+					//borrador
+					this.solicitudRegistrarT.setTiivsEstudio(null);
 				}
 								
 				Set<TiivsSolicitudAgrupacion> listaTMP = this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
