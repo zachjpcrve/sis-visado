@@ -6,7 +6,9 @@
     <class name="com.hildebrando.visado.modelo.TiivsMiembroNivel" table="TIIVS_MIEMBRO_NIVEL">
         <id name="id" type="int">
             <column name="ID" precision="8" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence">
+            	<param name="sequence">SEQ_MIEMBRO_NIVEL</param>
+            </generator>
         </id>
         <many-to-one name="tiivsMiembro" class="com.hildebrando.visado.modelo.TiivsMiembro" lazy="false" fetch="select">
             <column name="COD_MIEMBRO" length="7" />
