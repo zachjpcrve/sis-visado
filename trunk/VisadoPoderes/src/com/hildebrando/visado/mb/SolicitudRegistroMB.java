@@ -60,6 +60,7 @@ import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperbanId;
 import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
 import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
+import com.hildebrando.visado.service.ClasificacionService;
 
 @ManagedBean(name = "solicitudRegMB")
 @SessionScoped
@@ -67,6 +68,7 @@ public class SolicitudRegistroMB {
 
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
+	private List<ComboDto> lstClasificacionPersona;
 	@ManagedProperty(value = "#{pdfViewerMB}")
 	private PDFViewerMB pdfViewerMB;
 
@@ -252,6 +254,7 @@ public class SolicitudRegistroMB {
 		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroTipoSolcDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);
 		filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic",(String) e.getNewValue()));
+		filtroTipoSolcDoc.add(Restrictions.eq("activo",'1'));
 		filtroTipoSolcDoc.addOrder(Order.desc("obligatorio"));
 		try {
 			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);			
@@ -640,6 +643,10 @@ public class SolicitudRegistroMB {
 	  objTiivsPersonaResultado=new TiivsPersona();
 	  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
 	  flagUpdatePoderdanteApoderados=false;
+	  combosMB=new CombosMB();
+	  lstClasificacionPersona=combosMB.getLstClasificacionPersona();
+	  logger.info("tamanioo actual **** " +combosMB.getLstClasificacionPersona().size());
+	    
   }
 	public boolean validarAgregarAgrupacion(){
 		boolean returno=true;
@@ -1585,7 +1592,7 @@ public class SolicitudRegistroMB {
 				logger.info("objResultado.getCodSoli(); "+ objResultado.getCodSoli());
 				logger.info("objResultado.getTiivsSolicitudAgrupacions() "+ objResultado.getTiivsSolicitudAgrupacions().size());
 				logger.info("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getImporte());
-				instanciarSolicitudRegistro();
+				//instanciarSolicitudRegistro();
 			}
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage());
@@ -2103,6 +2110,14 @@ public class SolicitudRegistroMB {
 
 	public void setUbicacionTemporal(String ubicacionTemporal) {
 		this.ubicacionTemporal = ubicacionTemporal;
+	}
+
+	public List<ComboDto> getLstClasificacionPersona() {
+		return this.lstClasificacionPersona;
+	}
+
+	public void setLstClasificacionPersona(List<ComboDto> lstClasificacionPersona) {
+		this.lstClasificacionPersona = lstClasificacionPersona;
 	}
 
 	/*public boolean isBoleanoMensajeInfoGeneral() {
