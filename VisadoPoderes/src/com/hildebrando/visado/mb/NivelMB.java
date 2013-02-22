@@ -34,8 +34,6 @@ public class NivelMB {
 		nivelService = new NivelService();
 		nivelesMant = new ArrayList<TiivsNivel>();
 		nivel = new TiivsNivel();
-		TiivsNivelId nivelId = new TiivsNivelId();
-		nivel.setId(nivelId);
 		obtenerMaximo();
 		listarMonedas();
 		listarNiveles();
@@ -69,8 +67,8 @@ public class NivelMB {
 			logger.info("NivelMB : secuencial" + " " + secuencial);
 			
 			for (int i = 0 ; i< ConstantesVisado.NUMERO_DE_MONEDAS_POR_NIVEL; i++){
-				nivelesMant.add(i, new TiivsNivel(new TiivsNivelId()));
-				nivelesMant.get(i).getId().setCodNiv(secuencial);
+				//nivelesMant.add(i, new TiivsNivel(new TiivsNivelId()));
+				nivelesMant.get(i).setCodNiv(secuencial);
 				/*nivelesMant.get(i).getId().setRangoInicio(12);
 				nivelesMant.get(i).getId().setRangoFin(20);*/
 			}
@@ -89,8 +87,8 @@ public class NivelMB {
 		String valor = "0";
 		try {
 			for (int j = 0; j < nivelesMant.size(); j++) {
-				if (nivelesMant.get(j).getId().getRangoInicio() >= 0) {
-					if (nivelesMant.get(j).getId().getRangoFin() >= 0) {
+				if (nivelesMant.get(j).getRangoInicio() >= 0) {
+					if (nivelesMant.get(j).getRangoFin() >= 0) {
 						valor = "0";
 					}else{
 						valor = "1";
@@ -102,14 +100,14 @@ public class NivelMB {
 				}
 			}
 		//	nivelesMant.add(0, new TiivsNivel().getId().setMoneda("0001"));		
-			nivelesMant.get(0).getId().setMoneda("0001");
-			nivelesMant.get(1).getId().setMoneda("0002");
-			nivelesMant.get(2).getId().setMoneda("0003");
+			nivelesMant.get(0).setMoneda("0001");
+			nivelesMant.get(1).setMoneda("0002");
+			nivelesMant.get(2).setMoneda("0003");
 			if (valor.equals("0")) {
 				for (int i = 0; i < nivelesMant.size(); i++) {
-					nivelesMant.get(i).getId().setDesNiv(nivelesMant.get(0).getId().getDesNiv().toUpperCase());
-					nivelesMant.get(i).getId().setFechaReg(utilDateDate);
-					nivelesMant.get(i).getId().setUsuarioReg(Utilitarios.getObjectInSession("USUARIO_SESION").toString());
+					nivelesMant.get(i).setDesNiv(nivelesMant.get(0).getDesNiv().toUpperCase());
+					nivelesMant.get(i).setFechaReg(utilDateDate);
+					nivelesMant.get(i).setUsuarioReg(Utilitarios.getObjectInSession("USUARIO_SESION").toString());
 				}
 				Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
 			} else {
