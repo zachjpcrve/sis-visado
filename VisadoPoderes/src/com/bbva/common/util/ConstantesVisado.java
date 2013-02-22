@@ -3,7 +3,7 @@ package com.bbva.common.util;
 
 public class ConstantesVisado {
 	public static final String CODIGO_MULTITABLA_CRITERIO = "T03";
-
+	public static final int NUMERO_DE_MONEDAS_POR_NIVEL = 3;
 	public static final String CODIGO_MULTITABLA_CLASIFICACION = "T13";
 	
 	
