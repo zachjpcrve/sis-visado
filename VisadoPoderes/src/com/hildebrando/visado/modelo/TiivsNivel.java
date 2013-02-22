@@ -21,6 +21,7 @@ public class TiivsNivel implements java.io.Serializable {
 	private Date fechaAct;
 	private String usuarioAct;
 	private BigDecimal estado;
+	private String desEstado;
 
 	public TiivsNivel() {
 	}
@@ -132,6 +133,14 @@ public class TiivsNivel implements java.io.Serializable {
 
 	public void setEstado(BigDecimal estado) {
 		this.estado = estado;
+	}
+
+	public String getDesEstado() {
+		return this.desEstado;
+	}
+
+	public void setDesEstado(String desEstado) {
+		this.desEstado = desEstado;
 	}
 
 }
