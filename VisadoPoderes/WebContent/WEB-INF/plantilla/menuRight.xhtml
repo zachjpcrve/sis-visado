@@ -22,7 +22,10 @@
   
   <p:tieredMenu style="width:140px"> 
   		<p:submenu label="Registros" icon="ui-icon-pencil">
-      		<p:menuitem icon="ui-icon-pencil" value="Solicitud Visado" url="/faces/paginas/solicitud.xhtml"></p:menuitem>
+      		<p:menuitem icon="ui-icon-pencil" value="Solicitud Visado" url="/faces/paginas/solicitud.xhtml" 
+      		 onclick="alert('nono'); activador();" ajax="false" update=":formSolicitudRegistro">
+      		
+      		  </p:menuitem>
       		<p:menuitem icon="ui-icon-pencil" value="Calculadora" url="/faces/paginas/calculadoraComision.xhtml"></p:menuitem>
   		</p:submenu>
   		<p:submenu label="Consultas" icon="ui-icon-pencil">
@@ -36,10 +39,10 @@
   			<p:menuitem icon="ui-icon-pencil" value="Oficinas" url="/faces/paginas/oficina.xhtml"></p:menuitem> 
   			<p:menuitem icon="ui-icon-pencil" value="Perfil-Usuario" url="/faces/paginas/abogado.xhtml"></p:menuitem> 
   			<p:menuitem icon="ui-icon-pencil" value="Estudio de Abogados" url="/faces/paginas/estudio.xhtml"></p:menuitem>	
-  			<p:menuitem icon="ui-icon-pencil" value="Tipo de Comision"	url="/faces/paginas/comision.xhtml"></p:menuitem>
-  			<p:menuitem icon="ui-icon-pencil" value="Responsable Nivel Aprobacion"	url="/faces/paginas/respxNivelAprob.xhtml"></p:menuitem>	
+  			<p:menuitem icon="ui-icon-pencil" value="Tipo de Comision"	url="/faces/paginas/comision.xhtml"></p:menuitem>	
   			<p:menuitem icon="ui-icon-pencil" value="Documento"	url="/faces/paginas/documentoTiivs.xhtml"></p:menuitem>		
-  			<p:menuitem icon="ui-icon-pencil" value="Solicitud Documento" url="/faces/paginas/documento.xhtml"></p:menuitem>				
+  			<p:menuitem icon="ui-icon-pencil" value="Solicitud Documento" url="/faces/paginas/documento.xhtml"></p:menuitem>
+  			<p:menuitem icon="ui-icon-pencil" value="Responsable Nivel Aprobacion"        url="/faces/paginas/respNivel.xhtml"></p:menuitem>				
   		</p:submenu>	
   		<p:submenu label="Reportes" icon="ui-icon-pencil">
   			<p:menuitem style="font-size: 9px" value="Estado de Solicitud por Oficina" url="/faces/paginas/rptEstadoSolicitud.xhtml"></p:menuitem>  	
@@ -48,7 +51,8 @@
   			<p:menuitem style="font-size: 9px" value="Extractor" url="/faces/paginas/rptExtractor.xhtml"></p:menuitem>  			
   		</p:submenu>    	    
   </p:tieredMenu>
-  
+  <p:remoteCommand name="activador" update=":frmMenu"
+  action="#{solicitudRegMB.instanciarSolicitudRegistro}" />  
  </h:form>
 
 </ui:composition>
