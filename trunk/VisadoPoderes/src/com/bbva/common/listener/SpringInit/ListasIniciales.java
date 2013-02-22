@@ -29,7 +29,7 @@ public class ListasIniciales {
 		filtroTipoSolcDoc.add(Restrictions.isNotNull("id"));
 		try {
 			documentosDB = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
-			logger.info("****** "+ documentosDB);
+			logger.info("****** "+ documentosDB.size());
 		} catch (Exception ex) {			
 			ex.printStackTrace();
 		}		
