@@ -422,11 +422,17 @@ public class ConstantesVisado {
 		public static final String NO_RESULTADOS = "No se han encontrado resultados ";
 		public static final String TAMANHIO_LISTA = "El tamaño de la lista ";
 		public static final String OCURRE_ERROR_CARGA_LISTA = "Ha ocurrido un error al cargar la lista";
+		public static final String ACTUALIZA_OK = "Se ha actualizado correctamente ";
 	}
 	static public class SEGURIDAD{
 		public static final String USER_ACCESO_OK = "El usuario ha accedido correctamente al sistema.";
 		public static final String USER_NO_REGISTR = "El usuario no es encuentra registrado en el sistema.";
 		public static final String ERROR_CERRAR_SESION = "Ha ocurrido un error al intentar cerrar la sesion.";
+	}
+	static public class FERIADO{
+		public static final String LOCAL = "L";
+		public static final String NACIONAL = "N";
+		public static final String tablaferiado = "feriado";
 	}
 }
 
