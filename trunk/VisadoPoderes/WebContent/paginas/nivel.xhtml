@@ -15,17 +15,17 @@
 					<tr>
 						<td><h:outputText value="Codigo:  " /></td>
 						<td><p:inputText id="txtCodigo" disabled="true"
-								value="#{nivelMB.nivelesMant[0].id.codNiv}" maxlength="50" /></td>
+								value="#{nivelMB.nivelesMant[0].codNiv}" maxlength="50" /></td>
 					</tr>
 					<tr>
 						<td><h:outputText value="Descripcion:  " /></td>
 						<td><p:inputText id="txtDescripcion"
-								value="#{nivelMB.nivelesMant[0].id.desNiv}" maxlength="50" /></td>
+								value="#{nivelMB.nivelesMant[0].desNiv}" maxlength="50" /></td>
 					</tr>
 					<tr>
 						<td><h:outputText value="Estado" /></td>
 						<td><p:selectOneMenu
-								value="#{nivelMB.nivelesMant[0].id.desEstado}">
+								value="#{nivelMB.nivelesMant[0].desEstado}">
 								<f:selectItem itemLabel="ACTIVO" itemValue="1" />
 								<f:selectItem itemLabel="INACTIVO" itemValue="0" />
 							</p:selectOneMenu></td>
@@ -34,28 +34,28 @@
 						<td><h:outputText value="Soles:   " /></td>
 						<td><h:outputText value="Rango Inicio:  " /></td>
 						<td><p:inputText id="txtSolesRangInic"
-								value="#{nivelMB.nivelesMant[0].id.rangoInicio}" maxlength="50" /></td>
+								value="#{nivelMB.nivelesMant[0].rangoInicio}" maxlength="50" /></td>
 						<td><h:outputText value="Rango Fin:  " /></td>
 						<td><p:inputText id="txtSolesRangFin"
-								value="#{nivelMB.nivelesMant[0].id.rangoFin}" maxlength="50" /></td>
+								value="#{nivelMB.nivelesMant[0].rangoFin}" maxlength="50" /></td>
 					</tr>
 					<tr>
 						<td><h:outputText value="Dolares:    " /></td>
 						<td><h:outputText value="Rango Inicio:  " /></td>
 						<td><p:inputText id="txtDolarRangInic"
-								value="#{nivelMB.nivelesMant[1].id.rangoInicio}" maxlength="50" /></td>
+								value="#{nivelMB.nivelesMant[1].rangoInicio}" maxlength="50" /></td>
 						<td><h:outputText value="Rango Fin:  " /></td>
 						<td><p:inputText id="txtDolarRangFin"
-								value="#{nivelMB.nivelesMant[1].id.rangoFin}" maxlength="50" /></td>
+								value="#{nivelMB.nivelesMant[1].rangoFin}" maxlength="50" /></td>
 					</tr>
 					<tr>
 						<td><h:outputText value="Euros :   " /></td>
 						<td><h:outputText value="Rango Inicio:  " /></td>
 						<td><p:inputText id="txtEuroRangInic"
-								value="#{nivelMB.nivelesMant[0].id.rangoInicio}" maxlength="50" /></td>
+								value="#{nivelMB.nivelesMant[0].rangoInicio}" maxlength="50" /></td>
 						<td><h:outputText value="Rango Fin:  " /></td>
 						<td><p:inputText id="txtEuroRangFin"
-								value="#{nivelMB.nivelesMant[0].id.rangoFin}" maxlength="50" /></td>
+								value="#{nivelMB.nivelesMant[0].rangoFin}" maxlength="50" /></td>
 					</tr>
 				</table>
 
@@ -83,31 +83,31 @@
 					emptyMessage="No hay registros">
 
 					<p:column headerText="Nivel">
-						<h:outputText value="#{niv.id.desNiv}" />
+						<h:outputText value="#{niv.desNiv}" />
 					</p:column>
 					<p:column headerText="Rango Inicio">
-						<h:outputText value="#{niv.id.rangoInicio}" />
+						<h:outputText value="#{niv.rangoInicio}" />
 					</p:column>
 					<p:column headerText="Rango Fin">
-						<h:outputText value="#{niv.id.rangoFin}" />
+						<h:outputText value="#{niv.rangoFin}" />
 					</p:column>
 					<p:column headerText="Moneda">
-						<h:outputText value="#{niv.id.moneda}" />
+						<h:outputText value="#{niv.moneda}" />
 					</p:column>
 					<p:column headerText="Fecha de Registro">
-						<h:outputText value="#{niv.id.fechaReg}" />
+						<h:outputText value="#{niv.fechaReg}" />
 					</p:column>
 					<p:column headerText="Usuario de Registro">
-						<h:outputText value="#{niv.id.usuarioReg}" />
+						<h:outputText value="#{niv.usuarioReg}" />
 					</p:column>
 					<p:column headerText="Fecha de Actualizacion">
-						<h:outputText value="#{niv.id.fechaAct}" />
+						<h:outputText value="#{niv.fechaAct}" />
 					</p:column>
 					<p:column headerText="Usuario de Actualizacion">
-						<h:outputText value="#{niv.id.usuarioAct}" />
+						<h:outputText value="#{niv.usuarioAct}" />
 					</p:column>
 					<p:column headerText="Estado">
-						<h:outputText value="#{niv.id.desEstado}" />
+						<h:outputText value="#{niv.desEstado}" />
 					</p:column>
 				</p:dataTable>
 			</p:panel>
