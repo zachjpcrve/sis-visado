@@ -1,6 +1,5 @@
 package com.hildebrando.visado.mb;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +14,6 @@ import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
-import com.hildebrando.visado.modelo.TiivsNivelId;
 import com.hildebrando.visado.service.NivelService;
 
 @ManagedBean(name = "nivelMB")
