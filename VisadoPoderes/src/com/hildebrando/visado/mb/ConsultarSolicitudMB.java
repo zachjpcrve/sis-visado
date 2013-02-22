@@ -3,7 +3,6 @@ package com.hildebrando.visado.mb;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.primefaces.model.UploadedFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -70,7 +70,7 @@ import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
 @SessionScoped
 public class ConsultarSolicitudMB {
 	public static Logger logger = Logger.getLogger(ConsultarSolicitudMB.class);
-	@ManagedProperty(value = "#{combosMB}")
+	//@ManagedProperty(value = "#{combosMB}")
 	private List<ComboDto> lstClasificacionPersona;
 	private CombosMB combosMB;
 	@ManagedProperty(value = "#{seguimientoMB}")
@@ -206,10 +206,9 @@ public class ConsultarSolicitudMB {
 		combosMB = new CombosMB();
 		combosMB.cargarMultitabla();
 	}
-
+	
 	public void modificarTextoVentanaCartaAtencion() {
-		PERFIL_USUARIO = (String) Utilitarios
-				.getObjectInSession("PERFIL_USUARIO");
+		PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 
 		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 			setTextoMensajeCartaAtencion(ConstantesVisado.MENSAJE_CARTA_ATENCION.MENSA_SSJJ);
@@ -545,11 +544,14 @@ public class ConsultarSolicitudMB {
 		try {
 			lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 			String codigoSolicitud = Utilitarios.capturarParametro("prm_codSoli");
+			TiivsSolicitud solicitud;
 			logger.info("codigoSolicitud : " + codigoSolicitud);
-			TiivsSolicitud solicitud = new TiivsSolicitud();
+			 solicitud = new TiivsSolicitud();
 			solicitud.setCodSoli(codigoSolicitud);
+			
 			SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 			solicitudRegistrarT = solicitudService.obtenerTiivsSolicitud(solicitud);
+			
 			solicitudRegistrarT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudRegistrarT.getEstado()));
 			
 			
@@ -664,14 +666,16 @@ public class ConsultarSolicitudMB {
 			if (solicitudRegistrarT.getTiivsEstudio() == null) {
 				solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
 				}else{
+					if(this.solicitudRegistrarT.getTiivsEstudio()!=null){
 					List<TiivsMiembro> lstAbogadosMiembro = combosMB.getLstAbogados();
 					lstAbogados = new ArrayList<TiivsMiembro>();
 					for (TiivsMiembro x : lstAbogadosMiembro) {
+						
 						if (x.getEstudio().trim().equals(this.solicitudRegistrarT.getTiivsEstudio().getCodEstudio())) {
 							lstAbogados.add(x);
 						}
 				}
-			
+					}
 			}
 			// Listar ComboDictamen
 			listarComboDictamen();
@@ -1576,6 +1580,7 @@ public class ConsultarSolicitudMB {
 	}
 
 	@SuppressWarnings({ "unused", "unchecked" })
+	@Transactional
 	public void registrarSolicitud() 
 	{
 		String mensaje = "";
