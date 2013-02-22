@@ -29,7 +29,9 @@ public class MiembroNivelDTO implements Serializable {
 	private int rangoInicioEuros;
 	private int rangoFinEuros;
 	
-	public MiembroNivelDTO(int id,String codNivel, String desNivel, String registro,
+	private int nuevo;
+	
+	public MiembroNivelDTO(int nuevo, int id,String codNivel, String desNivel, String registro,
 			String descripcion, String codGrupo, String desGrupo,
 			String fechaRegistroToString, String usuarioRegistro,String codEstado, String estado,
 			int rangoInicioSoles,
@@ -41,6 +43,8 @@ public class MiembroNivelDTO implements Serializable {
 	int rangoInicioEuros,
 	int rangoFinEuros) {
 		super();
+		
+		this.nuevo =  nuevo;
 		this.id = id;
 		this.codNivel = codNivel;
 		this.desNivel = desNivel;
@@ -77,9 +81,12 @@ public class MiembroNivelDTO implements Serializable {
 		this.codEstado = codEstado;
 		this.estado = estado;
 	}
-	public MiembroNivelDTO(String codNiv, String desNivel, String codMiembro,
+	public MiembroNivelDTO(int nuevo,String descripcion, String codNiv, String desNivel, String codMiembro,
 			String fechaRegistroToString, String usuarioRegistro, String codEstado, String descEstado,
 			int ris, int rfs, int rid, int rfd, int rie, int rfe) {
+		
+		this.nuevo =  nuevo;
+		this.descripcion = descripcion;
 		this.codNivel = codNiv;
 		this.desNivel = desNivel;
 		this.registro = codMiembro;
@@ -209,6 +216,12 @@ public class MiembroNivelDTO implements Serializable {
 	}
 	public void setRangoFinEuros(int rangoFinEuros) {
 		this.rangoFinEuros = rangoFinEuros;
+	}
+	public int getNuevo() {
+		return nuevo;
+	}
+	public void setNuevo(int nuevo) {
+		this.nuevo = nuevo;
 	}
 	
 

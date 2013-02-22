@@ -51,7 +51,7 @@
 						</td>
 						<td><p:commandButton id="bsAgreg" value="Agregar" ajax="true"
 								action="#{editRespNivel.agregarlistarRespxNivel}"
-								update=":frmDataTableRespNivel">
+								update=":frmMantenimientoNivReg:dtbRespNivel">
 							</p:commandButton>
 						</td>
 
@@ -59,11 +59,7 @@
 
 
 				</table>
-			</h:form>
-
-			<h:form id="frmDataTableRespNivel">
-
-				<p:messages id="idMsmRespNivelAprob"></p:messages>
+		
 				<p:dataTable id="dtbRespNivel" value="#{editRespNivel.respNiveles}"
 					var="r" paginator="true" rows="50" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
@@ -116,9 +112,34 @@
 					</p:column>
 					
 				</p:dataTable>
+				
+				<table>
+					<tr>
+						<td><p:commandButton id="cmbConfirmar" value="Aceptar"
+								onclick="confirmarCambios.show();">
+							</p:commandButton>
+						</td>
+						
+
+					</tr>
+				</table>
+				
+				<p:confirmDialog widgetVar="confirmarCambios" message="¿Esta seguro de guardar los cambios?"
+								header="Mensaje de Confirmación" >
+					
+					<p:commandButton id="cmbSi" value="Sí" ajax="true"
+						actionListener="#{editRespNivel.confirmarCambios}"
+						oncomplete="confirmarCambios.hide();"
+						update=":frmMantenimientoNivReg:dtbRespNivel">
+					</p:commandButton>
+					
+					<p:commandButton id="cmbNo" value="No"
+						onclick="confirmarCambios.hide();">
+					</p:commandButton>
+							
+				</p:confirmDialog>
 
 			</h:form>
-			<!--Fin Data Table Oficina -->
 	
 		</fieldset>
 	
