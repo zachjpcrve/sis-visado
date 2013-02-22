@@ -63,9 +63,8 @@ public class NivelMB {
 
 			}
 			logger.info("NivelMB : secuencial" + " " + secuencial);
-			
 			for (int i = 0 ; i< ConstantesVisado.NUMERO_DE_MONEDAS_POR_NIVEL; i++){
-				//nivelesMant.add(i, new TiivsNivel(new TiivsNivelId()));
+				nivelesMant.add(i, new TiivsNivel());
 				nivelesMant.get(i).setCodNiv(secuencial);
 				/*nivelesMant.get(i).getId().setRangoInicio(12);
 				nivelesMant.get(i).getId().setRangoFin(20);*/
@@ -78,6 +77,10 @@ public class NivelMB {
 	
 	public void registrar() throws Exception{
 		logger.info("NivelMB : registrar");
+		
+		for (int j = 0; j < nivelesMant.size(); j++) {
+			logger.info("tamales : " +nivelesMant.get(j).getRangoInicio());
+		}
 		Date sysDate = new Date();
 		String utilDateString = formatear.format(sysDate);
 		Date utilDateDate = formatear.parse(utilDateString);
@@ -103,6 +106,7 @@ public class NivelMB {
 			nivelesMant.get(2).setMoneda("0003");
 			if (valor.equals("0")) {
 				for (int i = 0; i < nivelesMant.size(); i++) {
+					logger.info("tamales monedas  : " +nivelesMant.get(i).getMoneda());
 					nivelesMant.get(i).setDesNiv(nivelesMant.get(0).getDesNiv().toUpperCase());
 					nivelesMant.get(i).setFechaReg(utilDateDate);
 					nivelesMant.get(i).setUsuarioReg(Utilitarios.getObjectInSession("USUARIO_SESION").toString());
