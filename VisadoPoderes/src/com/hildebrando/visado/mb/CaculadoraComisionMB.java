@@ -6,6 +6,12 @@ import javax.faces.bean.SessionScoped;
 import org.apache.log4j.Logger;
 import com.bbva.common.util.ConstantesVisado;
 
+/**
+ * Clase que se encarga de manejar la calculadora de comision y que muestra de 
+ * forma dinamica el importe en base a ciertos parametros seleccionados.
+ * @author eramos
+ * */
+
 @ManagedBean(name = "calculadoraMB")
 @SessionScoped
 public class CaculadoraComisionMB {
@@ -65,12 +71,10 @@ public class CaculadoraComisionMB {
 		} catch (Exception e) {
 			resultado = new Double(0);
 		}
-		
-//		System.out.println("Valor:"+resultado);
+
 	}
 
-	private void obtenerParametros() {		
-		
+	private void obtenerParametros() {
 		String sMontoLimite;	
 		importes = new String [5];		
 		//Obtenemos los parametros de comisión
@@ -94,136 +98,92 @@ public class CaculadoraComisionMB {
 					ConstantesVisado.CODIGO_CAMPO_PERSONA_JURIDICA).getValor2();
 			
 		}catch(Exception e){
-			e.printStackTrace();
-			logger.error("No se pudo obtener los parámetros de comisión:"+e.getMessage(),e);			
-			logger.error("No se pudo obtener el parámero de comisión");			
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener los parámetros de comisión: "+e.getMessage(),e);			
 			importeLimite = new Double(0);
-		}					
-	}
-	
+		}
+	}	
 
 	
 	public Boolean getItem11() {
 		return item11;
 	}
-
-
-
+	
 	public void setItem11(Boolean item11) {
 		this.item11 = item11;		
 	}
-
-
-
+	
 	public Boolean getItem12() {
 		return item12;
-	}
-
-
-
+	}	
+	
 	public void setItem12(Boolean item12) {
 		this.item12 = item12;
 	}
-
-
-
+	
 	public Boolean getItem21() {
 		return item21;
 	}
-
-
-
+	
 	public void setItem21(Boolean item21) {
 		this.item21 = item21;
 	}
-
-
-
+	
 	public Boolean getItem22() {
 		return item22;
 	}
-
-
-
+	
 	public void setItem22(Boolean item22) {
 		this.item22 = item22;
 	}
-
-
-
+	
 	public Boolean getItem31() {
 		return item31;
 	}
-
-
-
+	
 	public void setItem31(Boolean item31) {
 		this.item31 = item31;
 	}
-
-
-
+	
 	public Boolean getItem32() {
 		return item32;
 	}
-
-
-
+	
 	public void setItem32(Boolean item32) {
 		this.item32 = item32;
 	}
-
-
-
+	
 	public Boolean getItem41() {
 		return item41;
 	}
-
-
-
+	
 	public void setItem41(Boolean item41) {
 		this.item41 = item41;
 	}
-
-
-
+	
 	public Boolean getItem42() {
 		return item42;
 	}
-
-
-
+	
 	public void setItem42(Boolean item42) {
 		this.item42 = item42;
 	}
-
-
-
+	
 	public Double getResultado() {
 		return resultado;
 	}
-
-
-
+	
 	public void setResultado(Double resultado) {
 		this.resultado = resultado;
 	}
-
-
-
+	
 	public Double getImporteLimite() {
 		return importeLimite;
 	}
-
-
-
+	
 	public void setImporteLimite(Double importeLimite) {
 		this.importeLimite = importeLimite;
 	}
 
-
-
-	/****************************************************/
 	public void setNoItem11(Boolean item11){
 		this.item11 = !item11;
 	}
@@ -255,7 +215,5 @@ public class CaculadoraComisionMB {
 	public Boolean getNoItem41(){
 		return !this.item41;
 	}
-	/****************************************************/
-	
 	
 }
