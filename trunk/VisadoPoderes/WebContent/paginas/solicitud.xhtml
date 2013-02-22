@@ -219,7 +219,9 @@ function invocarEscaner(urlApplet){
 								<td></td>
 								<td style="width: 50px;"></td>
 								<td><p:commandButton value="+" actionListener="#{solicitudRegMB.agregarActionListenerAgrupacion}"
-								update=":formRegistrar:tlbPersonasPopup"   oncomplete="dlgRegistrarPersona.show();"/></td>
+								update=":formRegistrar:tlbPersonasPopup,:formRegistrar:cboTipoDoi,
+								:formRegistrar:cboTipoDoi2,:formRegistrar:cboClasificacion"  
+								 oncomplete="dlgRegistrarPersona.show();"/></td>
 								</tr>
 								</table>
 								<p:separator styleClass="fielset" />
@@ -774,7 +776,7 @@ function invocarEscaner(urlApplet){
 						<td colspan="1"><h:outputText styleClass="outputTextPopup" id="outClasificacion" value="Clasificacion*:" /></td>
 						<td colspan="1"><p:selectOneMenu id="cboClasificacion" value="#{solicitudRegMB.objTiivsPersonaResultado.clasifPer}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-								 <f:selectItems value="#{combosMB.lstClasificacionPersona}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" />
+								 <f:selectItems value="#{solicitudRegMB.lstClasificacionPersona}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" />
 								<f:selectItem itemLabel="Otro" itemValue="99" />
 							</p:selectOneMenu></td>
 						<td colspan="1"><p:graphicImage value="/resources/images/pregunta.jpg"
