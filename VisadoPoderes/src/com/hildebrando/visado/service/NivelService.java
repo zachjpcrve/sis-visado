@@ -92,5 +92,86 @@ public class NivelService {
 		return contador;
 	}
 
+	public void registrar(TiivsNivel tiivsNivel) {
+		logger.info("NivelService : registrar");
+		try{
+			GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit
+					.getApplicationContext().getBean("genericoDao");
+			
+			service.insertar(tiivsNivel);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.error("NivelService : registrar: "
+					+ e.getLocalizedMessage());
+		}
+		
+	}
+
+	public <E> int obtenerSecuencialNivel() {
+		logger.info("NivelService : obtenerSecuencialNivel");
+		List<TiivsNivel> secuencial = new ArrayList<TiivsNivel>();
+		int seq = 0;
+		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
+		try {
+			secuencial = service.buscarDinamico(filtro.setProjection(Projections.max("id")));
+
+			List<E> parse = new ArrayList<E>();
+			parse = (List<E>) secuencial;
+			seq = (Integer) parse.get(0);
+			seq = seq + 1;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("NivelService : obtenerMaximo: "
+					+ ex.getLocalizedMessage());
+		}
+		return seq;
+	}
+
+	public <E> int obtenerRangoInicio(String codElem) {
+		logger.info("NivelService : obtenerSecuencialNivel");
+		List<TiivsNivel> rInicio = new ArrayList<TiivsNivel>();
+		int rangoInicio = 0;
+		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
+		try {
+			rInicio = service.buscarDinamico(filtro.add(Restrictions.eq("moneda", codElem)).setProjection(Projections.max("rangoFin")));
+
+			List<E> parse = new ArrayList<E>();
+			parse = (List<E>) rInicio;
+			rangoInicio = (Integer) parse.get(0);
+			rangoInicio = rangoInicio + 1;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("NivelService : obtenerMaximo: "
+					+ ex.getLocalizedMessage());
+		}
+		return rangoInicio;
+	}
+
+	public <E> int compararDesNivel(String desNivel) {
+		logger.info("NivelService : obtenerSecuencialNivel");
+		List<TiivsNivel> rInicio = new ArrayList<TiivsNivel>();
+		int contador = 0; 
+		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
+		try {
+			rInicio = service.buscarDinamico(filtro.add(Restrictions.eq("desNiv", desNivel)).setProjection(Projections.count("desNiv")));
+
+			List<E> parse = new ArrayList<E>();
+			parse = (List<E>) rInicio;
+			contador = (Integer) parse.get(0);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("NivelService : obtenerSecuencialNivel: "
+					+ ex.getLocalizedMessage());
+		}
+		return contador;
+	}
+
 
 }
