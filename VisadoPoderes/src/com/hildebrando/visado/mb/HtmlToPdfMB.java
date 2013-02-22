@@ -31,6 +31,13 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.util.Utilitarios;
 
+/**
+ * Clase que se encarga de generar un archivo .PDF en base a una 
+ * cadena HTML para el seguimiento de la solicitud.
+ * @author 
+ * @version 1.0
+ */
+
 @ManagedBean(name = "htmlToPdfMB")
 @SessionScoped
 public class HtmlToPdfMB {
@@ -43,7 +50,7 @@ public class HtmlToPdfMB {
 	
 		
 	public void generarPdfListener(ActionEvent event){
-		logger.info("generarPdfListener");	
+		logger.info("===== generarPdfListener() ======");	
 		File fileTemp = null;
 		String nameFile="";
 		String estado_obs="";
@@ -72,7 +79,7 @@ public class HtmlToPdfMB {
 	        	buf.append(texto);
 	        }
 	        buf.append("</body></html>");
-	        logger.info("cadena HTML: " + buf);
+	        logger.info("[CadenaHTML]:" + buf);
 	        
 	        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 	        ByteArrayInputStream encXML = new ByteArrayInputStream(buf.toString().getBytes("UTF8"));
@@ -83,12 +90,12 @@ public class HtmlToPdfMB {
 			if(!fDirectory.exists())
 				fDirectory.mkdir();
 			
-			logger.info("UbicacionTemporal:" + sUbicacionTemporal);
+			logger.info("[UbicacionTemporal]: " + sUbicacionTemporal);
 	        fileTemp = File.createTempFile("tmp", "htmlToPdf.pdf", new File(sUbicacionTemporal));
 	        if(fileTemp!=null){
 				nameFile = fileTemp.getName().substring(1 + fileTemp.getName().lastIndexOf(File.separator));				
 			}
-	        logger.info("Nombre de archivo comentarios: " + nameFile);
+	        logger.info("[NombreArchivo-comentarios]: "+nameFile);
 	        	        
 	        OutputStream os = new FileOutputStream(fileTemp);	        
 			ITextRenderer renderer = new ITextRenderer();			
@@ -98,14 +105,16 @@ public class HtmlToPdfMB {
 			os.close();
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al generar el PDF: "+ex);
 		} finally {
 			fileTemp.deleteOnExit();					
 		}
 		
 		InputStream stream = ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream(File.separator + ConstantesVisado.FILES + File.separator + nameFile);			
         this.file = new DefaultStreamedContent(stream, CONTENT_TYPE, estado_obs+"_Observacion.pdf");        
-        logger.info("File:" + file);
+        logger.info("[Archivo final]: " + file);
+        
+        logger.info("===== saliendo de generarPdfListener() ======");
 	}
 
 	public StreamedContent getFile() {
@@ -126,8 +135,5 @@ public class HtmlToPdfMB {
 
 	public void setNombrePdf(String nombrePdf) {
 		this.nombrePdf = nombrePdf;
-	}
-	
-	
-	
+	}	
 }
