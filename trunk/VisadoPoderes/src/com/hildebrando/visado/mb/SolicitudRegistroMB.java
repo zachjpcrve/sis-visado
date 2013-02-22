@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.primefaces.model.UploadedFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -1499,12 +1500,14 @@ public class SolicitudRegistroMB {
 	}
 
 	@SuppressWarnings({ "unused", "unchecked" })
-	public void registrarSolicitud() {
+	@Transactional
+	public String registrarSolicitud() {
 	/*	boleanoMensajeInfoGeneral=true;
 		 boleanoMensajeApoderdantePoderdante=true;
 		 boleanoMensajeOperacionesBancarias=true;
 		 boleanoMensajeDocumentos=false;*/
 		String mensaje = "";
+		String redirect = "";
 		logger.info("*********************** registrarSolicitud ************************");
 		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -1593,13 +1596,28 @@ public class SolicitudRegistroMB {
 				logger.info("objResultado.getTiivsSolicitudAgrupacions() "+ objResultado.getTiivsSolicitudAgrupacions().size());
 				logger.info("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getImporte());
 				//instanciarSolicitudRegistro();
+			/*	if (!this.sEstadoSolicitud.equals("BORRADOR")) {
+					
+					ConsultarSolicitudMB a =new ConsultarSolicitudMB(solicitudRegistrarT);
+					//a.obtenerSolicitud();
+					redirect = "/faces/paginas/detalleSolicitud.xhtml";
+				}else{
+					ConsultarSolicitudMB a =new ConsultarSolicitudMB(solicitudRegistrarT);
+					a.obtenerSolicitud();
+					redirect = "/faces/paginas/solicitudEdicion.xhtml";
+				}*/
+				
+				
+				
 			}
 		} catch (Exception e) {
+			redirect="";
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage());
 			Utilitarios.mensajeError("ERROR", "Ocurrio un Error al grabar la Solicitud");
 			e.printStackTrace();
 
 		}
+		return redirect;
 
 	}
 
