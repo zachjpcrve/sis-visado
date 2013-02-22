@@ -1,13 +1,16 @@
 package com.hildebrando.visado.mb;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -22,7 +25,6 @@ import com.hildebrando.visado.modelo.TiivsGrupo;
 import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsNivel;
-import com.hildebrando.visado.modelo.TiivsRevocado;
 
 
 @ManagedBean(name = "respNivel")
@@ -82,7 +84,60 @@ public class RespNivelAprobacionMB {
 			
 			logger.error("error al obtener la lista de cod de agrupacion "+  e.toString());
 		}
-	} 
+	}
+	
+	public void editarRespNivelAprob(){
+		
+		GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		
+		String idResp;
+		Map<String, String> params = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap();
+		
+		idResp = params.get("idResp");
+		
+		TiivsMiembroNivel miembroNivel= new TiivsMiembroNivel();
+		
+		try {
+			
+			miembroNivel= serviceTiivsMiembroNivel.buscarById(TiivsMiembroNivel.class, Integer.parseInt(idResp));
+			
+		} catch (NumberFormatException e) {
+			
+			e.printStackTrace();
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
+		
+		 ec.getSessionMap().put("miembroNivel", miembroNivel);
+		 
+		 
+		 try {
+			ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void nuevoRespxNivel(){
+		
+		 TiivsMiembroNivel miembroNivel= new TiivsMiembroNivel();
+		 ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
+		 ec.getSessionMap().put("miembroNivel", miembroNivel);
+		 
+		 
+		 try {
+			ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		 
+	}
 	
 	public void listarRespxNivel(){
 		
@@ -140,6 +195,8 @@ public class RespNivelAprobacionMB {
 			logger.error("error al obtener la lista de resp x nivel "+ e.getMessage());
 		}
 		
+		respNiveles = new ArrayList<MiembroNivelDTO>();
+		
 		for(TiivsMiembroNivel  e:list){
 			TiivsGrupo grupo= new TiivsGrupo();
 			TiivsMiembro miembro= new TiivsMiembro();
@@ -173,7 +230,7 @@ public class RespNivelAprobacionMB {
 				desNivel = ConstantesVisado.CAMPO_NIVEL4;
 				
 			respNiveles.add(new MiembroNivelDTO(e.getId(), e.getCodNiv(),desNivel,e.getTiivsMiembro().getCodMiembro(),e.getTiivsMiembro().getDescripcion(),e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(),
-					grupo.getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),descEstado));
+					grupo.getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),e.getEstado(),descEstado));
 		}
 		
 	}
