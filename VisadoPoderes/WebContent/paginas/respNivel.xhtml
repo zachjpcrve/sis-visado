@@ -57,8 +57,7 @@
 							</p:commandButton></td>
 
 						<td><p:commandButton id="nwResp" value="Nuevo" ajax="true"
-								action="#{respNivel.nuevoRespxNivel}"
-								update=":frmDataTableRespNivel">
+								action="#{respNivel.nuevoRespxNivel}">
 							</p:commandButton></td>
 					</tr>
 
@@ -98,10 +97,8 @@
 					</p:column>
 					<p:column headerText="Accion">
 						<p:commandLink id="clinkEditar" ajax="true"
-							update=":frmDataTableRespNivel"
-							actionListener="#{respNivel.editarRespNivelAprob}"
-							action="#{respNivel.modificarRespNivelAprob}">
-							<f:param name="codOficina" value="#{r.id}"></f:param>
+							action="#{respNivel.editarRespNivelAprob}">
+							<f:param name="idResp" value="#{r.id}"></f:param>
 							<h:outputText value="Editar" />
 						</p:commandLink>
 					</p:column>

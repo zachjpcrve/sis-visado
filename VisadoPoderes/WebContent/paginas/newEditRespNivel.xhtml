@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+
+		<fieldset>
+			<legend class="fielset">Niveles por Registro</legend>
+			
+			<h:form id="frmMantenimientoNivReg">
+
+				<p:messages id="idMsmNivReg"></p:messages>
+
+				<table>
+					<tr>
+						<td><h:outputText value="Registro: " /></td>
+						<td><p:inputText id="txtRegistro" readonly="#{editRespNivel.flagVisible}"
+								value="#{editRespNivel.miembroNivelDto.registro}" maxlength="10" size="10" /></td>
+						
+						<td><h:outputText value="Perfil:" /></td>
+						<td><p:inputText id="txtPerfil" readonly="#{editRespNivel.flagVisible}"
+								value="#{editRespNivel.miembroNivelDto.desGrupo}" maxlength="20" size="20" />
+						</td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Descripcion:" /></td>
+						<td><p:inputText id="txtDescrip" readonly="#{editRespNivel.flagVisible}"
+								value="#{editRespNivel.miembroNivelDto.descripcion}" maxlength="60" size="60" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Estado:" /></td>
+						<td><h:selectOneRadio  value="#{editRespNivel.miembroNivelDto.estado}">
+								<f:selectItem itemLabel="ACTIVO" itemValue="1" />
+							</h:selectOneRadio>
+						</td>
+					</tr>
+					<tr>	
+
+						<td><h:outputText value="Nivel: " />
+						</td>
+						<td><p:selectOneMenu value="#{editRespNivel.codNivel}">
+								<f:selectItem itemLabel="--Seleccione--" itemValue="-1" />
+								<f:selectItems  var="n" value="#{editRespNivel.niveles}" itemLabel="#{n.des}"  itemValue="#{n.cod}"  >
+								</f:selectItems>
+								
+							</p:selectOneMenu>
+						</td>
+						<td><p:commandButton id="bsAgreg" value="Agregar" ajax="true"
+								action="#{editRespNivel.agregarlistarRespxNivel}"
+								update=":frmDataTableRespNivel">
+							</p:commandButton>
+						</td>
+
+					</tr>
+
+
+				</table>
+			</h:form>
+
+			<h:form id="frmDataTableRespNivel">
+
+				<p:messages id="idMsmRespNivelAprob"></p:messages>
+				<p:dataTable id="dtbRespNivel" value="#{editRespNivel.respNiveles}"
+					var="r" paginator="true" rows="50" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+					emptyMessage="No hay responsables por niveles">
+
+					<p:column headerText="Nivel">
+						<h:outputText value="#{r.desNivel}" />
+					</p:column>
+					
+					<p:column headerText="Rango Inicio S/.">
+						<h:outputText value="#{r.rangoInicioSoles}" />
+					</p:column>
+					<p:column headerText="Rango Fin S/.">
+						<h:outputText value="#{r.rangoFinSoles}" />
+					</p:column>
+					
+					<p:column headerText="Rango Inicio $">
+						<h:outputText value="#{r.rangoInicioDolares}" />
+					</p:column>
+					<p:column headerText="Rango Fin $">
+						<h:outputText value="#{r.rangoFinDolares}" />
+					</p:column>
+					
+					<p:column headerText="Rango Inicio E">
+						<h:outputText value="#{r.rangoInicioEuros}" />
+					</p:column>
+					<p:column headerText="Rango Fin E">
+						<h:outputText value="#{r.rangoFinEuros}" />
+					</p:column>
+					
+					<p:column headerText="Fecha de Reg.">
+						<h:outputText value="#{r.fechaRegistroToString}" />
+					</p:column>
+					
+					<p:column headerText="Usuario de Reg.">
+						<h:outputText value="#{r.usuarioRegistro}" />
+					</p:column>
+					
+					<p:column headerText="Fecha de Act.">
+						<h:outputText value="#{r.fechaActualizacionToString}" />
+					</p:column>
+					
+					<p:column headerText="Usuario de Act.">
+						<h:outputText value="#{r.usuarioActualizacion}" />
+					</p:column>
+					
+					<p:column headerText="Estado">
+						<h:outputText value="#{r.estado}" />
+					</p:column>
+					
+				</p:dataTable>
+
+			</h:form>
+			<!--Fin Data Table Oficina -->
+	
+		</fieldset>
+	
+	</ui:define>
+</ui:composition>
+
+</html>
