@@ -10,7 +10,7 @@
             	<param name="sequence">SEQ_MIEMBRO_NIVEL</param>
             </generator>
         </id>
-        <many-to-one name="tiivsMiembro" class="com.hildebrando.visado.modelo.TiivsMiembro" lazy="false" fetch="select">
+        <many-to-one name="tiivsMiembro" class="com.hildebrando.visado.modelo.TiivsMiembro"  cascade="save-update" lazy="false" fetch="select">
             <column name="COD_MIEMBRO" length="7" />
         </many-to-one>
         <property name="codNiv" type="string">
