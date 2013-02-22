@@ -3,6 +3,7 @@ package com.hildebrando.visado.mb;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -70,6 +71,7 @@ import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
 public class ConsultarSolicitudMB {
 	public static Logger logger = Logger.getLogger(ConsultarSolicitudMB.class);
 	@ManagedProperty(value = "#{combosMB}")
+	private List<ComboDto> lstClasificacionPersona;
 	private CombosMB combosMB;
 	@ManagedProperty(value = "#{seguimientoMB}")
 	private SeguimientoMB seguimientoMB;
@@ -985,10 +987,12 @@ public class ConsultarSolicitudMB {
 		{
 			logger.info("****************** COD_SOLES ******************** " + solicitud.getMoneda());
 
+
 			List<TiivsNivel> lstNiveles = service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("moneda",ConstantesVisado.MONEDAS.COD_SOLES)));
 			logger.info("************** lstNiveles T_T : " +lstNiveles.size());
 			logger.info("************** solicitud.getImporte(): " +solicitud.getImporte());
 			logger.info("************** lstNiveles.get(0).getRangoInicio() : " +lstNiveles.get(0).getRangoInicio());
+
 			if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) 
 			{
 				logger.info("a" + lstNiveles.get(0).getDesNiv());
@@ -1956,6 +1960,9 @@ public class ConsultarSolicitudMB {
 		  objTiivsPersonaBusqueda=new TiivsPersona();
 		  objTiivsPersonaResultado=new TiivsPersona();
 		  flagUpdatePoderdanteApoderados=false;
+		  combosMB=new CombosMB();
+		  lstClasificacionPersona=combosMB.getLstClasificacionPersona();
+		  logger.info("tamanioo actual **** " +combosMB.getLstClasificacionPersona().size());
 	  }
 
 	public boolean validarAgregarAgrupacion() {
@@ -4016,8 +4023,11 @@ public class ConsultarSolicitudMB {
 		this.mapSolicitudes = mapSolicitudes;
 	}
 	
-	/*
-	 * public SolicitudEdicionMB getSolicitudEdicionMB() { return
-	 * solicitudEdicionMB; }
-	 */
+	public List<ComboDto> getLstClasificacionPersona() {
+		return this.lstClasificacionPersona;
+	}
+
+	public void setLstClasificacionPersona(List<ComboDto> lstClasificacionPersona) {
+		this.lstClasificacionPersona = lstClasificacionPersona;
+	}
 }
