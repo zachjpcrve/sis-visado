@@ -48,14 +48,14 @@ public class NivelService {
 			niveles = service.buscarDinamico(filtro);
 			
 			for (int i = 0; i < niveles.size(); i++) {
-				if(niveles.get(i).getId().getEstado().intValue() == 1){
-					niveles.get(i).getId().setDesEstado(ConstantesVisado.VALOR2_ESTADO_ACTIVO_LISTA);
+				if(niveles.get(i).getEstado().intValue() == 1){
+					niveles.get(i).setDesEstado(ConstantesVisado.VALOR2_ESTADO_ACTIVO_LISTA);
 				}else{
-					niveles.get(i).getId().setDesEstado(ConstantesVisado.VALOR2_ESTADO_INACTIVO_LISTA);
+					niveles.get(i).setDesEstado(ConstantesVisado.VALOR2_ESTADO_INACTIVO_LISTA);
 				}
 				for(int j = 0; j < moneda.size(); j++){
-					if(niveles.get(i).getId().getMoneda().equals(moneda.get(j).getId().getCodElem())){
-						niveles.get(i).getId().setMoneda(moneda.get(j).getValor1());
+					if(niveles.get(i).getMoneda().equals(moneda.get(j).getId().getCodElem())){
+						niveles.get(i).setMoneda(moneda.get(j).getValor1());
 					}
 				}
 
