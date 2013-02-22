@@ -1,5 +1,7 @@
 package com.hildebrando.visado.mb;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,7 +13,9 @@ import javax.faces.bean.SessionScoped;
 import org.apache.log4j.Logger;
 
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.common.util.ConstantesVisado.MONEDAS;
 import com.bbva.persistencia.generica.util.Utilitarios;
+import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.service.NivelService;
@@ -21,12 +25,13 @@ import com.hildebrando.visado.service.NivelService;
 public class NivelMB {
 	public static Logger logger = Logger.getLogger(NivelMB.class);
 	private SimpleDateFormat formatear = new SimpleDateFormat("dd/MM/yyyy");
-	
+	private DateFormat df = DateFormat.getDateInstance();
 	private TiivsNivel nivel;
 	private List<TiivsMultitabla> moneda;
 	private List<TiivsNivel> niveles;
 	private List<TiivsNivel> nivelesMant;
 	private NivelService nivelService;
+	private IILDPeUsuario usuario;
 
 	public NivelMB() {
 		nivelService = new NivelService();
@@ -35,6 +40,7 @@ public class NivelMB {
 		obtenerMaximo();
 		listarMonedas();
 		listarNiveles();
+		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 
 	}
 	
@@ -77,14 +83,14 @@ public class NivelMB {
 	
 	public void registrar() throws Exception{
 		logger.info("NivelMB : registrar");
-		
-		for (int j = 0; j < nivelesMant.size(); j++) {
-			logger.info("tamales : " +nivelesMant.get(j).getRangoInicio());
-		}
 		Date sysDate = new Date();
+		int seq; 	
 		String utilDateString = formatear.format(sysDate);
-		Date utilDateDate = formatear.parse(utilDateString);
-		
+		Date utilDateDate = df.parse(utilDateString);
+		String validacionRangoInicio = "0";
+		int compararDescripcion = 0;
+		String validacionDescripcion = "0";
+		String validacionCampoDesNulo = "0";
 		String valor = "0";
 		try {
 			for (int j = 0; j < nivelesMant.size(); j++) {
@@ -99,23 +105,84 @@ public class NivelMB {
 					valor = "1";
 					break;
 				}
+			}		
+			compararDescripcion = compararDesNivel(nivelesMant.get(0).getDesNiv().toUpperCase());
+			if(compararDescripcion == 0){
+				validacionDescripcion = "0";
+			}else{
+				validacionDescripcion = "1";
 			}
-		//	nivelesMant.add(0, new TiivsNivel().getId().setMoneda("0001"));		
-			nivelesMant.get(0).setMoneda("0001");
-			nivelesMant.get(1).setMoneda("0002");
-			nivelesMant.get(2).setMoneda("0003");
-			if (valor.equals("0")) {
-				for (int i = 0; i < nivelesMant.size(); i++) {
-					logger.info("tamales monedas  : " +nivelesMant.get(i).getMoneda());
-					nivelesMant.get(i).setDesNiv(nivelesMant.get(0).getDesNiv().toUpperCase());
-					nivelesMant.get(i).setFechaReg(utilDateDate);
-					nivelesMant.get(i).setUsuarioReg(Utilitarios.getObjectInSession("USUARIO_SESION").toString());
+			
+			//
+			if(nivelesMant.get(0).getDesNiv().isEmpty() == false){
+				validacionCampoDesNulo = "0";
+			}else{
+				validacionCampoDesNulo = "1";
+			}
+			//
+			for (int i = 0; i < nivelesMant.size(); i++) {
+				nivelesMant.get(i).setMoneda(moneda.get(i).getId().getCodElem());
+				logger.info("Niveles Mantenimiento  : " +" "+ i + " " +nivelesMant.get(i).getRangoInicio());
+				int rec =obtenerRangoInicio(moneda.get(i).getId().getCodElem());
+				logger.info("Niveles Mantenimiento  : " +"obtenerRangoInicio "+ rec);
+				if(nivelesMant.get(i).getRangoInicio() == rec/*obtenerRangoInicio(moneda.get(i).getId().getCodElem())*/){
+					validacionRangoInicio = "0";
+				}else{
+					validacionRangoInicio = "1";
+					break;
 				}
-				Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
-			} else {
-				Utilitarios.mensajeError("Error", "El campo es Obligatorio");
-
 			}
+			if(validacionCampoDesNulo.equals("0")){
+				if (valor.equals("0")) {
+					if(validacionDescripcion.equals("0")){
+						if(validacionRangoInicio.equals("0")){
+							
+							for (int i = 0; i < nivelesMant.size(); i++) {
+								if(nivelesMant.get(i).getRangoInicio() < nivelesMant.get(i).getRangoFin()){
+									seq = nivelService.obtenerSecuencialNivel();
+									nivelesMant.get(i).setId(seq);
+									nivelesMant.get(i).setDesNiv(nivelesMant.get(0).getDesNiv().toUpperCase());
+									nivelesMant.get(i).setFechaReg(utilDateDate);
+									nivelesMant.get(i).setUsuarioReg(usuario.getUID());
+									nivelesMant.get(i).setDesEstado(nivelesMant.get(0).getDesEstado());
+									
+									if(nivelesMant.get(i).getDesEstado().equals("1")){
+										nivelesMant.get(i).setEstado(new BigDecimal(1));
+									}else{
+										nivelesMant.get(i).setEstado(new BigDecimal(0));
+									}
+									logger.info("Niveles Mantenimiento  : " +" "+ i + " " +nivelesMant.get(i).getId());
+									logger.info("Niveles Mantenimiento  : " +" "+ i + " " +nivelesMant.get(i).getRangoInicio());
+									logger.info("Niveles Mantenimiento  : " +" "+ i + " " +nivelesMant.get(i).getRangoFin());	
+									logger.info("Niveles Mantenimiento  : " +" "+ i + " " +nivelesMant.get(i).getMoneda());
+									logger.info("Niveles Mantenimiento  : " +" "+ i + " " +nivelesMant.get(i).getEstado());
+									logger.info("Niveles Mantenimiento  : " +" "+ i + " " +nivelesMant.get(i).getFechaReg());	
+									logger.info("Niveles Mantenimiento  : " +" "+ i + " " +nivelesMant.get(i).getUsuarioReg());	
+									
+									nivelService.registrar(nivelesMant.get(i));
+									
+								}else{
+									Utilitarios.mensajeError("Error", "El rango inicio no puede ser mayor que el rango fin de cada nivel");
+								}
+								
+							}
+							Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
+						} else {
+							Utilitarios.mensajeError("Error", "Los Valores del Rango Inicio debe ser el correlativo del rango fin del ultimo nivel");
+
+						}
+					}else{
+						Utilitarios.mensajeError("Error", "La descripcion del nivel ya se encuentra registrada");
+					}
+					
+					}else{
+						Utilitarios.mensajeError("Error", "El campo es Obligatorio");
+					}
+			}else{
+				Utilitarios.mensajeError("Error", "El campo Descripcion es Obligatorio");
+			}
+			
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -123,6 +190,31 @@ public class NivelMB {
 			Utilitarios.mensajeError("Error", "No se pudo actualizar");
 		}
 	}
+
+	private Integer compararDesNivel(String desNivel) {
+		logger.info("NivelMB: compararDesNivel");
+		int compararDes =0;
+		try {
+			compararDes = nivelService.compararDesNivel(desNivel);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("NivelMB: compararDesNivel : " + e.getLocalizedMessage());
+		}
+		return compararDes;
+	}
+
+	private Integer obtenerRangoInicio(String codElem) {
+		logger.info("NivelMB: obtenerRangoInicio");
+		int rangoInicio= 0;
+		try {
+			rangoInicio = nivelService.obtenerRangoInicio(codElem);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("NivelMB: listarNiveles : " + e.getLocalizedMessage());
+		}
+		return rangoInicio;
+	}
+
 	public void listarNiveles() {
 		logger.info("NivelMB: listarNiveles");
 		try {
