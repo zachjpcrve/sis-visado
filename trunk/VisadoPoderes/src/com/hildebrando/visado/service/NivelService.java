@@ -78,7 +78,7 @@ public class NivelService {
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
 		try {
-			secuencial = service.buscarDinamico(filtro.setProjection(Projections.max("id.codNiv")));
+			secuencial = service.buscarDinamico(filtro.setProjection(Projections.max("codNiv")));
 
 			List<E> parse = new ArrayList<E>();
 			parse = (List<E>) secuencial;
