@@ -152,7 +152,8 @@ public class CombosMB {
 		for (TiivsMultitabla res : lstMultitabla) { 
 			//@Autor Samira
 			// Carga combo Clasificacion Persona
-			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA)) {
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA)
+					&&res.getValor2().trim().equals("1")) {
 				ComboDto tmpComboClasi = new ComboDto();
 				tmpComboClasi.setKey(res.getId().getCodElem());
 				tmpComboClasi.setDescripcion(res.getValor1());
@@ -233,7 +234,8 @@ public class CombosMB {
 			}
 
 			// Carga combo Tipos de documento
-			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC)) {
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC)
+					&& res.getValor2().equals("1")) {
 				TipoDocumento tmpTipoDoc = new TipoDocumento();
 				tmpTipoDoc.setCodTipoDoc(res.getId().getCodElem());
 				tmpTipoDoc.setDescripcion(res.getValor1());
@@ -309,8 +311,9 @@ public class CombosMB {
 		GenericDao<TiivsOficina1, Object> oficDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroOfi = Busqueda.forClass(TiivsOficina1.class);
 		filtroOfi.add(Restrictions.isNotNull("tiivsTerritorio.codTer"));
+		filtroOfi.add(Restrictions.eq("activo", '1'));
 		filtroOfi.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_OFICINA));
-		filtroOfi.setMaxResults(1000);
+		filtroOfi.setMaxResults(5000);
 		try {
 			lstOficina = oficDAO.buscarDinamico(filtroOfi);
 			lstOficina1 = oficDAO.buscarDinamico(filtroOfi);
