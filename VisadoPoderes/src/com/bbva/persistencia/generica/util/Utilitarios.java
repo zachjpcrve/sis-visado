@@ -100,29 +100,35 @@ public class Utilitarios {
 		return mes;
 	}
 	
-	public static String buscarAnioxCodigo(int codigo)
+	public static int buscarAnioxCodigo(int codigo)
 	{
-		String anio="";
+		System.out.println("Buscando codigo: " + codigo);
 		
-		switch (codigo) 
+		int pAnio=0;
+		
+		if (codigo!=0)
 		{
-			case 1: 
-				anio = "2013";
+			switch (codigo) {
+			case 1:
+				pAnio=2013;
 				break;
-			case 2: 
-				anio = "2014";
+			case 2:
+				pAnio=2014;
 				break;
-			case 3: 
-				anio = "2015";
-				break;	
-			case 4: 
-				anio = "2016";
+			case 3:
+				pAnio=2015;
+				break;
+			case 4:
+				pAnio=2016;
 				break;
 			default:
 				break;
+			}
 		}
 		
-		return anio;
+		System.out.println("Resultado: " + pAnio);
+		
+		return pAnio;
 	}
 	
 	public static String obternerDescripcionEstado(String estado){
