@@ -41,7 +41,9 @@ public class ConstantesVisado {
 	public static final java.lang.String CODIGO_MULTITABLA_TIPOS_FECHA = "T10";
 	public static final java.lang.String CODIGO_MULTITABLA_MONEDA = "T08";
 	public static final java.lang.String CODIGO_MULTITABLA_TIPO_DOC = "T04";
-	/*eramoz*/
+	public static final java.lang.String CODIGO_MULTITABLA_PARAM_ESCANER= "T01";
+	public static final java.lang.String CODIGO_CAMPO_PARAM_ESCANER = "0006"; //Ruta local del pdf
+	
 	public static final java.lang.String CODIGO_MULTITABLA_TIPO_PARTI = "T10"; //PODERDANTE|APODERADO	
 	public static final java.lang.String CODIGO_MULTITABLA_COMISION = "T11"; //COMISION	
 	public static final java.lang.String CODIGO_CAMPO_PODERDANTE = "0001"; //PODERDANTE
