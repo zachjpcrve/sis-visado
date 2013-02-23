@@ -27,6 +27,7 @@ import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
+import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
@@ -398,6 +399,19 @@ public class CombosMB {
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de anio, mes y dia: "+e);
 		}		
 	}
+	
+	public TiivsMultitabla getRowFromMultiTabla(String codTabla, String codElem){
+		TiivsMultitabla result=null;
+		if(this.lstMultitabla!=null){
+			for(TiivsMultitabla multi : this.lstMultitabla){			
+				if(multi.getId().equals(new TiivsMultitablaId(codTabla,codElem))){
+					result = multi;
+					break;
+				}
+			}	
+		}
+		return result;
+	}	
 
 	public void setLstMultitabla(List<TiivsMultitabla> lstMultitabla) {
 		this.lstMultitabla = lstMultitabla;

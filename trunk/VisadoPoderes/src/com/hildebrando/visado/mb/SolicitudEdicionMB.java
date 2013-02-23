@@ -1329,11 +1329,30 @@ public class SolicitudEdicionMB
 
 		for (TiivsTipoSolicDocumento s : lstTipoSolicitudDocumentos) {
 			if (s.getObligatorio()!=null && s.getObligatorio().equals("1") ){
-				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId().getCodDoc(),
-						s.getTiivsDocumento().getDescripcion(), true + "", "",""));
-			} else {				
-				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId().getCodDoc(),
-						s.getTiivsDocumento().getDescripcion(), false + "", "",""));
+				
+				DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO();
+				doc.setItem(s.getId().getCodDoc());
+				doc.setDocumento(s.getTiivsDocumento().getDescripcion());
+				doc.setObligacion(true+"");
+				doc.setAlias("");
+				doc.setAliasTemporal("");
+				doc.setNombreCorto(s.getTiivsDocumento().getNombre());
+				doc.setFormato(s.getTiivsDocumento().getFormato());
+				lstdocumentos.add(doc);				
+//				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId().getCodDoc(),
+//						s.getTiivsDocumento().getDescripcion(), true + "", "",""));
+			} else {
+				DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO();
+				doc.setItem(s.getId().getCodDoc());
+				doc.setDocumento(s.getTiivsDocumento().getDescripcion());
+				doc.setObligacion(true+"");
+				doc.setAlias("");
+				doc.setAliasTemporal("");
+				doc.setNombreCorto(s.getTiivsDocumento().getNombre());
+				doc.setFormato(s.getTiivsDocumento().getFormato());
+				lstdocumentos.add(doc);	
+//				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId().getCodDoc(),
+//						s.getTiivsDocumento().getDescripcion(), false + "", "",""));
 			}
 		}
 
@@ -1446,11 +1465,21 @@ public void actualizarListaDocumentosXTipo(TiivsAnexoSolicitud objAnexo) {
 	if (objAnexo.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS)) {
 		String sAlias = objAnexo.getAliasArchivo();
 		String sAliasTemporal = objAnexo.getAliasTemporal();
-		DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO(
-				objAnexo.getId().getCodDoc(),
-				ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS, false + "",
-				sAlias, sAliasTemporal); 
-		lstdocumentos.add(doc);
+		
+		DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO();
+		doc.setItem(objAnexo.getId().getCodDoc());
+		doc.setDocumento(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS);
+		doc.setObligacion(false+"");
+		doc.setAlias(sAlias);
+		doc.setAliasTemporal(sAliasTemporal);
+//		doc.setNombreCorto(s.getTiivsDocumento().getNombre());
+//		doc.setFormato(s.getTiivsDocumento().getFormato());
+		lstdocumentos.add(doc);			
+//		DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO(
+//				objAnexo.getId().getCodDoc(),
+//				ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS, false + "",
+//				sAlias, sAliasTemporal); 
+//		lstdocumentos.add(doc);
 		return;
 	}
 

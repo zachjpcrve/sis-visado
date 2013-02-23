@@ -697,11 +697,18 @@ public class ConsultarSolicitudMB {
 			
 			logger.info("lstAnexosSolicitudes:" + this.lstAnexosSolicitudes);
 
-			for(TiivsAnexoSolicitud anexo : lstAnexosSolicitudes){
+			for(TiivsAnexoSolicitud anexo : lstAnexosSolicitudes){				
 				if(anexo.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS)){
-					lstdocumentos.add(new DocumentoTipoSolicitudDTO(anexo.getId().getCodDoc(), 
-							obtenerDescripcionDocumento(anexo.getId().getCodDoc()),false+"",
-							anexo.getAliasArchivo(),anexo.getAliasTemporal()));
+					DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO();
+					doc.setItem(anexo.getId().getCodDoc());
+					doc.setDocumento(obtenerDescripcionDocumento(anexo.getId().getCodDoc()));
+					doc.setObligacion(false+"");
+					doc.setAlias(anexo.getAliasArchivo());
+					doc.setAliasTemporal(anexo.getAliasTemporal());
+					lstdocumentos.add(doc);
+//					lstdocumentos.add(new DocumentoTipoSolicitudDTO(anexo.getId().getCodDoc(), 
+//							obtenerDescripcionDocumento(anexo.getId().getCodDoc()),false+"",
+//							anexo.getAliasArchivo(),anexo.getAliasTemporal(),"","")); //nombre corto, 
 				} else {
 					for(DocumentoTipoSolicitudDTO doc : lstdocumentos){
 						if(doc.getItem().equals(anexo.getId().getCodDoc())){
@@ -726,15 +733,29 @@ public class ConsultarSolicitudMB {
 			{				
 				if (v.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS))
 				{
-					lstdocumentos.add(new DocumentoTipoSolicitudDTO(v.getId().getCodDoc(), 
-							obtenerDescripcionDocumento(v.getId().getCodDoc()),false+"",
-							v.getAliasArchivo(),v.getAliasTemporal()));
+					DocumentoTipoSolicitudDTO doc = new  DocumentoTipoSolicitudDTO();
+					doc.setItem(v.getId().getCodDoc());
+					doc.setDocumento(obtenerDescripcionDocumento(v.getId().getCodDoc()));
+					doc.setObligacion(false+"");
+					doc.setAlias(v.getAliasArchivo());
+					doc.setAliasTemporal(v.getAliasTemporal());	
+					lstdocumentos.add(doc);
+//					lstdocumentos.add(new DocumentoTipoSolicitudDTO(v.getId().getCodDoc(), 
+//							obtenerDescripcionDocumento(v.getId().getCodDoc()),false+"",
+//							v.getAliasArchivo(),v.getAliasTemporal()));
 				}
 				else
 				{
-					lstdocumentos.add(new DocumentoTipoSolicitudDTO(v.getId().getCodDoc(), 
-									obtenerDescripcionDocumento(v.getId().getCodDoc()),obtenerFlagObligatorioxDoc(v.getId().getCodDoc())+"",
-									v.getAliasArchivo(),v.getAliasTemporal()));
+					DocumentoTipoSolicitudDTO doc = new  DocumentoTipoSolicitudDTO();
+					doc.setItem(v.getId().getCodDoc());
+					doc.setDocumento(obtenerDescripcionDocumento(v.getId().getCodDoc()));
+					doc.setObligacion(obtenerFlagObligatorioxDoc(v.getId().getCodDoc())+"");
+					doc.setAlias(v.getAliasArchivo());
+					doc.setAliasTemporal(v.getAliasTemporal());	
+					lstdocumentos.add(doc);					
+//					lstdocumentos.add(new DocumentoTipoSolicitudDTO(v.getId().getCodDoc(), 
+//									obtenerDescripcionDocumento(v.getId().getCodDoc()),obtenerFlagObligatorioxDoc(v.getId().getCodDoc())+"",
+//									v.getAliasArchivo(),v.getAliasTemporal()));
 				}
 			}			
 						
@@ -2205,14 +2226,33 @@ public class ConsultarSolicitudMB {
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 
 		for (TiivsTipoSolicDocumento s : lstTipoSolicitudDocumentos) {
-			if (s.getObligatorio() != null && s.getObligatorio().equals("1")) {
-				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId()
-						.getCodDoc(), s.getTiivsDocumento().getDescripcion(),
-						true + "", "", ""));
+			if (s.getObligatorio() != null && s.getObligatorio().equals("1")) {								
+				DocumentoTipoSolicitudDTO doc = new  DocumentoTipoSolicitudDTO();
+				doc.setItem(s.getId().getCodDoc());
+				doc.setDocumento(s.getTiivsDocumento().getDescripcion());
+				doc.setObligacion(true + "");
+				doc.setAlias("");
+				doc.setAliasTemporal("");
+				doc.setNombreCorto(s.getTiivsDocumento().getNombre());
+				doc.setFormato(s.getTiivsDocumento().getFormato());
+				lstdocumentos.add(doc);									
+//				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId()
+//						.getCodDoc(), s.getTiivsDocumento().getDescripcion(),
+//						true + "", "", ""));
 			} else {
-				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId()
-						.getCodDoc(), s.getTiivsDocumento().getDescripcion(),
-						false + "", "", ""));
+				
+				DocumentoTipoSolicitudDTO doc = new  DocumentoTipoSolicitudDTO();
+				doc.setItem(s.getId().getCodDoc());
+				doc.setDocumento(s.getTiivsDocumento().getDescripcion());
+				doc.setObligacion(false + "");
+				doc.setAlias("");
+				doc.setAliasTemporal("");
+				doc.setNombreCorto(s.getTiivsDocumento().getNombre());
+				doc.setFormato(s.getTiivsDocumento().getFormato());
+				lstdocumentos.add(doc);						
+//				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId()
+//						.getCodDoc(), s.getTiivsDocumento().getDescripcion(),
+//						false + "", "", ""));
 			}
 		}
 
@@ -3435,11 +3475,21 @@ public class ConsultarSolicitudMB {
 				.contains(ConstantesVisado.PREFIJO_OTROS)) {
 			String sAlias = objAnexo.getAliasArchivo();
 			String sAliasTemporal = objAnexo.getAliasTemporal();
-			DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO(
-					objAnexo.getId().getCodDoc(),
-					ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS, false + "",
-					sAlias, sAliasTemporal);
-			lstdocumentos.add(doc);
+			
+			DocumentoTipoSolicitudDTO doc = new  DocumentoTipoSolicitudDTO();
+			doc.setItem(objAnexo.getId().getCodDoc());
+			doc.setDocumento(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS);
+			doc.setObligacion(false + "");
+			doc.setAlias(sAlias);
+			doc.setAliasTemporal(sAliasTemporal);
+			//doc.setNombreCorto(s.getTiivsDocumento().getNombre());
+			//doc.setFormato(s.getTiivsDocumento().getFormato());
+			lstdocumentos.add(doc);			
+//			DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO(
+//					objAnexo.getId().getCodDoc(),
+//					ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS, false + "",
+//					sAlias, sAliasTemporal);			
+//			lstdocumentos.add(doc);
 			return;
 		}
 

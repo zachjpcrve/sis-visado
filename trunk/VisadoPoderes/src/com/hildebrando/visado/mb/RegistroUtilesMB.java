@@ -36,44 +36,6 @@ public class RegistroUtilesMB {
 	public static Logger logger = Logger.getLogger(RegistroUtilesMB.class);
 	private String entrada;
 	private String resultado;
-	
-	/************************METODOS DE PRUEBA***************************/
-	/**
-     * Metodo prueba asignacion de estudio
-     * */
-	public void asignarEstudio() {
-		
-		String estudioAsignado = obtenerEstudioMenorCarga();
-		logger.debug("Estudio Asignado:" + estudioAsignado);
-		this.resultado = estudioAsignado;
-	}
-	
-	
-	/**
-     * Metodo prueba obtener fecha respuesta
-     * */
-	public void obtenFechaRespuesta() {			
-//		System.out.println("Fecha:" + this.entrada);		
-//		try {
-//			DateFormat formatter ; 
-//			Date date ; 
-//			formatter = new SimpleDateFormat("dd/MM/yy");
-//			date = (Date)formatter.parse(this.entrada);
-//			Calendar cal=Calendar.getInstance();
-//			cal.setTime(date);		
-//			System.out.println("Fecha a evaluar:" + cal.getTime());	
-//			Date fecharesp = obtenSiguienteFechaHabil(cal);
-//			this.resultado = fecharesp.toString();
-//		}catch(Exception e){
-//			e.printStackTrace();
-//		}		
-		this.resultado = obtenerFechaRespuesta().toString();
-	}
-	
-	/************************FIN METODOS DE PRUEBA***************************/
-	
-	
-
 
 	/**
 	  * Obtiene el código de un Estudio de Abogado con la menor cantidad
