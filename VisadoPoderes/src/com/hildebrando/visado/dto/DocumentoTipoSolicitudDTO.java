@@ -8,9 +8,12 @@ public class DocumentoTipoSolicitudDTO {
 	private String aliasTemporal;
 	private boolean bobligacion;
 	private String rutaDoc;
+	private String nombreCorto;
+	private String formato;
 
 	public DocumentoTipoSolicitudDTO(String item, String documento,
-			String obligacion, String alias, String aliasTemporal) {
+			String obligacion, String alias, String aliasTemporal,
+			String nombreCorto, String formato) {
 		super();
 		this.item = item;
 		this.documento = documento;
@@ -18,7 +21,9 @@ public class DocumentoTipoSolicitudDTO {
 		this.alias = alias;
 		this.bobligacion = Boolean.valueOf(obligacion);
 		this.aliasTemporal = aliasTemporal;
-		
+		this.nombreCorto = nombreCorto;
+		this.formato = formato;
+
 	}
 
 	public DocumentoTipoSolicitudDTO() {
@@ -91,5 +96,20 @@ public class DocumentoTipoSolicitudDTO {
 	public void setAliasTemporal(String aliasTemporal) {
 		this.aliasTemporal = aliasTemporal;
 	}
-	
+
+	public String getNombreCorto() {
+		return nombreCorto;
+	}
+
+	public void setNombreCorto(String nombreCorto) {
+		this.nombreCorto = nombreCorto;
+	}
+
+	public String getFormato() {
+		return formato;
+	}
+
+	public void setFormato(String formato) {
+		this.formato = formato;
+	}		
 }
