@@ -4,7 +4,6 @@ import java.util.List;
 
 public class Liquidacion 
 {
-	private String estudio;
 	private int totalDia1;
 	private int totalDia2;
 	private int totalDia3;
@@ -41,15 +40,7 @@ public class Liquidacion
 	private double honorarios;
 	private double impuesto;
 	private double total;
-	private List<Liquidacion> lstSolicitudesAT;
-	private List<Liquidacion> lstSolicitudesFT;
 	
-	public String getEstudio() {
-		return estudio;
-	}
-	public void setEstudio(String estudio) {
-		this.estudio = estudio;
-	}
 	public int getTotalDia1() {
 		return totalDia1;
 	}
@@ -265,17 +256,5 @@ public class Liquidacion
 	}
 	public void setTotal(double total) {
 		this.total = total;
-	}
-	public List<Liquidacion> getLstSolicitudesAT() {
-		return lstSolicitudesAT;
-	}
-	public void setLstSolicitudesAT(List<Liquidacion> lstSolicitudesAT) {
-		this.lstSolicitudesAT = lstSolicitudesAT;
-	}
-	public List<Liquidacion> getLstSolicitudesFT() {
-		return lstSolicitudesFT;
-	}
-	public void setLstSolicitudesFT(List<Liquidacion> lstSolicitudesFT) {
-		this.lstSolicitudesFT = lstSolicitudesFT;
 	}
 }

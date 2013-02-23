@@ -39,12 +39,12 @@ import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
+import com.hildebrando.visado.dto.AgrupacionPlazoDto;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.Moneda;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
-import com.hildebrando.visado.modelo.Liquidacion;
 import com.hildebrando.visado.modelo.RecaudacionTipoServ;
 import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.SolicitudesTipoServicio;
@@ -85,7 +85,7 @@ public class ReportesMB
 	private List<SolicitudesTipoServicio> lstSolicitudesTipoServicio;
 	private List<RecaudacionTipoServ> lstRecaudacionTipoServ;
 	private List<Moneda> lstMoneda;
-	private List<Liquidacion> lstLiquidacion;
+	private List<AgrupacionPlazoDto> lstLiquidacion;
 	private Date fechaInicio;
 	private Date fechaFin;
 	private String nombreExtractor;
@@ -123,6 +123,8 @@ public class ReportesMB
 		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		lstSolicitudesOficina = new ArrayList<SolicitudesOficina>();
 		lstRecaudacionTipoServ = new ArrayList<RecaudacionTipoServ>();
+		combosMB= new CombosMB();
+		combosMB.cargarMultitabla();
 		
 		inicializarCampos();
 			
@@ -141,8 +143,8 @@ public class ReportesMB
 			setNoHabilitarExportar(true);
 		}
 		
-		impuesto=obtenerImpuesto();
-	}
+		impuesto=obtenerImpuesto();	
+	}	
 	
 	public double obtenerImpuesto()
 	{
@@ -168,7 +170,17 @@ public class ReportesMB
 		logger.info("Mes seleccionado: " + getMes());
 		logger.info("Anio seleccionado: " + getAnio());
 		
-		setTextoAnioMes(Utilitarios.buscarMesxCodigo(getMes()) + ConstantesVisado.ESPACIO_BLANCO + Utilitarios.buscarAnioxCodigo(getAnio()));
+		String sAnio="";
+		if (getAnio()==0)
+		{
+			sAnio="2013";
+			setTextoAnioMes(Utilitarios.buscarMesxCodigo(getMes()) + ConstantesVisado.ESPACIO_BLANCO + sAnio);
+		}
+		else
+		{
+			setTextoAnioMes(Utilitarios.buscarMesxCodigo(getMes()) + ConstantesVisado.ESPACIO_BLANCO + Utilitarios.buscarAnioxCodigo(getAnio()));
+		}
+		
 	}
 	
 	public void inicializarCampos()
@@ -314,11 +326,26 @@ public class ReportesMB
 		}	
 		
 		//Busqueda por anio
-		int anio=0;
+		int pAnio=0;
 		
 		if (getAnio()!=0)
 		{
-			anio = getAnio();
+			switch (getAnio()) {
+			case 1:
+				pAnio=2013;
+				break;
+			case 2:
+				pAnio=2014;
+				break;
+			case 3:
+				pAnio=2015;
+				break;
+			case 4:
+				pAnio=2016;
+				break;
+			default:
+				break;
+			}
 		}
 		
 		//Busqueda por mes
@@ -330,7 +357,7 @@ public class ReportesMB
 		}		
 		
 		try {
-			this.lstLiquidacion = solicitudService.obtenerLiquidacion(cadEstudio, anio, mes,impuesto);
+			this.lstLiquidacion = solicitudService.obtenerLiquidacion(cadEstudio, pAnio, mes,impuesto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2993,11 +3020,11 @@ public class ReportesMB
 		this.mes = mes;
 	}
 
-	public List<Liquidacion> getLstLiquidacion() {
+	public List<AgrupacionPlazoDto> getLstLiquidacion() {
 		return lstLiquidacion;
 	}
 
-	public void setLstLiquidacion(List<Liquidacion> lstLiquidacion) {
+	public void setLstLiquidacion(List<AgrupacionPlazoDto> lstLiquidacion) {
 		this.lstLiquidacion = lstLiquidacion;
 	}
 
