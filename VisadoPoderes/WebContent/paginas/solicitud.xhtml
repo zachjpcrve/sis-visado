@@ -79,6 +79,14 @@ function invocarEscaner(urlApplet){
 	return false;
 }
 
+/*
+function actualizarDocumentos (documentos) {
+	//$("#"+this.form.name+"\\:idDocDigitalizada\\:idDocumentos").val(codigoDoc);
+	actDocumentos();
+}
+*/
+
+
 
 </SCRIPT>
 		<h:panelGrid columns="5">
@@ -340,7 +348,7 @@ function invocarEscaner(urlApplet){
 																immediate="true" 
 																valueChangeListener="#{solicitudRegMB.listarDocumentosXSolicitud}"
 																disabled="false">
-																<p:ajax update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos" 
+																<p:ajax update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos,:formSolicitudRegistro:idVisorApplet" 
 																event="change"></p:ajax>
 																<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 																<f:selectItems value="#{combosMB.lstTipoSolicitud}" var="lOf" itemValue="#{lOf.codTipSolic}" itemLabel="#{lOf.desTipServicio}" />
@@ -351,10 +359,45 @@ function invocarEscaner(urlApplet){
 														     Escaner
 														     </h:outputLink> -->
 														     
+														     <TABLE>
+															   <tr>
+															   <td>
 															   <p:commandButton id="btnEscanear" 
-															   		value="Escanear" 
-															   		onclick="return invocarEscaner('#{solicitudRegMB.cadenaEscanerFinal}');">
+																   		value="Escanear" 
+																   		onclick="return invocarEscaner('#{solicitudRegMB.cadenaEscanerFinal}');">
 															   </p:commandButton>
+																</td>															   															  	
+															   
+																   <td>
+																   <h:panelGroup id="idVisorApplet">
+																	   
+															            <script type="text/javascript" language="javascript">
+															                function actualizarDocumentos (documentos) {
+															                    //$("#"+this.formSolicitudRegistro+"\\:idDocumentos").val(documentos);
+															                    this.document.getElementById('formSolicitudRegistro:idDocumentos').value = documentos;
+															                    //alert('Documentos encontrados: ' + documentos);
+															                    actDocumentos();												                    
+															                }     
+															            </script>            
+															            <applet name="appletVisor" id="appletVisor"
+															                    code="com.hildebrando.visado.AgregarDocumentos.class"
+															                    archive="../../uploadFilesApplet.jar" 
+															                    width='93px'
+															                    height='24px'
+															                    mayscript="mayscript">
+															                <param name="path_cliente"
+															                       value="#{solicitudRegMB.pathCliente}" />												                       
+															                <param name="documentos_leer"
+															                       value="#{solicitudRegMB.documentosLeer}" />               
+															            </applet>            
+															        </h:panelGroup>
+															        </td>
+														        </tr>
+														        </TABLE>
+												        
+													        	<h:inputHidden id="idDocumentos" value="#{solicitudRegMB.documentosLeidos}" />												        
+														        <p:remoteCommand name="actDocumentos" update="@form" process="@form" 
+																	actionListener="#{solicitudRegMB.actualizarDocumentosXTipoSolicitud}" />
 
 														     
 														</td>
@@ -391,7 +434,8 @@ function invocarEscaner(urlApplet){
 														:formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:idfileUpload,
 														:formSolicitudRegistro:cboTipoSolicitud" ajax="false"
 														action="#{solicitudRegMB.agregarDocumentosXTipoSolicitud}"/>
-																												
+														
+																																									
 														</td>
 														
 													</tr>
