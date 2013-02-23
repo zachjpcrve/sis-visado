@@ -107,7 +107,9 @@ public class HtmlToPdfMB {
 		} catch (Exception ex) {
 			logger.info(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al generar el PDF: "+ex);
 		} finally {
-			fileTemp.deleteOnExit();					
+			if(fileTemp!=null){
+			fileTemp.deleteOnExit();
+			}
 		}
 		
 		InputStream stream = ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream(File.separator + ConstantesVisado.FILES + File.separator + nameFile);			
