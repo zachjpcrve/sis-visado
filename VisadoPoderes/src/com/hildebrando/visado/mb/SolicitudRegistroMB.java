@@ -806,14 +806,14 @@ public class SolicitudRegistroMB {
 			}
 		
 		}
-		SolicitudDao<TiivsPersona, Object> service = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
-		try {
-			String sCodigoSol = service.obtenerPKNuevaSolicitud();
+	/*	try {
+			SolicitudDao<TiivsPersona, Object> servicePK = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+			String sCodigoSol = servicePK.obtenerPKNuevaSolicitud();
 			logger.debug(" sCodigoSol " + sCodigoSol);
 			this.solicitudRegistrarT.setCodSoli(sCodigoSol);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02);
 		this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_REGISTRADO_T02);
 
@@ -937,17 +937,17 @@ public class SolicitudRegistroMB {
 			}
 			
 			String sExtension = sAliasTemporal.substring(sAliasTemporal.lastIndexOf("."));
-			String sAliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_" + sCodDocumento + sExtension;
+			//String sAliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_" +
+			String sAliasArchivo = sCodDocumento + sExtension;
 			
 			logger.info("aliasArchivo *** " + sAliasArchivo);
 			logger.info("aliasArchivoTemporal *** " + sAliasTemporal);
 			
 			TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
-			objAnexo.setId(new TiivsAnexoSolicitudId(this.solicitudRegistrarT.getCodSoli(), sCodDocumento));
+			objAnexo.setId(new TiivsAnexoSolicitudId(null, sCodDocumento));
 			objAnexo.setAliasArchivo(sAliasArchivo);
 			objAnexo.setAliasTemporal(sAliasTemporal);
 			lstAnexoSolicitud.add(objAnexo);
-			
 			this.actualizarListaDocumentosXTipo(objAnexo);
 
 			for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
@@ -1540,11 +1540,31 @@ public class SolicitudRegistroMB {
 					logger.info(solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
 				}
 				
+			
+				//Busqueda filtro =Busqueda.forClass(TiivsSolicitud.class);
+				//TiivsSolicitud objExisteSoli= (TiivsSolicitud) service.buscarById(TiivsSolicitud.class, solicitudRegistrarT.getCodSoli());
+						//(filtro.add(Restrictions.eq("codSoli", solicitudRegistrarT.getCodSoli())));
+				//if(objExisteSoli!=null){
+						SolicitudDao<TiivsPersona, Object> servicePK = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+						String sCodigoSol = servicePK.obtenerPKNuevaSolicitud();
+						logger.debug(" sCodigoSol " + sCodigoSol);
+						this.solicitudRegistrarT.setCodSoli(sCodigoSol);
+				
+				//}else{
+					//logger.info("");
+				//}
+						for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+							  //x.setTiivsSolicitud(this.solicitudRegistrarT);
+							  x.getId().setCodSoli(sCodigoSol);
+						}
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
+				this.solicitudRegistrarT.setCodSoli(objResultado.getCodSoli());
 				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+					  x.setTiivsSolicitud(this.solicitudRegistrarT);
+					  x.getId().setCodSoli(this.solicitudRegistrarT.getCodSoli());
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
 					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
-					   logger.info("ccdcdcd : "+objPersonaRetorno.getCodPer());
+					     b.setCodSoli(this.solicitudRegistrarT.getCodSoli());
 					     b.setTiivsPersona(null);
 					     b.setCodPer(objPersonaRetorno.getCodPer());
 					     serviceAgru.insertar(b);
@@ -1559,16 +1579,13 @@ public class SolicitudRegistroMB {
 				  objHistorial.setFecha(new Timestamp(new Date().getTime()));
 				  objHistorial.setRegUsuario(usuario.getUID());
 				  serviceHistorialSolicitud.insertar(objHistorial);
-				  //Carga ficheros al FTP
-				  boolean bRet = cargarArchivosFTP();
-				  logger.info("Resultado de carga de archivos al FTP:" + bRet);
-				  //Elimina archivos temporales
-				  eliminarArchivosTemporales();
+				 
 				  
 				  for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
-					  
+					  n.getId().setCodSoli(solicitudRegistrarT.getCodSoli());
 					  serviceAnexos.insertar(n);
 				   }
+				  
 				 
 				for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
 					logger.info("a.getId().getCodOperBan() **** "+ a.getId().getCodOperBan());
@@ -1576,6 +1593,13 @@ public class SolicitudRegistroMB {
 					logger.info("a.getId().getCodSoli() **** "+ a.getId().getCodSoli());
 					 serviceSoli.insertar(a);
 				}
+				
+				 //Carga ficheros al FTP
+				  boolean bRet = cargarArchivosFTP();
+				  logger.info("Resultado de carga de archivos al FTP:" + bRet);
+				  //Elimina archivos temporales
+				  eliminarArchivosTemporales();
+				  
 				if (objResultado.getCodSoli() != "" || objResultado != null) {
 					if (this.sEstadoSolicitud.equals("BORRADOR")) {
 						mensaje = "Se registro correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
@@ -1780,7 +1804,7 @@ public class SolicitudRegistroMB {
 
 		for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){
 			
-			String ruta = pdfViewerMB.cargarUnicoPDF(anexo.getAliasArchivo(),sUbicacionTemporal + anexo.getAliasTemporal());					
+			String ruta = pdfViewerMB.cargarUnicoPDF(anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo(),sUbicacionTemporal + anexo.getAliasTemporal());					
 			if (ruta.compareTo("") != 0) {
 				logger.debug("subio: " + anexo.getAliasTemporal());
 				exito = exito && true;
