@@ -77,13 +77,12 @@
 			
 			<p:spacer height="20"/>
 			
-			<h:outputLabel id="lblTextoAnioMes" value="#{reportesMB.textoAnioMes}" style="width: 250px" />
+			<h:outputLabel id="lblTextoAnioMes" value="#{reportesMB.textoAnioMes}"/>
 			
 			<p:spacer height="30"/>
 			
-			
 			<div class="ui-datatable ui-widget">
-			<table> 
+			<table width="1500"> 
 				<tr>
 					<th class="ui-state-default">
 						<div class="ui-dt-c">
@@ -115,283 +114,941 @@
 						<SPAN>4</SPAN>
 						</div>
 					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>5</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>6</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>7</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>8</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>9</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>10</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>11</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>12</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>13</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>14</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>15</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>16</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>17</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>18</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>19</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>20</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>21</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>22</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>23</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>24</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>25</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>26</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>27</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>28</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>29</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>30</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>31</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>T. MES</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>Costo</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>Honorarios</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>Impuesto</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>Total</SPAN>
+						</div>
+					</th>
 				</tr>
+				
+				<c:if test="${reportesMB.lstLiquidacion.size() > 0}">
+					<c:forEach items="#{reportesMB.lstLiquidacion}" var="s">
+		                  <tr class="ui-widget-content ui-datatable-even">
+		                  		<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.estudio}</SPAN>
+								 	</div>
+								</td>
+		                  		<c:forEach items="#{s.lstSolAT}" var="n">
+		                  				<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>A tiempo</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia1}</SPAN>
+										 	</div>
+									 	</td>
+									 	<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia2}</SPAN>
+										 	</div>
+									 	</td>
+									 	<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia3}</SPAN>
+										 	</div>
+									 	</td>
+									 	<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia4}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia5}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia6}</SPAN>
+										 	</div>
+									 	</td>
+									 	<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia7}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia8}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia9}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia10}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia11}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia12}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia13}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia14}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia15}</SPAN>
+										 	</div>
+									 	</td>
+									 	<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia16}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia17}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia18}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia19}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia20}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia21}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia22}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia23}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia24}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia25}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia26}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia27}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia28}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia29}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia30}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalDia31}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.totalMes}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.costo}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.honorarios}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.impuesto}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n.total}</SPAN>
+										 	</div>
+										</td>
+								</c:forEach>
+								
+								<c:forEach items="#{s.lstSolFT}" var="n1">
+									    <td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>Retraso</SPAN>
+										 	</div>
+									    </td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia1}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia2}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia3}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia4}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia5}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia6}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia7}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia8}</SPAN>
+										 	</div>
+										</td>
+										<td> 
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia9}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia10}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia11}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia12}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia13}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia14}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia15}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia16}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia17}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia18}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia19}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia20}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia21}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia22}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia23}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia24}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia25}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia26}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia27}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia28}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia29}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia30}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalDia31}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.totalMes}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.costo}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.honorarios}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.impuesto}</SPAN>
+										 	</div>
+										</td>
+										<td>
+										 	<div class="ui-dt-c">
+										 		 <SPAN>#{n1.total}</SPAN>
+										 	</div>
+										</td>
+								</c:forEach>
+		                  </tr>
+		                  <tr class="ui-widget-content ui-datatable-even">
+					<td>
+						<div class="ui-dt-c">
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia1}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia2}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia3}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia4}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia5}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia6}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia7}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia8}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia9}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia10}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia11}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia12}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia13}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia14}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia15}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia16}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia17}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia18}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia19}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia20}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia21}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia22}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia23}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia24}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia25}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia26}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia27}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia28}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia29}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia30}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalDia31}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.subTotalMes}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.costo}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.honorarios}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.impuesto}</SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN>#{s.gTotal}</SPAN>
+						</div>
+					</td>
+				</tr>
+				</c:forEach>
+				</c:if>
+				<c:otherwise>
+					<tr class="ui-widget-content ui-datatable-even">
+					<td >
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN></SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+				</tr>
+				</c:otherwise>				
 			</table>
 			</div>
-			
-			<p:panel header="Resultados" id="panelRes" style="width: 1090px" >
-				<p:dataTable value="#{reportesMB.lstLiquidacion}" var="tbl" rows="3" id="datosSol"
-						paginatorPosition="bottom" scrollable="true" scrollHeight="200"
-						paginator="true" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-						rowsPerPageTemplate="5,10,15" emptyMessage="">
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="Estudio" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.estudio}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="Plazo" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.plazo}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="1" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia1}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="2" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia2}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="3" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia3}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="4" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia4}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="5" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia5}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="6" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia6}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="7" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia7}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="8" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia8}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="9" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia9}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="10" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia10}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="11" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia11}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="12" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia12}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="13" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia13}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="14" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia14}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="15" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia15}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="16" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia16}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="17" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia17}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="18" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia18}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="19" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia19}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="20" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia20}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="21" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia21}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="22" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia22}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="23" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia23}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="24" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia24}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="25" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia25}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="26" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia26}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="27" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia27}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="28" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia28}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="29" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia29}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="30" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia30}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="31" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalDia31}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="Total Mes" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalMes}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="Costo" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.costo}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="Honorarios" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.honorarios}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="Impuesto" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.impuesto}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="Total" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.total}" style="font-size: 9px"/>	
-						</p:column>
-				</p:dataTable>
-			</p:panel>
+
 		</h:form>  
 		
 	</ui:define>
