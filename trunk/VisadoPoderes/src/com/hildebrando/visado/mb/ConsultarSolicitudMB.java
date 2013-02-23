@@ -1291,7 +1291,7 @@ public class ConsultarSolicitudMB {
 						fDirectory.mkdirs();
 					}
 
-					String fileName = a.getAliasArchivo();
+					String fileName = a.getId().getCodSoli() + "_" + a.getAliasArchivo();
 					String extension = fileName.substring(fileName
 							.lastIndexOf("."));
 					String sNombreTemporal = "";
@@ -1546,7 +1546,7 @@ public class ConsultarSolicitudMB {
 
 		for (TiivsAnexoSolicitud anexo : lstAnexoSolicitud) {
 
-			String ruta = pdfViewerMB.cargarUnicoPDF(anexo.getAliasArchivo(),
+			String ruta = pdfViewerMB.cargarUnicoPDF(anexo.getId().getCodSoli() + "_" +  anexo.getAliasArchivo(),
 					sUbicacionTemporal + anexo.getAliasTemporal());
 			if (ruta.compareTo("") != 0) {
 				logger.debug("subio: " + anexo.getAliasTemporal());
@@ -2274,8 +2274,9 @@ public class ConsultarSolicitudMB {
 
 			String sExtension = sAliasTemporal.substring(sAliasTemporal
 					.lastIndexOf("."));
-			String sAliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_"
-					+ sCodDocumento + sExtension;
+//			String sAliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_"
+//					+ sCodDocumento + sExtension;
+			String sAliasArchivo = this.sCodDocumento + sExtension;
 
 			logger.info("aliasArchivo *** " + sAliasArchivo);
 			logger.info("aliasArchivoTemporal *** " + sAliasTemporal);
