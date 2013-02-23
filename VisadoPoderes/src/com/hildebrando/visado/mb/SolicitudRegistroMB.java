@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 
 import org.apache.log4j.Logger;
@@ -50,6 +51,7 @@ import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
+import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsParametros;
@@ -134,6 +136,10 @@ public class SolicitudRegistroMB {
 	private UploadedFile file;
 	private String sMonedaImporteGlobal;  
 	
+	private String pathCliente="D:/Escaneados";
+	private String documentosLeer="";
+	private String documentosLeidos="";
+	
 	/*private boolean boleanoMensajeInfoGeneral=true;
 	private boolean boleanoMensajeApoderdantePoderdante=true;
 	private boolean boleanoMensajeOperacionesBancarias=true;
@@ -176,10 +182,13 @@ public class SolicitudRegistroMB {
 		selectedTipoDocumento = new TiivsTipoSolicDocumento();
 		mapSolicitudes=new HashMap<Integer, TiivsSolicitudOperban>();
 		
-		this.cadenaEscanerFinal = this.prepararURLEscaneo();
+		this.cadenaEscanerFinal = this.prepararURLEscaneo();	
+		
+		
+		this.pathCliente = obtenerRutaDocumentosEscaneados();
 
-	}
-
+	}	
+	
 	public void eliminarPersona() {
 		logger.info("**************************** eliminarPersona ****************************");
 		logger.info(objTiivsPersonaCapturado.getCodPer());
@@ -271,6 +280,25 @@ public class SolicitudRegistroMB {
 			logger.info("Error al cargar el listado de documentos por tipo de soliciitud");
 			ex.printStackTrace();
 		}
+		
+		this.documentosLeer = armaListaDocumentos(lstDocumentosXTipoSolTemp);
+		logger.info("Documentos a Leer:" + this.documentosLeer);		
+		
+	}
+	
+	public String armaListaDocumentos (List<TiivsTipoSolicDocumento> lstDocumentosXTipoSolTemp){
+		String sResult = "";		
+		StringBuilder sb = new StringBuilder(); 
+		for(TiivsTipoSolicDocumento doc : lstDocumentosXTipoSolTemp){
+			if(sb.length()>1){
+				sb.append(",");
+			}			
+			sb.append(doc.getTiivsDocumento().getNombre());
+			sb.append(".");
+			sb.append(doc.getTiivsDocumento().getFormato());			
+		}
+		sResult = sb.toString();
+		return sResult;
 	}
 
 	public void actualizarListadoDocumentos() {
@@ -280,12 +308,16 @@ public class SolicitudRegistroMB {
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 
 		for (TiivsTipoSolicDocumento s : lstTipoSolicitudDocumentos) {
+			String nombreCorto = s.getTiivsDocumento().getNombre();
+			String formato = s.getTiivsDocumento().getFormato();
 			if (s.getObligatorio()!=null && s.getObligatorio().equals("1") ){
-				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId().getCodDoc(),
-						s.getTiivsDocumento().getDescripcion(), true + "", "",""));
-			} else {				
-				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId().getCodDoc(),
-						s.getTiivsDocumento().getDescripcion(), false + "", "",""));
+				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId()
+						.getCodDoc(), s.getTiivsDocumento().getDescripcion(),
+						true + "", "", "", nombreCorto, formato));
+			} else {								
+				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId()
+						.getCodDoc(), s.getTiivsDocumento().getDescripcion(),
+						false + "", "", "", nombreCorto, formato));
 			}
 		}
 
@@ -848,7 +880,7 @@ public class SolicitudRegistroMB {
 			DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO(
 					objAnexo.getId().getCodDoc(),
 					ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS, false + "",
-					sAlias, sAliasTemporal); 
+					sAlias, sAliasTemporal, "", "");
 			lstdocumentos.add(doc);
 			return;
 		}
@@ -983,8 +1015,9 @@ public class SolicitudRegistroMB {
 		// Para el llenado del listado (listBox)
 		int i = 0;
 		for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
-			if (s.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {
-				this.lstTipoSolicitudDocumentos.add(i, s);
+			if (s.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {				
+				this.lstTipoSolicitudDocumentos.add(s);				
+				//this.lstTipoSolicitudDocumentos.add(i,s);											
 				break;
 			}
 			i++;
@@ -1003,6 +1036,51 @@ public class SolicitudRegistroMB {
 			}			
 		}
 		
+	}
+	
+	public void actualizarDocumentosXTipoSolicitud(ActionEvent ae){		
+		logger.info("*****************actualizarDocumentosXTipoSolicitud*****************");
+		
+		logger.info("documentos Leidos: " + documentosLeidos);		
+		String []aDocumentos = documentosLeidos.split(",");
+		String nombreDoc = "";
+		
+		//Actualiza lista de documentos
+		for(String documento : aDocumentos){
+			logger.info("Buscando coincidencias para:" + documento);
+			if(!documento.trim().isEmpty()){
+				nombreDoc = documento.substring(0, documento.lastIndexOf("."));			
+				
+				//Agregar a listado de documentos tabla documentos
+				for(DocumentoTipoSolicitudDTO doc : lstdocumentos){
+					logger.info("nombreDoc = doc.getItem():" + nombreDoc + "=" + doc.getNombreCorto());
+					if(doc.getNombreCorto().equals(nombreDoc)){
+						doc.setAlias(documento);
+						logger.info("actualizo nombre documento:" + doc.getAlias());
+						
+						//agregar a lista de anexos de la solicitud
+						TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
+						objAnexo.setId(new TiivsAnexoSolicitudId(null, doc.getItem()));
+						objAnexo.setAliasArchivo(doc.getAlias());
+						objAnexo.setAliasTemporal("");
+						lstAnexoSolicitud.add(objAnexo);
+												
+						//Actualiza lstTipoSolicitudDocumentos (listBox de documentos)		
+						for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
+							if (s.getId().getCodDoc().equals(objAnexo.getId().getCodDoc())) {
+								this.lstTipoSolicitudDocumentos.remove(s);
+								break;
+							}
+						}												
+					}
+				}										
+			}
+		}			
+		
+		
+		logger.info("(Tabla) lstdocumentos tamaño:" + lstdocumentos.size());
+		logger.info("(Anexos)lstAnexoSolicitud tamaño:" + lstdocumentos.size());
+		logger.info("(Combo) lstTipoSolicitudDocumentos tamaño:" + lstdocumentos.size());
 	}
 	
 
@@ -1834,6 +1912,18 @@ public class SolicitudRegistroMB {
 		fileToDelete = null;
 		aliasFilesToDelete = new ArrayList<String>();		
 	}
+	
+	public String obtenerRutaDocumentosEscaneados(){
+		if(this.getCombosMB()!=null){
+			TiivsMultitabla multi = this.getCombosMB().getRowFromMultiTabla(
+					ConstantesVisado.CODIGO_MULTITABLA_PARAM_ESCANER,
+					ConstantesVisado.CODIGO_CAMPO_PARAM_ESCANER);
+			if(multi!=null){
+				return multi.getValor1();
+			}
+		}
+		return null;
+	}
 
 	public List<TiivsMultitabla> getLstMultitabla() {
 		return lstMultitabla;
@@ -2137,6 +2227,8 @@ public class SolicitudRegistroMB {
 	public void setCadenaEscanerFinal(String cadenaEscanerFinal) {
 		this.cadenaEscanerFinal = cadenaEscanerFinal;
 	}
+	
+	
 
 	/*public boolean isbBooleanPopupTipoCambio() {
 		return bBooleanPopupTipoCambio;
@@ -2144,7 +2236,7 @@ public class SolicitudRegistroMB {
 
 	public void setbBooleanPopupTipoCambio(boolean bBooleanPopupTipoCambio) {
 		this.bBooleanPopupTipoCambio = bBooleanPopupTipoCambio;
-	}*/
+	}*/	
 
 	public String getUbicacionTemporal() {
 		return ubicacionTemporal;
@@ -2195,6 +2287,24 @@ public class SolicitudRegistroMB {
 	public void setBoleanoMensajeDocumentos(boolean boleanoMensajeDocumentos) {
 		this.boleanoMensajeDocumentos = boleanoMensajeDocumentos;
 	}*/
+	
+	
+	public String getPathCliente() {
+		return pathCliente;
+	}
+
+	public String getDocumentosLeer() {
+		return documentosLeer;
+	}
+
+	public String getDocumentosLeidos() {
+		return documentosLeidos;
+	}
+
+	public void setDocumentosLeidos(String documentosLeidos) {
+		this.documentosLeidos = documentosLeidos;
+	}
+	
 	
 	
 
