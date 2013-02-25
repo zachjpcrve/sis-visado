@@ -517,10 +517,13 @@ public class ConsultarSolicitudMB {
 		List<TiivsMiembro> lstAbogadosMiembro = combosMB.getLstAbogados();
 		lstAbogados = new ArrayList<TiivsMiembro>();
 		for (TiivsMiembro x : lstAbogadosMiembro) {
+			if(x.getEstudio()!=null){
 			if (x.getEstudio().trim().equals(e.getNewValue())) {
 				lstAbogados.add(x);
 			}
-
+			}else{
+				logger.info("El estudio del Abogado es nulll");
+			}
 		}
 	}
 
