@@ -673,9 +673,12 @@ public class ConsultarSolicitudMB {
 					List<TiivsMiembro> lstAbogadosMiembro = combosMB.getLstAbogados();
 					lstAbogados = new ArrayList<TiivsMiembro>();
 					for (TiivsMiembro x : lstAbogadosMiembro) {
-						
+						if(x.getEstudio()!=null){
 						if (x.getEstudio().trim().equals(this.solicitudRegistrarT.getTiivsEstudio().getCodEstudio())) {
 							lstAbogados.add(x);
+						}
+						}else{
+							logger.info("LA SOLICITUD NO TIENE UN ESTUDIO ASIGNADO");
 						}
 				}
 					}
@@ -1004,7 +1007,7 @@ public class ConsultarSolicitudMB {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "unused" })
 	public void agregarNiveles(TiivsSolicitud solicitud) throws Exception 
 	{
 		logger.info("*********************************** agregarNiveles ********************************************");
@@ -1019,17 +1022,20 @@ public class ConsultarSolicitudMB {
             		 filtro.add(Restrictions.eq("moneda",ConstantesVisado.MONEDAS.COD_SOLES));
             		 filtro.addOrder(Order.asc("codNiv"));
 			List<TiivsNivel> lstNiveles = service.buscarDinamico(filtro);
-			logger.info("************** lstNiveles T_T : " +lstNiveles.size());
+			logger.info("************** lstNiveles  : " +lstNiveles.size());
 			logger.info("************** solicitud.getImporte(): " +solicitud.getImporte());
 			logger.info("************** lstNiveles.get(0).getRangoInicio() : " +lstNiveles.get(0).getRangoInicio());
 
 			if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) 
 			{
 				logger.info("a" + lstNiveles.get(0).getDesNiv());
-
+				 System.out.println("a"+ lstNiveles.get(0).getDesNiv());
+				 System.out.println("this.solicitudRegistrarT.getImporte() !"+ this.solicitudRegistrarT.getImporte());
+				 System.out.println("lstNiveles.get(lstNiveles.size() - 1).getRangoFin() !"+ lstNiveles.get(lstNiveles.size() - 1).getRangoFin());
 				if (this.solicitudRegistrarT.getImporte() > lstNiveles.get(lstNiveles.size() - 1).getRangoFin()) 
-				{
+				{    logger.info("DATA INCONCISTENTE, EL RANGO FINAL , NO DEBE SER MENOR AL RANGO DE INICIO ..... ¬¬ !!! " );
 					 System.out.println("c");
+					 lstCodNivel=null;
 				} else {
 					 System.out.println("d");
 					for (TiivsNivel x : lstNiveles) 
@@ -1051,7 +1057,8 @@ public class ConsultarSolicitudMB {
 				logger.info("a" + lstNiveles.get(0).getDesNiv());
 
 				if (this.solicitudRegistrarT.getImporte() > lstNiveles.get(lstNiveles.size() - 1).getRangoFin()) {
-					// System.out.println("c");
+					 logger.info("DATA INCONCISTENTE, EL RANGO FINAL , NO DEBE SER MENOR AL RANGO DE INICIO ..... ¬¬ !!! " );
+					 
 				} else {
 					// System.out.println("d");
 					for (TiivsNivel x : lstNiveles) 
@@ -1073,7 +1080,8 @@ public class ConsultarSolicitudMB {
 
 				if (this.solicitudRegistrarT.getImporte() > lstNiveles
 						.get(lstNiveles.size() - 1).getRangoFin()) {
-					// System.out.println("c");
+					 logger.info("DATA INCONCISTENTE, EL RANGO FINAL , NO DEBE SER MENOR AL RANGO DE INICIO ..... ¬¬ !!! " );
+					 
 				} else {
 					// System.out.println("d");
 					for (TiivsNivel x : lstNiveles) {
@@ -1090,7 +1098,12 @@ public class ConsultarSolicitudMB {
 			logger.info("*********************************** NO ENTRO EN NINGUNO ********************************************");
 		}
 		logger.info(" ******************** Tamanio de la lista de Niveles *************** para probar: " + lstCodNivel.size());
-		if (lstCodNivel.size() > 0) {
+		if(lstCodNivel==null){
+			String mensaje = "DATA INCONCISTENTE, EL RANGO FINAL , NO DEBE SER MENOR AL RANGO DE INICIO.";
+			Utilitarios.mensajeInfo("INFO", mensaje);
+			
+		}
+		else if (lstCodNivel.size() > 0) {
 			// SI LA SOLICITUD SOPERA ALGUN NIVEL, ENTONCES PASA A ESTADO EN
 			// VERIFICACION A, SI NO A ACEPTADO
 			if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
