@@ -62,6 +62,7 @@ import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
+import com.hildebrando.visado.service.NivelService;
 
 @ManagedBean(name = "seguimientoMB")
 @SessionScoped
@@ -113,6 +114,7 @@ public class SeguimientoMB
 	private IILDPeUsuario usuario;
 	private String PERFIL_USUARIO ;
 	private boolean bloquearOficina=false;
+	private NivelService nivelService;
 	
 //	private List<TiivsHistSolicitud> lstHistorial;
 	private List<SeguimientoDTO> lstSeguimientoDTO;
@@ -134,7 +136,7 @@ public class SeguimientoMB
 		lstSolicitudesxOpeBan = new ArrayList<String>();
 		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
-				
+		nivelService = new NivelService();
 		oficina= new TiivsOficina1();
 		lstSolicitudesSelected = new ArrayList<String>();
 		lstHistorial = new ArrayList<TiivsHistSolicitud>();
@@ -543,7 +545,37 @@ public class SeguimientoMB
 			}
 			
 			tmpSol.setTxtOpeBan(cadena);
+			String cadNiveles = "";
 			
+			for (TiivsSolicitudNivel tmp: combosMB.getLstSolicNivel())
+			{
+				int j=0;
+				//int cont=1;
+				
+				if (tmp.getTiivsSolicitud().getCodSoli().trim().equals(tmpSol.getCodSoli()))
+				{
+					String nivel = nivelService.buscarNivelxCodigo(tmp.getCodNiv());
+					
+					if (cadNiveles.length()>0)
+					{
+						cadNiveles = cadNiveles.concat(",").concat(nivel);
+					}
+					else
+					{
+						cadNiveles = cadNiveles.concat(nivel);
+					}
+					
+				}
+			}
+			
+			if (cadNiveles.endsWith(","))
+			{
+				cadNiveles = cadNiveles.substring(0,cadNiveles.length()-1);
+			}
+			
+			logger.info("Niveles encontrados:" + cadNiveles);
+			
+			tmpSol.setTxtNivel(cadNiveles);
 			//Proceso para obtener los niveles de cada solicitud
 		/*	if (tmpSol.getImporte() != 0) 
 			{
@@ -2901,4 +2933,14 @@ public class SeguimientoMB
 			List<AgrupacionSimpleDto> lstAgrupacionSimpleDto) {
 		this.lstAgrupacionSimpleDto = lstAgrupacionSimpleDto;
 	}
+
+	public NivelService getNivelService() {
+		return nivelService;
+	}
+
+	public void setNivelService(NivelService nivelService) {
+		this.nivelService = nivelService;
+	}
+	
+	
 }

@@ -31,6 +31,7 @@ import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
+import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
 import com.hildebrando.visado.modelo.TiivsTiempo;
@@ -74,6 +75,7 @@ public class CombosMB {
 	private List<TiivsMiembro> lstAbogados;
 	private List<TiivsTipoSolicitud> lstTipoSolicitud;
 	private List<TiivsTiempo> lstTiempo;
+	private List<TiivsSolicitudNivel> lstSolicNivel;
 	
 	public CombosMB() {
 		lstMultitabla = new ArrayList<TiivsMultitabla>();
@@ -99,6 +101,7 @@ public class CombosMB {
 		lstTipoSolicitud=new ArrayList<TiivsTipoSolicitud>();
 		lstSolOperBan= new ArrayList<TiivsSolicitudOperban>();
 		lstAbogados=new ArrayList<TiivsMiembro>();
+		lstSolicNivel= new ArrayList<TiivsSolicitudNivel>();
 		
 		cargarMultitabla();
 		cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
@@ -397,7 +400,20 @@ public class CombosMB {
 			lstTiempo = tDAO.buscarDinamico(filtroTiempo);
 		} catch (Exception e) {
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de anio, mes y dia: "+e);
-		}		
+		}	
+		
+		// Carga data de Solicitud Nivel
+		GenericDao<TiivsSolicitudNivel, Object> solNivDAO = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroSolNivel = Busqueda.forClass(TiivsSolicitudNivel.class);
+		filtroSolNivel.createAlias("tiivsSolicitud", "solNiv");
+		filtroOperBan.addOrder(Order.asc("solNiv.codSoli"));
+		
+		try {
+			lstSolicNivel = solNivDAO.buscarDinamico(filtroSolNivel);
+			logger.debug("TAMANIOO DE LAS SOLICITUDES X NIVEL " +lstSolicNivel.size());
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de solicitudes x nivel: "+e);
+		}
 	}
 	
 	public TiivsMultitabla getRowFromMultiTabla(String codTabla, String codElem){
@@ -412,6 +428,8 @@ public class CombosMB {
 		}
 		return result;
 	}	
+	
+	
 
 	public void setLstMultitabla(List<TiivsMultitabla> lstMultitabla) {
 		this.lstMultitabla = lstMultitabla;
@@ -633,5 +651,13 @@ public class CombosMB {
 
 	public void setLstTiempo(List<TiivsTiempo> lstTiempo) {
 		this.lstTiempo = lstTiempo;
+	}
+
+	public List<TiivsSolicitudNivel> getLstSolicNivel() {
+		return lstSolicNivel;
+	}
+
+	public void setLstSolicNivel(List<TiivsSolicitudNivel> lstSolicNivel) {
+		this.lstSolicNivel = lstSolicNivel;
 	}
 }
