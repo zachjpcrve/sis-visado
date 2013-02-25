@@ -1619,18 +1619,13 @@ public class SolicitudRegistroMB {
 				}
 				
 			
-				//Busqueda filtro =Busqueda.forClass(TiivsSolicitud.class);
-				//TiivsSolicitud objExisteSoli= (TiivsSolicitud) service.buscarById(TiivsSolicitud.class, solicitudRegistrarT.getCodSoli());
-						//(filtro.add(Restrictions.eq("codSoli", solicitudRegistrarT.getCodSoli())));
-				//if(objExisteSoli!=null){
+				
 						SolicitudDao<TiivsPersona, Object> servicePK = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 						String sCodigoSol = servicePK.obtenerPKNuevaSolicitud();
 						logger.debug(" sCodigoSol " + sCodigoSol);
 						this.solicitudRegistrarT.setCodSoli(sCodigoSol);
 				
-				//}else{
-					//logger.info("");
-				//}
+				
 						for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 							  //x.setTiivsSolicitud(this.solicitudRegistrarT);
 							  x.getId().setCodSoli(sCodigoSol);
