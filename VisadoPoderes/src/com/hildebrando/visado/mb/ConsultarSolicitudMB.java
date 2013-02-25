@@ -1007,105 +1007,67 @@ public class ConsultarSolicitudMB {
 		}
 	}
 
+	 public List<String> ObtenerNivelesXMoneda(TiivsSolicitud solicitud) throws Exception {
+				logger.info("****************** MONEDA  ******************** " + solicitud.getMoneda());
+				GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+				List<String> lstCodNivel = new ArrayList<String>();
+				
+	            Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
+	            		 filtro.add(Restrictions.eq("moneda",solicitud.getMoneda().trim()));
+	            		 filtro.addOrder(Order.asc("codNiv"));
+	            		 
+				List<TiivsNivel> lstNiveles = service.buscarDinamico(filtro);
+				 for (TiivsNivel z : lstNiveles) {
+					 logger.info("************** NIVEL   : " +z.getCodNiv());
+				    }
+				logger.info("************** lstNiveles  : " +lstNiveles.size());
+				logger.info("************** solicitud.getImporte(): " +solicitud.getImporte());
+				logger.info("************** lstNiveles.get(0).getRangoInicio() : " +lstNiveles.get(0).getRangoInicio());
+
+				if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) 
+				{
+					logger.info("Paso Nivel " + lstNiveles.get(0).getDesNiv());
+					 System.out.println("a"+ lstNiveles.get(0).getDesNiv());
+					 System.out.println("this.solicitudRegistrarT.getImporte() !"+ this.solicitudRegistrarT.getImporte());
+					 System.out.println("lstNiveles.get(lstNiveles.size() - 1).getRangoFin() !"+ lstNiveles.get(lstNiveles.size() - 1).getRangoFin());
+					if (this.solicitudRegistrarT.getImporte() > lstNiveles.get(lstNiveles.size() - 1).getRangoFin()) 
+					{    logger.info("DATA INCONCISTENTE, EL RANGO FINAL DE TODOS LOS NIVELES , NO DEBE SER MENOR AL RANGO DE INICIO.");
+						 lstCodNivel=null;
+					} else {
+						for (TiivsNivel x : lstNiveles) 
+						{
+							if (solicitud.getImporte() >= x.getRangoInicio()) 
+							{
+								logger.info("NIVEL  " + x.getDesNiv());
+								lstCodNivel.add(x.getCodNiv());
+							}
+						}
+					}
+				}else{
+					logger.info("El importe supero el rango de inicio . " +lstNiveles.get(lstNiveles.size() - 1).getRangoFin());
+					lstCodNivel.add("SUPERO MAXIMO NIVEL");
+				}
+
+		return lstCodNivel;
+
+	 }
+	
 	@SuppressWarnings({ "unchecked", "unused" })
 	public void agregarNiveles(TiivsSolicitud solicitud) throws Exception 
 	{
 		logger.info("*********************************** agregarNiveles ********************************************");
-		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		List<String> lstCodNivel = new ArrayList<String>();
-		
-		if (solicitud.getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) 
-		{
-			logger.info("****************** COD_SOLES ******************** " + solicitud.getMoneda());
-
-            Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
-            		 filtro.add(Restrictions.eq("moneda",ConstantesVisado.MONEDAS.COD_SOLES));
-            		 filtro.addOrder(Order.asc("codNiv"));
-			List<TiivsNivel> lstNiveles = service.buscarDinamico(filtro);
-			logger.info("************** lstNiveles  : " +lstNiveles.size());
-			logger.info("************** solicitud.getImporte(): " +solicitud.getImporte());
-			logger.info("************** lstNiveles.get(0).getRangoInicio() : " +lstNiveles.get(0).getRangoInicio());
-
-			if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) 
-			{
-				logger.info("a" + lstNiveles.get(0).getDesNiv());
-				 System.out.println("a"+ lstNiveles.get(0).getDesNiv());
-				 System.out.println("this.solicitudRegistrarT.getImporte() !"+ this.solicitudRegistrarT.getImporte());
-				 System.out.println("lstNiveles.get(lstNiveles.size() - 1).getRangoFin() !"+ lstNiveles.get(lstNiveles.size() - 1).getRangoFin());
-				if (this.solicitudRegistrarT.getImporte() > lstNiveles.get(lstNiveles.size() - 1).getRangoFin()) 
-				{    logger.info("DATA INCONCISTENTE, EL RANGO FINAL , NO DEBE SER MENOR AL RANGO DE INICIO ..... ¬¬ !!! " );
-					 System.out.println("c");
-					 lstCodNivel=null;
-				} else {
-					 System.out.println("d");
-					for (TiivsNivel x : lstNiveles) 
-					{
-						if (solicitud.getImporte() >= x.getRangoInicio()) 
-						{
-							logger.info("g " + x.getDesNiv());
-							lstCodNivel.add(x.getCodNiv());
-						}
-					}
-				}
-			}
-
-		} else if (solicitud.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) {
-			logger.info("*********************************** COD_DOLAR ********************************************");
-			List<TiivsNivel> lstNiveles = service.buscarDinamico(Busqueda
-					.forClass(TiivsNivel.class).add(Restrictions.eq("moneda",ConstantesVisado.MONEDAS.COD_DOLAR)));
-			if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) {
-				logger.info("a" + lstNiveles.get(0).getDesNiv());
-
-				if (this.solicitudRegistrarT.getImporte() > lstNiveles.get(lstNiveles.size() - 1).getRangoFin()) {
-					 logger.info("DATA INCONCISTENTE, EL RANGO FINAL , NO DEBE SER MENOR AL RANGO DE INICIO ..... ¬¬ !!! " );
-					 
-				} else {
-					// System.out.println("d");
-					for (TiivsNivel x : lstNiveles) 
-					{
-						if (solicitud.getImporte() >= x.getRangoInicio()) 
-						{
-							logger.info("g " + x.getDesNiv());
-							lstCodNivel.add(x.getCodNiv());
-						}
-					}
-				}
-			}
-		} else if (solicitud.getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_EUROS)) {
-			logger.info("*********************************** COD_EUROS ********************************************");
-			List<TiivsNivel> lstNiveles = service.buscarDinamico(Busqueda
-					.forClass(TiivsNivel.class).add(Restrictions.eq("moneda",ConstantesVisado.MONEDAS.COD_EUROS)));
-			if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) {
-				logger.info("a" + lstNiveles.get(0).getDesNiv());
-
-				if (this.solicitudRegistrarT.getImporte() > lstNiveles
-						.get(lstNiveles.size() - 1).getRangoFin()) {
-					 logger.info("DATA INCONCISTENTE, EL RANGO FINAL , NO DEBE SER MENOR AL RANGO DE INICIO ..... ¬¬ !!! " );
-					 
-				} else {
-					// System.out.println("d");
-					for (TiivsNivel x : lstNiveles) {
-						if (solicitud.getImporte() >= x.getRangoInicio()) {
-							logger.info("g " + x.getDesNiv());
-							lstCodNivel.add(x.getCodNiv());
-
-						}
-
-					}
-				}
-			}
-		} else {
-			logger.info("*********************************** NO ENTRO EN NINGUNO ********************************************");
-		}
-		logger.info(" ******************** Tamanio de la lista de Niveles *************** para probar: " + lstCodNivel.size());
+		lstCodNivel=ObtenerNivelesXMoneda(solicitud);
+				logger.info(" ******************** Tamanio de la lista de Niveles *************** para probar: " + lstCodNivel.size());
 		if(lstCodNivel==null){
-			String mensaje = "DATA INCONCISTENTE, EL RANGO FINAL , NO DEBE SER MENOR AL RANGO DE INICIO.";
+			String mensaje = "DATA INCONCISTENTE, EL RANGO FINAL DE TODOS LOS NIVELES , NO DEBE SER MENOR AL RANGO DE INICIO.";
 			Utilitarios.mensajeInfo("INFO", mensaje);
 			
 		}
 		else if (lstCodNivel.size() > 0) {
 			// SI LA SOLICITUD SOPERA ALGUN NIVEL, ENTONCES PASA A ESTADO EN
 			// VERIFICACION A, SI NO A ACEPTADO
+			logger.info(" ******  LA SOLICITUD SUPERO ALGUN NIVEL, ENTONCES PASA A ESTADO EN  VERIFICACION A, SI NO A ACEPTADO");
 			if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
 				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
 			} else if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
@@ -1120,32 +1082,25 @@ public class ConsultarSolicitudMB {
 				soliNivel.setCodNiv(codNivel);
 				soliNivel.setEstadoSolicitud(solicitud.getEstado());
 				soliNivel.setTiivsSolicitud(solicitud);
-				soliNivel
-						.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
+				soliNivel.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
 				soliNivel.setUsuarioRegistro(usuario.getUID());
 				soliNivel.setFechaRegistro(new Timestamp(Calendar.DATE));
 				serviceSolicitud.insertar(soliNivel);
 			}
 
 		} else if (lstCodNivel.size() == 0) {
-			if (this.valorDictamen.trim().equals(
-					ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
-				solicitud
-						.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
-			} else if (this.valorDictamen.trim().equals(
-					ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
-				solicitud
-						.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
+			if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
+				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+			} else if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
+				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
 			}
 		}
 
 	}
 
 	public void registrarHistorial(TiivsSolicitud solicitud) throws Exception {
-		SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit
-				.getApplicationContext().getBean("solicitudEspDao");
-		String numeroMovimiento = serviceMaxMovi
-				.obtenerMaximoMovimiento(solicitud.getCodSoli());
+		SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+		String numeroMovimiento = serviceMaxMovi.obtenerMaximoMovimiento(solicitud.getCodSoli());
 
 		int num = 0;
 		if (!numeroMovimiento.equals("")) {
