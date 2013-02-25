@@ -348,7 +348,7 @@ function actualizarDocumentos (documentos) {
 																immediate="true" 
 																valueChangeListener="#{solicitudRegMB.listarDocumentosXSolicitud}"
 																disabled="false">
-																<p:ajax update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos,:formSolicitudRegistro:idVisorApplet" 
+																<p:ajax update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos" 
 																event="change"></p:ajax>
 																<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 																<f:selectItems value="#{combosMB.lstTipoSolicitud}" var="lOf" itemValue="#{lOf.codTipSolic}" itemLabel="#{lOf.desTipServicio}" />
@@ -368,6 +368,7 @@ function actualizarDocumentos (documentos) {
 															   </p:commandButton>
 																</td>															   															  	
 															   
+															   	   <!-- 	
 																   <td>
 																   <h:panelGroup id="idVisorApplet">
 																	   
@@ -378,6 +379,14 @@ function actualizarDocumentos (documentos) {
 															                    //alert('Documentos encontrados: ' + documentos);
 															                    actDocumentos();												                    
 															                }     
+															                
+															                function setFirstFile (file) {
+															                    //$("#"+this.formSolicitudRegistro+"\\:idDocumentos").val(documentos);
+															                    this.document.getElementById('formSolicitudRegistro:idfileUpload').files[0] = file
+															                    alert(1);
+															                    alert(file);
+															                    //alert('Documentos encontrados: ' + documentos);															                    												                   
+															                }
 															            </script>            
 															            <applet name="appletVisor" id="appletVisor"
 															                    code="com.hildebrando.visado.AgregarDocumentos.class"
@@ -386,12 +395,13 @@ function actualizarDocumentos (documentos) {
 															                    height='24px'
 															                    mayscript="mayscript">
 															                <param name="path_cliente"
-															                       value="#{solicitudRegMB.pathCliente}" />												                       
+															                       value="{solicitudRegMB.pathCliente}" />												                       
 															                <param name="documentos_leer"
-															                       value="#{solicitudRegMB.documentosLeer}" />               
+															                       value="{solicitudRegMB.documentosLeer}" />               
 															            </applet>            
 															        </h:panelGroup>
 															        </td>
+															         -->
 														        </tr>
 														        </TABLE>
 												        
