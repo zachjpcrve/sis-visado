@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -45,7 +46,7 @@ public class NivelService {
 		Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
 
 		try {
-			niveles = service.buscarDinamico(filtro);
+			niveles = service.buscarDinamico(filtro.addOrder(Order.asc("id")));
 			
 			for (int i = 0; i < niveles.size(); i++) {
 				if(niveles.get(i).getEstado().intValue() == 1){
@@ -98,7 +99,7 @@ public class NivelService {
 			GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit
 					.getApplicationContext().getBean("genericoDao");
 			
-			service.insertar(tiivsNivel);
+			service.insertarMerge(tiivsNivel);
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -164,13 +165,31 @@ public class NivelService {
 
 			List<E> parse = new ArrayList<E>();
 			parse = (List<E>) rInicio;
-			contador = (Integer) parse.get(0);
+			contador = Integer.parseInt(parse.get(0).toString());
+		//	contador = (Integer) parse.get(0);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("NivelService : obtenerSecuencialNivel: "
 					+ ex.getLocalizedMessage());
 		}
 		return contador;
+	}
+
+	public List<TiivsNivel> editarNivel(String codNiv) {
+		logger.info("NivelService : editarNivel");
+		List<TiivsNivel> editarNiv = new ArrayList<TiivsNivel>();
+		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
+		
+		try{
+			editarNiv = service.buscarDinamico(filtro.add(Restrictions.eq("codNiv", codNiv)));
+		}catch(Exception ex){
+			ex.printStackTrace();
+			logger.error("NivelService : editarNivel: "
+					+ ex.getLocalizedMessage());
+		}
+		return editarNiv;
 	}
 
 
