@@ -324,6 +324,37 @@ public class ConstantesVisado {
 			public static final String COLUMNA_RECAUDACION_FALLECIDA_X1 ="Recaudacion";
 			public static final String COLUMNA_RECAUDACION_RECAUDACION_TOTAL ="Recaudacion Total";
 		}
+		
+	///****************************Constantes para Reporte de Liquidacion Mensual Estudio Externo********************************
+		
+		public static final String TITULO_REPORTE_RPT_LIQUIDACION="LIQUIDACION MENSUAL - ESTUDIO EXTERNO";
+		
+		static public class COLUMNAS_RPT_LIQUIDACION{
+			public static final String COLUMNA_ANIO = "Año";
+			public static final String COLUMNA_MES = "Mes";
+			public static final String COLUMNA_ESTUDIO = "Estudio";
+			public static final String COLUMNA_PLAZO = "Plazo";
+			public static final String COLUMNA_NRO_1 = "1";
+			public static final String COLUMNA_NRO_2 = "2";
+			public static final String COLUMNA_NRO_3 = "3";
+			public static final String COLUMNA_NRO_4 = "4";
+			public static final String COLUMNA_NRO_5 = "5";
+			public static final String COLUMNA_NRO_6 = "6";
+			public static final String COLUMNA_NRO_7 = "7";
+			public static final String COLUMNA_NRO_8 = "8";
+			public static final String COLUMNA_NRO_9 = "9";
+			public static final String COLUMNA_NRO_10 = "10";
+			public static final String COLUMNA_NRO_11 = "11";
+			public static final String COLUMNA_NRO_12 = "12";
+			public static final String COLUMNA_NRO_13 = "13";
+			public static final String COLUMNA_NRO_14 = "14";
+			public static final String COLUMNA_NRO_15 = "15";
+			public static final String COLUMNA_NRO_16 = "16";
+			public static final String COLUMNA_NRO_17 = "17";
+			public static final String COLUMNA_NRO_18 = "18";
+			public static final String COLUMNA_NRO_19 = "19";
+			public static final String COLUMNA_NRO_20 = "20";
+		}
 	
 	//**************************************************************************************************************************
 	
