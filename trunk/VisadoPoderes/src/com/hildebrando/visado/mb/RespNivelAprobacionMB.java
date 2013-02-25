@@ -150,13 +150,15 @@ public class RespNivelAprobacionMB {
 		
 		GenericDao<TiivsGrupo, Object> serviceTiivsGrupo = (GenericDao<TiivsGrupo, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		
+		filtroTiivsMiembroNivel.createAlias("tiivsMiembro", "miemb");
 		
 		if(miembroNivelDto.getRegistro() != ""){
-			filtroTiivsMiembroNivel.add(Restrictions.eq("tiivsMiembro.codMiembro", miembroNivelDto.getRegistro()));
+			filtroTiivsMiembroNivel.add(Restrictions.eq("miemb.codMiembro", miembroNivelDto.getRegistro()));
 		}
 		
 		if(miembroNivelDto.getDescripcion() != ""){
-			filtroTiivsMiembroNivel.add(Restrictions.eq("tiivsMiembro.descripcion", miembroNivelDto.getDescripcion()));
+			
+			filtroTiivsMiembroNivel.add(Restrictions.eq("miemb.descripcion", miembroNivelDto.getDescripcion()));
 		}
 		
 		if(miembroNivelDto.getEstado() != "" && miembroNivelDto.getEstado().compareTo("-1") != 0 ){
@@ -167,7 +169,8 @@ public class RespNivelAprobacionMB {
 		if(miembroNivelDto.getCodGrupo() != "" && miembroNivelDto.getCodGrupo().compareTo("-1") != 0 ){
 			
 			Busqueda filtroTiivsMiembro= Busqueda.forClass(TiivsMiembro.class);
-			filtroTiivsMiembro.add(Restrictions.eq("tiivsGrupo.codGrupo", miembroNivelDto.getCodGrupo()));
+			filtroTiivsMiembro.createAlias("tiivsGrupo", "grupo");
+			filtroTiivsMiembro.add(Restrictions.eq("grupo.codGrupo", miembroNivelDto.getCodGrupo()));
 			List<TiivsMiembro> miembros= new ArrayList<TiivsMiembro>();
 			try {
 				miembros = serviceTiivsMiembro.buscarDinamico(filtroTiivsMiembro);
@@ -180,7 +183,7 @@ public class RespNivelAprobacionMB {
 			}
 			
 			
-			filtroTiivsMiembroNivel.add(Restrictions.in("tiivsMiembro.codMiembro", codigos));
+			filtroTiivsMiembroNivel.add(Restrictions.in("miemb.codMiembro", codigos));
 		}
 		
 		if(miembroNivelDto.getCodNivel() != "" && miembroNivelDto.getCodNivel().compareTo("-1") != 0 ){
