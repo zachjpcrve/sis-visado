@@ -1636,9 +1636,11 @@ public class SolicitudRegistroMB {
 					  x.setTiivsSolicitud(this.solicitudRegistrarT);
 					  x.getId().setCodSoli(this.solicitudRegistrarT.getCodSoli());
 				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
+					  logger.info("b.getTiivsPersona().getCodPer()  " +b.getTiivsPersona().getCodPer());
 					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
 					     b.setCodSoli(this.solicitudRegistrarT.getCodSoli());
 					     b.setTiivsPersona(null);
+					     logger.info("objPersonaRetorno.getCodPer() " +objPersonaRetorno.getCodPer());
 					     b.setCodPer(objPersonaRetorno.getCodPer());
 					     serviceAgru.insertar(b);
 					     } 
