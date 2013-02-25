@@ -359,6 +359,72 @@ public class Utilitarios {
 		cell.setCellStyle(cellStyle);
 	}
 	
+	public static CellStyle definirSoloEstiloCelda(Workbook wb, short halign, short valign, boolean booBorde,
+			boolean booCabecera, boolean booFiltrosBus, Short color) 
+	{
+		//CreationHelper ch = wb.getCreationHelper();
+		//Cell cell = row.createCell(column);
+		//cell.setCellValue(ch.createRichTextString(strContenido));
+		CellStyle cellStyle = wb.createCellStyle();
+		cellStyle.setAlignment(halign);
+		cellStyle.setVerticalAlignment(valign);
+		
+		if (booBorde) 
+		{
+			cellStyle.setBorderBottom(HSSFCellStyle.BORDER_DOTTED);
+			cellStyle.setBottomBorderColor((short) 8);
+			cellStyle.setBorderLeft(HSSFCellStyle.BORDER_DOTTED);
+			cellStyle.setLeftBorderColor((short) 8);
+			cellStyle.setBorderRight(HSSFCellStyle.BORDER_DOTTED);
+			cellStyle.setRightBorderColor((short) 8);
+			cellStyle.setBorderTop(HSSFCellStyle.BORDER_DOTTED);
+			cellStyle.setTopBorderColor((short) 8);
+		}
+		
+		if (booCabecera) 
+		{
+			cellStyle.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setBottomBorderColor((short) 8);
+			cellStyle.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setLeftBorderColor((short) 8);
+			cellStyle.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setRightBorderColor((short) 8);
+			cellStyle.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setTopBorderColor((short) 8);
+
+			cellStyle.setFillForegroundColor(color);
+			
+			Font cellFont = wb.createFont();
+			cellFont.setColor((short) HSSFColor.WHITE.index);
+			cellStyle.setFont(cellFont);
+			
+			cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		}
+		
+		if (booFiltrosBus) 
+		{
+			cellStyle.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setBottomBorderColor((short) 8);
+			cellStyle.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setLeftBorderColor((short) 8);
+			cellStyle.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setRightBorderColor((short) 8);
+			cellStyle.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
+			cellStyle.setTopBorderColor((short) 8);
+			//cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		}
+		return cellStyle;
+		//cell.setCellStyle(cellStyle);
+	}
+	
+	public static void SetearEstiloCelda(Workbook wb,Row row, int column,String strContenido,CellStyle cellStyle)
+	{
+		CreationHelper ch = wb.getCreationHelper();
+		Cell cell = row.createCell(column);
+		cell.setCellValue(ch.createRichTextString(strContenido));
+		cell.setCellStyle(cellStyle);
+	}
+	
 	public static String formatoFechaSinHora(Date fecha) {
 
 		String fechaActualizacion = "";

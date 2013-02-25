@@ -354,6 +354,22 @@ public class ConstantesVisado {
 			public static final String COLUMNA_NRO_18 = "18";
 			public static final String COLUMNA_NRO_19 = "19";
 			public static final String COLUMNA_NRO_20 = "20";
+			public static final String COLUMNA_NRO_21 = "21";
+			public static final String COLUMNA_NRO_22 = "22";
+			public static final String COLUMNA_NRO_23 = "23";
+			public static final String COLUMNA_NRO_24 = "24";
+			public static final String COLUMNA_NRO_25 = "25";
+			public static final String COLUMNA_NRO_26 = "26";
+			public static final String COLUMNA_NRO_27 = "27";
+			public static final String COLUMNA_NRO_28 = "28";
+			public static final String COLUMNA_NRO_29 = "29";
+			public static final String COLUMNA_NRO_30 = "30";
+			public static final String COLUMNA_NRO_31 = "31";
+			public static final String COLUMNA_TOTAL_MES = "TOTAL MES";
+			public static final String COLUMNA_COSTO = "Costo";
+			public static final String COLUMNA_HONORARIOS = "Honorarios";
+			public static final String COLUMNA_IMPUESTO = "Impuesto";
+			public static final String COLUMNA_TOTAL = "Total";
 		}
 	
 	//**************************************************************************************************************************
