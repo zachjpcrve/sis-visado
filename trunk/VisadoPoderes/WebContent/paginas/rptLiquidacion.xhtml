@@ -21,7 +21,7 @@
 					<tr bordercolor="white">
 						<td><h:outputText styleClass="outputText" id="txtAnio" value="Anio"/></td>
 						<td>
-							<p:selectOneMenu id="somAnio" value="#{reportesMB.anio}" required="true">
+							<p:selectOneMenu id="somAnio" value="#{reportesMB.anio}" required="true" requiredMessage="Ingrese Año valido">
 								<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 								<f:selectItem itemLabel="2013" itemValue="1" />
 								<f:selectItem itemLabel="2014" itemValue="2" />
@@ -44,7 +44,7 @@
 					<tr bordercolor="white">
 						<td ><h:outputText styleClass="outputText" id="txtMes" value="Mes" /></td>
 						<td >
-							<p:selectOneMenu id="somMes" value="#{reportesMB.mes}" required="true">
+							<p:selectOneMenu id="somMes" value="#{reportesMB.mes}" required="true" requiredMessage="Ingrese mes valido">
 								<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 								<f:selectItem itemLabel="Enero" itemValue="1" />
 								<f:selectItem itemLabel="Febrero" itemValue="2" />
