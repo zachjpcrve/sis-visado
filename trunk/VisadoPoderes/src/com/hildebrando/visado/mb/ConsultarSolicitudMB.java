@@ -1015,8 +1015,10 @@ public class ConsultarSolicitudMB {
 		{
 			logger.info("****************** COD_SOLES ******************** " + solicitud.getMoneda());
 
-
-			List<TiivsNivel> lstNiveles = service.buscarDinamico(Busqueda.forClass(TiivsNivel.class).add(Restrictions.eq("moneda",ConstantesVisado.MONEDAS.COD_SOLES)));
+            Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
+            		 filtro.add(Restrictions.eq("moneda",ConstantesVisado.MONEDAS.COD_SOLES));
+            		 filtro.addOrder(Order.asc("codNiv"));
+			List<TiivsNivel> lstNiveles = service.buscarDinamico(filtro);
 			logger.info("************** lstNiveles T_T : " +lstNiveles.size());
 			logger.info("************** solicitud.getImporte(): " +solicitud.getImporte());
 			logger.info("************** lstNiveles.get(0).getRangoInicio() : " +lstNiveles.get(0).getRangoInicio());
