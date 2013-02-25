@@ -498,8 +498,6 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				for(int i=0;i<=ResultList.size()-1;i++)
 				{
 				    Object[] row =  (Object[]) ResultList.get(i);
-				    objLiqAT = new Liquidacion();
-				    objLiqFT = new Liquidacion();
 				    objAgrp = new AgrupacionPlazoDto();
 				    
 				    if (!row[0].toString().equals(estudio))
@@ -512,6 +510,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				    
 				    if (row[3].toString().toUpperCase().equals("A"))
 				    {
+				    	 objLiqAT = new Liquidacion();
+				    	 
 				    	 if (dia.equals("01"))
 				    	 {
 				    		 objLiqAT.setTotalDia1(Integer.valueOf(row[4].toString())); 
@@ -655,12 +655,17 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 						objLiqAT.setImpuesto(objLiqAT.getHonorarios()*impuesto);
 						objLiqAT.setTotal(objLiqAT.getHonorarios()+objLiqAT.getImpuesto());
 						
-						tmpListaAT.add(objLiqAT);
-						objAgrp.setLstSolAT(tmpListaAT);
+						if (sumaAT>0)
+						{
+							tmpListaAT.add(objLiqAT);
+							objAgrp.setLstSolAT(tmpListaAT);
+						}
+						
 				    }
 				    else
 				    {
-				    	if (dia.equals("01"))
+				    	 objLiqFT = new Liquidacion();
+				    	 if (dia.equals("01"))
 				    	 {
 				    		 objLiqFT.setTotalDia1(Integer.valueOf(row[4].toString())); 
 						 }
@@ -803,14 +808,16 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 						objLiqFT.setImpuesto(objLiqFT.getHonorarios()*impuesto);
 						objLiqFT.setTotal(objLiqFT.getHonorarios()+objLiqFT.getImpuesto());
 						
-						tmpListaFT.add(objLiqFT);
-						objAgrp.setLstSolFT(tmpListaFT);
+						if (sumaFT>0)
+						{
+							tmpListaFT.add(objLiqFT);
+							objAgrp.setLstSolFT(tmpListaFT);
+						}
 				    }
 				    
 				    //Agregar agrupacion
 				    String id = String.valueOf(i);
 				    objAgrp.setsId(id);
-				    
 				    
 				    tmpLista.add(objAgrp);
 				}
@@ -819,7 +826,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				logger.info("Tamanio Lista FT:" + tmpListaFT.size());
 				logger.info("Tamanio Lista:" + tmpLista.size());
 				
-				/*AgrupacionPlazoDto subTotales=new AgrupacionPlazoDto();
+				AgrupacionPlazoDto subTotales=new AgrupacionPlazoDto();
 				subTotales.setsId("");
 				subTotales.setEstudio("");
 				
@@ -854,168 +861,98 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				int totalDia29=0;
 				int totalDia30=0;
 				int totalDia31=0;
+				int totalMes=0;
+				double costo = 0.0;
+				double honorarios = 0.0;
+				double imp = 0.0;
+				double total = 0.0;
 				
 				for (AgrupacionPlazoDto tmp: tmpLista)
 				{
-					for (Liquidacion tmpAT: tmp.getLstSolAT())
+					if (tmp.getLstSolAT()!=null)
+					{
+						for (Liquidacion tmpAT: tmp.getLstSolAT())
+						{
+							totalDia1 += tmpAT.getTotalDia1();
+							totalDia2 += tmpAT.getTotalDia2(); 
+							totalDia3 += tmpAT.getTotalDia3(); 
+							totalDia4 += tmpAT.getTotalDia4();
+							totalDia5 += tmpAT.getTotalDia5();
+							totalDia6 += tmpAT.getTotalDia6(); 
+							totalDia7 += tmpAT.getTotalDia7(); 
+							totalDia8 += tmpAT.getTotalDia8(); 
+							totalDia9 += tmpAT.getTotalDia9(); 
+							totalDia10 += tmpAT.getTotalDia10();
+							totalDia11 += tmpAT.getTotalDia11();
+							totalDia12 += tmpAT.getTotalDia12();
+							totalDia13 += tmpAT.getTotalDia13();
+							totalDia14 += tmpAT.getTotalDia14();
+							totalDia15 += tmpAT.getTotalDia15();
+							totalDia16 += tmpAT.getTotalDia16();
+							totalDia17 += tmpAT.getTotalDia17();
+							totalDia18 += tmpAT.getTotalDia18();
+							totalDia19 += tmpAT.getTotalDia19();
+							totalDia20 += tmpAT.getTotalDia20();
+							totalDia21 += tmpAT.getTotalDia21();
+							totalDia22 += tmpAT.getTotalDia22();
+							totalDia23 += tmpAT.getTotalDia23();
+							totalDia24 += tmpAT.getTotalDia24();
+							totalDia25 += tmpAT.getTotalDia25();
+							totalDia26 += tmpAT.getTotalDia26();
+							totalDia27 += tmpAT.getTotalDia27();
+							totalDia28 += tmpAT.getTotalDia28();
+							totalDia29 += tmpAT.getTotalDia29();
+							totalDia30 += tmpAT.getTotalDia30();
+							totalDia31 += tmpAT.getTotalDia31();
+							totalMes += tmpAT.getTotalMes();
+							costo += tmpAT.getCosto();
+							honorarios += tmpAT.getHonorarios() ;
+							imp += tmpAT.getImpuesto() ;
+							total += tmpAT.getTotal() ;
+						}	
+					}
+					
+					if (tmp.getLstSolFT()!=null)
 					{
 						for (Liquidacion tmpFT: tmp.getLstSolFT())
 						{
-							if (tmpAT.getTotalDia1()>0 && tmpFT.getTotalDia1()>0)
-							{
-								totalDia1 = tmpAT.getTotalDia1() + tmpFT.getTotalDia1();
-							}
-							
-							if (tmpAT.getTotalDia2()>0 && tmpFT.getTotalDia2()>0)
-							{
-								totalDia2 = tmpAT.getTotalDia2() + tmpFT.getTotalDia2();
-							}
-							
-							if (tmpAT.getTotalDia3()>0 && tmpFT.getTotalDia3()>0)
-							{
-								totalDia3 = tmpAT.getTotalDia3() + tmpFT.getTotalDia3();
-							}
-							
-							if (tmpAT.getTotalDia4()>0 && tmpFT.getTotalDia4()>0)
-							{
-								totalDia4 = tmpAT.getTotalDia4() + tmpFT.getTotalDia4();
-							}
-							
-							if (tmpAT.getTotalDia5()>0 && tmpFT.getTotalDia5()>0)
-							{
-								totalDia5 = tmpAT.getTotalDia5() + tmpFT.getTotalDia5();
-							}
-							
-							if (tmpAT.getTotalDia6()>0 && tmpFT.getTotalDia6()>0)
-							{
-								totalDia6 = tmpAT.getTotalDia6() + tmpFT.getTotalDia6();
-							}
-							
-							if (tmpAT.getTotalDia7()>0 && tmpFT.getTotalDia7()>0)
-							{
-								totalDia7 = tmpAT.getTotalDia7() + tmpFT.getTotalDia7();
-							}
-							
-							if (tmpAT.getTotalDia8()>0 && tmpFT.getTotalDia8()>0)
-							{
-								totalDia8 = tmpAT.getTotalDia8() + tmpFT.getTotalDia8();
-							}
-							
-							if (tmpAT.getTotalDia9()>0 && tmpFT.getTotalDia9()>0)
-							{
-								totalDia9 = tmpAT.getTotalDia9() + tmpFT.getTotalDia9();
-							}
-							
-							if (tmpAT.getTotalDia10()>0 && tmpFT.getTotalDia10()>0)
-							{
-								totalDia10 = tmpAT.getTotalDia10() + tmpFT.getTotalDia10();
-							}
-							
-							if (tmpAT.getTotalDia11()>0 && tmpFT.getTotalDia11()>0)
-							{
-								totalDia11 = tmpAT.getTotalDia11() + tmpFT.getTotalDia11();
-							}
-							
-							if (tmpAT.getTotalDia12()>0 && tmpFT.getTotalDia12()>0)
-							{
-								totalDia12 = tmpAT.getTotalDia12() + tmpFT.getTotalDia12();
-							}
-							
-							if (tmpAT.getTotalDia13()>0 && tmpFT.getTotalDia13()>0)
-							{
-								totalDia13 = tmpAT.getTotalDia13() + tmpFT.getTotalDia13();
-							}
-							
-							if (tmpAT.getTotalDia14()>0 && tmpFT.getTotalDia14()>0)
-							{
-								totalDia14 = tmpAT.getTotalDia14() + tmpFT.getTotalDia14();
-							}
-							
-							if (tmpAT.getTotalDia15()>0 && tmpFT.getTotalDia15()>0)
-							{
-								totalDia15 = tmpAT.getTotalDia15() + tmpFT.getTotalDia15();
-							}
-							
-							if (tmpAT.getTotalDia16()>0 && tmpFT.getTotalDia16()>0)
-							{
-								totalDia16 = tmpAT.getTotalDia16() + tmpFT.getTotalDia16();
-							}
-							
-							if (tmpAT.getTotalDia17()>0 && tmpFT.getTotalDia17()>0)
-							{
-								totalDia17 = tmpAT.getTotalDia17() + tmpFT.getTotalDia17();
-							}
-							
-							if (tmpAT.getTotalDia18()>0 && tmpFT.getTotalDia18()>0)
-							{
-								totalDia18 = tmpAT.getTotalDia18() + tmpFT.getTotalDia18();
-							}
-							
-							if (tmpAT.getTotalDia19()>0 && tmpFT.getTotalDia19()>0)
-							{
-								totalDia19 = tmpAT.getTotalDia19() + tmpFT.getTotalDia19();
-							}
-							
-							if (tmpAT.getTotalDia20()>0 && tmpFT.getTotalDia20()>0)
-							{
-								totalDia20 = tmpAT.getTotalDia20() + tmpFT.getTotalDia20();
-							}
-							
-							if (tmpAT.getTotalDia21()>0 && tmpFT.getTotalDia21()>0)
-							{
-								totalDia21 = tmpAT.getTotalDia21() + tmpFT.getTotalDia21();
-							}
-							
-							if (tmpAT.getTotalDia22()>0 && tmpFT.getTotalDia22()>0)
-							{
-								totalDia22 = tmpAT.getTotalDia22() + tmpFT.getTotalDia22();
-							}
-							
-							if (tmpAT.getTotalDia23()>0 && tmpFT.getTotalDia23()>0)
-							{
-								totalDia23 = tmpAT.getTotalDia23() + tmpFT.getTotalDia23();
-							}
-							
-							if (tmpAT.getTotalDia24()>0 && tmpFT.getTotalDia24()>0)
-							{
-								totalDia24 = tmpAT.getTotalDia24() + tmpFT.getTotalDia24();
-							}
-							
-							if (tmpAT.getTotalDia25()>0 && tmpFT.getTotalDia25()>0)
-							{
-								totalDia25 = tmpAT.getTotalDia25() + tmpFT.getTotalDia25();
-							}
-							
-							if (tmpAT.getTotalDia26()>0 && tmpFT.getTotalDia26()>0)
-							{
-								totalDia26 = tmpAT.getTotalDia26() + tmpFT.getTotalDia26();
-							}
-							
-							if (tmpAT.getTotalDia27()>0 && tmpFT.getTotalDia27()>0)
-							{
-								totalDia27 = tmpAT.getTotalDia27() + tmpFT.getTotalDia27();
-							}
-							
-							if (tmpAT.getTotalDia28()>0 && tmpFT.getTotalDia28()>0)
-							{
-								totalDia28 = tmpAT.getTotalDia28() + tmpFT.getTotalDia28();
-							}
-							
-							if (tmpAT.getTotalDia29()>0 && tmpFT.getTotalDia29()>0)
-							{
-								totalDia29 = tmpAT.getTotalDia29() + tmpFT.getTotalDia29();
-							}
-							
-							if (tmpAT.getTotalDia30()>0 && tmpFT.getTotalDia30()>0)
-							{
-								totalDia30 = tmpAT.getTotalDia30() + tmpFT.getTotalDia30();
-							}
-							
-							if (tmpAT.getTotalDia31()>0 && tmpFT.getTotalDia31()>0)
-							{
-								totalDia31 = tmpAT.getTotalDia31() + tmpFT.getTotalDia31();
-							}
-						}					
+							totalDia1 += tmpFT.getTotalDia1(); 
+							totalDia2 += tmpFT.getTotalDia2();
+							totalDia3 += tmpFT.getTotalDia3();
+							totalDia4 += tmpFT.getTotalDia4();
+							totalDia5 += tmpFT.getTotalDia5();
+							totalDia6 += tmpFT.getTotalDia6();
+							totalDia7 += tmpFT.getTotalDia7();
+							totalDia8 += tmpFT.getTotalDia8();
+							totalDia9 += tmpFT.getTotalDia9();
+							totalDia10 += tmpFT.getTotalDia10();
+							totalDia11 += tmpFT.getTotalDia11();
+							totalDia12 += tmpFT.getTotalDia12();
+							totalDia13 += tmpFT.getTotalDia13();
+							totalDia14 += tmpFT.getTotalDia14();
+							totalDia15 += tmpFT.getTotalDia15();
+							totalDia16 += tmpFT.getTotalDia16();
+							totalDia17 += tmpFT.getTotalDia17();
+							totalDia18 += tmpFT.getTotalDia18();
+							totalDia19 += tmpFT.getTotalDia19();
+							totalDia20 += tmpFT.getTotalDia20();
+							totalDia21 += tmpFT.getTotalDia21();
+							totalDia22 += tmpFT.getTotalDia22();
+							totalDia23 += tmpFT.getTotalDia23();
+							totalDia24 += tmpFT.getTotalDia24();
+							totalDia25 += tmpFT.getTotalDia25();
+							totalDia26 += tmpFT.getTotalDia26();
+							totalDia27 += tmpFT.getTotalDia27();
+							totalDia28 += tmpFT.getTotalDia28();
+							totalDia29 += tmpFT.getTotalDia29();
+							totalDia30 += tmpFT.getTotalDia30();
+							totalDia31 += tmpFT.getTotalDia31();
+							totalMes += tmpFT.getTotalMes();
+							costo += tmpFT.getCosto();
+							honorarios += tmpFT.getHonorarios();
+							imp += tmpFT.getImpuesto();
+							total += tmpFT.getTotal();
+						}
 					}
 				}
 				
@@ -1050,9 +987,14 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				subTotales.setSubTotalDia29(totalDia29);
 				subTotales.setSubTotalDia30(totalDia30);
 				subTotales.setSubTotalDia31(totalDia31);
+				subTotales.setSubTotalMes(totalMes);
+				subTotales.setCosto(costo);
+				subTotales.setHonorarios(honorarios);
+				subTotales.setImpuesto(imp);
+				subTotales.setgTotal(total);				
 				
 				tmpLista.add(subTotales);
-				logger.info("Tamanio Lista Final:" + tmpLista.size());*/
+				logger.info("Tamanio Lista Final:" + tmpLista.size());
 			}
 		}
 		

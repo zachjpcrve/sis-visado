@@ -138,6 +138,7 @@ public class ReportesMB
 		generarNombreArchivoEstadoSolicitud();
 		generarNombreArchivoTipoServicio();
 		generarNombreRecaudacion();
+		generarNombreLiquidacion();
 		
 		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + lstSolicitudesOficina.size() + ConstantesVisado.MSG_REGISTROS,lstSolicitudesOficina.size());
 		if (lstSolicitudesOficina.size()>0)
@@ -296,7 +297,7 @@ public class ReportesMB
 	
 	public void exportarExcelLiquidacion()
 	{
-		//rptLiquidacion();
+		rptLiquidacion();
 	}
 	
 	public void exportarExcelSolicitudTipoServ()
@@ -1005,6 +1006,10 @@ public class ReportesMB
 		setNombreRecaudacion("Recaudacion_"	+ Utilitarios.obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + Utilitarios.obtenerHoraArchivoExcel());
 	}
 	
+	public void generarNombreLiquidacion()
+	{
+		setNombreLiquidacion("Liquidacion_"	+ Utilitarios.obtenerFechaArchivoExcel() + ConstantesVisado.UNDERLINE + Utilitarios.obtenerHoraArchivoExcel());
+	}
 	/*public void postProcessXLS(Object document) 
 	{
 		HSSFWorkbook wb = (HSSFWorkbook) document;
@@ -1351,18 +1356,19 @@ public class ReportesMB
 			// creo una nueva fila
 			Row trow = sheet.createRow((short) 0);
 			Utilitarios.crearTituloCell(wb, trow, 4, CellStyle.ALIGN_CENTER, CellStyle.VERTICAL_CENTER, ConstantesVisado.TITULO_REPORTE_RPT_RECAUDACION,12);
+			sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, 16));
 						
 			//Se crea la leyenda de quien genero el archivo y la hora respectiva
-			Row rowG = sheet.createRow((short) 1);
-			Utilitarios.crearCell(wb, rowG, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false, false,false,HSSFColor.DARK_BLUE.index);
-			Utilitarios.crearCell(wb, rowG, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerGenerador(),  true, false,true,HSSFColor.DARK_BLUE.index);
+			Row rowG = sheet.createRow((short) 2);
+			Utilitarios.crearCell(wb, rowG, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false, false,false,HSSFColor.DARK_BLUE.index);
+			Utilitarios.crearCell(wb, rowG, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerGenerador(),  true, false,true,HSSFColor.DARK_BLUE.index);
 			
-			Row rowG1 = sheet.createRow((short) 2);
-			Utilitarios.crearCell(wb, rowG1, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false, false,false,HSSFColor.DARK_BLUE.index);
-			Utilitarios.crearCell(wb, rowG1, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.obtenerFechaHoraActual(),  true, false,true,HSSFColor.DARK_BLUE.index);
+			Row rowG1 = sheet.createRow((short) 3);
+			Utilitarios.crearCell(wb, rowG1, 16, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false, false,false,HSSFColor.DARK_BLUE.index);
+			Utilitarios.crearCell(wb, rowG1, 17, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.obtenerFechaHoraActual(),  true, false,true,HSSFColor.DARK_BLUE.index);
 			
 			//Genera celdas con los filtros de busqueda
-			Row row2 = sheet.createRow((short) 4);
+			Row row2 = sheet.createRow((short) 5);
 			
 			Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_ANIO, false, false,false,HSSFColor.DARK_BLUE.index);
 			
@@ -1422,8 +1428,10 @@ public class ReportesMB
 			}	
 			
 			Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, cadEstudio, true, false,true,HSSFColor.DARK_BLUE.index);
+			//sheet.addMergedRegion(new CellRangeAddress(5, 5, 8, 11));
 			
-			Row row3 = sheet.createRow((short) 6);
+			Row row3 = sheet.createRow((short) 7);
+			Utilitarios.crearCell(wb, row3, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_MES, false, false,false,HSSFColor.DARK_BLUE.index);
 			//Busqueda por mes
 			int mes=0;
 			
@@ -1431,7 +1439,12 @@ public class ReportesMB
 			{
 				mes = getMes();
 			}		
-			Utilitarios.crearCell(wb, row3, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(mes), true, false,true,HSSFColor.DARK_BLUE.index);
+			Utilitarios.crearCell(wb, row3, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,Utilitarios.buscarMesxCodigo(mes), true, false,true,HSSFColor.DARK_BLUE.index);
+			
+			Row rowST = sheet.createRow((short) 9);
+			Utilitarios.crearCell(wb, rowST, 1, CellStyle.ALIGN_CENTER,
+					CellStyle.VERTICAL_CENTER, Utilitarios.buscarMesxCodigo(mes) + ConstantesVisado.ESPACIO_BLANCO + 
+					String.valueOf(pAnio), false, false,false,HSSFColor.DARK_BLUE.index);
 			
 			//Generando la estructura de la tabla de resultados
 			if (lstLiquidacion.size()==0)
@@ -1444,134 +1457,187 @@ public class ReportesMB
 				Row rowT = sheet.createRow((short) 10);
 
 				// Creo las celdas de mi fila, se puede poner un diseño a la celda
-				Utilitarios.crearCell(wb, rowT, 0, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_ESTUDIO, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 1, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_PLAZO, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_ESTUDIO, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 2, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_1, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_PLAZO, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 3, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_2, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_1, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 4, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_3, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_2, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 5, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_4, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_3, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 6, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_5, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_4, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 7, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_6, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_5, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 8, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_7, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_6, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 9, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_8, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_7, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 10, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_9, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_8, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 11, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_10, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_9, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 12, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_11, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_10, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 13, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_12, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_11, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 14, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_13, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_12, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 15, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_14, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_13, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 16, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_15, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_14, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 17, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_16, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_15, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 18, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_17, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_16, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 19, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_18, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_17, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 20, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_19, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_18, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 21, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_20, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_19, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 22, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_21, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_20, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 23, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_22, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_21, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 24, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_23, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_22, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 25, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_24, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_23, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 26, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_25, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_24, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 27, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_26, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_25, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 28, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_27, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_26, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 29, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_28, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_27, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 30, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_29, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_28, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 31, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_30, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_29, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 32, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_31, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_30, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 33, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_TOTAL_MES, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_31, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 34, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_COSTO, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_TOTAL_MES, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 35, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_HONORARIOS, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_COSTO, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 36, CellStyle.ALIGN_CENTER,
-						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_IMPUESTO, true, true,false,HSSFColor.DARK_BLUE.index);
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_HONORARIOS, true, true,false,HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCell(wb, rowT, 37, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_IMPUESTO, true, true,false,HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCell(wb, rowT, 38, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER, ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_TOTAL, true, true,false,HSSFColor.DARK_BLUE.index);
 				
 				int numReg=11;
 				String plazo="";
+				
+				CellStyle estilo = Utilitarios.definirSoloEstiloCelda(wb, HSSFCellStyle.ALIGN_LEFT,HSSFCellStyle.VERTICAL_CENTER, true, false,true,HSSFColor.DARK_BLUE.index);
 				
 				for (AgrupacionPlazoDto tmp: lstLiquidacion)
 				{
 					Row row = sheet.createRow((short) numReg);
 					
 					//Columna Estudio en Excel
-					Utilitarios.crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getEstudio(),true, false,true,HSSFColor.DARK_BLUE.index);
+					Utilitarios.SetearEstiloCelda(wb,row, 1, tmp.getEstudio(),estilo);
 					
-					for (Liquidacion liqAT: tmp.getLstSolAT())
+					//Utilitarios.crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getEstudio(),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					if (tmp.getLstSolAT()!=null)
 					{
-						plazo="A tiempo";
-						Utilitarios.crearCell(wb, row, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,plazo,true, false,true,HSSFColor.DARK_BLUE.index);
-						
-						if (liqAT.getTotalDia1()>0)
+						for (Liquidacion liqAT: tmp.getLstSolAT())
 						{
-							Utilitarios.crearCell(wb, row, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(liqAT.getTotalDia1()),true, false,true,HSSFColor.DARK_BLUE.index);
-						}
-						
-						if (liqAT.getTotalDia2()>0)
-						{
-							Utilitarios.crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(liqAT.getTotalDia2()),true, false,true,HSSFColor.DARK_BLUE.index);
-						}
-						
-						if (liqAT.getTotalDia3()>0)
-						{
-							Utilitarios.crearCell(wb, row, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(liqAT.getTotalDia3()),true, false,true,HSSFColor.DARK_BLUE.index);
-						}
-						
-						if (liqAT.getTotalDia4()>0)
-						{
-							Utilitarios.crearCell(wb, row,5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(liqAT.getTotalDia4()),true, false,true,HSSFColor.DARK_BLUE.index);
-						}
-						
-						if (liqAT.getTotalDia5()>0)
-						{
-							Utilitarios.crearCell(wb, row,6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(liqAT.getTotalDia5()),true, false,true,HSSFColor.DARK_BLUE.index);
-						}
-						
-						if (liqAT.getTotalDia6()>0)
-						{
-							Utilitarios.crearCell(wb, row,7, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(liqAT.getTotalDia6()),true, false,true,HSSFColor.DARK_BLUE.index);
-						}
-						
-						if (liqAT.getTotalDia7()>0)
-						{
-							Utilitarios.crearCell(wb, row,8, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,String.valueOf(liqAT.getTotalDia7()),true, false,true,HSSFColor.DARK_BLUE.index);
+							plazo="A tiempo";
+							Utilitarios.SetearEstiloCelda(wb,row, 2,plazo,estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 3,String.valueOf(liqAT.getTotalDia1()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 4,String.valueOf(liqAT.getTotalDia2()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 5,String.valueOf(liqAT.getTotalDia3()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 6,String.valueOf(liqAT.getTotalDia4()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 7,String.valueOf(liqAT.getTotalDia5()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 8,String.valueOf(liqAT.getTotalDia6()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 9,String.valueOf(liqAT.getTotalDia7()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 10,String.valueOf(liqAT.getTotalDia8()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 11,String.valueOf(liqAT.getTotalDia9()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 12,String.valueOf(liqAT.getTotalDia10()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 13,String.valueOf(liqAT.getTotalDia11()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 14,String.valueOf(liqAT.getTotalDia12()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 15,String.valueOf(liqAT.getTotalDia13()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 16,String.valueOf(liqAT.getTotalDia14()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 17,String.valueOf(liqAT.getTotalDia15()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 18,String.valueOf(liqAT.getTotalDia16()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 19,String.valueOf(liqAT.getTotalDia17()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 20,String.valueOf(liqAT.getTotalDia18()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 21,String.valueOf(liqAT.getTotalDia19()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 22,String.valueOf(liqAT.getTotalDia20()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 23,String.valueOf(liqAT.getTotalDia21()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 24,String.valueOf(liqAT.getTotalDia22()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 25,String.valueOf(liqAT.getTotalDia23()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 26,String.valueOf(liqAT.getTotalDia24()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 27,String.valueOf(liqAT.getTotalDia25()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 28,String.valueOf(liqAT.getTotalDia26()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 29,String.valueOf(liqAT.getTotalDia27()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 30,String.valueOf(liqAT.getTotalDia28()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 31,String.valueOf(liqAT.getTotalDia29()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 32,String.valueOf(liqAT.getTotalDia30()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 33,String.valueOf(liqAT.getTotalDia31()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 34,String.valueOf(liqAT.getTotalMes()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 35,String.valueOf(liqAT.getCosto()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 36,String.valueOf(liqAT.getHonorarios()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 37,String.valueOf(liqAT.getImpuesto()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 38,String.valueOf(liqAT.getTotal()),estilo);
 						}
 					}
-					
+										
+					if (tmp.getLstSolFT()!=null)
+					{
+						for (Liquidacion liqFT: tmp.getLstSolFT())
+						{
+							plazo="Retraso";
+							Utilitarios.SetearEstiloCelda(wb,row, 2,plazo,estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 3,String.valueOf(liqFT.getTotalDia1()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 4,String.valueOf(liqFT.getTotalDia2()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 5,String.valueOf(liqFT.getTotalDia3()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 6,String.valueOf(liqFT.getTotalDia4()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 7,String.valueOf(liqFT.getTotalDia5()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 8,String.valueOf(liqFT.getTotalDia6()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 9,String.valueOf(liqFT.getTotalDia7()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 10,String.valueOf(liqFT.getTotalDia8()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 11,String.valueOf(liqFT.getTotalDia9()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 12,String.valueOf(liqFT.getTotalDia10()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 13,String.valueOf(liqFT.getTotalDia11()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 14,String.valueOf(liqFT.getTotalDia12()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 15,String.valueOf(liqFT.getTotalDia13()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 16,String.valueOf(liqFT.getTotalDia14()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 17,String.valueOf(liqFT.getTotalDia15()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 18,String.valueOf(liqFT.getTotalDia16()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 19,String.valueOf(liqFT.getTotalDia17()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 20,String.valueOf(liqFT.getTotalDia18()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 21,String.valueOf(liqFT.getTotalDia19()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 22,String.valueOf(liqFT.getTotalDia20()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 23,String.valueOf(liqFT.getTotalDia21()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 24,String.valueOf(liqFT.getTotalDia22()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 25,String.valueOf(liqFT.getTotalDia23()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 26,String.valueOf(liqFT.getTotalDia24()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 27,String.valueOf(liqFT.getTotalDia25()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 28,String.valueOf(liqFT.getTotalDia26()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 29,String.valueOf(liqFT.getTotalDia27()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 30,String.valueOf(liqFT.getTotalDia28()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 31,String.valueOf(liqFT.getTotalDia29()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 32,String.valueOf(liqFT.getTotalDia30()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 33,String.valueOf(liqFT.getTotalDia31()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 34,String.valueOf(liqFT.getTotalMes()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 35,String.valueOf(liqFT.getCosto()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 36,String.valueOf(liqFT.getHonorarios()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 37,String.valueOf(liqFT.getImpuesto()),estilo);
+							Utilitarios.SetearEstiloCelda(wb,row, 38,String.valueOf(liqFT.getTotal()),estilo);
+						}
+					}
+										
 					numReg++;
 				}
 			}
