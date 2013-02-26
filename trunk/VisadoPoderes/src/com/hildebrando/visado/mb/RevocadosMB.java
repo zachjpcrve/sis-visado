@@ -726,11 +726,11 @@ public class RevocadosMB {
 		
 	}
 	
-	public int getMaximoCodAgrupacion(){
-		
+	public int getMaximoCodAgrupacion()
+	{
+		int maximo=0;
 		List<TiivsRevocado> tiivsrevocados= new ArrayList<TiivsRevocado>();
-		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
 		
 		try {
@@ -738,20 +738,27 @@ public class RevocadosMB {
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en getMaximoCodAgrupacion :"+e);
 		}
-		if(tiivsrevocados!=null){
+		
+		if(tiivsrevocados!=null)
+		{
 			logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"tiivsrevocados es ["+tiivsrevocados.size()+"] .");
-			if(tiivsrevocados.size()>0){
+			if(tiivsrevocados.size()>0)
+			{
 				for(int i=0; i<=tiivsrevocados.size();i++){
 					logger.debug("i["+i+"]->codAgrupacion: "+tiivsrevocados.get(i).getCodAgrup());
 				}
-			}else{
+				maximo=tiivsrevocados.get(0).getCodAgrup();
+			}
+			else
+			{
 				logger.debug(ConstantesVisado.MENSAJE.NO_RESULTADOS+"para tiivsrevocados. ");
 			}
 		}
+		
 		//Se esta asumiendo que siempre habrá un resultado y estan obteniendo
 		//el indice:get(0). Si no hay algun resultado la excepcion generada es IndexOutOfBoundsException ...
-		return tiivsrevocados.get(0).getCodAgrup();
-		
+		//Se controla la excepcion 
+		return maximo;
 	}
 	
 	public void eliminarRevocado() {
