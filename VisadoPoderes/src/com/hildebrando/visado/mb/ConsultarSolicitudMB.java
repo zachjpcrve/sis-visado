@@ -489,7 +489,17 @@ public class ConsultarSolicitudMB {
 				lstComboDictamen.add(new ComboDto(
 						ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02,
 						ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02));
-			}
+			} else if (this.solicitudRegistrarT
+				.getEstado()
+				.trim()
+				.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
+				lstComboDictamen.add(new ComboDto(
+						ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02,
+						ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02));
+				lstComboDictamen.add(new ComboDto(
+						ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02,
+						ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02));
+		}
 		}
 	}
 
