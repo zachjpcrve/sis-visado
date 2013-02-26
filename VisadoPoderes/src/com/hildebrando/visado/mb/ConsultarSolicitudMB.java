@@ -900,6 +900,8 @@ public class ConsultarSolicitudMB {
 				this.bSeccionComentario = true;
 				this.bSeccionAccion = true;
 				this.bMostrarCartaRechazo = false;
+				this.bSeccionDictaminar = true;
+				this.bSeccionAccion=false;
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				this.bSeccionComentario = true;
 				this.bSeccionAccion = true;
