@@ -74,7 +74,8 @@ public class SolicitudRegistroMB {
 	private List<ComboDto> lstClasificacionPersona;
 	@ManagedProperty(value = "#{pdfViewerMB}")
 	private PDFViewerMB pdfViewerMB;
-
+	@ManagedProperty(value = "#{registroUtilesMB}")
+	private SeguimientoMB seguimientoMB;	
 	@ManagedProperty(value = "#{registroUtilesMB}")
 	RegistroUtilesMB objRegistroUtilesMB;
 	private TiivsSolicitudOperban objSolicBancaria;
@@ -1586,6 +1587,8 @@ public class SolicitudRegistroMB {
 		 boleanoMensajeDocumentos=false;*/
 		String mensaje = "";
 		String redirect = "";
+		boolean actualizarBandeja=false;
+		
 		logger.info("*********************** registrarSolicitud ************************");
 		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -1616,6 +1619,7 @@ public class SolicitudRegistroMB {
 				if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 					this.enviarSolicitudSSJJ();
 					logger.info(solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
+					
 				}
 				
 			
@@ -1679,9 +1683,11 @@ public class SolicitudRegistroMB {
 					if (this.sEstadoSolicitud.equals("BORRADOR")) {
 						mensaje = "Se registro correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
 						Utilitarios.mensajeInfo("INFO", mensaje);
+						actualizarBandeja=true;
 					} else {
 						mensaje = "Se envio a SSJJ correctamente la Solicitud con codigo : "+ objResultado.getCodSoli();
 						Utilitarios.mensajeInfo("INFO", mensaje);
+						actualizarBandeja=true;
 					}
 					
 				} else {
@@ -1705,8 +1711,10 @@ public class SolicitudRegistroMB {
 					a.obtenerSolicitud();
 					redirect = "/faces/paginas/solicitudEdicion.xhtml";
 				}*/
-				
-				
+				if (actualizarBandeja)
+				{
+					this.seguimientoMB.busquedaSolicitudes();
+				}
 				
 			}
 		} catch (Exception e) {
