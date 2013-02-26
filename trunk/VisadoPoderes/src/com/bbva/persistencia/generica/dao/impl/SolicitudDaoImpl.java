@@ -21,6 +21,7 @@ import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
+import com.hildebrando.visado.dto.AgrupacionDelegadosDto;
 import com.hildebrando.visado.dto.AgrupacionPlazoDto;
 import com.hildebrando.visado.modelo.Liquidacion;
 import com.hildebrando.visado.modelo.RecaudacionTipoServ;
@@ -61,7 +62,88 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		return codigoSol;
 
 	}
+	
+	 
+		@SuppressWarnings("unchecked")
+		public List<AgrupacionDelegadosDto>  obtenerPKDelegados() throws Exception {
 
+			final String sql = "select  distinct n.grupo,ni.des_niv "+
+	 " from tiivs_miembro_nivel n, tiivs_miembro m, tiivs_nivel ni "+
+	" where  n.cod_miembro = m.cod_miembro "+
+	  " and  n.cod_niv = ni.cod_niv "+
+	 " and n.tipo_rol = 'D' "+
+	 " group by n.grupo,ni.des_niv,n.cod_miembro, m.descripcion "+
+	  " order by n.grupo,ni.des_niv asc";
+
+			
+			List ResultList = (ArrayList<AgrupacionDelegadosDto>) getHibernateTemplate().execute(
+					new HibernateCallback() {
+						public List doInHibernate(Session session)
+								throws HibernateException {
+							SQLQuery sq = session.createSQLQuery(sql);
+							return sq.list();
+						}
+					});
+			
+			AgrupacionDelegadosDto nuevo=null;
+			List<AgrupacionDelegadosDto> tmpLista=new ArrayList<AgrupacionDelegadosDto>();
+			if (ResultList.size() > 0) {
+				for(int i=0;i<=ResultList.size()-1;i++)
+				{
+				    Object[] row =  (Object[]) ResultList.get(i);
+				    nuevo = new AgrupacionDelegadosDto();
+				    
+				    nuevo.setGrupo(row[0].toString());
+				    nuevo.setDes_niv(row[1].toString());
+				    
+				  
+				    tmpLista.add(nuevo);
+				}
+			}
+			return tmpLista;
+
+		}
+	@SuppressWarnings("unchecked")
+	public List<AgrupacionDelegadosDto>  obtenerDelegados() throws Exception {
+
+		final String sql = "select  n.grupo,ni.des_niv, n.cod_miembro, m.descripcion "
+				+ " from tiivs_miembro_nivel n, tiivs_miembro m, tiivs_nivel ni  "
+				+ " where  "
+				+ "n.cod_miembro = m.cod_miembro  "
+				+ "  and  n.cod_niv = ni.cod_niv "
+				+ " and n.tipo_rol = 'D' "
+				+ " group by n.grupo,ni.des_niv,n.cod_miembro, m.descripcion "
+				+ "  order by n.grupo,ni.des_niv asc";
+
+		
+		List ResultList = (ArrayList<AgrupacionDelegadosDto>) getHibernateTemplate().execute(
+				new HibernateCallback() {
+					public List doInHibernate(Session session)
+							throws HibernateException {
+						SQLQuery sq = session.createSQLQuery(sql);
+						return sq.list();
+					}
+				});
+		
+		AgrupacionDelegadosDto nuevo=null;
+		List<AgrupacionDelegadosDto> tmpLista=new ArrayList<AgrupacionDelegadosDto>();
+		if (ResultList.size() > 0) {
+			for(int i=0;i<=ResultList.size()-1;i++)
+			{
+			    Object[] row =  (Object[]) ResultList.get(i);
+			    nuevo = new AgrupacionDelegadosDto();
+			    
+			    nuevo.setGrupo(row[0].toString());
+			    nuevo.setDes_niv(row[1].toString());
+			    nuevo.setCod_miembro(row[2].toString());
+			    nuevo.setDescripcion(row[3].toString());
+			  
+			    tmpLista.add(nuevo);
+			}
+		}
+		return tmpLista;
+
+	}
 	@SuppressWarnings("unchecked")
 	public String obtenerMaximoMovimiento(String codSolicitud) throws Exception {
 
