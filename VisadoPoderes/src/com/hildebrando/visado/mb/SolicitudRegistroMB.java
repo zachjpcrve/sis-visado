@@ -99,7 +99,7 @@ public class SolicitudRegistroMB {
 	private TiivsSolicitudOperban objSolicitudOperacionCapturadoOld =new TiivsSolicitudOperban();
 	private String sCodDocumento;
 	private TiivsTipoSolicDocumento selectedTipoDocumento;
-	private DocumentoTipoSolicitudDTO selectedDocumentoDTO;
+	private DocumentoTipoSolicitudDTO selectedDocumentoDTO = new DocumentoTipoSolicitudDTO();
 	private String ubicacionTemporal;
 	private List<String> aliasFilesToDelete;
 
@@ -134,7 +134,7 @@ public class SolicitudRegistroMB {
 	private UploadedFile file;
 	private String sMonedaImporteGlobal;  
 	
-	private String pathCliente="D:/Escaneados";
+	//private String pathCliente="D:/Escaneados";
 	private String documentosLeer="";
 	private String documentosLeidos="";
 	
@@ -181,9 +181,7 @@ public class SolicitudRegistroMB {
 		mapSolicitudes=new HashMap<Integer, TiivsSolicitudOperban>();
 		
 		this.cadenaEscanerFinal = this.prepararURLEscaneo();	
-		
-		
-		this.pathCliente = obtenerRutaDocumentosEscaneados();
+						
 
 	}	
 	
@@ -980,16 +978,20 @@ public class SolicitudRegistroMB {
 			lstAnexoSolicitud.add(objAnexo);
 			this.actualizarListaDocumentosXTipo(objAnexo);
 
-			for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
-				if (tipoSoli.getCodTipSolic().equals(iTipoSolicitud)) {
-					solicitudRegistrarT.setTiivsTipoSolicitud(tipoSoli);
-				}
-			}
+			establecerTipoSolicitud();
 			
 		}
 		
 		
 	
+	}
+	
+	private void establecerTipoSolicitud(){
+		for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
+			if (tipoSoli.getCodTipSolic().equals(iTipoSolicitud)) {
+				solicitudRegistrarT.setTiivsTipoSolicitud(tipoSoli);
+			}
+		}
 	}
 
 	public void quitarDocumentosXTipoSolicitud() {
@@ -1913,19 +1915,7 @@ public class SolicitudRegistroMB {
 		
 		fileToDelete = null;
 		aliasFilesToDelete = new ArrayList<String>();		
-	}
-	
-	public String obtenerRutaDocumentosEscaneados(){
-		if(this.getCombosMB()!=null){
-			TiivsMultitabla multi = this.getCombosMB().getRowFromMultiTabla(
-					ConstantesVisado.CODIGO_MULTITABLA_PARAM_ESCANER,
-					ConstantesVisado.CODIGO_CAMPO_PARAM_ESCANER);
-			if(multi!=null){
-				return multi.getValor1();
-			}
-		}
-		return null;
-	}
+	}		
 
 	public List<TiivsMultitabla> getLstMultitabla() {
 		return lstMultitabla;
@@ -2288,12 +2278,7 @@ public class SolicitudRegistroMB {
 
 	public void setBoleanoMensajeDocumentos(boolean boleanoMensajeDocumentos) {
 		this.boleanoMensajeDocumentos = boleanoMensajeDocumentos;
-	}*/
-	
-	
-	public String getPathCliente() {
-		return pathCliente;
-	}
+	}*/	
 
 	public String getDocumentosLeer() {
 		return documentosLeer;
