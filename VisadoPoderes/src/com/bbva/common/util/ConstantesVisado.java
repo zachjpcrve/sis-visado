@@ -483,5 +483,14 @@ public class ConstantesVisado {
 		public static final String NACIONAL = "N";
 		public static final String tablaferiado = "feriado";
 	}
+	static public class NIVELES{
+		public static final String SELEC_OPCION_CORRECTA = "Debe seleccionar una opción correcta ";
+		public static final String CAMBIO_EST_NO_PERMITIDO = "No se permite el cambio de estado ";
+		public static final String SOLICIT_SIN_NIVEL = "Solicitud no tiene nivel de evaluación ";
+		public static final String EVALUAC_REGISTRAD_OK = "Evaluación registrada correctamente ";
+		public static final String ACCION_NO_PERMITIDA = "Acción restringida para el usuario ";
+		public static final String YA_EXISTE_GRUP_EVAL_ACCION_NO_PERMIT = ACCION_NO_PERMITIDA+" ya existe un grupo evaluador";
+		
+	}
 }
 
