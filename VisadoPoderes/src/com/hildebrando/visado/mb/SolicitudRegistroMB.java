@@ -51,10 +51,8 @@ import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
-import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
-import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
@@ -63,7 +61,6 @@ import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperbanId;
 import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
 import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
-import com.hildebrando.visado.service.ClasificacionService;
 
 @ManagedBean(name = "solicitudRegMB")
 @SessionScoped
@@ -74,7 +71,7 @@ public class SolicitudRegistroMB {
 	private List<ComboDto> lstClasificacionPersona;
 	@ManagedProperty(value = "#{pdfViewerMB}")
 	private PDFViewerMB pdfViewerMB;
-	@ManagedProperty(value = "#{registroUtilesMB}")
+	@ManagedProperty(value = "#{seguimientoMB}")
 	private SeguimientoMB seguimientoMB;	
 	@ManagedProperty(value = "#{registroUtilesMB}")
 	RegistroUtilesMB objRegistroUtilesMB;
@@ -102,7 +99,7 @@ public class SolicitudRegistroMB {
 	private TiivsSolicitudOperban objSolicitudOperacionCapturadoOld =new TiivsSolicitudOperban();
 	private String sCodDocumento;
 	private TiivsTipoSolicDocumento selectedTipoDocumento;
-	private DocumentoTipoSolicitudDTO selectedDocumentoDTO = new DocumentoTipoSolicitudDTO();
+	private DocumentoTipoSolicitudDTO selectedDocumentoDTO;
 	private String ubicacionTemporal;
 	private List<String> aliasFilesToDelete;
 
@@ -137,7 +134,7 @@ public class SolicitudRegistroMB {
 	private UploadedFile file;
 	private String sMonedaImporteGlobal;  
 	
-	//private String pathCliente="D:/Escaneados";
+	private String pathCliente="D:/Escaneados";
 	private String documentosLeer="";
 	private String documentosLeidos="";
 	
@@ -186,7 +183,7 @@ public class SolicitudRegistroMB {
 		this.cadenaEscanerFinal = this.prepararURLEscaneo();	
 		
 		
-		//this.pathCliente = obtenerRutaDocumentosEscaneados();
+		this.pathCliente = obtenerRutaDocumentosEscaneados();
 
 	}	
 	
@@ -983,20 +980,16 @@ public class SolicitudRegistroMB {
 			lstAnexoSolicitud.add(objAnexo);
 			this.actualizarListaDocumentosXTipo(objAnexo);
 
-			establecerTipoSolicitud();
+			for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
+				if (tipoSoli.getCodTipSolic().equals(iTipoSolicitud)) {
+					solicitudRegistrarT.setTiivsTipoSolicitud(tipoSoli);
+				}
+			}
 			
 		}
 		
 		
 	
-	}
-	
-	private void establecerTipoSolicitud(){
-		for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
-			if (tipoSoli.getCodTipSolic().equals(iTipoSolicitud)) {
-				solicitudRegistrarT.setTiivsTipoSolicitud(tipoSoli);
-			}
-		}
 	}
 
 	public void quitarDocumentosXTipoSolicitud() {
@@ -1080,10 +1073,9 @@ public class SolicitudRegistroMB {
 					}
 				}										
 			}
-		}		
+		}			
 		
-		establecerTipoSolicitud();
-				
+		
 		logger.info("(Tabla) lstdocumentos tamaño:" + lstdocumentos.size());
 		logger.info("(Anexos)lstAnexoSolicitud tamaño:" + lstdocumentos.size());
 		logger.info("(Combo) lstTipoSolicitudDocumentos tamaño:" + lstdocumentos.size());
@@ -1921,7 +1913,19 @@ public class SolicitudRegistroMB {
 		
 		fileToDelete = null;
 		aliasFilesToDelete = new ArrayList<String>();		
-	}	
+	}
+	
+	public String obtenerRutaDocumentosEscaneados(){
+		if(this.getCombosMB()!=null){
+			TiivsMultitabla multi = this.getCombosMB().getRowFromMultiTabla(
+					ConstantesVisado.CODIGO_MULTITABLA_PARAM_ESCANER,
+					ConstantesVisado.CODIGO_CAMPO_PARAM_ESCANER);
+			if(multi!=null){
+				return multi.getValor1();
+			}
+		}
+		return null;
+	}
 
 	public List<TiivsMultitabla> getLstMultitabla() {
 		return lstMultitabla;
@@ -2285,6 +2289,11 @@ public class SolicitudRegistroMB {
 	public void setBoleanoMensajeDocumentos(boolean boleanoMensajeDocumentos) {
 		this.boleanoMensajeDocumentos = boleanoMensajeDocumentos;
 	}*/
+	
+	
+	public String getPathCliente() {
+		return pathCliente;
+	}
 
 	public String getDocumentosLeer() {
 		return documentosLeer;
@@ -2296,6 +2305,14 @@ public class SolicitudRegistroMB {
 
 	public void setDocumentosLeidos(String documentosLeidos) {
 		this.documentosLeidos = documentosLeidos;
+	}
+
+	public SeguimientoMB getSeguimientoMB() {
+		return seguimientoMB;
+	}
+
+	public void setSeguimientoMB(SeguimientoMB seguimientoMB) {
+		this.seguimientoMB = seguimientoMB;
 	}
 	
 	
