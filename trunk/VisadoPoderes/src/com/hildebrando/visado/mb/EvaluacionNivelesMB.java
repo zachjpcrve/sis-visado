@@ -23,6 +23,11 @@ import com.hildebrando.visado.modelo.TiivsMovimientoNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 
+/**
+ * Clase que se encarga de evaluar los niveles .. contiene metodos de registro, 
+ * verificacion de niveles, obtención de datos de delegados, etc
+ * @author 
+ * */
 
 public class EvaluacionNivelesMB {
 	public static Logger logger = Logger.getLogger(EvaluacionNivelesMB.class);
@@ -61,20 +66,20 @@ public class EvaluacionNivelesMB {
 		
 		if(!sCodigoEstadoNivel.equals(ConstantesVisado.ESTADOS.ESTADO_COD_APROBADO_T09) && 
 				!sCodigoEstadoNivel.equals(ConstantesVisado.ESTADOS.ESTADO_COD_DESAPROBADO_T09)){
-			Utilitarios.mensajeInfo("INFO", "Debe seleccionar una opción correcta");
-			logger.info("Debe seleccionar una opción correcta:" + sCodigoEstadoNivel);
+			Utilitarios.mensajeInfo("INFO", ConstantesVisado.NIVELES.SELEC_OPCION_CORRECTA);
+			logger.info(ConstantesVisado.NIVELES.SELEC_OPCION_CORRECTA+"==> " + sCodigoEstadoNivel);
 			return;
 		}
 		if(!sCodigoEstadoActual.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02) &&
 				!sCodigoEstadoActual.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)){
-			Utilitarios.mensajeInfo("INFO", "No se permite el cambio de estado de la solicitud");
-			logger.info("No se permite el cambio de estado de: " + sCodigoEstadoActual);		
+			Utilitarios.mensajeInfo("INFO", ConstantesVisado.NIVELES.CAMBIO_EST_NO_PERMITIDO+"de la solicitud.");
+			logger.info(ConstantesVisado.NIVELES.CAMBIO_EST_NO_PERMITIDO+"de la solicitud ==>" + sCodigoEstadoActual);		
 			return;
 		}	
 		
 		if(!PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){ //confirmar que solo los usuarios de SSJJ pueden ser d|r
-			Utilitarios.mensajeInfo("INFO", "No se permite el cambio de estado para el perfil");
-			logger.info("No se permite el cambio de estado para el perfil");		
+			Utilitarios.mensajeInfo("INFO", ConstantesVisado.NIVELES.CAMBIO_EST_NO_PERMITIDO+"para el perfil");
+			logger.info(ConstantesVisado.NIVELES.CAMBIO_EST_NO_PERMITIDO+"para el perfil");		
 			return;
 		}	
 		
@@ -87,8 +92,8 @@ public class EvaluacionNivelesMB {
 		logger.info("Nivel: " + sCodNivel);
 							
 		if(sCodNivel==null || sCodNivel.equals("")){
-			Utilitarios.mensajeInfo("INFO", "Solicitud no tiene nivel de evaluación");
-			logger.info("Solicitud no tiene nivel de evaluación, no se permite realizar cambios");
+			Utilitarios.mensajeInfo("INFO", ConstantesVisado.NIVELES.SOLICIT_SIN_NIVEL+"de evaluación");
+			logger.info(ConstantesVisado.NIVELES.SOLICIT_SIN_NIVEL+"de evaluación, no se permite realizar cambios");
 			return;
 		}	
 		
@@ -101,12 +106,14 @@ public class EvaluacionNivelesMB {
 			sb.append(iGrupo + ",");
 		}
 		
-		logger.info("Solicitud: " + sCodigoSolicitud);			
-		logger.info("lstGrupo: " + lstGrupo.size());
-		logger.info("Grupo evaluador: " + sb);
-		logger.info("Responsables: " + lstResponsables.size());
-		logger.info("Delegados: " + lstDelegados.size());
-		logger.info("sCodUsuario: " + sCodUsuario);
+		if(logger.isInfoEnabled()){
+			logger.info("Solicitud: " + sCodigoSolicitud);			
+			logger.info("lstGrupo: " + lstGrupo.size());
+			logger.info("Grupo evaluador: " + sb);
+			logger.info("Responsables: " + lstResponsables.size());
+			logger.info("Delegados: " + lstDelegados.size());
+			logger.info("sCodUsuario: " + sCodUsuario);
+		}		
 		
 		boolean bRegistro = false;
 		
@@ -124,17 +131,17 @@ public class EvaluacionNivelesMB {
 				bRegistro = true;
 			} else {
 				bRegistro = false;
-				logger.info("Acción no permitida para el usuario, ya existe un grupo evaluador");
+				logger.info(ConstantesVisado.NIVELES.YA_EXISTE_GRUP_EVAL_ACCION_NO_PERMIT);
 			}
 													
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al registrar: "+e);
 		}
 		
 		if(bRegistro){
-			Utilitarios.mensajeInfo("INFO", "Evaluación registrada correctamente");
+			Utilitarios.mensajeInfo("INFO", ConstantesVisado.NIVELES.EVALUAC_REGISTRAD_OK);
 		} else {
-			Utilitarios.mensajeInfo("INFO", "Acción restringida para el usuario " + this.usuario.getUID());
+			Utilitarios.mensajeInfo("INFO", ConstantesVisado.NIVELES.ACCION_NO_PERMITIDA+": " + this.usuario.getUID());
 		}
 		logger.info("***********registrarEvaluacionNivel():FIN ****************");		
 	}
@@ -159,12 +166,11 @@ public class EvaluacionNivelesMB {
 						n.getEstadoNivel().equals(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09)){
 					solNivel = n;				
 					break;
-				}
-					
+				}					
 			} 
 		} catch (Exception e) {
 			this.lstSolicitudNivel = null;
-			logger.error("Error al obtener datos de nivel",e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener datos de nivel: "+e);
 		}        
 		return solNivel;
 	}
@@ -187,9 +193,8 @@ public class EvaluacionNivelesMB {
 			filtroMiembroNivel.add(Restrictions.eq("estado", "1"));
 			lstMiembroNivel = miembroNivelDAO.buscarDinamico(filtroMiembroNivel);
 		} catch (Exception e) {
-			e.printStackTrace();
 			lstMiembroNivel = null;
-			logger.error("Error al obtener datos de los responsables:" + e.getMessage());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener datos de los Responsables:" + e);
 		}        
 		
 		for(TiivsMiembroNivel m : lstMiembroNivel){
@@ -219,7 +224,7 @@ public class EvaluacionNivelesMB {
 				}
 			}						
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener obtenerGrupoEvaluador: " + e);
 		}
 		return lstGrupo;
 	}
@@ -304,16 +309,12 @@ public class EvaluacionNivelesMB {
 			
 			this.registrarHistorialSolicitud(this.solicitudRegistrarT, tiivsSolicitudNivel.getCodNiv(), sCodigoEstado, ConstantesVisado.CODIGO_CAMPO_TIPO_ROL_DELEGADO);
 			
-			
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("Error al registrar el movimiento");
-		}    
-	
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al registrarEstadoMovimientoNivel: " + e);
+		}
 	}
 	
 	private boolean verificarCalificacionPorDelegados(TiivsSolicitudNivel tiivsSolicitudNivel, String sCodigoEstado, List<Integer> lstGrupo){				
-		
 		List<TiivsMovimientoNivel> lstMovimientoNivel = new ArrayList<TiivsMovimientoNivel>();
 		try {
 			GenericDao<TiivsMovimientoNivel, Object> movimientoNivelDAO = (GenericDao<TiivsMovimientoNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -321,8 +322,7 @@ public class EvaluacionNivelesMB {
 			filtro.add(Restrictions.eq("tiivsSolicitudNivel", tiivsSolicitudNivel));
 			lstMovimientoNivel = movimientoNivelDAO.buscarDinamico(filtro);
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("Error al obtener datos de movimientos por nivel:"+ e.getMessage());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener datos de MovimientosPorNivel :"+ e);
 		}
 		
 		int cont;
@@ -342,7 +342,6 @@ public class EvaluacionNivelesMB {
 				}
 			}
 		}
-
 		return false;
 	}
 
@@ -356,16 +355,19 @@ public class EvaluacionNivelesMB {
 		String sNivel = sCodNivel;
 		String sEstadoNivel = sCodEstadoNivel;
 		String sRolNivel = sCodRolNivel;
-		logger.info("Registro:" + sRegUsuario);
-		logger.info("sNomUsuario:" + sNomUsuario);
-		logger.info("sCodSoli:" + sCodSoli);
-		logger.info("sEstado:" + sEstado);
-		logger.info("sNivel:" + sNivel);
-		logger.info("sEstadoNivel:" + sEstadoNivel);
-		logger.info("sRolNivel:" + sRolNivel);
-		logger.info("tsFechaRegistro:" + tsFechaRegistro);
-		logger.info("******************registrarHistorialSolicitud()*****************************");
-	
+		
+		if(logger.isInfoEnabled()){
+			logger.info("Registro:" + sRegUsuario);
+			logger.info("sNomUsuario:" + sNomUsuario);
+			logger.info("sCodSoli:" + sCodSoli);
+			logger.info("sEstado:" + sEstado);
+			logger.info("sNivel:" + sNivel);
+			logger.info("sEstadoNivel:" + sEstadoNivel);
+			logger.info("sRolNivel:" + sRolNivel);
+			logger.info("tsFechaRegistro:" + tsFechaRegistro);
+			logger.info("******************registrarHistorialSolicitud()*****************************");
+		}
+		
 		SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		String numeroMovimiento = serviceMaxMovi.obtenerMaximoMovimiento(solicitud.getCodSoli());
 		 
