@@ -943,6 +943,8 @@ public class ConsultarSolicitudMB {
 
 	public void dictaminarSolicitud() 
 	{
+		boolean actualizarBandeja=false;
+		
 		logger.info("********************** dictaminarSolicitud *********************************** ");
 		logger.info("********** " + valorDictamen);
 		try {
@@ -960,7 +962,7 @@ public class ConsultarSolicitudMB {
 					this.solicitudRegistrarT = serviceS
 							.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
-
+					actualizarBandeja=true;
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
@@ -968,6 +970,7 @@ public class ConsultarSolicitudMB {
 					this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
 					solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
+					actualizarBandeja=true;
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
@@ -976,6 +979,7 @@ public class ConsultarSolicitudMB {
 					this.bSeccionDictaminar = false;
 					this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
+					actualizarBandeja=true;
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
@@ -983,6 +987,7 @@ public class ConsultarSolicitudMB {
 					this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
 					solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
+					actualizarBandeja=true;
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 
 				}
@@ -999,6 +1004,11 @@ public class ConsultarSolicitudMB {
 				}
 
 				this.obtenerHistorialSolicitud();
+				
+				if (actualizarBandeja)
+				{
+					this.seguimientoMB.busquedaSolicitudes();
+				}
 
 			}
 
