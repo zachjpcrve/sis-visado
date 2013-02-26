@@ -31,7 +31,7 @@ public class DelegadosMB {
 	
 	public void listarAgrupacionesDelegados() {
 	try {
-	  SolicitudDao<TiivsMiembroNivel, Object> service =(SolicitudDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+	  SolicitudDao<TiivsMiembroNivel, Object> service =(SolicitudDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 	  List<AgrupacionDelegadosDto>  lstDele= service.obtenerDelegados();
 	  List<AgrupacionDelegadosDto>  lstDelegadosPK=service.obtenerPKDelegados();
 	  List<ComboDto>         lstDuos=null;   
@@ -59,10 +59,15 @@ public class DelegadosMB {
 	  
 	  for (AgrupacionNivelDelegadoDto c : lstListaAgrupacionesNivelesDelegados){
 		    c.setCod_delegado_A(c.getLstDelegados().get(0)==null?"":c.getLstDelegados().get(0).getKey());
+		    c.setCod_nombre_delegado_A(c.getLstDelegados().get(0)==null?"":c.getLstDelegados().get(0).getDescripcion());
 			c.setCod_delegado_B(c.getLstDelegados().get(1)==null?"":c.getLstDelegados().get(1).getKey());
+			c.setCod_nombre_delegado_B(c.getLstDelegados().get(1)==null?"":c.getLstDelegados().get(1).getDescripcion());
 			c.setCod_delegado_C(c.getLstDelegados().get(2)==null?"":c.getLstDelegados().get(2).getKey());
+			c.setCod_nombre_delegado_C(c.getLstDelegados().get(2)==null?"":c.getLstDelegados().get(3).getDescripcion());
 			c.setCod_delegado_D(c.getLstDelegados().get(3)==null?"":c.getLstDelegados().get(3).getKey());
+			c.setCod_nombre_delegado_D(c.getLstDelegados().get(3)==null?"":c.getLstDelegados().get(3).getDescripcion());
 			c.setCod_delegado_E(c.getLstDelegados().get(4)==null?"":c.getLstDelegados().get(4).getKey());
+			c.setCod_nombre_delegado_E(c.getLstDelegados().get(4)==null?"":c.getLstDelegados().get(4).getDescripcion());
 		   }
 		
 		} catch (Exception e) {
