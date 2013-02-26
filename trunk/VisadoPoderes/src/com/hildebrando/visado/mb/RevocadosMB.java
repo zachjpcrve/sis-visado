@@ -744,7 +744,7 @@ public class RevocadosMB {
 			logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"tiivsrevocados es ["+tiivsrevocados.size()+"] .");
 			if(tiivsrevocados.size()>0)
 			{
-				for(int i=0; i<=tiivsrevocados.size();i++){
+				for(int i=0; i<=tiivsrevocados.size()-1;i++){
 					logger.debug("i["+i+"]->codAgrupacion: "+tiivsrevocados.get(i).getCodAgrup());
 				}
 				maximo=tiivsrevocados.get(0).getCodAgrup();
@@ -1082,6 +1082,11 @@ public class RevocadosMB {
 
 			logger.debug("error al inactivar revocados!" + e.toString());
 		}
+		//buscarRevocado();
+	}
+	
+	public void deleteCombinacion()
+	{
 		
 	}
 	
