@@ -86,8 +86,6 @@ function actualizarDocumentos (documentos) {
 }
 */
 
-
-
 </SCRIPT>
 		<h:panelGrid columns="5">
 
@@ -101,10 +99,13 @@ function actualizarDocumentos (documentos) {
 
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">
-					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro:idMsmSolicitudRegistro"
-						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"/>
+					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro:idMsmSolicitudRegistro,formSolicitudRegistro:idCodigoSolicitud"
+						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"
+						oncomplete="return cargarMultipleFTP();"						
+						/>
 					<p:commandButton value="Enviar" id="btnEnviar3"  icon="ui-icon-document"
-					 update=":formSolicitudRegistro:idMsmSolicitudRegistro" onclick="confirmation.show()"/>
+					 update=":formSolicitudRegistro:idMsmSolicitudRegistro" onclick="confirmation.show()"					 
+					 />
 					<p:commandButton value="Imprimir" id="btnImprimir3"
 						icon="ui-icon-document" />
 						
@@ -348,7 +349,7 @@ function actualizarDocumentos (documentos) {
 																immediate="true" 
 																valueChangeListener="#{solicitudRegMB.listarDocumentosXSolicitud}"
 																disabled="false">
-																<p:ajax update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos" 
+																<p:ajax update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos,:formSolicitudRegistro:idVisorApplet" 
 																event="change"></p:ajax>
 																<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 																<f:selectItems value="#{combosMB.lstTipoSolicitud}" var="lOf" itemValue="#{lOf.codTipSolic}" itemLabel="#{lOf.desTipServicio}" />
@@ -368,48 +369,109 @@ function actualizarDocumentos (documentos) {
 															   </p:commandButton>
 																</td>															   															  	
 															   
-															   	   <!-- 	
+															   	   	
 																   <td>
 																   <h:panelGroup id="idVisorApplet">
 																	   
 															            <script type="text/javascript" language="javascript">
+															            
 															                function actualizarDocumentos (documentos) {
-															                    //$("#"+this.formSolicitudRegistro+"\\:idDocumentos").val(documentos);
 															                    this.document.getElementById('formSolicitudRegistro:idDocumentos').value = documentos;
-															                    //alert('Documentos encontrados: ' + documentos);
 															                    actDocumentos();												                    
 															                }     
+															                															                
 															                
-															                function setFirstFile (file) {
-															                    //$("#"+this.formSolicitudRegistro+"\\:idDocumentos").val(documentos);
-															                    this.document.getElementById('formSolicitudRegistro:idfileUpload').files[0] = file
-															                    alert(1);
-															                    alert(file);
-															                    //alert('Documentos encontrados: ' + documentos);															                    												                   
+															                function abrirDocumento(documento){	
+															                	applet = this.document.getElementById('appletVisor');
+															                	applet.abrirDocumento(documento);
+															                	return false;
 															                }
-															            </script>            
+															                
+															                function appletCargarFTP(){	
+															                	applet = this.document.getElementById('appletVisor');
+															                	applet.sendToFTP();
+															                	return false;
+															                }
+															                
+															                function appletActualizar(){	
+															                	applet = this.document.getElementById('appletVisor');
+															                	applet.actualizar();
+															                	return false;
+															                }
+															                															                
+															                function mostrarCodigoSolicitud(){
+															                	var codigo = this.document.getElementById('formSolicitudRegistro:idCodigoSolicitud').value;
+															                	return false;
+															                }
+															                
+															                
+															                function cargarMultipleFTP(){
+															                	var codigoSolicitud = null
+															                	codigoSolicitud = this.document.getElementById('formSolicitudRegistro:idCodigoSolicitud').value;
+															                	if(codigoSolicitud != null){
+															                		if (codigoSolicitud != ''){														                		
+															                			appletCargarMultipleFTP(codigoSolicitud);
+															                		}															                		
+															                	}
+															                	return false;
+															                }
+															                
+
+															                function appletCargarMultipleFTP(codigoDocumento){
+															                	applet = this.document.getElementById('appletVisor');
+															                	applet.cargarMultipleFTP(codigoDocumento);															                	
+															                	return false;
+															                }
+															                
+															                
+															                function appletEliminarDocumento(){
+															                	codigoDocumento = this.document.getElementById('formSolicitudRegistro:idCodigoDocumentoSelected').value;
+															                	applet = this.document.getElementById('appletVisor');
+															                	applet.eliminarDocumento(codigoDocumento);
+															                	return false;
+															                }
+															                
+															            </script>           
+															            
+															            
+															            <!-- Applet Size: width='93px';height='24px  -->        
 															            <applet name="appletVisor" id="appletVisor"
-															                    code="com.hildebrando.visado.AgregarDocumentos.class"
-															                    archive="../../uploadFilesApplet.jar" 
-															                    width='93px'
-															                    height='24px'
+															                    code="com.hildebrando.visado.applet.AgregarDocumentos.class"
+															                    archive="../../uploadFilesApplet.jar,../../commons-net-3.2.jar" 
+															                    width='1px'
+															                    height='1px'
 															                    mayscript="mayscript">
 															                <param name="path_cliente"
-															                       value="{solicitudRegMB.pathCliente}" />												                       
+															                       value="#{visadoDocumentosMB.pathCliente}" />												                       
 															                <param name="documentos_leer"
-															                       value="{solicitudRegMB.documentosLeer}" />               
+															                       value="#{solicitudRegMB.documentosLeer}"/>
+															                <param name="host"
+															                       value="#{visadoDocumentosMB.host}"/>
+															                <param name="user"
+															                       value="#{visadoDocumentosMB.user}"/>
+															                <param name="pass"
+															                       value="#{visadoDocumentosMB.pass}" />    
+															                <param name="directory"
+															                       value="#{visadoDocumentosMB.directory}" />            
 															            </applet>            
 															        </h:panelGroup>
 															        </td>
-															         -->
+															        
+															        <td>
+															        	<p:commandButton 
+															        		value="Actualizar"
+															        		onclick="return appletActualizar ();" />
+															        </td>
+															        															       
+															         
 														        </tr>
 														        </TABLE>
 												        
-													        	<h:inputHidden id="idDocumentos" value="#{solicitudRegMB.documentosLeidos}" />												        
+													        	<h:inputHidden id="idDocumentos" value="#{solicitudRegMB.documentosLeidos}" />
+													        	<h:inputHidden id="idCodigoSolicitud" value="#{solicitudRegMB.solicitudRegistrarT.codSoli}" /> 
+													        	<h:inputHidden id="idCodigoDocumentoSelected" value="#{solicitudRegMB.selectedDocumentoDTO.item}" />
 														        <p:remoteCommand name="actDocumentos" update="@form" process="@form" 
 																	actionListener="#{solicitudRegMB.actualizarDocumentosXTipoSolicitud}" />
-
-														     
 														</td>
 														
 													</tr>
@@ -440,12 +502,14 @@ function actualizarDocumentos (documentos) {
   
 										                    </td>
 
-														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro:idMsmSolicitudDocumentos,
-														:formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:idfileUpload,
-														:formSolicitudRegistro:cboTipoSolicitud" ajax="false"
-														action="#{solicitudRegMB.agregarDocumentosXTipoSolicitud}"/>
-														
-																																									
+														<td><p:commandButton id="btnAceptar" value="Aceptar"  
+
+																update=":formSolicitudRegistro:idMsmSolicitudDocumentos,
+																		:formSolicitudRegistro:listDocumentosXTipoSoli,
+																		:formSolicitudRegistro:idfileUpload,
+																		:formSolicitudRegistro:cboTipoSolicitud" 
+																ajax="false"
+																action="#{solicitudRegMB.agregarDocumentosXTipoSolicitud}"/>																																																					
 														</td>
 														
 													</tr>
@@ -468,16 +532,30 @@ function actualizarDocumentos (documentos) {
 																	<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>																	
 																</p:column>
 																<p:column headerText="Archivo" >
-																	<h:outputLink onclick="window.open('../../files/#{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
-																		<h:outputText value="#{s.alias}" /> 
-																	</h:outputLink>																																																																																																																																						
+
+																	
+																		<!-- Abrir documento desde el servidor -->
+																		<h:outputLink onclick="window.open('../../files/#{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
+																			<h:outputText value="#{s.alias}" /> 
+																		</h:outputLink>
+
+																		<!-- Abrir documento desde carpeta local -->	
+																		<!-- 																	
+																		<h:commandLink id="idAbrirDocumento" styleClass="abrirDocumento"  
+													            		    value="{s.alias}"
+																			onclick="return abrirDocumento (this.text);">
+																		</h:commandLink>
+																		 -->																	
+																																																			 																																																																																																																																				
 																</p:column>
 																<p:column headerText="Eliminar">
 																 	<p:commandButton 
 																 		action="#{solicitudRegMB.quitarDocumentosXTipoSolicitud}" 
-																 		update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos" 
+																 		update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos,:formSolicitudRegistro:idCodigoDocumentoSelected" 
 																 		id="iconOnly" icon="ui-icon-circle-close"
-																 		disabled="#{s.alias.isEmpty()?true:false}">
+																 		disabled="#{s.alias.isEmpty()?true:false}"
+																 		oncomplete="return appletEliminarDocumento();"
+																 		>
 																 		<f:setPropertyActionListener
 																			target="#{solicitudRegMB.selectedDocumentoDTO}" value="#{s}"
 																			for="del">
@@ -940,7 +1018,7 @@ function actualizarDocumentos (documentos) {
 	 	<p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"  
                 header="Confirmación" severity="alert" widgetVar="confirmation" >  
                   
-        <p:commandButton id="confirm" value="Si"  update=":formSolicitudRegistro:idMsmSolicitudRegistro" oncomplete="confirmation.hide()"   
+        <p:commandButton id="confirm" value="Si"  update=":formSolicitudRegistro:idMsmSolicitudRegistro,formSolicitudRegistro:idCodigoSolicitud" oncomplete="confirmation.hide(); return cargarMultipleFTP();"   
                     action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />  
         <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
                   
