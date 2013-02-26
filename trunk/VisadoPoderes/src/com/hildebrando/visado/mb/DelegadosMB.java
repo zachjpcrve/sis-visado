@@ -62,12 +62,12 @@ public class DelegadosMB {
 		    c.setCod_nombre_delegado_A(c.getLstDelegados().get(0)==null?"":c.getLstDelegados().get(0).getDescripcion());
 			c.setCod_delegado_B(c.getLstDelegados().get(1)==null?"":c.getLstDelegados().get(1).getKey());
 			c.setCod_nombre_delegado_B(c.getLstDelegados().get(1)==null?"":c.getLstDelegados().get(1).getDescripcion());
-			c.setCod_delegado_C(c.getLstDelegados().get(2)==null?"":c.getLstDelegados().get(2).getKey());
+			/*c.setCod_delegado_C(c.getLstDelegados().get(2)==null?"":c.getLstDelegados().get(2).getKey());
 			c.setCod_nombre_delegado_C(c.getLstDelegados().get(2)==null?"":c.getLstDelegados().get(3).getDescripcion());
 			c.setCod_delegado_D(c.getLstDelegados().get(3)==null?"":c.getLstDelegados().get(3).getKey());
 			c.setCod_nombre_delegado_D(c.getLstDelegados().get(3)==null?"":c.getLstDelegados().get(3).getDescripcion());
 			c.setCod_delegado_E(c.getLstDelegados().get(4)==null?"":c.getLstDelegados().get(4).getKey());
-			c.setCod_nombre_delegado_E(c.getLstDelegados().get(4)==null?"":c.getLstDelegados().get(4).getDescripcion());
+			c.setCod_nombre_delegado_E(c.getLstDelegados().get(4)==null?"":c.getLstDelegados().get(4).getDescripcion());*/
 		   }
 		
 		} catch (Exception e) {
