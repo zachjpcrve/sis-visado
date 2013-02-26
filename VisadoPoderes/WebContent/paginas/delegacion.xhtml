@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+		<!-- Data Table Delegacion -->
+		<h:form id="frmDataTableDelegacion">
+			<p:panel header="Delegacion por Niveles" style="width: 85%">
+				<p:dataTable id="dtbDelegacion" value="#{delegadosMB.lstListaAgrupacionesNivelesDelegados}" var="del"
+					paginator="true" rows="50" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+					emptyMessage="No hay registros">
+
+					<p:column headerText="Cod Nivel">
+						<h:outputText value="#{del.codNivel}" />
+					</p:column>
+					<p:column headerText="Grupo">
+						<h:outputText value="#{del.codGrupo}" />
+					</p:column>
+					<p:column headerText="Nivel">
+						<h:outputText value="#{del.nivel}" />
+					</p:column>
+					<p:column headerText="Delegado A">
+						<h:outputText value="#{del.cod_delegado_A}" />
+					</p:column>
+					<p:column headerText="Delegado B">
+						<h:outputText value="#{del.cod_delegado_B}" />
+					</p:column>
+					<p:column headerText="Delegado C">
+						<h:outputText value="#{del.cod_delegado_C}" />
+					</p:column>
+					<p:column headerText="Delegado D">
+						<h:outputText value="#{del.cod_delegado_D}" />
+					</p:column>
+					<p:column headerText="Delegado E">
+						<h:outputText value="#{del.cod_delegado_E}" />
+					</p:column>
+					
+				</p:dataTable>
+			</p:panel>
+
+		</h:form>
+		<!--Fin Data Table Oficina -->
+	</ui:define>
+</ui:composition>
+
+</html>
