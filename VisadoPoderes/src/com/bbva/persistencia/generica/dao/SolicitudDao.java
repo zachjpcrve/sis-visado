@@ -3,6 +3,7 @@ package com.bbva.persistencia.generica.dao;
 import java.util.Date;
 import java.util.List;
 
+import com.hildebrando.visado.dto.AgrupacionDelegadosDto;
 import com.hildebrando.visado.dto.AgrupacionPlazoDto;
 import com.hildebrando.visado.modelo.Liquidacion;
 import com.hildebrando.visado.modelo.RecaudacionTipoServ;
@@ -24,4 +25,8 @@ public interface SolicitudDao<K, T> extends GenericDao<K, T>{
 			String rangoImpG,Double importeIni,Double importeFin,Date dFechaInicio, Date dFechaFin) throws Exception;
 	public List<RecaudacionTipoServ> obtenerListarRecaudacionxTipoServicio(TiivsSolicitud solicitud, Date dFechaInicio, Date dFechaFin) throws Exception;
 	public List<AgrupacionPlazoDto> obtenerLiquidacion (String cadEstudio, int anio, int mes, double impuesto) throws Exception;
+	
+	public List<AgrupacionDelegadosDto>  obtenerDelegados() throws Exception;
+	public List<AgrupacionDelegadosDto>  obtenerPKDelegados() throws Exception ;
+	
 }
