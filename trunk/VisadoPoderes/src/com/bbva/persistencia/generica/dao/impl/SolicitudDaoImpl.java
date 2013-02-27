@@ -179,8 +179,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	{
 		GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
-		solicitud = service.buscarById(TiivsSolicitud.class,
-				solicitud.getCodSoli());
+		solicitud = service.buscarById(TiivsSolicitud.class,solicitud.getCodSoli());
 		return solicitud;
 	}
 
