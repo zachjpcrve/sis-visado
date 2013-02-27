@@ -29,6 +29,13 @@ import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 
+/**
+ * Clase que se contiene metodos utiles necesarios para el registro de 
+ * la solicitude de visado. Algunos de estos metodos son: obtenerEstudioMenorCarga, calcularComision,
+ * calcularComision, obtenerSiguienteDiaHabil, etc
+ * @author 
+ * **/
+
 @ManagedBean(name = "registroUtilesMB")
 @SessionScoped
 public class RegistroUtilesMB {
@@ -43,7 +50,7 @@ public class RegistroUtilesMB {
 	  * @return codigo de estudio de abogados
 	  */
 	public String obtenerEstudioMenorCarga() {
-					
+		logger.debug("==== obtenerEstudioMenorCarga()====");			
 		String codigoEstado = ConstantesVisado.CODIGO_ESTADO_ENVIADO;		
 		String sHoraCorte = getHoraCorte();  //Para obtener hora de corte (parámetro de sistema)
 		String resultEstudio = null;
@@ -54,7 +61,6 @@ public class RegistroUtilesMB {
 		}catch(Exception e){
 			aHora = "00:00".split(":");
 		}
-		
 		
 		//Query para obtener estudio con menos solicitudes pendientes
 		String sql = " SELECT "+ 
@@ -85,10 +91,8 @@ public class RegistroUtilesMB {
 				resultEstudio = getRandomEstudio();
 			}
 		} catch (Exception e) {
-			
-			e.printStackTrace();
-		}
-			
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+": " +e);
+		}	
 		return resultEstudio;
 		
 	}
@@ -112,9 +116,7 @@ public class RegistroUtilesMB {
 					ConstantesVisado.CODIGO_CAMPO_COMISION_X).getValor2();	
 			dMontoLimite = Double.valueOf(sMontoLimite);
 		}catch(Exception e){
-			e.printStackTrace();
-			logger.error("No se pudo obtener el parámero de comisión:"+e.getMessage(),e);			
-			logger.debug("No se pudo obtener el parámero de comisión");			
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener el parametro Comision: " +e);
 			dMontoLimite = null;
 		}
 		
@@ -201,7 +203,7 @@ public class RegistroUtilesMB {
 		
 		}
 		catch(Exception e){
-			logger.error("No se pudo calcular la comisión:"+e.toString());							
+			logger.error("No se pudo calcular la comisión: "+e);							
 		}
 		return sTipoComision;
 	}
@@ -226,8 +228,7 @@ public class RegistroUtilesMB {
 		
 		//Hora actual
 		Calendar fechaActual = Calendar.getInstance();	
-		int iHoraActual = Integer.valueOf(String.valueOf(fechaActual
-				.get(Calendar.HOUR_OF_DAY))
+		int iHoraActual = Integer.valueOf(String.valueOf(fechaActual.get(Calendar.HOUR_OF_DAY))
 				+ String.valueOf(fechaActual.get(Calendar.MINUTE)));		
 		
 		logger.debug("Compara fecha:"+iHoraActual+"<"+iHoraCorte);
@@ -241,11 +242,6 @@ public class RegistroUtilesMB {
 		}		
 		return fechaRetorno;
 	}
-	
-	
-	
-	
-	
 	
 	
 	/**
@@ -264,7 +260,7 @@ public class RegistroUtilesMB {
 			multitabla = multiTablaDAO.buscarDinamico(filtro);
 			sHoraCorte = multitabla.get(0).getValor1();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en sHoraCorte: "+e);
 		}
 		return sHoraCorte;
 	}	
@@ -278,18 +274,15 @@ public class RegistroUtilesMB {
 	 * */
 	public static TiivsMultitabla getRowFromMultitabla(String codigoMultitablaMoneda,
 			String codigoCampo) {
-		// TODO Apéndice de método generado automáticamente
 		TiivsMultitabla resultMultiTabla = null;
 		GenericDao<TiivsMultitabla, Object> multiTablaDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 
 		try {
-			TiivsMultitablaId tablaId = new TiivsMultitablaId(
-					codigoMultitablaMoneda, codigoCampo);			
-			resultMultiTabla = multiTablaDAO.buscarById(TiivsMultitabla.class,
-					tablaId);
+			TiivsMultitablaId tablaId = new TiivsMultitablaId(codigoMultitablaMoneda, codigoCampo);			
+			resultMultiTabla = multiTablaDAO.buscarById(TiivsMultitabla.class,tablaId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en resultMultiTabla: "+e);
 		}
 		return resultMultiTabla;
 	}
@@ -309,7 +302,7 @@ public class RegistroUtilesMB {
 			lstEstudios = estudioDAO.buscarDinamico(filtro);
 			codEstudio = lstEstudios.get( 0 + (int)(Math.random()*lstEstudios.size())).getCodEstudio();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en codEstudio: "+e);
 		}
 		return codEstudio;
 	}
@@ -341,8 +334,7 @@ public class RegistroUtilesMB {
 			
 			Iterator itAgruPersona = setAgruPersona.iterator();
 
-			while (itAgruPersona.hasNext()) 
-			{
+			while (itAgruPersona.hasNext()){
 				TiivsAgrupacionPersona valueAgruPersona = (TiivsAgrupacionPersona) itAgruPersona.next();
 				
 				if (valueAgruPersona.getTipPartic().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_PODERDANTE)) 
@@ -370,17 +362,14 @@ public class RegistroUtilesMB {
 			TiivsPersona persona = agruPersona.getTiivsPersona();
 			if(persona!=null){
 				TiivsMultitabla multi = getRowFromMultitabla(
-						ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC,
-						persona.getTipDoi());
+						ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC,persona.getTipDoi());
 				if (multi != null) {
-					if (multi.getValor1().equalsIgnoreCase(
-							ConstantesVisado.TIPO_DOCUMENTO_RUC)) {
+					if (multi.getValor1().equalsIgnoreCase(ConstantesVisado.TIPO_DOCUMENTO_RUC)) {
 						cont++;
 					}
 				}
 			} else {
-				logger.debug("Atributo persona nulo para la agrupacion:"
-						+ agruPersona.getNumGrupo());
+				logger.debug("Atributo persona nulo para la agrupacion: "+ agruPersona.getNumGrupo());
 			}
 		}
 		if (lstAgrupacionPersona.size() == cont) {
@@ -388,7 +377,6 @@ public class RegistroUtilesMB {
 		} else {
 			bRet = false;
 		}
-
 		return bRet;
 	}
 
@@ -428,7 +416,6 @@ public class RegistroUtilesMB {
 		} else {
 			bRet = false;
 		}
-
 		return bRet;
 	}
 
@@ -445,8 +432,7 @@ public class RegistroUtilesMB {
 					ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA,
 					agruPersonaId.getClasifPer());
 			if (multi != null) {
-				if (multi.getValor1().equalsIgnoreCase(
-						ConstantesVisado.TIPO_CLASIFICACION_FALLECIDO)) {
+				if (multi.getValor1().equalsIgnoreCase(ConstantesVisado.TIPO_CLASIFICACION_FALLECIDO)) {
 					bRet = true;
 					break;
 				}
@@ -460,9 +446,7 @@ public class RegistroUtilesMB {
 	 * @param tipo de comisión 
 	 * */
 	public Double obtenerComision(String sTipoComision) {
-		TiivsMultitabla multi = getRowFromMultitabla(
-				ConstantesVisado.CODIGO_MULTITABLA_COMISION,
-				sTipoComision);
+		TiivsMultitabla multi = getRowFromMultitabla(ConstantesVisado.CODIGO_MULTITABLA_COMISION,sTipoComision);
 		Double comision;
 		try {
 			if(multi!=null){
@@ -472,7 +456,7 @@ public class RegistroUtilesMB {
 				comision = new Double(0);
 			}
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en obtenerComision: "+e);
 			comision = new Double(0);
 		}
 		return comision;
@@ -508,9 +492,8 @@ public class RegistroUtilesMB {
 		try {
 			lstFeriados = feriadoDAO.buscarDinamico(filtro);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en obtener lstFeriados: "+e);
 		}
-
 		
 		if(!lstFeriados.isEmpty()){ // Si la fecha es feriado 
 			logger.info("Fecha:'" + fecha + "' es Feriado se obtendrá el siguiente día hábil ");
@@ -520,7 +503,6 @@ public class RegistroUtilesMB {
 		}		
 		return fechaRetorno;
 	}
-
 	
 	
 	public String getEntrada() {
