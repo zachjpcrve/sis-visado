@@ -1578,7 +1578,8 @@ public class SolicitudRegistroMB {
 
 	@SuppressWarnings({ "unused", "unchecked" })
 	@Transactional
-	public String registrarSolicitud() {
+	public String registrarSolicitud() 
+	{
 	/*	boleanoMensajeInfoGeneral=true;
 		 boleanoMensajeApoderdantePoderdante=true;
 		 boleanoMensajeOperacionesBancarias=true;
@@ -1596,6 +1597,7 @@ public class SolicitudRegistroMB {
 		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 	    TiivsPersona objPersonaRetorno=new TiivsPersona();
 	    TiivsAgrupacionPersona objAgruId=new TiivsAgrupacionPersona();
+	    
 		try {
 			logger.info("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getMoneda());
 			
@@ -1613,25 +1615,25 @@ public class SolicitudRegistroMB {
 			}
 
 			logger.info("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : "+ solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
-			if (this.validarRegistroSolicitud()) {
+			if (this.validarRegistroSolicitud()) 
+			{
 				if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 					this.enviarSolicitudSSJJ();
 					logger.info(solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
 					
 				}
 				
-			
+				SolicitudDao<TiivsPersona, Object> servicePK = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+				String sCodigoSol = servicePK.obtenerPKNuevaSolicitud();
+				logger.debug(" sCodigoSol " + sCodigoSol);
+				this.solicitudRegistrarT.setCodSoli(sCodigoSol);
+		
+		
+				for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+					  //x.setTiivsSolicitud(this.solicitudRegistrarT);
+					  x.getId().setCodSoli(sCodigoSol);
+				}
 				
-						SolicitudDao<TiivsPersona, Object> servicePK = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
-						String sCodigoSol = servicePK.obtenerPKNuevaSolicitud();
-						logger.debug(" sCodigoSol " + sCodigoSol);
-						this.solicitudRegistrarT.setCodSoli(sCodigoSol);
-				
-				
-						for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
-							  //x.setTiivsSolicitud(this.solicitudRegistrarT);
-							  x.getId().setCodSoli(sCodigoSol);
-						}
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
 				this.solicitudRegistrarT.setCodSoli(objResultado.getCodSoli());
 				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
@@ -1687,7 +1689,7 @@ public class SolicitudRegistroMB {
 						Utilitarios.mensajeInfo("INFO", mensaje);
 						actualizarBandeja=true;
 					}
-					
+					//redirect = "/faces/paginas/bandejaSeguimiento.xhtml";
 				} else {
 					mensaje = "Error al generar la Solicitud ";
 					Utilitarios.mensajeInfo("INFO", mensaje);
