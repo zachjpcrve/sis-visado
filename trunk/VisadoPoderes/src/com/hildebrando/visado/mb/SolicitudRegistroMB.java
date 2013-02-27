@@ -946,9 +946,6 @@ public class SolicitudRegistroMB {
 
 		if(sCodDocumento == null || sCodDocumento.isEmpty()){
 			Utilitarios.mensajeInfo("", "Debe seleccionar un documento");
-			
-			 
-			 
 			 return;
 		}
 
@@ -1075,7 +1072,9 @@ public class SolicitudRegistroMB {
 					}
 				}										
 			}
-		}			
+		}		
+		
+		establecerTipoSolicitud();
 		
 		
 		logger.info("(Tabla) lstdocumentos tamaño:" + lstdocumentos.size());
@@ -1710,10 +1709,10 @@ public class SolicitudRegistroMB {
 					a.obtenerSolicitud();
 					redirect = "/faces/paginas/solicitudEdicion.xhtml";
 				}*/
-				if (actualizarBandeja)
-				{
-					this.seguimientoMB.busquedaSolicitudes();
-				}
+//				if (actualizarBandeja)
+//				{
+//					this.seguimientoMB.busquedaSolicitudes();
+//				}
 				
 			}
 		} catch (Exception e) {
