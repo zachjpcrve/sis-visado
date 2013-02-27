@@ -4,12 +4,13 @@
 <!-- Generated 23/01/2013 04:04:35 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsSolicitudNivel" table="TIIVS_SOLICITUD_NIVEL">
-        <id name="id" type="int">
-            <column name="ID" precision="8" scale="0" />
+        <id name="id" type="integer">
+            <column name="ID" length="8"/>
             <generator class="sequence" >
-            <param name="sequence">SEQ_SOL_NIVEL</param>
+            	<param name="sequence">SEQ_SOL_NIVEL</param>
             </generator>
         </id>
+        
         <many-to-one name="tiivsSolicitud" class="com.hildebrando.visado.modelo.TiivsSolicitud" fetch="select">
             <column name="COD_SOLI" length="7" not-null="true" />
         </many-to-one>
