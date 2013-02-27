@@ -1112,10 +1112,12 @@ public class ConsultarSolicitudMB {
 			logger.info("Calendar.DATE " + Calendar.DATE);
 			for (String codNivel : lstCodNivel) {
 				soliNivel = new TiivsSolicitudNivel();
+				soliNivel.setTiivsSolicitud(this.solicitudRegistrarT);
 				soliNivel.setCodNiv(codNivel);
 				soliNivel.setEstadoSolicitud(solicitud.getEstado());
 				soliNivel.setTiivsSolicitud(solicitud);
-				soliNivel.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
+				//soliNivel.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
+				soliNivel.setEstadoNivel(null);
 				soliNivel.setUsuarioRegistro(usuario.getUID());
 				soliNivel.setFechaRegistro(new Timestamp(Calendar.DATE));
 				serviceSolicitud.insertar(soliNivel);
