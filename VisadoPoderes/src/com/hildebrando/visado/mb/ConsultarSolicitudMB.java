@@ -935,6 +935,7 @@ public class ConsultarSolicitudMB {
 				this.bMostrarCartaRechazo = true;
 				this.bMostrarCartaImprocedente = true;
 				this.bMostrarCartaRespuesta = true;
+				this.bSeccionDictaminar = true;
 			}
 		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02)) {
 			this.bSeccionAccion = false;
@@ -1112,7 +1113,7 @@ public class ConsultarSolicitudMB {
 			logger.info("Calendar.DATE " + Calendar.DATE);
 			for (String codNivel : lstCodNivel) {
 				soliNivel = new TiivsSolicitudNivel();
-				soliNivel.setTiivsSolicitud(this.solicitudRegistrarT);
+				//soliNivel.setTiivsSolicitud(this.solicitudRegistrarT);
 				soliNivel.setCodNiv(codNivel);
 				soliNivel.setEstadoSolicitud(solicitud.getEstado());
 				soliNivel.setTiivsSolicitud(solicitud);
@@ -1120,6 +1121,17 @@ public class ConsultarSolicitudMB {
 				soliNivel.setEstadoNivel(null);
 				soliNivel.setUsuarioRegistro(usuario.getUID());
 				soliNivel.setFechaRegistro(new Timestamp(Calendar.DATE));
+				
+				logger.info("************************************************************");
+				logger.info("Datos del nivel a insertar: ");
+				logger.info("Cod Soli: " + soliNivel.getTiivsSolicitud().getCodSoli());
+				logger.info("Cod Nivel: " + soliNivel.getCodNiv());
+				logger.info("Estado Solicitud: " + soliNivel.getEstadoSolicitud());
+				logger.info("Estado Nivel: " + soliNivel.getEstadoNivel());
+				logger.info("Usuario registro: " + soliNivel.getUsuarioRegistro());
+				logger.info("Fecha registro: " + soliNivel.getFechaRegistro());
+				logger.info("************************************************************");
+				
 				serviceSolicitud.insertar(soliNivel);
 			}
 
