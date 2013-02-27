@@ -457,15 +457,22 @@ public class ConsultarSolicitudMB {
 		//selectedDocumentoDTO = new DocumentoTipoSolicitudDTO();
 	}
 
-	public void listarComboDictamen() {
+	public void listarComboDictamen() throws Exception {
 		lstComboDictamen = new ArrayList<ComboDto>();
-		logger.info("this.solicitudRegistrarT.getEstado() "
-				+ this.solicitudRegistrarT.getEstado());
+		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+
+		solicitudRegistrarT = (TiivsSolicitud) solicitudService.buscarDinamico(Busqueda.forClass(TiivsSolicitud.class)
+				               .add(Restrictions.eq("codSoli", solicitudRegistrarT.getCodSoli()))).get(0);
+	
+		
+		logger.info("this.solicitudRegistrarT.getEstado() "+ this.solicitudRegistrarT.getEstado());
 		// SOLO SERVICIOS JURIDICOS
 		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)
 				|| PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+			
 			if (this.solicitudRegistrarT.getEstado().trim()
 					.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)) {
+				logger.info("xxxx  ESTADO_COD_RESERVADO_T02");
 				lstComboDictamen.add(new ComboDto(
 						ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02,
 						ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02));
@@ -476,6 +483,8 @@ public class ConsultarSolicitudMB {
 					.getEstado()
 					.trim()
 					.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)) {
+				logger.info("xxxx  ESTADO_COD_EN_REVISION_T02");
+			
 				lstComboDictamen.add(new ComboDto(
 						ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02,
 						ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02));
@@ -486,6 +495,7 @@ public class ConsultarSolicitudMB {
 					.getEstado()
 					.trim()
 					.equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
+				logger.info("xxxx  ESTADO_COD_IMPROCEDENTE_T02");
 				lstComboDictamen.add(new ComboDto(
 						ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02,
 						ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02));
@@ -493,6 +503,7 @@ public class ConsultarSolicitudMB {
 				.getEstado()
 				.trim()
 				.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
+				logger.info("xxxx  ESTADO_COD_RECHAZADO_T02");
 				lstComboDictamen.add(new ComboDto(
 						ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02,
 						ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02));
@@ -901,7 +912,7 @@ public class ConsultarSolicitudMB {
 				this.bSeccionAccion = true;
 				this.bMostrarCartaRechazo = false;
 				this.bSeccionDictaminar = true;
-				this.bSeccionAccion=false;
+				this.bSeccionAccion=true;
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				this.bSeccionComentario = true;
 				this.bSeccionAccion = true;
@@ -910,6 +921,7 @@ public class ConsultarSolicitudMB {
 		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)) {
 			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 				this.bSeccionDictaminar = true;
+			listarComboDictamen();
 				this.bSeccionComentario = true;
 			}
 		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
@@ -931,11 +943,10 @@ public class ConsultarSolicitudMB {
 
 	public void obtenerDictamen(ValueChangeEvent e) 
 	{
-		logger.info("****************** obtenerDictamen ********************** "
-				+ e.getNewValue());
+		
 
 		if (e.getNewValue() != null){
-			
+			logger.info("****************** obtenerDictamen ********************** "+ e.getNewValue());
 			valorDictamen = e.getNewValue().toString();
 			if (e.getNewValue().toString().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02))
 				descValorDictamen = ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02;
@@ -1067,7 +1078,7 @@ public class ConsultarSolicitudMB {
 					}
 				}else{
 					logger.info("El importe supero el rango de inicio . " +lstNiveles.get(lstNiveles.size() - 1).getRangoFin());
-					lstCodNivel.add("SUPERO MAXIMO NIVEL");
+					lstCodNivel.add("SPRI");
 				}
 
 		return lstCodNivel;

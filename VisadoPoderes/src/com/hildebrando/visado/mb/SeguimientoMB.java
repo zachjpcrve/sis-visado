@@ -573,7 +573,7 @@ public class SeguimientoMB
 				cadNiveles = cadNiveles.substring(0,cadNiveles.length()-1);
 			}
 			
-			logger.info("Niveles encontrados:" + cadNiveles);
+			//logger.info("Niveles encontrados:" + cadNiveles);
 			
 			tmpSol.setTxtNivel(cadNiveles);
 			//Proceso para obtener los niveles de cada solicitud
