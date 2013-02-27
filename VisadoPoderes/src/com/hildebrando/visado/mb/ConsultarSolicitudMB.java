@@ -2168,8 +2168,7 @@ public class ConsultarSolicitudMB {
 		tiivsSolicitudAgrupacionId.setCodSoli(solicitudRegistrarT.getCodSoli());
 		tiivsSolicitudAgrupacionId.setNumGrupo(iNumGrupo);
 		tiivsSolicitudAgrupacion.setId(tiivsSolicitudAgrupacionId);
-		tiivsSolicitudAgrupacion
-				.setTiivsAgrupacionPersonas(lstTiivsAgrupacionPersonas);
+		tiivsSolicitudAgrupacion.setTiivsAgrupacionPersonas(lstTiivsAgrupacionPersonas);
 		tiivsSolicitudAgrupacion.setEstado("1");
 
 		lstSolicitudArupacion.add(tiivsSolicitudAgrupacion);
