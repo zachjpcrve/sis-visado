@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="UploadFileApplet">
+	<target name="jar-applet">
+		<echo>Generando archivo jar</echo>
+		<jar destfile="dist/UploadFilesApplet.jar" basedir="bin">						
+			<zipfileset src="lib/commons-net-3.2.jar" 
+				excludes="META-INF/*,**/*.txt,**/*.java,**/*.html" />			
+		</jar>
+		
+		<echo>Firmando el archivo jar</echo>
+		<!--
+		<genkey alias="bbva-applet" storepass="javajava" 
+				keystore="javajava" validity="9999">
+			<dname>
+				<param name="CN" value="BBVA" />
+				<param name="OU" value="VISPOD" />
+				<param name="O" value="BBVA" />
+				<param name="C" value="PE" />
+			</dname>
+		</genkey>
+		-->
+		<signjar jar="dist/UploadFilesApplet.jar" alias="bbva-applet" 
+				storepass="javajava" keystore="javajava"/>
+		<echo>Fin</echo>
+		
+	</target>
+</project>
