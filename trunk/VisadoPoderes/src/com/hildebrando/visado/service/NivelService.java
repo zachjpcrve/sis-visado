@@ -196,6 +196,8 @@ public class NivelService {
 	{
 		String nivel="";
 		
+		logger.info("Buscando nivel por codigo: " + codigo);
+		
 		List<TiivsNivel> lista = new ArrayList<TiivsNivel>();
 		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
@@ -208,7 +210,15 @@ public class NivelService {
 					+ ex.getLocalizedMessage());
 		}
 		
-		nivel=lista.get(0).getDesNiv();
+		if (lista!=null)
+		{
+			if (lista.size()>0)
+			{
+				nivel=lista.get(0).getDesNiv();
+			}
+		}
+		
+		logger.info("Resultado obtenido: " + nivel);
 		
 		return nivel;
 	}
