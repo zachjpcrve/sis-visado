@@ -921,8 +921,9 @@ public class ConsultarSolicitudMB {
 		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)) {
 			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 				this.bSeccionDictaminar = true;
-			listarComboDictamen();
+				listarComboDictamen();
 				this.bSeccionComentario = true;
+				bMostrarCartaImprocedente=false;
 			}
 		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
 			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
