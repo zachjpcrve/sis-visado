@@ -382,8 +382,11 @@ function actualizarDocumentos (documentos) {
 															                															                
 															                
 															                function abrirDocumento(documento){	
-															                	applet = this.document.getElementById('appletVisor');
-															                	applet.abrirDocumento(documento);
+															                	//alert(1);
+															                	//alert(documento);
+															                	applet = this.document.getElementById('appletVisor');															                	
+															                	//applet.abrirDocumento(documento);
+															                	applet.abrirDocumentoConPermisos(documento);
 															                	return false;
 															                }
 															                
@@ -395,7 +398,8 @@ function actualizarDocumentos (documentos) {
 															                
 															                function appletActualizar(){	
 															                	applet = this.document.getElementById('appletVisor');
-															                	applet.actualizar();
+															                	//applet.actualizar();
+															                	applet.actualizarConPermisos();
 															                	return false;
 															                }
 															                															                
@@ -419,7 +423,8 @@ function actualizarDocumentos (documentos) {
 
 															                function appletCargarMultipleFTP(codigoDocumento){
 															                	applet = this.document.getElementById('appletVisor');
-															                	applet.cargarMultipleFTP(codigoDocumento);															                	
+															                	//applet.cargarMultipleFTP(codigoDocumento);															                	
+															                	applet.cargarMultipleFTPConPermisos(codigoDocumento);
 															                	return false;
 															                }
 															                
@@ -540,12 +545,14 @@ function actualizarDocumentos (documentos) {
 																		</h:outputLink>
 
 																		<!-- Abrir documento desde carpeta local -->	
-																		<!-- 																	
+																		
+																		<!--  																	
 																		<h:commandLink id="idAbrirDocumento" styleClass="abrirDocumento"  
-													            		    value="{s.alias}"
+													            		    value="#{s.alias}"
 																			onclick="return abrirDocumento (this.text);">
 																		</h:commandLink>
-																		 -->																	
+																		 -->
+																																			
 																																																			 																																																																																																																																				
 																</p:column>
 																<p:column headerText="Eliminar">
