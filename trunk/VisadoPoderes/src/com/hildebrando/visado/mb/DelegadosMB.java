@@ -9,7 +9,6 @@ import javax.faces.bean.SessionScoped;
 import org.apache.log4j.Logger;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
-import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.hildebrando.visado.dto.AgrupacionDelegadosDto;
 import com.hildebrando.visado.dto.AgrupacionNivelDelegadoDto;
@@ -57,17 +56,23 @@ public class DelegadosMB {
 		    lstListaAgrupacionesNivelesDelegados.add(agrupacionNivelDelegadoDto);
 	    }
 	  
+		
+	
 	  for (AgrupacionNivelDelegadoDto c : lstListaAgrupacionesNivelesDelegados){
-		    c.setCod_delegado_A(c.getLstDelegados().get(0)==null?"":c.getLstDelegados().get(0).getKey());
-		    c.setCod_nombre_delegado_A(c.getLstDelegados().get(0)==null?"":c.getLstDelegados().get(0).getDescripcion());
-			c.setCod_delegado_B(c.getLstDelegados().get(1)==null?"":c.getLstDelegados().get(1).getKey());
-			c.setCod_nombre_delegado_B(c.getLstDelegados().get(1)==null?"":c.getLstDelegados().get(1).getDescripcion());
-			/*c.setCod_delegado_C(c.getLstDelegados().get(2)==null?"":c.getLstDelegados().get(2).getKey());
-			c.setCod_nombre_delegado_C(c.getLstDelegados().get(2)==null?"":c.getLstDelegados().get(3).getDescripcion());
-			c.setCod_delegado_D(c.getLstDelegados().get(3)==null?"":c.getLstDelegados().get(3).getKey());
-			c.setCod_nombre_delegado_D(c.getLstDelegados().get(3)==null?"":c.getLstDelegados().get(3).getDescripcion());
-			c.setCod_delegado_E(c.getLstDelegados().get(4)==null?"":c.getLstDelegados().get(4).getKey());
-			c.setCod_nombre_delegado_E(c.getLstDelegados().get(4)==null?"":c.getLstDelegados().get(4).getDescripcion());*/
+		  for (int i = 0; i < c.getLstDelegados().size(); i++) {
+			  System.out.println("i " + i + " dd " +c.getLstDelegados().get(i).getDescripcion());
+			    c.setCod_delegado_A(i==0?c.getLstDelegados().get(i).getKey():"");
+			    c.setCod_nombre_delegado_A(c.getLstDelegados().get(i).getDescripcion());
+				c.setCod_delegado_B(i==1?c.getLstDelegados().get(i).getKey():"");
+				c.setCod_nombre_delegado_B(c.getLstDelegados().get(i).getDescripcion());
+				c.setCod_delegado_C(i==2?c.getLstDelegados().get(i).getKey():"");
+				c.setCod_nombre_delegado_C(i==2?c.getLstDelegados().get(i).getDescripcion():"");
+				c.setCod_delegado_D(i==3?c.getLstDelegados().get(i).getKey():"");
+				c.setCod_nombre_delegado_D(i==3?c.getLstDelegados().get(i).getDescripcion():"");
+				c.setCod_delegado_E(i==4?c.getLstDelegados().get(i).getKey():"");
+				c.setCod_nombre_delegado_E(i==4?c.getLstDelegados().get(i).getDescripcion():"");
+		  }
+		  
 		   }
 		
 		} catch (Exception e) {
