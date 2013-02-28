@@ -2224,6 +2224,7 @@ public class ConsultarSolicitudMB {
 		Busqueda filtroTipoSolcDoc = Busqueda
 				.forClass(TiivsTipoSolicDocumento.class);
 		filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic",sCodTipoSol));
+		filtroTipoSolcDoc.add(Restrictions.eq("activo",'1'));
 		filtroTipoSolcDoc.addOrder(Order.desc("obligatorio"));
 		try {
 			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
