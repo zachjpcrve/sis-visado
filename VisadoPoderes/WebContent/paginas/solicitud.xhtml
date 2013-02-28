@@ -522,10 +522,18 @@ function invocarEscaner(urlApplet){
 																<p:column headerText="Obligatorio">
 																	<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>																	
 																</p:column>
-																<p:column headerText="Archivo" >																		
-																	<h:outputLink onclick="window.open('../../files/#{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
-																		<h:outputText value="#{s.alias}" /> 
-																	</h:outputLink>																																															 																																																																																																																																				
+																<p:column headerText="Archivo" >
+																	<h:panelGroup border="0" rendered="#{s.aliasTemporal.isEmpty()}"><!-- Si aliasTemporal esta vacio: se abre desde el servidor -->
+																		<h:commandLink id="idAbrirDocumento" styleClass="abrirDocumento"  
+													            		    value="#{s.alias}"
+																			onclick="return abrirDocumento (this.text);">
+																		</h:commandLink>
+																	</h:panelGroup>	
+																	<h:panelGroup border="0" rendered="#{!s.aliasTemporal.isEmpty()}"><!-- Si aliasTemporal esta vacio: se abre desde el cliente -->																		
+																		<h:outputLink onclick="window.open('../../files/#{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
+																			<h:outputText value="#{s.alias}" /> 
+																		</h:outputLink>	
+																	</h:panelGroup>																																																			
 																</p:column>
 																<p:column headerText="Eliminar">
 																 	<p:commandButton 
