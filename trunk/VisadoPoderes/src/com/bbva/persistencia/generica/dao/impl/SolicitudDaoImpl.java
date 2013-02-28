@@ -28,6 +28,7 @@ import com.hildebrando.visado.modelo.RecaudacionTipoServ;
 import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.SolicitudesTipoServicio;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
+import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 
@@ -144,6 +145,37 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		return tmpLista;
 
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TiivsNivel> listarNivelesDistinct() throws Exception {
+		List<TiivsNivel> listaNivel;
+		TiivsNivel nivel;
+		final String sql = "select distinct n.des_niv, n.cod_niv "
+				+ "from tiivs_nivel n " + "order by n.cod_niv asc";
+
+		List ResultList = (ArrayList<TiivsNivel>) getHibernateTemplate()
+				.execute(new HibernateCallback() {
+					public List doInHibernate(Session session)
+							throws HibernateException {
+						SQLQuery sq = session.createSQLQuery(sql);
+						return sq.list();
+					}
+				});
+		nivel = null;
+		listaNivel = new ArrayList<TiivsNivel>();
+		if(ResultList.size()>0){
+			for(int i = 0; i < ResultList.size(); i++){
+				
+				nivel = new TiivsNivel();
+				Object[] row = (Object[]) ResultList.get(i);
+				nivel.setDesNiv(row[0].toString());
+				nivel.setCodNiv(row[1].toString());
+				listaNivel.add(nivel);
+			}
+		}
+		return listaNivel;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public String obtenerMaximoMovimiento(String codSolicitud) throws Exception {
 
