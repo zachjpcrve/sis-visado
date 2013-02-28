@@ -105,7 +105,7 @@ public class ConsultarSolicitudMB {
 	private boolean bSeccionReasignacion = false;
 	private boolean bSeccionCartaAtencion = false;
 	private boolean bSeccionComentario = false;
-	private boolean bSeccionAccion = false;
+	private boolean bcartaRevision = false;
 	private boolean bSeccionDocumentos = false;
 	private boolean bSeccionEvaluarNivel = false;
 	private int indexUpdatePoderdanteApoderado=0;
@@ -325,7 +325,7 @@ public class ConsultarSolicitudMB {
 				setbMostrarCartaAtencion(false);
 				setbMostrarGenerarRevision(false);
 				setbSeccionDocumentos(true);
-				setbSeccionAccion(false);
+				setbcartaRevision(false);
 				
 			} else {
 				setbMostrarCartaRevision(false);
@@ -459,10 +459,10 @@ public class ConsultarSolicitudMB {
 
 	public void listarComboDictamen() throws Exception {
 		lstComboDictamen = new ArrayList<ComboDto>();
-		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+		/*SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 
 		solicitudRegistrarT = (TiivsSolicitud) solicitudService.buscarDinamico(Busqueda.forClass(TiivsSolicitud.class)
-				               .add(Restrictions.eq("codSoli", solicitudRegistrarT.getCodSoli()))).get(0);
+				               .add(Restrictions.eq("codSoli", solicitudRegistrarT.getCodSoli()))).get(0);*/
 	
 		
 		logger.info("this.solicitudRegistrarT.getEstado() "+ this.solicitudRegistrarT.getEstado());
@@ -903,19 +903,46 @@ public class ConsultarSolicitudMB {
 				this.bSeccionComentario = false;
 				this.bSeccionReasignacion = false;
 			}
-		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
+			
+		}else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
-				this.bSeccionAccion = false;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bcartaRevision = false;
+				this.bMostrarCartaAtencion=false;
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bcartaRevision = false;
+				this.bMostrarCartaAtencion=true;
+
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bcartaRevision = false;
+				this.bMostrarCartaAtencion=true;
+			}
+		}
+		
+		
+		
+		
+		
+		else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
+			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+				this.bcartaRevision = false;
 				this.bMostrarCartaRechazo = true;
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 				this.bSeccionComentario = true;
-				this.bSeccionAccion = true;
+				this.bcartaRevision = true;
 				this.bMostrarCartaRechazo = false;
 				this.bSeccionDictaminar = true;
-				this.bSeccionAccion=true;
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				this.bSeccionComentario = true;
-				this.bSeccionAccion = true;
+				this.bcartaRevision = true;
 				this.bMostrarCartaRechazo = false;
 			}
 		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)) {
@@ -938,8 +965,17 @@ public class ConsultarSolicitudMB {
 				this.bMostrarCartaRespuesta = true;
 				this.bSeccionDictaminar = true;
 			}
-		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02)) {
-			this.bSeccionAccion = false;
+		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02)) {
+			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+			this.bMostrarCartaAtencion = true;
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
+				this.bMostrarCartaAtencion = false;
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+				this.bMostrarCartaAtencion = false;
+			}
+			
+		}else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02)) {
+			this.bcartaRevision = false;
 		}
 	}
 
@@ -3760,12 +3796,12 @@ public class ConsultarSolicitudMB {
 		this.bRevision = bRevision;
 	}
 
-	public boolean isbSeccionAccion() {
-		return bSeccionAccion;
+	public boolean isbcartaRevision() {
+		return bcartaRevision;
 	}
 
-	public void setbSeccionAccion(boolean bSeccionAccion) {
-		this.bSeccionAccion = bSeccionAccion;
+	public void setbcartaRevision(boolean bcartaRevision) {
+		this.bcartaRevision = bcartaRevision;
 	}
 
 	public boolean isbMostrarGenerarRevision() {
