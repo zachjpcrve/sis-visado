@@ -936,8 +936,10 @@ public class SolicitudRegistroMB {
 		 boleanoMensajeDocumentos=true;*/
 		logger.info(" ************************** agrearDocumentosXTipoSolicitud  ****************************** ");
 		logger.info("iTipoSolicitud  : " + iTipoSolicitud);
+		String aliasCortoDocumento="";
 		if(selectedTipoDocumento!=null){
 			sCodDocumento = selectedTipoDocumento.getId().getCodDoc();
+			//sCodDocumento = selectedTipoDocumento.getTiivsDocumento().getNombre();
 		} else {
 			sCodDocumento = null;
 		}
@@ -953,7 +955,10 @@ public class SolicitudRegistroMB {
 												
 			if (sCodDocumento.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
 				sCodDocumento = ConstantesVisado.PREFIJO_OTROS+String.format("%06d", lstdocumentos.size() + 1);
-			} 
+				aliasCortoDocumento = sCodDocumento;
+			} else {
+				aliasCortoDocumento = selectedTipoDocumento.getTiivsDocumento().getNombre();
+			}
 						
 			String sAliasTemporal = cargarUnicoPDF();
 									
@@ -963,14 +968,17 @@ public class SolicitudRegistroMB {
 			
 			String sExtension = sAliasTemporal.substring(sAliasTemporal.lastIndexOf("."));
 			//String sAliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_" +
-			String sAliasArchivo = sCodDocumento + sExtension;
+			//String sAliasArchivo = sCodDocumento + sExtension;
+			aliasCortoDocumento += sExtension;
 			
-			logger.info("aliasArchivo *** " + sAliasArchivo);
+			//logger.info("aliasArchivo *** " + sAliasArchivo);
+			logger.info("aliasArchivo *** " + aliasCortoDocumento);
 			logger.info("aliasArchivoTemporal *** " + sAliasTemporal);
 			
 			TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
 			objAnexo.setId(new TiivsAnexoSolicitudId(null, sCodDocumento));
-			objAnexo.setAliasArchivo(sAliasArchivo);
+			//objAnexo.setAliasArchivo(sAliasArchivo);
+			objAnexo.setAliasArchivo(aliasCortoDocumento.toUpperCase());
 			objAnexo.setAliasTemporal(sAliasTemporal);
 			lstAnexoSolicitud.add(objAnexo);
 			this.actualizarListaDocumentosXTipo(objAnexo);
