@@ -7,18 +7,108 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
+		<!-- Delegacion -->
+		<h:form id="frmMantenimientoDelegado">
+			<p:panel header="Delegacion por Nivel" style="width: 85%">
+
+				<table>
+					<tr>
+						<td><p:commandButton id="nuevaDelegacion"
+								value="Nueva Agrupacion" onclick="dlgNuevaDelegacion.show();">
+							</p:commandButton></td>
+					</tr>
+
+				</table>
+
+			</p:panel>
+			<p:dialog widgetVar="dlgNuevaDelegacion" modal="true"
+				header="Nueva Delegacion por Nivel">
+
+				<p:panel>
+					<p:messages id="idMsmDocumento"></p:messages>
+					<table>
+						<tr>
+							<td><h:outputText value="Nivel:  " /></td>
+							<td><p:selectOneMenu
+									value="#{delegadosMB.miembroNivel.codNiv}">
+									<f:selectItems value="#{delegadosMB.listaNiveles}"
+										itemLabel="#{n.desNiv}" itemValue="#{n.codNiv}" var="n"></f:selectItems>
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><h:outputText value="Registro  " /></td>
+							<td><p:inputText id="txtCodRegistro"
+									value="#{delegadosMB.codRegistro}" maxlength="7">
+									<p:ajax event="blur"
+										update=":frmMantenimientoDelegado:txtDescRegMiembro :frmMantenimientoDelegado:txtPerfilRegMiembro"
+										listener="#{delegadosMB.obtenerDatosMiembro}"></p:ajax>
+								</p:inputText></td>
+							<td><h:outputText value="Descripcion  " /></td>
+							<td><p:inputText id="txtDescRegMiembro" disabled="true"
+									value="#{delegadosMB.desRegistro}" maxlength="45" /></td>
+						</tr>
+						<tr>
+							<td><h:outputText value="Perfil" /></td>
+							<td><p:inputText id="txtPerfilRegMiembro" disabled="true"
+									value="#{delegadosMB.perfilRegistro}" maxlength="45" /></td>
+						</tr>
+						<tr>
+							<td><p:commandButton id="registrarDelegado" value="Guardar"
+									actionListener="#{delegadosMB.agregarDelegado}"
+									update=":frmMantenimientoDelegado:dtbListaDelegado :frmMantenimientoDelegado:txtCodRegistro :frmMantenimientoDelegado:txtDescRegMiembro :frmMantenimientoDelegado:txtPerfilRegMiembro">
+								</p:commandButton></td>
+						</tr>
+
+					</table>
+					<p:dataTable id="dtbListaDelegado" rowIndexVar="rowIndex"
+						value="#{delegadosMB.listaDelegados}" var="lstDel"
+						paginator="true" rows="50" paginatorPosition="bottom"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+						currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+						emptyMessage="No hay registros">
+
+						<p:column headerText="Nivel">
+							<h:outputText value="#{lstDel.codNiv}" />
+						</p:column>
+						<p:column headerText="Registro">
+							<h:outputText value="#{lstDel.tiivsMiembro.codMiembro}" />
+						</p:column>
+						<p:column headerText="Descripcion">
+							<h:outputText value="#{lstDel.tiivsMiembro.descripcion}" />
+						</p:column>
+						<p:column headerText="Eliminar">
+							<p:commandLink id="clinkEditar" ajax="true"
+								update=":frmMantenimientoDelegado:dtbListaDelegado"
+								actionListener="#{delegadosMB.eliminarDelegado}">
+								<f:param name="id" value="#{rowIndex}"></f:param>
+								<h:outputText value="Eliminar" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+					<table>
+						<tr>
+							<td><p:commandButton id="agregarAgrupacion" value="Agregar Agrupacion"
+									actionListener="#{delegadosMB.registrarAgrupacion}"
+									oncomplete="dlgNuevaDelegacion.hide()"
+									update=":frmDataTableDelegacion">
+								</p:commandButton></td>
+						</tr>
+					</table>
+				</p:panel>
+
+			</p:dialog>
+		</h:form>
+		<!-- Fin Delegacion -->
 		<!-- Data Table Delegacion -->
 		<h:form id="frmDataTableDelegacion">
 			<p:panel header="Delegacion por Niveles" style="width: 85%">
-				<p:dataTable id="dtbDelegacion" value="#{delegadosMB.lstListaAgrupacionesNivelesDelegados}" var="del"
-					paginator="true" rows="50" paginatorPosition="bottom"
+				<p:dataTable id="dtbDelegacion"
+					value="#{delegadosMB.lstListaAgrupacionesNivelesDelegados}"
+					var="del" paginator="true" rows="50" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
 					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
 					emptyMessage="No hay registros">
 
-					<p:column headerText="Cod Nivel">
-						<h:outputText value="#{del.codNivel}" />
-					</p:column>
 					<p:column headerText="Grupo">
 						<h:outputText value="#{del.codGrupo}" />
 					</p:column>
@@ -40,7 +130,7 @@
 					<p:column headerText="Delegado E">
 						<h:outputText value="#{del.cod_nombre_delegado_E}" />
 					</p:column>
-					
+
 				</p:dataTable>
 			</p:panel>
 
