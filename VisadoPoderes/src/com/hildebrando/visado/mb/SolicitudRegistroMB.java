@@ -75,6 +75,8 @@ public class SolicitudRegistroMB {
 	private SeguimientoMB seguimientoMB;	
 	@ManagedProperty(value = "#{registroUtilesMB}")
 	RegistroUtilesMB objRegistroUtilesMB;
+	@ManagedProperty(value = "#{visadoDocumentosMB}")
+	private VisadoDocumentosMB visadoDocumentosMB;//eramos
 	private TiivsSolicitudOperban objSolicBancaria;
 	private List<TiivsSolicitudOperban> lstSolicBancarias;
 	private TiivsSolicitud solicitudRegistrarT;
@@ -134,9 +136,8 @@ public class SolicitudRegistroMB {
 	private UploadedFile file;
 	private String sMonedaImporteGlobal;  
 	
-	//private String pathCliente="D:/Escaneados";
-	private String documentosLeer="";
-	private String documentosLeidos="";
+	//private String documentosLeer="";
+	//private String documentosLeidos="";
 	
 	/*private boolean boleanoMensajeInfoGeneral=true;
 	private boolean boleanoMensajeApoderdantePoderdante=true;
@@ -277,25 +278,10 @@ public class SolicitudRegistroMB {
 			ex.printStackTrace();
 		}
 		
-		this.documentosLeer = armaListaDocumentos(lstDocumentosXTipoSolTemp);
-		logger.info("Documentos a Leer:" + this.documentosLeer);		
+		visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(lstDocumentosXTipoSolTemp));		
+		logger.info("Trama de documentos a Leer:" + visadoDocumentosMB.getDocumentosLeer());		
 		
-	}
-	
-	public String armaListaDocumentos (List<TiivsTipoSolicDocumento> lstDocumentosXTipoSolTemp){
-		String sResult = "";		
-		StringBuilder sb = new StringBuilder(); 
-		for(TiivsTipoSolicDocumento doc : lstDocumentosXTipoSolTemp){
-			if(sb.length()>1){
-				sb.append(",");
-			}			
-			sb.append(doc.getTiivsDocumento().getNombre());
-			sb.append(".");
-			sb.append(doc.getTiivsDocumento().getFormato());			
-		}
-		sResult = sb.toString();
-		return sResult;
-	}
+	}		
 
 	public void actualizarListadoDocumentos() {
 		
@@ -986,8 +972,6 @@ public class SolicitudRegistroMB {
 			establecerTipoSolicitud();
 			
 		}
-		
-		
 	
 	}
 	
@@ -1046,8 +1030,9 @@ public class SolicitudRegistroMB {
 	public void actualizarDocumentosXTipoSolicitud(ActionEvent ae){		
 		logger.info("*****************actualizarDocumentosXTipoSolicitud*****************");
 		
-		logger.info("documentos Leidos: " + documentosLeidos);		
-		String []aDocumentos = documentosLeidos.split(",");
+		//logger.info("documentos Leidos: " + documentosLeidos);		
+		logger.info("documentos Leidos: " + visadoDocumentosMB.getDocumentosLeidos());
+		String []aDocumentos = visadoDocumentosMB.getDocumentosLeidos().split(",");
 		String nombreDoc = "";
 		
 		//Actualiza lista de documentos
@@ -1083,8 +1068,7 @@ public class SolicitudRegistroMB {
 		}		
 		
 		establecerTipoSolicitud();
-		
-		
+				
 		logger.info("(Tabla) lstdocumentos tamaño:" + lstdocumentos.size());
 		logger.info("(Anexos)lstAnexoSolicitud tamaño:" + lstdocumentos.size());
 		logger.info("(Combo) lstTipoSolicitudDocumentos tamaño:" + lstdocumentos.size());
@@ -1874,8 +1858,7 @@ public class SolicitudRegistroMB {
 		logger.info("***********prepararURLEscaneo***************");
 		
 		String sCadena = "";		
-		try{
-//			usuario.setUID("P014773");				
+		try{				
 			pdfViewerMB = new PDFViewerMB();	
 			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID());			
 		}catch(Exception e){
@@ -2287,19 +2270,7 @@ public class SolicitudRegistroMB {
 
 	public void setBoleanoMensajeDocumentos(boolean boleanoMensajeDocumentos) {
 		this.boleanoMensajeDocumentos = boleanoMensajeDocumentos;
-	}*/	
-
-	public String getDocumentosLeer() {
-		return documentosLeer;
-	}
-
-	public String getDocumentosLeidos() {
-		return documentosLeidos;
-	}
-
-	public void setDocumentosLeidos(String documentosLeidos) {
-		this.documentosLeidos = documentosLeidos;
-	}
+	}*/		
 
 	public SeguimientoMB getSeguimientoMB() {
 		return seguimientoMB;
@@ -2308,8 +2279,14 @@ public class SolicitudRegistroMB {
 	public void setSeguimientoMB(SeguimientoMB seguimientoMB) {
 		this.seguimientoMB = seguimientoMB;
 	}
-	
-	
+
+	public VisadoDocumentosMB getVisadoDocumentosMB() {
+		return visadoDocumentosMB;
+	}
+
+	public void setVisadoDocumentosMB(VisadoDocumentosMB visadoDocumentosMB) {
+		this.visadoDocumentosMB = visadoDocumentosMB;
+	}		
 	
 
 }

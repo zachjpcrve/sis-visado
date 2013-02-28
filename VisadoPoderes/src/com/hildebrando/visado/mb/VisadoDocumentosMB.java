@@ -39,6 +39,7 @@ import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsParametros;
+import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
 
 /**
  * 
@@ -93,6 +94,23 @@ public class VisadoDocumentosMB {
 			
 		}		
 	}
+	
+	public static String armaTramaDocumentosALeer (List<TiivsTipoSolicDocumento> lstDocumentosXTipoSolTemp){
+		String sResult = "";		
+		StringBuilder sb = new StringBuilder(); 
+		if(lstDocumentosXTipoSolTemp!=null){
+			for(TiivsTipoSolicDocumento doc : lstDocumentosXTipoSolTemp){
+				if(sb.length()>1){
+					sb.append(",");
+				}			
+				sb.append(doc.getTiivsDocumento().getNombre());
+				sb.append(".");
+				sb.append(doc.getTiivsDocumento().getFormato());			
+			}
+			sResult = sb.toString();
+		}		
+		return sResult;
+	}
 
 	public String getPathCliente() {
 		return pathCliente;
@@ -133,6 +151,24 @@ public class VisadoDocumentosMB {
 	public void setDirectory(String directory) {
 		this.directory = directory;
 	}
+
+	public String getDocumentosLeer() {
+		return documentosLeer;
+	}
+
+	public void setDocumentosLeer(String documentosLeer) {
+		this.documentosLeer = documentosLeer;
+	}
+
+	public String getDocumentosLeidos() {
+		return documentosLeidos;
+	}
+
+	public void setDocumentosLeidos(String documentosLeidos) {
+		this.documentosLeidos = documentosLeidos;
+	}
+	
+	
 	
 	
 }
