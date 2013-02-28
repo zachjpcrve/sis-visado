@@ -2,7 +2,6 @@ package com.hildebrando.visado.mb;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +15,6 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
-import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
@@ -207,18 +205,7 @@ public class DelegadosMB {
 					"Debe asignar delegados a un nivel");	
 		}
 	}
-	private int obtenerId() {
-		logger.info("DelegadosMB : obtenerId");
-		int id = 0;
-		try{
-			id = delegadosService.obtenerId();
-		}catch(Exception ex){
-			ex.printStackTrace();
-			logger.error("DelegadosMB : obtenerId"
-					+ ex.getLocalizedMessage());
-		}
-		return id;
-	}
+
 
 	private int obtenerGrupo() {
 		logger.info("DelegadosMB : obtenerGrupo");
@@ -234,6 +221,7 @@ public class DelegadosMB {
 	}
 
 	public void listarAgrupacionesDelegados() {
+
 		logger.info("DelegadosMB : listarAgrupacionesDelegados");
 		try {
 			SolicitudDao<TiivsMiembroNivel, Object> service = (SolicitudDao<TiivsMiembroNivel, Object>) SpringInit
