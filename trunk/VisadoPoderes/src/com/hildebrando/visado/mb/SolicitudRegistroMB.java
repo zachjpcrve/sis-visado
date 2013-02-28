@@ -1027,6 +1027,10 @@ public class SolicitudRegistroMB {
 		
 	}
 	
+	/*
+	 * Metodo que actualiza la lista de documentos, este método es indirectamente
+	 * invocado desde el applet
+	 * */
 	public void actualizarDocumentosXTipoSolicitud(ActionEvent ae){		
 		logger.info("*****************actualizarDocumentosXTipoSolicitud*****************");
 		
@@ -1046,13 +1050,14 @@ public class SolicitudRegistroMB {
 					logger.info("nombreDoc = doc.getItem():" + nombreDoc + "=" + doc.getNombreCorto());
 					if(doc.getNombreCorto().equals(nombreDoc)){
 						doc.setAlias(documento);
+						doc.setAliasTemporal("");
 						logger.info("actualizo nombre documento:" + doc.getAlias());
 						
 						//agregar a lista de anexos de la solicitud
 						TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
 						objAnexo.setId(new TiivsAnexoSolicitudId(null, doc.getItem()));
 						objAnexo.setAliasArchivo(doc.getAlias());
-						objAnexo.setAliasTemporal("");
+						objAnexo.setAliasTemporal(doc.getAliasTemporal());
 						lstAnexoSolicitud.add(objAnexo);
 												
 						//Actualiza lstTipoSolicitudDocumentos (listBox de documentos)		
