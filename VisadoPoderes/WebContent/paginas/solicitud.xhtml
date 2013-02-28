@@ -617,11 +617,13 @@ function actualizarDocumentos (documentos) {
 															</p:selectOneMenu></td>
 													<td><h:outputText styleClass="outputText" id="outImporte" value="Importe:" title="Importe"></h:outputText>
 													</td>
-													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importe}"  id="intImporte"/></td>
+													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importe}" onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');" id="intImporte" maxlength="16" /></td>
 												</tr>
 												<tr>
 													<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
-													<td><h:inputText id="intTipoCambio" value="#{solicitudRegMB.objSolicBancaria.tipoCambio}" /></td>
+													<td><h:inputText id="intTipoCambio" maxlength="5"  onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');" value="#{solicitudRegMB.objSolicBancaria.tipoCambio}" /></td>
 													<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
 													<td><h:inputText value="#{solicitudRegMB.objSolicBancaria.importeSoles}" readonly="true" id="txtImporteSoles"/></td>
 													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{solicitudRegMB.agregarOperacionBancaria}" actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}"
