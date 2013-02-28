@@ -119,7 +119,8 @@ public class DelegadosMB {
 				TiivsMiembro miembroDelegado = new TiivsMiembro();
 				miembroDelegado.setCodMiembro(codRegistro);
 				miembroDelegado.setDescripcion(desRegistro);
-				delegado.setTiivsMiembro(miembroDelegado);
+				//delegado.setTiivsMiembro(miembroDelegado);
+				delegado.setTiivsMiembro(miembros.get(0));
 				for(int i = 0; i <listaDelegados.size(); i++){
 					if(listaDelegados.size()> 0 && codRegistro.toUpperCase().equals(listaDelegados.get(i).getTiivsMiembro().getCodMiembro().toUpperCase())){
 						codigoRepetido = true;
@@ -192,13 +193,11 @@ public class DelegadosMB {
 			String utilDateString = formatear.format(sysDate);*/
 			Timestamp utilDateDate = new Timestamp(sysDate.getTime());
 			grupo = obtenerGrupo();
-			id = obtenerId();
 			for(int i = 0; i<listaDelegados.size(); i ++){
 				id= id + i;
 				listaDelegados.get(i).setGrupo(grupo);
 				listaDelegados.get(i).setFechaRegistro(utilDateDate);
 				listaDelegados.get(i).setUsuarioRegistro(usuario.getUID());
-				listaDelegados.get(i).setId(id);
 				
 				delegadosService.registrarAgrupacion(listaDelegados.get(i));
 			}
