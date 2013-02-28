@@ -432,7 +432,8 @@ function actualizarDocumentos (documentos) {
 															                function appletEliminarDocumento(){
 															                	codigoDocumento = this.document.getElementById('formSolicitudRegistro:idCodigoDocumentoSelected').value;
 															                	applet = this.document.getElementById('appletVisor');
-															                	applet.eliminarDocumento(codigoDocumento);
+															                	//applet.eliminarDocumento(codigoDocumento);
+															                	applet.eliminarDocumentoConPermisos(codigoDocumento);
 															                	return false;
 															                }
 															                
@@ -474,7 +475,7 @@ function actualizarDocumentos (documentos) {
 												        
 													        	<h:inputHidden id="idDocumentos" value="#{solicitudRegMB.documentosLeidos}" />
 													        	<h:inputHidden id="idCodigoSolicitud" value="#{solicitudRegMB.solicitudRegistrarT.codSoli}" /> 
-													        	<h:inputHidden id="idCodigoDocumentoSelected" value="#{solicitudRegMB.selectedDocumentoDTO.item}" />
+													        	<h:inputHidden id="idCodigoDocumentoSelected" value="#{solicitudRegMB.selectedDocumentoDTO.nombreCorto}" />
 														        <p:remoteCommand name="actDocumentos" update="@form" process="@form" 
 																	actionListener="#{solicitudRegMB.actualizarDocumentosXTipoSolicitud}" />
 														</td>
