@@ -18,6 +18,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpServletRequest;
 
@@ -79,6 +80,8 @@ public class ConsultarSolicitudMB {
 	RegistroUtilesMB objRegistroUtilesMB;
 	@ManagedProperty(value = "#{pdfViewerMB}")
 	private PDFViewerMB pdfViewerMB;
+	@ManagedProperty(value = "#{visadoDocumentosMB}")
+	private VisadoDocumentosMB visadoDocumentosMB;//eramos
 	/*
 	 * @ManagedProperty(value = "#{solEdicionMB}") private SolicitudEdicionMB
 	 * solicitudEdicionMB;
@@ -142,7 +145,7 @@ public class ConsultarSolicitudMB {
 	private TiivsPersona objTiivsPersonaResultado;
 	private TiivsPersona objTiivsPersonaSeleccionado;
 	private TiivsPersona objTiivsPersonaCapturado;
-	private DocumentoTipoSolicitudDTO selectedDocumentoDTO;
+	private DocumentoTipoSolicitudDTO selectedDocumentoDTO = new DocumentoTipoSolicitudDTO();
 	private String iTipoSolicitud = "";
 	private TiivsTipoSolicDocumento selectedTipoDocumento;
 	Map<Integer, TiivsSolicitudOperban> mapSolicitudes;
@@ -752,7 +755,7 @@ public class ConsultarSolicitudMB {
 						} 
 					}
 				}				
-			}
+			}					
 			
 		} else {	//Para consulta		
 			lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
@@ -1801,8 +1804,7 @@ public class ConsultarSolicitudMB {
 					  }
 				   }
 				}
-				
-				
+																				
 				TiivsSolicitud objResultado = service.insertarMerge(this.solicitudRegistrarT);
 								  
 				// Carga ficheros al FTP
@@ -1815,7 +1817,7 @@ public class ConsultarSolicitudMB {
 				{
 					logger.info("nnnnnnnnnnnnnnnnnnnnnnn " + n.getAliasArchivo());
 					serviceAnexos.insertarMerge(n);
-				}
+				}			
 
 				for (TiivsSolicitudOperban a : this.lstSolicBancarias) 
 				{
@@ -2274,6 +2276,9 @@ public class ConsultarSolicitudMB {
 		} catch (Exception ex) {
 			logger.info("Error al cargar el listado de documentos:",ex);			
 		}
+		
+		//eramos
+		this.visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(this.lstTipoSolicitudDocumentos));
 	}
 
 	public void actualizarListadoDocumentos() {
@@ -2339,6 +2344,7 @@ public class ConsultarSolicitudMB {
 	public void agregarDocumentosXTipoSolicitud() {
 		logger.info(" ************************** agrearDocumentosXTipoSolicitud  ****************************** ");
 		logger.info("iTipoSolicitud  : " + iTipoSolicitud);
+		String aliasCortoDocumento="";
 		
 		setbBooleanPopup(false);
 		
@@ -2357,10 +2363,11 @@ public class ConsultarSolicitudMB {
 
 		if (this.ValidarDocumentosDuplicados()) {
 
-			if (sCodDocumento
-					.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
-				sCodDocumento = ConstantesVisado.PREFIJO_OTROS
-						+ String.format("%06d", lstdocumentos.size() + 1);
+			if (sCodDocumento.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
+				sCodDocumento = ConstantesVisado.PREFIJO_OTROS + String.format("%06d", lstdocumentos.size() + 1);
+				aliasCortoDocumento = sCodDocumento;
+			} else {
+				aliasCortoDocumento = selectedTipoDocumento.getTiivsDocumento().getNombre();
 			}
 
 			String sAliasTemporal = cargarUnicoPDF();
@@ -2373,29 +2380,35 @@ public class ConsultarSolicitudMB {
 					.lastIndexOf("."));
 //			String sAliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_"
 //					+ sCodDocumento + sExtension;
-			String sAliasArchivo = this.sCodDocumento + sExtension;
+//			String sAliasArchivo = this.sCodDocumento + sExtension;
+			aliasCortoDocumento += sExtension;
 
-			logger.info("aliasArchivo *** " + sAliasArchivo);
+			logger.info("aliasArchivo *** " + aliasCortoDocumento.toLowerCase());
 			logger.info("aliasArchivoTemporal *** " + sAliasTemporal);
 
 			TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
 			objAnexo.setId(new TiivsAnexoSolicitudId(this.solicitudRegistrarT
 					.getCodSoli(), sCodDocumento));
-			objAnexo.setAliasArchivo(sAliasArchivo);
+			objAnexo.setAliasArchivo(aliasCortoDocumento.toUpperCase());
 			objAnexo.setAliasTemporal(sAliasTemporal);
 			lstAnexoSolicitud.add(objAnexo);
 
 			this.actualizarListaDocumentosXTipo(objAnexo);
 
-			for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
-				if (tipoSoli.getCodTipSolic().equals(iTipoSolicitud)) {
-					solicitudRegistrarT.setTiivsTipoSolicitud(tipoSoli);
-				}
-			}
+			establecerTipoSolicitud();						
 
 		}
 		// solicitudRegistrarT.getTiivsTipoSolicitud().setTiivsTipoSolicDocumentos(tiivsTipoSolicDocumentos);
 	}
+	
+	private void establecerTipoSolicitud(){
+		for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
+			if (tipoSoli.getCodTipSolic().equals(iTipoSolicitud)) {
+				solicitudRegistrarT.setTiivsTipoSolicitud(tipoSoli);
+			}
+		}
+	}
+	
 
 	public String cargarUnicoPDF() {
 
@@ -2483,7 +2496,8 @@ public class ConsultarSolicitudMB {
 		int i = 0;
 		for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
 			if (s.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {
-				this.lstTipoSolicitudDocumentos.add(i, s);
+				//this.lstTipoSolicitudDocumentos.add(i, s);
+				this.lstTipoSolicitudDocumentos.add(s);
 				break;
 			}
 			i++;
@@ -2503,6 +2517,56 @@ public class ConsultarSolicitudMB {
 		}
 		
 	}
+	
+	
+	public void actualizarDocumentosXTipoSolicitud(ActionEvent ae){		//eramos
+		logger.info("*****************actualizarDocumentosXTipoSolicitud*****************");
+		
+		//logger.info("documentos Leidos: " + documentosLeidos);		
+		logger.info("documentos Leidos: " + visadoDocumentosMB.getDocumentosLeidos());
+		String []aDocumentos = visadoDocumentosMB.getDocumentosLeidos().split(",");
+		String nombreDoc = "";
+		
+		//Actualiza lista de documentos
+		for(String documento : aDocumentos){
+			logger.info("Buscando coincidencias para:" + documento);
+			if(!documento.trim().isEmpty()){
+				nombreDoc = documento.substring(0, documento.lastIndexOf("."));			
+				
+				//Agregar a listado de documentos tabla documentos
+				for(DocumentoTipoSolicitudDTO doc : lstdocumentos){
+					logger.info("nombreDoc = doc.getItem():" + nombreDoc + "=" + doc.getNombreCorto());
+					if(doc.getNombreCorto().equals(nombreDoc)){
+						doc.setAlias(documento);
+						logger.info("actualizo nombre documento:" + doc.getAlias());
+						
+						//agregar a lista de anexos de la solicitud
+						TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
+						objAnexo.setId(new TiivsAnexoSolicitudId(null, doc.getItem()));
+						objAnexo.setAliasArchivo(doc.getAlias());
+						objAnexo.setAliasTemporal("");
+						lstAnexoSolicitud.add(objAnexo);
+												
+						//Actualiza lstTipoSolicitudDocumentos (listBox de documentos)		
+						for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
+							if (s.getId().getCodDoc().equals(objAnexo.getId().getCodDoc())) {
+								this.lstTipoSolicitudDocumentos.remove(s);
+								break;
+							}
+						}												
+					}
+				}										
+			}
+		}		
+		
+		//ver si tambien cambia tipo solicitud
+		establecerTipoSolicitud();
+				
+		logger.info("(Tabla) lstdocumentos tamaño:" + lstdocumentos.size());
+		logger.info("(Anexos)lstAnexoSolicitud tamaño:" + lstdocumentos.size());
+		logger.info("(Combo) lstTipoSolicitudDocumentos tamaño:" + lstdocumentos.size());
+	}
+	
 
 	public boolean validarOperacionBancaria() {
 		boolean result = true;
@@ -4143,4 +4207,14 @@ public class ConsultarSolicitudMB {
 	public void setLstClasificacionPersona(List<ComboDto> lstClasificacionPersona) {
 		this.lstClasificacionPersona = lstClasificacionPersona;
 	}
+
+	public VisadoDocumentosMB getVisadoDocumentosMB() {
+		return visadoDocumentosMB;
+	}
+
+	public void setVisadoDocumentosMB(VisadoDocumentosMB visadoDocumentosMB) {
+		this.visadoDocumentosMB = visadoDocumentosMB;
+	}
+	
+	
 }
