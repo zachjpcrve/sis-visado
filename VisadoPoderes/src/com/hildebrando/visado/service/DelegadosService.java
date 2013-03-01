@@ -58,18 +58,30 @@ public class DelegadosService {
 	public <E> int obtenerGrupo(String codNiv) {
 		logger.info("DelegadosService : obtenerDatosMiembro ");
 		List<TiivsMiembroNivel> grupo = new ArrayList<TiivsMiembroNivel>();
+		List<TiivsMiembroNivel> contador = new ArrayList<TiivsMiembroNivel>();
 		int grupoI = 0;
+		int grupoCount = 0;
 		GenericDao<TiivsMiembroNivel, Object> service = (GenericDao<TiivsMiembroNivel, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsMiembroNivel.class);
 		try {
-			grupo = service.buscarDinamico(filtro.add(Restrictions.eq("codNiv", codNiv)).setProjection(Projections
-					.max("grupo")));
+			
+			contador = service.buscarDinamico(filtro.add(Restrictions.eq("codNiv", codNiv)).setProjection(Projections
+					.count("grupo")));
+			List<E> parseCount = new ArrayList<E>();
+			parseCount = (List<E>) contador;
+			grupoCount = Integer.parseInt(parseCount.get(0).toString());
+			if(grupoCount > 0){
+				grupo = service.buscarDinamico(filtro.add(Restrictions.eq("codNiv", codNiv)).setProjection(Projections
+						.max("grupo")));
 
-			List<E> parse = new ArrayList<E>();
-			parse = (List<E>) grupo;
-			grupoI = (Integer) parse.get(0);
-			grupoI = grupoI + 1;
+				List<E> parse = new ArrayList<E>();
+				parse = (List<E>) grupo;
+				grupoI = (Integer) parse.get(0);
+				grupoI = grupoI + 1;
+			}else{
+				grupoI = 1;
+			}
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -118,23 +130,64 @@ public class DelegadosService {
 		return grupoI;
 	}
 
-	public List<TiivsMiembroNivel> editarAgrupacion(String codigoGrupo) {
+	public List<TiivsMiembroNivel> editarAgrupacion(String codigoGrupo, String desNivel) {
 		logger.info("DelegadosService : editarAgrupacion ");
 		List<TiivsMiembroNivel> delegadosEditar = new ArrayList<TiivsMiembroNivel>();
 		int grupo = 0;
 		grupo = Integer.parseInt(codigoGrupo);
+		String codigoNivel = null;
+		
+		codigoNivel = obtenerCodNivel(desNivel);
+		
 		GenericDao<TiivsMiembroNivel, Object> service = (GenericDao<TiivsMiembroNivel, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsMiembroNivel.class);
 		try{
-			delegadosEditar = service.buscarDinamico(filtro.add(Restrictions.eq("grupo", grupo)));
+			delegadosEditar = service.buscarDinamico(filtro.add(Restrictions.eq("grupo", grupo)).add(Restrictions.eq("codNiv", codigoNivel)).add(Restrictions.eq("estadoMiembro", "1")));
 			
 		}catch(Exception ex){
 			ex.printStackTrace();
-			logger.error("NivelService : editarAgrupacion: "
+			logger.error("DelegadosService : editarAgrupacion: "
 					+ ex.getLocalizedMessage());
 		}
 		return delegadosEditar;
+	}
+
+	public String obtenerCodNivel(String desNivel) {
+		logger.info("DelegadosService : obtenerCodNivel ");
+		List<TiivsNivel> lstCodNivel = new ArrayList<TiivsNivel>();
+		String codNivel = null;
+		
+		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
+		
+		try{
+			lstCodNivel = service.buscarDinamico(filtro.add(Restrictions.eq("desNiv", desNivel)));
+			
+			codNivel = lstCodNivel.get(0).getCodNiv();
+		}catch(Exception ex){
+			ex.printStackTrace();
+			logger.error("DelegadosService : obtenerCodNivel: "
+					+ ex.getLocalizedMessage());
+		}
+		return codNivel;
+	}
+
+	public void actualizarAgrupacion(TiivsMiembroNivel tiivsMiembroNivel) {
+		logger.info("DelegadosService : actualizarAgrupacion ");
+		try {
+			GenericDao<TiivsMiembroNivel, Object> service = (GenericDao<TiivsMiembroNivel, Object>) SpringInit
+					.getApplicationContext().getBean("genericoDao");
+
+			service.insertarMerge(tiivsMiembroNivel);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("DocumentoService : actualizarAgrupacion: "
+					+ e.getLocalizedMessage());
+		}
+		
 	}
 
 }
