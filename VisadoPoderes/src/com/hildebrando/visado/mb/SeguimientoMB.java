@@ -1483,7 +1483,8 @@ public class SeguimientoMB
 		if (getCodSolicitud().compareTo("") != 0) 
 		{
 			logger.debug("Filtro por codigo de solicitud: " + getCodSolicitud());
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,	getCodSolicitud()));
+			String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getCodSolicitud().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
+			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_COD_SOLICITUD,"%"+filtroNuevo));
 		}
 
 		// 2. Filtro por estado (si funciona, validar que campo estado en BD no tenga espacios en blanco)
