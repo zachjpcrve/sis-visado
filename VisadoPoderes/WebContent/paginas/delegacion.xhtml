@@ -13,8 +13,9 @@
 
 				<table>
 					<tr>
-						<td><p:commandButton id="nuevaDelegacion"
-								value="Nueva Agrupacion" onclick="dlgNuevaDelegacion.show();">
+						<td><p:commandButton id="nuevaDelegacion" actionListener="#{delegadosMB.limpiarNuevo}"
+						update =":frmMantenimientoDelegado:txtDescRegMiembro :frmMantenimientoDelegado:txtPerfilRegMiembro :frmMantenimientoDelegado:dtbListaDelegado :frmMantenimientoDelegado:txtCodRegistro"
+								value="Nueva Agrupacion" oncomplete="dlgNuevaDelegacion.show();">
 							</p:commandButton></td>
 					</tr>
 
@@ -89,6 +90,7 @@
 						<tr>
 							<td><p:commandButton id="agregarAgrupacion" value="Agregar Agrupacion"
 									actionListener="#{delegadosMB.registrarAgrupacion}"
+									action ="#{delegadosMB.listarAgrupacionesDelegados}"
 									oncomplete="dlgNuevaDelegacion.hide()"
 									update=":frmDataTableDelegacion">
 								</p:commandButton></td>
@@ -130,8 +132,84 @@
 					<p:column headerText="Delegado E">
 						<h:outputText value="#{del.cod_nombre_delegado_E}" />
 					</p:column>
-
+					<p:column headerText="Delegado E">
+						<h:outputText value="#{del.cod_nombre_delegado_E}" />
+					</p:column>
+						<p:column headerText="Editar">
+							<p:commandLink id="clinkEditarDtb" ajax="true"
+								actionListener="#{delegadosMB.editarAgrupacion}" oncomplete="dlgEditarDelegacion.show();" update=":frmDataTableDelegacion:dtbListaDelegadoEditar">
+								<f:param name="codGrupo" value="#{del.codGrupo}"></f:param>
+								<h:outputText value="Editar" />
+							</p:commandLink>
+						</p:column>
 				</p:dataTable>
+				<p:dialog widgetVar="dlgEditarDelegacion" modal="true"
+				header="Editar Delegacion por Nivel">
+
+				<p:panel>
+					<p:messages id="idMsmDocumento"></p:messages>
+					<table>
+						<tr>
+							<td><h:outputText value="Nivel:  " /></td>
+							<td><p:selectOneMenu
+									value="#{delegadosMB.miembroNivelEditar.codNiv}">
+									<f:selectItems value="#{delegadosMB.listaNiveles}"
+										itemLabel="#{nE.desNiv}" itemValue="#{nE.codNiv}" var="nE"></f:selectItems>
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><h:outputText value="Registro  " /></td>
+							<td><p:inputText id="txtCodRegistroEditar"
+									value="#{delegadosMB.codRegistroEditar}" maxlength="7">
+									<p:ajax event="blur" 
+										update=":frmDataTableDelegacion:txtDescRegMiembroEditar :frmDataTableDelegacion:txtPerfilRegMiembroEditar"
+										listener="#{delegadosMB.obtenerDatosMiembroEditar}"></p:ajax>
+								</p:inputText></td>
+							<td><h:outputText value="Descripcion  " /></td>
+							<td><p:inputText id="txtDescRegMiembroEditar" disabled="true"
+									value="#{delegadosMB.desRegistroEditar}" maxlength="45" /></td>
+						</tr>
+						<tr>
+							<td><h:outputText value="Perfil" /></td>
+							<td><p:inputText id="txtPerfilRegMiembroEditar" disabled="true"
+									value="#{delegadosMB.perfilRegistroEditar}" maxlength="45" /></td>
+						</tr>
+						<tr>
+							<td><p:commandButton id="registrarDelegadoEditar" value="Guardar"
+									actionListener="#{delegadosMB.agregarDelegadoEditar}">
+								</p:commandButton></td>
+						</tr>
+
+					</table>
+					<p:dataTable id="dtbListaDelegadoEditar" rowIndexVar="rowIndex"
+						value="#{delegadosMB.listaDelegadosEditar}" var="lstDelEd"
+						paginator="true" rows="50" paginatorPosition="bottom"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+						currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+						emptyMessage="No hay registros">
+
+						<p:column headerText="Nivel">
+							<h:outputText value="#{lstDelEd.codNiv}" />
+						</p:column>
+						<p:column headerText="Registro">
+							<h:outputText value="#{lstDelEd.tiivsMiembro.codMiembro}" />
+						</p:column>
+						<p:column headerText="Descripcion">
+							<h:outputText value="#{lstDelEd.tiivsMiembro.descripcion}" />
+						</p:column>
+							<p:column headerText="Eliminar">
+							<p:commandLink id="clkEliminar" ajax="true"
+								update=":frmDataTableDelegacion:dtbListaDelegadoEditar"
+								actionListener="#{delegadosMB.eliminarDelegadoEditar}">
+								<f:param name="idEl" value="#{rowIndex}"></f:param>
+								<h:outputText value="Eliminar" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+
+				</p:panel>
+
+			</p:dialog>
 			</p:panel>
 
 		</h:form>
