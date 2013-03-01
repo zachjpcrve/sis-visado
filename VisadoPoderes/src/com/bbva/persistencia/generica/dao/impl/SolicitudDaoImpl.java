@@ -68,13 +68,13 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		@SuppressWarnings("unchecked")
 		public List<AgrupacionDelegadosDto>  obtenerPKDelegados() throws Exception {
 
-			final String sql = "select  distinct n.grupo,ni.des_niv "+
+			final String sql = "select  distinct ni.des_niv, n.grupo "+
 	 " from tiivs_miembro_nivel n, tiivs_miembro m, tiivs_nivel ni "+
 	" where  n.cod_miembro = m.cod_miembro "+
 	  " and  n.cod_niv = ni.cod_niv "+
 	 " and n.tipo_rol = 'D' "+
-	 " group by n.grupo,ni.des_niv,n.cod_miembro, m.descripcion "+
-	  " order by n.grupo,ni.des_niv asc";
+	 " group by ni.des_niv, n.grupo,n.cod_miembro, m.descripcion "+
+	  " order by ni.des_niv, n.grupo asc";
 
 			
 			List ResultList = (ArrayList<AgrupacionDelegadosDto>) getHibernateTemplate().execute(
@@ -94,8 +94,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				    Object[] row =  (Object[]) ResultList.get(i);
 				    nuevo = new AgrupacionDelegadosDto();
 				    
-				    nuevo.setGrupo(row[0].toString());
-				    nuevo.setDes_niv(row[1].toString());
+				    nuevo.setGrupo(row[1].toString());
+				    nuevo.setDes_niv(row[0].toString());
 				    
 				  
 				    tmpLista.add(nuevo);
@@ -107,14 +107,15 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	@SuppressWarnings("unchecked")
 	public List<AgrupacionDelegadosDto>  obtenerDelegados() throws Exception {
 
-		final String sql = "select  n.grupo,ni.des_niv, n.cod_miembro, m.descripcion "
+		final String sql = "select  ni.des_niv,n.grupo, n.cod_miembro, m.descripcion "
 				+ " from tiivs_miembro_nivel n, tiivs_miembro m, tiivs_nivel ni  "
 				+ " where  "
 				+ "n.cod_miembro = m.cod_miembro  "
 				+ "  and  n.cod_niv = ni.cod_niv "
+				+ " and n.estado_miembro = '1' "
 				+ " and n.tipo_rol = 'D' "
-				+ " group by n.grupo,ni.des_niv,n.cod_miembro, m.descripcion "
-				+ "  order by n.grupo,ni.des_niv asc";
+				+ " group by ni.des_niv,n.grupo,n.cod_miembro, m.descripcion "
+				+ "  order by ni.des_niv,n.grupo asc";
 
 		
 		List ResultList = (ArrayList<AgrupacionDelegadosDto>) getHibernateTemplate().execute(
@@ -134,8 +135,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			    Object[] row =  (Object[]) ResultList.get(i);
 			    nuevo = new AgrupacionDelegadosDto();
 			    
-			    nuevo.setGrupo(row[0].toString());
-			    nuevo.setDes_niv(row[1].toString());
+			    nuevo.setGrupo(row[1].toString());
+			    nuevo.setDes_niv(row[0].toString());
 			    nuevo.setCod_miembro(row[2].toString());
 			    nuevo.setDescripcion(row[3].toString());
 			  
