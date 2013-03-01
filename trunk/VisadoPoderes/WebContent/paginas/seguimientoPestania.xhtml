@@ -217,7 +217,7 @@
 	
 						<!-- /c:if -->
 						<c:if test="#{consultarSolicitudMB.bMostrarCartaAtencion}">
-							<a href="#" onclick="confirmation2.show()">						
+							<a href="#{root}main/download/pdfReportCartaAtencion.htm" onclick="confirmation2.show()">						
 								<font color="blue">
 									<u>Carta de atención</u>
 								</font>
@@ -236,20 +236,20 @@
 							</a>
 						</c:if>
 						<c:if test="#{consultarSolicitudMB.bMostrarCartaRechazo}">
-							<a href="#{root}main/download/pdfReportCartaRechazo.htm"  style="color:#0073EA;font-weight:bold; ">Carta Rechazo</a><br/>
-						</c:if>
-											
-						
-						<c:if test="#{consultarSolicitudMB.bMostrarCartaImprocedente}">
-							<a href="#{root}main/download/pdfReportCartaImprocedente.htm"  style="color:#0073EA;font-weight:bold; ">Carta Improcedente</a><br/>
-						</c:if>
-						<c:if test="#{consultarSolicitudMB.bMostrarCartaRespuesta}">
-							<a href="">
+							<a href="#{root}main/download/pdfReportCartaRechazo.htm" >
 								<font color="blue">
 									<u>Carta Respuesta</u>
 								</font>
 							</a>
 						</c:if>
+						<c:if test="#{consultarSolicitudMB.bMostrarCartaImprocedente}">
+							<a href="#{root}main/download/pdfReportCartaImprocedente.htm">
+								<font color="blue">
+									Carta Improcedente
+								</font>
+							</a>
+						</c:if>
+						
 					</h:panelGrid>
 				</td>
 			</tr>
