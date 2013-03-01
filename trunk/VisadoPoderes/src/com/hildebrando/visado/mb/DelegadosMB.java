@@ -1,5 +1,6 @@
 package com.hildebrando.visado.mb;
 
+import java.nio.charset.CodingErrorAction;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -42,9 +43,11 @@ public class DelegadosMB {
 	private List<TiivsMiembro> miembros;
 	private List<TiivsMiembroNivel> listaDelegados;
 	private List<TiivsMiembroNivel> listaDelegadosEditar;
+	private List<TiivsMiembroNivel> listaDelegadosEditarCopia;
+	private List<TiivsMiembroNivel> listaDelegadosEditarEliminar;
 	private TiivsMiembroNivel delegado;
 	private boolean validarCodRegistro;
-
+	private boolean validarCodRegistroEditar;
 	private String codRegistro;
 	private String desRegistro;
 	private String perfilRegistro;
@@ -68,16 +71,18 @@ public class DelegadosMB {
 		usuario = (IILDPeUsuario) Utilitarios
 				.getObjectInSession("USUARIO_SESION");
 		validarCodRegistro = false;
+		validarCodRegistroEditar = false;
 		delegado = new TiivsMiembroNivel();
 		listaDelegadosEditar = new ArrayList<TiivsMiembroNivel>();
 		listaDelegados = new ArrayList<TiivsMiembroNivel>();
+		listaDelegadosEditarCopia = new ArrayList<TiivsMiembroNivel>();
 		delegadosService = new DelegadosService();
 		lstListaAgrupacionesNivelesDelegados = new ArrayList<AgrupacionNivelDelegadoDto>();
 		listarAgrupacionesDelegados();
 		miembroNivel = new TiivsMiembroNivel();
 		miembroNivelEditar = new TiivsMiembroNivel();
 		listarNiveles();
-
+		listaDelegadosEditarEliminar = new ArrayList<TiivsMiembroNivel>();
 	}
 
 	public void listarNiveles() {
@@ -121,28 +126,28 @@ public class DelegadosMB {
 					+ ex.getLocalizedMessage());
 		}
 	}
-	
+
 	public void obtenerDatosMiembroEditar() {
 		logger.info("DelegadosMB : obtenerDatosMiembroEditar");
 		try {
 			if (!codRegistroEditar.equals("")) {
-				miembros = delegadosService.obtenerDatosMiembro(codRegistroEditar
-						.toUpperCase());
+				miembros = delegadosService
+						.obtenerDatosMiembro(codRegistroEditar.toUpperCase());
 				if (miembros.size() > 0) {
 
 					desRegistroEditar = miembros.get(0).getDescripcion();
 					perfilRegistroEditar = miembros.get(0).getTiivsGrupo()
 							.getDesGrupo();
-					criterioRegistroEditar= miembros.get(0).getCriterio();
-					validarCodRegistro = true;
+					criterioRegistroEditar = miembros.get(0).getCriterio();
+					validarCodRegistroEditar = true;
 				} else {
 					Utilitarios
 							.mensajeError("Error",
 									"No se encuentra Registrado el codigo del Delegado");
-					desRegistro = "";
-					perfilRegistro = "";
-					criterioRegistro = "";
-					validarCodRegistro = false;
+					desRegistroEditar = "";
+					perfilRegistroEditar = "";
+					criterioRegistroEditar = "";
+					validarCodRegistroEditar = false;
 				}
 			}
 		} catch (Exception ex) {
@@ -155,12 +160,15 @@ public class DelegadosMB {
 	public void editarAgrupacion() {
 		logger.info("DelegadosMB : editarAgrupacion");
 		String codigoGrupo = null;
+		String desNivel = null;
 		Map<String, String> params = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap();
 		codigoGrupo = params.get("codGrupo");
+		desNivel = params.get("desNivel");
 		try {
-			listaDelegadosEditar = delegadosService
-					.editarAgrupacion(codigoGrupo);
+			listaDelegadosEditar = delegadosService.editarAgrupacion(
+					codigoGrupo, desNivel);
+			listaDelegadosEditarCopia = listaDelegadosEditar;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("DelegadosMB : editarAgrupacion"
@@ -204,7 +212,7 @@ public class DelegadosMB {
 					}
 				}
 				delegado.setCodNiv(miembroNivel.getCodNiv());
-				delegado.setEstado("1");
+				delegado.setEstadoMiembro("1");
 				delegado.setTipoRol("D");
 				if (codigoRepetido == false) {
 					if (nivelDiferente == false) {
@@ -251,6 +259,90 @@ public class DelegadosMB {
 
 	}
 
+	public void agregarDelegadoEditar() {
+		logger.info("DelegadosMB : agregarDelegadoEditar");
+		boolean codigoRepetido = false;
+		boolean nivelDiferente = false;
+		if (isValidarCodRegistroEditar() == true) {
+			if (listaDelegadosEditar.size() < 5) {
+				delegado = new TiivsMiembroNivel();
+				TiivsMiembro miembroDelegado = new TiivsMiembro();
+				miembroDelegado.setCodMiembro(codRegistro);
+				miembroDelegado.setDescripcion(desRegistro);
+				// delegado.setTiivsMiembro(miembroDelegado);
+				delegado.setTiivsMiembro(miembros.get(0));
+				for (int i = 0; i < listaDelegadosEditar.size(); i++) {
+					if (listaDelegadosEditar.size() > 0
+							&& codRegistroEditar.toUpperCase().equals(
+									listaDelegadosEditar.get(i)
+											.getTiivsMiembro().getCodMiembro()
+											.toUpperCase())) {
+						codigoRepetido = true;
+						break;
+					} else {
+						codigoRepetido = false;
+					}
+				}
+				for (int j = 0; j < listaDelegadosEditar.size(); j++) {
+					if (listaDelegadosEditar.size() > 0
+							&& miembroNivelEditar.getCodNiv().equals(
+									listaDelegadosEditar.get(j).getCodNiv())) {
+						nivelDiferente = false;
+
+					} else {
+						nivelDiferente = true;
+						break;
+					}
+				}
+				delegado.setCodNiv(miembroNivelEditar.getCodNiv());
+				delegado.setEstadoMiembro("1");
+				delegado.setTipoRol("D");
+				delegado.setGrupo(listaDelegadosEditar.get(0).getGrupo());
+				if (codigoRepetido == false) {
+					if (nivelDiferente == false) {
+						listaDelegadosEditar.add(delegado);
+
+					} else {
+						Utilitarios
+								.mensajeError("Error",
+										"Debe seleccionar el mismo nivel para los delegados a agregar");
+					}
+
+				} else {
+					Utilitarios
+							.mensajeError("Error",
+									"El delegado ya ha sido seleccionado para este nivel");
+				}
+
+				//
+				codRegistroEditar = "";
+				desRegistroEditar = "";
+				perfilRegistroEditar = "";
+				criterioRegistroEditar = "";
+				validarCodRegistroEditar = false;
+			} else {
+				Utilitarios.mensajeError("Error",
+						"Un Nivel no puede tener mas de 5 delegados");
+				//
+				codRegistroEditar = "";
+				desRegistroEditar = "";
+				perfilRegistroEditar = "";
+				criterioRegistroEditar = "";
+				validarCodRegistroEditar = false;
+			}
+			//
+		} else {
+			//
+			codRegistroEditar = "";
+			desRegistroEditar = "";
+			perfilRegistroEditar = "";
+			criterioRegistroEditar = "";
+			validarCodRegistroEditar = false;
+			//
+		}
+
+	}
+
 	public void eliminarDelegado() {
 		logger.info("DelegadosMB : eliminarDelegado");
 		String id;
@@ -265,12 +357,23 @@ public class DelegadosMB {
 
 	public void eliminarDelegadoEditar() {
 		logger.info("DelegadosMB : eliminarDelegadoEditar");
+		listaDelegadosEditarEliminar = new ArrayList<TiivsMiembroNivel>();
 		String idEl;
+		String codRegistro;
 		int codigo;
 		Map<String, String> params = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap();
 		idEl = params.get("idEl");
+		codRegistro = params.get("codMiembroEditar");
 		codigo = Integer.parseInt(idEl);
+		for (int i = 0; i < listaDelegadosEditarCopia.size(); i++) {
+			if (listaDelegadosEditar.get(codigo).equals(
+					listaDelegadosEditarCopia.get(i)) == true) {
+				listaDelegadosEditar.get(i).setEstadoMiembro("0");
+				listaDelegadosEditarEliminar.add(listaDelegadosEditar.get(i));
+			}
+		}
+
 		listaDelegadosEditar.remove(codigo);
 
 	}
@@ -283,6 +386,28 @@ public class DelegadosMB {
 		perfilRegistro = "";
 		criterioRegistro = "";
 		validarCodRegistro = false;
+	}
+
+	public void actualizarAgrupacion() throws Exception {
+		logger.info("DelegadosMB : actualizarAgrupacion");
+		Date sysDate = new Date();/*
+								 * String utilDateString =
+								 * formatear.format(sysDate);
+								 */
+		Timestamp utilDateDate = new Timestamp(sysDate.getTime());
+		for (int i = 0; i < listaDelegadosEditarEliminar.size(); i++) {
+
+			delegadosService.actualizarAgrupacion(listaDelegadosEditarEliminar
+					.get(i));
+		}
+
+		for (int j = 0; j < listaDelegadosEditar.size(); j++) {
+			listaDelegadosEditar.get(j).setFechaRegistro(utilDateDate);
+			listaDelegadosEditar.get(j).setUsuarioRegistro(usuario.getUID());
+			
+			delegadosService.actualizarAgrupacion(listaDelegadosEditar.get(j));
+		}
+		limpiarListaAgrupaciones();
 	}
 
 	public void registrarAgrupacion() throws Exception {
@@ -336,12 +461,13 @@ public class DelegadosMB {
 		}
 		return grupo;
 	}
-	
-	public void limpiarListaAgrupaciones(){
+
+	public void limpiarListaAgrupaciones() {
 		logger.info("DelegadosMB : listarAgrupacionesDelegados");
 		lstListaAgrupacionesNivelesDelegados = new ArrayList<AgrupacionNivelDelegadoDto>();
-		
+
 	}
+
 	public void listarAgrupacionesDelegados() {
 		logger.info("DelegadosMB : listarAgrupacionesDelegados");
 		try {
@@ -349,8 +475,9 @@ public class DelegadosMB {
 					.getApplicationContext().getBean("solicitudEspDao");
 			List<AgrupacionDelegadosDto> lstDele = new ArrayList<AgrupacionDelegadosDto>();
 			List<AgrupacionDelegadosDto> lstDelegadosPK = new ArrayList<AgrupacionDelegadosDto>();
-			/*List<AgrupacionDelegadosDto> */lstDele = service.obtenerDelegados();
-			/*List<AgrupacionDelegadosDto> */lstDelegadosPK = service
+			/* List<AgrupacionDelegadosDto> */lstDele = service
+					.obtenerDelegados();
+			/* List<AgrupacionDelegadosDto> */lstDelegadosPK = service
 					.obtenerPKDelegados();
 			List<ComboDto> lstDuos = null;
 			ComboDto duo = null;
@@ -362,7 +489,6 @@ public class DelegadosMB {
 				agrupacionNivelDelegadoDto.setNivel(a.getDes_niv());
 				agrupacionNivelDelegadoDto.setCodGrupo(a.getGrupo());
 				agrupacionNivelDelegadoDto.setLstDelegados(lstDuos);
-
 				for (AgrupacionDelegadosDto b : lstDele) {
 					if (a.getDes_niv().equals(b.getDes_niv())
 							&& a.getGrupo().equals(b.getGrupo())) {
@@ -436,42 +562,47 @@ public class DelegadosMB {
 										.get(3) == null ? "" : c
 										.getLstDelegados().get(3)
 										.getDescripcion());
-							
-							} else {
-								if(c.getLstDelegados().size() == 5){
-									c.setCod_delegado_A(c.getLstDelegados().get(0) == null ? ""
-											: c.getLstDelegados().get(0).getKey());
-									c.setCod_nombre_delegado_A(c.getLstDelegados()
-											.get(0) == null ? "" : c
-											.getLstDelegados().get(0)
-											.getDescripcion());
-									c.setCod_delegado_B(c.getLstDelegados().get(1) == null ? ""
-											: c.getLstDelegados().get(1).getKey());
-									c.setCod_nombre_delegado_B(c.getLstDelegados()
-											.get(1) == null ? "" : c
-											.getLstDelegados().get(1)
-											.getDescripcion());
-									c.setCod_delegado_C(c.getLstDelegados().get(2) == null ? ""
-											: c.getLstDelegados().get(2).getKey());
-									c.setCod_nombre_delegado_C(c.getLstDelegados()
-											.get(2) == null ? "" : c
-											.getLstDelegados().get(2)
-											.getDescripcion());
-									c.setCod_delegado_D(c.getLstDelegados().get(3) == null ? ""
-											: c.getLstDelegados().get(3).getKey());
-									c.setCod_nombre_delegado_D(c.getLstDelegados()
-											.get(3) == null ? "" : c
-											.getLstDelegados().get(3)
-											.getDescripcion());
-									c.setCod_delegado_E(c.getLstDelegados().get(4) == null ? ""
-											: c.getLstDelegados().get(4).getKey());
-									c.setCod_nombre_delegado_E(c.getLstDelegados()
-											.get(4) == null ? "" : c
-											.getLstDelegados().get(4)
-											.getDescripcion());
-								}else{
 
-									break;	
+							} else {
+								if (c.getLstDelegados().size() == 5) {
+									c.setCod_delegado_A(c.getLstDelegados()
+											.get(0) == null ? "" : c
+											.getLstDelegados().get(0).getKey());
+									c.setCod_nombre_delegado_A(c
+											.getLstDelegados().get(0) == null ? ""
+											: c.getLstDelegados().get(0)
+													.getDescripcion());
+									c.setCod_delegado_B(c.getLstDelegados()
+											.get(1) == null ? "" : c
+											.getLstDelegados().get(1).getKey());
+									c.setCod_nombre_delegado_B(c
+											.getLstDelegados().get(1) == null ? ""
+											: c.getLstDelegados().get(1)
+													.getDescripcion());
+									c.setCod_delegado_C(c.getLstDelegados()
+											.get(2) == null ? "" : c
+											.getLstDelegados().get(2).getKey());
+									c.setCod_nombre_delegado_C(c
+											.getLstDelegados().get(2) == null ? ""
+											: c.getLstDelegados().get(2)
+													.getDescripcion());
+									c.setCod_delegado_D(c.getLstDelegados()
+											.get(3) == null ? "" : c
+											.getLstDelegados().get(3).getKey());
+									c.setCod_nombre_delegado_D(c
+											.getLstDelegados().get(3) == null ? ""
+											: c.getLstDelegados().get(3)
+													.getDescripcion());
+									c.setCod_delegado_E(c.getLstDelegados()
+											.get(4) == null ? "" : c
+											.getLstDelegados().get(4).getKey());
+									c.setCod_nombre_delegado_E(c
+											.getLstDelegados().get(4) == null ? ""
+											: c.getLstDelegados().get(4)
+													.getDescripcion());
+								} else {
+
+									break;
 								}
 							}
 						}
@@ -622,5 +753,31 @@ public class DelegadosMB {
 	public void setMiembroNivelEditar(TiivsMiembroNivel miembroNivelEditar) {
 		this.miembroNivelEditar = miembroNivelEditar;
 	}
-	
+
+	public List<TiivsMiembroNivel> getListaDelegadosEditarCopia() {
+		return listaDelegadosEditarCopia;
+	}
+
+	public void setListaDelegadosEditarCopia(
+			List<TiivsMiembroNivel> listaDelegadosEditarCopia) {
+		this.listaDelegadosEditarCopia = listaDelegadosEditarCopia;
+	}
+
+	public List<TiivsMiembroNivel> getListaDelegadosEditarEliminar() {
+		return listaDelegadosEditarEliminar;
+	}
+
+	public void setListaDelegadosEditarEliminar(
+			List<TiivsMiembroNivel> listaDelegadosEditarEliminar) {
+		this.listaDelegadosEditarEliminar = listaDelegadosEditarEliminar;
+	}
+
+	public boolean isValidarCodRegistroEditar() {
+		return validarCodRegistroEditar;
+	}
+
+	public void setValidarCodRegistroEditar(boolean validarCodRegistroEditar) {
+		this.validarCodRegistroEditar = validarCodRegistroEditar;
+	}
+
 }
