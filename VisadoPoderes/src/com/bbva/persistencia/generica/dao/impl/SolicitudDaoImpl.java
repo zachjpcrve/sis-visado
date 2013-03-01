@@ -5,10 +5,10 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -20,7 +20,6 @@ import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
-import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.dto.AgrupacionDelegadosDto;
 import com.hildebrando.visado.dto.AgrupacionPlazoDto;
 import com.hildebrando.visado.modelo.Liquidacion;
@@ -35,7 +34,9 @@ import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		GenericDaoImpl<K, Serializable> implements
 		SolicitudDao<K, Serializable> {
-
+	
+	public static Logger logger = Logger.getLogger(SolicitudDaoImpl.class);
+	
 	public SolicitudDaoImpl() {
 	}
 
