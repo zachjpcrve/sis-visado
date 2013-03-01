@@ -19,6 +19,7 @@ public class TiivsMiembroNivel implements java.io.Serializable {
 	private Timestamp fechaRegistro;
 	private String usuarioAct;
 	private Timestamp fechaAct;
+	private String estadoMiembro;
 
 	public TiivsMiembroNivel() {
 	}
@@ -123,4 +124,13 @@ public class TiivsMiembroNivel implements java.io.Serializable {
 		this.fechaAct = fechaAct;
 	}
 
+	public String getEstadoMiembro() {
+		return estadoMiembro;
+	}
+
+	public void setEstadoMiembro(String estadoMiembro) {
+		this.estadoMiembro = estadoMiembro;
+	}
+	
+	
 }
