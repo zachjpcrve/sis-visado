@@ -43,5 +43,8 @@
         <property name="fechaAct" type="java.sql.Timestamp">
             <column name="FECHA_ACT" />
         </property>
+        <property name="estadoMiembro" type="string">
+            <column name="ESTADO_MIEMBRO" length="1" />
+        </property>
     </class>
 </hibernate-mapping>
