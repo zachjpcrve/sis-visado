@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.codehaus.groovy.tools.shell.ParseCode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -44,7 +45,8 @@ public class DelegadosService {
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsMiembro.class);
 		try {
-			miembro = service.buscarDinamico(filtro.add(Restrictions.eq("codMiembro", codRegistro)));
+			miembro = service.buscarDinamico(filtro.add(Restrictions.eq(
+					"codMiembro", codRegistro)));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("DelegadosService : obtenerDatosMiembro: "
@@ -53,7 +55,7 @@ public class DelegadosService {
 		return miembro;
 	}
 
-	public <E> int obtenerGrupo() {
+	public <E> int obtenerGrupo(String codNiv) {
 		logger.info("DelegadosService : obtenerDatosMiembro ");
 		List<TiivsMiembroNivel> grupo = new ArrayList<TiivsMiembroNivel>();
 		int grupoI = 0;
@@ -61,13 +63,14 @@ public class DelegadosService {
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsMiembroNivel.class);
 		try {
-			grupo = service.buscarDinamico(filtro.setProjection(Projections.max("grupo")));
+			grupo = service.buscarDinamico(filtro.add(Restrictions.eq("codNiv", codNiv)).setProjection(Projections
+					.max("grupo")));
 
 			List<E> parse = new ArrayList<E>();
 			parse = (List<E>) grupo;
 			grupoI = (Integer) parse.get(0);
 			grupoI = grupoI + 1;
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("NivelService : obtenerMaximo: "
@@ -78,13 +81,13 @@ public class DelegadosService {
 
 	public void registrarAgrupacion(TiivsMiembroNivel tiivsMiembroNivel) {
 		logger.info("DelegadosService : registrarAgrupacion ");
-		try{
+		try {
 			GenericDao<TiivsMiembroNivel, Object> service = (GenericDao<TiivsMiembroNivel, Object>) SpringInit
 					.getApplicationContext().getBean("genericoDao");
-			
+
 			service.insertar(tiivsMiembroNivel);
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("DocumentoService : registrarAgrupacion: "
 					+ e.getLocalizedMessage());
@@ -99,19 +102,39 @@ public class DelegadosService {
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsMiembroNivel.class);
 		try {
-			id = service.buscarDinamico(filtro.setProjection(Projections.max("id")));
+			id = service.buscarDinamico(filtro.setProjection(Projections
+					.max("id")));
 
 			List<E> parse = new ArrayList<E>();
 			parse = (List<E>) id;
 			grupoI = (Integer) parse.get(0);
 			grupoI = grupoI + 1;
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("NivelService : obtenerMaximo: "
 					+ ex.getLocalizedMessage());
 		}
 		return grupoI;
+	}
+
+	public List<TiivsMiembroNivel> editarAgrupacion(String codigoGrupo) {
+		logger.info("DelegadosService : editarAgrupacion ");
+		List<TiivsMiembroNivel> delegadosEditar = new ArrayList<TiivsMiembroNivel>();
+		int grupo = 0;
+		grupo = Integer.parseInt(codigoGrupo);
+		GenericDao<TiivsMiembroNivel, Object> service = (GenericDao<TiivsMiembroNivel, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMiembroNivel.class);
+		try{
+			delegadosEditar = service.buscarDinamico(filtro.add(Restrictions.eq("grupo", grupo)));
+			
+		}catch(Exception ex){
+			ex.printStackTrace();
+			logger.error("NivelService : editarAgrupacion: "
+					+ ex.getLocalizedMessage());
+		}
+		return delegadosEditar;
 	}
 
 }
