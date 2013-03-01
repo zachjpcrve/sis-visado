@@ -128,6 +128,7 @@ public class ConstantesVisado {
 	public static final String CAMPO_ESTADO="estado";
 	public static final String CAMPO_COD_MIEMBRO="codMiembro";
 	public static final String CAMPO_ALIAS_ANEXO_ARCHIVO = "aliasArchivo";
+	public static final String CAMPO_TIPO_PARTIC="tipPartic";
 	
 	/*eramoz*/
 	public static final String CAMPO_ID_CODIGO_SOLICITUD_ALIAS="id.codSoli";

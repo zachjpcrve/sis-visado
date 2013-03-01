@@ -13,12 +13,16 @@ import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.persistencia.generica.dao.Busqueda;
+import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
@@ -26,8 +30,12 @@ import com.hildebrando.visado.dto.FormatosDTO;
 import com.hildebrando.visado.dto.OperacionesPDF;
 import com.hildebrando.visado.dto.SolicitudPDF;
 import com.hildebrando.visado.mb.RegistroUtilesMB;
+import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
+import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
+import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
+import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 
 @Controller
@@ -87,10 +95,10 @@ public class JasperController {
         	os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
 		}catch (Exception e) {
 			e.printStackTrace();
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
 		}
         return("pdfReportCartaAtencion");
 	}
@@ -129,7 +137,7 @@ public class JasperController {
 	{   try{
 		logger.info("generarReporteCartaRechazo : ");
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
-		logger.debug("SOLICITUD_TEMP.getLstAgrupacionSimpleDto() "+SOLICITUD_TEMP.getLstAgrupacionSimpleDto().size() );
+		logger.info("SOLICITUD_TEMP.getLstAgrupacionSimpleDto() "+SOLICITUD_TEMP.getLstAgrupacionSimpleDto().size() );
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
 		FormatosDTO uno = new FormatosDTO();
 		uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
@@ -142,7 +150,12 @@ public class JasperController {
 		{
 			uno.setInstrucciones("");
 		}
-		uno.setPoderdantes("VASQUEZ YAIPEN ALICIA MARIA");
+		
+		String cadenaPoderdantes = obtenerPoderdantesxSolicitud(SOLICITUD_TEMP);
+		
+		logger.info("lista poderdantes:" + cadenaPoderdantes);
+		
+		uno.setPoderdantes(cadenaPoderdantes);
 		
 	    cabecera.add(uno);
     	   	
@@ -170,7 +183,7 @@ public class JasperController {
 		try{
 		logger.info("generarReporteCartaImprocedente : ");
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
-		logger.debug("SOLICITUD_TEMP.getLstAgrupacionSimpleDto() "+SOLICITUD_TEMP.getLstAgrupacionSimpleDto().size() );
+		logger.info("SOLICITUD_TEMP.getLstAgrupacionSimpleDto() "+SOLICITUD_TEMP.getLstAgrupacionSimpleDto().size() );
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
 		FormatosDTO uno = new FormatosDTO();
 		uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
@@ -183,7 +196,12 @@ public class JasperController {
 		{
 			uno.setInstrucciones("");
 		}
-		uno.setPoderdantes("VASQUEZ YAIPEN ALICIA MARIA");
+		
+		String cadenaPoderdantes = obtenerPoderdantesxSolicitud(SOLICITUD_TEMP);
+		
+		logger.info("lista poderdantes:" + cadenaPoderdantes);
+		
+		uno.setPoderdantes(cadenaPoderdantes);
 		
 	    cabecera.add(uno);
     	   	
@@ -206,6 +224,52 @@ public class JasperController {
         return("pdfReportCartaImprocedente");
 	}
 	
+	public String obtenerPoderdantesxSolicitud(TiivsSolicitud SOLICITUD_TEMP)
+	{
+		String resultado="";
+		
+		if (SOLICITUD_TEMP!=null)
+		{
+			String solicitud = SOLICITUD_TEMP.getCodSoli();
+			logger.info("Buscando poderdantes en la solicitud: " + solicitud);
+			
+			List<TiivsAgrupacionPersona> lstTMP = new ArrayList<TiivsAgrupacionPersona>();
+			
+			GenericDao<TiivsAgrupacionPersona, Object> solicDAO = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroAgrp = Busqueda.forClass(TiivsAgrupacionPersona.class);
+			filtroAgrp.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, solicitud));
+			filtroAgrp.add(Restrictions.eq(ConstantesVisado.CAMPO_TIPO_PARTIC, ConstantesVisado.PODERDANTE));
+			
+			try {
+				lstTMP = solicDAO.buscarDinamico(filtroAgrp);
+				
+			} catch (Exception ex) {
+				logger.info("Error al buscar las agrupaciones de personas",ex);
+			}
+			
+			for (TiivsAgrupacionPersona tmp: lstTMP)
+			{
+				if (tmp.getTiivsPersona().getNombre()!=null)
+				{
+					if (resultado.length()>0)
+					{
+						resultado = resultado.concat(",").concat(tmp.getTiivsPersona().getNombre().
+									concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApePat()).
+									concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApeMat())); 
+					}
+					else
+					{
+						resultado = tmp.getTiivsPersona().getNombre().
+									concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApePat()).
+									concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApeMat());
+					}
+				}
+			}
+		}
+		
+		return resultado;
+	}
+	
     @SuppressWarnings("unused")
 	@RequestMapping(value="/download/pdfReportSolicitudVisado.htm", method=RequestMethod.GET)
     public String generarReporteSolicitudVisado(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request) 
@@ -225,21 +289,21 @@ public class JasperController {
     	//Cabecera del reporte
     	if(SOLICITUD_TEMP!=null){
     		 try {
-    		logger.debug("Solicitidu-CodSolicitud: "+SOLICITUD_TEMP.getCodSoli());
-    		logger.debug("Solicitidu-NroVoucher: "+SOLICITUD_TEMP.getNroVoucher());
+    		logger.info("Solicitidu-CodSolicitud: "+SOLICITUD_TEMP.getCodSoli());
+    		logger.info("Solicitidu-NroVoucher: "+SOLICITUD_TEMP.getNroVoucher());
     		solicitudPDF.setCodSoli(SOLICITUD_TEMP.getCodSoli());
     		solicitudPDF.setNroVoucher(SOLICITUD_TEMP.getNroVoucher());    		
 
     		TiivsMultitabla multi = RegistroUtilesMB.getRowFromMultitabla(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS, SOLICITUD_TEMP.getEstado());
     		String sEstado = multi.getValor1();
-    		logger.debug("Solicitidu-Estado: "+sEstado);
+    		logger.info("Solicitidu-Estado: "+sEstado);
     		solicitudPDF.setEstado(sEstado);    		
     		solicitudPDF.setComision(SOLICITUD_TEMP.getComision());
     		solicitudPDF.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
     		solicitudPDF.setTerritorio(SOLICITUD_TEMP.getTiivsOficina1().getTiivsTerritorio().getCodTer() + SOLICITUD_TEMP.getTiivsOficina1().getTiivsTerritorio().getDesTer());
     		solicitudPDF.setImporte(SOLICITUD_TEMP.getImporte());    	
     		solicitudPDF.setTipoServicio(SOLICITUD_TEMP.getTiivsTipoSolicitud().getDesTipServicio());
-    		logger.debug("Solicitidu-Moneda: "+SOLICITUD_TEMP.getMoneda());
+    		logger.info("Solicitidu-Moneda: "+SOLICITUD_TEMP.getMoneda());
     		if(SOLICITUD_TEMP.getMoneda().equalsIgnoreCase(ConstantesVisado.MONEDAS.COD_SOLES)){
     			solicitudPDF.setMoneda(ConstantesVisado.MONEDAS.SIMBOLO_SOLES);
     		} else if (SOLICITUD_TEMP.getMoneda().equalsIgnoreCase(ConstantesVisado.MONEDAS.COD_DOLAR)){
@@ -248,7 +312,7 @@ public class JasperController {
     			solicitudPDF.setMoneda(ConstantesVisado.MONEDAS.SIMBOLO_EURO);
     		}
     		    		
-    		logger.debug("Solicitid-Lista Agrupacion-size: "+lstAgrupacionSimpleDto.size());
+    		logger.info("Solicitid-Lista Agrupacion-size: "+lstAgrupacionSimpleDto.size());
     		solicitudPDF.setLstAgrupacionSimpleDto(lstAgrupacionSimpleDto); //agregar agrupaciones    		
     		solicitudPDF.setLstDocumentos(lstDocumentos); //agregar documentos    		
     		List<OperacionesPDF> lstOperaciones = new ArrayList<OperacionesPDF> ();    		
@@ -269,7 +333,7 @@ public class JasperController {
     		String nombreSalida = ConstantesVisado.PREFIJO_NOMBRE_SOLICITUD_VISADO
     				+ "_" + SOLICITUD_TEMP.getCodSoli() + "_"
     				+ Utilitarios.formatoFechaHora(new Date()) + ".pdf";
-        	logger.debug("nombreSalida: "+nombreSalida);
+        	logger.info("nombreSalida: "+nombreSalida);
         	
             response.setHeader("Content-type", "application/pdf");
             response.setHeader("Content-Disposition","attachment; filename=\"" + nombreSalida + "\"");
@@ -288,9 +352,9 @@ public class JasperController {
 			}
     		
     	}else{
-    		logger.debug("La solicitud es NULA ");
+    		logger.info("La solicitud es NULA ");
     	}
-    	logger.debug("=== saliendo de generarReporteSolicitudVisado() ==");
+    	logger.info("=== saliendo de generarReporteSolicitudVisado() ==");
        
         return("pdfReport");
     }
