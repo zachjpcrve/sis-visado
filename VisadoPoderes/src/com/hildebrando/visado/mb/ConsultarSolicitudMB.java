@@ -1053,6 +1053,7 @@ public class ConsultarSolicitudMB {
 					solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
 					actualizarBandeja=true;
+					bMostrarCartaImprocedente=true;
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 
 				}
