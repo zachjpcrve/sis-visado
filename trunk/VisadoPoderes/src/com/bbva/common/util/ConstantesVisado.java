@@ -459,6 +459,7 @@ public class ConstantesVisado {
 	}
 	
 		public static final int DOCUMENTO_OBLIGATORIO = 1;
+		public static final String CARPETA_LOG_CLIENTE = "C:/Visado Poderes/log";
 	
 	static public class MENSAJE_CARTA_ATENCION {
 		public static final String MENSAJE_OFICINA="¿Está seguro de generar la Carta de atención? Luego de la generación no podrá volverse a imprimir.";
