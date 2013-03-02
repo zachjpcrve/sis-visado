@@ -91,14 +91,20 @@
 																id="outComision" value="Comision" /></td>
 														<td><h:outputText
 																id="txtComision" style="width:100px;"
-																value="#{consultarSolicitudMB.solicitudRegistrarT.comision}" /></td>
+																value="#{consultarSolicitudMB.solicitudRegistrarT.comision}" >
+																<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																</h:outputText>
+																</td>
 													
 
 														<td><h:outputText styleClass="outputText"
 																id="outImpTotal" value="Importe Total" /></td>
 														<td><h:outputText 
 																id="txtImpTotal" style="width:100px;"
-																value="#{consultarSolicitudMB.solicitudRegistrarT.importe}"/></td>
+																value="#{consultarSolicitudMB.solicitudRegistrarT.sImporteMoneda}">
+																<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																</h:outputText>
+																</td>
 														</tr>
 
 												</tbody>
@@ -262,14 +268,20 @@
 															<p:column headerText="Moneda">
 																<h:outputText value="#{o.sDescMoneda}" />
 															</p:column>
-															<p:column headerText="Importe">
-																<h:outputText value="#{o.importe}" />
+															<p:column headerText="Importe" style="text-align: right ;">
+																<h:outputText value="#{o.importe}" >
+																<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																</h:outputText>
 															</p:column>
-															<p:column headerText="Tipo de Cambio">
-																<h:outputText value="#{o.tipoCambio}" />
+															<p:column headerText="Tipo de Cambio" style="text-align: right ;">
+																<h:outputText value="#{o.tipoCambio}" >
+																<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																</h:outputText>
 															</p:column>
-															<p:column headerText="Importe en Soles">
-																<h:outputText value="#{o.importeSoles}" />
+															<p:column headerText="Importe en Soles" style="text-align: right ;">
+																<h:outputText value="#{o.importeSoles}" >
+																<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																</h:outputText>
 															</p:column>
 													
 														</p:dataTable></td>
