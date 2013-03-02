@@ -135,7 +135,10 @@
 														<td><h:inputText styleClass="inputText"
 																id="txtComision" style="width:100px;"
 																value="#{consultarSolicitudMB.solicitudRegistrarT.comision}"
-																readonly="true" /></td>
+																readonly="true" >
+																<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																</h:inputText>
+																</td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
 																id="tooltxtComision" /></td>
@@ -144,10 +147,13 @@
 
 														<td><h:outputText styleClass="outputText"
 																id="outImpTotal" value="Importe Total" /></td>
-														<td><h:inputText styleClass="inputText"
+														<td ><h:inputText styleClass="inputText" 
 																id="txtImpTotal" style="width:100px;"
 																value="#{consultarSolicitudMB.solicitudRegistrarT.sImporteMoneda}"
-																disabled="false" readonly="true" /></td>
+																disabled="false" readonly="true" >
+																<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																</h:inputText>
+																</td>
 														<td><p:graphicImage
 																value="/resources/images/pregunta.jpg"
 																id="tooltxtImpTotal" /></td>
@@ -552,13 +558,25 @@
 															</p:selectOneMenu></td>
 													<td><h:outputText styleClass="outputText" id="outImporte" value="Importe:" title="Importe"></h:outputText>
 													</td>
-													<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importe}" id="intImporte"/></td>
+													<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importe}" onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');" id="intImporte" maxlength="16" >
+																<f:convertNumber pattern="#,###,##0.00" locale="en" />
+															</h:inputText>	
+														</td>
 												</tr>
 												<tr>
 													<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
-													<td><h:inputText id="intTipoCambio"  value="#{consultarSolicitudMB.objSolicBancaria.tipoCambio}" /></td>
+													<td ><h:inputText id="intTipoCambio" maxlength="8"  onkeypress="return validaNumero(event,'0',this,'0');"
+															onblur="validaNumero(event,'0',this,'1');" value="#{consultarSolicitudMB.objSolicBancaria.tipoCambio}" >
+													<f:convertNumber pattern="#,###,##0.00" locale="en" />
+													    </h:inputText>
+													</td>
 													<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
-													<td><h:inputText value="#{consultarSolicitudMBobjSolicBancaria.importeSoles}" id="txtImporteSoles" readonly="true"/></td>
+													
+													<td><h:inputText value="#{consultarSolicitudMBobjSolicBancaria.objSolicBancaria.importeSoles}" readonly="true" id="txtImporteSoles">
+													<f:convertNumber pattern="#,###,##0.00" locale="en" />
+													</h:inputText>
+													</td>
 													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{consultarSolicitudMB.agregarOperacionBancaria}" actionListener="#{consultarSolicitudMB.obtenerAccionAgregarOperacionBancaria}"
 													 update=":formSolicitudRegistro:idMsmSolicitudEdicion,:formSolicitudRegistro:tlbOperacionesBanca,
 													 :formSolicitudRegistro:txtImporteSoles,:formSolicitudRegistro:intImporte,
@@ -585,14 +603,20 @@
 															<p:column headerText="Moneda">
 																<h:outputText value="#{o.sDescMoneda}" />
 															</p:column>
-															<p:column headerText="Importe">
-																<h:outputText value="#{o.importe}" />
+															<p:column headerText="Importe" style="text-align: right ;">
+																<h:outputText value="#{o.importe}" >
+																<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																</h:outputText>
 															</p:column>
-															<p:column headerText="Tipo de Cambio">
-																<h:outputText value="#{o.tipoCambio}" />
+															<p:column headerText="Tipo de Cambio" style="text-align: right ;">
+																<h:outputText value="#{o.tipoCambio}" >
+																<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																</h:outputText>
 															</p:column>
-															<p:column headerText="Importe en Soles">
-																<h:outputText value="#{o.importeSoles}" />
+															<p:column headerText="Importe en Soles" style="text-align: right ;">
+																<h:outputText value="#{o.importeSoles}">
+																<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																</h:outputText>
 															</p:column>
 															<p:column headerText="Editar">
 															<p:commandButton icon="ui-icon-pencil" id="ed"
