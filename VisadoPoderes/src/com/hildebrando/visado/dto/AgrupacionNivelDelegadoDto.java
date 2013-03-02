@@ -6,6 +6,8 @@ public class AgrupacionNivelDelegadoDto {
     private String codNivel;
     private String codGrupo;
 	private String nivel;
+	private String estado;
+	private String estadoEtiqueta;
 	
 	private String cod_delegado_A;
 	private String cod_delegado_B;
@@ -106,8 +108,17 @@ public class AgrupacionNivelDelegadoDto {
 	public void setCod_nombre_delegado_E(String cod_nombre_delegado_E) {
 		this.cod_nombre_delegado_E = cod_nombre_delegado_E;
 	}
-	
-	
-	
-	
+	public String getEstado() {
+		return estado;
+	}
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+	public String getEstadoEtiqueta() {
+		return estadoEtiqueta;
+	}
+	public void setEstadoEtiqueta(String estadoEtiqueta) {
+		this.estadoEtiqueta = estadoEtiqueta;
+	}
+
 }

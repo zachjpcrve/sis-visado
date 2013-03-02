@@ -6,6 +6,7 @@ public class AgrupacionDelegadosDto {
 	private String des_niv;
 	private String cod_miembro;
 	private String descripcion;
+	private String estado;
 	
 	public String getGrupo() {
 		return this.grupo;
@@ -32,5 +33,10 @@ public class AgrupacionDelegadosDto {
 		this.descripcion = descripcion;
 	}
 
-	
+	public String getEstado() {
+		return estado;
+	}
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
 }
