@@ -87,9 +87,9 @@ Atentamente,]]></text>
 			<rectangle>
 				<reportElement x="39" y="64" width="641" height="136"/>
 			</rectangle>
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="54" y="75" width="615" height="115"/>
-				<textElement>
+				<textElement markup="html">
 					<font size="11"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones}]]></textFieldExpression>
