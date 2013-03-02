@@ -245,18 +245,18 @@ public class CombosMB {
 				tmpTipoDoc.setDescripcion(res.getValor1());
 				lstTipoDocumentos.add(tmpTipoDoc);
 
-				logger.debug("Tamanio lista de tipos de documento: "+ lstTipoDocumentos.size());
+				//logger.debug("Tamanio lista de tipos de documento: "+ lstTipoDocumentos.size());
 			}
 		}
 		
-		logger.debug("Tamanio lista de Clasificacion de Personas: "+ lstClasificacionPersona.size());
+/*		logger.debug("Tamanio lista de Clasificacion de Personas: "+ lstClasificacionPersona.size());
 		logger.debug("Tamanio lista de Tipo de Registro de Personas: "+ lstTipoRegistroPersona.size());
 		logger.debug("Tamanio lista de importes: "+ lstRangosImporte.size());
 		logger.debug("Tamanio lista de estados: " + lstEstado.size());
 		logger.debug("Tamanio lista de estados nivel: "+ lstEstadoNivel.size());
 		logger.debug("Tamanio lista de estados: " + lstEstado.size());
 		logger.debug("Tamanio lista de tipos de fecha: "+ lstTiposFecha.size());
-		logger.debug("Tamanio lista de monedas: " + lstMoneda.size());
+		logger.debug("Tamanio lista de monedas: " + lstMoneda.size());*/
 
 	}
 	
@@ -410,7 +410,7 @@ public class CombosMB {
 		
 		try {
 			lstSolicNivel = solNivDAO.buscarDinamico(filtroSolNivel);
-			logger.debug("TAMANIOO DE LAS SOLICITUDES X NIVEL " +lstSolicNivel.size());
+			//logger.debug("TAMANIOO DE LAS SOLICITUDES X NIVEL " +lstSolicNivel.size());
 		} catch (Exception e) {
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de solicitudes x nivel: "+e);
 		}
