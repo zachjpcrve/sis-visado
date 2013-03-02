@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 
@@ -76,7 +77,11 @@ public class SolicitudRegistroMB {
 	@ManagedProperty(value = "#{registroUtilesMB}")
 	RegistroUtilesMB objRegistroUtilesMB;
 	@ManagedProperty(value = "#{visadoDocumentosMB}")
-	private VisadoDocumentosMB visadoDocumentosMB;//eramos
+	private VisadoDocumentosMB visadoDocumentosMB;
+	@ManagedProperty(value = "#{consultarSolicitudMB}")
+	private ConsultarSolicitudMB consultarSolicitudMB;
+	
+	
 	private TiivsSolicitudOperban objSolicBancaria;
 	private List<TiivsSolicitudOperban> lstSolicBancarias;
 	private TiivsSolicitud solicitudRegistrarT;
@@ -1686,7 +1691,8 @@ public class SolicitudRegistroMB {
 						Utilitarios.mensajeInfo("INFO", mensaje);
 						actualizarBandeja=true;
 					}
-					//redirect = "/faces/paginas/bandejaSeguimiento.xhtml";
+					//redirect = "/faces/paginas/bandejaSeguimiento.xhtml";					
+					redirect = consultarSolicitudMB.redirectDetalleSolicitud(objResultado.getCodSoli());//eramos					
 				} else {
 					mensaje = "Error al generar la Solicitud ";
 					Utilitarios.mensajeInfo("INFO", mensaje);
@@ -1721,6 +1727,7 @@ public class SolicitudRegistroMB {
 			e.printStackTrace();
 
 		}
+		logger.info("Redirec:" + redirect);
 		return redirect;
 
 	}
@@ -2291,7 +2298,17 @@ public class SolicitudRegistroMB {
 
 	public void setVisadoDocumentosMB(VisadoDocumentosMB visadoDocumentosMB) {
 		this.visadoDocumentosMB = visadoDocumentosMB;
-	}		
+	}
+
+	public ConsultarSolicitudMB getConsultarSolicitudMB() {
+		return consultarSolicitudMB;
+	}
+
+	public void setConsultarSolicitudMB(ConsultarSolicitudMB consultarSolicitudMB) {
+		this.consultarSolicitudMB = consultarSolicitudMB;
+	}	
+	
+	
 	
 
 }
