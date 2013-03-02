@@ -140,6 +140,19 @@ public class SeguimientoMB
 		oficina= new TiivsOficina1();
 		lstSolicitudesSelected = new ArrayList<String>();
 		lstHistorial = new ArrayList<TiivsHistSolicitud>();
+				
+		this.lstTipoSolicitudSelected = new ArrayList<String>();
+		this.lstEstadoNivelSelected = new ArrayList<String>();
+		this.lstEstadoSelected = new ArrayList<String>();
+		
+		this.codSolicitud="";
+		this.idImporte="";
+		this.idTiposFecha = "";
+		this.idOpeBan = "";
+		this.nroDOIApoderado="";
+		this.txtNomApoderado="";
+		this.nroDOIPoderdante="";
+		this.txtNomPoderdante="";
 		
 		combosMB= new CombosMB();
 		combosMB.cargarMultitabla();
@@ -1634,11 +1647,12 @@ public class SeguimientoMB
 		// 8. Filtro por nombre de oficina (funciona)
 		if (getOficina() != null) 
 		{
-			logger.debug("Filtro Oficina: " + getOficina());
-			
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
-			String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getOficina().getDesOfi().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
-			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
+			logger.debug("Filtro Oficina: " + getOficina());			
+			if(getOficina().getDesOfi()!=null){
+				filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
+				String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getOficina().getDesOfi().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
+				filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
+			}			
 		}
 
 		// 11. Filtro por numero de documento de apoderado (funciona)

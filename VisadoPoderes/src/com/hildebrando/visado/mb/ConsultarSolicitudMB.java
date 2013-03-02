@@ -81,7 +81,7 @@ public class ConsultarSolicitudMB {
 	@ManagedProperty(value = "#{pdfViewerMB}")
 	private PDFViewerMB pdfViewerMB;
 	@ManagedProperty(value = "#{visadoDocumentosMB}")
-	private VisadoDocumentosMB visadoDocumentosMB;//eramos
+	private VisadoDocumentosMB visadoDocumentosMB;
 	/*
 	 * @ManagedProperty(value = "#{solEdicionMB}") private SolicitudEdicionMB
 	 * solicitudEdicionMB;
@@ -164,47 +164,49 @@ public class ConsultarSolicitudMB {
 
 	private int numGrupo = 0;
 
-	public ConsultarSolicitudMB() {
+	public ConsultarSolicitudMB() {		
 		inicializarContructor();
 		cargarDocumentos();
 
-		modificarTextoVentanaCartaAtencion();
-		mostrarCartaAtencion();
-		ocultarCartas();
+		//Para Incidencia 34
+//		modificarTextoVentanaCartaAtencion();
+//		mostrarCartaAtencion();
+//		ocultarCartas();
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 
-		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
-			if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)){
-				setbMostrarComentario(false);
-				setbSeccionEvaluarNivel(false);
-				setbSeccionDocumentos(false);
-			} else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
-				setbSeccionDocumentos(true);
-			} else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)){
-				setbSeccionDocumentos(true);
-				setbMostrarCartaRevision(true);
-				setbMostrarCartaAtencion(false);				
-			}
-		}
-
-		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
-			String sEstado = solicitudRegistrarT.getEstado().trim();
-			if (sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02) || 
-					sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)) {
-				evaluacionNivelesMB = new EvaluacionNivelesMB(solicitudRegistrarT);
-				TiivsSolicitudNivel solNivel = evaluacionNivelesMB.obtenerNivelSolicitud();
-				if (solNivel != null) {
-					this.sNivelSolicitud = solNivel.getCodNiv();
-				}
-				setbSeccionEvaluarNivel(true);								
-			}
-			setbSeccionDocumentos(true);
-		}
-		
-		if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
-			setbSeccionDocumentos(true);
-		}
+		//Para Incidencia 34
+//		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
+//			if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)){
+//				setbMostrarComentario(false);
+//				setbSeccionEvaluarNivel(false);
+//				setbSeccionDocumentos(false);
+//			} else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)){
+//				setbSeccionDocumentos(true);
+//			} else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)){
+//				setbSeccionDocumentos(true);
+//				setbMostrarCartaRevision(true);
+//				setbMostrarCartaAtencion(false);				
+//			}
+//		}
+//
+//		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+//			String sEstado = solicitudRegistrarT.getEstado().trim();
+//			if (sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02) || 
+//					sEstado.equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)) {
+//				evaluacionNivelesMB = new EvaluacionNivelesMB(solicitudRegistrarT);
+//				TiivsSolicitudNivel solNivel = evaluacionNivelesMB.obtenerNivelSolicitud();
+//				if (solNivel != null) {
+//					this.sNivelSolicitud = solNivel.getCodNiv();
+//				}
+//				setbSeccionEvaluarNivel(true);								
+//			}
+//			setbSeccionDocumentos(true);
+//		}
+//		
+//		if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+//			setbSeccionDocumentos(true);
+//		}
 
 		combosMB = new CombosMB();
 		combosMB.cargarMultitabla();
@@ -519,19 +521,26 @@ public class ConsultarSolicitudMB {
 
 	public String redirectDetalleSolicitud() {
 		logger.info(" **** redirectDetalleSolicitud ***");
-
-		String redirect = "";
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		obtenerSolicitud();
+		obtenerSolicitud(Utilitarios.capturarParametro("prm_codSoli"));
+		return getRedirectDetalleSolicitud();
+	}
+	
+	public String redirectDetalleSolicitud(String codigoSolicitud) {
+		logger.info(" **** redirectDetalleSolicitud ***");		
+		obtenerSolicitud(codigoSolicitud);		
+		return getRedirectDetalleSolicitud();
+	}
+	
+	private String getRedirectDetalleSolicitud(){
+		String redirect = "";		
 		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)) {
 			redirect = "/faces/paginas/solicitudEdicion.xhtml";
 			//obtenerSolicitud();
 		} else {
-			request.getSession(true).setAttribute("SOLICITUD_TEMP", solicitudRegistrarT);			
-			
+			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+			request.getSession(true).setAttribute("SOLICITUD_TEMP", solicitudRegistrarT);						
 			redirect = "/faces/paginas/detalleSolicitud.xhtml";
 		}
-
 		return redirect;
 	}
 
@@ -567,10 +576,10 @@ public class ConsultarSolicitudMB {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void obtenerSolicitud(){
+	public void obtenerSolicitud(String codigoSolicitud){
 		try {
 			lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
-			String codigoSolicitud = Utilitarios.capturarParametro("prm_codSoli");
+			//String codigoSolicitud = Utilitarios.capturarParametro("prm_codSoli");
 			TiivsSolicitud solicitud;
 			logger.info("codigoSolicitud : " + codigoSolicitud);
 			 solicitud = new TiivsSolicitud();

@@ -60,6 +60,7 @@ public class VisadoDocumentosMB {
 	private String user="";
 	private String pass="";
 	private String directory="";
+	private String carpetaClienteLog=ConstantesVisado.CARPETA_LOG_CLIENTE;
 	
 	public VisadoDocumentosMB(){
 		iniciarlizarParametros();
@@ -167,8 +168,13 @@ public class VisadoDocumentosMB {
 	public void setDocumentosLeidos(String documentosLeidos) {
 		this.documentosLeidos = documentosLeidos;
 	}
-	
-	
-	
+
+	public String getCarpetaClienteLog() {
+		return carpetaClienteLog;
+	}
+
+	public void setCarpetaClienteLog(String carpetaClienteLog) {
+		this.carpetaClienteLog = carpetaClienteLog;
+	}
 	
 }
