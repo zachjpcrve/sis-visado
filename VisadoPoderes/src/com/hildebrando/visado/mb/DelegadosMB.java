@@ -45,6 +45,7 @@ public class DelegadosMB {
 	private List<TiivsMiembroNivel> listaDelegadosEditar;
 	private List<TiivsMiembroNivel> listaDelegadosEditarCopia;
 	private List<TiivsMiembroNivel> listaDelegadosEditarEliminar;
+	private List<TiivsMiembroNivel> listaDelegadosEditarEstado;
 	private TiivsMiembroNivel delegado;
 	private boolean validarCodRegistro;
 	private boolean validarCodRegistroEditar;
@@ -83,6 +84,7 @@ public class DelegadosMB {
 		miembroNivelEditar = new TiivsMiembroNivel();
 		listarNiveles();
 		listaDelegadosEditarEliminar = new ArrayList<TiivsMiembroNivel>();
+		listaDelegadosEditarEstado = new ArrayList<TiivsMiembroNivel>();
 	}
 
 	public void listarNiveles() {
@@ -259,6 +261,46 @@ public class DelegadosMB {
 
 	}
 
+	public void estadoAgrupacion() {
+		logger.info("DelegadosMB : estadoAgrupacion");
+		String grupo = null;
+		String nivel = null;
+		listaDelegadosEditarEstado = new ArrayList<TiivsMiembroNivel>();
+		Map<String, String> params = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap();
+		grupo = params.get("grupo");
+		nivel = params.get("nivel");
+		try {
+			listaDelegadosEditarEstado = delegadosService.estadoAgrupacion(
+					grupo, nivel);
+
+			if (listaDelegadosEditarEstado.get(0).getEstado() == null) {
+				for (int i = 0; i < listaDelegadosEditarEstado.size(); i++) {
+					listaDelegadosEditarEstado.get(i).setEstado("1");
+					delegadosService.actualizarAgrupacion(listaDelegadosEditarEstado.get(i));	
+				}
+			} else {
+				if (listaDelegadosEditarEstado.get(0).getEstado().equals("1")) {
+					for (int i = 0; i < listaDelegadosEditarEstado.size(); i++) {
+						listaDelegadosEditarEstado.get(i).setEstado("0");
+						delegadosService.actualizarAgrupacion(listaDelegadosEditarEstado.get(i));	
+					}
+				} else {
+					for (int i = 0; i < listaDelegadosEditarEstado.size(); i++) {
+						listaDelegadosEditarEstado.get(i).setEstado("1");
+						delegadosService.actualizarAgrupacion(listaDelegadosEditarEstado.get(i));	
+					}
+				}
+			}
+			limpiarListaAgrupaciones();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("DelegadosMB : estadoAgrupacion"
+					+ ex.getLocalizedMessage());
+		}
+
+	}
+
 	public void agregarDelegadoEditar() {
 		logger.info("DelegadosMB : agregarDelegadoEditar");
 		boolean codigoRepetido = false;
@@ -404,7 +446,7 @@ public class DelegadosMB {
 		for (int j = 0; j < listaDelegadosEditar.size(); j++) {
 			listaDelegadosEditar.get(j).setFechaRegistro(utilDateDate);
 			listaDelegadosEditar.get(j).setUsuarioRegistro(usuario.getUID());
-			
+
 			delegadosService.actualizarAgrupacion(listaDelegadosEditar.get(j));
 		}
 		limpiarListaAgrupaciones();
@@ -434,6 +476,7 @@ public class DelegadosMB {
 		} else {
 			Utilitarios.mensajeError("Error",
 					"Debe asignar delegados a un nivel");
+			limpiarListaAgrupaciones();
 		}
 	}
 
@@ -488,6 +531,21 @@ public class DelegadosMB {
 				agrupacionNivelDelegadoDto = new AgrupacionNivelDelegadoDto();
 				agrupacionNivelDelegadoDto.setNivel(a.getDes_niv());
 				agrupacionNivelDelegadoDto.setCodGrupo(a.getGrupo());
+				if (a.getEstado().equals("")) {
+					agrupacionNivelDelegadoDto.setEstado("Pendiente");
+					agrupacionNivelDelegadoDto.setEstadoEtiqueta("Activar");
+				} else {
+					if (a.getEstado().equals("1")) {
+						agrupacionNivelDelegadoDto.setEstado("Activo");
+						agrupacionNivelDelegadoDto
+								.setEstadoEtiqueta("Inactivar");
+
+					} else {
+						agrupacionNivelDelegadoDto.setEstado("Inactivo");
+						agrupacionNivelDelegadoDto.setEstadoEtiqueta("Activar");
+					}
+				}
+
 				agrupacionNivelDelegadoDto.setLstDelegados(lstDuos);
 				for (AgrupacionDelegadosDto b : lstDele) {
 					if (a.getDes_niv().equals(b.getDes_niv())
@@ -778,6 +836,15 @@ public class DelegadosMB {
 
 	public void setValidarCodRegistroEditar(boolean validarCodRegistroEditar) {
 		this.validarCodRegistroEditar = validarCodRegistroEditar;
+	}
+
+	public List<TiivsMiembroNivel> getListaDelegadosEditarEstado() {
+		return listaDelegadosEditarEstado;
+	}
+
+	public void setListaDelegadosEditarEstado(
+			List<TiivsMiembroNivel> listaDelegadosEditarEstado) {
+		this.listaDelegadosEditarEstado = listaDelegadosEditarEstado;
 	}
 
 }
