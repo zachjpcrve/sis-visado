@@ -519,10 +519,8 @@ public class SeguimientoMB
 		    	cadena += devolverDesTipoDOI(tmpPoder.getTipDoi()) + ConstantesVisado.DOS_PUNTOS + tmpPoder.getNumDoi() +
 						  ConstantesVisado.GUION + (tmpPoder.getApePat()==null?"":tmpPoder.getApePat()) + " " + (tmpPoder.getApeMat()==null?"":tmpPoder.getApeMat()) + " " + 
 						  (tmpPoder.getNombre()==null?"":tmpPoder.getNombre()) + ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
-		    	System.out.println("tmpPoder.getApePat() " + (tmpPoder.getApePat()== null ?"":tmpPoder.getApePat()) );
+		    	
 		    }
-			
-			System.out.println(" cadena ****** " + cadena);
 		    
 		    tmpSol.setTxtPoderdante(cadena);
 			
@@ -546,10 +544,8 @@ public class SeguimientoMB
 		    	cadena += devolverDesTipoDOI(tmpApor.getTipDoi()) + ConstantesVisado.DOS_PUNTOS + tmpApor.getNumDoi() +
 						  ConstantesVisado.GUION + (tmpApor.getApePat()== null ?"":tmpApor.getApePat()) + " " + (tmpApor.getApeMat()==null?"":tmpApor.getApeMat()) + " " + 
 						  (tmpApor.getNombre()==null?"": tmpApor.getNombre()) + ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
-		    System.out.println("tmpApor.getApePat() " + (tmpApor.getApePat()== null ?"":tmpApor.getApePat()) );
 		    }
 			
-			System.out.println(" cadena ****** " + cadena);
 			tmpSol.setTxtApoderado(cadena);
 			
 			//Carga las operaciones bancarias asociadas a una solicitud
