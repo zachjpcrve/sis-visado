@@ -79,7 +79,9 @@ function invocarEscaner(urlApplet){
 	return false;
 }
 
+
 </SCRIPT>
+	
 		<h:panelGrid columns="5">
 
 			<p:tabMenu activeIndex="0" style="width:350px;">
@@ -92,13 +94,19 @@ function invocarEscaner(urlApplet){
 
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">
-					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" 
-						update=":formSolicitudRegistro:idMsmSolicitudRegistro,
-								:formSolicitudRegistro:idCodigoSolicitud"
-						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" 
-						actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"
-						oncomplete="return cargarMultipleFTP();"						
-						/>
+					
+				 
+					<h:form id="formRegistroToolBar"> 
+					 
+						<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" 
+							update=":formSolicitudRegistro:idMsmSolicitudRegistro,
+									:formSolicitudRegistro:idCodigoSolicitud"
+							icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" 
+							actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"
+							oncomplete="return cargarMultipleFTP();"
+							ajax="false">							
+						</p:commandButton>
+
 					<p:commandButton value="Enviar" id="btnEnviar3"  icon="ui-icon-document"
 					 update=":formSolicitudRegistro:idMsmSolicitudRegistro" onclick="confirmation.show()"					 
 					 />
@@ -108,6 +116,7 @@ function invocarEscaner(urlApplet){
 					<p:commandButton value="Salir" id="btnSalir3" onclick="cfdCerrarSesion.show()"
 						icon="ui-icon-document" />
 						
+					 </h:form>	
 				</p:toolbarGroup>
 			</p:toolbar>
 
@@ -405,8 +414,9 @@ function invocarEscaner(urlApplet){
 															                
 															                
 															                function cargarMultipleFTP(){
-															                	var codigoSolicitud = null
+															                	var codigoSolicitud = null															                	
 															                	codigoSolicitud = this.document.getElementById('formSolicitudRegistro:idCodigoSolicitud').value;
+															                	alert(codigoSolicitud);
 															                	if(codigoSolicitud != null){
 															                		if (codigoSolicitud != ''){														                		
 															                			appletCargarMultipleFTP(codigoSolicitud);
@@ -453,7 +463,9 @@ function invocarEscaner(urlApplet){
 															                <param name="pass"
 															                       value="#{visadoDocumentosMB.pass}" />    
 															                <param name="directory"
-															                       value="#{visadoDocumentosMB.directory}" />            
+															                       value="#{visadoDocumentosMB.directory}" />     
+															                <param name="carpeta_cliente_log"
+															                       value="#{visadoDocumentosMB.carpetaClienteLog}" />        
 															            </applet>            
 															        </h:panelGroup>
 															        
@@ -1009,14 +1021,16 @@ function invocarEscaner(urlApplet){
 	 	<p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"  
                 header="Confirmación" severity="alert" widgetVar="confirmation" >  
                   
-        <p:commandButton id="confirm" value="Si"  
-        			update=":formSolicitudRegistro:idMsmSolicitudRegistro,
-        					:formSolicitudRegistro:idCodigoSolicitud" 
-        			oncomplete="confirmation.hide(); return cargarMultipleFTP();"   
-                    action="#{solicitudRegMB.registrarSolicitud}" 
-                    actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />  
-        <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
-                  
+        <h:form id="formRegistroConfirmDialog">
+	        <p:commandButton id="confirm" value="Si"  
+	        			update=":formSolicitudRegistro:idMsmSolicitudRegistro,
+	        					:formSolicitudRegistro:idCodigoSolicitud"
+	        			oncomplete="confirmation.hide(); return cargarMultipleFTP();"
+	                    action="#{solicitudRegMB.registrarSolicitud}"
+	                    ajax="false"                     
+	                    actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />  
+	        <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
+        </h:form>          
     </p:confirmDialog> 
     	
 	</ui:define>
