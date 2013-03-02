@@ -10,6 +10,8 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
+	
+	<script type="text/JavaScript" src="../resources/js/visado.js" />	
 
 		<p:tabMenu activeIndex="0"  style="width:1120px;margin-top: 0px; "   >
 			<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml" icon="ui-icon-star" />
@@ -23,7 +25,7 @@
 				<tbody>
 					<tr bordercolor="white">
 						<td ><h:outputText styleClass="outputText" id="txtCod" value="Nro Solicitud: " /></td>
-						<td ><p:inputText id="text100" value="#{seguimientoMB.codSolicitud}" maxlength="15" size="15"/></td>
+						<td ><p:inputText id="text100" value="#{seguimientoMB.codSolicitud}" maxlength="7" size="15" onkeypress="return validaNumero(event,'0',this,'0');" onblur="validaNumero(event,'0',this,'1');"/></td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtSolicitud" /></td>	
 						<p:tooltip for="tooltxtSolicitud" value="Numero de solicitud" showEffect="fade" hideEffect="fade" />  
 						<td ><h:outputText styleClass="outputText" id="txtEstado" value="Estado" /></td>

@@ -11,74 +11,9 @@
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 <ui:param name="root" value="#{request.contextPath}/" />
 	<ui:define name="contenido">
-		<SCRIPT type="text/javascript">
-function validaNumero(e, ent, obj, fn) {
-	//Se captura la tecla presionada             
-	var tecla = (document.all) ? e.keyCode : e.which;
-	var patron;
-	var te;
-	var result;
-	//Tecla de retroceso (para poder borrar)       
-	if (tecla == 8) {
-		return true;
-	}
-	if (ent == '0') {
-		if (fn == '1') {
-			if (obj.value == '') {
-				return true;
-			}
-			var puntos = obj.value.split('.');
-			if (puntos.length > 2) {
-				obj.value = '';
-				obj.focus();
-			}
-		}
-		if (tecla == 46) {
-			if (obj.value.indexOf('.') != -1) {
-				return false;
-			}
-			return true;
-		}
-	} else {
-		if (fn == '1') {
-			if (obj.value.indexOf('.') != -1) {
-				obj.value = '';
-				obj.focus();
-			}
-		}
-	}
-		//Dejar la línea de patron que se necesite y borrar el resto             
-	//patron =/[A-Za-z]/; // Solo acepta letras             
-	patron = /\d/; // Solo acepta números             
-	//patron = /\w/; // Acepta números y letras             
-	//patron = /\D/; // No acepta números             
-	//
-	te = String.fromCharCode(tecla);
-	if (fn == '1') {
-		te = obj.value;
-	}
-	result = patron.test(te);
-	if (result == false) {
-		if (fn == '1') {
-			if (obj.value == '') {
-				return true;
-			}
-			obj.value = '';
-			obj.focus();
-		}
-	}
-	return result;
-}
-
-//Funcion que se encarga de la invocacion del nuevo applet de escaneo (NAE) 05.02.2013
-function invocarEscaner(urlApplet){
-	var winId1;
-	//alert("urlApplet==> "+urlApplet);
-	//var rutaAppletFinal = document.getElementById("formSolicitudRegistro:linkEscaner").value;
-	winId1 = window.open(urlApplet,'NAE', "status=yes,menubar=no,scrollbars=yes,resizable=yes,toolbar=no,screenX=0,screenY=0,left=0,top=0,width=100,height=100" );
-	return false;
-}
-</SCRIPT>
+	
+	<script type="text/JavaScript" src="../resources/js/visado.js" />
+		
 		<h:panelGrid columns="5">
 
 			<p:tabMenu activeIndex="0" style="width:350px;">
@@ -92,7 +27,7 @@ function invocarEscaner(urlApplet){
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">
 				                <p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" 
-				                	update=":formSolicitudRegistro:idMsmSolicitudRegistro,
+				                	update=":formSolicitudRegistro:idMsmSolicitudEdicion,
 				                			:formSolicitudRegistro:idCodigoSolicitud"
 									icon="ui-icon-document" 
 									action="#{consultarSolicitudMB.registrarSolicitud}" 
@@ -116,6 +51,8 @@ function invocarEscaner(urlApplet){
 	<h:outputScript library="js" name="visado.js" target="head" />			
   
 	<h:form id="formSolicitudRegistro" enctype="multipart/form-data">
+	
+		<p:growl id="idMsmSolicitudEdicion" sticky="true" />	
 
 <!-- <a href="#{root}main/download/reportPDF.htm"  style="color:#0073EA;font-weight:bold; ">Download PDF</a> -->
 
@@ -133,7 +70,7 @@ function invocarEscaner(urlApplet){
 											<h:outputText title="Información General"
 												value="Información General" styleClass="outputText" />
 											<p:separator />
-											<p:messages id="idMsmSolicitudRegistro"></p:messages>
+											<!-- <p:messages id="idMsmSolicitudRegistro"></p:messages> -->
 											<table border="0">
 												<tbody>
 													<tr>
@@ -300,7 +237,7 @@ function invocarEscaner(urlApplet){
 															
 															<td>
 															<p:commandButton icon="ui-icon-search" 
-																			 update=":formSolicitudRegistro:modalVerPersona,:formSolicitudRegistro:idMsmSolicitudRegistro" action="#{consultarSolicitudMB.verAgrupacion}"
+																			 update=":formSolicitudRegistro:modalVerPersona,:formSolicitudRegistro:idMsmSolicitudEdicion" action="#{consultarSolicitudMB.verAgrupacion}"
 																			 oncomplete ="dlgVerPersona.show()"  >
 																<f:setPropertyActionListener target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}"
 																							  value="#{s}">
@@ -344,7 +281,7 @@ function invocarEscaner(urlApplet){
 											<h:outputText title="Documentos por Tipo de Solicitud"
 												value="Documentos por Tipo de Solicitud" />
 											<p:separator styleClass="fielset" />
-											<p:messages id="idMsmSolicitudDocumentos"></p:messages>
+											<!-- <p:messages id="idMsmSolicitudDocumentos"></p:messages> -->
 											<table border="0">
 												<tbody>
 													<tr>
@@ -513,7 +450,7 @@ function invocarEscaner(urlApplet){
   
 										                    </td>
 
-														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro:idMsmSolicitudDocumentos,
+														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro:idMsmSolicitudEdicion,
 														:formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:idfileUpload,
 														:formSolicitudRegistro:cboTipoSolicitud" ajax="false"
 														action="#{consultarSolicitudMB.agregarDocumentosXTipoSolicitud}"/>
@@ -584,7 +521,7 @@ function invocarEscaner(urlApplet){
 												value="Operaciones Bancarias">
 											</h:outputText>
 											<p:separator styleClass="fielset" />
-											<p:messages id="idMsmOperacionBancaria"></p:messages>
+											<!-- <p:messages id="idMsmOperacionBancaria"></p:messages> -->
 											<table border="0">
 												<tr>
 													<td><h:outputText styleClass="outputText"
@@ -623,7 +560,7 @@ function invocarEscaner(urlApplet){
 													<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
 													<td><h:inputText value="#{consultarSolicitudMBobjSolicBancaria.importeSoles}" id="txtImporteSoles" readonly="true"/></td>
 													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{consultarSolicitudMB.agregarOperacionBancaria}" actionListener="#{consultarSolicitudMB.obtenerAccionAgregarOperacionBancaria}"
-													 update=":formSolicitudRegistro:idMsmOperacionBancaria,:formSolicitudRegistro:tlbOperacionesBanca,
+													 update=":formSolicitudRegistro:idMsmSolicitudEdicion,:formSolicitudRegistro:tlbOperacionesBanca,
 													 :formSolicitudRegistro:txtImporteSoles,:formSolicitudRegistro:intImporte,
 													 :formSolicitudRegistro:intTipoCambio,:formSolicitudRegistro:cboMoneda,
 													 :formSolicitudRegistro:cboTipoOperacion, :formSolicitudRegistro:txtImpTotal" /></td>
