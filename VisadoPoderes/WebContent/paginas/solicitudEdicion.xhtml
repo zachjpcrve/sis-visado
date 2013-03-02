@@ -993,11 +993,11 @@ function invocarEscaner(urlApplet){
 								</p:column>
 								<p:column headerText="Eliminar">
 									<p:commandButton icon="ui-icon-trash" id="del"
-													 action="#{consultarSolicitudMB.eliminarPersona}" 
+										action="#{consultarSolicitudMB.eliminarPersona}"
 													 update=":formRegistrar" >
-										<f:setPropertyActionListener target="#{consultarSolicitudMB.objTiivsPersonaCapturado}"
-																	  value="#{s}" for="del">
-										</f:setPropertyActionListener>
+										<f:setPropertyActionListener target="#{consultarSolicitudMB.objTiivsPersonaCapturado}" value="#{s}" for="del"/>
+																	  
+										
 									</p:commandButton>
 								</p:column>
 							</p:dataTable></td>
