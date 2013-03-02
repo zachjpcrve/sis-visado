@@ -3746,6 +3746,12 @@ public class ConsultarSolicitudMB {
 	}
 
 	/* Termino metodos del registro */
+	
+
+	public void limpiarComentario() {
+		logger.info("**************************** limpiar Comentario ****************************");
+		 this.solicitudRegistrarT.setObs("");
+	}
 
 	public CombosMB getCombosMB() {
 		return combosMB;
