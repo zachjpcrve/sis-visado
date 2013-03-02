@@ -190,4 +190,26 @@ public class DelegadosService {
 		
 	}
 
+	public List<TiivsMiembroNivel> estadoAgrupacion(String grupo, String nivel) {
+		logger.info("DelegadosService : estadoAgrupacion ");
+		List<TiivsMiembroNivel> delegadosEstado = new ArrayList<TiivsMiembroNivel>();
+		int grupo2 = 0;
+		grupo2 = Integer.parseInt(grupo);
+		String codigoNivel = null;
+		codigoNivel = obtenerCodNivel(nivel);
+		
+		GenericDao<TiivsMiembroNivel, Object> service = (GenericDao<TiivsMiembroNivel, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMiembroNivel.class);
+		try{
+			delegadosEstado = service.buscarDinamico(filtro.add(Restrictions.eq("grupo", grupo2)).add(Restrictions.eq("codNiv", codigoNivel)));
+			
+		}catch(Exception ex){
+			ex.printStackTrace();
+			logger.error("DelegadosService : estadoAgrupacion: "
+					+ ex.getLocalizedMessage());
+		}
+		return delegadosEstado;
+	}
+
 }
