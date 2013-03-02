@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" language="groovy" pageWidth="795" pageHeight="842" columnWidth="755" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="6"/>
 	<field name="oficina" class="java.lang.String"/>
 	<field name="numeroSolicitud" class="java.lang.String"/>
 	<field name="instrucciones" class="java.lang.String"/>
@@ -15,22 +15,15 @@
 		<band height="102">
 			<frame>
 				<reportElement mode="Transparent" x="0" y="11" width="769" height="91" backcolor="#99FF99"/>
-				<staticText>
-					<reportElement x="7" y="24" width="645" height="43" forecolor="#000099"/>
-					<textElement>
-						<font size="30" isBold="true" isUnderline="true"/>
-					</textElement>
-					<text><![CDATA[Solicitud de Revisión de Visado de Poderes Nro]]></text>
-				</staticText>
 				<textField>
-					<reportElement x="639" y="24" width="116" height="53" forecolor="#330099"/>
+					<reportElement x="128" y="51" width="587" height="30" forecolor="#330099"/>
 					<textElement>
-						<font size="30" isBold="true" isUnderline="true"/>
+						<font size="16" isBold="true" isUnderline="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{numeroSolicitud}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["SOLICITUD DE REVISIÓN DE VISADO DE PODERES - " + $F{numeroSolicitud}]]></textFieldExpression>
 				</textField>
 				<textField pattern="dd/MM/yyyy h.mm a">
-					<reportElement x="580" y="0" width="100" height="13"/>
+					<reportElement x="618" y="0" width="100" height="13"/>
 					<textElement/>
 					<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
@@ -58,7 +51,7 @@
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="312">
+		<band height="332">
 			<line>
 				<reportElement x="39" y="0" width="641" height="1" forecolor="#666666"/>
 			</line>
@@ -78,20 +71,20 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="79" y="272" width="204" height="1"/>
+				<reportElement x="79" y="299" width="204" height="1"/>
 			</line>
 			<line>
-				<reportElement x="419" y="271" width="220" height="1"/>
+				<reportElement x="419" y="298" width="220" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="134" y="273" width="100" height="20" forecolor="#000099"/>
+				<reportElement x="134" y="300" width="100" height="20" forecolor="#000099"/>
 				<textElement>
 					<font size="12" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Solicitante(s)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="480" y="273" width="100" height="20" forecolor="#000099"/>
+				<reportElement x="480" y="300" width="100" height="20" forecolor="#000099"/>
 				<textElement>
 					<font size="13" isBold="true"/>
 				</textElement>
@@ -106,17 +99,14 @@
 		<band/>
 	</columnFooter>
 	<pageFooter>
-		<band height="13">
-			<textField>
-				<reportElement mode="Opaque" x="39" y="0" width="589" height="13" backcolor="#E6E6E6"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement mode="Opaque" x="628" y="0" width="52" height="13" backcolor="#E6E6E6"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
+		<band height="26">
+			<staticText>
+				<reportElement x="190" y="0" width="353" height="20" forecolor="#003399"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BBVA Banco Continental © Copyright - Todos los Derechos Reservados]]></text>
+			</staticText>
 		</band>
 	</pageFooter>
 	<summary>
