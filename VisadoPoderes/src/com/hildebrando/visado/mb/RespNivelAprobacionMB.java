@@ -226,12 +226,14 @@ public class RespNivelAprobacionMB {
 			respNiveles.add(new MiembroNivelDTO(e.getId(), e.getCodNiv(),desNivel,e.getTiivsMiembro().getCodMiembro(),e.getTiivsMiembro().getDescripcion(),e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(),
 					grupo.getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),e.getEstado(),descEstado));
 		}
-		
-		for(int i=0;i <=respNiveles.size(); i++ ){
-			if(logger.isDebugEnabled()){
-				logger.debug("==>  ID:"+respNiveles.get(i).getId()+"  Registro:"+respNiveles.get(i).getRegistro());
-			}
+		if(respNiveles!=null && respNiveles.size()>0){
+			for(int i=0;i <=respNiveles.size(); i++ ){
+				if(logger.isDebugEnabled()){
+					logger.debug("==>  ID:"+respNiveles.get(i).getId()+"  Registro:"+respNiveles.get(i).getRegistro());
+				}
+			}	
 		}
+		
 		
 		logger.debug("=== saliendo de listarRespxNivel() ===");
 	}
