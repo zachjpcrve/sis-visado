@@ -202,21 +202,21 @@
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="129" splitType="Stretch">
+		<band height="112" splitType="Stretch">
 			<textField>
-				<reportElement x="43" y="15" width="74" height="20"/>
+				<reportElement x="43" y="2" width="74" height="20"/>
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{sEstado}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="15" width="43" height="20" forecolor="#003399"/>
+				<reportElement x="0" y="2" width="43" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="SansSerif" size="11" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Estadoo]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement key="table 7" style="table 7" x="0" y="38" width="555" height="89" forecolor="#000000"/>
+				<reportElement key="table 7" style="table 7" x="0" y="23" width="555" height="89" forecolor="#000000"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Table Dataset 1">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{lstPersonas})]]></dataSourceExpression>

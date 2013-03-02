@@ -16,23 +16,23 @@
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="28" splitType="Stretch">
+		<band height="22" splitType="Stretch">
 			<staticText>
-				<reportElement x="178" y="8" width="100" height="20" forecolor="#000099"/>
+				<reportElement x="178" y="2" width="100" height="20" forecolor="#000099"/>
 				<textElement>
 					<font isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Importe]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="278" y="8" width="100" height="20" forecolor="#000099"/>
+				<reportElement x="278" y="2" width="100" height="20" forecolor="#000099"/>
 				<textElement>
 					<font isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Moneda]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="378" y="8" width="100" height="20" forecolor="#000099"/>
+				<reportElement x="378" y="2" width="100" height="20" forecolor="#000099"/>
 				<textElement>
 					<font isBold="true" isUnderline="true"/>
 				</textElement>
@@ -41,7 +41,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="57" splitType="Stretch">
+		<band height="22" splitType="Stretch">
 			<textField>
 				<reportElement x="178" y="0" width="100" height="20"/>
 				<textElement/>
@@ -50,7 +50,7 @@
 			<textField>
 				<reportElement x="278" y="0" width="100" height="20"/>
 				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{sDescMoneda}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sDescMoneda} + "   "]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="378" y="0" width="100" height="20"/>
@@ -60,10 +60,10 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="8" splitType="Stretch"/>
+		<band height="1" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="11" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
 		<band splitType="Stretch"/>
