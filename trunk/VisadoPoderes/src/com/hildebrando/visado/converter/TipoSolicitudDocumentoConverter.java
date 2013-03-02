@@ -41,9 +41,8 @@ public class TipoSolicitudDocumentoConverter
 	      filtroTipoSolcDoc.add(Restrictions.isNotNull("id"));
 	
 	      documentosDB = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
-	      logger.info("****** " + documentosDB.size());
+	      //logger.info("****** " + documentosDB.size());
 	
-	      logger.info("************* TipoSolicitudDocumentoConverter ***********************" + lst);
 	    } catch (Exception e) {
 	      e.printStackTrace();
 	    }
