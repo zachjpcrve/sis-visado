@@ -544,7 +544,7 @@
 													</td>
 													<td><p:selectOneMenu styleClass="selectOneMenu"
 															id="cboMoneda" 
-															value="#{consultarSolicitudMB.objSolicBancaria.moneda}"
+															value="#{consultarSolicitudMB.objSolicBancaria.id.moneda}"
 															immediate="true" 
 															disabled="false" valueChangeListener="#{consultarSolicitudMB.validarTipoCambioDisabled}">
 															<p:ajax update=":formSolicitudRegistro:intImporte" event="change"></p:ajax>
@@ -598,7 +598,7 @@
 																<h:outputText value="#{o.tiivsOperacionBancaria.desOperBan}"></h:outputText>
 															</p:column>
 															<p:column headerText="Moneda">
-																<h:outputText value="#{o.sDescMoneda}" />
+																<h:outputText value="#{o.id.sDescMoneda}" />
 															</p:column>
 															<p:column headerText="Importe" style="text-align: right ;">
 																<h:outputText value="#{o.importe}" >
