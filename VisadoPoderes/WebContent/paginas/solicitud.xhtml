@@ -141,7 +141,7 @@
 																id="outImpTotal" value="Importe Total" /></td>
 														<td><h:inputText styleClass="inputText"
 																id="txtImpTotal" style="width:100px;"
-																value="#{solicitudRegMB.solicitudRegistrarT.sImporteMoneda}"
+																value="#{solicitudRegMB.solicitudRegistrarT.id.sImporteMoneda}"
 																disabled="false" readonly="true" >
 																<f:convertNumber pattern="#,###,##0.00" locale="en" />
 																</h:inputText>
@@ -542,7 +542,7 @@
 													<td><p:selectOneMenu 
 															style="width:160px;"
 															id="cboMoneda" 
-															value="#{solicitudRegMB.objSolicBancaria.moneda}"
+															value="#{solicitudRegMB.objSolicBancaria.id.moneda}"
 															immediate="true" 
 															disabled="false" valueChangeListener="#{solicitudRegMB.validarTipoCambioDisabled}">
 															<p:ajax update=":formSolicitudRegistro:intImporte" event="change"></p:ajax>
@@ -596,7 +596,7 @@
 																<h:outputText value="#{o.tiivsOperacionBancaria.desOperBan}"></h:outputText>
 															</p:column>
 															<p:column headerText="Moneda">
-																<h:outputText value="#{o.sDescMoneda}" />
+																<h:outputText value="#{o.id.sDescMoneda}" />
 															</p:column>
 															<p:column headerText="Importe" style="text-align: right ;">
 																<h:outputText value="#{o.importe}" >
