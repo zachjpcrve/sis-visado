@@ -69,7 +69,10 @@
 							<p:commandButton value="Buscar" actionListener="#{reportesMB.buscarLiquidacion}" update=":frm"/>
 						</td>
 						<td>
-							<p:commandButton value="Exportar"  disabled="#{reportesMB.noHabilitarExportar}" actionListener="#{reportesMB.abrirExcelLiquidacion}"/>
+							<p:commandButton value="Exportar"  disabled="#{reportesMB.noHabilitarExportar}" 
+								actionListener="#{reportesMB.descargarArchivoLiquidacion}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)" >
+								<p:fileDownload value="#{reportesMB.file}" />  
+							</p:commandButton> 
 						</td>
 					</tr>
 				</tbody>

@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,6 +17,17 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -32,6 +44,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -43,6 +58,7 @@ import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.AgrupacionPlazoDto;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.ComboDto;
+import com.hildebrando.visado.dto.FormatosDTO;
 import com.hildebrando.visado.dto.Moneda;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
@@ -2086,7 +2102,7 @@ public class ReportesMB
 			}
 						
 			//Se crea el archivo con la informacion y estilos definidos previamente
-			String strRuta="";
+			//String strRuta="";
 			if (obtenerRutaExcel().compareTo("")!=0)
 			{
 				
@@ -2094,7 +2110,7 @@ public class ReportesMB
 				logger.info("Ruta: " + obtenerRutaExcel());
 				logger.info("Nombre Archivo Excel: " + getNombreEstadoSolicitud());
 				
-				strRuta = obtenerRutaExcel() + getNombreEstadoSolicitud() + ConstantesVisado.EXTENSION_XLS;
+				/*strRuta = obtenerRutaExcel() + getNombreEstadoSolicitud() + ConstantesVisado.EXTENSION_XLS;
 				logger.info("Nombre strRuta: " + strRuta);
 				FileOutputStream fileOut = new FileOutputStream(strRuta);
 				wb.write(fileOut);
@@ -2103,7 +2119,27 @@ public class ReportesMB
 				
 				logger.debug("Ruta final donde encontrar el archivo excel: " + strRuta);
 				
-				setRutaArchivoExcel(strRuta);
+				setRutaArchivoExcel(strRuta);*/
+				
+				try {
+					FacesContext context = FacesContext.getCurrentInstance();
+					ExternalContext externalContext = context.getExternalContext();
+					externalContext.responseReset(); 
+					externalContext.setResponseContentType("application/vnd.ms-excel");
+					externalContext.setResponseHeader("Content-Disposition", "attachment;filename=" + getNombreEstadoSolicitud() + ConstantesVisado.EXTENSION_XLS );
+					wb.write(externalContext.getResponseOutputStream());
+					context.responseComplete(); // Prevent JSF from performing navigation.
+					
+					OutputStream os = externalContext.getResponseOutputStream();
+					os.flush();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				 
+				
+				
+				//FacesContext context = FacesContext.getCurrentInstance();
+				//writeExcelToResponse(((HttpServletResponse)context.getExternalContext().getResponse()), wb, getNombreEstadoSolicitud());
 			}
 						
 		} catch (Exception e) {
@@ -2111,6 +2147,18 @@ public class ReportesMB
 			//logger.info("Error al generar el archivo excel debido a: " + e.getStackTrace());
 		}	
 	}
+	
+	protected void writeExcelToResponse(HttpServletResponse response, HSSFWorkbook generatedExcel, String filename) throws IOException {
+		response.reset();
+		response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-disposition", "attachment;filename="+ filename + ".xls");
+        
+        OutputStream os = response.getOutputStream();
+        generatedExcel.write(os);
+       
+		os.flush();
+    }
+	
 	
 	private void rptExtractor() 
 	{
@@ -2608,21 +2656,7 @@ public class ReportesMB
 	
 	public void abrirExcelEstadoSolicitud()
 	{
-		try {
-			exportarExcelEstadoSolicitud();
-			//Abrir archivo excel
-				
-			if (rutaArchivoExcel!=null && rutaArchivoExcel.length()>0)
-			{
-				Desktop.getDesktop().open(new File(rutaArchivoExcel));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.debug("Error al abrir archivo excel debido a: " + e.getMessage());
-		} catch (Exception e1)
-		{
-			e1.printStackTrace();
-		}
+		exportarExcelEstadoSolicitud();
 	}
 	
 	public void abrirExcelLiquidacion()
@@ -2703,6 +2737,7 @@ public class ReportesMB
 	
 	public void descargarArchivoExtractor()
 	{
+		buscarSolicitudesExtractor();
 		exportarExcelExtractor();
 		InputStream stream=null;
 		try {
@@ -2730,6 +2765,22 @@ public class ReportesMB
 		if (stream!=null)
 		{
 			file = new DefaultStreamedContent(stream, "application/excel", nombreEstadoSolicitud+ConstantesVisado.EXTENSION_XLS);
+		}
+	}
+	
+	public void descargarArchivoLiquidacion()
+	{
+		exportarExcelLiquidacion();
+		InputStream stream=null;
+		try {
+			stream = new FileInputStream(rutaArchivoExcel);
+		} catch (FileNotFoundException e) {
+			logger.debug("Error al obtener archivo excel debido a: " + e.getMessage());
+		}
+		
+		if (stream!=null)
+		{
+			file = new DefaultStreamedContent(stream, "application/excel", nombreLiquidacion+ConstantesVisado.EXTENSION_XLS);
 		}
 	}
 	
