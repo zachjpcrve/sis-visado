@@ -1648,8 +1648,8 @@ public class SeguimientoMB
 		// 8. Filtro por nombre de oficina (funciona)
 		if (getOficina() != null) 
 		{
-			logger.debug("Filtro Oficina: " + getOficina());			
 			if(getOficina().getDesOfi()!=null){
+				logger.debug("Filtro Oficina: " + getOficina().getCodOfi());		
 				filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
 				String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getOficina().getDesOfi().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
 				filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
@@ -1948,7 +1948,6 @@ public class SeguimientoMB
 		}
 		else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
 		{
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA_FILTRO);
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS_FILTRO, usuario.getBancoOficina().getCodigo().trim()));
 		}
 		
