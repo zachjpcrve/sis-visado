@@ -1561,6 +1561,7 @@ public class SeguimientoMB
 		{
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_ENVIO)) // Es fecha de envio
 			{
+				logger.info("Filtrando por fecha de envio");
 				DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
 				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
 				
@@ -1573,6 +1574,9 @@ public class SeguimientoMB
 				Date dFechaIni = newFechaInicio.toDateTimeAtStartOfDay().toDate();
 				Date dFechaFin = newFechaFin.toDateTimeAtStartOfDay().toDate();
 				
+				logger.info("Fecha de inicio:" + dFechaIni);
+				logger.info("Fecha de Fin:" + dFechaFin);
+				
 				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_ENVIO, dFechaIni,dFechaFin));
 				
 				//Verificar que el campo estado no tenga espacios en blanco en BD
@@ -1581,6 +1585,7 @@ public class SeguimientoMB
 			}
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_RPTA)) // Sino es fecha de respuesta
 			{
+				logger.info("Filtrando por fecha de rpta");
 				DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
 				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
 				
@@ -1593,7 +1598,6 @@ public class SeguimientoMB
 				Date dateIni = newFechaInicio.toDateTimeAtStartOfDay().toDate();
 				Date dateFin = newFechaFin.toDateTimeAtStartOfDay().toDate();
 				
-				logger.debug("Filtro por fecha de rpta...");
 				logger.info("Fecha Inicio: " + dateIni);
 				logger.info("Fecha Fin: " + dateFin);
 				
