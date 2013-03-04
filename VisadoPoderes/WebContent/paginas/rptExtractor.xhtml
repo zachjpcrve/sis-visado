@@ -56,25 +56,14 @@
 			<table border="0">
 				<tr>
 					<td>
-						<p:commandButton value="Generar" actionListener="#{reportesMB.buscarSolicitudesExtractor}"
-							oncomplete="confirmation.show()" update="confirmDialog"/>
+						<p:commandButton id="cmdGenerar" value="Generar" actionListener="#{reportesMB.descargarArchivoExtractor}" ajax="false"
+							onclick="PrimeFaces.monitorDownload(start, stop)" >
+								<p:fileDownload value="#{reportesMB.file}" />  
+						</p:commandButton>  
 					</td>
 				</tr>
 			</table>	
-			
-			
-			<p:confirmDialog id="confirmDialog" message="#{reportesMB.txtMsgDialog}"
-		                header="Generar Reporte Extractor" severity="alert" widgetVar="confirmation">  
-	            
-	            <p:commandButton id="confirm" value="Abrir"  oncomplete="confirmation.hide()"  rendered="#{reportesMB.mostrarBotones}"
-			                    actionListener="#{reportesMB.abrirExcelExtractor}" />  
-			        
-		        <p:commandButton id="decline" value="Grabar" onclick="PrimeFaces.monitorDownload(start, stop)" ajax="false"  rendered="#{reportesMB.mostrarBotones}"
-				        icon="ui-icon-arrowthichk-s" oncomplete="confirmation.hide()" actionListener="#{reportesMB.descargarArchivoExtractor}">
-				    <p:fileDownload value="#{reportesMB.file}" />  
-				</p:commandButton>  
-			</p:confirmDialog>  
-     			
+    			
 		</h:form>
 		
 			

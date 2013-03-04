@@ -84,8 +84,9 @@
 							</td>
 							<td>
 								<p:commandButton value="Exportar"  disabled="#{reportesMB.noHabilitarExportar}" 
-									actionListener="#{reportesMB.abrirExcelRecaudacion}">
-								</p:commandButton>
+									actionListener="#{reportesMB.descargarArchivoRecaudacion}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)" >
+										<p:fileDownload value="#{reportesMB.file}" />  
+								</p:commandButton>  
 							</td>
 						</tr>
 							
