@@ -65,10 +65,7 @@
 							<h:outputText styleClass="outputText" id="txtTipoFecha" value="Tipo Fecha:" />
 						</td>
 						<td >
-							<p:selectOneMenu value="#{seguimientoMB.idTiposFecha}" id="somTiposFecha" 
-								valueChangeListener="#{seguimientoMB.habilitarFechas}" 
-								immediate="true" onchange="this" style="width:120px;">
-																
+							<p:selectOneMenu value="#{seguimientoMB.idTiposFecha}" id="somTiposFecha" style="width:120px;">
 								<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 								<f:selectItems value="#{seguimientoMB.combosMB.lstTiposFecha}" var="tipoFec"
 									itemValue="#{tipoFec.codigoTipoFecha}" itemLabel="#{tipoFec.descripcion}" />
