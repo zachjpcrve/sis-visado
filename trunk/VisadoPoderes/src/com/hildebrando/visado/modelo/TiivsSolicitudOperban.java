@@ -9,8 +9,8 @@ public class TiivsSolicitudOperban implements java.io.Serializable {
 	private TiivsSolicitudOperbanId id;
 	private TiivsOperacionBancaria tiivsOperacionBancaria;
 	private Double importe;
-	private String moneda;
-	private String sDescMoneda;
+/*	private String moneda;*/
+	
 	private Double tipoCambio;
 	private Double importeSoles;
 
@@ -25,11 +25,11 @@ public class TiivsSolicitudOperban implements java.io.Serializable {
 
 	public TiivsSolicitudOperban(TiivsSolicitudOperbanId id,
 			TiivsOperacionBancaria tiivsOperacionBancaria, Double importe,
-			String moneda, Double tipoCambio) {
+			/*String moneda*/ Double tipoCambio) {
 		this.id = id;
 		this.tiivsOperacionBancaria = tiivsOperacionBancaria;
 		this.importe = importe;
-		this.moneda = moneda;
+		//this.moneda = moneda;
 		this.tipoCambio = tipoCambio;
 	}
 
@@ -58,14 +58,7 @@ public class TiivsSolicitudOperban implements java.io.Serializable {
 		this.importe = importe;
 	}
 
-	public String getMoneda() {
-		return this.moneda;
-	}
-
-	public void setMoneda(String moneda) {
-		this.moneda = moneda;
-	}
-
+	
 	public Double getTipoCambio() {
 		return this.tipoCambio;
 	}
@@ -90,12 +83,6 @@ public class TiivsSolicitudOperban implements java.io.Serializable {
 		this.sItem = sItem;
 	}
 
-	public String getsDescMoneda() {
-		return sDescMoneda;
-	}
-
-	public void setsDescMoneda(String sDescMoneda) {
-		this.sDescMoneda = sDescMoneda;
-	}
+	
 
 }

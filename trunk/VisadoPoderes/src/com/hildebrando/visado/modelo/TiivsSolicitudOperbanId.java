@@ -10,6 +10,7 @@ public class TiivsSolicitudOperbanId implements java.io.Serializable {
 	private String codSoli;
 	private String codOperBan;
 	private String moneda;
+	private String sDescMoneda;
 
 	public TiivsSolicitudOperbanId() {
 	}
@@ -43,6 +44,16 @@ public class TiivsSolicitudOperbanId implements java.io.Serializable {
 
 	public void setMoneda(String moneda) {
 		this.moneda = moneda;
+	}
+
+	
+	
+	public String getsDescMoneda() {
+		return this.sDescMoneda;
+	}
+
+	public void setsDescMoneda(String sDescMoneda) {
+		this.sDescMoneda = sDescMoneda;
 	}
 
 	public boolean equals(Object other) {
