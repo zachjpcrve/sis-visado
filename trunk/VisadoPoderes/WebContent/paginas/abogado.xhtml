@@ -7,7 +7,71 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
+
 		<!-- Abogado -->
+
+		<SCRIPT type="text/javascript">
+			function validaLetraNumero(e, ent, obj, fn) {
+				//Se captura la tecla presionada             
+				var tecla = (document.all) ? e.keyCode : e.which;
+				var patron;
+				var te;
+				var result;
+				//Tecla de retroceso (para poder borrar)       
+				if (tecla == 8) {
+					return true;
+				}
+				/* if (tecla == 32) {
+					return true;
+				} */
+				if (ent == '0') {
+					if (fn == '1') {
+						if (obj.value == '') {
+							return true;
+						}
+						var puntos = obj.value.split('.');
+						if (puntos.length > 2) {
+							obj.value = '';
+							obj.focus();
+						}
+					}
+					if (tecla == 46) {
+						if (obj.value.indexOf('.') != -1) {
+							return false;
+						}
+						return true;
+					}
+				} else {
+					if (fn == '1') {
+						if (obj.value.indexOf('.') != -1) {
+							obj.value = '';
+							obj.focus();
+						}
+					}
+				}
+				//Dejar la línea de patron que se necesite y borrar el resto             
+				//patron = /[A-Za-z0-9]/; // Solo acepta letras             
+				//patron = /\d/; // Solo acepta números             
+				patron = /\w/; // Acepta números y letras             
+				//patron = /\D/; // No acepta números             
+				//
+				te = String.fromCharCode(tecla);
+				if (fn == '1') {
+					te = obj.value;
+				}
+				result = patron.test(te);
+				if (result == false) {
+					if (fn == '1') {
+						if (obj.value == '') {
+							return true;
+						}
+						obj.value = '';
+						obj.focus();
+					}
+				}
+				return result;
+			}
+		</SCRIPT>
 		<h:form id="frmMantenimientoAbogado">
 			<p:panel header="Perfil-Usuario" style="width: 85%">
 				<p:messages id="idMsmDocumento"></p:messages>
@@ -35,8 +99,10 @@
 					<tr>
 						<td><h:outputText value="Codigo:  " /></td>
 						<td><p:inputText id="txtCodigo"
+								onkeypress="return validaLetraNumero(event,'0',this,'0');"
+								onblur="validaLetraNumero(event,'0',this,'1');"
 								disabled="#{abogadoMB.mostrarCodigoEditar}"
-								value="#{abogadoMB.abogado.codMiembro}" maxlength="50" /></td>
+								value="#{abogadoMB.abogado.codMiembro}" maxlength="7" /></td>
 					</tr>
 					<tr>
 						<td><h:outputText value="Descripcion:  " /></td>
@@ -60,7 +126,7 @@
 								actionListener="#{abogadoMB.registrar}"
 								update=":frmDataTableAbogado :frmMantenimientoAbogado">
 							</p:commandButton></td>
-							<td><p:commandButton id="limpiar" value="Limpiar" ajax="true"
+						<td><p:commandButton id="limpiar" value="Limpiar" ajax="true"
 								action="#{abogadoMB.limpiarCampos}"
 								update=":frmMantenimientoAbogado">
 							</p:commandButton></td>
