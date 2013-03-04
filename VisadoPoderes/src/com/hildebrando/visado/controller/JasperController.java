@@ -74,7 +74,7 @@ public class JasperController {
 					.getLstSolicBancarias()) {
 				OperacionesPDF oper = new OperacionesPDF(op.getsItem(), op
 						.getTiivsOperacionBancaria().getDesOperBan(),
-						op.getsDescMoneda(), op.getImporte(),
+						op.getId().getsDescMoneda(), op.getImporte(),
 						op.getTipoCambio(), op.getImporteSoles());
 				lstOperaciones.add(oper);
 			}
@@ -321,7 +321,7 @@ public class JasperController {
     			OperacionesPDF oper = new OperacionesPDF(
     					op.getsItem(), 
     					op.getTiivsOperacionBancaria().getDesOperBan(), 
-    					op.getsDescMoneda(), 
+    					op.getId().getsDescMoneda(), 
     					op.getImporte(),
     					op.getTipoCambio(),
     					op.getImporteSoles());    			
