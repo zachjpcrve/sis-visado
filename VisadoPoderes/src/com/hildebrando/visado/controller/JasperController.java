@@ -51,56 +51,57 @@ public class JasperController {
 	@RequestMapping(value="/download/pdfReportCartaAtencion.htm", method=RequestMethod.GET)
 	public String generarReporteCartaAtencion(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
 		logger.info("==== generarReporteCartaAtencion ==== ");
-		  try {
-		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
-		
-		if(SOLICITUD_TEMP==null){
-			logger.info("La solicitud es nula");
-			return null;
-		}
-		
-		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
-		FormatosDTO uno = new FormatosDTO();
-		uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
-		uno.setNumeroDiasForEjecucion("NO DEFINIDO");
-		uno.setInstrucciones(SOLICITUD_TEMP.getObs());
-		uno.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getCodOfi()+" - " +SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
-		
-		
-		
-	    //Add lista datasource
-		List<TiivsSolicitudOperban> listaOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();
-		listaOperacionesBancarias=SOLICITUD_TEMP.getLstSolicBancarias();
-		logger.info("getLstSolicBancarias.size : "+SOLICITUD_TEMP.getLstSolicBancarias().size());
-	     JRDataSource dsOperacion = new JRBeanCollectionDataSource(listaOperacionesBancarias);
-	    List<JRDataSource> lstDsSolicitudOperban = new ArrayList<JRDataSource>();
-	    lstDsSolicitudOperban.add(dsOperacion);
-	    uno.setListaSolicitudOperban(listaOperacionesBancarias);
-	    cabecera.add(uno);
-	    
-	    
-    	
-		   	
-        response.setHeader("Content-type", "application/pdf");
-        response.setHeader("Content-Disposition","attachment; filename=\"Carta_Atencion.pdf\"");
-		
-        JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
-              
+		try {
+			TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request
+					.getSession(true).getAttribute("SOLICITUD_TEMP");
 
-        
-        modelMap.put("dataKey", objCab);
-       
-      
-        	OutputStream os = response.getOutputStream();
-        	os.flush();
+			if (SOLICITUD_TEMP == null) {
+				logger.info("La solicitud es nula");
+				return null;
+			}
+
+			List<FormatosDTO> cabecera = new ArrayList<FormatosDTO>();
+			FormatosDTO uno = new FormatosDTO();
+			uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
+			uno.setNumeroDiasForEjecucion("NO DEFINIDO");
+			uno.setInstrucciones(SOLICITUD_TEMP.getObs());
+			uno.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getCodOfi()
+					+ " - " + SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
+
+			// Add lista datasource
+			List<OperacionesPDF> lstOperaciones = new ArrayList<OperacionesPDF>();
+			for (TiivsSolicitudOperban op : SOLICITUD_TEMP
+					.getLstSolicBancarias()) {
+				OperacionesPDF oper = new OperacionesPDF(op.getsItem(), op
+						.getTiivsOperacionBancaria().getDesOperBan(),
+						op.getsDescMoneda(), op.getImporte(),
+						op.getTipoCambio(), op.getImporteSoles());
+				lstOperaciones.add(oper);
+			}
+
+			uno.setLstOperaciones(lstOperaciones); // agregar operaciones
+
+			cabecera.add(uno);
+			response.setHeader("Content-type", "application/pdf");
+			response.setHeader("Content-Disposition",
+					"attachment; filename=\"Carta_Atencion.pdf\"");
+
+			JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(
+					cabecera, false);
+			modelMap.put("dataKey", objCab);
+
+			OutputStream os = response.getOutputStream();
+			os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
-		}catch (Exception e) {
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
+					+ "al generar el archivo: " + e);
+		} catch (Exception e) {
 			e.printStackTrace();
-			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
+					+ "al generar el archivo: " + e);
 		}
-        return("pdfReportCartaAtencion");
+		return ("pdfReportCartaAtencion");
 	}
 	@RequestMapping(value="/download/pdfReportCartaSolicitudRevision.htm", method=RequestMethod.GET)
 	public String generarReporteCartaSolicitudRevision(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
