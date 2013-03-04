@@ -291,7 +291,10 @@ public class ConsultarSolicitudMB {
 	}
 	*/
 
-	/*
+	
+	
+	
+	//Ref: SeguimientoPestania: Botón "Generar Revision"
 	public void mostrarCartaRevision() {
 		PERFIL_USUARIO = (String) Utilitarios
 				.getObjectInSession("PERFIL_USUARIO");
@@ -332,7 +335,7 @@ public class ConsultarSolicitudMB {
 //			setbMostrarCartaAtencion(false);
 //		}
 	}
-	*/
+	
 
 	@SuppressWarnings("unchecked")
 	public void validarCambioEstadoVencido() {
