@@ -61,9 +61,8 @@
 								<h:outputLabel value="Estado: " />
 								<p:selectOneMenu id="cboEstado"
 									value="#{revocadosMB.estadoRevocado}" style="width: 120px">
-									<f:selectItem itemLabel="Activo" itemValue="001" />
-									<f:selectItem itemLabel="Inactivo" itemValue="002" />
-									<f:selectItem itemLabel="Pendiente" itemValue="003" />
+									<f:selectItems value="#{revocadosMB.listEstadoRevocados}" var="est"
+										itemLabel="#{est.valor1}" itemValue="#{est.id.codElem}" />
 									<f:selectItem itemLabel="--Seleccione--" itemValue="S" />
 								</p:selectOneMenu>
 
@@ -255,7 +254,9 @@
 						maxlength="13" />
 
 					<p:commandButton id="btnBuscar"
-						update=":frmCliente:dtClientes, :frmPendEdit"
+						update=":frmCliente:dtClientes, :frmPendEdit:gridMsj, 
+						:frmPendEdit:gridApodPod, :frmPendEdit:gridApodPod2, 
+						:frmPendEdit:gridApodPod3"
 						icon="ui-icon-seek-next" oncomplete="dlgCliente.show();"
 						actionListener="#{revocadosMB.buscarPersona}" ajax="true"
 						process="@form" />
@@ -333,6 +334,8 @@
 
 
 				<p:outputPanel id="dtClientes">
+				
+					<p:messages globalOnly="true" showDetail="true" ></p:messages>
 
 					<table border="0" width="100%">
 						<tbody>
@@ -485,35 +488,7 @@
 
 				</p:outputPanel>
 
-				<p:confirmDialog widgetVar="cfdRevocar"
-					message="¿Está seguro de revocar los poderes? "
-					header="Mensaje de Información" appendToBody="true"
-					showEffect="explode" hideEffect="explode" severity="alert"
-					modal="true">
-
-					<p:commandButton value="Sí" process="dtClientes"
-						actionListener="#{revocadosMB.revocarApodPod}" update="gridMsj" ajax="true"
-						oncomplete="cfdRevocar.hide();">
-					</p:commandButton>
-
-					<p:commandButton value="No" onclick="cfdRevocar.hide();">
-					</p:commandButton>
-				</p:confirmDialog>
-
-				<p:confirmDialog widgetVar="cfdGuardar"
-					message="¿Está seguro de guardar los apoderados/poderdantes? "
-					header="Mensaje de Información" appendToBody="true"
-					showEffect="explode" hideEffect="explode" severity="alert"
-					modal="true">
-
-					<p:commandButton value="Sí" process="dtClientes"
-						actionListener="#{revocadosMB.guardarApodPod}" ajax="true"
-						oncomplete="cfdGuardar.hide();">
-					</p:commandButton>
-
-					<p:commandButton value="No" onclick="cfdGuardar.hide();">
-					</p:commandButton>
-				</p:confirmDialog>
+				
 
 			</h:form>
 
@@ -656,6 +631,44 @@
 			</h:form>
 
 		</p:dialog>
+		
+		<p:confirmDialog widgetVar="cfdRevocar"
+			message="¿Está seguro de revocar los poderes? "
+			header="Mensaje de Información" appendToBody="true"
+			showEffect="explode" hideEffect="explode" severity="alert"
+			modal="true">
+			
+			<h:form>
+				<p:commandButton value="Sí" process=":frmPendEdit:dtClientes"
+					actionListener="#{revocadosMB.revocarApodPod}" 
+					update=":frmPendEdit:gridMsj" ajax="true"
+					oncomplete="cfdRevocar.hide();">
+				</p:commandButton>
+
+				<p:commandButton value="No" onclick="cfdRevocar.hide();">
+				</p:commandButton>
+			</h:form>
+		</p:confirmDialog>
+
+		<p:confirmDialog widgetVar="cfdGuardar"
+			message="¿Está seguro de guardar los apoderados/poderdantes? "
+			header="Mensaje de Información" appendToBody="true"
+			showEffect="explode" hideEffect="explode" severity="alert"
+			modal="true">
+			
+			<h:form>
+				<p:commandButton value="Sí" process=":frmPendEdit:dtClientes"
+					actionListener="#{revocadosMB.guardarApodPod}" ajax="true"
+					update=":frmPendEdit:dtClientes"
+					oncomplete="cfdGuardar.hide();">
+				</p:commandButton>
+
+				<p:commandButton value="No" onclick="cfdGuardar.hide();">
+				</p:commandButton>
+				
+			</h:form>
+			
+		</p:confirmDialog>
 
 		<!-- Ver -->
 		<p:dialog widgetVar="dlgApoPodVer" modal="true" id="idDlgApoPodVer"
