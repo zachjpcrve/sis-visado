@@ -19,15 +19,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -44,9 +36,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -58,7 +47,6 @@ import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.AgrupacionPlazoDto;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.ComboDto;
-import com.hildebrando.visado.dto.FormatosDTO;
 import com.hildebrando.visado.dto.Moneda;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.TipoDocumento;
