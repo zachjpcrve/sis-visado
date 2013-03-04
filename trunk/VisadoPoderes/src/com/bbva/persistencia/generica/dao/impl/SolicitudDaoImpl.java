@@ -9,10 +9,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.Alias;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
@@ -224,12 +226,17 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	public List<TiivsSolicitudOperban> obtenerListarOperacionesBancarias(
 			TiivsSolicitud solicitud) throws Exception 
 	{
-		List<TiivsSolicitudOperban> lstOperacionesBancarias = new ArrayList<TiivsSolicitudOperban>();
-		GenericDao<TiivsSolicitudOperban, Object> service = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		
+		GenericDao<TiivsSolicitudOperban, String> service = (GenericDao<TiivsSolicitudOperban, String>) SpringInit.getApplicationContext().getBean("genericoDao");
+		logger.info(" solicitud.getCodSoli() " +solicitud.getCodSoli());
 		Busqueda filtro = Busqueda.forClass(TiivsSolicitudOperban.class);
 		filtro.add(Restrictions.eq("id.codSoli", solicitud.getCodSoli()));
-		return lstOperacionesBancarias = service.buscarDinamico(filtro);
+		List<TiivsSolicitudOperban> lstOperacionesBancarias_2 = new ArrayList<TiivsSolicitudOperban>();
+		lstOperacionesBancarias_2 = service.buscarDinamico(filtro);
+		 for (TiivsSolicitudOperban x : service.buscarDinamico(filtro)) {
+			logger.info(" x.getMoneda() " +x.getId().getMoneda());
+		}
+		return lstOperacionesBancarias_2 ;
 	}
 
 	public List<TiivsAnexoSolicitud> obtenerListarAnexosSolicitud(
