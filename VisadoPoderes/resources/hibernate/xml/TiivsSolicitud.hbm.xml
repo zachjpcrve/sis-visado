@@ -1,7 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR1 
+
+
+  <column name="COD_SOLI" length="7" />
+            <generator class="sequence">
+            <param name="SEQ_SOLICITUD">SEQ_SOLICITUD</param>
+            </generator>
+
+-->
 <hibernate-mapping>
     <class name="com.hildebrando.visado.modelo.TiivsSolicitud" table="TIIVS_SOLICITUD">
         <id name="codSoli" type="string">
