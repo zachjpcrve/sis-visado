@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion_subreportOperaciones" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
-	<property name="ireport.zoom" value="1.0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OperacionesBancarias" pageWidth="555" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="PARAM_INSTRUCCION" class="java.lang.String"/>
+	<field name="item" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="moneda" class="java.lang.String"/>
 	<field name="importe" class="java.lang.Double"/>
-	<field name="sDescMoneda" class="java.lang.String"/>
 	<field name="tipoCambio" class="java.lang.Double"/>
+	<field name="soles" class="java.lang.Double"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -16,56 +20,108 @@
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="22" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement x="178" y="2" width="100" height="20" forecolor="#000099"/>
+				<reportElement x="0" y="0" width="39" height="20" forecolor="#003399"/>
 				<textElement>
-					<font isBold="true" isUnderline="true"/>
+					<font fontName="SansSerif" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Importe]]></text>
+				<text><![CDATA[Item]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="278" y="2" width="100" height="20" forecolor="#000099"/>
+				<reportElement x="39" y="0" width="145" height="20" forecolor="#003399"/>
 				<textElement>
-					<font isBold="true" isUnderline="true"/>
+					<font fontName="SansSerif" size="11" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Descripcion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="184" y="0" width="78" height="20" forecolor="#003399"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Moneda]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="378" y="2" width="100" height="20" forecolor="#000099"/>
+				<reportElement x="272" y="0" width="72" height="20" forecolor="#003399"/>
 				<textElement>
-					<font isBold="true" isUnderline="true"/>
+					<font fontName="SansSerif" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Tipo Cambio]]></text>
+				<text><![CDATA[Importe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="359" y="0" width="92" height="20" forecolor="#003399"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Cambio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="462" y="0" width="66" height="20" forecolor="#003399"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Soles]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="22" splitType="Stretch">
-			<textField>
-				<reportElement x="178" y="0" width="100" height="20"/>
-				<textElement/>
+		<band height="27" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="4" y="3" width="35" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{item}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="39" y="3" width="145" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descripcion} + "  "]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="272" y="3" width="72" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{importe}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="278" y="0" width="100" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{sDescMoneda} + "   "]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="378" y="0" width="100" height="20"/>
-				<textElement/>
+			<textField pattern="###0,00" isBlankWhenNull="true">
+				<reportElement x="359" y="3" width="92" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{tipoCambio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="462" y="3" width="66" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{soles}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="184" y="3" width="78" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda} + "  "]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="1" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="100" splitType="Stretch">
+			<textField>
+				<reportElement x="4" y="3" width="551" height="97"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{PARAM_INSTRUCCION} + "  "]]></textFieldExpression>
+			</textField>
+		</band>
 	</summary>
 </jasperReport>
