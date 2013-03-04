@@ -49,8 +49,8 @@
 			<p:editor id="editor" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="380" height="400" disabled="#{consultarSolicitudMB.bMostrarComentario}"/>
 
 			<h:panelGrid columns="2" style="margin-top:10px">
-				<p:commandButton id="submitButton" value="Guardar" update="display" actionListener="#{consultarSolicitudMB.seterComentario}"
-					 icon="ui-icon-disk" />
+				<!-- <p:commandButton id="submitButton" value="Guardar" update="display" actionListener="{consultarSolicitudMB.seterComentario}"
+					 icon="ui-icon-disk" /> -->
 				<p:commandButton id="clearButton" type="button" value="Limpiar"
 					onclick="editor.clear()" icon="ui-icon-close" />
 			</h:panelGrid>
