@@ -2,12 +2,11 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" language="groovy" pageWidth="795" pageHeight="842" columnWidth="755" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="6"/>
+	<property name="ireport.y" value="54"/>
 	<field name="oficina" class="java.lang.String"/>
 	<field name="numeroSolicitud" class="java.lang.String"/>
 	<field name="instrucciones" class="java.lang.String"/>
 	<field name="numeroDiasForEjecucion" class="java.lang.String"/>
-	<field name="lstSolicitudOperban" class="net.sf.jasperreports.engine.JRDataSource"/>
 	<background>
 		<band/>
 	</background>
@@ -63,7 +62,7 @@
 			<rectangle>
 				<reportElement x="39" y="6" width="641" height="161"/>
 			</rectangle>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="55" y="6" width="607" height="154"/>
 				<textElement markup="html">
 					<font size="11"/>
