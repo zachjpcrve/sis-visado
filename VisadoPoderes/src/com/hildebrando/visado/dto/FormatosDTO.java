@@ -1,5 +1,6 @@
 package com.hildebrando.visado.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.jasperreports.engine.JRDataSource;
@@ -13,18 +14,13 @@ public class FormatosDTO {
 	private String instrucciones;
 	private String numeroDiasForEjecucion;
 	private String oficina;
-	private List<TiivsSolicitudOperban> listaSolicitudOperban;
-	private JRDataSource lstSolicitudOperban ;
+	private List<OperacionesPDF> lstOperaciones=new ArrayList<OperacionesPDF>();
+	private JRDataSource lstOperacionesDS;
 	private String poderdantes;
 
-	
-	
-	public JRDataSource getLstSolicitudOperban() {
-		return new JRBeanCollectionDataSource(listaSolicitudOperban); 
+	public JRDataSource getLstOperacionesDS() {
+		return new JRBeanCollectionDataSource(lstOperaciones); 
 	}
-
-	
-	
 
 	public String getNumeroSolicitud() {
 		return numeroSolicitud;
@@ -58,33 +54,20 @@ public class FormatosDTO {
 		this.oficina = oficina;
 	}
 
-
-
-
-	public List<TiivsSolicitudOperban> getListaSolicitudOperban() {
-		return listaSolicitudOperban;
-	}
-
-
-
-
-	public void setListaSolicitudOperban(
-			List<TiivsSolicitudOperban> listaSolicitudOperban) {
-		this.listaSolicitudOperban = listaSolicitudOperban;
-	}
-
-
-
-
 	public String getPoderdantes() {
 		return poderdantes;
 	}
 
-
-
-
 	public void setPoderdantes(String poderdantes) {
 		this.poderdantes = poderdantes;
+	}
+	
+	public List<OperacionesPDF> getLstOperaciones() {
+		return lstOperaciones;
+	}
+
+	public void setLstOperaciones(List<OperacionesPDF> lstOperaciones) {
+		this.lstOperaciones = lstOperaciones;
 	}	
 	
 }
