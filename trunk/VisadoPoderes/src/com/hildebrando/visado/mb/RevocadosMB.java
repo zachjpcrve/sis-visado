@@ -46,12 +46,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
-/**
- * Clase que se encarga del manejo de los Revocados, contiene metodos
- * de creacion, busqueda y edicion de revocados.
- * @author jsaldana 
- * **/
-
 @ManagedBean(name = "revocadosMB")
 @SessionScoped
 public class RevocadosMB {
@@ -64,17 +58,24 @@ public class RevocadosMB {
 	private Revocado revocadoEdit;
 	private String nroRegistros;
 
+	//para la busqueda
 	private TiivsPersona objTiivsPersonaBusqueda;
 	private TiivsPersona objTiivsPersonaBusquedaNombre;
+	private String estadoRevocado;
+	private Date fechaInicio;
+	private Date fechaFin;
 	
+	
+	
+	//la primera busqueda de los nuevos
 	private TiivsPersona objTiivsPersonaBusquedaDlg;
 	
+	//el resultado de la busqueda y se utilizara para agregarlo
 	private TiivsPersona objTiivsPersonaAgregar;
 	
 	private TiivsPersona deletePersonaEdit;
 	
-	//private TiivsOficina1 tiivsOficina1;
-	private Character estadoRevocado;
+	
 	
 	private List<TiivsPersona> personaClientes;
 	private List<Revocado> personaClientesActivoEdit;
@@ -99,17 +100,19 @@ public class RevocadosMB {
 	private List<String>  listCodSoli;
 	private List<Integer> listNumGrupo;
 	private List<String> listSolicResult;
+	
+	//combos
 	private List<TiivsMultitabla> listDocumentos;
 	private List<TiivsMultitabla> listEstados;
 	private List<TiivsMultitabla> listTipoRegistro;
+	private List<TiivsMultitabla> listEstadoRevocados;
 	
 	private List<TiivsPersona> apoderadosNuevo;
 	private List<TiivsPersona> poderdantesNuevo;
 	
 	private String msjResultRevocados;
 	
-	private Date fechaInicio;
-	private Date fechaFin;
+	
 
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
@@ -120,18 +123,14 @@ public class RevocadosMB {
 
 	public RevocadosMB() {
 		combosMB = new CombosMB();
-		// combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
-		// combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC);
-
 		
 		objTiivsPersonaBusqueda = new TiivsPersona();
 		objTiivsPersonaBusquedaNombre = new TiivsPersona();
 		
 		objTiivsPersonaBusquedaDlg = new TiivsPersona();
 		
-		estadoRevocado= new Character('S');
+		estadoRevocado= "S";
 		listSolicResult = new ArrayList<String>();
-		//tiivsOficina1 = new TiivsOficina1();
 		
 		cargarCombos();
 	}
@@ -151,7 +150,6 @@ public class RevocadosMB {
 		CombinacionSolicitudUtil combinacionSolicitudUtil= new CombinacionSolicitudUtil(); 
 		
 		for(String numCodSoli:listCodSoli){
-			
 			
 			contadorCombinacion=0;
 			for(Integer numGrupo:listNumGrupo){
@@ -346,14 +344,15 @@ public class RevocadosMB {
 	}
 	
 	public void cargarCombos(){
-		logger.debug("=== cargarCombos() ===");
+		
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro2 = Busqueda.forClass(TiivsRevocado.class).setProjection(Projections.distinct(Projections.property("codAgrup")));
 		
 		try {
 			listCodAgrup = service.buscarDinamicoInteger(filtro2.addOrder(Order.desc("codAgrup")));
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"codigos de agrupacion: "+e);
+			
+			logger.debug("error al obtener la lista de cod de agrupacion "+  e.toString());
 		}
 		
 		GenericDao<TiivsAgrupacionPersona, Object> serviceAgrupPers = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -362,7 +361,8 @@ public class RevocadosMB {
 		try {
 			listNumGrupo = serviceAgrupPers.buscarDinamicoInteger(filtro_.addOrder(Order.desc("numGrupo")));
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"numGrupo: "+e);
+			
+			logger.debug("error al obtener la lista de cod de agrupacion "+  e.toString());
 		}
 		
 		Busqueda filtro_2 = Busqueda.forClass(TiivsAgrupacionPersona.class).setProjection(Projections.distinct(Projections.property("codSoli")));
@@ -370,7 +370,8 @@ public class RevocadosMB {
 		try {
 			listCodSoli = serviceAgrupPers.buscarDinamicoString(filtro_2.addOrder(Order.desc("codSoli")));
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"codSoli: "+e);
+			
+			logger.debug("error al obtener la lista de cod de agrupacion "+  e.toString());
 		}
 
 		GenericDao<TiivsMultitabla, Object> serviceMul = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -380,7 +381,8 @@ public class RevocadosMB {
 		try {
 			listDocumentos = serviceMul.buscarDinamico(filtro3);
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipoDOI: "+e);
+			
+			logger.debug("error al obtener la lista de cod de agrupacion "+  e.toString());
 		}
 		
 		Busqueda filtro4 = Busqueda.forClass(TiivsMultitabla.class);
@@ -389,7 +391,7 @@ public class RevocadosMB {
 		try {
 			listEstados = serviceMul.buscarDinamico(filtro4);
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de Estados: "+e);
+			logger.debug("error al obtener la lista de estados "+  e.toString());
 		}
 		
 		Busqueda filtro5 = Busqueda.forClass(TiivsMultitabla.class);
@@ -398,10 +400,28 @@ public class RevocadosMB {
 		try {
 			listTipoRegistro = serviceMul.buscarDinamico(filtro5);
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipoRegistroPersona: "+e);
+			logger.debug("error al obtener la lista de registros "+  e.toString());
 		}
 		
-		logger.debug("==== saliendo de cargarCombos() ====");
+		
+		String[] codEstadosRevocados= new String[3];
+		codEstadosRevocados[0] = ConstantesVisado.ESTADOS.ESTADO_ACTIVO_REVOCADO;
+		codEstadosRevocados[1] = ConstantesVisado.ESTADOS.ESTADO_INACTIVO_REVOCADO;
+		codEstadosRevocados[2] = ConstantesVisado.ESTADOS.ESTADO_PENDIENTE_REVOCADO;
+		
+		
+		Busqueda filtro6 = Busqueda.forClass(TiivsMultitabla.class);
+		filtro6.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
+		filtro6.add(Restrictions.in("id.codElem", codEstadosRevocados));
+		
+		try {
+			listEstadoRevocados = serviceMul.buscarDinamico(filtro6);
+		} catch (Exception e) {
+			
+			logger.debug("error al obtener la lista de cod de agrupacion "+  e.toString());
+		}
+		
+		
 	}
 
 	public void verRevocado() {
@@ -445,22 +465,20 @@ public class RevocadosMB {
 	}
 	
 	public void obtenerPersonaSeleccionada() {
-		logger.debug("=== en obtenerPersonaSeleccionada()===");
-		if(objTiivsPersonaSeleccionado!=null){
-			if(logger.isDebugEnabled()){
-				logger.debug("[PERS_SELECTED]: "+objTiivsPersonaSeleccionado.getCodPer());
-			}
-		}		
+		logger.info(objTiivsPersonaSeleccionado.getCodPer());
 		this.objTiivsPersonaAgregar = this.objTiivsPersonaSeleccionado;
 	}
 	
 	
 	public void  buscarPersona(ActionEvent actionEvent) {
-		logger.debug("==== [REVOCADO] - buscarPersona() === ");
+		
+		List<TiivsPersona> lstTiivsPersonaNuevo = new ArrayList<TiivsPersona>();
+		personaDataModal = new PersonaDataModal(lstTiivsPersonaNuevo);
+		
 		try {
 			List<TiivsPersona> lstTiivsPersonaLocal = new ArrayList<TiivsPersona>();
 			lstTiivsPersonaLocal = this.buscarPersonaLocal();
-			logger.info("[REVOCADO]-lstTiivsPersonaLocal  "+ lstTiivsPersonaLocal.size());
+			logger.info("lstTiivsPersonaLocal  "+ lstTiivsPersonaLocal.size());
 			List<TiivsPersona> lstTiivsPersonaReniec = new ArrayList<TiivsPersona>();
 			if (lstTiivsPersonaLocal.size() == 0) {
 				lstTiivsPersonaReniec = this.buscarPersonaReniec();
@@ -476,24 +494,24 @@ public class RevocadosMB {
 					personaClientesPopUp = lstTiivsPersonaReniec;
 				}
 			} else if (lstTiivsPersonaLocal.size() == 1) {
-				logger.debug("Existe una persona en BD Local");
 				this.bBooleanPopup = false;
 				objTiivsPersonaAgregar = lstTiivsPersonaLocal.get(0);
 			} else if (lstTiivsPersonaLocal.size() > 1) {
 				this.bBooleanPopup = true;
 				personaClientesPopUp = lstTiivsPersonaLocal;
 
-				personaDataModal = new PersonaDataModal(personaClientesPopUp);
+				personaDataModal = new PersonaDataModal(
+						personaClientesPopUp);
 			} else {
 				this.bBooleanPopup = true;
 			}
 		
 		} catch (Exception e) {
 			Utilitarios.mensajeError("ERROR", e.getMessage());
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al buscarPersona(): "+e);
+			e.printStackTrace();
 		}
 		
-		logger.debug("=== saliendo de REVOCADO - buscarPersona()===");
+		
 	}
 	
 	public void limpiarCriteriosBusqueda() {
@@ -542,7 +560,7 @@ public class RevocadosMB {
 					try {
 						tiivsrevocados = service.buscarDinamico(filtro.add(Restrictions.eq("codAgrup", Integer.parseInt(personaClientesPendEdit.get(0).getCodAgrupacion()))));
 					} catch (Exception e) {
-						logger.info(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al buscar: "+e);
+						e.printStackTrace();
 					}
 					
 					
@@ -556,9 +574,12 @@ public class RevocadosMB {
 					try {
 						service.insertar(tiivsRevocadoAux);
 						tiivsrevocados = service.buscarDinamico(filtro.add(Restrictions.eq("codAgrup", Integer.parseInt(personaClientesPendEdit.get(0).getCodAgrupacion()))));
+						
 					} catch (Exception e) {
-						logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al registrar: "+e);
+						
+						e.printStackTrace();
 					}
+					
 					
 					List<TiivsPersona> apoderados= new ArrayList<TiivsPersona>();
 					List<TiivsPersona> poderdantes= new ArrayList<TiivsPersona>();
@@ -624,13 +645,6 @@ public class RevocadosMB {
 			int maximoCodAgrupacion = getMaximoCodAgrupacion();
 			List<Revocado> revocadosAux= new ArrayList<Revocado>();
 			
-			
-			if(objTiivsPersonaAgregar.getTipPartic()!=null){
-				if(logger.isDebugEnabled()){
-					logger.debug("TipoParticip: "+objTiivsPersonaAgregar.getTipPartic());	
-				}				
-			}
-			
 			if(objTiivsPersonaAgregar.getTipPartic().equals(ConstantesVisado.APODERADO)){
 				
 				apoderado= new TiivsPersona();
@@ -679,9 +693,9 @@ public class RevocadosMB {
 		
 		TiivsRevocado tiivsRevocadoAux;
 		
-		
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
+		int flag=0;
 		
 		for(Revocado revocado: personaClientesPendEdit){
 			
@@ -697,8 +711,9 @@ public class RevocadosMB {
 				
 				try {
 					service.save(tiivsRevocadoAux);
+					flag=1;
 				} catch (Exception e) {
-					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al guardar apodPod:" + e);
+					logger.error("error al guardar revocado");
 				}
 			}
 			
@@ -714,51 +729,42 @@ public class RevocadosMB {
 				
 				try {
 					service.save(tiivsRevocadoAux);
+					flag=1;
 				} catch (Exception e) {
-					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al guardar revocado:" + e);
+					logger.error("error al guardar revocado");
 				}
 			}
 			
 		}
 		
-		
+		if(flag==1){
+			
+			FacesMessage msg = new FacesMessage(
+					FacesMessage.SEVERITY_INFO, "Guardado!",
+					"Registros agregados correctamente!");
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+
+			
+		}
 		
 		
 	}
 	
-	public int getMaximoCodAgrupacion()
-	{
-		int maximo=0;
+	public int getMaximoCodAgrupacion(){
+		
 		List<TiivsRevocado> tiivsrevocados= new ArrayList<TiivsRevocado>();
-		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
 		
 		try {
 			tiivsrevocados = service.buscarDinamico(filtro.addOrder(Order.desc("codAgrup")));
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en getMaximoCodAgrupacion :"+e);
+			e.printStackTrace();
 		}
 		
-		if(tiivsrevocados!=null)
-		{
-			logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"tiivsrevocados es ["+tiivsrevocados.size()+"] .");
-			if(tiivsrevocados.size()>0)
-			{
-				for(int i=0; i<=tiivsrevocados.size()-1;i++){
-					logger.debug("i["+i+"]->codAgrupacion: "+tiivsrevocados.get(i).getCodAgrup());
-				}
-				maximo=tiivsrevocados.get(0).getCodAgrup();
-			}
-			else
-			{
-				logger.debug(ConstantesVisado.MENSAJE.NO_RESULTADOS+"para tiivsrevocados. ");
-			}
-		}
+		return tiivsrevocados.get(0).getCodAgrup();
 		
-		//Se esta asumiendo que siempre habrá un resultado y estan obteniendo
-		//el indice:get(0). Si no hay algun resultado la excepcion generada es IndexOutOfBoundsException ...
-		//Se controla la excepcion 
-		return maximo;
 	}
 	
 	public void eliminarRevocado() {
@@ -1082,11 +1088,6 @@ public class RevocadosMB {
 
 			logger.debug("error al inactivar revocados!" + e.toString());
 		}
-		//buscarRevocado();
-	}
-	
-	public void deleteCombinacion()
-	{
 		
 	}
 	
@@ -1139,40 +1140,6 @@ public class RevocadosMB {
 		return lstTiivsPersonaResultado;
 	}
 
-	/*
-	public List<TiivsOficina1> completeOficina(String query) {
-		List<TiivsOficina1> listTiivsOficina1Resultado = new ArrayList<TiivsOficina1>();
-		List<TiivsOficina1> listTiivsOficina1Busqueda = new ArrayList<TiivsOficina1>();
-		listTiivsOficina1Busqueda = combosMB.getLstOficina();
-
-		for (TiivsOficina1 tiivsOficina1 : listTiivsOficina1Busqueda) {
-
-			if(tiivsOficina1!= null ){
-				
-				if(tiivsOficina1.getCodOfi()!= ""
-						&&  tiivsOficina1.getDesOfi() != ""
-						  && tiivsOficina1.getTiivsTerritorio().getCodTer() != ""
-						    && tiivsOficina1.getTiivsTerritorio().getDesTer()  != ""){
-					
-					String texto = tiivsOficina1.getCodOfi() + "-"
-							+ tiivsOficina1.getDesOfi().toUpperCase() + "("
-							+ tiivsOficina1.getTiivsTerritorio().getCodTer()
-							+ tiivsOficina1.getTiivsTerritorio().getDesTer() + ")";
-
-					if (texto.contains(query.toUpperCase())) {
-
-						tiivsOficina1.setNombreDetallado(texto);
-						listTiivsOficina1Resultado.add(tiivsOficina1);
-					}
-				}
-			}
-			
-
-		}
-
-		return listTiivsOficina1Resultado;
-	}*/
-
 	public void buscarRevocado() {
 		revocados = new ArrayList<Revocado>();
 		List<TiivsRevocado> tiivsrevocados = new ArrayList<TiivsRevocado>();
@@ -1209,19 +1176,19 @@ public class RevocadosMB {
 			
 		}
 		
-		if(estadoRevocado.compareTo('S')!=0){
+		if(estadoRevocado.compareTo("S")!=0){
 			
 			filtro.add(Restrictions.eq("estado", estadoRevocado));
 		}
 		
 		if(fechaInicio!= null ||  fechaFin!=null){
 
-			filtro.add(Restrictions.between("fecha_revocatoria", fechaInicio, fechaFin));
+			filtro.add(Restrictions.between("fechaRevocatoria", fechaInicio, fechaFin));
 		}
 		
 		
 		try {
-			tiivsrevocados = service.buscarDinamico(filtro.addOrder(Order.desc("codAgrup")));
+			tiivsrevocados = service.buscarDinamico(filtro.addOrder(Order.desc("codAgrup")).addOrder(Order.desc("fechaRevocatoria")));
 		} catch (Exception e) {
 			
 			logger.debug("erro al obtener la lista de revocados "+  e.toString());
@@ -1303,15 +1270,17 @@ public class RevocadosMB {
 			
 			revocado = new Revocado();
 			revocado.setCodAgrupacion(tiivsRevocado2+"");
-			revocado.setNombreCompletoApoderados(nombreCompletoApoderados.trim());
-			revocado.setApoderados(apoderados);
-			revocado.setNombreCompletoPoderdantes(nombreCompletoPoderdantes.trim());
-			revocado.setPoderdantes(poderdantes);
 			revocado.setFechaRegistro(fecha);
 			revocado.setEstado(estado);
 			revocado.setCorrelativo(String.valueOf(numCorrelativo));
 			
-
+			revocado.setNombreCompletoApoderados(nombreCompletoApoderados.trim());
+			revocado.setApoderados(apoderados);
+				
+			revocado.setNombreCompletoPoderdantes(nombreCompletoPoderdantes.trim());
+			revocado.setPoderdantes(poderdantes);
+			
+			
 			if(estado.compareTo("Activo")==0){
 				revocado.setFlagEditAct(true);
 				revocado.setFlagEditPend(false);
@@ -1332,7 +1301,9 @@ public class RevocadosMB {
 				
 			}
 			
-			revocados.add(revocado);
+			if(apoderados.size() > 0  || poderdantes.size() > 0){
+				revocados.add(revocado);
+			}
 			
 			nombreCompletoApoderados="";
 			nombreCompletoPoderdantes="";
@@ -1364,7 +1335,6 @@ public class RevocadosMB {
         try {
             return df.format(date);
         } catch (Exception ex) {
-        	logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al formatear la fecha: "+ex);
         }
         return null;
     }
@@ -1441,16 +1411,6 @@ public class RevocadosMB {
 
 	public void setFechaFin(Date fechaFin) {
 		this.fechaFin = fechaFin;
-	}
-
-	
-
-	public Character getEstadoRevocado() {
-		return estadoRevocado;
-	}
-
-	public void setEstadoRevocado(Character estadoRevocado) {
-		this.estadoRevocado = estadoRevocado;
 	}
 
 	public List<Revocado> getRevocados() {
@@ -1670,6 +1630,22 @@ public class RevocadosMB {
 
 	public void setMsjResultRevocados(String msjResultRevocados) {
 		this.msjResultRevocados = msjResultRevocados;
+	}
+
+	public List<TiivsMultitabla> getListEstadoRevocados() {
+		return listEstadoRevocados;
+	}
+
+	public void setListEstadoRevocados(List<TiivsMultitabla> listEstadoRevocados) {
+		this.listEstadoRevocados = listEstadoRevocados;
+	}
+
+	public String getEstadoRevocado() {
+		return estadoRevocado;
+	}
+
+	public void setEstadoRevocado(String estadoRevocado) {
+		this.estadoRevocado = estadoRevocado;
 	}
 
 
