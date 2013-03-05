@@ -26,7 +26,7 @@
 
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">
-				                <p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" 
+				                <p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" ajax="false"
 				                	update=":formSolicitudRegistro:idMsmSolicitudEdicion,
 				                			:formSolicitudRegistro:idCodigoSolicitud"
 									icon="ui-icon-document" 
@@ -548,7 +548,9 @@
 															value="#{consultarSolicitudMB.objSolicBancaria.id.moneda}"
 															immediate="true" 
 															disabled="false" valueChangeListener="#{consultarSolicitudMB.validarTipoCambioDisabled}">
-															<p:ajax update=":formSolicitudRegistro:intImporte" event="change"></p:ajax>
+															<p:ajax update=":formSolicitudRegistro:intImporte,
+															                :formSolicitudRegistro:intTipoCambio,
+															                :formSolicitudRegistro:txtImporteSoles" event="change"></p:ajax>
 															<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 															<f:selectItems value="#{combosMB.lstMoneda}" var="varo" itemValue="#{varo.codMoneda}" 
 																itemLabel="#{varo.desMoneda}" /> 
@@ -572,7 +574,7 @@
 													</td>
 													<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
 													
-													<td><h:inputText value="#{consultarSolicitudMBobjSolicBancaria.objSolicBancaria.importeSoles}" readonly="true" id="txtImporteSoles">
+													<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importeSoles}" readonly="true" id="txtImporteSoles">
 													<f:convertNumber pattern="#,###,##0.00" locale="en" />
 													</h:inputText>
 													</td>
