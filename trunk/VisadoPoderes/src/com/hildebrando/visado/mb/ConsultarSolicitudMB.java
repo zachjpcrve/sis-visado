@@ -9,7 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -128,7 +127,7 @@ public class ConsultarSolicitudMB {
 	private boolean bMostrarCartaRechazo = false;
 	private boolean bMostrarCartaImprocedente = false;
 	private boolean bMostrarCartaRespuesta = false;
-	//boolean bBooleanPopupTipoCambio = true;
+	boolean bBooleanPopupTipoCambio = true;
 	boolean bBooleanPopup = false;
 	private String PERFIL_USUARIO;
 	private String sCodigoEstadoNivel;
@@ -2043,6 +2042,10 @@ public class ConsultarSolicitudMB {
 		logger.info("this.getNumGrupo  "+ this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
 		logger.info("this.getLstPersonas  "+ this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
 		
+		 combosMB=new CombosMB();
+		  lstClasificacionPersona=combosMB.getLstClasificacionPersona();
+		  logger.info("tamanioo actual de la lista de Clasificacion **** " +lstClasificacionPersona.size());
+		
 		for (int i = 0; i < lstAgrupacionSimpleDto.size(); i++) {
            if(lstAgrupacionSimpleDto.get(i).equals(objAgrupacionSimpleDtoCapturado)){
         	   indexUpdatePoderdanteApoderado=i;
@@ -2712,6 +2715,9 @@ public class ConsultarSolicitudMB {
 		logger.info("**************************** limpiarListaSolicitudesBancarias ****************************");
 		this.objSolicBancaria = new TiivsSolicitudOperban();
 		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
+		this.objSolicBancaria.setTipoCambio(0.00);
+		this.objSolicBancaria.setImporte(0.00);
+		bBooleanPopupTipoCambio=true;
 		flagUpdateOperacionSolic = false;
 		// this.lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
 	}
@@ -2967,12 +2973,14 @@ public class ConsultarSolicitudMB {
 	}
 
 	public void limpiarCriteriosBusqueda() {
+		
+		logger.info("***************************** limpiar ************************************ ");
 		objTiivsPersonaBusqueda.setCodCen("");
 		objTiivsPersonaBusqueda.setTipDoi("");
 		objTiivsPersonaBusqueda.setNumDoi("");
 		objTiivsPersonaResultado.setTipDoi("");
 		objTiivsPersonaResultado.setNumDoi("");
-		objTiivsPersonaBusqueda.setCodCen("");
+		objTiivsPersonaResultado.setCodCen("");
 		objTiivsPersonaResultado.setApePat("");
 		objTiivsPersonaResultado.setApeMat("");
 		objTiivsPersonaResultado.setNombre("");
@@ -2990,8 +2998,18 @@ public class ConsultarSolicitudMB {
 				indexUpdatePersona = i;
 			}
 		}
-
-		this.objTiivsPersonaResultado = this.objTiivsPersonaCapturado;
+		//this.objTiivsPersonaResultado=new TiivsPersona();  
+		this.objTiivsPersonaResultado.setApeMat(this.objTiivsPersonaCapturado.getApeMat());
+		this.objTiivsPersonaResultado.setTipDoi(this.objTiivsPersonaCapturado.getTipDoi());
+		this.objTiivsPersonaResultado.setNumDoi(this.objTiivsPersonaCapturado.getNumDoi());
+		this.objTiivsPersonaResultado.setCodCen(this.objTiivsPersonaCapturado.getCodCen());
+		this.objTiivsPersonaResultado.setApePat(this.objTiivsPersonaCapturado.getApePat());
+		this.objTiivsPersonaResultado.setNombre(this.objTiivsPersonaCapturado.getNombre());
+		this.objTiivsPersonaResultado.setTipPartic(this.objTiivsPersonaCapturado.getTipPartic());
+		this.objTiivsPersonaResultado.setClasifPer(this.objTiivsPersonaCapturado.getClasifPer());
+		this.objTiivsPersonaResultado.setClasifPerOtro(this.objTiivsPersonaCapturado.getClasifPerOtro());
+		this.objTiivsPersonaResultado.setEmail(this.objTiivsPersonaCapturado.getEmail());
+		this.objTiivsPersonaResultado.setNumCel(this.objTiivsPersonaCapturado.getNumCel());
 		this.flagUpdatePersona = true;
 	}
 
@@ -3119,6 +3137,7 @@ public class ConsultarSolicitudMB {
 				}
 			}
 		}
+		logger.info("bResult " +bResult);
 
 		return bResult;
 
@@ -3127,8 +3146,10 @@ public class ConsultarSolicitudMB {
 	public void agregarPersona() {
 		logger.info("****************** agregarPersona ********************");
 		if (validarPersona()) {
+			logger.info("****************** paso primera validacion ********************");
 			if (validarRegistroDuplicado()) {
-
+				logger.info("****************** paso segunda validacion ********************");
+				
 				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
 					if (objTiivsPersonaResultado.getTipDoi().equals(
 							p.getCodTipoDoc())) {
@@ -3155,8 +3176,9 @@ public class ConsultarSolicitudMB {
 										.getClasifPerOtro());
 					}
 				}
-
+				logger.info(" objTiivsPersonaResultado " +objTiivsPersonaResultado.getEmail());
 				if (!flagUpdatePersona) {
+					
 					lstTiivsPersona.add(objTiivsPersonaResultado);
 					objTiivsPersonaResultado = new TiivsPersona();
 					objTiivsPersonaBusqueda = new TiivsPersona();
@@ -3169,7 +3191,7 @@ public class ConsultarSolicitudMB {
 					logger.info("Index Update: " + indexUpdatePersona);
 
 					this.lstTiivsPersona.set(indexUpdatePersona,
-							objTiivsPersonaCapturado);
+							objTiivsPersonaResultado);
 					personaDataModal = new PersonaDataModal(
 							lstTiivsPersonaResultado);
 					objTiivsPersonaResultado = new TiivsPersona();
@@ -3241,20 +3263,8 @@ public class ConsultarSolicitudMB {
 		}
 		y = y + 1;
 		logger.info("yyyyyyy : " + y);
-		// Map<String, TiivsSolicitudOperban> mapSolicitudes=new HashMap<String,
-		// TiivsSolicitudOperban>();
+		// Map<String, TiivsSolicitudOperban> mapSolicitudes=new HashMap<String, TiivsSolicitudOperban>();
 		mapSolicitudes.put(y, objSolicitudOperacionCapturado);
-
-		Set set = mapSolicitudes.entrySet();
-		// Get an iterator
-		Iterator iterate = set.iterator();
-		// Display elements
-
-		while (iterate.hasNext()) {
-			Map.Entry me = (Map.Entry) iterate.next();
-			System.out.print(me.getKey() + ": ");
-			logger.info(me.getValue());
-		}
 
 		logger.info("mapSolicitudes.get(mapSolicitudes.size()).getImporte()"
 				+ mapSolicitudes.get(mapSolicitudes.size()).getImporte());
@@ -3262,6 +3272,18 @@ public class ConsultarSolicitudMB {
 		this.objSolicitudOperacionCapturadoOld = this.objSolicitudOperacionCapturado;
 		// }
 		this.objSolicBancaria = this.objSolicitudOperacionCapturado;
+		
+		 /**  Validar el disabled del tipo de cambio */
+		if (objSolicitudOperacionCapturado.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+			this.objSolicBancaria.setTipoCambio(0.0);
+			bBooleanPopupTipoCambio=true;
+		}else{
+			bBooleanPopupTipoCambio=false;
+		
+		}
+        /** Fin del Validar el disabled del tipo de cambio */
+		
+		/** Setear el flag para actualizar las operaciones bancarias*/
 		this.flagUpdateOperacionSolic = true;
 	}
 	
@@ -3498,6 +3520,9 @@ public class ConsultarSolicitudMB {
           objSolicBancaria=new TiivsSolicitudOperban();
           objSolicBancaria.setId(new TiivsSolicitudOperbanId());
           objSolicBancaria.setTipoCambio(0.0);
+          objSolicBancaria.setImporte(0.0);
+          objSolicBancaria.setImporteSoles(0.0);
+          this.bBooleanPopupTipoCambio=true;
           this.flagUpdateOperacionSolic=false;
           this.objSolicitudOperacionCapturado=new TiivsSolicitudOperban();
           this.objSolicitudOperacionCapturado.setId(new TiivsSolicitudOperbanId());
@@ -3720,9 +3745,10 @@ public class ConsultarSolicitudMB {
 		if (e.getNewValue() != null) {
 			logger.info(" validarTipoCambioDisabled " + e.getNewValue());
 			if (e.getNewValue().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
-				//bBooleanPopupTipoCambio = true;
+				this.objSolicBancaria.setTipoCambio(0.0);
+				bBooleanPopupTipoCambio = true;
 			} else {
-				//bBooleanPopupTipoCambio = false;
+				bBooleanPopupTipoCambio = false;
 
 			}
 		}
@@ -4068,13 +4094,13 @@ public class ConsultarSolicitudMB {
 		this.objSolicBancaria = objSolicBancaria;
 	}
 
-	/*public boolean isbBooleanPopupTipoCambio() {
+	public boolean isbBooleanPopupTipoCambio() {
 		return bBooleanPopupTipoCambio;
 	}
 
 	public void setbBooleanPopupTipoCambio(boolean bBooleanPopupTipoCambio) {
 		this.bBooleanPopupTipoCambio = bBooleanPopupTipoCambio;
-	}*/
+	}
 
 	public PersonaDataModal getPersonaDataModal() {
 		return personaDataModal;
