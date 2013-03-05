@@ -565,7 +565,8 @@
 												<tr>
 													<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
 													<td ><h:inputText id="intTipoCambio" maxlength="8"  onkeypress="return validaNumero(event,'0',this,'0');"
-															onblur="validaNumero(event,'0',this,'1');" value="#{consultarSolicitudMB.objSolicBancaria.tipoCambio}" >
+														disabled="#{consultarSolicitudMB.bBooleanPopupTipoCambio}"  onblur="validaNumero(event,'0',this,'1');" 
+														value="#{consultarSolicitudMB.objSolicBancaria.tipoCambio}" >
 													<f:convertNumber pattern="#,###,##0.00" locale="en" />
 													    </h:inputText>
 													</td>
