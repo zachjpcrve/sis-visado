@@ -1127,7 +1127,7 @@ public class ConsultarSolicitudMB {
 				
 				if (actualizarBandeja)
 				{
-					this.seguimientoMB.busquedaSolicitudes();
+					this.seguimientoMB.busquedaSolicitudxCodigo(solicitudRegistrarT.getCodSoli());
 				}
 
 			}
@@ -1301,7 +1301,7 @@ public class ConsultarSolicitudMB {
 
 		this.registrarHistorial(solicitudRegistrarT);
 		this.obtenerHistorialSolicitud();
-		this.seguimientoMB.busquedaSolicitudes();
+		this.seguimientoMB.busquedaSolicitudxCodigo(solicitudRegistrarT.getCodSoli());
 	}
 
 	public void actualizarEstadoVencidoSolicitud(TiivsSolicitud solicitud) throws Exception {
@@ -1892,7 +1892,7 @@ public class ConsultarSolicitudMB {
 				
 				if (actualizarBandeja)
 				{
-					this.seguimientoMB.busquedaSolicitudes();
+					this.seguimientoMB.busquedaSolicitudxCodigo(objResultado.getCodSoli());
 				}
 				
 			}

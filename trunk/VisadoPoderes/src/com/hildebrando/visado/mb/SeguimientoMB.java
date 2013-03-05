@@ -1978,6 +1978,36 @@ public class SeguimientoMB
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void busquedaSolicitudxCodigo(String codigo) 
+	{
+		logger.info("Buscando solicitudes");
+		
+		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
+		filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, codigo));
+		
+		// Actualizar datos de la solicitud de acuerdo al codigo.
+		try {
+			solicitudes = solicDAO.buscarDinamico(filtroSol);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.debug("Error al buscar las solicitudes: " + ex.getStackTrace());
+		}
+
+		if (solicitudes.size() == 0) 
+		{
+			setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_SIN_REGISTROS,solicitudes.size());
+			setNoHabilitarExportar(true);
+		} 
+		else 
+		{
+			setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + solicitudes.size() + ConstantesVisado.MSG_REGISTROS,solicitudes.size());
+			actualizarDatosGrilla();
+			setNoHabilitarExportar(false);
+		}
+	}
+	
 	public Boolean validarSolicitudConDelegacion(String codSoli)
 	{
 		boolean bEncontrado=false;
