@@ -2408,7 +2408,9 @@ public class ConsultarSolicitudMB {
         	   numGrupoUpdatePoderdanteApoderado=lstAgrupacionSimpleDto.get(i).getId().getNumGrupo();
         	   for (TiivsSolicitudAgrupacion a : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				if(a.getId().getNumGrupo()==numGrupoUpdatePoderdanteApoderado){
-					lstTiivsAgrupacionPersonas=a.getTiivsAgrupacionPersonas();
+					lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
+					lstTiivsAgrupacionPersonas.addAll(a.getTiivsAgrupacionPersonas());
+					//lstTiivsAgrupacionPersonas=a.getTiivsAgrupacionPersonas();
 				}
 			   }
         	   break;
@@ -3372,7 +3374,7 @@ public class ConsultarSolicitudMB {
 	public void eliminarPersona() {
 		logger.info("**************************** eliminarPersona ****************************");
 		logger.info("Codigo de la persona capturada a Eliminar " +objTiivsPersonaCapturado.getCodPer());
-		logger.info(" Lista de las Personas Original de base " +lstTiivsPersonaCopia.size());
+		//logger.info(" Lista de las Personas Original de base " +lstTiivsPersonaCopia.size());
 		logger.info(" Lista de las Personas Antes de Remover " +lstTiivsPersona.size());
 		logger.info("listaTemporalPersonasBorradores Antes de eliminarse ::: " +listaTemporalPersonasBorradores.size());
 		logger.info(" Lista de las lstTiivsAgrupacionPersonas Antes de Remover " +lstTiivsAgrupacionPersonas.size());
@@ -3392,8 +3394,8 @@ public class ConsultarSolicitudMB {
 		}
 		}
 		
-		logger.info("lstPoderdantes " +lstPoderdantes.size());
-		logger.info("lstApoderdantes " +lstApoderdantes.size());
+		logger.info("lstPoderdantes antes de remover " +lstPoderdantes.size());
+		logger.info("lstApoderdantes antes de remover " +lstApoderdantes.size());
 		
 		lstTiivsPersona.remove(objTiivsPersonaCapturado);
 		
@@ -3412,8 +3414,8 @@ public class ConsultarSolicitudMB {
 		}
 		}
 		
-		logger.info("lstPoderdantes " +lstPoderdantes.size());
-		logger.info("lstApoderdantes " +lstApoderdantes.size());
+		logger.info("lstPoderdantes despues de remover  " +lstPoderdantes.size());
+		logger.info("lstApoderdantes  despues de remover " +lstApoderdantes.size());
 		
 		
 		for (TiivsAgrupacionPersona n : lstTiivsAgrupacionPersonas) {
