@@ -67,8 +67,7 @@ public class AbogadoService {
 				} else {
 
 					for (int j = 0; j < estudios.size(); j++) {
-						if (abogados.get(i).getTiivsGrupo().getCodGrupo()
-								.equals(estudios.get(j).getCodEstudio())) {
+						if (abogados.get(i).getEstudio().equals(estudios.get(j).getCodEstudio())) {
 							abogados.get(i).setEstudio(
 									estudios.get(j).getDesEstudio());
 						}

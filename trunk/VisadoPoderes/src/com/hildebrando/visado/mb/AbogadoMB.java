@@ -77,7 +77,10 @@ public class AbogadoMB {
 		try{
 		if(abogado.getCodMiembro().isEmpty()==false){
 			if(abogado.getDescripcion().isEmpty()==false){
-				if(isEditarAbogado()==true){
+				if(isEditarAbogado()==true){;
+					if(	!abogado.getTiivsGrupo().getCodGrupo().equals(ConstantesVisado.COD_GRUPO_JRD)){
+						abogado.setEstudio(null);						
+					}
 					abogadoService.registrar(abogado);
 					Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
 				}else{
