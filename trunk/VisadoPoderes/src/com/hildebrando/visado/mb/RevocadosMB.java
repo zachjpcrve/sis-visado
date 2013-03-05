@@ -763,7 +763,16 @@ public class RevocadosMB {
 			e.printStackTrace();
 		}
 		
-		return tiivsrevocados.get(0).getCodAgrup();
+		if(tiivsrevocados.size() > 0){
+			
+			return tiivsrevocados.get(0).getCodAgrup();
+			
+		}else{
+			
+			return 0;
+			
+		}
+		
 		
 	}
 	
@@ -1209,109 +1218,116 @@ public class RevocadosMB {
 		TiivsPersona poderdante;
 		
 		
-		for(Integer tiivsRevocado2:listCodAgrup){
-			numCorrelativo++;
-			apoderados= new ArrayList<TiivsPersona>();
-			poderdantes= new ArrayList<TiivsPersona>();
-			for(TiivsRevocado tiivsRevocado:tiivsrevocados){
+		if(listCodAgrup != null){
+			
+			if(listCodAgrup.size() > 0){
 				
-				if(tiivsRevocado.getCodAgrup().compareTo(tiivsRevocado2)==0){
-					
-					fecha=getDate(tiivsRevocado.getFechaRevocatoria());
-					estado=getValor1(tiivsRevocado.getEstado(),listEstados);
-					
-					if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
+				for(Integer tiivsRevocado2:listCodAgrup){
+					numCorrelativo++;
+					apoderados= new ArrayList<TiivsPersona>();
+					poderdantes= new ArrayList<TiivsPersona>();
+					for(TiivsRevocado tiivsRevocado:tiivsrevocados){
 						
-						apoderado= new TiivsPersona();
-						apoderado = tiivsRevocado.getTiivsPersona();
-						
-						String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
-						String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
-						
-						nombreCompletoApoderados = nombreCompletoApoderados
-														+ " " + descDoiApod
-														+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
-														+ " - " + tiivsRevocado.getTiivsPersona().getApePat() 
-														+ " " + tiivsRevocado.getTiivsPersona().getApeMat()
-														+ " " + tiivsRevocado.getTiivsPersona().getNombre() + "\n";
-						
-						apoderado.setsDesctipDoi( descDoiApod);
-						apoderado.setsDesctipPartic(descTipPart);
-						
-						apoderados.add(apoderado);
-					}
-						
-					if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
-						
-						poderdante = new TiivsPersona();
-						poderdante = tiivsRevocado.getTiivsPersona();
-						
-						String descDoiPod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
-						String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
-						
+						if(tiivsRevocado.getCodAgrup().compareTo(tiivsRevocado2)==0){
+							
+							fecha=getDate(tiivsRevocado.getFechaRevocatoria());
+							estado=getValor1(tiivsRevocado.getEstado(),listEstados);
+							
+							if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
 								
-						nombreCompletoPoderdantes = nombreCompletoPoderdantes 
-															+ " " + descDoiPod
-															+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
-															+ " - " + tiivsRevocado.getTiivsPersona().getApePat() 
-															+ " " + tiivsRevocado.getTiivsPersona().getApeMat() 
-															+ " " + tiivsRevocado.getTiivsPersona().getNombre() + "\n";
+								apoderado= new TiivsPersona();
+								apoderado = tiivsRevocado.getTiivsPersona();
+								
+								String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
+								String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
+								
+								nombreCompletoApoderados = nombreCompletoApoderados
+																+ " " + descDoiApod
+																+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
+																+ " - " + tiivsRevocado.getTiivsPersona().getApePat() 
+																+ " " + tiivsRevocado.getTiivsPersona().getApeMat()
+																+ " " + tiivsRevocado.getTiivsPersona().getNombre() + "\n";
+								
+								apoderado.setsDesctipDoi( descDoiApod);
+								apoderado.setsDesctipPartic(descTipPart);
+								
+								apoderados.add(apoderado);
+							}
+								
+							if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+								
+								poderdante = new TiivsPersona();
+								poderdante = tiivsRevocado.getTiivsPersona();
+								
+								String descDoiPod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
+								String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
+								
+										
+								nombreCompletoPoderdantes = nombreCompletoPoderdantes 
+																	+ " " + descDoiPod
+																	+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
+																	+ " - " + tiivsRevocado.getTiivsPersona().getApePat() 
+																	+ " " + tiivsRevocado.getTiivsPersona().getApeMat() 
+																	+ " " + tiivsRevocado.getTiivsPersona().getNombre() + "\n";
+								
+								poderdante.setsDesctipDoi( descDoiPod);
+								poderdante.setsDesctipPartic(descTipPart);
+								
+								poderdantes.add(poderdante);
+							}
+							
+						}
 						
-						poderdante.setsDesctipDoi( descDoiPod);
-						poderdante.setsDesctipPartic(descTipPart);
 						
-						poderdantes.add(poderdante);
 					}
 					
+					revocado = new Revocado();
+					revocado.setCodAgrupacion(tiivsRevocado2+"");
+					revocado.setFechaRegistro(fecha);
+					revocado.setEstado(estado);
+					revocado.setCorrelativo(String.valueOf(numCorrelativo));
+					
+					revocado.setNombreCompletoApoderados(nombreCompletoApoderados.trim());
+					revocado.setApoderados(apoderados);
+						
+					revocado.setNombreCompletoPoderdantes(nombreCompletoPoderdantes.trim());
+					revocado.setPoderdantes(poderdantes);
+					
+					
+					if(estado.compareTo("Activo")==0){
+						revocado.setFlagEditAct(true);
+						revocado.setFlagEditPend(false);
+						revocado.setFlagDelete(false);
+					}
+					
+					if(estado.compareTo("Pendiente")==0){
+						revocado.setFlagEditPend(true);
+						revocado.setFlagEditAct(false);
+						revocado.setFlagDelete(true);
+					}
+					
+					if(estado.compareTo("Inactivo")==0){
+						revocado.setFlagEditPend(false);
+						revocado.setFlagEditAct(false);
+						revocado.setFlagDelete(false);
+						
+						
+					}
+					
+					if(apoderados.size() > 0  || poderdantes.size() > 0){
+						revocados.add(revocado);
+					}
+					
+					nombreCompletoApoderados="";
+					nombreCompletoPoderdantes="";
+					fecha="";
+					estado="";
 				}
 				
-				
 			}
 			
-			revocado = new Revocado();
-			revocado.setCodAgrupacion(tiivsRevocado2+"");
-			revocado.setFechaRegistro(fecha);
-			revocado.setEstado(estado);
-			revocado.setCorrelativo(String.valueOf(numCorrelativo));
 			
-			revocado.setNombreCompletoApoderados(nombreCompletoApoderados.trim());
-			revocado.setApoderados(apoderados);
-				
-			revocado.setNombreCompletoPoderdantes(nombreCompletoPoderdantes.trim());
-			revocado.setPoderdantes(poderdantes);
-			
-			
-			if(estado.compareTo("Activo")==0){
-				revocado.setFlagEditAct(true);
-				revocado.setFlagEditPend(false);
-				revocado.setFlagDelete(false);
-			}
-			
-			if(estado.compareTo("Pendiente")==0){
-				revocado.setFlagEditPend(true);
-				revocado.setFlagEditAct(false);
-				revocado.setFlagDelete(true);
-			}
-			
-			if(estado.compareTo("Inactivo")==0){
-				revocado.setFlagEditPend(false);
-				revocado.setFlagEditAct(false);
-				revocado.setFlagDelete(false);
-				
-				
-			}
-			
-			if(apoderados.size() > 0  || poderdantes.size() > 0){
-				revocados.add(revocado);
-			}
-			
-			nombreCompletoApoderados="";
-			nombreCompletoPoderdantes="";
-			fecha="";
-			estado="";
 		}
-		
-		
 		
 	}
 	
