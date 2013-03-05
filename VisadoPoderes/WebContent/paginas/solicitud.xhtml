@@ -545,7 +545,7 @@
 															value="#{solicitudRegMB.objSolicBancaria.id.moneda}"
 															immediate="true" 
 															disabled="false" valueChangeListener="#{solicitudRegMB.validarTipoCambioDisabled}">
-															<p:ajax update=":formSolicitudRegistro:intImporte" event="change"></p:ajax>
+															<p:ajax update=":formSolicitudRegistro:intImporte,:formSolicitudRegistro:intTipoCambio" event="change"></p:ajax>
 															<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 															<f:selectItems value="#{combosMB.lstMoneda}" var="varo" itemValue="#{varo.codMoneda}" itemLabel="#{varo.desMoneda}" /> 
 															
@@ -560,8 +560,8 @@
 												</tr>
 												<tr>
 													<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
-													<td><h:inputText id="intTipoCambio" maxlength="8"  onkeypress="return validaNumero(event,'0',this,'0');"
-															onblur="validaNumero(event,'0',this,'1');" value="#{solicitudRegMB.objSolicBancaria.tipoCambio}" >
+													<td><h:inputText id="intTipoCambio" maxlength="8"  onkeypress="return validaNumero(event,'0',this,'0');" 
+														disabled="#{solicitudRegMB.bBooleanPopupTipoCambio}"	onblur="validaNumero(event,'0',this,'1');" value="#{solicitudRegMB.objSolicBancaria.tipoCambio}" >
 															<f:convertNumber pattern="#,###,##0.00" locale="en" />
 															</h:inputText>
 															</td>
