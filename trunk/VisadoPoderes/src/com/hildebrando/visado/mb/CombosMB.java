@@ -77,7 +77,17 @@ public class CombosMB {
 	private List<TiivsTiempo> lstTiempo;
 	private List<TiivsSolicitudNivel> lstSolicNivel;
 	
+	
+	private TipoDocumento tmpTipoDoc;
+	private List<TipoDocumento> lstTipoDocumentosExtra;
+	private List<TipoDocumento> lstTipoDocumentosExtra2;
 	public CombosMB() {
+		tmpTipoDoc = new TipoDocumento();
+		lstTipoDocumentosExtra = new ArrayList<TipoDocumento>();
+		lstTipoDocumentosExtra2 =  new ArrayList<TipoDocumento>();
+		
+		
+		
 		lstMultitabla = new ArrayList<TiivsMultitabla>();
 		lstRangosImporte = new ArrayList<RangosImporte>();
 		lstTipoDocumentos=new ArrayList<TipoDocumento>();
@@ -240,15 +250,27 @@ public class CombosMB {
 			// Carga combo Tipos de documento
 			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC)
 					&& res.getValor2().equals("1")) {
-				TipoDocumento tmpTipoDoc = new TipoDocumento();
-				tmpTipoDoc.setCodTipoDoc(res.getId().getCodElem());
-				tmpTipoDoc.setDescripcion(res.getValor1());
-				lstTipoDocumentos.add(tmpTipoDoc);
+				 tmpTipoDoc = new TipoDocumento();
+			
+				if(res.getValor5()!=null){
+					tmpTipoDoc.setCodTipoDoc(res.getId().getCodElem());
+					tmpTipoDoc.setDescripcion(res.getValor1());
+					lstTipoDocumentosExtra.add(tmpTipoDoc);
+				}else{
+					tmpTipoDoc.setCodTipoDoc(res.getId().getCodElem());
+					tmpTipoDoc.setDescripcion(res.getValor1());
+					lstTipoDocumentosExtra2.add(tmpTipoDoc);
+				}				
+				
 
 				//logger.debug("Tamanio lista de tipos de documento: "+ lstTipoDocumentos.size());
 			}
+			
 		}
-		
+		lstTipoDocumentos.add(lstTipoDocumentosExtra.get(0));
+		for (int i= 0 ; i< lstTipoDocumentosExtra2.size(); i++){
+			lstTipoDocumentos.add(lstTipoDocumentosExtra2.get(i));
+		}
 /*		logger.debug("Tamanio lista de Clasificacion de Personas: "+ lstClasificacionPersona.size());
 		logger.debug("Tamanio lista de Tipo de Registro de Personas: "+ lstTipoRegistroPersona.size());
 		logger.debug("Tamanio lista de importes: "+ lstRangosImporte.size());
@@ -660,4 +682,50 @@ public class CombosMB {
 	public void setLstSolicNivel(List<TiivsSolicitudNivel> lstSolicNivel) {
 		this.lstSolicNivel = lstSolicNivel;
 	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public TipoDocumento getTmpTipoDoc() {
+		return tmpTipoDoc;
+	}
+
+	public void setTmpTipoDoc(TipoDocumento tmpTipoDoc) {
+		this.tmpTipoDoc = tmpTipoDoc;
+	}
+
+	public List<TipoDocumento> getLstTipoDocumentosExtra() {
+		return lstTipoDocumentosExtra;
+	}
+
+	public void setLstTipoDocumentosExtra(List<TipoDocumento> lstTipoDocumentosExtra) {
+		this.lstTipoDocumentosExtra = lstTipoDocumentosExtra;
+	}
+
+	public List<TipoDocumento> getLstTipoDocumentosExtra2() {
+		return lstTipoDocumentosExtra2;
+	}
+
+	public void setLstTipoDocumentosExtra2(
+			List<TipoDocumento> lstTipoDocumentosExtra2) {
+		this.lstTipoDocumentosExtra2 = lstTipoDocumentosExtra2;
+	}
+	
 }
