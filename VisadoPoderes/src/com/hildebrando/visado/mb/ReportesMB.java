@@ -2579,7 +2579,7 @@ public class ReportesMB
 						//Columna Observaciones en Excel
 						Utilitarios.crearCell(wb, row, 6, HSSFCellStyle.ALIGN_LEFT,HSSFCellStyle.VERTICAL_CENTER,seg.getObs(), true, false,true,HSSFColor.DARK_BLUE.index);
 					}
-					
+					numReg++;
 				}
 				
 				//Arregla ancho de columnas
