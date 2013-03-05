@@ -151,6 +151,7 @@ public class TiposDOIMB {
 				documento.setValor1(documentoEditar.get(i).getValor1());
 				documento.setValor2(documentoEditar.get(i).getValor2());
 				documento.setValor4(documentoEditar.get(i).getValor4());
+				documento.setValor5(documentoEditar.get(i).getValor5());
 			}
 			/*if (documento.getValor4().equals(
 					ConstantesVisado.VALOR4_OBLIGATORIO_SI)) {
