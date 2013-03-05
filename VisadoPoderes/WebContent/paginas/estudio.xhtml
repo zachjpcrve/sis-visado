@@ -7,25 +7,92 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
+				<SCRIPT type="text/javascript">
+			function validaNumeroDecimal(e, ent, obj, fn) {
+				//Se captura la tecla presionada             
+				var tecla = (document.all) ? e.keyCode : e.which;
+				var patron;
+				var te;
+				var result;
+				//Tecla de retroceso (para poder borrar)       
+				if (tecla == 8) {
+					return true;
+				}
+				if(tecla == 46){
+					return true
+				}
+				if (ent == '0') {
+					if (fn == '1') {
+						if (obj.value == '') {
+							return true;
+						}
+						var puntos = obj.value.split('.');
+						if (puntos.length > 2) {
+							obj.value = '';
+							obj.focus();
+						}
+					}
+					if (tecla == 46) {
+						if (obj.value.indexOf('.') != -1) {
+							return false;
+						}
+						return true;
+					}
+				} else {
+					if (fn == '1') {
+						if (obj.value.indexOf('.') != -1) {
+							obj.value = '';
+							obj.focus();
+						}
+					}
+				}
+				//Dejar la línea de patron que se necesite y borrar el resto             
+				//patron =/[A-Za-z]/; // Solo acepta letras         
+				patron = /\d/; // Solo acepta números             
+				//patron = /\w/; // Acepta números y letras             
+				//patron = /\D/; // No acepta números             
+				//
+
+				te = String.fromCharCode(tecla);
+				if (fn == '1') {
+					te = obj.value;
+				}
+				result = patron.test(te);
+				if (result == false) {
+					if (fn == '1') {
+						if (obj.value == '') {
+							return true;
+						}
+						obj.value = '';
+						obj.focus();
+					}
+				}
+				return result;
+			}
+		</SCRIPT>
 		<!-- Mantenimiento Estudio -->
 		<h:form id="frmMantenimientoEstudio">
 			<p:panel header="Estudio de Abogados" style="width: 85%">
-			<p:messages id="idMsmDocumento"></p:messages>
+				<p:messages id="idMsmDocumento"></p:messages>
 				<table>
 					<tr>
 						<td><h:outputText value="Codigo:  " /></td>
-						<td><p:inputText id="txtCodigo" disabled="#{estudioMB.bMostrarCodigo}"
+						<td><p:inputText id="txtCodigo"
+								disabled="#{estudioMB.bMostrarCodigo}"
 								value="#{estudioMB.estudio.codEstudio}" maxlength="50" /></td>
 					</tr>
 					<tr>
 						<td><h:outputText value="Descripcion:  " /></td>
-						<td><p:inputText id="txtDescripcion" 
+						<td><p:inputText id="txtDescripcion"
 								value="#{estudioMB.estudio.desEstudio}" maxlength="50" /></td>
 					</tr>
 					<tr>
 						<td><h:outputText value="Costo:  " /></td>
-						<td><p:inputText id="txtCosto" 
-								value="#{estudioMB.estudio.costo}" maxlength="50" /></td>
+						<td><p:inputText id="txtCosto" 	onkeypress="return validaNumeroDecimal(event,'0',this,'0');"
+								onblur="validaNumeroDecimal(event,'0',this,'1');"
+								value="#{estudioMB.estudio.costo}" maxlength="13">
+								<f:convertNumber pattern="#,###,##0.00" locale="en" />
+							</p:inputText></td>
 					</tr>
 					<tr>
 						<td><h:outputText value="Estado" /></td>
@@ -69,7 +136,8 @@
 						<h:outputText value="#{est.desActivo}" />
 					</p:column>
 					<p:column headerText="Accion">
-						<p:commandLink id="clinkEditar" ajax="true" update=":frmMantenimientoEstudio"
+						<p:commandLink id="clinkEditar" ajax="true"
+							update=":frmMantenimientoEstudio"
 							actionListener="#{estudioMB.editarEstudio}">
 							<f:param name="codEstudio" value="#{est.codEstudio}"></f:param>
 							<h:outputText value="Editar" />
