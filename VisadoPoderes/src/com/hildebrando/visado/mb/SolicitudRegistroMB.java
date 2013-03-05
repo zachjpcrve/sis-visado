@@ -16,7 +16,6 @@ import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 
@@ -1673,8 +1672,6 @@ public class SolicitudRegistroMB {
 					 serviceSoli.insertar(a);
 				}
 				
-				
-				
 				 //Carga ficheros al FTP
 				  boolean bRet = cargarArchivosFTP();
 				  logger.info("Resultado de carga de archivos al FTP:" + bRet);
@@ -1696,16 +1693,14 @@ public class SolicitudRegistroMB {
 				} else {
 					mensaje = "Error al generar la Solicitud ";
 					Utilitarios.mensajeInfo("INFO", mensaje);
-				
-					
 				}
 
 				logger.info("objResultado.getCodSoli(); "+ objResultado.getCodSoli());
 				logger.info("objResultado.getTiivsSolicitudAgrupacions() "+ objResultado.getTiivsSolicitudAgrupacions().size());
 				logger.info("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getImporte());
+				
 				//instanciarSolicitudRegistro();
-			/*	if (!this.sEstadoSolicitud.equals("BORRADOR")) {
-					
+				/*if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 					ConsultarSolicitudMB a =new ConsultarSolicitudMB(solicitudRegistrarT);
 					//a.obtenerSolicitud();
 					redirect = "/faces/paginas/detalleSolicitud.xhtml";
@@ -1714,10 +1709,11 @@ public class SolicitudRegistroMB {
 					a.obtenerSolicitud();
 					redirect = "/faces/paginas/solicitudEdicion.xhtml";
 				}*/
-//				if (actualizarBandeja)
-//				{
-//					this.seguimientoMB.busquedaSolicitudes();
-//				}
+				
+				if (actualizarBandeja)
+				{
+					this.seguimientoMB.busquedaSolicitudxCodigo(objResultado.getCodSoli());
+				}
 				
 			}
 		} catch (Exception e) {
