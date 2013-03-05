@@ -51,7 +51,6 @@ import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMiembro;
-import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsParametros;
@@ -1562,8 +1561,8 @@ public class SeguimientoMB
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_ENVIO)) // Es fecha de envio
 			{
 				logger.info("Filtrando por fecha de envio");
-				DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
-				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
+				DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss");
+				DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 				
 				String tmpFecIni = formato.format(getFechaInicio());
 				String tmpFecFin = formato.format(getFechaFin());
@@ -1586,8 +1585,8 @@ public class SeguimientoMB
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_RPTA)) // Sino es fecha de respuesta
 			{
 				logger.info("Filtrando por fecha de rpta");
-				DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
-				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
+				DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss");
+				DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 				
 				String tmpFecIni = formato.format(getFechaInicio());
 				String tmpFecFin = formato.format(getFechaFin());
@@ -1650,16 +1649,18 @@ public class SeguimientoMB
 		}
 
 		// 8. Filtro por nombre de oficina (funciona)
-		if (getOficina() != null) 
+		if (!PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
 		{
-			if(getOficina().getDesOfi()!=null){
-				logger.debug("Filtro Oficina: " + getOficina().getCodOfi());		
-				filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
-				String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getOficina().getDesOfi().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
-				filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
-			}			
+			if (getOficina() != null) 
+			{
+				if(getOficina().getDesOfi()!=null){
+					logger.debug("Filtro Oficina: " + getOficina().getCodOfi());		
+					filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
+					String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getOficina().getDesOfi().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
+					filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
+				}			
+			}
 		}
-
 		// 11. Filtro por numero de documento de apoderado (funciona)
 		if (getNroDOIApoderado().compareTo("") != 0) 
 		{
@@ -1952,6 +1953,7 @@ public class SeguimientoMB
 		}
 		else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
 		{
+			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA, ConstantesVisado.ALIAS_TBL_OFICINA);
 			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS_FILTRO, usuario.getBancoOficina().getCodigo().trim()));
 		}
 		
