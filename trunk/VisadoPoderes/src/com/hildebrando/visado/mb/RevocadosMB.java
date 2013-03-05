@@ -96,7 +96,6 @@ public class RevocadosMB {
 	private boolean flagRevocar;
 	private boolean flagGuardar;
 	
-	private List<Integer> listCodAgrup;
 	private List<String>  listCodSoli;
 	private List<Integer> listNumGrupo;
 	private List<String> listSolicResult;
@@ -345,15 +344,7 @@ public class RevocadosMB {
 	
 	public void cargarCombos(){
 		
-		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro2 = Busqueda.forClass(TiivsRevocado.class).setProjection(Projections.distinct(Projections.property("codAgrup")));
 		
-		try {
-			listCodAgrup = service.buscarDinamicoInteger(filtro2.addOrder(Order.desc("codAgrup")));
-		} catch (Exception e) {
-			
-			logger.debug("error al obtener la lista de cod de agrupacion "+  e.toString());
-		}
 		
 		GenericDao<TiivsAgrupacionPersona, Object> serviceAgrupPers = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro_ = Busqueda.forClass(TiivsAgrupacionPersona.class).setProjection(Projections.distinct(Projections.property("numGrupo")));
@@ -424,6 +415,8 @@ public class RevocadosMB {
 		
 	}
 
+	
+	
 	public void verRevocado() {
 
 		personaClientesVer = new ArrayList<Revocado>();
@@ -1205,7 +1198,6 @@ public class RevocadosMB {
 		
 		
 		Revocado revocado;
-		String codAgrup="";
 		String nombreCompletoApoderados="";
 		String nombreCompletoPoderdantes="";
 		String fecha="";
@@ -1216,7 +1208,7 @@ public class RevocadosMB {
 		
 		List<TiivsPersona> poderdantes;
 		TiivsPersona poderdante;
-		
+		 List<Integer>  listCodAgrup =  obtenerListCodAgrupacion();
 		
 		if(listCodAgrup != null){
 			
@@ -1331,6 +1323,25 @@ public class RevocadosMB {
 		
 	}
 	
+	public List<Integer> obtenerListCodAgrupacion(){
+		
+		 List<Integer> listCodAgrup= new ArrayList<Integer>();
+		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro2 = Busqueda.forClass(TiivsRevocado.class).setProjection(Projections.distinct(Projections.property("codAgrup")));
+		
+		try {
+			listCodAgrup = service.buscarDinamicoInteger(filtro2.addOrder(Order.desc("codAgrup")));
+		} catch (Exception e) {
+			
+			logger.debug("error al obtener la lista de cod de agrupacion "+  e.toString());
+		}
+		
+		return listCodAgrup;
+		
+		
+		
+	}
+	
 	private String getValor1(String codElem, List<TiivsMultitabla> multitabla){
 		
 		for(TiivsMultitabla obj:multitabla){
@@ -1400,14 +1411,6 @@ public class RevocadosMB {
 	public void setObjTiivsPersonaBusqueda(TiivsPersona objTiivsPersonaBusqueda) {
 		this.objTiivsPersonaBusqueda = objTiivsPersonaBusqueda;
 	}
-
-	/*public TiivsOficina1 getTiivsOficina1() {
-		return tiivsOficina1;
-	}
-
-	public void setTiivsOficina1(TiivsOficina1 tiivsOficina1) {
-		this.tiivsOficina1 = tiivsOficina1;
-	}*/
 
 	public CombosMB getCombosMB() {
 		return combosMB;
