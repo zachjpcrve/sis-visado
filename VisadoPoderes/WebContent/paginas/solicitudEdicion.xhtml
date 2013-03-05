@@ -251,8 +251,9 @@
 															</p:commandButton>
 															
 															</td>
-															<td><p:commandButton icon="ui-icon-pencil"  oncomplete ="dlgRegistrarPersona.show()"
-																			 update=":formRegistrar:tlbPersonasPopup" action="#{consultarSolicitudMB.verEditarAgrupacion}">
+															<td><p:commandButton icon="ui-icon-pencil"  oncomplete ="dlgRegistrarPersona.show()" update=":formRegistrar:tlbPersonasPopup,:formRegistrar:cboTipoDoi,
+																				:formRegistrar:cboTipoDoi2,:formRegistrar:cboClasificacion"
+																			  action="#{consultarSolicitudMB.verEditarAgrupacion}">
 																<f:setPropertyActionListener target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}"
 																							  value="#{s}">
 																</f:setPropertyActionListener>
@@ -879,7 +880,7 @@
 		
 		
 		<p:commandButton id="btnAgregar" value="Agregar" style="padding-left:0em !important;" action="#{consultarSolicitudMB.agregarPersona}"  update=":formRegistrar"/>
-		<p:commandButton id="btnLimpiar" value="Limpiar" style="padding-left:0.1em !important;"  action="#{consultarSolicitudMB.limpiarCriteriosBusqueda}" update=":formRegistrar"/>
+		<p:commandButton id="btnLimpiar" value="Limpiar" style="padding-left:0.1em !important;"  actionListener="#{consultarSolicitudMB.limpiarCriteriosBusqueda}" update=":formRegistrar"/>
 		</h:panelGrid>
 	 </h:panelGrid>
 			
