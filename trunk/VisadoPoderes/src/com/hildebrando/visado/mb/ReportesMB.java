@@ -775,14 +775,17 @@ public class ReportesMB
 	@SuppressWarnings("unchecked")
 	public void buscarSolicitudesExtractor() 
 	{
-		logger.info("Buscando solicitudes a exportar");
-		
+		logger.info("Buscando solicitudes RPT Extractor:");
+		LocalDate newFechaInicio = null;
+		LocalDate newFechaFin = null;
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
 		
 		//Busqueda por fecha de Registro
 		if (getFechaInicio()!=null && getFechaFin()!=null)
 		{
+			/*logger.info("Buscando por fecha de registro");
+			
 			LocalDate newFechaInicio = null;
 			LocalDate newFechaFin = null;
 			
@@ -798,6 +801,27 @@ public class ReportesMB
 			Date dFechaIni = newFechaInicio.toDateTimeAtStartOfDay().toDate();
 			Date dFechaFin = newFechaFin.toDateTimeAtStartOfDay().toDate();
 			
+			logger.info("Fecha Inicio: " +dFechaIni );
+			logger.info("Fecha Fin: " +dFechaFin );
+			
+			filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaIni,dFechaFin));*/
+			
+			logger.info("Filtrando por fecha de registro");
+			DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
+			DateFormat formato = new SimpleDateFormat("dd/MM/yy");
+			
+			String tmpFecIni = formato.format(getFechaInicio());
+			String tmpFecFin = formato.format(getFechaFin());
+			
+			newFechaInicio=fmt.parseLocalDate(tmpFecIni);
+			newFechaFin= fmt.parseLocalDate(tmpFecFin);
+			
+			Date dFechaIni = newFechaInicio.toDateTimeAtStartOfDay().toDate();
+			Date dFechaFin = newFechaFin.toDateTimeAtStartOfDay().toDate();
+			
+			logger.info("Fecha de inicio:" + dFechaIni);
+			logger.info("Fecha de Fin:" + dFechaFin);
+			
 			filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaIni,dFechaFin));
 		}
 				
@@ -808,7 +832,7 @@ public class ReportesMB
 
 			for (; ind <= lstEstadoSelected.size() - 1; ind++) 
 			{
-				logger.info("Filtro por estados: " + lstEstadoSelected.get(ind));
+				logger.info("Filtro por estado [" + ind  + "]" + lstEstadoSelected.get(ind));
 			}
 			
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,lstEstadoSelected));
@@ -926,9 +950,7 @@ public class ReportesMB
 			   {
 				    if (tmpSol.getCodSoli().equals(d.getCodSoli()) && tmpSol.getCodSoli().equals(x.getId().getCodSoli()))
 				    {
-				    	logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
-				    	
-					    objPersona=new TiivsPersona();
+				    	objPersona=new TiivsPersona();
 					    objPersona=d.getTiivsPersona();
 					    objPersona.setTipPartic(d.getTipPartic());
 					    objPersona.setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
