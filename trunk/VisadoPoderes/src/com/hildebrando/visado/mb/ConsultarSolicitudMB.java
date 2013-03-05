@@ -108,7 +108,7 @@ public class ConsultarSolicitudMB {
 	private boolean bSeccionReasignacion = false;
 	private boolean bSeccionCartaAtencion = false;
 	private boolean bSeccionComentario = false;
-	private boolean bcartaRevision = false;
+	//private boolean bcartaRevision = false;
 	private boolean bSeccionDocumentos = false;
 	private boolean bSeccionEvaluarNivel = false;
 	private int indexUpdatePoderdanteApoderado=0;
@@ -127,6 +127,7 @@ public class ConsultarSolicitudMB {
 	private boolean bMostrarCartaRechazo = false;
 	private boolean bMostrarCartaImprocedente = false;
 	private boolean bMostrarCartaRespuesta = false;
+	private boolean bMostrarSolicitudVisado = false;
 	boolean bBooleanPopupTipoCambio = true;
 	boolean bBooleanPopup = false;
 	private String PERFIL_USUARIO;
@@ -314,7 +315,7 @@ public class ConsultarSolicitudMB {
 				setbMostrarCartaAtencion(false);
 				setbMostrarGenerarRevision(false);
 				setbSeccionDocumentos(true);
-				setbcartaRevision(false);
+				//setbcartaRevision(false);
 				
 			} else {
 				setbMostrarCartaRevision(false);
@@ -873,11 +874,18 @@ public class ConsultarSolicitudMB {
 		{
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) 
 			{
-				// Seccion Dictaminar
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
 				this.bSeccionDictaminar = true;
 				this.bSeccionComentario = true;
 				this.bSeccionReasignacion = false;
-
+				this.bSeccionEvaluarNivel = false;
+				this.bSeccionDocumentos = true;
+				this.bMostrarGenerarRevision = false;
+				
 				this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02);
 				this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_RESERVADO_T02);
 				GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -885,57 +893,125 @@ public class ConsultarSolicitudMB {
 				this.registrarHistorial(solicitudRegistrarT);
 
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
-				// Seccion Reasgnar
+
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = false;
-				this.bSeccionComentario = false;
+				this.bSeccionComentario = true;
 				this.bSeccionReasignacion = true;
+				this.bSeccionEvaluarNivel = false;				
+				this.bMostrarGenerarRevision = false;
 
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
+				
+				this.bMostrarSolicitudVisado = false;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = false;
 				this.bSeccionDictaminar = false;
 				this.bSeccionComentario = false;
 				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
 			}
 		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)) {
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = true;
 				this.bSeccionComentario = true;
 				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = true;
 				this.bSeccionComentario = true;
 				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
 
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
+				
+				this.bMostrarSolicitudVisado = false;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = false;
 				this.bSeccionDictaminar = false;
 				this.bSeccionComentario = false;
 				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
 			}
 			
 		}else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = false;
 				this.bSeccionComentario = false;
 				this.bSeccionReasignacion = false;
-				this.bcartaRevision = false;
-				this.bMostrarCartaAtencion=false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = true;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = false;
 				this.bSeccionComentario = false;
 				this.bSeccionReasignacion = false;
-				this.bcartaRevision = false;
-				this.bMostrarCartaAtencion=true;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
 
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
+
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = true;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = false;
 				this.bSeccionComentario = false;
 				this.bSeccionReasignacion = false;
-				this.bcartaRevision = false;
-				this.bMostrarCartaAtencion=true;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
 			}
 		}
 		else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02)){
-			
-			
 			
 			evaluacionNivelesMB = new EvaluacionNivelesMB(solicitudRegistrarT);
 			TiivsSolicitudNivel solNivel = evaluacionNivelesMB.obtenerNivelSolicitud();
@@ -944,14 +1020,48 @@ public class ConsultarSolicitudMB {
 			}
 			
             if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
-            	//Por confirmar
-            	setbSeccionEvaluarNivel(true);
+           	
+            	this.bMostrarSolicitudVisado = true;
+            	this.bMostrarCartaAtencion = false;
+            	this.bMostrarCartaRechazo = false;
+            	this.bMostrarCartaRevision = false;
+            	this.bMostrarCartaImprocedente = false;
+            	this.bSeccionDocumentos = true;
+            	this.bSeccionDictaminar = false;
+            	this.bSeccionComentario = true;
+            	this.bSeccionReasignacion = false;
+            	this.bSeccionEvaluarNivel = true;
+            	this.bMostrarGenerarRevision = false;
+            	
         	} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
-        		setbSeccionEvaluarNivel(true);
+        		
+        		this.bMostrarSolicitudVisado = true;
+            	this.bMostrarCartaAtencion = false;
+            	this.bMostrarCartaRechazo = false;
+            	this.bMostrarCartaRevision = false;
+            	this.bMostrarCartaImprocedente = false;
+            	this.bSeccionDocumentos = true;
+            	this.bSeccionDictaminar = false;
+            	this.bSeccionComentario = true;
+            	this.bSeccionReasignacion = false;
+            	this.bSeccionEvaluarNivel = true;
+            	this.bMostrarGenerarRevision = false;
+            	
         	} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
-        		setbSeccionEvaluarNivel(false);
-        	}
-			
+        		
+        		this.bMostrarSolicitudVisado = true;
+            	this.bMostrarCartaAtencion = false;
+            	this.bMostrarCartaRechazo = false;
+            	this.bMostrarCartaRevision = false;
+            	this.bMostrarCartaImprocedente = false;
+            	this.bSeccionDocumentos = true;
+            	this.bSeccionDictaminar = false;
+            	this.bSeccionComentario = false;
+            	this.bSeccionReasignacion = false;
+            	this.bSeccionEvaluarNivel = false;
+            	this.bMostrarGenerarRevision = false;
+            	
+        	}			
 				
 		}
 		else if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02)){
@@ -962,77 +1072,323 @@ public class ConsultarSolicitudMB {
 			}
 			
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
-            	//Por confirmar
-            	setbSeccionEvaluarNivel(true);
+           	
+            	this.bMostrarSolicitudVisado = true;
+            	this.bMostrarCartaAtencion = false;
+            	this.bMostrarCartaRechazo = true;
+            	this.bMostrarCartaRevision = true;
+            	this.bMostrarCartaImprocedente = false;
+            	this.bSeccionDocumentos = true;
+            	this.bSeccionDictaminar = false;
+            	this.bSeccionComentario = true;
+            	this.bSeccionReasignacion = false;
+            	this.bSeccionEvaluarNivel = true;
+            	this.bMostrarGenerarRevision = false;
+            	
         	} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
-        		setbSeccionEvaluarNivel(true);
+        		
+        		this.bMostrarSolicitudVisado = true;
+            	this.bMostrarCartaAtencion = false;
+            	this.bMostrarCartaRechazo = true;
+            	this.bMostrarCartaRevision = true;
+            	this.bMostrarCartaImprocedente = false;
+            	this.bSeccionDocumentos = true;
+            	this.bSeccionDictaminar = false;
+            	this.bSeccionComentario = true;
+            	this.bSeccionReasignacion = false;
+            	this.bSeccionEvaluarNivel = true;
+            	this.bMostrarGenerarRevision = false;
+        		
         	} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
-        		setbSeccionEvaluarNivel(false);
+        		
+        		this.bMostrarSolicitudVisado = true;
+        		this.bMostrarCartaAtencion = false;
+        		this.bMostrarCartaRechazo = true;
+        		this.bMostrarCartaRevision = true;
+        		this.bMostrarCartaImprocedente = false;
+        		this.bSeccionDocumentos = true;
+        		this.bSeccionDictaminar = false;
+        		this.bSeccionComentario = false;
+        		this.bSeccionReasignacion = false;
+        		this.bSeccionEvaluarNivel = false;
+        		this.bMostrarGenerarRevision = false;
+        		
         	}
 			
 		}
 	
 	else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
-				this.bcartaRevision = false;
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = true;
-			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
-				this.bSeccionComentario = true;
-				this.bcartaRevision = true;
-				this.bMostrarCartaRechazo = false;
-				this.listarComboDictamen();
-				this.bSeccionDictaminar = true;
-				setbSeccionDocumentos(true);
-			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = false;
 				this.bSeccionComentario = false;
-				this.bcartaRevision = true;
-				this.bMostrarCartaRechazo = false;
-				setbSeccionEvaluarNivel(false);
-			}
-			setbMostrarCartaRevision(false);
-			setbMostrarCartaAtencion(false);
-		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)) {
-			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = true;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = true;
-				listarComboDictamen();
 				this.bSeccionComentario = true;
-				bMostrarCartaImprocedente=false;
-				setbMostrarCartaRevision(true);
-				setbMostrarCartaAtencion(false);
-			}else if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
-				setbMostrarCartaRevision(true);
-				setbMostrarCartaAtencion(false);
-
-				setbMostrarGenerarRevision(false);
-				setbcartaRevision(false);
-			}
-		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
-			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
-				this.bMostrarCartaRechazo = true;
-				this.bMostrarCartaRevision = true;
-				this.bMostrarCartaAtencion = true;
-			}
-		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
-			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
-				this.bMostrarCartaRechazo = true;
-				this.bMostrarCartaImprocedente = true;
-				this.bMostrarCartaRespuesta = true;
-				this.bSeccionDictaminar = true;
-			}
-		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02)) {
-			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
-				this.bMostrarCartaAtencion = true;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = true;				
+				this.listarComboDictamen();
+				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
+				
+				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
-			} else if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
-				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = true;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = true;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = true;
 			}
 			
+		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)) {
+			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = true;
+				this.bMostrarCartaRevision = true;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+								
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = true;
+				this.bMostrarCartaRevision = true;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = true;
+				this.bSeccionComentario = true;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+				listarComboDictamen();
+				
+			}else if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = true;
+				this.bMostrarCartaRevision = true;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			}
+		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
+			
+			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+				
+				this.bMostrarSolicitudVisado = false;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = false;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = true;
+				this.bMostrarCartaRechazo = true;
+				this.bMostrarCartaRevision = true;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = true;
+				this.bMostrarCartaRechazo = true;
+				this.bMostrarCartaRevision = true;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			}
+		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
+			
+			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+				
+				this.bMostrarSolicitudVisado = false;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = false;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = true;
+				this.bMostrarCartaRevision = true;
+				this.bMostrarCartaImprocedente = true;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = true;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = true;
+				this.bMostrarCartaRevision = true;
+				this.bMostrarCartaImprocedente = true;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			}
+			
+		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02)) {
+			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+				
+				this.bMostrarSolicitudVisado = false;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = false;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = true;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = true;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			} 
+			
 		}else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02)) {
-			this.bcartaRevision = false;
-			setbMostrarCartaAtencion(false);
+			
+			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+				
+				this.bMostrarSolicitudVisado = false;
+				this.bMostrarCartaAtencion = false;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = false;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = true;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;
+				
+			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
+				
+				this.bMostrarSolicitudVisado = true;
+				this.bMostrarCartaAtencion = true;
+				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRevision = false;
+				this.bMostrarCartaImprocedente = false;
+				this.bSeccionDocumentos = true;
+				this.bSeccionDictaminar = false;
+				this.bSeccionComentario = false;
+				this.bSeccionReasignacion = false;
+				this.bSeccionEvaluarNivel = false;
+				this.bMostrarGenerarRevision = false;				
+			} 
 		}
-		setbSeccionDocumentos(true);
 	}
 
 	public void obtenerDictamen(ValueChangeEvent e) 
@@ -4030,6 +4386,7 @@ public class ConsultarSolicitudMB {
 		this.bRevision = bRevision;
 	}
 
+	/*
 	public boolean isbcartaRevision() {
 		return bcartaRevision;
 	}
@@ -4037,6 +4394,7 @@ public class ConsultarSolicitudMB {
 	public void setbcartaRevision(boolean bcartaRevision) {
 		this.bcartaRevision = bcartaRevision;
 	}
+	*/
 
 	public boolean isbMostrarGenerarRevision() {
 		return bMostrarGenerarRevision;
