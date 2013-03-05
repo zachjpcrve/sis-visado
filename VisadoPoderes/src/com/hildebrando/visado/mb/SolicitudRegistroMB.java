@@ -116,7 +116,7 @@ public class SolicitudRegistroMB {
 	private List<TiivsTipoSolicDocumento> lstTipoSolicitudDocumentos;
 	private List<TiivsTipoSolicDocumento> lstDocumentosXTipoSolTemp;
 	boolean bBooleanPopup = false;
-	//boolean bBooleanPopupTipoCambio = true;
+	boolean bBooleanPopupTipoCambio = true;
 	boolean bBooleanPopupEmail = true;
 	private boolean flagUpdatePoderdanteApoderados=false;
 	private boolean flagUpdateOperacionSolic = false;
@@ -133,7 +133,7 @@ public class SolicitudRegistroMB {
 	private int indexUpdatePersona = 0;
 	private int indexUpdatePoderdanteApoderado=0;
 	private int numGrupoUpdatePoderdanteApoderado=0;
-	Map<Integer, TiivsSolicitudOperban> mapSolicitudes;
+	//Map<Integer, TiivsSolicitudOperban> mapSolicitudes;
 	public static Logger logger = Logger.getLogger(SolicitudRegistroMB.class);
 	String cadenaEscanerFinal = "";
 	//http://172.31.9.41:9080/NAEWeb/pages/escaner/InvocaEscaner.xhtml?idEmpresa=1&idSistema=98&txLogin=P014773
@@ -183,7 +183,7 @@ public class SolicitudRegistroMB {
 		aliasFilesToDelete = new ArrayList<String>();
 		
 		selectedTipoDocumento = new TiivsTipoSolicDocumento();
-		mapSolicitudes=new HashMap<Integer, TiivsSolicitudOperban>();
+		//mapSolicitudes=new HashMap<Integer, TiivsSolicitudOperban>();
 		
 		this.cadenaEscanerFinal = this.prepararURLEscaneo();	
 						
@@ -540,7 +540,7 @@ public class SolicitudRegistroMB {
 					// update
 					logger.info("Index Update: " + indexUpdatePersona);
 
-					this.lstTiivsPersona.set(indexUpdatePersona,objTiivsPersonaCapturado);
+					this.lstTiivsPersona.set(indexUpdatePersona,objTiivsPersonaResultado);
 					personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
 					objTiivsPersonaResultado = new TiivsPersona();
 					objTiivsPersonaBusqueda = new TiivsPersona();
@@ -594,7 +594,17 @@ public class SolicitudRegistroMB {
 			}
 		}
 
-		this.objTiivsPersonaResultado = this.objTiivsPersonaCapturado;
+		this.objTiivsPersonaResultado.setApeMat(this.objTiivsPersonaCapturado.getApeMat());
+		this.objTiivsPersonaResultado.setTipDoi(this.objTiivsPersonaCapturado.getTipDoi());
+		this.objTiivsPersonaResultado.setNumDoi(this.objTiivsPersonaCapturado.getNumDoi());
+		this.objTiivsPersonaResultado.setCodCen(this.objTiivsPersonaCapturado.getCodCen());
+		this.objTiivsPersonaResultado.setApePat(this.objTiivsPersonaCapturado.getApePat());
+		this.objTiivsPersonaResultado.setNombre(this.objTiivsPersonaCapturado.getNombre());
+		this.objTiivsPersonaResultado.setTipPartic(this.objTiivsPersonaCapturado.getTipPartic());
+		this.objTiivsPersonaResultado.setClasifPer(this.objTiivsPersonaCapturado.getClasifPer());
+		this.objTiivsPersonaResultado.setClasifPerOtro(this.objTiivsPersonaCapturado.getClasifPerOtro());
+		this.objTiivsPersonaResultado.setEmail(this.objTiivsPersonaCapturado.getEmail());
+		this.objTiivsPersonaResultado.setNumCel(this.objTiivsPersonaCapturado.getNumCel());
 		this.flagUpdatePersona = true;
 	}
 
@@ -1151,8 +1161,9 @@ public class SolicitudRegistroMB {
 		logger.info(" validarTipoCambioDisabled " +e.getNewValue());
 		if (e.getNewValue().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
 			this.objSolicBancaria.setTipoCambio(0.0);
+			bBooleanPopupTipoCambio=true;
 		}else{
-			//bBooleanPopupTipoCambio=false;
+			bBooleanPopupTipoCambio=false;
 		
 		}
 		}
@@ -1316,16 +1327,16 @@ public class SolicitudRegistroMB {
           objSolicBancaria=new TiivsSolicitudOperban();
           objSolicBancaria.setId(new TiivsSolicitudOperbanId());
           objSolicBancaria.setTipoCambio(0.0);
+          objSolicBancaria.setImporte(0.0);
+          objSolicBancaria.setImporteSoles(0.0);
+          this.bBooleanPopupTipoCambio=true;
           this.flagUpdateOperacionSolic=false;
           this.objSolicitudOperacionCapturado=new TiivsSolicitudOperban();
           this.objSolicitudOperacionCapturado.setId(new TiivsSolicitudOperbanId());
           this.valorFinal=0;
           this.llamarComision();
+        
 		}
-  
-			
-
-		
 
 	}
 
@@ -1333,6 +1344,10 @@ public class SolicitudRegistroMB {
 		logger.info("**************************** limpiarListaSolicitudesBancarias ****************************");
 		this.objSolicBancaria=new TiivsSolicitudOperban();
 		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
+		this.objSolicBancaria.setTipoCambio(0.00);
+		this.objSolicBancaria.setImporte(0.00);
+		bBooleanPopupTipoCambio=true;
+		
 		flagUpdateOperacionSolic=false;
 		//this.lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
 	}
@@ -1420,6 +1435,8 @@ public class SolicitudRegistroMB {
 		  objSolicBancaria=new TiivsSolicitudOperban();
 		  objSolicBancaria.setId(new TiivsSolicitudOperbanId());
 		  objSolicBancaria.setTipoCambio(0.0);
+          objSolicBancaria.setImporte(0.0);
+          objSolicBancaria.setImporteSoles(0.0);
 		  this.flagUpdateOperacionSolic=false;
 		  this.objSolicitudOperacionCapturado=new TiivsSolicitudOperban();
 		  this.objSolicitudOperacionCapturado.setId(new TiivsSolicitudOperbanId());
@@ -1528,24 +1545,37 @@ public class SolicitudRegistroMB {
 		y=y+1;
 		logger.info("yyyyyyy : " +y);
 	//	Map<String, TiivsSolicitudOperban> mapSolicitudes=new HashMap<String, TiivsSolicitudOperban>();
-		mapSolicitudes.put(y, objSolicitudOperacionCapturado);
+		//mapSolicitudes.put(y, objSolicitudOperacionCapturado);
 		
-		Set set = mapSolicitudes.entrySet(); 
+		//Set set = mapSolicitudes.entrySet(); 
 		// Get an iterator 
-		Iterator iterate = set.iterator(); 
+		//Iterator iterate = set.iterator(); 
 		// Display elements 
 		
-		while(iterate.hasNext()) { 
-		Map.Entry me = (Map.Entry)iterate.next(); 
-		System.out.print(me.getKey() + ": "); 
-		logger.info(me.getValue()); 
-		} 
 		
-		logger.info("mapSolicitudes.get(mapSolicitudes.size()).getImporte()"+mapSolicitudes.get(mapSolicitudes.size()).getImporte());
+		//logger.info("mapSolicitudes.get(mapSolicitudes.size()).getImporte()"+mapSolicitudes.get(mapSolicitudes.size()).getImporte());
 		//if(!flagUpdateOperacionSolic){
-		this.objSolicitudOperacionCapturadoOld=this.objSolicitudOperacionCapturado;
+		this.objSolicitudOperacionCapturadoOld= this.objSolicitudOperacionCapturado;
+		this.objSolicitudOperacionCapturadoOld.setId(this.objSolicitudOperacionCapturado.getId());
+		this.objSolicitudOperacionCapturadoOld.setImporte(this.objSolicitudOperacionCapturado.getImporte());
+		this.objSolicitudOperacionCapturadoOld.setImporteSoles(this.objSolicitudOperacionCapturado.getImporteSoles());
+		this.objSolicitudOperacionCapturadoOld.setTiivsOperacionBancaria(this.objSolicitudOperacionCapturado.getTiivsOperacionBancaria());
+		this.objSolicitudOperacionCapturadoOld.setTipoCambio(this.objSolicitudOperacionCapturado.getTipoCambio());
+		this.objSolicitudOperacionCapturadoOld.setsItem(this.objSolicitudOperacionCapturado.getsItem());
 		//}
 		this.objSolicBancaria = this.objSolicitudOperacionCapturado;
+		
+		/** Validar el disabled del tipo de cambio */
+		if (objSolicitudOperacionCapturado.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+			this.objSolicBancaria.setTipoCambio(0.0);
+			bBooleanPopupTipoCambio=true;
+		}else{
+			bBooleanPopupTipoCambio=false;
+		
+		}
+		/** Fin del Validar el disabled del tipo de cambio */
+		
+		/** Setear el flag para actualizar las operaciones bancarias*/
 		this.flagUpdateOperacionSolic = true;
 	}
 
@@ -2222,13 +2252,13 @@ public class SolicitudRegistroMB {
 	
 	
 
-	/*public boolean isbBooleanPopupTipoCambio() {
+	public boolean isbBooleanPopupTipoCambio() {
 		return bBooleanPopupTipoCambio;
 	}
 
 	public void setbBooleanPopupTipoCambio(boolean bBooleanPopupTipoCambio) {
 		this.bBooleanPopupTipoCambio = bBooleanPopupTipoCambio;
-	}*/	
+	}
 
 	public String getUbicacionTemporal() {
 		return ubicacionTemporal;
