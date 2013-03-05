@@ -428,14 +428,61 @@ public class Utilitarios {
 	public static String formatoFechaSinHora(Date fecha) {
 
 		String fechaActualizacion = "";
-
+		
 		Calendar calFechaAct = Calendar.getInstance();
 		calFechaAct.setTimeInMillis(fecha.getTime());
+		
 		fechaActualizacion = calFechaAct.get(Calendar.DATE) + "/"
-				+ calFechaAct.get(Calendar.MONTH) + "/"
+				+ obtenerMesSistema(calFechaAct.get(Calendar.MONTH)) + "/"
 				+ calFechaAct.get(Calendar.YEAR);
 
 		return fechaActualizacion ;
+	}
+	
+	public static String obtenerMesSistema(int iMes)
+	{
+		String mes="";
+		switch (iMes) {
+		case 0:
+			mes = "01";
+			break;
+		case 1:
+			mes = "02";
+			break;
+		case 2:
+			mes = "03";
+			break;
+		case 3:
+			mes = "04";
+			break;
+		case 4:
+			mes = "05";
+			break;
+		case 5:
+			mes = "06";
+			break;
+		case 6:
+			mes = "07";
+			break;
+		case 7:
+			mes = "08";
+			break;
+		case 8:
+			mes = "09";
+			break;
+		case 9:
+			mes = "10";
+			break;
+		case 10:
+			mes = "11";
+			break;	
+		case 11:
+			mes = "12";
+			break;
+		default:
+			break;
+		}
+		return mes;
 	}
 	
 	public static String obtenerParteFecha(String fecha, String tipo)
@@ -464,7 +511,7 @@ public class Utilitarios {
 				}
 				if (tipo.equals("m"))
 				{
-					tipoRes = String.valueOf(calFechaAct.get(Calendar.MONTH));
+					tipoRes = obtenerMesSistema(calFechaAct.get(Calendar.MONTH));
 				}
 				if (tipo.equals("y"))
 				{
