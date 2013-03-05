@@ -545,7 +545,9 @@
 															value="#{solicitudRegMB.objSolicBancaria.id.moneda}"
 															immediate="true" 
 															disabled="false" valueChangeListener="#{solicitudRegMB.validarTipoCambioDisabled}">
-															<p:ajax update=":formSolicitudRegistro:intImporte,:formSolicitudRegistro:intTipoCambio" event="change"></p:ajax>
+															<p:ajax update=":formSolicitudRegistro:intImporte,
+															                :formSolicitudRegistro:intTipoCambio,
+															                :formSolicitudRegistro:txtImporteSoles" event="change"></p:ajax>
 															<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 															<f:selectItems value="#{combosMB.lstMoneda}" var="varo" itemValue="#{varo.codMoneda}" itemLabel="#{varo.desMoneda}" /> 
 															
