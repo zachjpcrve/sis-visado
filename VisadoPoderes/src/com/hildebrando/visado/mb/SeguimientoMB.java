@@ -278,6 +278,7 @@ public class SeguimientoMB
 				setMostrarColumna(false);
 			}
 		}
+		
 	}
 	
 	public String buscarEstudioxAbogado()
