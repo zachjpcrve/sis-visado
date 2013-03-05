@@ -9,12 +9,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.Alias;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
