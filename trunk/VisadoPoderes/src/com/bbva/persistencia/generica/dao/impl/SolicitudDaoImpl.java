@@ -1128,7 +1128,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	@SuppressWarnings("unchecked")
 	public List<RecaudacionTipoServ> obtenerListarRecaudacionxTipoServicio(TiivsSolicitud solicitud, Date dFechaInicio, Date dFechaFin) throws Exception
 	{	
-		logger.info("***************En el obtenerListarTotalSolicitudesxEstado*************************");
+		logger.info("***************En el obtenerListarRecaudacionxTipoServicio*************************");
 		String sql ="";
 		//String sCadFecha="";
 		List<RecaudacionTipoServ> tmpLista = new ArrayList<RecaudacionTipoServ>();
@@ -1140,6 +1140,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer()!=null)
 			{
+				logger.info("Filtro de territorio: " + solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer());
+				
 				if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and ofi.cod_terr = '" + solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer() + "' ";
@@ -1152,6 +1154,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (solicitud.getTiivsOficina1().getCodOfi()!=null)
 			{
+				logger.info("Filtro de oficina: " + solicitud.getTiivsOficina1().getCodOfi());
+				
 				if (solicitud.getTiivsOficina1().getCodOfi()!=null && solicitud.getTiivsOficina1().getCodOfi().compareTo("")!=0)
 				{
 					if (sWhere.compareTo("")!=0)
@@ -1172,6 +1176,9 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				String tmpFecIni = formato.format(dFechaInicio);
 				String tmpFecFin = formato.format(dFechaFin);
 				
+				logger.info("Filtro de fecha Inicio: " + tmpFecIni);
+				logger.info("Filtro de fecha Fin: " + tmpFecFin);
+				
 				if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
@@ -1183,19 +1190,18 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			}
 			
 			//Filtros de estados a buscar por RN054 del Doc Funcional
-			/*if (sWhere.compareTo("")!=0)
+			if (sWhere.compareTo("")!=0)
 			{
 				sWhere += " and so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
 											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
-											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "')" ;
-						
+											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "') " ;
 			}
 			else
 			{
 				sWhere = " where so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
-						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "')" ;
-			}*/
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "') " ;
+			}
 			
 			sql="select distinct terr.des_ter, so.cod_ofi, ofi.des_ofi, NVL(PN.cont,0) Persona_Natural, " +
 				"NVL((PN.cont*PN.valor2),0) Recaudacion, NVL(PJ.cont,0) Persona_Juridica,NVL((PJ.cont*PJ.valor2),0) Recaudacion1, " +
@@ -1229,19 +1235,19 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				"order by so.cod_ofi " ;
 			 
 			
-			 logger.info("SQL : "+sql);
+			logger.info("SQL : "+sql);
 			 
-			 final String sSQL=sql;
+			final String sSQL=sql;
 			
-			 RecaudacionTipoServ objRecaudacion;
-			 List ResultList = (ArrayList<RecaudacionTipoServ>)getHibernateTemplate().execute(new HibernateCallback() 
-			 {
+			RecaudacionTipoServ objRecaudacion;
+			List ResultList = (ArrayList<RecaudacionTipoServ>)getHibernateTemplate().execute(new HibernateCallback() 
+			{
 					public List<Object> doInHibernate(Session session) throws HibernateException 
 					{
 						SQLQuery sq =session.createSQLQuery(sSQL);
 						return sq.list();
 					}
-			 });
+			});
 
 			if(ResultList.size()>0)
 			{
