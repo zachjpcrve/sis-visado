@@ -276,7 +276,9 @@
 	       	<p:commandButton id="confirm" value="Si" 
 	        			onclick="window.location.href='#{root}main/download/pdfReportCartaAtencion.htm'" 
 	        			oncomplete="confirmation2.hide()" update=":formSolicitudSeguimiento" 
-	                    actionListener="#{consultarSolicitudMB.actualizarEstadoEjecutadoSolicitud}" />	
+	                    action="#{consultarSolicitudMB.actualizarEstadoEjecutadoSolicitud}"
+	                    ajax="false"
+	                     />	
 	                    	                    
 	       	<p:commandButton id="decline" value="No" oncomplete="confirmation2.hide()" />
 	       	</center>  
