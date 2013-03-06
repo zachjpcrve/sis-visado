@@ -131,7 +131,7 @@ public class DelegadosService {
 	}
 
 	public List<TiivsMiembroNivel> editarAgrupacion(String codigoGrupo, String desNivel) {
-		logger.info("DelegadosService : editarAgrupacion ");
+		logger.info("DelegadosService : editarAgrupacion " + desNivel);
 		List<TiivsMiembroNivel> delegadosEditar = new ArrayList<TiivsMiembroNivel>();
 		int grupo = 0;
 		grupo = Integer.parseInt(codigoGrupo);
@@ -154,7 +154,7 @@ public class DelegadosService {
 	}
 
 	public String obtenerCodNivel(String desNivel) {
-		logger.info("DelegadosService : obtenerCodNivel ");
+		logger.info("DelegadosService : obtenerCodNivel " +desNivel);
 		List<TiivsNivel> lstCodNivel = new ArrayList<TiivsNivel>();
 		String codNivel = null;
 		
@@ -164,7 +164,7 @@ public class DelegadosService {
 		
 		try{
 			lstCodNivel = service.buscarDinamico(filtro.add(Restrictions.eq("desNiv", desNivel)));
-			
+			logger.info("lstCodNivel.size() " +lstCodNivel.size());
 			codNivel = lstCodNivel.get(0).getCodNiv();
 		}catch(Exception ex){
 			ex.printStackTrace();
