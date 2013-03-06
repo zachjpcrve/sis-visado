@@ -707,7 +707,7 @@ public class ConsultarSolicitudMB {
 			// Listar ComboDictamen
 			listarComboDictamen();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION,e);
 		}
 	}
 	
@@ -1278,7 +1278,7 @@ public class ConsultarSolicitudMB {
 				this.bMostrarCartaImprocedente = true;
 				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = true;
-				this.bSeccionComentario = false;
+				this.bSeccionComentario = true;
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
 				this.bMostrarGenerarRevision = false;
@@ -1868,8 +1868,13 @@ public class ConsultarSolicitudMB {
 	}
 
 	public void registrarEvaluacionNivel() {
-		// evaluacionNivelesMB.setRegistroUsuario(this.registroUsuario);
 		evaluacionNivelesMB.registrarEvaluacionNivel(sCodigoEstadoNivel);
+		try {
+			this.actualizarEstadoReservadoSolicitud();
+			this.obtenerHistorialSolicitud();
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION,e);
+		}
 	}
 			
 	public void obtenerDictamenNivel(ValueChangeEvent e) 
