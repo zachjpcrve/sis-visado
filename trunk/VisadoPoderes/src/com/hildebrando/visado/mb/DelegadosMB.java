@@ -176,6 +176,7 @@ public class DelegadosMB {
 				.getExternalContext().getRequestParameterMap();
 		codigoGrupo = params.get("codGrupo");
 		desNivel = params.get("desNivel");
+		logger.info("desNivel "+desNivel);
 		try {
 			listaDelegadosEditar = delegadosService.editarAgrupacion(
 					codigoGrupo, desNivel);
