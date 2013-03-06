@@ -103,7 +103,7 @@ public class OficinaService {
 		GenericDao<TiivsOficina1, Object> service = (GenericDao<TiivsOficina1, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsOficina1.class);
-
+		filtro.setMaxResults(5000);
 		try {
 			oficinas = service.buscarDinamico(filtro);
 
@@ -173,6 +173,7 @@ public class OficinaService {
 		GenericDao<TiivsOficina1, Object> service = (GenericDao<TiivsOficina1, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsOficina1.class);
+		filtro.setMaxResults(5000);
 
 		try {
 			if(territorio.getCodTer().equals("-1") && oficina1.getCodOfi().equals("-2")){
