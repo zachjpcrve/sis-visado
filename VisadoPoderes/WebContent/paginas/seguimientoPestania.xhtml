@@ -300,7 +300,7 @@
                 header="Confirmación" severity="alert" widgetVar="confirmationNivel" >  
         
         <center>          
-        <p:commandButton id="confirmSiDicNiv" value="Si" update=":formSolicitudSeguimiento:growlSolicitudSeguimiento" oncomplete="confirmationNivel.hide()"   
+        <p:commandButton id="confirmSiDicNiv" value="Si" update=":formSolicitudSeguimiento :formSolicitudSeguimiento:growlSolicitudSeguimiento" oncomplete="confirmationNivel.hide()"   
                  action="#{consultarSolicitudMB.registrarEvaluacionNivel}"     />  
         <p:commandButton id="declineNoDicNiv" value="No" onclick="confirmationNivel.hide()" type="button" />
         </center>   
