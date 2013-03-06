@@ -262,6 +262,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		{
 			if (solicitud.getCodSoli().trim().compareTo("")!=0)
 			{
+				logger.info("Buscando solicitudes por solicitud:" +  solicitud.getCodSoli());
+				
 				if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and so.cod_soli = '" + solicitud.getCodSoli() + "'";
@@ -274,6 +276,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (cadTipoServ.trim().compareTo("")!=0)
 			{
+				logger.info("Buscando solicitudes por tipo de servicio: " + cadTipoServ);
+				
 				if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and ts.cod_tip_solic in ('" + cadTipoServ + "')";
@@ -286,6 +290,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (rangoImpG.trim().compareTo("")!=0)
 			{
+				logger.info("Buscando solicitudes por importe global: " + rangoImpG);
+				
 				if (sWhere.compareTo("")!=0)
 				{
 					if (rangoImpG.equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
@@ -350,6 +356,9 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (importeIni!=0 && importeFin != 0)
 			{
+				logger.info("Buscando solicitudes por rango importe inicio: " + importeIni);
+				logger.info("Buscando solicitudes por rango importe fin: " + importeFin);
+				
 				if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and ob.importe between " + importeIni + " and " + importeFin;
@@ -362,6 +371,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (cadEstudio.trim().compareTo("")!=0)
 			{
+				logger.info("Buscando por estudio: " + cadEstudio);
+				
 				if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and so.cod_estudio in ('" + cadEstudio + "')";
@@ -374,10 +385,13 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (dFechaInicio!=null && dFechaFin!=null)
 			{
-				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
+				DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 				
 				String tmpFecIni = formato.format(dFechaInicio);
 				String tmpFecFin = formato.format(dFechaFin);
+				
+				logger.info("Buscando por fecha de inicio: " + dFechaInicio);
+				logger.info("Buscando por fecha de fin: " + dFechaFin);
 				
 				sCadFecha = " and so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
 				
@@ -393,6 +407,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (solicitud.getMoneda().trim().compareTo("")!=0)
 			{
+				logger.info("Buscando por moneda: " + solicitud.getMoneda());
+				
 				if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and so.moneda = '" + solicitud.getMoneda() + "'";
@@ -1375,6 +1391,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer()!=null)
 			{
+				logger.info("Buscando por territorio: " + solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer());
+				
 				sWhere += " and c.cod_ter = '" + solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer() + "' ";
 			}
 			
@@ -1382,16 +1400,21 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			{
 				if (solicitud.getTiivsOficina1().getCodOfi()!=null && solicitud.getTiivsOficina1().getCodOfi().compareTo("")!=0)
 				{
+					logger.info("Buscando por oficina: " + solicitud.getTiivsOficina1().getCodOfi());
+					
 					sWhere += " and a.cod_ofi= '" + solicitud.getTiivsOficina1().getCodOfi() + "' " ; 
 				}
 			}
 			
 			if (dFechaInicio!=null && dFechaFin!=null)
 			{
-				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
+				DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 				
 				String tmpFecIni = formato.format(dFechaInicio);
 				String tmpFecFin = formato.format(dFechaFin);
+				
+				logger.info("Buscando por fecha de inicio: " + tmpFecIni);
+				logger.info("Buscando por fecha de fin: " + tmpFecFin);
 				
 				sCadFecha = " and a.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
 				
