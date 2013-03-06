@@ -323,7 +323,6 @@ public class SolicitudRegistroMB {
 
 	public void buscarPersona() {
 		logger.info("******************** buscarPersona **********************");
-		logger.info("***objTiivsPersonaBusqueda.getCodCen() "+ objTiivsPersonaBusqueda.getCodCen());
 		logger.info("***objTiivsPersonaBusqueda.getTipDoi() "+ objTiivsPersonaBusqueda.getTipDoi());
 		logger.info("***objTiivsPersonaBusqueda.getNumDoi() "	+ objTiivsPersonaBusqueda.getNumDoi());
 		try {
@@ -416,19 +415,17 @@ public class SolicitudRegistroMB {
 	}
 
 	public List<TiivsPersona> buscarPersonaLocal() throws Exception {
+		logger.info("Buscando en Persona Local");
 		boolean busco = false;
 		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
 		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
 
-		if ((objTiivsPersonaBusqueda.getCodCen() == null || objTiivsPersonaBusqueda.getCodCen().equals(""))
-				&& (objTiivsPersonaBusqueda.getTipDoi() == null || objTiivsPersonaBusqueda
-						.getTipDoi().equals(""))
-				&& (objTiivsPersonaBusqueda.getNumDoi() == null || objTiivsPersonaBusqueda
-						.getNumDoi().equals(""))) {
-			Utilitarios.mensajeInfo("INFO",
-					"Ingrese al menos un criterio de busqueda");
-
+		if ((objTiivsPersonaBusqueda.getTipDoi() == null 
+		  || objTiivsPersonaBusqueda.getTipDoi().equals(""))
+		 && (objTiivsPersonaBusqueda.getNumDoi() == null
+		  || objTiivsPersonaBusqueda.getNumDoi().equals(""))) {
+			Utilitarios.mensajeInfo("INFO","Ingrese al menos un criterio de busqueda");
 		} else if (objTiivsPersonaBusqueda.getNumDoi() == null
 				|| objTiivsPersonaBusqueda.getNumDoi().equals("")) {
 			Utilitarios.mensajeInfo("INFO", "Ingrese el Número de Doi");
@@ -436,31 +433,34 @@ public class SolicitudRegistroMB {
 				|| objTiivsPersonaBusqueda.getTipDoi().equals("")) {
 			Utilitarios.mensajeInfo("INFO", "Ingrese el Tipo de Doi");
 		} else {
-			if (objTiivsPersonaBusqueda.getTipDoi() != null
-					&& objTiivsPersonaBusqueda.getNumDoi() != null
-					&& objTiivsPersonaBusqueda.getTipDoi().compareTo("") != 0
-					&& objTiivsPersonaBusqueda.getNumDoi().compareTo("") != 0) {
-				filtro.add(Restrictions.eq("tipDoi",
-						objTiivsPersonaBusqueda.getTipDoi()));
-				filtro.add(Restrictions.eq("numDoi",
-						objTiivsPersonaBusqueda.getNumDoi()));
+			if (objTiivsPersonaBusqueda.getTipDoi().equals(ConstantesVisado.CODIGO_CENTRAL.COD_CODIGO_CENTRAL)) {
+				filtro.add(Restrictions.eq("codCen",objTiivsPersonaBusqueda.getNumDoi()));
 				busco = true;
-			}
-			if (objTiivsPersonaBusqueda.getCodCen() != null
-					&& objTiivsPersonaBusqueda.getCodCen().compareTo("") != 0) {
-				filtro.add(Restrictions.eq("codCen",objTiivsPersonaBusqueda.getCodCen()));
-				busco = true;
-			}
-			lstTiivsPersona = service.buscarDinamico(filtro);
-		
-			for (TiivsPersona tiivsPersona : lstTiivsPersona) {
-				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
-					if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
-						tiivsPersona.setsDesctipDoi(p.getDescripcion());
+				
+				lstTiivsPersona = service.buscarDinamico(filtro);
+				
+				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+							tiivsPersona.setsDesctipDoi(p.getDescripcion());
+						}
 					}
 				}
+			}else{
+				filtro.add(Restrictions.eq("tipDoi",objTiivsPersonaBusqueda.getTipDoi().trim()));
+				filtro.add(Restrictions.eq("numDoi",objTiivsPersonaBusqueda.getNumDoi().trim()));
+				busco = true;
+				
+               lstTiivsPersona = service.buscarDinamico(filtro);
+				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+							tiivsPersona.setsDesctipDoi(p.getDescripcion());
+						}
+					}
+				} 
 			}
-
+			
 			if (lstTiivsPersona.size() == 0 && busco) {
 				//Utilitarios.mensajeInfo("INFO","No se han encontrado resultados para los criterios de busqueda seleccionados");
 			}
