@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ListResourceBundle;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -22,6 +23,7 @@ import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.AgrupacionDelegadosDto;
 import com.hildebrando.visado.dto.AgrupacionNivelDelegadoDto;
 import com.hildebrando.visado.dto.ComboDto;
+import com.hildebrando.visado.dto.GrupoDto;
 import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsNivel;
@@ -59,6 +61,10 @@ public class DelegadosMB {
 	private String perfilRegistroEditar;
 	private String criterioRegistroEditar;
 
+	private int iDelegadoGrupo;
+	private String sDelegadoEstado;
+	
+	
 	public DelegadosMB() {
 		criterioRegistro = "";
 		codRegistro = "";
@@ -85,6 +91,9 @@ public class DelegadosMB {
 		listarNiveles();
 		listaDelegadosEditarEliminar = new ArrayList<TiivsMiembroNivel>();
 		listaDelegadosEditarEstado = new ArrayList<TiivsMiembroNivel>();
+		
+		iDelegadoGrupo = 0;
+		sDelegadoEstado = null;
 	}
 
 	public void listarNiveles() {
@@ -170,6 +179,10 @@ public class DelegadosMB {
 		try {
 			listaDelegadosEditar = delegadosService.editarAgrupacion(
 					codigoGrupo, desNivel);
+			
+			sDelegadoEstado = listaDelegadosEditar.get(0).getEstado();
+			iDelegadoGrupo = listaDelegadosEditar.get(0).getGrupo();
+			
 			listaDelegadosEditarCopia = listaDelegadosEditar;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -339,7 +352,7 @@ public class DelegadosMB {
 				delegado.setCodNiv(miembroNivelEditar.getCodNiv());
 				delegado.setEstadoMiembro("1");
 				delegado.setTipoRol("D");
-				delegado.setGrupo(listaDelegadosEditar.get(0).getGrupo());
+				delegado.setGrupo(iDelegadoGrupo);
 				if (codigoRepetido == false) {
 					if (nivelDiferente == false) {
 						listaDelegadosEditar.add(delegado);
@@ -432,24 +445,25 @@ public class DelegadosMB {
 
 	public void actualizarAgrupacion() throws Exception {
 		logger.info("DelegadosMB : actualizarAgrupacion");
-		Date sysDate = new Date();/*
-								 * String utilDateString =
-								 * formatear.format(sysDate);
-								 */
+		
+		Date sysDate = new Date();
 		Timestamp utilDateDate = new Timestamp(sysDate.getTime());
 		for (int i = 0; i < listaDelegadosEditarEliminar.size(); i++) {
 
 			delegadosService.actualizarAgrupacion(listaDelegadosEditarEliminar
 					.get(i));
 		}
-
 		for (int j = 0; j < listaDelegadosEditar.size(); j++) {
+			listaDelegadosEditar.get(j).setEstado(sDelegadoEstado);
+			listaDelegadosEditar.get(j).setGrupo(iDelegadoGrupo);
 			listaDelegadosEditar.get(j).setFechaRegistro(utilDateDate);
 			listaDelegadosEditar.get(j).setUsuarioRegistro(usuario.getUID());
 
 			delegadosService.actualizarAgrupacion(listaDelegadosEditar.get(j));
 		}
 		limpiarListaAgrupaciones();
+		sDelegadoEstado = null;
+		iDelegadoGrupo = 0;
 	}
 
 	public void registrarAgrupacion() throws Exception {
@@ -847,4 +861,20 @@ public class DelegadosMB {
 		this.listaDelegadosEditarEstado = listaDelegadosEditarEstado;
 	}
 
+	
+	public int getiDelegadoGrupo() {
+		return iDelegadoGrupo;
+	}
+
+	public void setiDelegadoGrupo(int iDelegadoGrupo) {
+		this.iDelegadoGrupo = iDelegadoGrupo;
+	}
+
+	public String getsDelegadoEstado() {
+		return sDelegadoEstado;
+	}
+
+	public void setsDelegadoEstado(String sDelegadoEstado) {
+		this.sDelegadoEstado = sDelegadoEstado;
+	}
 }
