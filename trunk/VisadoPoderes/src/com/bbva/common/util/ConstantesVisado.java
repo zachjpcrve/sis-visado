@@ -494,5 +494,8 @@ public class ConstantesVisado {
 		public static final String YA_EXISTE_GRUP_EVAL_ACCION_NO_PERMIT = ACCION_NO_PERMITIDA+" ya existe un grupo evaluador";
 		
 	}
+	static public class CODIGO_CENTRAL{
+		public static final String COD_CODIGO_CENTRAL = "0001";
+	}
 }
 
