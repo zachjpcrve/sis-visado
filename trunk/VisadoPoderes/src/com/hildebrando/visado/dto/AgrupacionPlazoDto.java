@@ -8,6 +8,7 @@ public class AgrupacionPlazoDto {
 	
 	private String sId;
 	private String estudio;
+	private String plazo;
 	private List<Liquidacion> lstSolAT;
 	private List<Liquidacion> lstSolFT;
 	private int subTotalDia1;
@@ -286,5 +287,11 @@ public class AgrupacionPlazoDto {
 	}
 	public void setEstudio(String estudio) {
 		this.estudio = estudio;
+	}
+	public String getPlazo() {
+		return plazo;
+	}
+	public void setPlazo(String plazo) {
+		this.plazo = plazo;
 	}
 }
