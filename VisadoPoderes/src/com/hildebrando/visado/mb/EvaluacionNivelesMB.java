@@ -56,7 +56,6 @@ public class EvaluacionNivelesMB {
 		logger.info("**************registrarEvaluacionNivel()*********************");
 			
 		String sCodUsuario = (String) usuario.getUID();
-//		String sCodUsuario = this.registroUsuario; 
 		TiivsSolicitudNivel solicitudNivel;
 		
 		String sCodigoEstadoActual = this.solicitudRegistrarT.getEstado().trim();
@@ -77,7 +76,7 @@ public class EvaluacionNivelesMB {
 			return;
 		}	
 		
-		if(!PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){ //confirmar que solo los usuarios de SSJJ pueden ser d|r
+		if(!(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))){ //confirmar que solo los usuarios de SSJJ pueden ser d|r
 			Utilitarios.mensajeInfo("INFO", ConstantesVisado.NIVELES.CAMBIO_EST_NO_PERMITIDO+"para el perfil");
 			logger.info(ConstantesVisado.NIVELES.CAMBIO_EST_NO_PERMITIDO+"para el perfil");		
 			return;
@@ -123,6 +122,10 @@ public class EvaluacionNivelesMB {
 				bRegistro = true;
 			} else if (usuarioEsMiembroDe(sCodUsuario, lstDelegados,lstGrupo)) {
 				registrarEstadoMovimientoNivel(solicitudNivel,sCodigoEstadoNuevo, sCodUsuario);
+				//Para obtener el grupo evaluador una vez se registre el estado nivel
+				if(lstGrupo.size()==0){
+					lstGrupo = obtenerGrupoEvaluador(solicitudNivel);
+				}
 				if (verificarCalificacionPorDelegados(solicitudNivel,sCodigoEstadoNuevo, lstGrupo)) {
 					String registro = iGrupoDelegados != null ? iGrupoDelegados.toString() : null;
 					logger.info("Registro Estado Solicitud Nivel: "+ registro);
@@ -135,7 +138,7 @@ public class EvaluacionNivelesMB {
 			}
 													
 		}catch(Exception e){
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al registrar: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al registrar: ", e);
 		}
 		
 		if(bRegistro){
@@ -191,9 +194,10 @@ public class EvaluacionNivelesMB {
 			Busqueda filtroMiembroNivel = Busqueda.forClass(TiivsMiembroNivel.class);
 			filtroMiembroNivel.add(Restrictions.eq("codNiv", sCodNivel));
 			filtroMiembroNivel.add(Restrictions.eq("estado", "1"));
+			filtroMiembroNivel.add(Restrictions.eq("estadoMiembro", "1"));
 			lstMiembroNivel = miembroNivelDAO.buscarDinamico(filtroMiembroNivel);
 		} catch (Exception e) {
-			lstMiembroNivel = null;
+			//lstMiembroNivel = null;
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener datos de los Responsables:" + e);
 		}        
 		
@@ -224,7 +228,7 @@ public class EvaluacionNivelesMB {
 				}
 			}						
 		}catch(Exception e){
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener obtenerGrupoEvaluador: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener obtenerGrupoEvaluador: ",e);
 		}
 		return lstGrupo;
 	}
@@ -234,7 +238,7 @@ public class EvaluacionNivelesMB {
 			return false;
 		}
 		for(TiivsMiembroNivel res : lstMiembros){
-			if(res.getTiivsMiembro().getCodMiembro().equals(sCodUsuario.trim())){
+			if(res.getTiivsMiembro()!=null && res.getTiivsMiembro().getCodMiembro().equals(sCodUsuario.trim())){
 				if(lstGrupo==null || lstGrupo.size()==0){
 					return true;
 				} else {		
@@ -327,19 +331,18 @@ public class EvaluacionNivelesMB {
 		
 		int cont;
 		int nroDelegados;
-		if(lstGrupo!=null){
-			for(Integer iGrupo : lstGrupo){
-				cont=0;
-				for(TiivsMovimientoNivel movNivel : lstMovimientoNivel){
-					if(movNivel.getGrupo().equals(iGrupo) && movNivel.getEstado().equals(sCodigoEstado)){ //movimiento nivel x grupo
-						cont++;
-					}
+		
+		for(Integer iGrupo : lstGrupo){
+			cont=0;
+			for(TiivsMovimientoNivel movNivel : lstMovimientoNivel){
+				if(movNivel.getGrupo().equals(iGrupo) && movNivel.getEstado().equals(sCodigoEstado)){ //movimiento nivel x grupo
+					cont++;
 				}
-				nroDelegados=obtenerNroDelegados(lstDelegados,iGrupo);
-				if(cont==nroDelegados && nroDelegados > 0){
-					this.iGrupoDelegados = iGrupo;
-					return true;				
-				}
+			}
+			nroDelegados=obtenerNroDelegados(lstDelegados,iGrupo);
+			if(cont==nroDelegados && nroDelegados > 0){
+				this.iGrupoDelegados = iGrupo;
+				return true;				
 			}
 		}
 		return false;
