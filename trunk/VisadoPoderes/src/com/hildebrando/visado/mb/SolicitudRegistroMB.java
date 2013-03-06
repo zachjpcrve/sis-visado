@@ -448,8 +448,7 @@ public class SolicitudRegistroMB {
 			}
 			if (objTiivsPersonaBusqueda.getCodCen() != null
 					&& objTiivsPersonaBusqueda.getCodCen().compareTo("") != 0) {
-				filtro.add(Restrictions.eq("codCen",
-						objTiivsPersonaBusqueda.getCodCen()));
+				filtro.add(Restrictions.eq("codCen",objTiivsPersonaBusqueda.getCodCen()));
 				busco = true;
 			}
 			lstTiivsPersona = service.buscarDinamico(filtro);
