@@ -26,8 +26,8 @@
 								<p:selectOneMenu id="cboTipoRegistro"
 									value="#{revocadosMB.objTiivsPersonaBusqueda.tipPartic}"
 									style="width: 120px">
-									<f:selectItems value="#{combosMB.lstTipoRegistroPersona}"
-										var="t" itemValue="#{t.key}" itemLabel="#{t.descripcion}" />
+									<f:selectItems value="#{revocadosMB.listTipoRegistro}"
+										var="t" itemValue="#{t.id.codElem}" itemLabel="#{t.valor1}" />
 									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 								</p:selectOneMenu>
 
@@ -85,9 +85,9 @@
 					</td>
 				</tr>
 			</table>
-
-			<div class="btnIzq">
-
+			
+			<h:panelGrid columns="4">
+				
 				<p:commandButton value="Nuevo"
 					actionListener="#{revocadosMB.editPendRevocadoNuevo}"
 					oncomplete="dlgApoPodPendEdit.show();" update=":frmPendEdit"
@@ -95,17 +95,21 @@
 
 				<h:outputLabel id="outLblTotal"
 					value="Total de registros: #{revocadosMB.nroRegistros} Registros" />
-
+				
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				
 				<p:commandButton value="Buscar"
 					action="#{revocadosMB.buscarRevocado}" ajax="false" update="tbl" />
-			</div>
+				
+				<h:commandLink>
+					<h:graphicImage library="images" name="excel.png" style="width : 28px; height : 23px;"/>
+					<p:dataExporter type="xls" target="tbl" fileName="Revocados" />
+				</h:commandLink>
+				
+			</h:panelGrid>
 
-			<br></br>
-			<br></br>
-			<br></br>
-			<br></br>
 
-			<p:dataTable style="width: 650px;" id="tbl" var="revocado"
+			<p:dataTable style="width: 800px;" id="tbl" var="revocado"
 				value="#{revocadosMB.revocados}" paginator="true" rows="5"
 				paginatorPosition="bottom">
 				<p:column headerText="Nro">
@@ -172,10 +176,7 @@
 				</p:column>
 			</p:dataTable>
 
-			<h:commandLink>
-				<h:graphicImage library="images" name="excel.png" />
-				<p:dataExporter type="xls" target="tbl" fileName="Revocados" />
-			</h:commandLink>
+			
 
 		</h:form>
 
@@ -216,8 +217,10 @@
 						<f:facet name="footer">
 							<p:commandButton id="btnAgregarBusqueda" value="Agregar"
 								icon="ui-icon-check"
+								ajax="true"
 								actionListener="#{revocadosMB.obtenerPersonaSeleccionada}"
-								onclick="dlgCliente.hide()" update=":frmPendEdit" />
+								onclick="dlgCliente.hide()" update=":frmPendEdit:gridMsj, :frmPendEdit:gridApodPod, 
+								:frmPendEdit:gridApodPod2, :frmPendEdit:gridApodPod3" />
 						</f:facet>
 
 					</p:dataTable>
@@ -242,7 +245,6 @@
 					<p:selectOneMenu id="cboTipoDoi"
 						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.tipDoi}"
 						style="width: 120px">
-						<f:selectItem itemLabel="Codigo Central" itemValue="" />
 						<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 							itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
 						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
@@ -251,7 +253,9 @@
 					<h:outputLabel value="Nro*: " />
 					<p:inputText styleClass="inputText"
 						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.numDoi}"
-						maxlength="13" />
+						maxlength="13" >
+						<f:validateLongRange></f:validateLongRange>
+					</p:inputText>
 
 					<p:commandButton id="btnBuscar"
 						update=":frmCliente:dtClientes, :frmPendEdit:gridMsj, 
@@ -265,7 +269,6 @@
 					<p:selectOneMenu id="cboTipoDoi2"
 						value="#{revocadosMB.objTiivsPersonaAgregar.tipDoi}"
 						style="width: 120px">
-						<f:selectItem itemLabel="Codigo Central" itemValue="" />
 						<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 							itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
 						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
@@ -274,7 +277,9 @@
 					<h:outputLabel value="Nro de DOI*: " />
 					<p:inputText styleClass="inputText"
 						value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}"
-						maxlength="13" />
+						maxlength="13">
+						<f:validateLongRange></f:validateLongRange>
+					</p:inputText>
 
 					<h:outputLabel value="C. Central: " />
 					<p:inputText styleClass="inputText"
@@ -318,7 +323,7 @@
 				<h:panelGrid columns="3">
 
 					<p:commandButton id="btnAgregar" value="Agregar"
-						icon="ui-icon-plus" update="gridMsj dtClientes"
+						icon="ui-icon-plus" update="gridMsj gridApodPod gridApodPod2 gridApodPod3 dtClientes"
 						actionListener="#{revocadosMB.agregarRevocado}" ajax="true"
 						/>
 
@@ -328,7 +333,7 @@
 						icon="ui-icon-trash"
 						actionListener="#{revocadosMB.limpiarCriteriosBusqueda}"
 						update=":frmPendEdit:gridMsj :frmPendEdit:gridApodPod :frmPendEdit:gridApodPod2 :frmPendEdit:gridApodPod3"
-						process="@form" ajax="true" />
+						ajax="true" />
 
 				</h:panelGrid>
 

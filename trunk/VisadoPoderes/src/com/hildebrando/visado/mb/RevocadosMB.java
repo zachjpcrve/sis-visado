@@ -57,30 +57,30 @@ public class RevocadosMB {
 	private Revocado revocadoVer;
 	private Revocado revocadoEdit;
 	private String nroRegistros;
-
-	//para la busqueda
+	
+	//para la busqueda principal
 	private TiivsPersona objTiivsPersonaBusqueda;
 	private TiivsPersona objTiivsPersonaBusquedaNombre;
 	private String estadoRevocado;
 	private Date fechaInicio;
 	private Date fechaFin;
 	
-	
-	
-	//la primera busqueda de los nuevos
+	//busqueda de los nuevos
 	private TiivsPersona objTiivsPersonaBusquedaDlg;
-	
 	//el resultado de la busqueda y se utilizara para agregarlo
 	private TiivsPersona objTiivsPersonaAgregar;
 	
+	
+	
+	
+	
+	
 	private TiivsPersona deletePersonaEdit;
-	
-	
-	
+
 	private List<TiivsPersona> personaClientes;
 	private List<Revocado> personaClientesActivoEdit;
 	private List<Revocado> personaClientesPendEdit;
-	private List<TiivsPersona> personaClientesPopUp;
+	
 	private List<Revocado> personaClientesVer;
 	
 	private TiivsPersona objTiivsPersonaSeleccionado;
@@ -92,7 +92,6 @@ public class RevocadosMB {
 	private TiivsPersona selectPersonaPendEdit;
 	private TiivsPersona selectPersonaActEdit;
 	
-	boolean bBooleanPopup = false;
 	private boolean flagRevocar;
 	private boolean flagGuardar;
 	
@@ -386,7 +385,7 @@ public class RevocadosMB {
 		}
 		
 		Busqueda filtro5 = Busqueda.forClass(TiivsMultitabla.class);
-		filtro5.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
+		filtro5.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA)).addOrder(Order.asc("valor1"));
 		
 		try {
 			listTipoRegistro = serviceMul.buscarDinamico(filtro5);
@@ -472,31 +471,35 @@ public class RevocadosMB {
 			List<TiivsPersona> lstTiivsPersonaLocal = new ArrayList<TiivsPersona>();
 			lstTiivsPersonaLocal = this.buscarPersonaLocal();
 			logger.info("lstTiivsPersonaLocal  "+ lstTiivsPersonaLocal.size());
+			
 			List<TiivsPersona> lstTiivsPersonaReniec = new ArrayList<TiivsPersona>();
+			
 			if (lstTiivsPersonaLocal.size() == 0) {
+				
 				lstTiivsPersonaReniec = this.buscarPersonaReniec();
+				
 				if (lstTiivsPersonaReniec.size() == 0) {
+					
 					objTiivsPersonaAgregar = new TiivsPersona();
-					this.bBooleanPopup = false;
-					 Utilitarios.mensajeInfo("INFO","No se encontro resultados para la busqueda.");
+					
+					Utilitarios.mensajeInfo("INFO","No se encontro resultados para la busqueda.");
+					
 				} else if (lstTiivsPersonaReniec.size() == 1) {
+					
 					objTiivsPersonaAgregar = lstTiivsPersonaReniec.get(0);
-					this.bBooleanPopup = false;
+					
 				} else if (lstTiivsPersonaReniec.size() > 1) {
-					this.bBooleanPopup = true;
-					personaClientesPopUp = lstTiivsPersonaReniec;
+					
+					personaDataModal = new PersonaDataModal(lstTiivsPersonaReniec);
 				}
+				
 			} else if (lstTiivsPersonaLocal.size() == 1) {
-				this.bBooleanPopup = false;
+				
 				objTiivsPersonaAgregar = lstTiivsPersonaLocal.get(0);
+				
 			} else if (lstTiivsPersonaLocal.size() > 1) {
-				this.bBooleanPopup = true;
-				personaClientesPopUp = lstTiivsPersonaLocal;
 
-				personaDataModal = new PersonaDataModal(
-						personaClientesPopUp);
-			} else {
-				this.bBooleanPopup = true;
+				personaDataModal = new PersonaDataModal(lstTiivsPersonaLocal);
 			}
 		
 		} catch (Exception e) {
@@ -508,20 +511,26 @@ public class RevocadosMB {
 	}
 	
 	public void limpiarCriteriosBusqueda() {
-		objTiivsPersonaBusquedaDlg.setCodCen("");
-		objTiivsPersonaBusquedaDlg.setTipDoi("");
-		objTiivsPersonaBusquedaDlg.setNumDoi("");
-		objTiivsPersonaAgregar.setTipDoi("");
-		objTiivsPersonaAgregar.setNumDoi("");
-		objTiivsPersonaBusquedaDlg.setCodCen("");
-		objTiivsPersonaAgregar.setApePat("");
-		objTiivsPersonaAgregar.setApeMat("");
-		objTiivsPersonaAgregar.setNombre("");
-		objTiivsPersonaAgregar.setTipPartic("");
-		objTiivsPersonaAgregar.setClasifPer("");
-		objTiivsPersonaAgregar.setClasifPerOtro("");
-		objTiivsPersonaAgregar.setEmail("");
-		objTiivsPersonaAgregar.setNumCel("");
+//		objTiivsPersonaBusquedaDlg.setCodCen("");
+//		objTiivsPersonaBusquedaDlg.setCodCen("");
+//		objTiivsPersonaAgregar.setClasifPer("");
+//		objTiivsPersonaAgregar.setClasifPerOtro("");
+//		objTiivsPersonaAgregar.setEmail("");
+//		objTiivsPersonaAgregar.setNumCel("");
+		
+		//objTiivsPersonaBusquedaDlg= new TiivsPersona();
+		objTiivsPersonaAgregar = new TiivsPersona();
+		
+		//objTiivsPersonaBusquedaDlg.setTipDoi("");
+		//objTiivsPersonaBusquedaDlg.setNumDoi("");
+		
+//		objTiivsPersonaAgregar.setTipDoi("");
+//		objTiivsPersonaAgregar.setNumDoi("");
+//		objTiivsPersonaAgregar.setCodCen("");
+//		objTiivsPersonaAgregar.setApePat("");
+//		objTiivsPersonaAgregar.setApeMat("");
+//		objTiivsPersonaAgregar.setNombre("");
+//		objTiivsPersonaAgregar.setTipPartic("");
 	}
 	
 	
@@ -675,7 +684,7 @@ public class RevocadosMB {
 			
 			personaClientesPendEdit = revocadosAux;
 			
-			
+			objTiivsPersonaAgregar = new TiivsPersona();
 		}
 		
 		
@@ -1469,15 +1478,6 @@ public class RevocadosMB {
 		this.personaClientes = personaClientes;
 	}
 
-	public List<TiivsPersona> getPersonaClientesPopUp() {
-		return personaClientesPopUp;
-	}
-
-	public void setPersonaClientesPopUp(List<TiivsPersona> personaClientesPopUp) {
-		this.personaClientesPopUp = personaClientesPopUp;
-	}
-
-
 	public TiivsPersona getSelectPersonaBusqueda() {
 		return selectPersonaBusqueda;
 	}
@@ -1549,14 +1549,6 @@ public class RevocadosMB {
 
 	public void setDeletePersonaEdit(TiivsPersona deletePersonaEdit) {
 		this.deletePersonaEdit = deletePersonaEdit;
-	}
-
-	public boolean isbBooleanPopup() {
-		return bBooleanPopup;
-	}
-
-	public void setbBooleanPopup(boolean bBooleanPopup) {
-		this.bBooleanPopup = bBooleanPopup;
 	}
 
 	public PersonaDataModal getPersonaDataModal() {
@@ -1667,9 +1659,12 @@ public class RevocadosMB {
 		this.estadoRevocado = estadoRevocado;
 	}
 
+	public List<TiivsMultitabla> getListTipoRegistro() {
+		return listTipoRegistro;
+	}
 
-
-
-	
+	public void setListTipoRegistro(List<TiivsMultitabla> listTipoRegistro) {
+		this.listTipoRegistro = listTipoRegistro;
+	}
 
 }
