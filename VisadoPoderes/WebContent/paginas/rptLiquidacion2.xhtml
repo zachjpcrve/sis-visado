@@ -1,0 +1,681 @@
+<!DOCTYPE html PUBLIC "-//W3C//Dtd XHTML 1.0 transitional//EN" "http://www.w3.org/tr/xhtml1/Dtd/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:param name="root" value="#{request.contextPath}/" />
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+		
+		<h:form id="frm">
+			<p:growl life="10000" globalOnly="false" showDetail="true" id="growl" />
+			
+			<p:spacer height="5"/>
+			
+			<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
+				<tbody>
+					<tr bordercolor="white">
+						<td><h:outputText styleClass="outputText" id="txtAnio" value="Anio"/></td>
+						<td>
+							<p:selectOneMenu id="somAnio" value="#{reportesMB.anio}" required="true" requiredMessage="Ingrese Año valido">
+								<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+								<f:selectItem itemLabel="2013" itemValue="1" />
+								<f:selectItem itemLabel="2014" itemValue="2" />
+								<f:selectItem itemLabel="2015" itemValue="3" />
+								<f:selectItem itemLabel="2016" itemValue="4" />
+							</p:selectOneMenu>
+						</td>
+						
+						<td>
+							<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio" />
+						</td>
+						<td>
+							<p:selectCheckboxMenu id="scmEstudio" label="--Todos--" value="#{reportesMB.lstEstudioSelected}" 
+								panelStyle="width:150px;" style="width:150px;">  
+						        <f:selectItems value="#{reportesMB.combosMB.estudios}" />  
+						    </p:selectCheckboxMenu>  
+						</td>
+					</tr>
+					
+					<tr bordercolor="white">
+						<td ><h:outputText styleClass="outputText" id="txtMes" value="Mes" /></td>
+						<td >
+							<p:selectOneMenu id="somMes" value="#{reportesMB.mes}" required="true" requiredMessage="Ingrese mes valido">
+								<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+								<f:selectItem itemLabel="Enero" itemValue="1" />
+								<f:selectItem itemLabel="Febrero" itemValue="2" />
+								<f:selectItem itemLabel="Marzo" itemValue="3" />
+								<f:selectItem itemLabel="Abril" itemValue="4" />
+								<f:selectItem itemLabel="Mayo" itemValue="5" />
+								<f:selectItem itemLabel="Junio" itemValue="6" />
+								<f:selectItem itemLabel="Julio" itemValue="7" />
+								<f:selectItem itemLabel="Agosto" itemValue="8" />
+								<f:selectItem itemLabel="Septiembre" itemValue="9" />
+								<f:selectItem itemLabel="Octubre" itemValue="10" />
+								<f:selectItem itemLabel="Noviembre" itemValue="11" />
+								<f:selectItem itemLabel="Diciembre" itemValue="12" />
+								
+								<p:ajax event="change" update=":frm:lblTextoAnioMes" process="@this" listener="#{reportesMB.actualizarTextoAnioMes}"/>
+							</p:selectOneMenu>
+						</td>
+					</tr>
+					
+					<tr bordercolor="white">
+						<td>
+							<p:commandButton value="Buscar" actionListener="#{reportesMB.buscarLiquidacion}" update=":frm"/>
+						</td>
+						<td>
+							<p:commandButton value="Exportar"  disabled="#{reportesMB.noHabilitarExportar}" 
+								actionListener="#{reportesMB.descargarArchivoLiquidacion}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)" >
+								<p:fileDownload value="#{reportesMB.file}" />  
+							</p:commandButton> 
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<p:spacer height="20"/>
+			
+			<h:outputLabel id="lblTextoAnioMes" value="#{reportesMB.textoAnioMes}"/>
+			
+			<p:spacer height="30"/>
+			
+			<p:panel header="Resultados" id="panelRes" style="width: 1300px" >
+				<div class="ui-datatable ui-widget">
+				<table > 
+				<tr>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>Estudio</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>Plazo</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>1</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>2</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>3</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>4</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>5</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>6</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>7</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>8</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>9</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>10</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>11</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>12</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>13</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>14</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>15</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>16</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>17</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>18</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>19</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>20</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>21</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>22</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>23</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>24</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>25</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>26</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>27</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>28</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>29</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>30</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>31</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>T. MES</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>Costo</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>Honorarios</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>Impuesto</SPAN>
+						</div>
+					</th>
+					<th class="ui-state-default">
+						<div class="ui-dt-c">
+						<SPAN>Total</SPAN>
+						</div>
+					</th>
+				</tr>
+				
+				<c:if test="${reportesMB.lstLiquidacion.size() > 0}">
+					<c:forEach items="#{reportesMB.lstLiquidacion}" var="s">
+		                  <tr class="ui-widget-content ui-datatable-even">
+		                  		<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.estudio}</SPAN>
+								 	</div>
+								</td>
+		                  		<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.plazo}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia1}</SPAN>
+								 	</div>
+							 	</td>
+							 	<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia2}</SPAN>
+								 	</div>
+							 	</td>
+							 	<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia3}</SPAN>
+								 	</div>
+							 	</td>
+							 	<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia4}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia5}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia6}</SPAN>
+								 	</div>
+							 	</td>
+							 	<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia7}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia8}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia9}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia10}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia11}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia12}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia13}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia14}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia15}</SPAN>
+								 	</div>
+							 	</td>
+							 	<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia16}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia17}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia18}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia19}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia21}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia21}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia22}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia23}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia24}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia25}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia26}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia27}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia28}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia29}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia30}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalDia31}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{s.subTotalMes}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{n.costo}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{n.honorarios}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{n.impuesto}</SPAN>
+								 	</div>
+								</td>
+								<td>
+								 	<div class="ui-dt-c">
+								 		 <SPAN>#{n.gTotal}</SPAN>
+								 	</div>
+								</td>						
+		                  </tr>
+				</c:forEach>
+				</c:if>
+				<c:otherwise>
+					<tr class="ui-widget-content ui-datatable-even">
+					<td >
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							<SPAN></SPAN>
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+					<td>
+						<div class="ui-dt-c">
+							
+						</div>
+					</td>
+				</tr>
+				</c:otherwise>				
+			</table>
+			</div>
+			</p:panel>
+		</h:form>  
+		
+	</ui:define>
+</ui:composition>
+
+</html>

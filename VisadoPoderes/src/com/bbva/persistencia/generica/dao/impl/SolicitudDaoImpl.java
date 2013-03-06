@@ -555,6 +555,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	@SuppressWarnings("unchecked")
 	public List<AgrupacionPlazoDto> obtenerLiquidacion (String cadEstudio, int anio, int mes, double impuesto) throws Exception
 	{
+		logger.info("En el obtenerLiquidacion");
+		
 		List<Liquidacion> tmpListaAT = new ArrayList<Liquidacion>();
 		List<Liquidacion> tmpListaFT = new ArrayList<Liquidacion>();
 		List<AgrupacionPlazoDto> tmpLista = new ArrayList<AgrupacionPlazoDto>();
@@ -565,7 +567,6 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		
 		int sumaAT=0;
 		int sumaFT=0;
-		int contFxEstudio=1;
 		
 		//boolean bAgregar=false;
 		
@@ -581,16 +582,19 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		{
 			if (cadEstudio.compareTo("")!=0)
 			{
+				logger.info("Buscando por estudio: " + cadEstudio );
 				sWhere += " and so.cod_estudio in ('" + cadEstudio + "') ";
 			}
 			
 			if (anio!=0)
 			{
+				logger.info("Buscando por anio: " + anio );
 				sWhere += " and to_char(hst.fecha, 'YYYY')= '" + anio  + "' " ;
 			}
 			
 			if (mes!=0)
 			{
+				logger.info("Buscando por mes: " + mes );
 				sWhere += " and to_char(hst.fecha, 'MM')= '0" + mes  + "' " ;
 			}
 			
@@ -1094,6 +1098,370 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 							total += tmpFT.getTotal();
 						}
 					}
+				}
+				
+				subTotales.setSubTotalDia1(totalDia1);
+				subTotales.setSubTotalDia2(totalDia2);
+				subTotales.setSubTotalDia3(totalDia3);
+				subTotales.setSubTotalDia4(totalDia4);
+				subTotales.setSubTotalDia5(totalDia5);
+				subTotales.setSubTotalDia6(totalDia6);
+				subTotales.setSubTotalDia7(totalDia7);
+				subTotales.setSubTotalDia8(totalDia8);				
+				subTotales.setSubTotalDia9(totalDia9);
+				subTotales.setSubTotalDia10(totalDia10);
+				subTotales.setSubTotalDia11(totalDia11);
+				subTotales.setSubTotalDia12(totalDia12);
+				subTotales.setSubTotalDia13(totalDia13);
+				subTotales.setSubTotalDia14(totalDia14);
+				subTotales.setSubTotalDia15(totalDia15);
+				subTotales.setSubTotalDia16(totalDia16);	
+				subTotales.setSubTotalDia17(totalDia17);
+				subTotales.setSubTotalDia18(totalDia18);
+				subTotales.setSubTotalDia19(totalDia19);
+				subTotales.setSubTotalDia20(totalDia20);
+				subTotales.setSubTotalDia21(totalDia21);
+				subTotales.setSubTotalDia22(totalDia22);
+				subTotales.setSubTotalDia23(totalDia23);
+				subTotales.setSubTotalDia24(totalDia24);
+				subTotales.setSubTotalDia25(totalDia25);
+				subTotales.setSubTotalDia26(totalDia26);
+				subTotales.setSubTotalDia27(totalDia27);
+				subTotales.setSubTotalDia28(totalDia28);
+				subTotales.setSubTotalDia29(totalDia29);
+				subTotales.setSubTotalDia30(totalDia30);
+				subTotales.setSubTotalDia31(totalDia31);
+				subTotales.setSubTotalMes(totalMes);
+				subTotales.setCosto(costo);
+				subTotales.setHonorarios(honorarios);
+				subTotales.setImpuesto(imp);
+				subTotales.setgTotal(total);				
+				
+				tmpLista.add(subTotales);
+				logger.info("Tamanio Lista Final:" + tmpLista.size());
+			}
+		}
+		
+		return tmpLista;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<AgrupacionPlazoDto> obtenerLiquidacion_2 (String cadEstudio, int anio, int mes, double impuesto) throws Exception
+	{
+		logger.info("En el obtenerLiquidacion");
+		
+		List<AgrupacionPlazoDto> tmpLista = new ArrayList<AgrupacionPlazoDto>();
+		
+		String sWhere = "";
+		String sql = "";
+		String estudio = "";
+		
+		int suma=0;
+		
+		if (cadEstudio != null && anio!=0 && mes!= 0)
+		{
+			if (cadEstudio.compareTo("")!=0)
+			{
+				logger.info("Buscando por estudio: " + cadEstudio );
+				sWhere += " and so.cod_estudio in ('" + cadEstudio + "') ";
+			}
+			
+			if (anio!=0)
+			{
+				logger.info("Buscando por anio: " + anio );
+				sWhere += " and to_char(hst.fecha, 'YYYY')= '" + anio  + "' " ;
+			}
+			
+			if (mes!=0)
+			{
+				logger.info("Buscando por mes: " + mes );
+				sWhere += " and to_char(hst.fecha, 'MM')= '0" + mes  + "' " ;
+			}
+			
+			sql= "SELECT des_estudio,costo,dia_atencion, filtro, COUNT(filtro) contador " + 
+				"FROM (select es.des_estudio, to_char(hst.fecha,'dd') dia_atencion, es.costo, " +
+				"case when to_char(hst.fecha,'dd')<to_char(so.fecha_respuesta,'dd') then 'A' else 'B' END AS FILTRO " +
+				"from tiivs_solicitud so " +
+				"join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
+				"left join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+				"join tiivs_miembro m on hst.reg_usuario = m.cod_miembro " +
+				"where so.estado in ('0003','0009','0004','0017','0012','0010','0013','0015','0008') and hst.estado in ('0003','0009','0004') " + sWhere +
+				"order by so.cod_estudio) A "  +
+				"group by DES_ESTUDIO,dia_atencion,filtro,costo order by des_estudio";
+			
+			logger.info("SQL : "+sql);
+			 
+			final String sSQL=sql;
+			
+			AgrupacionPlazoDto objAgrp;
+			 
+			List ResultList = (ArrayList<Liquidacion>)getHibernateTemplate().execute(new HibernateCallback() 
+			{
+				public List<Object> doInHibernate(Session session) throws HibernateException 
+				{
+					SQLQuery sq =session.createSQLQuery(sSQL);
+					return sq.list();
+				}
+			});
+
+			if(ResultList.size()>0)
+			{
+				for(int i=0;i<=ResultList.size()-1;i++)
+				{
+				     Object[] row =  (Object[]) ResultList.get(i);
+				     objAgrp = new AgrupacionPlazoDto();
+				    
+				     if (!row[0].toString().equals(estudio))
+				     {
+				    	objAgrp.setEstudio(row[0].toString());
+				    	estudio=row[0].toString();
+				     }
+				    
+				     if (row[3].toString().equals("A"))
+				     {
+				    	objAgrp.setPlazo("A tiempo");
+				     }
+				     else
+				     {
+				    	objAgrp.setPlazo("Retrazo");
+				     }
+				    
+				     String dia = row[2].toString();
+				    
+				     if (dia.equals("01"))
+			    	 {
+				    	objAgrp.setSubTotalDia1(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("02"))
+			    	 {
+			    		 objAgrp.setSubTotalDia2(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("03"))
+			    	 {
+			    		 objAgrp.setSubTotalDia3(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("04"))
+			    	 {
+			    		 objAgrp.setSubTotalDia4(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("05"))
+			    	 {
+			    		 objAgrp.setSubTotalDia5(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("06"))
+			    	 {
+			    		 objAgrp.setSubTotalDia6(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("07"))
+			    	 {
+			    		 objAgrp.setSubTotalDia7(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("08"))
+			    	 {
+			    		 objAgrp.setSubTotalDia8(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("09"))
+			    	 {
+			    		 objAgrp.setSubTotalDia9(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("10"))
+			    	 {
+			    		 objAgrp.setSubTotalDia10(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("11"))
+			    	 {
+			    		 objAgrp.setSubTotalDia11(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("12"))
+			    	 {
+			    		 objAgrp.setSubTotalDia12(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("13"))
+			    	 {
+			    		 objAgrp.setSubTotalDia13(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("14"))
+			    	 {
+			    		 objAgrp.setSubTotalDia14(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("15"))
+			    	 {
+			    		 objAgrp.setSubTotalDia15(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("16"))
+			    	 {
+			    		 objAgrp.setSubTotalDia16(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("17"))
+			    	 {
+			    		 objAgrp.setSubTotalDia17(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("18"))
+			    	 {
+			    		 objAgrp.setSubTotalDia18(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("19"))
+			    	 {
+			    		 objAgrp.setSubTotalDia19(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("20"))
+			    	 {
+			    		 objAgrp.setSubTotalDia20(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("21"))
+			    	 {
+			    		 objAgrp.setSubTotalDia21(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("22"))
+			    	 {
+			    		 objAgrp.setSubTotalDia22(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("23"))
+			    	 {
+			    		 objAgrp.setSubTotalDia23(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("24"))
+			    	 {
+			    		 objAgrp.setSubTotalDia24(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("25"))
+			    	 {
+			    		 objAgrp.setSubTotalDia25(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("26"))
+			    	 {
+			    		 objAgrp.setSubTotalDia26(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("27"))
+			    	 {
+			    		 objAgrp.setSubTotalDia27(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("28"))
+			    	 {
+			    		 objAgrp.setSubTotalDia28(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("29"))
+			    	 {
+			    		 objAgrp.setSubTotalDia29(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("30"))
+			    	 {
+			    		 objAgrp.setSubTotalDia30(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 if (dia.equals("31"))
+			    	 {
+			    		 objAgrp.setSubTotalDia31(Integer.valueOf(row[4].toString())); 
+					 }
+			    	 
+			    	 suma=	objAgrp.getSubTotalDia1() + objAgrp.getSubTotalDia2() + objAgrp.getSubTotalDia3()
+			    		 		+ objAgrp.getSubTotalDia4() + objAgrp.getSubTotalDia5() + objAgrp.getSubTotalDia6()
+			    				+ objAgrp.getSubTotalDia7() + objAgrp.getSubTotalDia8() + objAgrp.getSubTotalDia9()
+			    				+ objAgrp.getSubTotalDia10() + objAgrp.getSubTotalDia11() + objAgrp.getSubTotalDia12()
+			    				+ objAgrp.getSubTotalDia13() + objAgrp.getSubTotalDia14() + objAgrp.getSubTotalDia15()
+			    				+ objAgrp.getSubTotalDia16() + objAgrp.getSubTotalDia17() + objAgrp.getSubTotalDia18()
+			    				+ objAgrp.getSubTotalDia19() + objAgrp.getSubTotalDia20() + objAgrp.getSubTotalDia21()
+			    				+ objAgrp.getSubTotalDia22() + objAgrp.getSubTotalDia23() + objAgrp.getSubTotalDia24()
+			    				+ objAgrp.getSubTotalDia25() + objAgrp.getSubTotalDia26() + objAgrp.getSubTotalDia27()
+			    				+ objAgrp.getSubTotalDia28() + objAgrp.getSubTotalDia29() + objAgrp.getSubTotalDia30()
+			    				+ objAgrp.getSubTotalDia31();
+				    	 
+			    	 objAgrp.setCosto(Double.valueOf(row[1].toString()));
+			    	 objAgrp.setSubTotalMes(suma);
+			    	 objAgrp.setHonorarios(objAgrp.getSubTotalMes()*objAgrp.getCosto());
+			    	 objAgrp.setImpuesto(objAgrp.getHonorarios()*impuesto);
+			    	 objAgrp.setgTotal(objAgrp.getHonorarios()+objAgrp.getImpuesto());
+					
+					 //Agregar agrupacion
+				     String id = String.valueOf(i);
+				     objAgrp.setsId(id);
+				    
+				     if (suma>0)
+				     {
+				    	tmpLista.add(objAgrp);
+				     }
+				}
+							 
+				logger.info("Tamanio Lista:" + tmpLista.size());
+				
+				AgrupacionPlazoDto subTotales=new AgrupacionPlazoDto();
+				subTotales.setsId("");
+				subTotales.setEstudio("Totales:");
+				
+				int totalDia1=0;
+				int totalDia2=0;
+				int totalDia3=0;
+				int totalDia4=0;
+				int totalDia5=0;
+				int totalDia6=0;
+				int totalDia7=0;
+				int totalDia8=0;
+				int totalDia9=0;
+				int totalDia10=0;
+				int totalDia11=0;
+				int totalDia12=0;
+				int totalDia13=0;
+				int totalDia14=0;
+				int totalDia15=0;
+				int totalDia16=0;
+				int totalDia17=0;
+				int totalDia18=0;
+				int totalDia19=0;
+				int totalDia20=0;
+				int totalDia21=0;
+				int totalDia22=0;
+				int totalDia23=0;
+				int totalDia24=0;
+				int totalDia25=0;
+				int totalDia26=0;
+				int totalDia27=0;
+				int totalDia28=0;
+				int totalDia29=0;
+				int totalDia30=0;
+				int totalDia31=0;
+				int totalMes=0;
+				double costo = 0.0;
+				double honorarios = 0.0;
+				double imp = 0.0;
+				double total = 0.0;
+				
+				for (AgrupacionPlazoDto tmp: tmpLista)
+				{
+					totalDia1 += tmp.getSubTotalDia1();
+					totalDia2 += tmp.getSubTotalDia2(); 
+					totalDia3 += tmp.getSubTotalDia3(); 
+					totalDia4 += tmp.getSubTotalDia4();
+					totalDia5 += tmp.getSubTotalDia5();
+					totalDia6 += tmp.getSubTotalDia6(); 
+					totalDia7 += tmp.getSubTotalDia7(); 
+					totalDia8 += tmp.getSubTotalDia8(); 
+					totalDia9 += tmp.getSubTotalDia9(); 
+					totalDia10 += tmp.getSubTotalDia10();
+					totalDia11 += tmp.getSubTotalDia11();
+					totalDia12 += tmp.getSubTotalDia12();
+					totalDia13 += tmp.getSubTotalDia13();
+					totalDia14 += tmp.getSubTotalDia14();
+					totalDia15 += tmp.getSubTotalDia15();
+					totalDia16 += tmp.getSubTotalDia16();
+					totalDia17 += tmp.getSubTotalDia17();
+					totalDia18 += tmp.getSubTotalDia18();
+					totalDia19 += tmp.getSubTotalDia19();
+					totalDia20 += tmp.getSubTotalDia20();
+					totalDia21 += tmp.getSubTotalDia21();
+					totalDia22 += tmp.getSubTotalDia22();
+					totalDia23 += tmp.getSubTotalDia23();
+					totalDia24 += tmp.getSubTotalDia24();
+					totalDia25 += tmp.getSubTotalDia25();
+					totalDia26 += tmp.getSubTotalDia26();
+					totalDia27 += tmp.getSubTotalDia27();
+					totalDia28 += tmp.getSubTotalDia28();
+					totalDia29 += tmp.getSubTotalDia29();
+					totalDia30 += tmp.getSubTotalDia30();
+					totalDia31 += tmp.getSubTotalDia31();
+					totalMes += tmp.getSubTotalMes();
+					costo += tmp.getCosto();
+					honorarios += tmp.getHonorarios() ;
+					imp += tmp.getImpuesto() ;
+					total += tmp.getgTotal();
 				}
 				
 				subTotales.setSubTotalDia1(totalDia1);

@@ -370,7 +370,7 @@ public class ReportesMB
 		}		
 		
 		try {
-			this.lstLiquidacion = solicitudService.obtenerLiquidacion(cadEstudio, pAnio, mes,impuesto);
+			this.lstLiquidacion = solicitudService.obtenerLiquidacion_2(cadEstudio, pAnio, mes,impuesto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -807,8 +807,8 @@ public class ReportesMB
 			filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaIni,dFechaFin));*/
 			
 			logger.info("Filtrando por fecha de registro");
-			DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
-			DateFormat formato = new SimpleDateFormat("dd/MM/yy");
+			DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss");
+			DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 			
 			String tmpFecIni = formato.format(getFechaInicio());
 			String tmpFecFin = formato.format(getFechaFin());
@@ -2555,7 +2555,7 @@ public class ReportesMB
 						Utilitarios.crearCell(wb, row, 0, HSSFCellStyle.ALIGN_LEFT,HSSFCellStyle.VERTICAL_CENTER, tmp2.getCodSoli(), true, false,true,HSSFColor.DARK_BLUE.index);
 						
 						//Columna Estado en Excel
-						Utilitarios.crearCell(wb, row, 1, HSSFCellStyle.ALIGN_LEFT,HSSFCellStyle.VERTICAL_CENTER, buscarEstadoxCodigo(seg.getEstado()), true, false,true,HSSFColor.DARK_BLUE.index);
+						Utilitarios.crearCell(wb, row, 1, HSSFCellStyle.ALIGN_LEFT,HSSFCellStyle.VERTICAL_CENTER, seg.getEstado(), true, false,true,HSSFColor.DARK_BLUE.index);
 						
 						//Columna Nivel en Excel
 						Utilitarios.crearCell(wb, row, 2, HSSFCellStyle.ALIGN_LEFT,HSSFCellStyle.VERTICAL_CENTER, seg.getNivel(), true, false,true,HSSFColor.DARK_BLUE.index);
