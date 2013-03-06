@@ -267,12 +267,12 @@ public class CombosMB {
 			}
 			
 		}
-		if(lstTipoDocumentosExtra.size()!=0){
-		lstTipoDocumentos.add(lstTipoDocumentosExtra.get(0));
+		if(lstTipoDocumentosExtra.size()!=0)
+			lstTipoDocumentos.add(lstTipoDocumentosExtra.get(0));
 		for (int i= 0 ; i< lstTipoDocumentosExtra2.size(); i++){
 			lstTipoDocumentos.add(lstTipoDocumentosExtra2.get(i));
 		}
-		}
+		
 /*		logger.debug("Tamanio lista de Clasificacion de Personas: "+ lstClasificacionPersona.size());
 		logger.debug("Tamanio lista de Tipo de Registro de Personas: "+ lstTipoRegistroPersona.size());
 		logger.debug("Tamanio lista de importes: "+ lstRangosImporte.size());

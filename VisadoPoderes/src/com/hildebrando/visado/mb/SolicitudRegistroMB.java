@@ -246,10 +246,10 @@ public class SolicitudRegistroMB {
 			Utilitarios.mensajeInfo("", sMensaje);
 			return "";
 		} finally {
-
-			fichTemp.deleteOnExit(); // Delete the file when the
-			// JVM terminates
-
+			if(fichTemp!=null){
+				fichTemp.deleteOnExit(); // Delete the file when the
+				// JVM terminates
+			}
 			if (canalSalida != null) {
 				try {
 					canalSalida.close();
