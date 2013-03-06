@@ -2586,7 +2586,31 @@ public class SeguimientoMB
 				String estado = h.getEstado();
 				if(estado!=null)
 					seg.setEstado(buscarEstadoxCodigo(estado.trim()));
-				seg.setNivel("");
+				
+				
+				String desEstadoNivel = "";
+				String desRolNivel = "";
+				Integer iCodNivel = 0;
+				String descripcionNivel = "";
+
+				if (h.getNivel() != null) {
+					if (h.getNivelRol() != null && h.getNivelRol().trim().equals(ConstantesVisado.CODIGO_CAMPO_TIPO_ROL_RESPONSABLE)) {
+						desRolNivel = "Responsable";
+					}
+					if (h.getNivelRol() != null && h.getNivelRol().trim().equals(ConstantesVisado.CODIGO_CAMPO_TIPO_ROL_DELEGADO)) {
+						desRolNivel = "Delegado";
+					}
+					if (h.getNivelEstado() != null && h.getNivelEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_Desaprobado_T09)) {
+						desEstadoNivel = ConstantesVisado.ESTADOS.ESTADO_Desaprobado_T09;
+					}
+					if (h.getNivelEstado() != null && h.getNivelEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_Aprobado_T09)) {
+						desEstadoNivel = ConstantesVisado.ESTADOS.ESTADO_Aprobado_T09;
+					}
+					iCodNivel = Integer.parseInt(h.getNivel());
+					descripcionNivel = "Nivel " + iCodNivel + " " + desRolNivel + ": " + desEstadoNivel;
+				}
+				
+				seg.setNivel(descripcionNivel);
 				seg.setFecha(h.getFecha());
 				seg.setUsuario(h.getNomUsuario());
 				seg.setRegUsuario(h.getRegUsuario());
