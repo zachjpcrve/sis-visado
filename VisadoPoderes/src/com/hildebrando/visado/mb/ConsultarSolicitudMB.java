@@ -1641,6 +1641,8 @@ public class ConsultarSolicitudMB {
 			this.registrarHistorial(solicitudRegistrarT);
 			this.obtenerHistorialSolicitud();
 			this.seguimientoMB.busquedaSolicitudes();
+			
+			this.actualizarEstadoReservadoSolicitud();//
 		}
 	}
 
