@@ -1187,7 +1187,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (dFechaInicio!=null && dFechaFin!=null)
 			{
-				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
+				DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 				
 				String tmpFecIni = formato.format(dFechaInicio);
 				String tmpFecFin = formato.format(dFechaFin);
