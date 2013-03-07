@@ -817,7 +817,7 @@
 		<h:panelGrid columns="3">			
 			 <h:outputText  id="outCodCentral" value="Código Central:" />
 			 <h:inputText styleClass="inputTextPopup" id="txtCodCentral"
-			             size="8" maxlength="7"  onkeypress="return validaNumero(event,'0',this,'0');" 
+			             size="9" maxlength="8"  onkeypress="return validaNumero(event,'0',this,'0');" 
 			             onblur="validaNumero(event,'0',this,'1');" value="#{consultarSolicitudMB.objTiivsPersonaResultado.codCen}" />
 			<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtCodCentral" />
 			<p:tooltip for="tooltxtCodCentral" value="Código Central" showEffect="slide" />
