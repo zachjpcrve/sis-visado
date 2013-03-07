@@ -528,6 +528,7 @@ public class ConsultarSolicitudMB {
 	}
 	
 	private String getRedirectDetalleSolicitud(){
+		logger.info("Estado de la solicitud :: " +this.solicitudRegistrarT.getEstado());
 		String redirect = "";		
 		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)) {
 			redirect = "/faces/paginas/solicitudEdicion.xhtml";
@@ -1537,8 +1538,8 @@ public class ConsultarSolicitudMB {
 							}
 						}
 					}
-				}else{
-					logger.info("El importe no  supero el rango de inicio . " +lstNiveles.get(lstNiveles.size() - 1).getRangoFin());
+					}else{
+					logger.info("El importe no  supero el rango de inicio . " );
 					//lstCodNivel.add("SPRI");
 				}
 
