@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" language="groovy" pageWidth="542" pageHeight="795" columnWidth="472" leftMargin="50" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0245201830476058"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="51"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<field name="numeroSolicitud" class="java.lang.String"/>
 	<field name="instrucciones" class="java.lang.String"/>
@@ -40,13 +40,6 @@
 	<pageHeader>
 		<band height="52">
 			<staticText>
-				<reportElement x="8" y="22" width="251" height="20"/>
-				<textElement>
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[Atencion: Solicitud de revisión de poderes N°]]></text>
-			</staticText>
-			<staticText>
 				<reportElement mode="Transparent" x="8" y="0" width="43" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left">
 					<font size="10" isBold="false"/>
@@ -54,11 +47,11 @@
 				<text><![CDATA[Señor:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="253" y="22" width="140" height="20"/>
+				<reportElement x="8" y="22" width="385" height="20"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{numeroSolicitud}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Atencion: Solicitud de revisión de poderes N° " + $F{numeroSolicitud}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="51" y="0" width="404" height="20"/>
@@ -90,7 +83,7 @@ Atentamente,                        ]]></text>
 				<textElement markup="html">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones} + "   "]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="8" y="6" width="447" height="74"/>
