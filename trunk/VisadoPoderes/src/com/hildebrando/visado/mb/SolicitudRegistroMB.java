@@ -433,7 +433,7 @@ public class SolicitudRegistroMB {
 				|| objTiivsPersonaBusqueda.getTipDoi().equals("")) {
 			Utilitarios.mensajeInfo("INFO", "Ingrese el Tipo de Doi");
 		} else {
-			if (objTiivsPersonaBusqueda.getTipDoi().equals(ConstantesVisado.CODIGO_CENTRAL.COD_CODIGO_CENTRAL)) {
+			if (objTiivsPersonaBusqueda.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CODIGO_CENTRAL)) {
 				filtro.add(Restrictions.eq("codCen",objTiivsPersonaBusqueda.getNumDoi()));
 				busco = true;
 				
@@ -612,8 +612,7 @@ public class SolicitudRegistroMB {
 				+ objTiivsPersonaResultado.getTipPartic());
 		boolean bResult = true;
 		String sMensaje = "";
-		logger.info("objTiivsPersonaResultado.getClasifPer() " + objTiivsPersonaResultado.getClasifPer());
-		
+		logger.info("objTiivsPersonaResultado.getClasifPer() "+ objTiivsPersonaResultado.getClasifPer());
 		if (objTiivsPersonaResultado.getTipDoi().equals("")) {
 			sMensaje = "Seleccione el Tipo de Documento";
 			bResult = false;
@@ -623,6 +622,23 @@ public class SolicitudRegistroMB {
 			sMensaje = "Ingrese el Número de Doi";
 			bResult = false;
 			Utilitarios.mensajeInfo("INFO", sMensaje);
+		}else{
+			if (!objTiivsPersonaResultado.getTipDoi().equals("")) {
+				bResult=validarTipoDocumentos();
+				}
+		}
+		if (objTiivsPersonaResultado.getNombre() == null
+				|| objTiivsPersonaResultado.getNombre().equals("")) {
+			sMensaje = "Ingrese el Nombre";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+		}
+		if(objTiivsPersonaResultado.getCodCen()!=""){
+		if(objTiivsPersonaResultado.getCodCen().length()!=8){
+			sMensaje = "El código central debe ser de 8 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+		}
 		}
 		if (objTiivsPersonaResultado.getClasifPer() == null
 				|| objTiivsPersonaResultado.getClasifPer().equals("")) {
@@ -630,12 +646,12 @@ public class SolicitudRegistroMB {
 			bResult = false;
 			Utilitarios.mensajeInfo("INFO", sMensaje);
 		}
-		if(!objTiivsPersonaResultado.getEmail().equals("")){
-		if(!Utilitarios.validateEmail(objTiivsPersonaResultado.getEmail())){
-			sMensaje = "Ingrese un email valido";
-			bResult = false;
-			Utilitarios.mensajeInfo("INFO", sMensaje);
-		}
+		if (!objTiivsPersonaResultado.getEmail().equals("")) {
+			if (!Utilitarios.validateEmail(objTiivsPersonaResultado.getEmail())) {
+				sMensaje = "Ingrese un email valido";
+				bResult = false;
+				Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
 		}
 		if ((objTiivsPersonaResultado.getTipPartic() == null || objTiivsPersonaResultado
 				.getTipPartic().equals(""))) {
@@ -658,11 +674,51 @@ public class SolicitudRegistroMB {
 				}
 			}
 		}
+		logger.info("bResult " +bResult);
 
 		return bResult;
 
 	}
-
+	
+	public boolean 	validarTipoDocumentos() {
+		logger.info("***************** validarTipoDocumentos ********************* ");
+		boolean bResult = true;
+		String sMensaje = "";
+		if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CODIGO_CENTRAL)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=8){
+			sMensaje = "El Número de documento debe ser de 8 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}else if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.CODIGO_C_U_S_P_P)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=11){
+			sMensaje = "El código CUSPP debe ser de 11 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}else if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_RUC)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=11){
+			sMensaje = "El Ruc debe ser de 11 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}else if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_RUC_ANTIGUO)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=8){
+			sMensaje = "El Ruc Antiguo debe ser de 8 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}else if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_DNI)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=8){
+			sMensaje = "El Dni debe ser de 8 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}
+			
+		
+		return bResult;
+	}
 
   public void agregarActionListenerAgrupacion(){
 	  logger.info("********************** agregarActionListenerAgrupacion ********************* " );
