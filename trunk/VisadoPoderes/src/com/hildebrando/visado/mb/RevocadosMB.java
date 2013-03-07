@@ -53,7 +53,7 @@ public class RevocadosMB {
 	public static Logger logger = Logger.getLogger(RevocadosMB.class);
 
 	private List<Revocado> revocados;
-	private Revocado revocado;
+	private Revocado revocadoDelete;
 	private Revocado revocadoVer;
 	private Revocado revocadoEdit;
 	private String nroRegistros;
@@ -507,6 +507,33 @@ public class RevocadosMB {
 			e.printStackTrace();
 		}
 		
+		
+	}
+	
+	public void deleteCombinacion(ActionEvent event){
+		
+		logger.info("********************** deleteCombinacion *********************************** ");
+		
+		List<TiivsRevocado> tiivsrevocados= new ArrayList<TiivsRevocado>();
+		List<TiivsRevocado> tiivsrevocados2= new ArrayList<TiivsRevocado>();
+		
+		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
+		String codAgrup= getRevocadoDelete().getCodAgrupacion();
+		
+		try {
+			filtro.add(Restrictions.eq("codAgrup", Integer.parseInt(codAgrup)));
+			tiivsrevocados = service.buscarDinamico(filtro);
+			
+			for(TiivsRevocado revocado:tiivsrevocados){
+				service.eliminar(revocado);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		buscarRevocado();
 		
 	}
 	
@@ -1100,6 +1127,8 @@ public class RevocadosMB {
 			logger.debug("error al inactivar revocados!" + e.toString());
 		}
 		
+		buscarRevocado();
+		
 	}
 	
 	public List<TiivsPersona> completePersona(String query) {
@@ -1392,16 +1421,7 @@ public class RevocadosMB {
 		System.out.print("guardar");
 		return "/faces/paginas/bandejaRevocados.xhtml";
 	}
-
 	
-
-	public Revocado getRevocado() {
-		return revocado;
-	}
-
-	public void setRevocado(Revocado revocado) {
-		this.revocado = revocado;
-	}
 
 	public String getNroRegistros() {
 		Integer nReg;
@@ -1665,6 +1685,14 @@ public class RevocadosMB {
 
 	public void setListTipoRegistro(List<TiivsMultitabla> listTipoRegistro) {
 		this.listTipoRegistro = listTipoRegistro;
+	}
+
+	public Revocado getRevocadoDelete() {
+		return revocadoDelete;
+	}
+
+	public void setRevocadoDelete(Revocado revocadoDelete) {
+		this.revocadoDelete = revocadoDelete;
 	}
 
 }
