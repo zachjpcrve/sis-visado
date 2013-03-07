@@ -104,9 +104,11 @@
 					}
 				}
 				//Dejar la línea de patron que se necesite y borrar el resto             
-				//patron = /[A-Za-záéíóúÁÉÍÓÚñÑ]/; // Solo acepta letras             
+				patron = /[A-Za-z0-9áéíóúÁÉÍÓÚñÑ]/; // Solo acepta letras             
+				//patron = /[0-9]/;
+				//patron = /^[0-9a-zA-Z]*$/;
 				//patron = /\d/; // Solo acepta números             
-				patron = /\w/; // Acepta números y letras             
+				//patron = /\w/; // Acepta números y letras             
 				//patron = /\D/; // No acepta números             
 				//
 				te = String.fromCharCode(tecla);
@@ -157,7 +159,7 @@
 					<tr>
 						<td><h:outputText value="Codigo de Barras  " /></td>
 						<td><p:inputText id="txtCodigoBarras" onkeypress="return validaLetraNumero(event,'0',this,'0');"
-								onblur="validaLetraTilde(event,'0',this,'1');"
+								onblur="validaLetraNumero(event,'0',this,'1');"
 								value="#{documentoTiivsMB.documento.codBarra}" maxlength="20" /></td>
 					</tr>
 					<tr>
