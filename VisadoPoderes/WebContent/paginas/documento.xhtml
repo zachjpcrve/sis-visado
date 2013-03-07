@@ -14,8 +14,9 @@
 				<table>
 					<tr>
 						<td><h:outputText value="Documento:  " /></td>
-						<td><p:selectOneMenu
+						<td><p:selectOneMenu disabled="#{documentoMB.bEditar}"
 								value="#{documentoMB.tipoSolicDocumento.id.codDoc}">
+								    <f:selectItem itemLabel="Seleccione un Documento" itemValue="-1" />  
 								<f:selectItems value="#{documentoMB.listaDocumentos}"
 									itemLabel="#{d.descripcion}" itemValue="#{d.codDocumento}"
 									var="d"></f:selectItems>
@@ -23,8 +24,9 @@
 					</tr>
 					<tr>
 						<td><h:outputText value="Tipo de Solicitud:  " /></td>
-						<td><p:selectOneMenu
+						<td><p:selectOneMenu disabled="#{documentoMB.bEditar}"
 								value="#{documentoMB.tipoSolicDocumento.id.codTipoSolic}">
+								<f:selectItem itemLabel="Seleccione un Tipo de Solicitud" itemValue="-1" />  
 								<f:selectItems value="#{documentoMB.tipoSolicitud}"
 									itemLabel="#{t.desTipServicio}" itemValue="#{t.codTipSolic}"
 									var="t"></f:selectItems>
@@ -66,10 +68,10 @@
 					<p:column headerText="Codigo">
 						<h:outputText value="#{doc.tiivsDocumento.codDocumento}" />
 					</p:column>
-					<p:column headerText="Descripcion">
+					<p:column headerText="Documento">
 						<h:outputText value="#{doc.tiivsDocumento.descripcion}" />
 					</p:column>
-					<p:column headerText="Tipo de Documento">
+					<p:column headerText="Tipo de Solicitud">
 						<h:outputText value="#{doc.tiivsTipoSolicitud.desTipServicio}" />
 					</p:column>
 					<p:column headerText="Obligatorio">
