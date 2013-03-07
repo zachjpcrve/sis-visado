@@ -1879,6 +1879,8 @@ public class ConsultarSolicitudMB {
 	}
 
 	public void registrarEvaluacionNivel() {
+		logger.info("this.solicitudRegistrarT.getObs():" + this.solicitudRegistrarT.getObs());
+		evaluacionNivelesMB = new EvaluacionNivelesMB(solicitudRegistrarT);
 		evaluacionNivelesMB.registrarEvaluacionNivel(sCodigoEstadoNivel);
 		try {
 			this.actualizarEstadoReservadoSolicitud();
