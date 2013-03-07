@@ -229,7 +229,7 @@ public class RespNivelAprobacionMB {
 		if(respNiveles!=null && respNiveles.size()>0){
 			for(int i=0;i <=respNiveles.size(); i++ ){
 				if(logger.isDebugEnabled()){
-					logger.debug("==>  ID:"+respNiveles.get(i).getId()+"  Registro:"+respNiveles.get(i).getRegistro());
+					//logger.debug("==>  ID:"+respNiveles.get(i).getId()+"  Registro:"+respNiveles.get(i).getRegistro());
 				}
 			}	
 		}
