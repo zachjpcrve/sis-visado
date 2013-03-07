@@ -13,7 +13,7 @@
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
 
-		<h:form>
+		<h:form  id="frmConsRev">
 
 			<table>
 				<tr>
@@ -21,7 +21,7 @@
 						<fieldset>
 							<legend class="fielset">CONSULTA DE REVOCADOS</legend>
 
-							<h:panelGrid columns="8" style="width: 800px">
+							<h:panelGrid columns="9" style="width: 800px">
 								<h:outputLabel value="Tipo de Registro: " />
 								<p:selectOneMenu id="cboTipoRegistro"
 									value="#{revocadosMB.objTiivsPersonaBusqueda.tipPartic}"
@@ -42,9 +42,12 @@
 								</p:selectOneMenu>
 
 								<h:outputLabel value="Nro de DOI: " />
-								<p:inputText styleClass="inputText"
+								<p:inputText id="txtNroDoi" styleClass="inputText"
 									value="#{revocadosMB.objTiivsPersonaBusqueda.numDoi}"
-									maxlength="13" />
+									validatorMessage="Numero requerido">
+									<f:validateLongRange minimum="1" maximum="99999999"></f:validateLongRange>
+								</p:inputText>
+								<p:message for="txtNroDoi" ></p:message>
 
 								<h:outputLabel value="Nombre: " />
 								<p:autoComplete completeMethod="#{revocadosMB.completePersona}"
@@ -95,8 +98,6 @@
 
 				<h:outputLabel id="outLblTotal"
 					value="Total de registros: #{revocadosMB.nroRegistros} Registros" />
-				
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				
 				<p:commandButton value="Buscar"
 					action="#{revocadosMB.buscarRevocado}" ajax="false" update="tbl" />
@@ -166,10 +167,10 @@
 				<p:column headerText="Eliminar">
 
 					<p:commandButton id="idDel"
-						action="#{revocadosMB.deleteCombinacion}"
 						rendered="#{revocado.flagDelete}" icon="ui-icon-closethick"
+						oncomplete="cfdEliminar.show();"
 						title="Eliminar Combinación">
-						<f:setPropertyActionListener target="#{revocadosMB.revocado}"
+						<f:setPropertyActionListener target="#{revocadosMB.revocadoDelete}"
 							value="#{revocado}"></f:setPropertyActionListener>
 					</p:commandButton>
 
@@ -253,8 +254,8 @@
 					<h:outputLabel value="Nro*: " />
 					<p:inputText styleClass="inputText"
 						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.numDoi}"
-						maxlength="13" >
-						<f:validateLongRange></f:validateLongRange>
+						validatorMessage="Numero requerido">
+						<f:validateLongRange minimum="1" maximum="99999999"></f:validateLongRange>
 					</p:inputText>
 
 					<p:commandButton id="btnBuscar"
@@ -277,8 +278,8 @@
 					<h:outputLabel value="Nro de DOI*: " />
 					<p:inputText styleClass="inputText"
 						value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}"
-						maxlength="13">
-						<f:validateLongRange></f:validateLongRange>
+						validatorMessage="Numero requerido">
+						<f:validateLongRange minimum="1" maximum="99999999"></f:validateLongRange>
 					</p:inputText>
 
 					<h:outputLabel value="C. Central: " />
@@ -313,8 +314,8 @@
 					<p:selectOneMenu id="cboTipoRegistro"
 						value="#{revocadosMB.objTiivsPersonaAgregar.tipPartic}"
 						style="width: 120px">
-						<f:selectItems value="#{combosMB.lstTipoRegistroPersona}" var="t"
-							itemValue="#{t.key}" itemLabel="#{t.descripcion}" />
+						<f:selectItems value="#{revocadosMB.listTipoRegistro}" 
+						var="t" itemValue="#{t.id.codElem}" itemLabel="#{t.valor1}" />
 						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 					</p:selectOneMenu>
 
@@ -512,7 +513,7 @@
 				<h:panelGrid columns="1" id="gridBtn">
 
 					<p:commandButton id="btnInactivar" value="Inactivar"
-						update=":frmActEdit:dtClientes"
+						update=":frmActEdit:dtClientes, :frmConsRev:tbl"
 						actionListener="#{revocadosMB.inactivarCombinacion}" ajax="true"
 						process="@form" oncomplete="dlgApoPodActEdit.hide();"/>
 				</h:panelGrid>
@@ -669,6 +670,27 @@
 				</p:commandButton>
 
 				<p:commandButton value="No" onclick="cfdGuardar.hide();">
+				</p:commandButton>
+				
+			</h:form>
+			
+		</p:confirmDialog>
+		
+		<p:confirmDialog widgetVar="cfdEliminar"
+			message="¿Está seguro de eliminar la combinación? "
+			header="Mensaje de Información" appendToBody="true"
+			showEffect="explode" hideEffect="explode" severity="alert"
+			modal="true">
+			
+			<h:form>
+				<p:commandButton value="Sí" process=":frmConsRev:tbl"
+					actionListener="#{revocadosMB.deleteCombinacion}" 
+					ajax="true"
+					update=":frmConsRev:tbl"
+					oncomplete="cfdEliminar.hide();">
+				</p:commandButton>
+
+				<p:commandButton value="No" onclick="cfdEliminar.hide();">
 				</p:commandButton>
 				
 			</h:form>
