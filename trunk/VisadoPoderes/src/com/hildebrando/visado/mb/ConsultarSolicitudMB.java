@@ -1503,7 +1503,7 @@ public class ConsultarSolicitudMB {
 	            		 
 				List<TiivsNivel> lstNiveles = service.buscarDinamico(filtro);
 				 for (TiivsNivel z : lstNiveles) {
-					 logger.info("************** NIVEL   : " +z.getCodNiv());
+					 logger.info("************** NIVEL   : " +z.getCodNiv() + " rango inicio " +z.getRangoInicio() + "rango fin" +z.getRangoFin());
 				    }
 				logger.info("************** lstNiveles  : " +lstNiveles.size());
 				logger.info("************** solicitud.getImporte(): " +solicitud.getImporte());
@@ -1529,8 +1529,8 @@ public class ConsultarSolicitudMB {
 						}
 					}
 				}else{
-					logger.info("El importe supero el rango de inicio . " +lstNiveles.get(lstNiveles.size() - 1).getRangoFin());
-					lstCodNivel.add("SPRI");
+					logger.info("El importe no  supero el rango de inicio . " +lstNiveles.get(lstNiveles.size() - 1).getRangoFin());
+					//lstCodNivel.add("SPRI");
 				}
 
 		return lstCodNivel;
@@ -1938,9 +1938,9 @@ public class ConsultarSolicitudMB {
 			
 			for (TiivsSolicitudAgrupacion a : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				conuntNumAgru=a.getId().getNumGrupo();
-				logger.info("conuntNumAgru : " +conuntNumAgru);
+				logger.info("conuntNumAgru ****** : " +conuntNumAgru);
 				lstAgrupacionPersona=a.getTiivsAgrupacionPersonas();
-				logger.info("lstAgrupacionPersona : " +lstAgrupacionPersona.size());
+				logger.info(" - lstAgrupacionPersona  -: " +lstAgrupacionPersona.size());
 				int contPoderdante=0, contApoderado=0;
 				for (TiivsAgrupacionPersona xa : lstAgrupacionPersona) {
 					if(xa.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
@@ -2169,7 +2169,7 @@ public class ConsultarSolicitudMB {
 					logger.debug("Tamanio agrupaciones: " + x1.getTiivsAgrupacionPersonas().size());
 					TiivsPersona personaTemporal=null;
 					for (TiivsAgrupacionPersona b :x1.getTiivsAgrupacionPersonas()) 
-				    { logger.info("b.getTiivsPersona() "+b.getTiivsPersona());
+				    { logger.info("b.getTiivsPersona()::::::: "+b.getTiivsPersona().getCodPer());
 				      personaTemporal=b.getTiivsPersona();
 					  objPersonaRetorno=servicePers.insertarMerge(personaTemporal);
 					  logger.info("Codigo de la persona a Insertar : "+objPersonaRetorno.getCodPer());
@@ -3482,7 +3482,7 @@ public class ConsultarSolicitudMB {
 			bResult = false;
 			Utilitarios.mensajeInfo("INFO", sMensaje);
 		}
-		if(objTiivsPersonaResultado.getCodCen()!=""){
+		if(!objTiivsPersonaResultado.getCodCen().isEmpty()){
 		if(objTiivsPersonaResultado.getCodCen().length()!=8){
 			sMensaje = "El código central debe ser de 8 caracteres";
 			bResult = false;
@@ -3578,25 +3578,21 @@ public class ConsultarSolicitudMB {
 				for (ComboDto p : combosMB.getLstTipoRegistroPersona()) {
 					if (objTiivsPersonaResultado.getTipPartic().equals(p.getKey())) {objTiivsPersonaResultado.setsDesctipPartic(p.getDescripcion());}}
 				for (ComboDto p : combosMB.getLstClasificacionPersona()) {
-					if (objTiivsPersonaResultado.getClasifPer().equals(p.getKey())) {
-						objTiivsPersonaResultado.setsDescclasifPer(p.getDescripcion());
-					}
-					if (objTiivsPersonaResultado.getClasifPer().equals("99")) {
-						objTiivsPersonaResultado.setsDescclasifPer(objTiivsPersonaResultado.getClasifPerOtro());
-					}
+					if (objTiivsPersonaResultado.getClasifPer().equals(p.getKey())) {objTiivsPersonaResultado.setsDescclasifPer(p.getDescripcion());}
+					if (objTiivsPersonaResultado.getClasifPer().equals("99")) {objTiivsPersonaResultado.setsDescclasifPer(objTiivsPersonaResultado.getClasifPerOtro());}
 				}
 				
 				/** Se agrega a la lista de personas en la grilla*/
 				
 				if (!flagUpdatePersona) {
 					lstTiivsPersona.add(objTiivsPersonaResultado);
-					
 				} else {
 					// update
 					logger.info("Index Update: " + indexUpdatePersona);
 					this.lstTiivsPersona.set(indexUpdatePersona,objTiivsPersonaResultado);
 					flagUpdatePersona = false;
 				}
+				logger.info("Tamanio de la lista PersonaResultado " +lstTiivsPersonaResultado.size());
 				personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
 				logger.info("tamanio de personaDataModal  en el metodo agregar ::::: " +personaDataModal.getRowCount());
 				objTiivsPersonaResultado = new TiivsPersona();
