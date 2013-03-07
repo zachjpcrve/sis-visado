@@ -181,11 +181,12 @@
 
 		</h:form>
 
+<h:form id="frmCliente">
+
 		<!-- Buscar Clientes -->
 		<p:dialog widgetVar="dlgCliente" modal="true" id="idDlgCliente"
+			visible="#{revocadosMB.bBooleanPopup}"
 			header="Buscar Cliente/Nro cliente">
-
-			<h:form id="frmCliente">
 
 				<h:panelGrid columns="1" id="gridMsj">
 					<p:messages globalOnly="true" />
@@ -220,15 +221,16 @@
 								icon="ui-icon-check"
 								ajax="true"
 								actionListener="#{revocadosMB.obtenerPersonaSeleccionada}"
-								onclick="dlgCliente.hide()" update=":frmPendEdit:gridMsj, :frmPendEdit:gridApodPod, 
+								onclick="dlgCliente.hide()" update=":frmPendEdit:gridApodPod, 
 								:frmPendEdit:gridApodPod2, :frmPendEdit:gridApodPod3" />
 						</f:facet>
 
 					</p:dataTable>
 				</p:outputPanel>
-			</h:form>
 
 		</p:dialog>
+
+			</h:form>
 
 		<!-- Pendiente/Editar -->
 		<p:dialog widgetVar="dlgApoPodPendEdit" modal="true" id="idDlgApoPod"
@@ -240,26 +242,28 @@
 					<p:messages globalOnly="true"  showDetail="true" />
 				</h:panelGrid>
 
-				<h:panelGrid columns="11" id="gridApodPod">
+				<h:panelGrid columns="12" id="gridApodPod">
 
 					<h:outputLabel value="T.DOI/ C.Central*: " />
 					<p:selectOneMenu id="cboTipoDoi"
 						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.tipDoi}"
 						style="width: 120px">
+						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 						<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 							itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
-						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+						
 					</p:selectOneMenu>
 
 					<h:outputLabel value="Nro*: " />
-					<p:inputText styleClass="inputText"
+					<p:inputText id="txtNumDoi" styleClass="inputText"
 						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.numDoi}"
 						validatorMessage="Numero requerido">
-						<f:validateLongRange minimum="1" maximum="99999999"></f:validateLongRange>
+						<f:validateLongRange minimum="1" maximum="999999999"></f:validateLongRange>
 					</p:inputText>
+					<p:message for="txtNumDoi"></p:message>
 
 					<p:commandButton id="btnBuscar"
-						update=":frmCliente:dtClientes, :frmPendEdit:gridMsj, 
+						update=":frmCliente, 
 						:frmPendEdit:gridApodPod, :frmPendEdit:gridApodPod2, 
 						:frmPendEdit:gridApodPod3"
 						icon="ui-icon-seek-next" oncomplete="dlgCliente.show();"
@@ -270,16 +274,15 @@
 					<p:selectOneMenu id="cboTipoDoi2"
 						value="#{revocadosMB.objTiivsPersonaAgregar.tipDoi}"
 						style="width: 120px">
+						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 						<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 							itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
-						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+						
 					</p:selectOneMenu>
 
 					<h:outputLabel value="Nro de DOI*: " />
 					<p:inputText styleClass="inputText"
-						value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}"
-						validatorMessage="Numero requerido">
-						<f:validateLongRange minimum="1" maximum="99999999"></f:validateLongRange>
+						value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}">
 					</p:inputText>
 
 					<h:outputLabel value="C. Central: " />
@@ -333,7 +336,7 @@
 					<p:commandButton id="btnLimpiar" value="Limpiar"
 						icon="ui-icon-trash"
 						actionListener="#{revocadosMB.limpiarCriteriosBusqueda}"
-						update=":frmPendEdit:gridMsj :frmPendEdit:gridApodPod :frmPendEdit:gridApodPod2 :frmPendEdit:gridApodPod3"
+						update=":frmPendEdit:gridApodPod :frmPendEdit:gridApodPod2 :frmPendEdit:gridApodPod3"
 						ajax="true" />
 
 				</h:panelGrid>
