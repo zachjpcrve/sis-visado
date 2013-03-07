@@ -402,7 +402,7 @@ public class CombosMB {
 		// Carga combo de Estudios
 		GenericDao<TiivsEstudio, Object> estudioDAO = (GenericDao<TiivsEstudio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroEstudio = Busqueda.forClass(TiivsEstudio.class);
-
+		filtroEstudio.add(Restrictions.eq("activo", '1'));
 		try {
 			lstEstudio = estudioDAO.buscarDinamico(filtroEstudio);
 		} catch (Exception e) {
