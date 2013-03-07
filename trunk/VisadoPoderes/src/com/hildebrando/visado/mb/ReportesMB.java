@@ -822,7 +822,10 @@ public class ReportesMB
 			logger.info("Fecha de inicio:" + dFechaIni);
 			logger.info("Fecha de Fin:" + dFechaFin);
 			
-			filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaIni,dFechaFin));
+			//filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaIni,dFechaFin));
+			
+			filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaIni));
+			filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaFin));
 		}
 				
 		//Busqueda por estado de la solicitud

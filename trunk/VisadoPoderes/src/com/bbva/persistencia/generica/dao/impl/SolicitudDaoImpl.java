@@ -385,7 +385,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (dFechaInicio!=null && dFechaFin!=null)
 			{
-				DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
 				
 				String tmpFecIni = formato.format(dFechaInicio);
 				String tmpFecFin = formato.format(dFechaFin);
@@ -393,15 +393,15 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				logger.info("Buscando por fecha de inicio: " + dFechaInicio);
 				logger.info("Buscando por fecha de fin: " + dFechaFin);
 				
-				sCadFecha = " and so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+				//sCadFecha = " and so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
 				
 				if (sWhere.compareTo("")!=0)
 				{
-					sWhere += sCadFecha;
+					sWhere += " and TO_CHAR(so.fecha,'DD-MON-YYYY') between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
 				}
 				else
 				{
-					sWhere = "where so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+					sWhere = "where TO_CHAR(so.fecha,'DD-MON-YYYY') between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
 				}
 			}
 			
@@ -1555,7 +1555,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (dFechaInicio!=null && dFechaFin!=null)
 			{
-				DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
 				
 				String tmpFecIni = formato.format(dFechaInicio);
 				String tmpFecFin = formato.format(dFechaFin);
@@ -1565,11 +1565,11 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				
 				if (sWhere.compareTo("")!=0)
 				{
-					sWhere += " and so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+					sWhere += " and TO_CHAR(so.fecha,'DD-MON-YYYY') between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
 				}
 				else
 				{
-					sWhere = " where so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+					sWhere = " where TO_CHAR(so.fecha,'DD-MON-YYYY') between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
 				}				
 			}
 			
@@ -1776,7 +1776,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (dFechaInicio!=null && dFechaFin!=null)
 			{
-				DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
 				
 				String tmpFecIni = formato.format(dFechaInicio);
 				String tmpFecFin = formato.format(dFechaFin);
@@ -1784,7 +1784,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				logger.info("Buscando por fecha de inicio: " + tmpFecIni);
 				logger.info("Buscando por fecha de fin: " + tmpFecFin);
 				
-				sCadFecha = " and a.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+				sCadFecha = " and TO_CHAR(a.fecha,'DD-MON-YYYY') between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
 				
 				sWhere += sCadFecha;
 			}
