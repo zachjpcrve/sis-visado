@@ -368,7 +368,7 @@ public class SolicitudRegistroMB {
 		objTiivsPersonaBusqueda.setNumDoi("");
 		objTiivsPersonaResultado.setTipDoi("");
 		objTiivsPersonaResultado.setNumDoi("");
-		objTiivsPersonaBusqueda.setCodCen("");
+		objTiivsPersonaResultado.setCodCen("");
 		objTiivsPersonaResultado.setApePat("");
 		objTiivsPersonaResultado.setApeMat("");
 		objTiivsPersonaResultado.setNombre("");
@@ -633,7 +633,7 @@ public class SolicitudRegistroMB {
 			bResult = false;
 			Utilitarios.mensajeInfo("INFO", sMensaje);
 		}
-		if(objTiivsPersonaResultado.getCodCen()!=""){
+		if(!objTiivsPersonaResultado.getCodCen().isEmpty()){
 		if(objTiivsPersonaResultado.getCodCen().length()!=8){
 			sMensaje = "El código central debe ser de 8 caracteres";
 			bResult = false;
