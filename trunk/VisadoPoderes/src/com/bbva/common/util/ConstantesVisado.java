@@ -494,8 +494,12 @@ public class ConstantesVisado {
 		public static final String YA_EXISTE_GRUP_EVAL_ACCION_NO_PERMIT = ACCION_NO_PERMITIDA+" ya existe un grupo evaluador";
 		
 	}
-	static public class CODIGO_CENTRAL{
+	static public class TIPOS_DOCUMENTOS_DOI{
 		public static final String COD_CODIGO_CENTRAL = "0001";
+		public static final String CODIGO_C_U_S_P_P = "0013";
+		public static final String COD_RUC = "0003";
+		public static final String COD_DNI = "0016";
+		public static final String COD_RUC_ANTIGUO = "0009";
 	}
 }
 
