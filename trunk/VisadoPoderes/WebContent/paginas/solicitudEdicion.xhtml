@@ -34,7 +34,7 @@
 									action="#{consultarSolicitudMB.registrarSolicitud}" 
 									actionListener="#{consultarSolicitudMB.registrarSolicitudBorrador}"
 									oncomplete="return cargarMultipleFTP();"
-									/>
+									ajax="false"/>
 					
 					<p:commandButton value="Enviar" id="btnEnviar3"  
 						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>
