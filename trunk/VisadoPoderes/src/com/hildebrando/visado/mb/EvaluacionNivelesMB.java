@@ -354,10 +354,11 @@ public class EvaluacionNivelesMB {
 		String sRegUsuario = this.usuario.getUID();
 		String sNomUsuario = this.usuario.getNombre() + ' ' + this.usuario.getApellido1() + ' '	+ this.usuario.getApellido2();
 		String sCodSoli = solicitud.getCodSoli();
-		String sEstado = solicitud.getEstado();
+		String sEstado = solicitud.getEstado();		
 		String sNivel = sCodNivel;
 		String sEstadoNivel = sCodEstadoNivel;
 		String sRolNivel = sCodRolNivel;
+		String sObs = solicitud.getObs();
 		
 		if(logger.isInfoEnabled()){
 			logger.info("Registro:" + sRegUsuario);
@@ -368,6 +369,7 @@ public class EvaluacionNivelesMB {
 			logger.info("sEstadoNivel:" + sEstadoNivel);
 			logger.info("sRolNivel:" + sRolNivel);
 			logger.info("tsFechaRegistro:" + tsFechaRegistro);
+			logger.info("sObs:" + sObs);
 			logger.info("******************registrarHistorialSolicitud()*****************************");
 		}
 		
@@ -392,6 +394,7 @@ public class EvaluacionNivelesMB {
 		objHistorial.setNivel(sNivel);
 		objHistorial.setNivelEstado(sEstadoNivel);
 		objHistorial.setNivelRol(sRolNivel);
+		objHistorial.setObs(sObs);
 		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		serviceHistorialSolicitud.insertar(objHistorial);
 	}
