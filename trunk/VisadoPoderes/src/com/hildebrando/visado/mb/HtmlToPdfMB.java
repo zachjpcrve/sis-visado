@@ -104,18 +104,17 @@ public class HtmlToPdfMB {
 			renderer.createPDF(os);
 			os.close();
 			
+			InputStream stream = ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream(File.separator + ConstantesVisado.FILES + File.separator + nameFile);			
+	        this.file = new DefaultStreamedContent(stream, CONTENT_TYPE, estado_obs+"_Observacion.pdf");        
+	        logger.info("[Archivo final]: " + file);
+			
 		} catch (Exception ex) {
-			logger.info(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al generar el PDF: "+ex);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al generar el PDF: ", ex);
 		} finally {
 			if(fileTemp!=null){
-			fileTemp.deleteOnExit();
+				fileTemp.deleteOnExit();
 			}
-		}
-		
-		InputStream stream = ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream(File.separator + ConstantesVisado.FILES + File.separator + nameFile);			
-        this.file = new DefaultStreamedContent(stream, CONTENT_TYPE, estado_obs+"_Observacion.pdf");        
-        logger.info("[Archivo final]: " + file);
-        
+		}		
         logger.info("===== saliendo de generarPdfListener() ======");
 	}
 
