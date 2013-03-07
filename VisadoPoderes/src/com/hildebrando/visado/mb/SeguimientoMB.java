@@ -1602,7 +1602,8 @@ public class SeguimientoMB
 				logger.info("Fecha Inicio: " + dateIni);
 				logger.info("Fecha Fin: " + dateFin);
 				
-				filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_RPTA, dateIni,	dateFin));
+				filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_RPTA, dateIni));
+				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_RPTA, dateFin));
 
 				List<String> tmpEstados = new ArrayList<String>();
 				tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
