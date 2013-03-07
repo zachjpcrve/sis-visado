@@ -30,7 +30,8 @@ public class DocumentoMB {
 	private boolean bValor4;
 	private boolean bMsgActualizar;
 	private boolean bValidacion;
-
+	private boolean bEditar;
+	
 	public DocumentoMB() {
 		TiivsDocumento documento = new TiivsDocumento();
 		TiivsTipoSolicitud tipoSol = new TiivsTipoSolicitud();
@@ -44,6 +45,7 @@ public class DocumentoMB {
 		bValor4 = false;
 		bMsgActualizar = false;
 		bValidacion = false;
+		bEditar = false;
 		documentoService = new DocumentoService();
 		
 		
@@ -124,35 +126,45 @@ public class DocumentoMB {
 	public void registrar() {
 		logger.info("DocumentoMB : Registrar");
 		boolean validacion;
-		
-		validacion =validarRegistro(tipoSolicDocumento.getId().getCodDoc(), tipoSolicDocumento.getId().getCodTipoSolic());
-		try{
-			
-			if (isbValor4() == true) {
-				tipoSolicDocumento.setObligatorio(ConstantesVisado.VALOR4_OBLIGATORIO_SI);
-				} else {
-					tipoSolicDocumento.setObligatorio(ConstantesVisado.VALOR4_OBLIGATORIO_NO);
-				}
-				documentoService.registrar(tipoSolicDocumento);
-				if (validacion == false) {
-					Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
-				} else {
-					Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
-				}
+		if(tipoSolicDocumento.getId().getCodDoc().equals("-1")){
+
+			Utilitarios.mensajeError("Error", "Debe Seleccionar un Documento");
+		}else{
+			if(tipoSolicDocumento.getId().getCodTipoSolic().equals("-1")){
+				Utilitarios.mensajeError("Error", "Debe Seleccionar un Tipo de Solicitud");
+			}else{
 				
-				/*documento = new TiivsDocumento();*/
-				setbValor4(false);
-			/*	TiivsMultitablaId documentoId = new TiivsMultitablaId();
-				documento.setId(documentoId);*/
-			/*	obtenerMaximo();*/
-				bMsgActualizar = false;
-				bValidacion = false;
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.error("DocumentoMB :" + e.getLocalizedMessage());
-				Utilitarios
-						.mensajeError("Error", "Error al registrar el Documento");
-			}		
+				validacion =validarRegistro(tipoSolicDocumento.getId().getCodDoc(), tipoSolicDocumento.getId().getCodTipoSolic());
+				try{
+					
+					if (isbValor4() == true) {
+						tipoSolicDocumento.setObligatorio(ConstantesVisado.VALOR4_OBLIGATORIO_SI);
+						} else {
+							tipoSolicDocumento.setObligatorio(ConstantesVisado.VALOR4_OBLIGATORIO_NO);
+						}
+
+						documentoService.registrar(tipoSolicDocumento);
+					
+						if (validacion == false) {
+							Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
+						} else {
+							Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
+						}
+						
+					
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+						logger.error("DocumentoMB :" + e.getLocalizedMessage());
+						Utilitarios
+								.mensajeError("Error", "Error al registrar el Documento");
+					}		
+			}
+		}
+		setbValor4(false);
+		bMsgActualizar = false;
+		bValidacion = false;
+		limpiarCampos();
 	}
 
 	private boolean validarRegistro(String codDoc, String codTipoSolic) {
@@ -189,6 +201,7 @@ public class DocumentoMB {
 		tipoSolicDocumento.setId(tipoSolcDocumentoId);
 		tipoSolicDocumento.setTiivsDocumento(documento);
 		tipoSolicDocumento.setTiivsTipoSolicitud(tipoSol);
+		setbEditar(false);
 	}
 	
 
@@ -217,6 +230,7 @@ public class DocumentoMB {
 				bValor4 = false;
 			}
 			bMsgActualizar = true;
+			bEditar = true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("DocumentoMB : listarDocumentos: "
@@ -303,6 +317,13 @@ public class DocumentoMB {
 	public void setDocumentoService(DocumentoService documentoService) {
 		this.documentoService = documentoService;
 	}
-	
+
+	public boolean isbEditar() {
+		return bEditar;
+	}
+
+	public void setbEditar(boolean bEditar) {
+		this.bEditar = bEditar;
+	}
 	
 }

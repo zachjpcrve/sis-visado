@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -49,6 +50,32 @@ public class DocumentoService<E> {
 		}
 
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void actualizar(TiivsTipoSolicDocumento documento) {
+		logger.info("DocumentoService : actualizar");
+		GenericDao<TiivsTipoSolicDocumento, Object> service = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+
+		documento.setTiivsDocumento(new TiivsDocumento(documento.getId()
+				.getCodDoc()));
+		documento.setTiivsTipoSolicitud(new TiivsTipoSolicitud(documento
+				.getId().getCodTipoSolic()));
+
+		if (documento.getDesActivo().equals("1")) {
+			documento.setActivo(estadoSi);
+		} else {
+			documento.setActivo(estadoNo);
+		}
+		try {
+			service.modificar(documento);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("DocumentoService : actualizar: "
+					+ ex.getLocalizedMessage());
+		}
+
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<TiivsTipoSolicDocumento> listarDocumentos() {
@@ -59,7 +86,7 @@ public class DocumentoService<E> {
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsTipoSolicDocumento.class);
 		try {
-			documentos = service.buscarDinamico(filtro);
+			documentos = service.buscarDinamico(filtro.addOrder(Order.asc("id.codTipoSolic")));
 			for (int i = 0; i < documentos.size(); i++) {
 
 				if (documentos.get(i).getObligatorio()
@@ -199,10 +226,10 @@ public class DocumentoService<E> {
 		boolean validacion = false;
 		int contador = 0;
 
-		List<TiivsDocumento> secuencial = new ArrayList<TiivsDocumento>();
-		GenericDao<TiivsDocumento, Object> service = (GenericDao<TiivsDocumento, Object>) SpringInit
+		List<TiivsTipoSolicDocumento> secuencial = new ArrayList<TiivsTipoSolicDocumento>();
+		GenericDao<TiivsTipoSolicDocumento, Object> service = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsDocumento.class);
+		Busqueda filtro = Busqueda.forClass(TiivsTipoSolicDocumento.class);
 		try {
 			secuencial = service.buscarDinamico(filtro
 					.add(Restrictions.eq("id.codDoc", codDoc))
@@ -211,7 +238,7 @@ public class DocumentoService<E> {
 
 			List<E> parse = new ArrayList<E>();
 			parse = (List<E>) secuencial;
-			contador = (Integer) parse.get(0);
+			contador = Integer.parseInt(parse.get(0).toString());
 			if (contador == 0) {
 				validacion = true;
 			} else {

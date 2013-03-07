@@ -123,7 +123,7 @@ public class DocumentoTiivsService {
 
 			List<E> parse = new ArrayList<E>();
 			parse = (List<E>) existe;
-			contador = (Integer) parse.get(0);
+			contador = Integer.parseInt(parse.get(0).toString());
 			if (contador == 0) {
 				validacion = true;
 			} else {
