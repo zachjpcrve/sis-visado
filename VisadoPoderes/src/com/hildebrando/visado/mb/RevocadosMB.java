@@ -72,7 +72,7 @@ public class RevocadosMB {
 	
 	
 	
-	
+	boolean bBooleanPopup = false;
 	
 	
 	private TiivsPersona deletePersonaEdit;
@@ -481,25 +481,27 @@ public class RevocadosMB {
 				if (lstTiivsPersonaReniec.size() == 0) {
 					
 					objTiivsPersonaAgregar = new TiivsPersona();
-					
+					this.bBooleanPopup = false;
 					Utilitarios.mensajeInfo("INFO","No se encontro resultados para la busqueda.");
 					
 				} else if (lstTiivsPersonaReniec.size() == 1) {
-					
+					this.bBooleanPopup = false;
 					objTiivsPersonaAgregar = lstTiivsPersonaReniec.get(0);
 					
 				} else if (lstTiivsPersonaReniec.size() > 1) {
-					
+					this.bBooleanPopup = true;
 					personaDataModal = new PersonaDataModal(lstTiivsPersonaReniec);
 				}
 				
 			} else if (lstTiivsPersonaLocal.size() == 1) {
-				
+				this.bBooleanPopup = false;
 				objTiivsPersonaAgregar = lstTiivsPersonaLocal.get(0);
 				
 			} else if (lstTiivsPersonaLocal.size() > 1) {
-
+				this.bBooleanPopup = true;
 				personaDataModal = new PersonaDataModal(lstTiivsPersonaLocal);
+			} else {
+				this.bBooleanPopup = true;
 			}
 		
 		} catch (Exception e) {
@@ -545,7 +547,7 @@ public class RevocadosMB {
 //		objTiivsPersonaAgregar.setEmail("");
 //		objTiivsPersonaAgregar.setNumCel("");
 		
-		//objTiivsPersonaBusquedaDlg= new TiivsPersona();
+		objTiivsPersonaBusquedaDlg= new TiivsPersona();
 		objTiivsPersonaAgregar = new TiivsPersona();
 		
 		//objTiivsPersonaBusquedaDlg.setTipDoi("");
@@ -1516,6 +1518,14 @@ public class RevocadosMB {
 
 	public TiivsPersona getSelectPersonaActEdit() {
 		return selectPersonaActEdit;
+	}
+	
+	public boolean isbBooleanPopup() {
+		return bBooleanPopup;
+	}
+
+	public void setbBooleanPopup(boolean bBooleanPopup) {
+		this.bBooleanPopup = bBooleanPopup;
 	}
 
 	public void setSelectPersonaActEdit(TiivsPersona selectPersonaActEdit) {
