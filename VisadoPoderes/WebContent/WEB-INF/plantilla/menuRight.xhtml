@@ -23,13 +23,13 @@
   <p:tieredMenu style="width:140px"> 
   		<p:submenu label="Registros" icon="ui-icon-pencil">
       		<p:menuitem icon="ui-icon-pencil" value="Solicitud Visado" url="/faces/paginas/solicitud.xhtml" 
-      		 onclick="activador();" ajax="false" update=":formSolicitudRegistro">
-      		
+      		 onclick="activador();" ajax="false" update=":formSolicitudRegistro">      		
       		  </p:menuitem>
       		<p:menuitem icon="ui-icon-pencil" value="Calculadora" url="/faces/paginas/calculadoraComision.xhtml"></p:menuitem>
   		</p:submenu>
   		<p:submenu label="Consultas" icon="ui-icon-pencil">
-  			<p:menuitem icon="ui-icon-pencil" value="Solicitudes" url="/faces/paginas/bandejaSeguimiento.xhtml" ></p:menuitem>
+  			<p:menuitem icon="ui-icon-pencil" value="Solicitudes" url="/faces/paginas/bandejaSeguimiento.xhtml"
+  			onclick="actualizarListas();"></p:menuitem>
 	    	<p:menuitem icon="ui-icon-pencil" value="Revocados" url="/faces/paginas/bandejaRevocados.xhtml"></p:menuitem>
   		</p:submenu>
   		<p:submenu label="Mantenimiento" icon="ui-icon-pencil">
@@ -56,6 +56,10 @@
   </p:tieredMenu>
   <p:remoteCommand name="activador" update=":frmMenu"
   action="#{solicitudRegMB.instanciarSolicitudRegistro}" /> 
+  
+    <p:remoteCommand name="actualizarListas"
+  action="#{consultarSolicitudMB.actualizarListas}" /> 
+
   
  </h:form>
 
