@@ -26,7 +26,7 @@ import com.hildebrando.visado.service.NivelService;
 @SessionScoped
 public class NivelMB {
 	public static Logger logger = Logger.getLogger(NivelMB.class);
-	private SimpleDateFormat formatear = new SimpleDateFormat("dd/MM/yyyy");
+	private SimpleDateFormat formatear = new SimpleDateFormat("dd/MM/yy");
 	private DateFormat df = DateFormat.getDateInstance();
 	private TiivsNivel nivel;
 	private List<TiivsMultitabla> moneda;
@@ -118,8 +118,8 @@ public class NivelMB {
 		Date sysDate = new Date();
 		int seq;
 		String utilDateString = formatear.format(sysDate);
-		Date utilDateDate = df.parse(utilDateString);
-		String validacionRangoInicio = "0";
+		/*Date utilDateDate = df.parse(utilDateString);
+		String validacionRangoInicio = "0";*/
 		int compararDescripcion = 0;
 		String validacionDescripcion = "0";
 		String validacionCampoDesNulo = "0";
@@ -187,11 +187,11 @@ public class NivelMB {
 								if(bEditar == false){
 									seq = nivelService.obtenerSecuencialNivel();
 									nivelesMant.get(i).setId(seq);
-									nivelesMant.get(i).setFechaReg(utilDateDate);
+									nivelesMant.get(i).setFechaReg(new Date());
 									nivelesMant.get(i).setUsuarioReg(
 											usuario.getUID());
 								}else{
-									nivelesMant.get(i).setFechaAct(utilDateDate);
+									nivelesMant.get(i).setFechaAct(new Date());
 									nivelesMant.get(i).setUsuarioAct(
 											usuario.getUID());
 								}
