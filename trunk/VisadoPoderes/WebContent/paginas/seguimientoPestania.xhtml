@@ -129,7 +129,7 @@
 			<p:selectOneMenu id="cboEstudio" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio}" valueChangeListener="#{consultarSolicitudMB.abogadosXEstudios}"> 
 					 <p:ajax update=":formSolicitudSeguimiento:cboAbogado" event="change"> </p:ajax> 
 					<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-					 <f:selectItems  value="#{combosMB.lstEstudio}" var="lOf" itemValue="#{lOf.codEstudio}" itemLabel="#{lOf.desEstudio}" />
+					 <f:selectItems  value="#{consultarSolicitudMB.combosMB.lstEstudio}" var="lOf" itemValue="#{lOf.codEstudio}" itemLabel="#{lOf.desEstudio}" />
 					
 					 
 			</p:selectOneMenu>
