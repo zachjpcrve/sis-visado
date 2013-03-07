@@ -188,6 +188,15 @@ public class ConsultarSolicitudMB {
 		combosMB.cargarMultitabla();
 	}
 	
+	/*
+	 * Metodo que actualiza los listados de los Combos
+	 * */
+	public void actualizarListas(){
+		logger.info("*************actualizarListas************");
+		combosMB = new CombosMB();	
+		logger.info("**********************************+*****");
+	}
+	
 	public void modificarTextoVentanaCartaAtencion() {
 		PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 
