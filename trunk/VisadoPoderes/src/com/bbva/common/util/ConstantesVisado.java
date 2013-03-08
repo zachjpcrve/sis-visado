@@ -238,6 +238,11 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_COLUMNA_DELEGADO = "Delegado";
 	public static final String ETIQUETA_COLUMNA_EN_REVISION = "En revision";
 	public static final String ETIQUETA_COLUMNA_REVOCATORIA = "Revocatoria";
+
+	public static final String ETIQUETA_FILTRO_BUS_TIPO_REGISTRO ="Tipo de Registro";
+	public static final String ETIQUETA_FILTRO_BUS_T_DOI_C_CENTRAL ="T.DOI/C.Central";
+	public static final String ETIQUETA_FILTRO_BUS_NRO_DOI ="Nro de DOI";
+	public static final String ETIQUETA_FILTRO_BUS_NOMBRE ="Nombre";
 	
 	//************Constantes para Reporte Extractor***********************************************
 	
@@ -280,6 +285,12 @@ public class ConstantesVisado {
 	public static final String RPT_NOMBRE_HOJA1="05.Extractor";
 	public static final String RPT_NOMBRE_HOJA2="05A.Seguimiento";
 	
+	///****************************Constantes para Reporte de Revocados********************************************************
+	
+	public static final String TITULO_REPORTE_REVOCADOS ="REVOCADOS";
+	public static final String ETIQUETA_COLUMNA_NRO ="Nro";
+	public static final String ETIQUETA_COLUMNA_F_REVOCACION ="Apoderado";
+		
 	///****************************Constantes para Reporte de Estado de Solicitudes por Oficinas********************************
 	
 	public static final String TITULO_REPORTE_RPT_SOLICITUD ="ESTADO DE SOLICITUDES POR OFICINAS";
@@ -504,4 +515,5 @@ public class ConstantesVisado {
 		
 	}
 }
+
 
