@@ -500,6 +500,8 @@ public class ConstantesVisado {
 		public static final String COD_RUC = "0003";
 		public static final String COD_DNI = "0016";
 		public static final String COD_RUC_ANTIGUO = "0009";
+		public static final String COD_CARNET_DIPLOMATICO = "0009";
+		
 	}
 }
 
