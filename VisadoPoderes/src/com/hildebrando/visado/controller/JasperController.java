@@ -13,11 +13,13 @@ import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -31,6 +33,7 @@ import com.hildebrando.visado.dto.OperacionesPDF;
 import com.hildebrando.visado.dto.SolicitudPDF;
 import com.hildebrando.visado.mb.RegistroUtilesMB;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
+import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
@@ -359,6 +362,63 @@ public class JasperController {
        
         return("pdfReport");
     }
+    
+    
+    @SuppressWarnings("unused")
+	@RequestMapping(value="/download/pdfReportObsHistorial.htm", method=RequestMethod.GET)
+	public String generarReporteObsHistorial(@RequestParam("id") String id, ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
+		logger.info("==== generarReporteObsHistorial ==== ");
+		try {
+
+			String codSoli = "";
+			String movimiento = "";
+			codSoli = id.split(";")[0];
+			movimiento  = id.split(";")[1];
+			
+			logger.info("codSoli   :" + codSoli);
+			logger.info("movimiento:" + movimiento);
+			
+			GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
+			filtroHist.add(Restrictions.eq("id.codSoli", codSoli));
+			filtroHist.add(Restrictions.eq("id.movimiento", movimiento));
+		
+			List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
+			lstHist = histDAO.buscarDinamico(filtroHist);
+			
+			String obs = "";
+			String nombrePDF =  "Observacion_" +codSoli+"_" + movimiento + ".pdf";
+			if(lstHist.size()>0){
+				obs = lstHist.get(0).getObs();
+				
+			}
+			
+			List<FormatosDTO> cabecera = new ArrayList<FormatosDTO>();
+			FormatosDTO uno = new FormatosDTO();
+			
+			uno.setObservaciones(obs);			
+
+			cabecera.add(uno);
+			response.setHeader("Content-type", "application/pdf");
+			response.setHeader("Content-Disposition",
+					"attachment; filename=\"" + nombrePDF + "\"");
+
+			JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
+			modelMap.put("dataKey", objCab);
+
+			OutputStream os = response.getOutputStream();
+			os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
+					+ "al generar el archivo: " + e);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
+					+ "al generar el archivo: " + e);
+		}
+		return ("pdfReportObsHistorial");
+	}
 
 
     
