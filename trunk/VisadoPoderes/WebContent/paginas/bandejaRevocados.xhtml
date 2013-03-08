@@ -263,7 +263,8 @@
 					<p:message for="txtNumDoi"></p:message>
 
 					<p:commandButton id="btnBuscar"
-						update=":frmCliente"
+						update=":frmCliente, :frmPendEdit:gridApodPod,
+							:frmPendEdit:gridApodPod2, :frmPendEdit:gridApodPod3"
 						icon="ui-icon-seek-next"
 						action="#{revocadosMB.buscarPersona}" ajax="true" />
 
