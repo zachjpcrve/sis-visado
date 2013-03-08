@@ -314,7 +314,7 @@ public class EvaluacionNivelesMB {
 			this.registrarHistorialSolicitud(this.solicitudRegistrarT, tiivsSolicitudNivel.getCodNiv(), sCodigoEstado, ConstantesVisado.CODIGO_CAMPO_TIPO_ROL_DELEGADO);
 			
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al registrarEstadoMovimientoNivel: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al registrarEstadoMovimientoNivel: ",e);
 		}
 	}
 	
