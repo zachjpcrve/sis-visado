@@ -33,8 +33,7 @@
 									icon="ui-icon-document" 
 									action="#{consultarSolicitudMB.registrarSolicitud}" 
 									actionListener="#{consultarSolicitudMB.registrarSolicitudBorrador}"
-									oncomplete="return cargarMultipleFTP();"
-									ajax="false"/>
+									oncomplete="return cargarMultipleFTP();" />
 					
 					<p:commandButton value="Enviar" id="btnEnviar3"  
 						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>
@@ -314,7 +313,7 @@
 														     
 														     <p:commandButton id="btnEscanear" 
 															   		value="Escanear" 
-															   		onclick="return invocarEscaner('#{solEdicionMB.cadenaEscanerFinal}');">
+															   		onclick="return invocarEscaner('#{consultarSolicitudMB.cadenaEscanerFinal}');">
 															  </p:commandButton>
 															  
 															  <p:commandButton 
