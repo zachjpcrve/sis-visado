@@ -35,7 +35,6 @@
 								<p:selectOneMenu id="cboTipoDoi"
 									value="#{revocadosMB.objTiivsPersonaBusqueda.tipDoi}"
 									style="width: 120px">
-									<f:selectItem itemLabel="Codigo Central" itemValue="" />
 									<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 										itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
 									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
@@ -102,10 +101,9 @@
 				<p:commandButton value="Buscar"
 					action="#{revocadosMB.buscarRevocado}" ajax="false" update="tbl" />
 				
-				<h:commandLink>
-					<h:graphicImage library="images" name="excel.png" style="width : 28px; height : 23px;"/>
-					<p:dataExporter type="xls" target="tbl" fileName="Revocados" />
-				</h:commandLink>
+				<h:commandButton value="Exportar">
+				 	<p:dataExporter type="xls" target="tbl" fileName="Revocados" />
+				</h:commandButton>
 				
 			</h:panelGrid>
 
