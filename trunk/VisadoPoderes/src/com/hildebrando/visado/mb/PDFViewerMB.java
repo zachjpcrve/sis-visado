@@ -90,9 +90,6 @@ public class PDFViewerMB {
 			cadFinal = tmp.getUrlAPP() + "?" + "idEmpresa="
 					+ tmp.getIdEmpresa() + "&amp;" + "idSistema="
 					+ tmp.getIdSistema() + "&amp;" + "txLogin=" +usuario;
-//			cadFinal = tmp.getUrlAPP() + "?" + "idEmpresa="
-//					+ tmp.getIdEmpresa() + "&" + "idSistema="
-//					+ tmp.getIdSistema() + "&" + "txLogin=" +usuario;
 		}		
 		logger.debug("URL: " + cadFinal);		
 		return cadFinal;
