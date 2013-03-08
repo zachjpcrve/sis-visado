@@ -17,6 +17,8 @@ public class FormatosDTO {
 	private List<OperacionesPDF> lstOperaciones=new ArrayList<OperacionesPDF>();
 	private JRDataSource lstOperacionesDS;
 	private String poderdantes;
+	
+	private String observaciones;
 
 	public JRDataSource getLstOperacionesDS() {
 		return new JRBeanCollectionDataSource(lstOperaciones); 
@@ -68,6 +70,15 @@ public class FormatosDTO {
 
 	public void setLstOperaciones(List<OperacionesPDF> lstOperaciones) {
 		this.lstOperaciones = lstOperaciones;
+	}
+
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
 	}	
+
 	
 }
