@@ -62,7 +62,9 @@ public class HtmlToPdfMB {
 			StringBuffer buf = new StringBuffer();
 			String sUbicacionTemporal;
 			File fDirectory;
-			buf.append("<html><head><title>Comentario</title></head><body>");    	       			
+			buf.append("<html><head>");    	       			
+			buf.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
+			buf.append("<title>Comentario</title></head><body>");
 //			buf.append("<table>");
 //			buf.append("<tr>");
 //			buf.append("<td>");
