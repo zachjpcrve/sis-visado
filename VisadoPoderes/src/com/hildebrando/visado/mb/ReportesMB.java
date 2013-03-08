@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -776,8 +778,8 @@ public class ReportesMB
 	public void buscarSolicitudesExtractor() 
 	{
 		logger.info("Buscando solicitudes RPT Extractor:");
-		LocalDate newFechaInicio = null;
-		LocalDate newFechaFin = null;
+		/*LocalDate newFechaInicio = null;
+		LocalDate newFechaFin = null;*/
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
 		
@@ -805,27 +807,22 @@ public class ReportesMB
 			logger.info("Fecha Fin: " +dFechaFin );
 			
 			filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaIni,dFechaFin));*/
-			
-			logger.info("Filtrando por fecha de registro");
-			DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss");
-			DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-			
-			String tmpFecIni = formato.format(getFechaInicio());
-			String tmpFecFin = formato.format(getFechaFin());
-			
-			newFechaInicio=fmt.parseLocalDate(tmpFecIni);
-			newFechaFin= fmt.parseLocalDate(tmpFecFin);
-			
-			Date dFechaIni = newFechaInicio.toDateTimeAtStartOfDay().toDate();
-			Date dFechaFin = newFechaFin.toDateTimeAtStartOfDay().toDate();
-			
-			logger.info("Fecha de inicio:" + dFechaIni);
-			logger.info("Fecha de Fin:" + dFechaFin);
-			
-			//filtroSol.add(Restrictions.between(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaIni,dFechaFin));
-			
-			filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaIni));
-			filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaFin));
+			try {
+				SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+				String fecIni = formatter.format(getFechaInicio());
+				Date minDate = formatter.parse(fecIni);
+				String fecFin = formatter.format(getFechaFin());
+				Date maxDate = formatter.parse(fecFin);
+				Date rangoFin = new Date(maxDate.getTime() + TimeUnit.DAYS.toMillis(1));
+				
+				logger.info("Fecha Inicio: " + minDate);
+				logger.info("Fecha Fin: " + rangoFin);
+				
+				filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_REGISTRO, minDate));
+				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_REGISTRO, rangoFin));
+			} catch (ParseException e) {
+				logger.info("Hubo un error al convertir la fecha: ",e);
+			}
 		}
 				
 		//Busqueda por estado de la solicitud
