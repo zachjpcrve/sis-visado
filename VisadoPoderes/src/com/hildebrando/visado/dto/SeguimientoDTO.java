@@ -4,13 +4,18 @@ import java.sql.Timestamp;
 
 import org.apache.commons.net.ntp.TimeStamp;
 
+import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
+
 public class SeguimientoDTO {
+	
 	private String estado;
 	private String nivel;
 	private Timestamp fecha;
 	private String usuario;
 	private String obs;
 	private String regUsuario;
+	private String codSoli;
+	private String movimiento;
 
 	public SeguimientoDTO() {
 
@@ -73,7 +78,26 @@ public class SeguimientoDTO {
 	public void setRegUsuario(String regUsuario) {
 		this.regUsuario = regUsuario;
 	}
+
 	
+
+	public void setCodSoli(String codSoli) {
+		this.codSoli = codSoli;
+		
+	}
+
+	public void setMovimiento(String movimiento) {
+		this.movimiento = movimiento;
+		
+	}
+
+	public String getCodSoli() {
+		return codSoli;
+	}
+
+	public String getMovimiento() {
+		return movimiento;
+	}
 	
 
 }
