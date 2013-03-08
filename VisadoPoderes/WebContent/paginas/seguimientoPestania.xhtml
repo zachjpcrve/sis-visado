@@ -9,6 +9,8 @@
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
 <ui:param name="root" value="#{request.contextPath}/" />
+
+
 				<h:panelGrid columns="5">
 
 			<p:tabMenu activeIndex="0" style="width:750px;">
@@ -72,7 +74,7 @@
 			<td width="100%">
 			
 			<h:outputText title="Seguimiento" value="Seguimiento" styleClass="outputText" />
-			<p:separator styleClass="fielset" />
+			<p:separator styleClass="fielset" />			
             <p:dataTable value="#{consultarSolicitudMB.lstSeguimientoDTO}" var="seg" rows="5" id="datosSeguimiento"
 						paginatorPosition="bottom" scrollable="true" scrollHeight="120"
 						paginator="true"
@@ -96,13 +98,12 @@
 							<h:outputText value="#{seg.regUsuario} #{seg.usuario}" style="font-size: 9px"/>  							 
 						</p:column>
 						
-						<p:column headerText="Obs" width="55" exportable="false" style="font-size: 9px">								 					   							
-							<p:commandButton id="downloadLink" actionListener="#{htmlToPdfMB.generarPdfListener}" ajax="false" icon="ui-icon-search">							 			                     			                     	
-							 	<f:attribute name="texto" value="#{seg.obs}" />
-							 	<f:attribute name="estado_obs" value="#{seg.estado}"></f:attribute>
-    							<p:fileDownload value="#{htmlToPdfMB.file}" />  
-							</p:commandButton>																				
-						</p:column>																		
+						<p:column headerText="Obs" width="55" exportable="false" style="font-size: 9px">													
+							<p:commandButton id="downloadLink2" icon="ui-icon-search" 
+								onclick="window.location.href='#{root}main/download/pdfReportObsHistorial.htm?id=#{seg.codSoli};#{seg.movimiento}'" 
+								/>
+						</p:column>		
+																						
 				</p:dataTable>
 			
 				</td>
