@@ -4799,6 +4799,14 @@ public class ConsultarSolicitudMB {
 	public void setVisadoDocumentosMB(VisadoDocumentosMB visadoDocumentosMB) {
 		this.visadoDocumentosMB = visadoDocumentosMB;
 	}
+
+	public String getCadenaEscanerFinal() {
+		return this.cadenaEscanerFinal;
+	}
+
+	public void setCadenaEscanerFinal(String cadenaEscanerFinal) {
+		this.cadenaEscanerFinal = cadenaEscanerFinal;
+	}
 	
 	
 }
