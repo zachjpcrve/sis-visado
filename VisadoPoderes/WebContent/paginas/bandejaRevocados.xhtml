@@ -35,9 +35,10 @@
 								<p:selectOneMenu id="cboTipoDoi"
 									value="#{revocadosMB.objTiivsPersonaBusqueda.tipDoi}"
 									style="width: 120px">
+									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 									<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 										itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
-									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+									
 								</p:selectOneMenu>
 
 								<h:outputLabel value="Nro de DOI: " />
@@ -64,9 +65,10 @@
 								<h:outputLabel value="Estado: " />
 								<p:selectOneMenu id="cboEstado"
 									value="#{revocadosMB.estadoRevocado}" style="width: 120px">
+									
+									<f:selectItem itemLabel="--Seleccione--" itemValue="S" />
 									<f:selectItems value="#{revocadosMB.listEstadoRevocados}" var="est"
 										itemLabel="#{est.valor1}" itemValue="#{est.id.codElem}" />
-									<f:selectItem itemLabel="--Seleccione--" itemValue="S" />
 								</p:selectOneMenu>
 
 								<h:outputLabel for="calFecIni" value="Fecha de Inicio: " />
