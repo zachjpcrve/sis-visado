@@ -1667,8 +1667,7 @@ public class SeguimientoMB
 					filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,tmpEstados));
 					
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.info("Hubo un error al convertir la fecha: ",e);
 				}
 
 				filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
