@@ -1603,8 +1603,8 @@ public class SeguimientoMB
 					logger.info("Fecha Inicio: " + minDate);
 					logger.info("Fecha Fin: " + rangoFin);
 					
-					filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_RPTA, minDate));
-					filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_RPTA, rangoFin));
+					filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_ENVIO, minDate));
+					filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_ENVIO, rangoFin));
 					
 					//Verificar que el campo estado no tenga espacios en blanco en BD
 					filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02));
