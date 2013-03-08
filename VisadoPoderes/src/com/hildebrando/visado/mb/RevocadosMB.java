@@ -1,5 +1,11 @@
 package com.hildebrando.visado.mb;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,8 +19,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpServletResponse;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -23,6 +31,7 @@ import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
+import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.converter.PersonaDataModal;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.CombinacionSolicitudUtil;
@@ -30,9 +39,11 @@ import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.Persona;
 import com.hildebrando.visado.dto.Revocado;
 import com.hildebrando.visado.dto.TipoDocumento;
+import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOficina1;
+import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsRevocado;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
@@ -40,11 +51,22 @@ import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 @ManagedBean(name = "revocadosMB")
 @SessionScoped
@@ -58,6 +80,13 @@ public class RevocadosMB {
 	private Revocado revocadoEdit;
 	private String nroRegistros;
 	
+	private String rutaArchivoExcel;
+	
+	private StreamedContent file;  
+	
+	@ManagedProperty(value = "#{pdfViewerMB}")
+	private PDFViewerMB pdfViewerMB;
+	
 	//para la busqueda principal
 	private TiivsPersona objTiivsPersonaBusqueda;
 	private TiivsPersona objTiivsPersonaBusquedaNombre;
@@ -70,7 +99,7 @@ public class RevocadosMB {
 	//el resultado de la busqueda y se utilizara para agregarlo
 	private TiivsPersona objTiivsPersonaAgregar;
 	
-	
+	private IILDPeUsuario usuario;
 	
 	boolean bBooleanPopup = false;
 	
@@ -122,6 +151,8 @@ public class RevocadosMB {
 	public RevocadosMB() {
 		combosMB = new CombosMB();
 		
+		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
+		
 		objTiivsPersonaBusqueda = new TiivsPersona();
 		objTiivsPersonaBusquedaNombre = new TiivsPersona();
 		
@@ -132,6 +163,277 @@ public class RevocadosMB {
 		
 		cargarCombos();
 	}
+	
+	public String obtenerGenerador()
+	{
+		String resultado="";
+		
+		if (usuario != null)
+		{
+			resultado = usuario.getUID() + ConstantesVisado.GUION + usuario.getNombre() +  ConstantesVisado.ESPACIO_BLANCO + 
+						usuario.getApellido1() + ConstantesVisado.ESPACIO_BLANCO + usuario.getApellido2();
+		}
+		else
+		{
+			logger.debug("Error al obtener datos del usuario de session para mostrar en el excel");
+		}
+		return resultado;
+	}
+	
+	public void descargarArchivoRecaudacion()
+	{
+		exportarExcelRevocados();
+		InputStream stream=null;
+		try {
+			stream = new FileInputStream(rutaArchivoExcel);
+		} catch (FileNotFoundException e) {
+			logger.debug("Error al obtener archivo excel debido a: " + e.getMessage());
+		}
+		
+		if (stream!=null)
+		{
+			file = new DefaultStreamedContent(stream, "application/excel", "Revocados" + ConstantesVisado.EXTENSION_XLS);
+		}
+	}
+	
+	public void exportarExcelRevocados()
+	{
+		rptRevocados();
+	}
+	
+	
+	public void rptRevocados() { 
+		
+		try 
+		{
+			// Defino el Libro de Excel
+			HSSFWorkbook wb = new HSSFWorkbook();
+
+			// Creo la Hoja en Excel
+			Sheet sheet = wb.createSheet(Utilitarios.obtenerFechaArchivoExcel());
+
+			// quito las lineas del libro para darle un mejor acabado
+			sheet.setDisplayGridlines(false);
+
+			// creo una nueva fila
+			Row trow = sheet.createRow((short) 0);
+			Utilitarios.crearTituloCell(wb, trow, 4, CellStyle.ALIGN_CENTER, CellStyle.VERTICAL_CENTER, ConstantesVisado.TITULO_REPORTE_REVOCADOS,14);
+						
+			//Se crea la leyenda de quien genero el archivo y la hora respectiva
+			Row rowG = sheet.createRow((short) 1);
+			Utilitarios.crearCell(wb, rowG, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false, false,false,HSSFColor.DARK_BLUE.index);
+			Utilitarios.crearCell(wb, rowG, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, obtenerGenerador(),  true, false,true,HSSFColor.DARK_BLUE.index);
+			
+			Row rowG1 = sheet.createRow((short) 2);
+			Utilitarios.crearCell(wb, rowG1, 9, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false, false,false,HSSFColor.DARK_BLUE.index);
+			Utilitarios.crearCell(wb, rowG1, 10, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.obtenerFechaHoraActual(),  true, false,true,HSSFColor.DARK_BLUE.index);
+			
+			//Genera celdas con los filtros de busqueda
+			Row row2 = sheet.createRow((short) 4);
+			
+			Utilitarios.crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_TIPO_REGISTRO, false, false,false,HSSFColor.DARK_BLUE.index);
+			
+			if (objTiivsPersonaBusqueda.getTipPartic() != null)
+			{
+				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, objTiivsPersonaBusqueda.getTipPartic(), true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			Row row3 = sheet.createRow((short) 6);
+			
+			Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_T_DOI_C_CENTRAL, false, false,false,HSSFColor.DARK_BLUE.index);
+			
+			if (objTiivsPersonaBusqueda.getTipDoi().compareTo("")!=0)
+			{
+				Utilitarios.crearCell(wb, row3, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, objTiivsPersonaBusqueda.getTipDoi(), true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row3, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			Utilitarios.crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_NRO_DOI, false, false,false,HSSFColor.DARK_BLUE.index);
+			if (objTiivsPersonaBusqueda.getNumDoi().compareTo("")!=0)
+			{
+				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, objTiivsPersonaBusqueda.getNumDoi(), true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			Row row4 = sheet.createRow((short) 8);
+			
+			Utilitarios.crearCell(wb, row4, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_NOMBRE, false, false,false,HSSFColor.DARK_BLUE.index);
+			
+			if (objTiivsPersonaBusquedaNombre!=null)
+			{
+				if (objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().compareTo("")!=0)
+				{
+					Utilitarios.crearCell(wb, row4, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, 
+							objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().split(" ")[0] +" "+ 
+							objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().split(" ")[1] +" "+
+							objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().split(" ")[2], true, false,true,HSSFColor.DARK_BLUE.index);
+				}
+				else
+				{
+					Utilitarios.crearCell(wb, row4, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+				}
+				
+			}else{
+				
+				Utilitarios.crearCell(wb, row4, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			
+			Utilitarios.crearCell(wb, row4, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_ESTADO, false, false,false,HSSFColor.DARK_BLUE.index);
+			if (estadoRevocado.compareTo("S")!=0)
+			{
+				Utilitarios.crearCell(wb, row4, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, estadoRevocado, true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row4, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+		
+			Utilitarios.crearCell(wb, row4, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_INICIO, false, false,false,HSSFColor.DARK_BLUE.index);
+			if (getFechaInicio()!=null)
+			{
+				Utilitarios.crearCell(wb, row4, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.formatoFechaSinHora(getFechaInicio()), true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row4, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			Utilitarios.crearCell(wb, row4, 5, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_FIN, false, false,false,HSSFColor.DARK_BLUE.index);
+			if (getFechaFin()!=null)
+			{
+				Utilitarios.crearCell(wb, row4, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, Utilitarios.formatoFechaSinHora(getFechaFin()), true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			else
+			{
+				Utilitarios.crearCell(wb, row4, 6, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "", true, false,true,HSSFColor.DARK_BLUE.index);
+			}
+			
+			Row rowTot = sheet.createRow((short) 10);
+			Utilitarios.crearCell(wb, rowTot, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, "Total de Registros: " + (revocados.size()-1) , false, false,false,HSSFColor.DARK_BLUE.index);
+			
+		
+			if (revocados.size()==0)
+			{
+				logger.info("Sin registros para exportar");
+			}
+			else
+			{
+				// Se crea la cabecera de la tabla de resultados
+				Row rowT = sheet.createRow((short) 12);
+
+				// Creo las celdas de mi fila, se puede poner un diseño a la celda
+				Utilitarios.crearCell(wb, rowT, 0, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_NRO, true, true,false,HSSFColor.DARK_BLUE.index);
+				
+				Utilitarios.crearCell(wb, rowT, 1, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_PODERDANTE, true, true,false,HSSFColor.DARK_BLUE.index);
+				
+				Utilitarios.crearCell(wb, rowT, 2, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_APODERADO, true, true,false,HSSFColor.DARK_BLUE.index);
+				
+				Utilitarios.crearCell(wb, rowT, 3, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_F_REVOCACION, true, true,false,HSSFColor.DARK_BLUE.index);
+				
+				Utilitarios.crearCell(wb, rowT, 4, CellStyle.ALIGN_CENTER,
+						CellStyle.VERTICAL_CENTER, ConstantesVisado.ETIQUETA_COLUMNA_ESTADO, true, true,false,HSSFColor.DARK_BLUE.index);
+				
+				int numReg=13;
+				
+				for (Revocado tmp: revocados)
+				{
+					Row row = sheet.createRow((short) numReg);
+					
+					//Columna Territorio en Excel
+					Utilitarios.crearCell(wb, row, 0, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getCorrelativo(),true, false,true,HSSFColor.DARK_BLUE.index);
+										
+					//Columna Cod Oficina en Excel
+					Utilitarios.crearCell(wb, row, 1, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER, tmp.getNombreCompletoPoderdantes(),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Oficina en Excel
+					Utilitarios.crearCell(wb, row, 2, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,tmp.getNombreCompletoApoderados(),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Registrado en Excel
+					Utilitarios.crearCell(wb, row, 3, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,tmp.getFechaRegistro(),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					//Columna Enviado en Excel
+					Utilitarios.crearCell(wb, row, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,tmp.getEstado(),true, false,true,HSSFColor.DARK_BLUE.index);
+					
+					numReg++;
+				}
+			}
+			
+			//Arregla ancho de columnas
+			int pos=0;
+			for (;pos<=18;pos++)
+			{
+				sheet.autoSizeColumn(pos);
+			}
+						
+			//Se crea el archivo con la informacion y estilos definidos previamente
+			String strRuta="";
+			if (obtenerRutaExcel().compareTo("")!=0)
+			{
+				
+				logger.info("Parametros recogidos para exportar");
+				logger.info("Ruta: " + obtenerRutaExcel());
+				logger.info("Nombre Archivo Excel: " + "Revocados");
+				
+				strRuta = obtenerRutaExcel() + "Revocados" + ConstantesVisado.EXTENSION_XLS;
+				logger.info("Nombre strRuta: " + strRuta);
+				FileOutputStream fileOut = new FileOutputStream(strRuta);
+				wb.write(fileOut);
+				
+				fileOut.close();
+				
+				logger.debug("Ruta final donde encontrar el archivo excel: " + strRuta);
+				
+				setRutaArchivoExcel(strRuta);
+				
+			}
+						
+		} catch (Exception e) {
+			logger.error("Error al exportar datos a excel del Rpt Estado de Solicitud",e);
+			//logger.info("Error al generar el archivo excel debido a: " + e.getStackTrace());
+		}
+	
+	} 
+	
+	public String obtenerRutaExcel()
+	{
+		String res="";
+		
+		for (TiivsParametros tmp: pdfViewerMB.getLstParametros())
+		{
+			if (usuario.getUID().equals(tmp.getCodUsuario()))
+			{
+				res=tmp.getRutaArchivoExcel();
+				break;
+			}
+		}
+		
+		if (res.compareTo("")==0)
+		{
+			logger.debug("No se encontro el parametro de ruta para exportar excel para el usuario: " + usuario.getUID());
+		}
+		else
+		{
+			logger.debug("Parametro ruta encontrada para el usuario: " + usuario.getUID() + " es: " +  res);
+		}
+		
+		return res;
+	}
+	
 	
 	public void revocarApodPod(){
 		List<TiivsAgrupacionPersona>  agrupacionPersonas= new ArrayList<TiivsAgrupacionPersona>();
@@ -462,7 +764,7 @@ public class RevocadosMB {
 	}
 	
 	
-	public void  buscarPersona(ActionEvent actionEvent) {
+	public void  buscarPersona() {
 		
 		List<TiivsPersona> lstTiivsPersonaNuevo = new ArrayList<TiivsPersona>();
 		personaDataModal = new PersonaDataModal(lstTiivsPersonaNuevo);
@@ -995,20 +1297,17 @@ public class RevocadosMB {
 	}
 	
 	public List<TiivsPersona> buscarPersonaLocal() throws Exception {
+		logger.info("Buscando en Persona Local");
 		boolean busco = false;
 		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
-		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
 
-		if ((objTiivsPersonaBusquedaDlg.getCodCen() == null || objTiivsPersonaBusquedaDlg.getCodCen().equals(""))
-				&& (objTiivsPersonaBusquedaDlg.getTipDoi() == null || objTiivsPersonaBusquedaDlg
-						.getTipDoi().equals(""))
-				&& (objTiivsPersonaBusquedaDlg.getNumDoi() == null || objTiivsPersonaBusquedaDlg
-						.getNumDoi().equals(""))) {
-			Utilitarios.mensajeInfo("INFO",
-					"Ingrese al menos un criterio de busqueda");
-
+		if ((objTiivsPersonaBusquedaDlg.getTipDoi() == null 
+		  || objTiivsPersonaBusquedaDlg.getTipDoi().equals(""))
+		 && (objTiivsPersonaBusquedaDlg.getNumDoi() == null
+		  || objTiivsPersonaBusquedaDlg.getNumDoi().equals(""))) {
+			Utilitarios.mensajeInfo("INFO","Ingrese al menos un criterio de busqueda");
 		} else if (objTiivsPersonaBusquedaDlg.getNumDoi() == null
 				|| objTiivsPersonaBusquedaDlg.getNumDoi().equals("")) {
 			Utilitarios.mensajeInfo("INFO", "Ingrese el Número de Doi");
@@ -1016,32 +1315,34 @@ public class RevocadosMB {
 				|| objTiivsPersonaBusquedaDlg.getTipDoi().equals("")) {
 			Utilitarios.mensajeInfo("INFO", "Ingrese el Tipo de Doi");
 		} else {
-			if (objTiivsPersonaBusquedaDlg.getTipDoi() != null
-					&& objTiivsPersonaBusquedaDlg.getNumDoi() != null
-					&& objTiivsPersonaBusquedaDlg.getTipDoi().compareTo("") != 0
-					&& objTiivsPersonaBusquedaDlg.getNumDoi().compareTo("") != 0) {
-				filtro.add(Restrictions.eq("tipDoi",
-						objTiivsPersonaBusquedaDlg.getTipDoi()));
-				filtro.add(Restrictions.eq("numDoi",
-						objTiivsPersonaBusquedaDlg.getNumDoi()));
+			if (objTiivsPersonaBusquedaDlg.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CODIGO_CENTRAL)) {
+				filtro.add(Restrictions.eq("codCen",objTiivsPersonaBusquedaDlg.getNumDoi()));
 				busco = true;
-			}
-			if (objTiivsPersonaBusquedaDlg.getCodCen() != null
-					&& objTiivsPersonaBusquedaDlg.getCodCen().compareTo("") != 0) {
-				filtro.add(Restrictions.eq("codCen",
-						objTiivsPersonaBusquedaDlg.getCodCen()));
-				busco = true;
-			}
-			lstTiivsPersona = service.buscarDinamico(filtro);
-		
-			for (TiivsPersona tiivsPersona : lstTiivsPersona) {
-				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
-					if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
-						tiivsPersona.setsDesctipDoi(p.getDescripcion());
+				
+				lstTiivsPersona = service.buscarDinamico(filtro);
+				
+				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+							tiivsPersona.setsDesctipDoi(p.getDescripcion());
+						}
 					}
 				}
+			}else{
+				filtro.add(Restrictions.eq("tipDoi",objTiivsPersonaBusquedaDlg.getTipDoi().trim()));
+				filtro.add(Restrictions.eq("numDoi",objTiivsPersonaBusquedaDlg.getNumDoi().trim()));
+				busco = true;
+				
+               lstTiivsPersona = service.buscarDinamico(filtro);
+				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+							tiivsPersona.setsDesctipDoi(p.getDescripcion());
+						}
+					}
+				} 
 			}
-
+			
 			if (lstTiivsPersona.size() == 0 && busco) {
 				//Utilitarios.mensajeInfo("INFO","No se han encontrado resultados para los criterios de busqueda seleccionados");
 			}
@@ -1703,6 +2004,38 @@ public class RevocadosMB {
 
 	public void setRevocadoDelete(Revocado revocadoDelete) {
 		this.revocadoDelete = revocadoDelete;
+	}
+
+	public IILDPeUsuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(IILDPeUsuario usuario) {
+		this.usuario = usuario;
+	}
+
+	public PDFViewerMB getPdfViewerMB() {
+		return pdfViewerMB;
+	}
+
+	public void setPdfViewerMB(PDFViewerMB pdfViewerMB) {
+		this.pdfViewerMB = pdfViewerMB;
+	}
+
+	public String getRutaArchivoExcel() {
+		return rutaArchivoExcel;
+	}
+
+	public void setRutaArchivoExcel(String rutaArchivoExcel) {
+		this.rutaArchivoExcel = rutaArchivoExcel;
+	}
+
+	public StreamedContent getFile() {
+		return file;
+	}
+
+	public void setFile(StreamedContent file) {
+		this.file = file;
 	}
 
 }

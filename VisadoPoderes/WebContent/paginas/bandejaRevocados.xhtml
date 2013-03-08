@@ -44,9 +44,7 @@
 								<h:outputLabel value="Nro de DOI: " />
 								<p:inputText id="txtNroDoi" styleClass="inputText"
 									value="#{revocadosMB.objTiivsPersonaBusqueda.numDoi}"  onkeypress="return validaNumero(event,'0',this,'0');"
-									onblur="validaNumero(event,'0',this,'1');"
-									validatorMessage="Numero requerido">
-									<f:validateLongRange minimum="1" maximum="99999999"></f:validateLongRange>
+									onblur="validaNumero(event,'0',this,'1');">
 								</p:inputText>
 								<p:message for="txtNroDoi" ></p:message>
 
@@ -104,9 +102,10 @@
 				<p:commandButton value="Buscar"
 					action="#{revocadosMB.buscarRevocado}" ajax="false" update="tbl" />
 				
-				<h:commandButton value="Exportar">
-				 	<p:dataExporter type="xls" target="tbl" fileName="Revocados" />
-				</h:commandButton>
+				<p:commandButton value="Exportar"
+					actionListener="#{revocadosMB.descargarArchivoRecaudacion}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)" >
+					<p:fileDownload value="#{revocadosMB.file}" />  
+				</p:commandButton>
 				
 			</h:panelGrid>
 
@@ -264,12 +263,9 @@
 					<p:message for="txtNumDoi"></p:message>
 
 					<p:commandButton id="btnBuscar"
-						update=":frmCliente, 
-						:frmPendEdit:gridApodPod, :frmPendEdit:gridApodPod2, 
-						:frmPendEdit:gridApodPod3"
-						icon="ui-icon-seek-next" oncomplete="dlgCliente.show();"
-						actionListener="#{revocadosMB.buscarPersona}" ajax="true"
-						process="@form" />
+						update=":frmCliente"
+						icon="ui-icon-seek-next"
+						action="#{revocadosMB.buscarPersona}" ajax="true" />
 
 					<h:outputLabel value="T.DOI/ C.Central*: " />
 					<p:selectOneMenu id="cboTipoDoi2"
