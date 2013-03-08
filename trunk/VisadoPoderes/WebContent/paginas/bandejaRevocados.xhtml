@@ -12,7 +12,7 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
-
+	<script type="text/JavaScript" src="../resources/js/visado.js" />
 		<h:form  id="frmConsRev">
 
 			<table>
@@ -42,7 +42,8 @@
 
 								<h:outputLabel value="Nro de DOI: " />
 								<p:inputText id="txtNroDoi" styleClass="inputText"
-									value="#{revocadosMB.objTiivsPersonaBusqueda.numDoi}"
+									value="#{revocadosMB.objTiivsPersonaBusqueda.numDoi}"  onkeypress="return validaNumero(event,'0',this,'0');"
+									onblur="validaNumero(event,'0',this,'1');"
 									validatorMessage="Numero requerido">
 									<f:validateLongRange minimum="1" maximum="99999999"></f:validateLongRange>
 								</p:inputText>
