@@ -2,7 +2,8 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" language="groovy" pageWidth="795" pageHeight="842" columnWidth="755" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="54"/>
+	<property name="ireport.y" value="26"/>
+	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<field name="oficina" class="java.lang.String"/>
 	<field name="numeroSolicitud" class="java.lang.String"/>
 	<field name="instrucciones" class="java.lang.String"/>
@@ -13,7 +14,7 @@
 	<title>
 		<band height="102">
 			<frame>
-				<reportElement mode="Transparent" x="0" y="11" width="769" height="91" backcolor="#99FF99"/>
+				<reportElement mode="Transparent" x="0" y="11" width="755" height="91" backcolor="#99FF99"/>
 				<textField>
 					<reportElement x="128" y="51" width="587" height="30" forecolor="#330099"/>
 					<textElement>
@@ -63,11 +64,11 @@
 				<reportElement x="39" y="6" width="641" height="161"/>
 			</rectangle>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="55" y="6" width="607" height="154"/>
+				<reportElement x="55" y="8" width="607" height="154"/>
 				<textElement markup="html">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones} + " "]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="79" y="299" width="204" height="1"/>

@@ -3,6 +3,7 @@
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="17"/>
 	<property name="ireport.y" value="0"/>
+    <property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="PARAM_INSTRUCCION" class="java.lang.String"/>
 	<field name="item" class="java.lang.String"/>
 	<field name="descripcion" class="java.lang.String"/>
