@@ -245,8 +245,11 @@
 							update="panelRes" ajax="false"/>
 					</td>
 					<td>
-						<p:commandButton value="Exportar" disabled="#{seguimientoMB.noHabilitarExportar}"
-							 oncomplete="confirmation.show()"/>
+						<p:commandButton id="exportar" value="Exportar" onclick="PrimeFaces.monitorDownload(start, stop)" ajax="false"  
+							disabled="#{seguimientoMB.noHabilitarExportar}"  icon="ui-icon-arrowthichk-s" oncomplete="confirmation.hide()" 
+							actionListener="#{seguimientoMB.descargarArchivo}" >
+				   			<p:fileDownload value="#{seguimientoMB.file}" />  
+						</p:commandButton>  
 					</td>
 				</tr>	
 			</table>	
