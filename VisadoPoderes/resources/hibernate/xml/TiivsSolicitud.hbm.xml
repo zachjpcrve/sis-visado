@@ -35,7 +35,7 @@
             <column name="REG_ABOGADO" length="7" />
         </property>
         <property name="obs" type="string">
-            <column name="OBS" length="1000" />
+            <column name="OBS" length="4000" />
         </property>
         <property name="regUsuario" type="string">
             <column name="REG_USUARIO" length="7" not-null="true" />
