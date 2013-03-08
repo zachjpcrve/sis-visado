@@ -3,6 +3,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="45"/>
+    <property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["../../WEB-INF/classes/jasper/"]]></defaultValueExpression>

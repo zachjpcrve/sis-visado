@@ -3,6 +3,7 @@
 	<property name="ireport.zoom" value="1.0245201830476058"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<field name="numeroSolicitud" class="java.lang.String"/>
 	<field name="instrucciones" class="java.lang.String"/>
