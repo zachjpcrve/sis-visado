@@ -714,6 +714,12 @@ public class SolicitudRegistroMB {
 			bResult = false;
 			Utilitarios.mensajeInfo("INFO", sMensaje);
 			}
+		}else if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CARNET_DIPLOMATICO)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=8){
+			sMensaje = "El Carnet Diplomático debe ser de 8 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
 		}
 			
 		

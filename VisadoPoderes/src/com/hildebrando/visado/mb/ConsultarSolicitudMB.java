@@ -81,10 +81,7 @@ public class ConsultarSolicitudMB {
 	private PDFViewerMB pdfViewerMB;
 	@ManagedProperty(value = "#{visadoDocumentosMB}")
 	private VisadoDocumentosMB visadoDocumentosMB;
-	/*
-	 * @ManagedProperty(value = "#{solEdicionMB}") private SolicitudEdicionMB
-	 * solicitudEdicionMB;
-	 */
+
 
 	private TiivsSolicitud solicitudRegistrarT;
 	private TiivsSolicitud solicitudRegistrarTCopia;
@@ -456,6 +453,7 @@ public class ConsultarSolicitudMB {
 		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
 		
 		listaTemporalEliminarOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();
+		this.cadenaEscanerFinal = this.prepararURLEscaneo();	
 	}
 
 	public void listarComboDictamen() throws Exception {
@@ -2574,16 +2572,12 @@ public class ConsultarSolicitudMB {
 		   bBooleanPopup=false;
 		   
 			  } else if(flagUpdatePoderdanteApoderados){ //INDICA QUE SE VA A MODIFICAR una agrupacion 
+				  logger.info(" numGrupoUpdatePoderdanteApoderado anttes  : "+numGrupoUpdatePoderdanteApoderado);
 				 logger.info("SE MODIFICARA " +indexUpdatePoderdanteApoderado);
 				 logger.info(" La lista de Personas que se tiene en memoria " +lstTiivsPersona.size());
 				 logger.info(" La lista de Personas que se tiene en memoria " +objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
 				 logger.info(" lstAgrupacionSimpleDto " +lstAgrupacionSimpleDto.size());
 				 TiivsAgrupacionPersona  tiivsAgrupacionPersona=null;
-				 //objAgrupacionSimpleDtoCapturado.getLstPersonas()
-				 for (AgrupacionSimpleDto x : lstAgrupacionSimpleDto) {
-					
-				}
-				 
 				  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 				  List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
 				  Set<TiivsAgrupacionPersona> lstTempAgrupacion=null;
@@ -2780,18 +2774,19 @@ public class ConsultarSolicitudMB {
 		}
 	}
 
-	public String prepararURLEscaneo() {
-
-		usuario.setUID("P014773");
-		for (TiivsParametros tmp : pdfViewerMB.getLstParametros()) {
-			cadenaEscanerFinal = tmp.getUrlAPP() + "?" + "idEmpresa="
-					+ tmp.getIdEmpresa() + "&" + "idSistema="
-					+ tmp.getIdSistema() + "&" + "txLogin=" + usuario.getUID();
+	
+	public String prepararURLEscaneo() {			
+		logger.info("***********prepararURLEscaneo***************");
+		
+		String sCadena = "";		
+		try{				
+			pdfViewerMB = new PDFViewerMB();	
+			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID());			
+		}catch(Exception e){
+			logger.error("Error al obtener parámetros de APPLET",e);
 		}
-
-		logger.info("URL APPLET: " + cadenaEscanerFinal);
-
-		return cadenaEscanerFinal;
+		return sCadena;
+		
 	}
 
 	public void agregarDocumentosXTipoSolicitud() {
@@ -3535,7 +3530,6 @@ public class ConsultarSolicitudMB {
 				}
 			}
 		}
-		logger.info("bResult " +bResult);
 
 		return bResult;
 
@@ -3575,6 +3569,12 @@ public class ConsultarSolicitudMB {
 			bResult = false;
 			Utilitarios.mensajeInfo("INFO", sMensaje);
 			}
+		}else if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CARNET_DIPLOMATICO)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=8){
+			sMensaje = "El Carnet Diplomático debe ser de 8 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
 		}
 			
 		
@@ -3604,6 +3604,7 @@ public class ConsultarSolicitudMB {
 					this.lstTiivsPersona.set(indexUpdatePersona,objTiivsPersonaResultado);
 					flagUpdatePersona = false;
 				}
+				logger.info("Tamanio de la lista lstTiivsPersona " +lstTiivsPersona.size());
 				logger.info("Tamanio de la lista PersonaResultado " +lstTiivsPersonaResultado.size());
 				personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
 				logger.info("tamanio de personaDataModal  en el metodo agregar ::::: " +personaDataModal.getRowCount());
