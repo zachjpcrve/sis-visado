@@ -22,7 +22,7 @@
             <column name="NOM_USUARIO" length="75" not-null="true" />
         </property>
         <property name="obs" type="string">
-            <column name="OBS" length="1000" />
+            <column name="OBS" length="4000" />
         </property>
         <property name="regAbogado" type="string">
             <column name="REG_ABOGADO" length="7" />
