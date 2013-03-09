@@ -257,7 +257,7 @@
 					<h:outputLabel value="Nro*: " />
 					<p:inputText id="txtNumDoi" styleClass="inputText"
 						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.numDoi}"
-						validatorMessage="Numero requerido">
+						validatorMessage="Numero requerido" onkeypress="return validaNumero(event,'0',this,'0');" onblur="validaNumero(event,'0',this,'1');">
 						<f:validateLongRange minimum="1" maximum="999999999"></f:validateLongRange>
 					</p:inputText>
 					<p:message for="txtNumDoi"></p:message>
@@ -280,13 +280,13 @@
 
 					<h:outputLabel value="Nro de DOI*: " />
 					<p:inputText styleClass="inputText"
-						value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}">
+						value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}" onkeypress="return validaNumero(event,'0',this,'0');" onblur="validaNumero(event,'0',this,'1');">
 					</p:inputText>
 
 					<h:outputLabel value="C. Central: " />
 					<p:inputText styleClass="inputText"
 						value="#{revocadosMB.objTiivsPersonaAgregar.codCen}"
-						maxlength="13" />
+						maxlength="13"  onkeypress="return validaNumero(event,'0',this,'0');" onblur="validaNumero(event,'0',this,'1');"/>
 
 				</h:panelGrid>
 
