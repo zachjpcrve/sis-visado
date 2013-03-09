@@ -10,6 +10,7 @@
 		
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 <ui:param name="root" value="#{request.contextPath}/" />
+
 	<ui:define name="contenido">
 	
 	<script type="text/JavaScript" src="../resources/js/visado.js" />
@@ -34,8 +35,7 @@
 							update=":formSolicitudRegistro:idMsmSolicitudRegistro,
 									:formSolicitudRegistro:idCodigoSolicitud"
 							icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" 
-							actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"
-							oncomplete="return cargarMultipleFTP();"
+							actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"							
 							ajax="false">							
 						</p:commandButton>
 
@@ -321,68 +321,27 @@
 																	   
 															            <script type="text/javascript" language="javascript">
 															            
-															                function actualizarDocumentos (documentosLeidos) {															                	
+																            function actualizarDocumentos (documentosLeidos,documentosCargados) {															                	
 															                    this.document.getElementById('formSolicitudRegistro:idDocumentosLeidos').value = documentosLeidos;
+															                    this.document.getElementById('formSolicitudRegistro:idDocumentosCargados').value = documentosCargados;
 															                    actDocumentos();															                    
-															                }     
-															                															                
-															                
-															                function abrirDocumento(documento){	
-															                	//alert(1);
-															                	//alert(documento);
-															                	applet = this.document.getElementById('appletVisor');															                	
-															                	//applet.abrirDocumento(documento);
-															                	applet.abrirDocumentoConPermisos(documento);
-															                	return false;
-															                }
-															                
-															                function appletCargarFTP(){	
-															                	applet = this.document.getElementById('appletVisor');
-															                	applet.sendToFTP();
-															                	return false;
-															                }
-															                
-															                function appletActualizar(){	
+															                }  
+															            
+																            function appletActualizar(){	
 															                	applet = this.document.getElementById('appletVisor');
 															                	//applet.actualizar();
 															                	applet.actualizarConPermisos();
 															                	return false;
 															                }
-															                															                
-															                function mostrarCodigoSolicitud(){
-															                	var codigo = this.document.getElementById('formSolicitudRegistro:idCodigoSolicitud').value;
-															                	return false;
-															                }
-															                
-															                
-															                function cargarMultipleFTP(){
-															                	var codigoSolicitud = null															                	
-															                	codigoSolicitud = this.document.getElementById('formSolicitudRegistro:idCodigoSolicitud').value;
-															                	alert(codigoSolicitud);
-															                	if(codigoSolicitud != null){
-															                		if (codigoSolicitud != ''){														                		
-															                			appletCargarMultipleFTP(codigoSolicitud);
-															                		}															                		
-															                	}
-															                	return false;
-															                }
-															                
-
-															                function appletCargarMultipleFTP(codigoDocumento){
-															                	applet = this.document.getElementById('appletVisor');
-															                	//applet.cargarMultipleFTP(codigoDocumento);															                	
-															                	applet.cargarMultipleFTPConPermisos(codigoDocumento);
-															                	return false;
-															                }
-															                
-															                
-															                function appletEliminarDocumento(){
+																            
+																            function appletEliminarDocumento(){
 															                	codigoDocumento = this.document.getElementById('formSolicitudRegistro:idCodigoDocumentoSelected').value;
 															                	applet = this.document.getElementById('appletVisor');
 															                	//applet.eliminarDocumento(codigoDocumento);
 															                	applet.eliminarDocumentoConPermisos(codigoDocumento);
 															                	return false;
 															                }
+															            	
 															                
 															            </script>           
 															            
@@ -407,12 +366,15 @@
 															                <param name="directory"
 															                       value="#{visadoDocumentosMB.directory}" />     
 															                <param name="carpeta_cliente_log"
-															                       value="#{visadoDocumentosMB.carpetaClienteLog}" />        
+															                       value="#{visadoDocumentosMB.carpetaClienteLog}" />   
+															                <param name="url_server"
+															                       value="#{visadoDocumentosMB.urlCarga}" />     
 															            </applet>            
 															        </h:panelGroup>
 															        
 												        
 													        	<h:inputHidden id="idDocumentosLeidos" value="#{visadoDocumentosMB.documentosLeidos}" />
+													        	<h:inputHidden id="idDocumentosCargados" value="#{visadoDocumentosMB.documentosCargados}" />
 													        	<h:inputHidden id="idCodigoSolicitud" value="#{solicitudRegMB.solicitudRegistrarT.codSoli}" /> 
 													        	<h:inputHidden id="idCodigoDocumentoSelected" value="#{solicitudRegMB.selectedDocumentoDTO.nombreCorto}" />
 														        <p:remoteCommand name="actDocumentos" update="@form" process="@form" 
@@ -477,17 +439,9 @@
 																	<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>																	
 																</p:column>
 																<p:column headerText="Archivo" >
-																	<h:panelGroup border="0" rendered="#{s.aliasTemporal.isEmpty()}"><!-- Si aliasTemporal esta vacio: se abre desde el servidor -->
-																		<h:commandLink id="idAbrirDocumento" styleClass="abrirDocumento"  
-													            		    value="#{s.alias}"
-																			onclick="return abrirDocumento (this.text);">
-																		</h:commandLink>
-																	</h:panelGroup>	
-																	<h:panelGroup border="0" rendered="#{!s.aliasTemporal.isEmpty()}"><!-- Si aliasTemporal esta vacio: se abre desde el cliente -->																		
-																		<h:outputLink onclick="window.open('../../files/#{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
+																	<h:outputLink onclick="window.open('../../files/#{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
 																			<h:outputText value="#{s.alias}" /> 
-																		</h:outputLink>	
-																	</h:panelGroup>																																																			
+																	</h:outputLink>																																																																					
 																</p:column>
 																<p:column headerText="Eliminar">
 																 	<p:commandButton 
@@ -947,7 +901,7 @@ update=":formRegistrar,:formSolicitudRegistro">
 	        <p:commandButton id="confirm" value="Si"  
 	        			update=":formSolicitudRegistro:idMsmSolicitudRegistro,
 	        					:formSolicitudRegistro:idCodigoSolicitud"
-	        			oncomplete="confirmation.hide(); return cargarMultipleFTP();"
+	        			oncomplete="confirmation.hide();"
 	                    action="#{solicitudRegMB.registrarSolicitud}"
 	                    ajax="false"                     
 	                    actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />  
