@@ -28,23 +28,26 @@
 					<tr>
 						<td><h:outputText value="Estado:" /></td>
 						<td><p:selectOneMenu value="#{respNivel.miembroNivelDto.estado}">
+						
+								<f:selectItem itemLabel="--TODOS--" itemValue="-1" />
 								<f:selectItem itemLabel="ACTIVO" itemValue="1" />
 								<f:selectItem itemLabel="INACTIVO" itemValue="0" />
-								<f:selectItem itemLabel="--TODOS--" itemValue="-1" />
 							</p:selectOneMenu></td>
 
 						<td><h:outputText value="Perfil:" /></td>
 						<td><p:selectOneMenu value="#{respNivel.miembroNivelDto.codGrupo}">
+						
+								<f:selectItem itemLabel="--TODOS--" itemValue="-1" />
 								<f:selectItems  var="c" value="#{respNivel.grupos}" itemLabel="#{c.des}"  itemValue="#{c.cod}"  >
 								</f:selectItems>
-								<f:selectItem itemLabel="--TODOS--" itemValue="-1" />
 							</p:selectOneMenu></td>
 
 						<td><h:outputText value="Nivel: " /></td>
 						<td><p:selectOneMenu value="#{respNivel.miembroNivelDto.codNivel}">
+						
+								<f:selectItem itemLabel="--TODOS--" itemValue="-1" />
 								<f:selectItems  var="n" value="#{respNivel.niveles}" itemLabel="#{n.des}"  itemValue="#{n.cod}"  >
 								</f:selectItems>
-								<f:selectItem itemLabel="--TODOS--" itemValue="-1" />
 							</p:selectOneMenu>
 						</td>
 
@@ -99,6 +102,7 @@
 						<p:commandLink id="clinkEditar" ajax="true"
 							action="#{respNivel.editarRespNivelAprob}">
 							<f:param name="idResp" value="#{r.id}"></f:param>
+							<f:param name ="editar" value="1"></f:param>
 							<h:outputText value="Editar" />
 						</p:commandLink>
 					</p:column>

@@ -25,6 +25,7 @@ import com.hildebrando.visado.modelo.TiivsGrupo;
 import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsNivel;
+import com.hildebrando.visado.service.RespNivelAprobacionService;
 
 /**
  * Clase que maneja el mantenimiento de Responsable Nivel Aprobacion, contiene la 
@@ -41,17 +42,19 @@ public class RespNivelAprobacionMB {
 	private MiembroNivelDTO miembroNivelDto;
 	private List<GrupoDto> grupos;
 	private List<NivelDto> niveles;
-	
+	private boolean limpiar;
 	private List<MiembroNivelDTO> respNiveles;
 	
-	
+	private RespNivelAprobacionService respNivelAprobacionService;
 	public RespNivelAprobacionMB(){
 		
+		respNivelAprobacionService = new RespNivelAprobacionService();
 		miembroNivelDto= new MiembroNivelDTO();
 		grupos = new ArrayList<GrupoDto>();
 		niveles = new ArrayList<NivelDto>();
 		respNiveles = new ArrayList<MiembroNivelDTO>();
 		cargarCombos();
+		limpiar = false;
 	}
 	
 	private void cargarCombos(){
@@ -89,9 +92,10 @@ public class RespNivelAprobacionMB {
 		GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		
 		String idResp;
+		String editar;
 		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		idResp = params.get("idResp");
-		
+		editar = params.get("editar");
 		TiivsMiembroNivel miembroNivel= new TiivsMiembroNivel();
 		
 		try {
@@ -104,13 +108,14 @@ public class RespNivelAprobacionMB {
 		
 		ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
 		ec.getSessionMap().put("miembroNivel", miembroNivel);
-		 
+		 ec.getSessionMap().put("editar", editar);
 		try {
 			ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel: "+e);
 		}
 		logger.debug("=== saliendo de editarRespNivelAprob() ====");
+		//setLimpiar(false);
 	}
 	
 	public void nuevoRespxNivel(){
@@ -120,6 +125,7 @@ public class RespNivelAprobacionMB {
 		ec.getSessionMap().put("miembroNivel", miembroNivel);
 		 
 		try{
+			this.setLimpiar(true);
 			ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel.xhtml: "+e);
@@ -173,6 +179,7 @@ public class RespNivelAprobacionMB {
 				codigos.add(tiivsMiembro.getCodMiembro());
 			}
 			filtroTiivsMiembroNivel.add(Restrictions.in("miemb.codMiembro", codigos));
+			
 		}
 		
 		if(miembroNivelDto.getCodNivel() != "" && miembroNivelDto.getCodNivel().compareTo("-1") != 0 ){
@@ -180,6 +187,8 @@ public class RespNivelAprobacionMB {
 			filtroTiivsMiembroNivel.add(Restrictions.eq("codNiv", miembroNivelDto.getCodNivel()));
 		}
 		//Se consulta los responsables por nivel en base al filtroTiivsMiembroNivel 
+		filtroTiivsMiembroNivel.add(Restrictions.eq("tipoRol", "R"));
+		
 		try {
 			list = serviceTiivsMiembroNivel.buscarDinamico(filtroTiivsMiembroNivel);
 		} catch (Exception e) {
@@ -205,7 +214,10 @@ public class RespNivelAprobacionMB {
 			String descEstado="" ;
 			String desNivel="";
 			
-			if(e.getEstado().compareTo(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO)==0)
+			descEstado = respNivelAprobacionService.obtenerDesEstado(e.getCodNiv());
+			desNivel = respNivelAprobacionService.obtenerDesNivel(e.getCodNiv());
+			
+		/*	if(e.getEstado().compareTo(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO)==0)
 				descEstado= ConstantesVisado.ESTADOS.ESTADO_ACTIVO;
 			
 			if(e.getEstado().compareTo(ConstantesVisado.ESTADOS.ESTADO_COD_DESACTIVO)==0)
@@ -221,7 +233,7 @@ public class RespNivelAprobacionMB {
 				desNivel = ConstantesVisado.CAMPO_NIVEL3;
 			
 			if(e.getCodNiv().compareTo(ConstantesVisado.COD_NIVEL4)==0)
-				desNivel = ConstantesVisado.CAMPO_NIVEL4;
+				desNivel = ConstantesVisado.CAMPO_NIVEL4;*/
 				
 			respNiveles.add(new MiembroNivelDTO(e.getId(), e.getCodNiv(),desNivel,e.getTiivsMiembro().getCodMiembro(),e.getTiivsMiembro().getDescripcion(),e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(),
 					grupo.getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),e.getEstado(),descEstado));
@@ -270,6 +282,14 @@ public class RespNivelAprobacionMB {
 
 	public void setRespNiveles(List<MiembroNivelDTO> respNiveles) {
 		this.respNiveles = respNiveles;
+	}
+
+	public boolean isLimpiar() {
+		return limpiar;
+	}
+
+	public void setLimpiar(boolean limpiar) {
+		this.limpiar = limpiar;
 	}
 
 	
