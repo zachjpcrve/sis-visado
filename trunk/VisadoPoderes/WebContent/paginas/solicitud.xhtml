@@ -72,7 +72,7 @@
 								<tr>
 								
 									<td class="styleLegend2" width="203">
-										<fieldset style="width: 105%;" class="fielset">
+										<fieldset style="width: #{solicitudRegMB.ancho_FieldSet};" class="fielset">
 											<h:outputText title="Información General"
 												value="Información General" styleClass="outputText" />
 											<p:separator />
@@ -96,7 +96,9 @@
 											<td><p:tooltip for="tooltxtEstado" value="Estado solicitud" showEffect="slide" /></td>
 
 											<td><h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
-											<td style="font-size:0.9em"><p:selectOneMenu id="cboOficina" value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
+											<td style="font-size:0.9em"><p:selectOneMenu id="cboOficina" 
+												value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}" 
+												required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em;width:120px;"> 
 												<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 												<f:selectItems  value="#{solicitudRegMB.combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.tiivsTerritorio.codTer}-#{lOf.tiivsTerritorio.desTer})" /> 
 												</p:selectOneMenu></td>
@@ -159,7 +161,7 @@
 									</td>
 								</tr>
 								<tr><td class="styleLegend2" width="783">
-								<fieldset style="width: 105%;" class="fielset">
+								<fieldset style="width: #{solicitudRegMB.ancho_FieldSet_Poder};" class="fielset">
 								<table>
 								<tr>
 								<td style="width: 380px;">
@@ -749,7 +751,7 @@
  
 		<p:dialog id="modalRegistrarPersona"
 			header="Busqueda Cliente/No Cliente" widgetVar="dlgRegistrarPersona"
-			modal="true" height="520" >
+			modal="true" height="520" width="#{solicitudRegMB.ancho_Popup_Poder}">
 	                    <h:form id="formRegistrar">
 		    <p:messages id="idMsmModalPerona"></p:messages>
 		     <table border="0" width="30px">
@@ -893,7 +895,7 @@ update=":formRegistrar,:formSolicitudRegistro">
 		</p:commandButton>
 		<div align="center" style="width:100%; " >
 	 		<p:dataTable id="tlbPersonasPopup" var="s" rows="20" value="#{solicitudRegMB.lstTiivsPersona}"
-			  emptyMessage="No hay resultados en la bandeja"   style="width:125%"
+			  emptyMessage="No hay resultados en la bandeja"   style="width:#{solicitudRegMB.ancho_Revoc_Poder}"
 			  paginatorPosition="bottom" paginator="true" 
 			  paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 			  rowsPerPageTemplate="5,10,15" editable="true">
