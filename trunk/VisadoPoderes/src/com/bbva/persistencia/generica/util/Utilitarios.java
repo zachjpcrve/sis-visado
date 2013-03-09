@@ -182,6 +182,9 @@ public class Utilitarios {
 		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)){
 			return descEstado=ConstantesVisado.ESTADOS.ESTADO_EN_REVISION_T02;
 		}
+		else if(estado.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_3)){
+			return descEstado=ConstantesVisado.ESTADOS.ESTADO_REVOCADO_T02;
+		}
 		return descEstado;
 	}
 	
