@@ -55,7 +55,6 @@ import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
-import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
@@ -180,7 +179,7 @@ public class ConsultarSolicitudMB {
 //		ocultarCartas();
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
-
+		this.cadenaEscanerFinal = this.prepararURLEscaneo();
 		combosMB = new CombosMB();
 		combosMB.cargarMultitabla();
 	}
@@ -432,7 +431,7 @@ public class ConsultarSolicitudMB {
 
 		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
 		lstAnexosSolicitudes = new ArrayList<TiivsAnexoSolicitud>();
-		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
+		//lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		objAgrupacionSimpleDtoCapturado = new AgrupacionSimpleDto();
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 		lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
@@ -453,7 +452,7 @@ public class ConsultarSolicitudMB {
 		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
 		
 		listaTemporalEliminarOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();
-		this.cadenaEscanerFinal = this.prepararURLEscaneo();	
+			
 	}
 
 	public void listarComboDictamen() throws Exception {
@@ -721,7 +720,7 @@ public class ConsultarSolicitudMB {
 	
 	private void llenarListaDocumentosSolicitud(boolean isEditar){
 		
-		String sEstado = this.solicitudRegistrarT.getEstado();
+		//String sEstado = this.solicitudRegistrarT.getEstado();
 		
 		//En caso de editar una solicitud
 		if(isEditar){ 
@@ -2161,13 +2160,15 @@ public class ConsultarSolicitudMB {
 					serviceAgru.eliminar(c);
 				}
 				}
+				TiivsSolicitudAgrupacion  solicAgruTempDelete = null;
 				for (TiivsSolicitudAgrupacion d : listaTemporalSolicitudAgrupacionesBorradores){
 					
 					for (TiivsAgrupacionPersona e : d.getTiivsAgrupacionPersonas()) {
 						serviceAgru.eliminar(e);
 					}
-					
-					serviceSolAgru.eliminar(d);
+					solicAgruTempDelete=new TiivsSolicitudAgrupacion();
+					solicAgruTempDelete.setId(d.getId());
+					serviceSolAgru.eliminar(solicAgruTempDelete);
 				}
 				
 				
@@ -2181,22 +2182,33 @@ public class ConsultarSolicitudMB {
 					logger.debug("Tamanio agrupaciones: " + x1.getTiivsAgrupacionPersonas().size());
 					TiivsPersona personaTemporal=null;
 					for (TiivsAgrupacionPersona b :x1.getTiivsAgrupacionPersonas()) 
-				    { logger.info("b.getTiivsPersona()::::::: "+b.getTiivsPersona().getCodPer());
-				      personaTemporal=b.getTiivsPersona();
-					  objPersonaRetorno=servicePers.insertarMerge(personaTemporal);
-					  logger.info("Codigo de la persona a Insertar : "+objPersonaRetorno.getCodPer());
-					  b.setTiivsPersona(null);
-					  b.setCodPer(objPersonaRetorno.getCodPer());
-					  
-					  if (existeAgrupacionPersona(b))
-					  {
-						  serviceAgru.modificar(b);
-					  }
-					  else
-					  {
-						  serviceAgru.insertar(b);
-					  }
-					  b.setTiivsPersona(personaTemporal);
+				    { 
+						//for (TiivsSolicitudAgrupacion c : listaSolicitudAgrupacionesCopia) {
+							
+							
+							
+							//if(!c.get .equals(b)){
+								logger.info("b.getTiivsPersona()::::::: "+b.getNumGrupo());
+							      personaTemporal=b.getTiivsPersona();
+								  objPersonaRetorno=servicePers.insertarMerge(personaTemporal);
+								  logger.info("Codigo de la persona a Insertar : "+objPersonaRetorno.getCodPer());
+								  b.setTiivsPersona(null);
+								  b.setCodPer(objPersonaRetorno.getCodPer());
+								  
+								  if (existeAgrupacionPersona(b))
+								  {
+									  serviceAgru.modificar(b);
+								  }
+								  else
+								  {
+									  serviceAgru.insertar(b);
+								  }
+								  b.setTiivsPersona(personaTemporal);
+								
+							//}
+						//} 
+						
+						
 				   }
 				}
 																				
@@ -2582,36 +2594,37 @@ public class ConsultarSolicitudMB {
 				 TiivsAgrupacionPersona  tiivsAgrupacionPersona=null;
 				  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 				  List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
-				  Set<TiivsAgrupacionPersona> lstTempAgrupacion=null;
+				  Set<TiivsAgrupacionPersona> setTempAgrupaciones=new HashSet<TiivsAgrupacionPersona>();
+				  setTempAgrupaciones.addAll(lstTiivsAgrupacionPersonas);
 				  for (TiivsPersona objTiivsPersonaResultado : lstTiivsPersona) {
+					
+					for (TiivsAgrupacionPersona  x : lstTiivsAgrupacionPersonas) {
+					  if(!x.getCodPer().equals(objTiivsPersonaResultado.getCodPer())){
+						  tiivsAgrupacionPersona =new TiivsAgrupacionPersona();
+						  tiivsAgrupacionPersona.setNumGrupo(numGrupoUpdatePoderdanteApoderado);
+						  tiivsAgrupacionPersona.setCodSoli(solicitudRegistrarT.getCodSoli());
+						  tiivsAgrupacionPersona.setCodPer(objTiivsPersonaResultado.getCodPer());
+						  tiivsAgrupacionPersona.setClasifPer(objTiivsPersonaResultado.getClasifPer());
+						  tiivsAgrupacionPersona.setTipPartic(objTiivsPersonaResultado.getTipPartic());
+						  tiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
+						  setTempAgrupaciones.add(tiivsAgrupacionPersona);
+					  }
+				     } 
 					  
 					  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 						  lstPoderdantes.add(objTiivsPersonaResultado);}
 					  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.APODERADO)){
 						  lstApoderdantes.add(objTiivsPersonaResultado);}
-					    tiivsAgrupacionPersona =new TiivsAgrupacionPersona();
-					  //logger.info("numGrupo cambiar esto  " +numGrupoUpdatePoderdanteApoderado);
-					  tiivsAgrupacionPersona.setNumGrupo(numGrupoUpdatePoderdanteApoderado);
-					  tiivsAgrupacionPersona.setCodSoli(solicitudRegistrarT.getCodSoli());
-					  tiivsAgrupacionPersona.setCodPer(objTiivsPersonaResultado.getCodPer());
-					  tiivsAgrupacionPersona.setClasifPer(objTiivsPersonaResultado.getClasifPer());
-					  tiivsAgrupacionPersona.setTipPartic(objTiivsPersonaResultado.getTipPartic());
-					  tiivsAgrupacionPersona.setTiivsPersona(objTiivsPersonaResultado);
-					  lstTempAgrupacion=new HashSet<TiivsAgrupacionPersona>();
-					  for (TiivsAgrupacionPersona  x : lstTiivsAgrupacionPersonas) {
-						  if(!x.equals(tiivsAgrupacionPersona)){
-							  lstTempAgrupacion.add(tiivsAgrupacionPersona);}
-					}
+					
 				}
-				  //lstTiivsAgrupacionPersonas.addAll(lstTempAgrupacion);
+				  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
+				  lstTiivsAgrupacionPersonas.addAll(setTempAgrupaciones);
 				  logger.info(" lstAgrupacionSimpleDto despues " +lstAgrupacionSimpleDto.size());
-				  logger.info("lstTempAgrupacion  tamanio" +lstTempAgrupacion.size());
+				 
 				  logger.info("lstPoderdantes " +lstPoderdantes.size());
 				  logger.info("lstApoderdantes " +lstApoderdantes.size());
 				  logger.info(" lstTiivsAgrupacionPersonas " +lstTiivsAgrupacionPersonas.size());
 				  AgrupacionSimpleDto agrupacionSimpleDto =null;
-				for (TiivsSolicitudAgrupacion x : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
-					lstTiivsAgrupacionPersonas.addAll(x.getTiivsAgrupacionPersonas());
 					
 					logger.info(" lstTiivsAgrupacionPersonas " +lstTiivsAgrupacionPersonas.size());
 					for (TiivsAgrupacionPersona c : lstTiivsAgrupacionPersonas) {
@@ -2624,8 +2637,13 @@ public class ConsultarSolicitudMB {
 						   agrupacionSimpleDto.setLstPersonas(this.lstTiivsPersona);
 						   this.lstAgrupacionSimpleDto.set(indexUpdatePoderdanteApoderado, agrupacionSimpleDto);
 					}
-					 
-				} 
+					
+					
+					for (TiivsSolicitudAgrupacion a : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+						if(a.getId().getNumGrupo()==numGrupoUpdatePoderdanteApoderado){
+						a.setTiivsAgrupacionPersonas(lstTiivsAgrupacionPersonas);
+						}
+				     } 
 				
 			  }
 		  
@@ -2665,8 +2683,19 @@ public class ConsultarSolicitudMB {
 
 	public void eliminarArupacion() {
 		logger.info("********************** eliminarArupacion *********************************** ");
-
-		this.lstAgrupacionSimpleDto.remove(this.objAgrupacionSimpleDtoCapturado);
+		for (int i = 0; i < lstAgrupacionSimpleDto.size(); i++) {
+			System.out.println( " i  " +i + "indexUpdatePoderdanteApoderado" +  indexUpdatePoderdanteApoderado);
+			if(i==indexUpdatePoderdanteApoderado){
+				lstAgrupacionSimpleDto.get(i).setLstPoderdantes(new ArrayList<TiivsPersona>());
+				for (TiivsPersona n : lstAgrupacionSimpleDto.get(i).getLstApoderdantes()) {
+					//lstAgrupacionSimpleDto.get(i).remove(n);
+				}
+				this.lstAgrupacionSimpleDto.remove(indexUpdatePoderdanteApoderado);
+			}
+			
+		}
+		//this.lstAgrupacionSimpleDto.remove(indexUpdatePoderdanteApoderado);
+		//this.lstAgrupacionSimpleDto.remove(this.objAgrupacionSimpleDtoCapturado);
 		Set<TiivsSolicitudAgrupacion> lstSolicitudAgrupacion = (Set<TiivsSolicitudAgrupacion>) this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
 
 		logger.info("Tamanio de la lista Solicitud Agrupacion : " + lstSolicitudAgrupacion.size());
@@ -2783,6 +2812,7 @@ public class ConsultarSolicitudMB {
 		String sCadena = "";		
 		try{				
 			pdfViewerMB = new PDFViewerMB();	
+			logger.info("usuario.getUID() ******************** " +usuario.getUID());
 			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID());			
 		}catch(Exception e){
 			logger.error("Error al obtener parámetros de APPLET",e);
