@@ -1112,41 +1112,51 @@ public class SolicitudRegistroMB {
 		
 		//logger.info("documentos Leidos: " + documentosLeidos);		
 		logger.info("documentos Leidos: " + visadoDocumentosMB.getDocumentosLeidos());
-		String []aDocumentos = visadoDocumentosMB.getDocumentosLeidos().split(",");
+		logger.info("documentos Cargados: " + visadoDocumentosMB.getDocumentosCargados());
+		String []aDocumentosLeidos = visadoDocumentosMB.getDocumentosLeidos().split(",");
+		String []aDocumentosCargados = visadoDocumentosMB.getDocumentosCargados().split(",");
 		String nombreDoc = "";
 		
 		//Actualiza lista de documentos
-		for(String documento : aDocumentos){
-			logger.info("Buscando coincidencias para:" + documento);
-			if(!documento.trim().isEmpty()){
-				nombreDoc = documento.substring(0, documento.lastIndexOf("."));			
-				
-				//Agregar a listado de documentos tabla documentos
-				for(DocumentoTipoSolicitudDTO doc : lstdocumentos){
-					logger.info("nombreDoc = doc.getItem():" + nombreDoc + "=" + doc.getNombreCorto());
-					if(doc.getNombreCorto().equals(nombreDoc)){
-						doc.setAlias(documento);
-						doc.setAliasTemporal("");
-						logger.info("actualizo nombre documento:" + doc.getAlias());
-						
-						//agregar a lista de anexos de la solicitud
-						TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
-						objAnexo.setId(new TiivsAnexoSolicitudId(null, doc.getItem()));
-						objAnexo.setAliasArchivo(doc.getAlias());
-						objAnexo.setAliasTemporal(doc.getAliasTemporal());
-						lstAnexoSolicitud.add(objAnexo);
-												
-						//Actualiza lstTipoSolicitudDocumentos (listBox de documentos)		
-						for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
-							if (s.getId().getCodDoc().equals(objAnexo.getId().getCodDoc())) {
-								this.lstTipoSolicitudDocumentos.remove(s);
-								break;
-							}
-						}												
-					}
-				}										
-			}
-		}		
+		
+		if(aDocumentosLeidos.length == aDocumentosCargados.length){
+			
+			//for(String documento : aDocumentosLeidos){
+			for(int i=0;i<aDocumentosLeidos.length;i++){
+				String documentoLeido = aDocumentosLeidos[i];
+				String documentoCargado = aDocumentosCargados[i];
+				logger.info("Buscando coincidencias para:" + documentoLeido);
+				if(!documentoLeido.trim().isEmpty()){
+					nombreDoc = documentoLeido.substring(0, documentoLeido.lastIndexOf("."));			
+					
+					//Agregar a listado de documentos tabla documentos
+					for(DocumentoTipoSolicitudDTO doc : lstdocumentos){
+						logger.info("nombreDoc = doc.getItem():" + nombreDoc + "=" + doc.getNombreCorto());
+						if(doc.getNombreCorto().equals(nombreDoc)){
+							doc.setAlias(documentoLeido);
+							doc.setAliasTemporal(documentoCargado);
+							logger.info("actualizo nombre documento:" + doc.getAlias());
+							
+							//agregar a lista de anexos de la solicitud
+							TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
+							objAnexo.setId(new TiivsAnexoSolicitudId(null, doc.getItem()));
+							objAnexo.setAliasArchivo(doc.getAlias());
+							objAnexo.setAliasTemporal(doc.getAliasTemporal());
+							lstAnexoSolicitud.add(objAnexo);
+													
+							//Actualiza lstTipoSolicitudDocumentos (listBox de documentos)		
+							for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
+								if (s.getId().getCodDoc().equals(objAnexo.getId().getCodDoc())) {
+									this.lstTipoSolicitudDocumentos.remove(s);
+									break;
+								}
+							}												
+						}
+					}										
+				}
+			}		
+			
+		}
 		
 		establecerTipoSolicitud();
 				
