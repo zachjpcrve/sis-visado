@@ -5,6 +5,10 @@
 package com.hildebrando.visado.applet;
 
 import com.hildebrando.visado.ftp.ClienteFTP;
+import com.hildebrando.visado.http.HttpTransferFiles;
+import com.hildebrando.visado.util.Constantes;
+import com.hildebrando.visado.util.Utiles;
+
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -14,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -133,7 +138,8 @@ public class AgregarDocumentos extends JApplet {
         String sNombreDocLeidos = "";
         List<File> lstFicherosLeidos = null;
         String sPathCliente = getParameter(Constantes.PATH_CLIENTE);
-        String sDocumentosLeer = getParameter(Constantes.DOCUMENTOS_LEER);        
+        String sDocumentosLeer = getParameter(Constantes.DOCUMENTOS_LEER);    
+        String sDocumentosCargados = "";
         Archivo archivo = new Archivo();                
         if(archivo.obtenerListaFiles(sPathCliente, sDocumentosLeer) == 1){
             sNombreDocLeidos = archivo.getNombreFilesReaded();
@@ -141,14 +147,16 @@ public class AgregarDocumentos extends JApplet {
             System.out.println("Documentos obtenidos : " + sNombreDocLeidos);
             System.out.println("Cantidad de archivos leidos : " + lstFicherosLeidos.size());
             documentosLeidos = sNombreDocLeidos;   
-            ficherosLeidos = lstFicherosLeidos;
-            ejecutarFuncion("actualizarDocumentos", documentosLeidos);
+            ficherosLeidos = lstFicherosLeidos;                     
+            sDocumentosCargados = subirArchivoHTTP(ficherosLeidos);            
+            ejecutarFuncion("actualizarDocumentos", documentosLeidos,sDocumentosCargados);//ojo modificar java script
         }
         System.out.println("********actualizar:Fin*************");
                 
     }        
     
-    public void actualizarConPermisos(){
+   
+	public void actualizarConPermisos(){
         AccessController.doPrivileged(new PrivilegedAction<String>() {
             @Override
             public String run() {
@@ -175,7 +183,19 @@ public class AgregarDocumentos extends JApplet {
         System.out.println("********cargarMultipleFTP:Fin*************");        
     }
     
-    public void cargarMultipleFTPConPermisos(final String codigoSolicitud){
+       
+    private String subirArchivoHTTP(List<File> ficherosLeidos2) {
+    	String tramaDocumentosCargados = "";
+    	HttpTransferFiles httpTransferFiles = new HttpTransferFiles();
+    	httpTransferFiles.setUrl(getParameter(Constantes.URL_SERVER));
+    	httpTransferFiles.sendFiles(ficherosLeidos);
+    	//tramaDocumentosCargados = Utiles.armaTramaLista(httpTransferFiles.getNameSentFiles());
+    	tramaDocumentosCargados = httpTransferFiles.getFilesLoaded();
+    	System.out.println("Archivos cargados:" + tramaDocumentosCargados);
+		return tramaDocumentosCargados;
+	}    
+
+	public void cargarMultipleFTPConPermisos(final String codigoSolicitud){
         AccessController.doPrivileged(new PrivilegedAction<String>() {
             @Override
             public String run() {
@@ -249,12 +269,17 @@ public class AgregarDocumentos extends JApplet {
         try {
             StringBuilder builder = new StringBuilder(Constantes.URL_JAVA_SCRIPT);
             builder.append(funcion).append("(");
+            int i=0;
             for (Object param : parametros) {
                 if (param instanceof String) {
+                	if(i>0){
+                		builder.append(",");
+                	}
                     builder.append("'").append(param).append("'");
                 } else {
                     builder.append(param);
                 }
+                i++;
             }
             builder.append(")");
             String ejecFuncion = builder.toString();

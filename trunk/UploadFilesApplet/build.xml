@@ -3,13 +3,24 @@
 <project name="UploadFileApplet">
 	<target name="jar-applet">
 		<echo>Generando archivo jar</echo>
-		<jar destfile="dist/UploadFilesApplet.jar" basedir="bin">						
+		<jar destfile="dist/uploadFilesApplet.jar" basedir="bin">						
 			<zipfileset src="lib/commons-net-3.2.jar" 
 				excludes="META-INF/*,**/*.txt,**/*.java,**/*.html" />			
+			<zipfileset src="lib/commons-logging-1.1.1.jar" 
+				excludes="META-INF/*,**/*.txt,**/*.java,**/*.html" />			
+			<zipfileset src="lib/httpclient-4.2.3.jar" 
+				excludes="META-INF/*,**/*.txt,**/*.java,**/*.html" />						
+			<zipfileset src="lib/httpcore-4.2.2.jar" 
+				excludes="META-INF/*,**/*.txt,**/*.java,**/*.html" />				
+			<zipfileset src="lib/httpmime-4.2.3.jar" 
+				excludes="META-INF/*,**/*.txt,**/*.java,**/*.html" />
 		</jar>
 		
+		
 		<echo>Firmando el archivo jar</echo>
+		
 		<!--
+		
 		<genkey alias="bbva-applet" storepass="javajava" 
 				keystore="javajava" validity="9999">
 			<dname>
@@ -20,7 +31,8 @@
 			</dname>
 		</genkey>
 		-->
-		<signjar jar="dist/UploadFilesApplet.jar" alias="bbva-applet" 
+		
+		<signjar jar="dist/uploadFilesApplet.jar" alias="bbva-applet" 
 				storepass="javajava" keystore="javajava"/>
 		<echo>Fin</echo>
 		
