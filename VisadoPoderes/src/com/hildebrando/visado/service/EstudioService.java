@@ -27,7 +27,13 @@ public class EstudioService {
 		logger.info("EstudioService : listarEstudios");
 		List<TiivsEstudio> estudios = new ArrayList<TiivsEstudio>();
 		/*******************************/
-
+		String estadoString = "1";
+		char estadoChar = estadoString.charAt(0);
+		Character estadoSi = Character.valueOf(estadoChar);
+		String estadoNoString = "0";
+		char estadoNoChar = estadoNoString.charAt(0);
+		Character estadoNo = Character.valueOf(estadoNoChar);
+		
 		/**********************/
 		GenericDao<TiivsEstudio, Object> service = (GenericDao<TiivsEstudio, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
