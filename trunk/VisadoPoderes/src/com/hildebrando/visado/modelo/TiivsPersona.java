@@ -223,5 +223,27 @@ public class TiivsPersona implements java.io.Serializable {
 	public void setTiivsRevocados(Set tiivsRevocados) {
 		this.tiivsRevocados = tiivsRevocados;
 	}
+
+	@Override
+	public String toString() {
+		return "TiivsPersona [codPer=" + this.codPer + ", codCen="
+				+ this.codCen + ", tipDoi=" + this.tipDoi + ", numDoi="
+				+ this.numDoi + ", nombre=" + this.nombre + ", apePat="
+				+ this.apePat + ", apeMat=" + this.apeMat + ", numCel="
+				+ this.numCel + ", email=" + this.email + ", usuarioRegistro="
+				+ this.usuarioRegistro + ", fechaRegistro="
+				+ this.fechaRegistro + ", tipPartic=" + this.tipPartic
+				+ ", clasifPer=" + this.clasifPer + ", clasifPerOtro="
+				+ this.clasifPerOtro + ", sDesctipPartic="
+				+ this.sDesctipPartic + ", sDescclasifPer="
+				+ this.sDescclasifPer + ", sDesctipDoi=" + this.sDesctipDoi
+				+ ", nombreCompletoMayuscula=" + this.nombreCompletoMayuscula
+				+ ", tiivsRevocados=" + this.tiivsRevocados
+				+ ", tiivsAgrupacionPersonas=" + this.tiivsAgrupacionPersonas
+				+ "]";
+	}
+	
+	
+	
 	
 }
