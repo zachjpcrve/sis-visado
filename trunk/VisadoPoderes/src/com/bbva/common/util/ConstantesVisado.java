@@ -414,6 +414,7 @@ public class ConstantesVisado {
 		
 		public static final String ESTADO_COD_ACTIVO="1";
 		public static final String ESTADO_COD_DESACTIVO="0";
+		public static final String ESTADO_COD_REVOCADO_3="3";
 		
 		public static final String ESTADO_COD_REGISTRADO_T02="0001";					
 		public static final String ESTADO_COD_RESERVADO_T02="0002";					
