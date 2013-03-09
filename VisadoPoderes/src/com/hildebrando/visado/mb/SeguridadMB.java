@@ -64,6 +64,7 @@ public class SeguridadMB {
 	}
 	@SuppressWarnings("rawtypes")
 	public void iniciarSession(){
+	String explorador="";
 	logger.info("===== entrando a iniciarSession() ====");				
 	ServiciosSeguridadBbva objSeguridad;
 	IILDPeUsuario usuarioIILD = null;
@@ -79,8 +80,84 @@ public class SeguridadMB {
         	__Conexion2 con = new __Conexion2();
             String codigoUsuario = sCodUsuarioBBVA;                                
             usuarioIILD = con.recuperarUsuario(codigoUsuario);	
-
-           
+        
+        //Valida explorador
+        String agente = FacesContext.getCurrentInstance()
+                    .getExternalContext().getRequestHeaderMap()
+                    .get("User-Agent");
+        
+        if (agente.contains("MSIE 7.0")) {
+            explorador = "IE7";
+	    }
+        if (agente.contains("MSIE 9.0")) {
+            explorador = "IE9";
+	    }
+        if (agente.contains("MSIE 8.0")) {
+            explorador = "IE8";
+	    }
+	    if (agente.contains("Opera")) {
+	        explorador = "Opera";
+	    }
+	    if (agente.contains("Firefox")) {
+	        explorador = "Firefox";
+	    }
+	    if (agente.contains("Safari")) {
+	        explorador = "Safari";
+	    }
+	    if (agente.contains("Chrome")) {
+	        explorador = "Chrome";
+	    }
+	    
+	    logger.info("Navegador detectado: " + explorador);
+	    
+	    if (explorador.equals("IE7"))
+	    {
+	    	request.getSession(true).setAttribute("ANCHO_FIELDSET", "350%");
+	    	request.getSession(true).setAttribute("ANCHO_FIELDSET_PODER", "95%");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_PODER", "850");
+	    	request.getSession(true).setAttribute("ANCHO_REVOC_PODER", "100%");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_REVOC_PODER", "850");
+	    	request.getSession(true).setAttribute("ALTO_POPUP_REVOC_PODER", "300");
+	    }
+	    if (explorador.equals("IE9"))
+	    {
+	    	request.getSession(true).setAttribute("ANCHO_FIELDSET", "105%");
+	    	request.getSession(true).setAttribute("ANCHO_FIELDSET_PODER", "105%");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_PODER", "850");
+	    	request.getSession(true).setAttribute("ANCHO_REVOC_PODER", "150%");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_REVOC_PODER", "800");
+	    	request.getSession(true).setAttribute("ALTO_POPUP_REVOC_PODER", "400");
+	    }
+	    
+	    if (explorador.equals("IE8"))
+	    {
+	    	request.getSession(true).setAttribute("ANCHO_FIELDSET", "105%");
+	    	request.getSession(true).setAttribute("ANCHO_FIELDSET_PODER", "105%");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_PODER", "850");
+	    	request.getSession(true).setAttribute("ANCHO_REVOC_PODER", "150%");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_REVOC_PODER", "800");
+	    	request.getSession(true).setAttribute("ALTO_POPUP_REVOC_PODER", "400");
+	    }
+	    if (explorador.equals("Firefox"))
+	    {
+	    	request.getSession(true).setAttribute("ANCHO_FIELDSET", "105%");
+	    	request.getSession(true).setAttribute("ANCHO_FIELDSET_PODER", "105%");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_PODER", "850");
+	    	request.getSession(true).setAttribute("ANCHO_REVOC_PODER", "150%");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_REVOC_PODER", "800");
+	    	request.getSession(true).setAttribute("ALTO_POPUP_REVOC_PODER", "400");
+	    }
+	    
+	    if (explorador.equals("Chrome"))
+	    {
+	    	request.getSession(true).setAttribute("ANCHO_FIELDSET", "105%");
+	    	request.getSession(true).setAttribute("ANCHO_FIELDSET_PODER", "105%");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_PODER", "850");
+	    	request.getSession(true).setAttribute("ANCHO_REVOC_PODER", "150%");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_REVOC_PODER", "800");
+	    	request.getSession(true).setAttribute("ALTO_POPUP_REVOC_PODER", "400");
+	    }
+          
 		//PARTE ESPACIOsc
 		if(password!=null){
 			logger.info("IIVP : Desarrollo = true");

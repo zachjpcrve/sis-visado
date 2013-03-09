@@ -6,11 +6,8 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
@@ -139,6 +136,10 @@ public class SolicitudRegistroMB {
 	//http://172.31.9.41:9080/NAEWeb/pages/escaner/InvocaEscaner.xhtml?idEmpresa=1&idSistema=98&txLogin=P014773
 	private UploadedFile file;
 	private String sMonedaImporteGlobal;  
+	private String ancho_FieldSet;
+	private String ancho_FieldSet_Poder;
+	private String ancho_Popup_Poder;
+	private String ancho_Revoc_Poder;
 	
 	//private String documentosLeer="";
 	//private String documentosLeidos="";
@@ -186,7 +187,14 @@ public class SolicitudRegistroMB {
 		//mapSolicitudes=new HashMap<Integer, TiivsSolicitudOperban>();
 		
 		this.cadenaEscanerFinal = this.prepararURLEscaneo();	
-						
+		
+		ancho_FieldSet = (String) Utilitarios.getObjectInSession("ANCHO_FIELDSET");
+		ancho_FieldSet_Poder = (String) Utilitarios.getObjectInSession("ANCHO_FIELDSET_PODER");
+		ancho_Popup_Poder=(String) Utilitarios.getObjectInSession("ANCHO_POPUP_PODER");
+		ancho_Revoc_Poder=(String) Utilitarios.getObjectInSession("ANCHO_REVOC_PODER");
+		
+		logger.info("Ancho Fieldset Datos Generales: " + ancho_FieldSet);
+		logger.info("Ancho Fieldset Datos Poderdantes: " + ancho_FieldSet_Poder);
 
 	}	
 	
@@ -2393,9 +2401,37 @@ public class SolicitudRegistroMB {
 
 	public void setConsultarSolicitudMB(ConsultarSolicitudMB consultarSolicitudMB) {
 		this.consultarSolicitudMB = consultarSolicitudMB;
-	}	
-	
-	
-	
+	}
 
+	public String getAncho_FieldSet() {
+		return ancho_FieldSet;
+	}
+
+	public void setAncho_FieldSet(String ancho_FieldSet) {
+		this.ancho_FieldSet = ancho_FieldSet;
+	}
+
+	public String getAncho_FieldSet_Poder() {
+		return ancho_FieldSet_Poder;
+	}
+
+	public void setAncho_FieldSet_Poder(String ancho_FieldSet_Poder) {
+		this.ancho_FieldSet_Poder = ancho_FieldSet_Poder;
+	}
+
+	public String getAncho_Popup_Poder() {
+		return ancho_Popup_Poder;
+	}
+
+	public void setAncho_Popup_Poder(String ancho_Popup_Poder) {
+		this.ancho_Popup_Poder = ancho_Popup_Poder;
+	}
+
+	public String getAncho_Revoc_Poder() {
+		return ancho_Revoc_Poder;
+	}
+
+	public void setAncho_Revoc_Poder(String ancho_Revoc_Poder) {
+		this.ancho_Revoc_Poder = ancho_Revoc_Poder;
+	}
 }
