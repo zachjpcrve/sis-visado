@@ -3,26 +3,31 @@ package com.hildebrando.visado.mb;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -33,40 +38,18 @@ import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.converter.PersonaDataModal;
-import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.CombinacionSolicitudUtil;
 import com.hildebrando.visado.dto.ComboDto;
-import com.hildebrando.visado.dto.Persona;
 import com.hildebrando.visado.dto.Revocado;
 import com.hildebrando.visado.dto.TipoDocumento;
-import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
-import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsRevocado;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
-
-import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
 @ManagedBean(name = "revocadosMB")
 @SessionScoped
@@ -138,8 +121,8 @@ public class RevocadosMB {
 	private List<TiivsPersona> poderdantesNuevo;
 	
 	private String msjResultRevocados;
-	
-	
+	private String ancho_Popup_Revoc_Poder;
+	private String alto_Popup_Revoc_Poder;
 
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
@@ -160,6 +143,8 @@ public class RevocadosMB {
 		
 		estadoRevocado= "S";
 		listSolicResult = new ArrayList<String>();
+		ancho_Popup_Revoc_Poder=(String) Utilitarios.getObjectInSession("ANCHO_POPUP_REVOC_PODER");
+		alto_Popup_Revoc_Poder=(String) Utilitarios.getObjectInSession("ALTO_POPUP_REVOC_PODER");
 		
 		cargarCombos();
 	}
@@ -2009,7 +1994,7 @@ public class RevocadosMB {
 	public void setRevocadoDelete(Revocado revocadoDelete) {
 		this.revocadoDelete = revocadoDelete;
 	}
-
+	
 	public IILDPeUsuario getUsuario() {
 		return usuario;
 	}
@@ -2042,4 +2027,19 @@ public class RevocadosMB {
 		this.file = file;
 	}
 
+	public String getAncho_Popup_Revoc_Poder() {
+		return ancho_Popup_Revoc_Poder;
+	}
+
+	public void setAncho_Popup_Revoc_Poder(String ancho_Popup_Revoc_Poder) {
+		this.ancho_Popup_Revoc_Poder = ancho_Popup_Revoc_Poder;
+	}
+
+	public String getAlto_Popup_Revoc_Poder() {
+		return alto_Popup_Revoc_Poder;
+	}
+
+	public void setAlto_Popup_Revoc_Poder(String alto_Popup_Revoc_Poder) {
+		this.alto_Popup_Revoc_Poder = alto_Popup_Revoc_Poder;
+	}
 }
