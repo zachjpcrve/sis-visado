@@ -1019,6 +1019,7 @@ public class RevocadosMB {
 			personaClientesPendEdit = revocadosAux;
 			
 			objTiivsPersonaAgregar = new TiivsPersona();
+			objTiivsPersonaBusquedaDlg = new TiivsPersona();
 		}
 		
 		
@@ -1042,7 +1043,7 @@ public class RevocadosMB {
 				tiivsRevocadoAux.setTiivsPersona(tiivsPersona);
 				tiivsRevocadoAux.setTipPartic(tiivsPersona.getTipPartic());
 				tiivsRevocadoAux.setFechaRevocatoria(new Date());
-				tiivsRevocadoAux.setEstado(ConstantesVisado.ESTADOS.ESTADO_ACTIVO_REVOCADO);
+				tiivsRevocadoAux.setEstado(ConstantesVisado.ESTADOS.ESTADO_PENDIENTE_REVOCADO);
 				tiivsRevocadoAux.setCodAgrup(Integer.parseInt(revocado.getCodAgrupacion()));
 				
 				try {
@@ -1060,7 +1061,7 @@ public class RevocadosMB {
 				tiivsRevocadoAux.setTiivsPersona(tiivsPersona);
 				tiivsRevocadoAux.setTipPartic(tiivsPersona.getTipPartic());
 				tiivsRevocadoAux.setFechaRevocatoria(new Date());
-				tiivsRevocadoAux.setEstado(ConstantesVisado.ESTADOS.ESTADO_ACTIVO_REVOCADO);
+				tiivsRevocadoAux.setEstado(ConstantesVisado.ESTADOS.ESTADO_PENDIENTE_REVOCADO);
 				tiivsRevocadoAux.setCodAgrup(Integer.parseInt(revocado.getCodAgrupacion()));
 				
 				try {
