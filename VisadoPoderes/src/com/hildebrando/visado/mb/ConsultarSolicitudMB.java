@@ -1677,6 +1677,8 @@ public class ConsultarSolicitudMB {
 		this.registrarHistorial(solicitudRegistrarT);
 		this.obtenerHistorialSolicitud();
 		this.seguimientoMB.busquedaSolicitudxCodigo(solicitudRegistrarT.getCodSoli());
+		
+		this.actualizarEstadoReservadoSolicitud();
 	}
 
 	public void actualizarEstadoVencidoSolicitud(TiivsSolicitud solicitud) throws Exception {
