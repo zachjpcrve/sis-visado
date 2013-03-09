@@ -1435,9 +1435,13 @@ public class ConsultarSolicitudMB {
 			{
 				if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) 
 				{
-					// Llamada a los Niveles
+					  if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)
+							  && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+	                    	 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+						}else{
+							this.agregarNiveles(solicitudRegistrarT);
+						}
 
-					this.agregarNiveles(solicitudRegistrarT);
 					this.bSeccionDictaminar = false;
 					this.solicitudRegistrarT = serviceS
 							.modificar(solicitudRegistrarT);
@@ -1455,13 +1459,20 @@ public class ConsultarSolicitudMB {
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
-
-					this.agregarNiveles(solicitudRegistrarT);
+					
+                     if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)
+                    		          && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+                    	 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
+					}else{
+						this.agregarNiveles(solicitudRegistrarT);
+					}
 					this.bSeccionDictaminar = false;
 					this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
 					actualizarBandeja=true;
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
+					
+					
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
 
@@ -2094,7 +2105,7 @@ public class ConsultarSolicitudMB {
 	}
 
 	@SuppressWarnings({ "unused", "unchecked" })
-	@Transactional
+	@Transactional (rollbackFor=Exception.class)
 	public void registrarSolicitud() 
 	{
 		String mensaje = "";
@@ -2194,13 +2205,14 @@ public class ConsultarSolicitudMB {
 								  logger.info("Codigo de la persona a Insertar : "+objPersonaRetorno.getCodPer());
 								  b.setTiivsPersona(null);
 								  b.setCodPer(objPersonaRetorno.getCodPer());
-								  
-								  if (existeAgrupacionPersona(b))
-								  {
+								  System.out.println(" -------------------------------- "+ b.toString());
+								  if (existeAgrupacionPersona(b)!=(null))
+								  {  System.out.println(" -------------if-----------------");
+									  b.setIdAgrupacion(existeAgrupacionPersona(b).getIdAgrupacion());
 									  serviceAgru.modificar(b);
 								  }
 								  else
-								  {
+								  { System.out.println(" ---------------else----------------");
 									  serviceAgru.insertar(b);
 								  }
 								  b.setTiivsPersona(personaTemporal);
@@ -2222,7 +2234,6 @@ public class ConsultarSolicitudMB {
 
 				for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) 
 				{
-					logger.info("nnnnnnnnnnnnnnnnnnnnnnn " + n.getAliasArchivo());
 					serviceAnexos.insertarMerge(n);
 				}	
 				
@@ -2286,11 +2297,14 @@ public class ConsultarSolicitudMB {
 				}
 				
 			}
+			bBooleanPopup=false;
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage());
 			Utilitarios.mensajeError("ERROR", "Ocurrio un Error al grabar la Solicitud");
 			e.printStackTrace();
 
+		}catch(Throwable t){
+			logger.error("Throwable ::: "+ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+t.getMessage());
 		}
 	}
 	
@@ -2331,12 +2345,11 @@ public class ConsultarSolicitudMB {
 		//}
 	}
 	
-	public Boolean existeAgrupacionPersona(TiivsAgrupacionPersona objAgrupacion)
+	public TiivsAgrupacionPersona existeAgrupacionPersona(TiivsAgrupacionPersona objAgrupacion)
 	{
 		Boolean existe=false;
-		
-		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		TiivsAgrupacionPersona objReturn =null;
+		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		
 		List<TiivsAgrupacionPersona> lista = new ArrayList<TiivsAgrupacionPersona>();
 		
@@ -2358,9 +2371,13 @@ public class ConsultarSolicitudMB {
 		if (lista.size()>0)
 		{
 			existe=true;
+			objReturn= lista.get(0);
+		}else{
+			objReturn=null;
 		}
 		
-		return existe;
+		return objReturn;
+		///return existe;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -2427,7 +2444,7 @@ public class ConsultarSolicitudMB {
 
 	
 	//metodo Samira update
-	public void verEditarAgrupacion(){
+	public String verEditarAgrupacion(){
 		logger.info("********************** verEditarAgrupacion *********************************** ");
 		logger.info("this.getCodSoli  "+ this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
 		logger.info("this.getNumGrupo  "+ this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
@@ -2468,6 +2485,8 @@ public class ConsultarSolicitudMB {
 		listaTemporalAgrupacionesPersonaBorradores=new ArrayList<TiivsAgrupacionPersona>();
 		logger.info("this.getLstPersonas  "+ lstTiivsPersona.size());
 		flagUpdatePoderdanteApoderados=true;
+		bBooleanPopup=false;
+		return  "/faces/paginas/solicitudEdicion.xhtml";
 	}
 
 	public void agregarActionListenerAgrupacion(){
@@ -2681,21 +2700,9 @@ public class ConsultarSolicitudMB {
 
 	}
 
-	public void eliminarArupacion() {
+	public String eliminarArupacion() {
 		logger.info("********************** eliminarArupacion *********************************** ");
-		for (int i = 0; i < lstAgrupacionSimpleDto.size(); i++) {
-			System.out.println( " i  " +i + "indexUpdatePoderdanteApoderado" +  indexUpdatePoderdanteApoderado);
-			if(i==indexUpdatePoderdanteApoderado){
-				lstAgrupacionSimpleDto.get(i).setLstPoderdantes(new ArrayList<TiivsPersona>());
-				for (TiivsPersona n : lstAgrupacionSimpleDto.get(i).getLstApoderdantes()) {
-					//lstAgrupacionSimpleDto.get(i).remove(n);
-				}
-				this.lstAgrupacionSimpleDto.remove(indexUpdatePoderdanteApoderado);
-			}
-			
-		}
-		//this.lstAgrupacionSimpleDto.remove(indexUpdatePoderdanteApoderado);
-		//this.lstAgrupacionSimpleDto.remove(this.objAgrupacionSimpleDtoCapturado);
+		this.lstAgrupacionSimpleDto.remove(this.objAgrupacionSimpleDtoCapturado);
 		Set<TiivsSolicitudAgrupacion> lstSolicitudAgrupacion = (Set<TiivsSolicitudAgrupacion>) this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
 
 		logger.info("Tamanio de la lista Solicitud Agrupacion : " + lstSolicitudAgrupacion.size());
@@ -2725,6 +2732,8 @@ public class ConsultarSolicitudMB {
 		logger.info("Tamanio de la lista Solicitud Agrupacion : " + lstSolicitudAgrupacion.size());
 		this.llamarComision();
 		this.objAgrupacionSimpleDtoCapturado = new AgrupacionSimpleDto();
+		
+		return  "/faces/paginas/solicitudEdicion.xhtml";
 	}
 
 	public void listarDocumentosXSolicitud(ValueChangeEvent e) {
