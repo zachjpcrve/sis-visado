@@ -442,7 +442,7 @@ public class ConstantesVisado {
 		public static final String ESTADO_RESERVADO_T02="Reservado";					
 		public static final String ESTADO_ACEPTADO_T02="Aceptado";				
 		public static final String ESTADO_RECHAZADO_T02="Rechazado";				
-		public static final String ESTADO_ENVIADOSSJJ_T02="Enviado a SSJJ";					
+		public static final String ESTADO_ENVIADOSSJJ_T02="Enviado";					
 		public static final String ESTADO_VENCIDO_T02="Vencido";					
 		public static final String ESTADO_EN_VERIFICACION_A_T02="En Verificación A";					
 		public static final String ESTADO_EN_VERIFICACION_B_T02="En Verificación B";						
