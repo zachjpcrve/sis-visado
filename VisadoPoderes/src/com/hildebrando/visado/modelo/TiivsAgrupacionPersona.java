@@ -100,4 +100,17 @@ public class TiivsAgrupacionPersona implements java.io.Serializable {
 	public void setClasifPer(String clasifPer) {
 		this.clasifPer = clasifPer;
 	}
+
+	@Override
+	public String toString() {
+		return "TiivsAgrupacionPersona [idAgrupacion=" + this.idAgrupacion
+				+ ", codSoli=" + this.codSoli + ", numGrupo=" + this.numGrupo
+				+ ", codPer=" + this.codPer + ", tipPartic=" + this.tipPartic
+				+ ", clasifPer=" + this.clasifPer
+				+ ", tiivsSolicitudAgrupacion=" + this.tiivsSolicitudAgrupacion
+				+ ", tiivsPersona=" + this.tiivsPersona + "]";
+	}
+	
+	
+	
 }
