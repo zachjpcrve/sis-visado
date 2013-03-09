@@ -26,9 +26,9 @@
 								<p:selectOneMenu id="cboTipoRegistro"
 									value="#{revocadosMB.objTiivsPersonaBusqueda.tipPartic}"
 									style="width: 120px">
+									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 									<f:selectItems value="#{revocadosMB.listTipoRegistro}"
 										var="t" itemValue="#{t.id.codElem}" itemLabel="#{t.valor1}" />
-									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 								</p:selectOneMenu>
 
 								<h:outputLabel value="T.DOI/ C.Central: " />
@@ -315,9 +315,9 @@
 					<p:selectOneMenu id="cboTipoRegistro"
 						value="#{revocadosMB.objTiivsPersonaAgregar.tipPartic}"
 						style="width: 120px">
+						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 						<f:selectItems value="#{revocadosMB.listTipoRegistro}" 
 						var="t" itemValue="#{t.id.codElem}" itemLabel="#{t.valor1}" />
-						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 					</p:selectOneMenu>
 
 				</h:panelGrid>
