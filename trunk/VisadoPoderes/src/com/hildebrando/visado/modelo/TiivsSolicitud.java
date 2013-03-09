@@ -2,12 +2,14 @@ package com.hildebrando.visado.modelo;
 
 // Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
+import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
 
 /**
@@ -47,6 +49,18 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private Boolean bLiberado;
 	
 	private List<TiivsSolicitudOperban> lstSolicBancarias; ///Solo para el reporte
+	private List<ComboDto> listaPersonasXAgrupacionXSolicitud; ///Para comparar revocados
+	
+	private List<ComboDto> listaNum_ListaPersonas;///Para comparar revocados
+	
+	public List<ComboDto> getListaNum_ListaPersonas() {
+		return this.listaNum_ListaPersonas;
+	}
+
+	public void setListaNum_ListaPersonas(List<ComboDto> listaNum_ListaPersonas) {
+		this.listaNum_ListaPersonas = listaNum_ListaPersonas;
+	}
+
 	private List<DocumentoTipoSolicitudDTO> lstDocumentos; 
 	private List<AgrupacionSimpleDto> lstAgrupacionSimpleDto;
 	
@@ -93,6 +107,10 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.nroVoucher = nroVoucher;
 		this.tiivsSolicitudNivels = tiivsSolicitudNivels;
 		this.tiivsSolicitudAgrupacions = tiivsSolicitudAgrupacions;
+	}
+
+	public TiivsSolicitud(String codSoli) {
+		this.codSoli = codSoli;
 	}
 
 	public String getCodSoli() {
@@ -356,6 +374,17 @@ public class TiivsSolicitud implements java.io.Serializable {
 	public List<AgrupacionSimpleDto> getLstAgrupacionSimpleDto() {
 		return lstAgrupacionSimpleDto;		
 	}
+
+	public List<ComboDto> getListaPersonasXAgrupacionXSolicitud() {
+		return this.listaPersonasXAgrupacionXSolicitud;
+	}
+
+	public void setListaPersonasXAgrupacionXSolicitud(
+			List<ComboDto> listaPersonasXAgrupacionXSolicitud) {
+		this.listaPersonasXAgrupacionXSolicitud = listaPersonasXAgrupacionXSolicitud;
+	}
+
+	
 	
 	
 	
