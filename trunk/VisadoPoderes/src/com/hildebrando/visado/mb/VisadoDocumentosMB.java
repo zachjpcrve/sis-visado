@@ -56,11 +56,13 @@ public class VisadoDocumentosMB {
 	private String pathCliente="";
 	private String documentosLeer="";
 	private String documentosLeidos="";
+	private String documentosCargados="";
 	private String host="";
 	private String user="";
 	private String pass="";
 	private String directory="";
 	private String carpetaClienteLog=ConstantesVisado.CARPETA_LOG_CLIENTE;
+	private String urlCarga="";
 	
 	public VisadoDocumentosMB(){
 		iniciarlizarParametros();
@@ -94,8 +96,30 @@ public class VisadoDocumentosMB {
 			logger.info("directory:" + directory);
 			
 		}		
+		this.urlCarga = armaUrlCarga();		
 	}
 	
+	private String armaUrlCarga() {
+		String url="";
+		try {
+			HttpServletRequest request = (HttpServletRequest) FacesContext
+					.getCurrentInstance().getExternalContext().getRequest();				
+			url = request.getScheme()
+				      + "://"
+				      + request.getServerName()
+				      + ":"
+				      + request.getServerPort()
+				      + request.getContextPath();
+				      //+ request.getRequestURI();
+			
+			url = url + "/principal/cargar.htm";		
+		}catch(Exception e){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR + " al obtener la ruta de carga de archivos",e);
+		}
+				
+		return url;
+	}
+
 	public static String armaTramaDocumentosALeer (List<TiivsTipoSolicDocumento> lstDocumentosXTipoSolTemp){
 		String sResult = "";		
 		StringBuilder sb = new StringBuilder(); 
@@ -176,5 +200,29 @@ public class VisadoDocumentosMB {
 	public void setCarpetaClienteLog(String carpetaClienteLog) {
 		this.carpetaClienteLog = carpetaClienteLog;
 	}
+
+	public String getDocumentosCargados() {
+		return documentosCargados;
+	}
+
+	public void setDocumentosCargados(String documentosCargados) {
+		this.documentosCargados = documentosCargados;
+	}
+	
+	public String getUrlCarga() {
+		return urlCarga;
+	}
+
+	public void setUrlCarga(String urlCarga) {
+		this.urlCarga = urlCarga;
+	}
+	
+	
+
+	
+	
+	
+	
+	
 	
 }
