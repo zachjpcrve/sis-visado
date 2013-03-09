@@ -225,19 +225,21 @@
 														</th>
 														</tr>
                                                         
-                                                        <c:forEach items="#{consultarSolicitudMB.lstAgrupacionSimpleDto}" var="s">
-                                                        <tr class="ui-widget-content ui-datatable-even">
+											                                                        <c:forEach items="#{consultarSolicitudMB.lstAgrupacionSimpleDto}" var="s">
+											                                                        <tr class="ui-widget-content ui-datatable-even">
 															<td><c:forEach items="#{s.lstPoderdantes}" var="n">
 															   <div class="ui-dt-c">
 															     <SPAN>#{n.sDesctipDoi}:#{n.numDoi}/#{n.nombre} #{n.apePat} #{n.apeMat}</SPAN>
 														         </div>
 															     </c:forEach>
+															     
 															</td>
 															<td><c:forEach items="#{s.lstApoderdantes}" var="n">
 															   <div class="ui-dt-c">
 															     <SPAN>#{n.sDesctipDoi}:#{n.numDoi}/#{n.nombre} #{n.apePat} #{n.apeMat}</SPAN>
 														         </div>
 															     </c:forEach>
+															    
 															</td>
 															<td><h:outputText value="#{s.sEstado}"/></td>
 															
@@ -253,19 +255,23 @@
 															</td>
 															<td><p:commandButton icon="ui-icon-pencil"  oncomplete ="dlgRegistrarPersona.show()" update=":formRegistrar:tlbPersonasPopup,:formRegistrar:cboTipoDoi,
 																				:formRegistrar:cboTipoDoi2,:formRegistrar:cboClasificacion"
-																			  action="#{consultarSolicitudMB.verEditarAgrupacion}">
+																		ajax="false"	  action="#{consultarSolicitudMB.verEditarAgrupacion}">
 																<f:setPropertyActionListener target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}"
 																							  value="#{s}">
 																</f:setPropertyActionListener>
 															</p:commandButton>
 															</td>
-															<td><p:commandButton icon="ui-icon-trash" 
-																			 action="#{consultarSolicitudMB.eliminarArupacion}" 
-																			 update=":formSolicitudRegistro" >
-																<f:setPropertyActionListener target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}"
-																							  value="#{s}" >
+															<td>
+															<p:commandButton icon="ui-icon-trash"
+																action="#{consultarSolicitudMB.eliminarArupacion}"
+																ajax="false"
+																update=":formSolicitudRegistro">
+																<f:setPropertyActionListener
+																	target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}"
+																	value="#{s}">
 																</f:setPropertyActionListener>
-															</p:commandButton></td>
+																					</p:commandButton>
+																				</td>
 														</tr>
 														</c:forEach>
 														
