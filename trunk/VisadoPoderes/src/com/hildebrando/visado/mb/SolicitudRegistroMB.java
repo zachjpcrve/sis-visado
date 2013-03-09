@@ -674,12 +674,25 @@ public class SolicitudRegistroMB {
 			Utilitarios.mensajeInfo("INFO", sMensaje);
 		} else if (!flagUpdatePersona) {
 			for (TiivsPersona x : lstTiivsPersona) {
-				if (x.getCodPer() == objTiivsPersonaResultado.getCodPer()) {
-					sMensaje = "Persona ya registrada, Ingrese otros datos de persona. ";
+				System.out.println("x.getCodPer() " +x.getCodPer());
+				System.out.println("objTiivsPersonaResultado.getCodPer() " +objTiivsPersonaResultado.getCodPer());
+				
+				
+				if(x.getTipDoi().equals(objTiivsPersonaResultado.getTipDoi())
+						&& x.getNumDoi().equals(objTiivsPersonaResultado.getNumDoi())){
+					sMensaje = "Persona con Documento ya ingresado, Ingrese otros datos de persona. ";
 					Utilitarios.mensajeInfo("", sMensaje);
 					bResult = false;
 					break;
-				}
+				}else if(objTiivsPersonaResultado.getCodPer()!=0){
+					if (x.getCodPer() == objTiivsPersonaResultado.getCodPer()) {
+						sMensaje = "Persona ya registrada, Ingrese otros datos de persona. ";
+						Utilitarios.mensajeInfo("", sMensaje);
+						bResult = false;
+						break;
+					}
+					}
+					
 			}
 		}
 		logger.info("bResult " +bResult);
