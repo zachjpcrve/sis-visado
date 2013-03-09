@@ -24,7 +24,7 @@
 				<textElement markup="html">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{observaciones} + " "]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{observaciones}!=null?$F{observaciones}: " ") + " "]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
