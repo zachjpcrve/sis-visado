@@ -13,7 +13,17 @@
 		</ui:insert></title>
 
 <h:outputStylesheet library="css" name="visado.css" />
+<!--[if IE 7]>
+<style type="text/css">
+.ui-menu .ui-menu-parent .ui-menu-child {
+       z-index: 9999999;
+}
+.ui-widget-content .ui-menu-list .ui-corner-all .ui-helper-clearfix .ui-menu-child .ui-shadow {
+       z-index: 9999999;
+}
 
+</style>
+<![endif]-->
 </h:head>
 <h:body>
 	<div id="container">
