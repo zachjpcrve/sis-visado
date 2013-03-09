@@ -8,7 +8,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -422,8 +424,287 @@ public class RevocadosMB {
 		return res;
 	}
 	
+	//@Samira 09/03/2012
+	public void revocarApodPod() {
+		try {
+			logger.info("**************** revocarActivar  ***************************" );
+			
+			/** Actualizar el estado de la Revocacion a Activo*/
+			this.actualizarEstadoRevocacionActivo();
+		
+		    String[] values  =new String[7];
+			values[0]=ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02;
+			values[1]=ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02;
+			values[2]=ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02;
+			values[3]=ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02;
+			
+			values[4]=ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02;
+			values[5]=ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02;
+			values[6]=ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02;
+			
+		List<TiivsSolicitudAgrupacionId> listaTiivsSolicitudAgrupacionId=new ArrayList<TiivsSolicitudAgrupacionId>();
+		List<TiivsSolicitud> listaSolicitudesDeDondeComparar=new ArrayList<TiivsSolicitud>();
+		GenericDao<TiivsSolicitud, Object> serviceSolicitud = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsSolicitud.class);
+		filtro.add(Restrictions.in("estado", values));
+		listaSolicitudesDeDondeComparar=serviceSolicitud.buscarDinamico(filtro);
+		logger.info("******** Tamanio de la lista de Solicitudes donde buscar ************* "+listaSolicitudesDeDondeComparar.size());
+		
+		List<String> listaCodSolicitudes =new ArrayList<String>();
+		for (TiivsSolicitud e : listaSolicitudesDeDondeComparar) {
+			listaCodSolicitudes.add(e.getCodSoli());
+		}
+		
+		
+		List<TiivsAgrupacionPersona> listaAgrupacionPersonacontraQuienComparar=new ArrayList<TiivsAgrupacionPersona>();
+		GenericDao<TiivsAgrupacionPersona, Object> serviceSolicitudAgrupacionPersona = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroAgrupacionPersona = Busqueda.forClass(TiivsAgrupacionPersona.class);
+		filtroAgrupacionPersona.add(Restrictions.in("codSoli", listaCodSolicitudes));
+		listaAgrupacionPersonacontraQuienComparar=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroAgrupacionPersona);
+		
+		
+		logger.info("******** Tamanio de la lista de Agrupacion Personas contra quien comparar ************* "+listaAgrupacionPersonacontraQuienComparar.size());
+		logger.info("******** Tamanio de la lista de Solicitudes donde buscar ************* "+listaSolicitudesDeDondeComparar.size());
+		
+		///revocadoEdit.get
+		/** Pasar Revocados a lista de ComboDto y comparar */
+		List<ComboDto> lstRevocadosComboDto = new ArrayList<ComboDto>();
+		for (TiivsPersona a : revocadoEdit.getApoderados()) {
+			lstRevocadosComboDto.add(new ComboDto(a.getCodPer()+"", ConstantesVisado.APODERADO));
+		}
+		for (TiivsPersona b : revocadoEdit.getPoderdantes()) {
+			lstRevocadosComboDto.add(new ComboDto(b.getCodPer()+"", ConstantesVisado.PODERDANTE));
+		}
+		logger.info("******** Tamanio de la lista de Solicitu ********** ::: " +lstRevocadosComboDto.size());
+		List<ComboDto> listaPersonasXAgrupacionXSolicitud=null;
+		List<Integer> listaStringCodAgrupacionesXCodSol=null;
+		List<ComboDto> listaPersonas=null;
+		 ComboDto combo=null;
+		 List<ComboDto> listaNum_ListaPersonas;
+		for (TiivsSolicitud a : listaSolicitudesDeDondeComparar) {
+			listaPersonasXAgrupacionXSolicitud =new ArrayList<ComboDto>();
+			for (TiivsAgrupacionPersona x : listaAgrupacionPersonacontraQuienComparar) {
+				if(a.getCodSoli().equals(x.getCodSoli())){
+					listaPersonasXAgrupacionXSolicitud.add(new ComboDto(x.getCodPer().toString(),x.getTipPartic(),x.getNumGrupo()));
+				}
+			}
+			
+		    listaStringCodAgrupacionesXCodSol=new ArrayList<Integer>();
+			listaStringCodAgrupacionesXCodSol=existe(listaPersonasXAgrupacionXSolicitud);
+			listaNum_ListaPersonas =new ArrayList<ComboDto>();
+			     
+			for (Integer w : listaStringCodAgrupacionesXCodSol) {
+				listaPersonas=new ArrayList<ComboDto>();
+				for (ComboDto v : listaPersonasXAgrupacionXSolicitud) {
+					if(w==v.getNumGrupo()){
+						listaPersonas.add(v);
+					}
+				}
+				combo = new ComboDto(w,listaPersonas);
+				listaNum_ListaPersonas.add(combo);
+			}
+			a.setListaNum_ListaPersonas(listaNum_ListaPersonas);
+			int i=0;
+			for (ComboDto m : listaNum_ListaPersonas) {
+				if(m.getListaPersonas().size()==lstRevocadosComboDto.size()){
+				    for (ComboDto comboDto : m.getListaPersonas()) {
+						System.out.println("###### comboDto.getKey()  " +  comboDto.getKey() +" %%%%% " +comboDto.getDescripcion() );
+					}
+					for (ComboDto comboDto : lstRevocadosComboDto) {
+						System.out.println("&&&&&&& comboDto.getKey()  " +  comboDto.getKey() +" T_T " +comboDto.getDescripcion() );
+					}
+					
+					for (ComboDto an : m.getListaPersonas()) {
+						for (ComboDto bn : lstRevocadosComboDto) {
+							
+							if(an.getKey().equals(bn.getKey()) 
+									&& an.getDescripcion().equals(bn.getDescripcion()) ){
+									//logger.info("Una combinacion es igual " + an.getNumGrupo());
+										i++;
+									}
+							
+						}
+					}
+					
+					//logger.info("Contador ::: " +i);
+					
+					if(i==lstRevocadosComboDto.size()){
+						logger.info("Toda la combinación es igual a la de Revocado Num Grupo : " + m.getNumGrupo());
+						listaTiivsSolicitudAgrupacionId.add(new TiivsSolicitudAgrupacionId(a.getCodSoli(), m.getNumGrupo()));
+						
+					}
+					
+				}
+			}
+			
+		}
+		
+		/** Por ultimo modificar el estado de las combinaciones iguales, pasarlas al estado Revocados */
+		this.actualizarEstadoA_Revocado_SolicitudAgrupacion(listaTiivsSolicitudAgrupacionId);
+		bBooleanPopup=false;
+		buscarRevocado();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
-	public void revocarApodPod(){
+	//@Samira 09/03/2012
+	public void actualizarEstadoRevocacionActivo() throws Exception{
+		List<TiivsRevocado> listaTiivsRevocado=new ArrayList<TiivsRevocado>();
+		GenericDao<TiivsRevocado, Object> serviceTiivsRevocado = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroTiivsRevocado = Busqueda.forClass(TiivsRevocado.class);
+		filtroTiivsRevocado.add(Restrictions.eq("codAgrup", Integer.parseInt(revocadoEdit.getCodAgrupacion())));
+		listaTiivsRevocado=serviceTiivsRevocado.buscarDinamico(filtroTiivsRevocado);
+		for (TiivsRevocado yy : listaTiivsRevocado) {
+			yy.setEstado(ConstantesVisado.ESTADOS.ESTADO_ACTIVO_REVOCADO);
+			serviceTiivsRevocado.modificar(yy);
+		}
+	}
+	//@Samira 09/03/2012
+	public void actualizarEstadoA_Revocado_SolicitudAgrupacion(List<TiivsSolicitudAgrupacionId> listaTiivsSolicitudAgrupacionId) throws Exception{
+		List<TiivsSolicitudAgrupacion> listaTiivsSolicitudAgrupacion=new ArrayList<TiivsSolicitudAgrupacion>();
+		GenericDao<TiivsSolicitudAgrupacion, Object> serviceSolicitudAgrupacionPersona = (GenericDao<TiivsSolicitudAgrupacion, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroSolicitudAgrupacion = Busqueda.forClass(TiivsSolicitudAgrupacion.class);
+		filtroSolicitudAgrupacion.add(Restrictions.in("id", listaTiivsSolicitudAgrupacionId));
+		listaTiivsSolicitudAgrupacion=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroSolicitudAgrupacion);
+		for (TiivsSolicitudAgrupacion xx : listaTiivsSolicitudAgrupacion) {
+			xx.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_3);
+			xx=serviceSolicitudAgrupacionPersona.modificar(xx);
+		}
+		
+		/** Luego validar si se cambiara el estado de la Solicitud */
+		this.validarSolicitudesSiTodasCombinacionesRevocadas();
+	}
+	//@Samira 09/03/2012
+	public void validarSolicitudesSiTodasCombinacionesRevocadas() throws Exception{
+		List<String> solicitudes = new ArrayList<String>();
+		   
+			
+			List<TiivsSolicitudAgrupacion> listaTiivsSolicitudAgrupacion=new ArrayList<TiivsSolicitudAgrupacion>();
+			GenericDao<TiivsSolicitudAgrupacion, Object> serviceSolicitudAgrupacionPersona = (GenericDao<TiivsSolicitudAgrupacion, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroSolicitudAgrupacion = Busqueda.forClass(TiivsSolicitudAgrupacion.class);
+			//filtroSolicitudAgrupacion.add(Restrictions.eq("estado", ""))
+			listaTiivsSolicitudAgrupacion=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroSolicitudAgrupacion);
+			logger.info("Tmanio listaTiivsSolicitudAgrupacion desde bd" +listaTiivsSolicitudAgrupacion.size());
+			List<String> lstString = new ArrayList<String>();
+			 lstString = this.listaCodSoli(listaTiivsSolicitudAgrupacion);
+			 if(lstString!=null){
+			for (String cc : lstString) {
+			int i=0,j=0;
+             for (TiivsSolicitudAgrupacion vv : listaTiivsSolicitudAgrupacion) {
+            	 if(vv!=null){
+            	 if(vv.getId()!=null){
+				if(cc.equals(vv.getId().getCodSoli())){
+					j++;
+					if(vv.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_3)){
+						i++;
+					}
+				    }
+            	 }
+            	}
+			}
+             logger.info(" Contador i  "+i + " Contador j : " +j) ;
+             if(i==j){
+            	 logger.info(" Todas las combinaciones estan revocadas , se cambiara el estado de la solicitud, segun corresponda");
+            	 solicitudes.add(cc);
+             }else{
+            	 logger.info(" No todas las combinaciones estan revocadas, no se cambia el estado de la solicitud");
+             }
+             
+		}
+			
+			/** Actualizar Estado Solicitudes**/
+			this.actualizarEstadoSolicitudes(solicitudes);
+		}	  
+			
+	}
+	
+	//@Samira 09/03/2012
+	public void actualizarEstadoSolicitudes(List<String> solicitudes) throws Exception{
+		    String[] codigosParaPasarSolicitudRechazada  =new String[4];
+		    String[] codigosParaPasarSolicitudImprocedente  =new String[3];
+		    codigosParaPasarSolicitudRechazada[0]=ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02;
+			codigosParaPasarSolicitudRechazada[1]=ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02;
+			codigosParaPasarSolicitudRechazada[2]=ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02;
+			codigosParaPasarSolicitudRechazada[3]=ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02;
+			
+			codigosParaPasarSolicitudImprocedente[0]=ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02;
+			codigosParaPasarSolicitudImprocedente[1]=ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02;
+			codigosParaPasarSolicitudImprocedente[2]=ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02;
+			
+		List<TiivsSolicitud> listaTiivsSolicitudRechazdas=new ArrayList<TiivsSolicitud>();
+		List<TiivsSolicitud> listaTiivsSolicitudImprocedentes=new ArrayList<TiivsSolicitud>();
+		GenericDao<TiivsSolicitud, Object> serviceSolicitudAgrupacionPersona = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroSolicitudRechazado = Busqueda.forClass(TiivsSolicitud.class);
+		filtroSolicitudRechazado.add(Restrictions.in("estado", codigosParaPasarSolicitudRechazada));
+		filtroSolicitudRechazado.add(Restrictions.in("codSoli", solicitudes));
+		listaTiivsSolicitudRechazdas=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroSolicitudRechazado);
+		for (TiivsSolicitud xx : listaTiivsSolicitudRechazdas) {
+			xx.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
+			xx=serviceSolicitudAgrupacionPersona.modificar(xx);
+		}
+		
+		Busqueda filtroSolicitudImprocedente = Busqueda.forClass(TiivsSolicitud.class);
+		filtroSolicitudImprocedente.add(Restrictions.in("estado", codigosParaPasarSolicitudImprocedente));
+		filtroSolicitudImprocedente.add(Restrictions.in("codSoli", solicitudes));
+		listaTiivsSolicitudImprocedentes=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroSolicitudRechazado);
+		for (TiivsSolicitud xx : listaTiivsSolicitudImprocedentes) {
+			xx.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
+			xx=serviceSolicitudAgrupacionPersona.modificar(xx);
+		}
+	}
+	//@Samira 09/03/2012
+	public List<String>listaCodSoli(List<TiivsSolicitudAgrupacion> listaTiivsSolicitudAgrupacion)throws Exception{
+		List<String>listaCodSoli =new ArrayList<String>();
+		for(int i=0;i<listaTiivsSolicitudAgrupacion.size();i++){
+            for(int j=0;j<listaTiivsSolicitudAgrupacion.size()-1;j++){
+                if(i!=j){
+                	if(listaTiivsSolicitudAgrupacion.get(i)!=null&&listaTiivsSolicitudAgrupacion.get(j)!=null){
+                    if(listaTiivsSolicitudAgrupacion.get(i).getId().getCodSoli().equals
+                    		(listaTiivsSolicitudAgrupacion.get(j).getId().getCodSoli())){
+                    	listaTiivsSolicitudAgrupacion.set(j, null);
+                    }
+                	}
+                }
+            }
+        }  
+	  
+	  for (TiivsSolicitudAgrupacion obj : listaTiivsSolicitudAgrupacion) {
+        	if(obj!=null){
+        		listaCodSoli.add(obj.getId().getCodSoli());
+        	}
+        	}
+	  logger.info("Tamanio de la lista a Devolver listaCodSoli " +listaCodSoli.size());
+	  return listaCodSoli;
+	}
+	//@Samira 09/03/2012
+	public List<Integer> existe(List<ComboDto> listaTemporal2){
+		           List<Integer> listaTemporal=new ArrayList<Integer>();
+		           List<Integer> arraycar=new ArrayList<Integer>();
+		           for (ComboDto c : listaTemporal2) {
+				    	  arraycar.add(c.getNumGrupo());
+				   }
+			
+			        for(int i=0;i<arraycar.size();i++){
+			            for(int j=0;j<arraycar.size()-1;j++){
+			                if(i!=j){
+			                    if(arraycar.get(i)==arraycar.get(j)){
+			                        arraycar.set(j, 99);
+			                    }
+			                }
+			            }
+			        }   
+			        for (Integer integer : arraycar) {
+			        	if(integer!=99){
+			        		listaTemporal.add(integer);
+			        	}
+			        	}
+	             return listaTemporal;
+	}
+	
+/*	public void revocarApodPod(){
+		logger.info("******************************* revocarApodPod ***************************");
 		List<TiivsAgrupacionPersona>  agrupacionPersonas= new ArrayList<TiivsAgrupacionPersona>();
 		GenericDao<TiivsAgrupacionPersona, Object> service = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsSolicitud, Object> service2 = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -629,7 +910,7 @@ public class RevocadosMB {
 		}
 		
 		
-	}
+	}*/
 	
 	public void cargarCombos(){
 		
