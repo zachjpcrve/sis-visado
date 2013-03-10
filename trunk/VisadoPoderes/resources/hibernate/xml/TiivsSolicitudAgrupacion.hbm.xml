@@ -18,7 +18,7 @@
         <property name="estado" type="string">
             <column name="ESTADO" length="1" />
         </property>
-        <set name="tiivsAgrupacionPersonas" table="TIIVS_AGRUPACION_PERSONA"  inverse="true" lazy="false" fetch="select" >
+        <set name="tiivsAgrupacionPersonas" table="TIIVS_AGRUPACION_PERSONA" cascade="delete-orphan,save-update"  inverse="true" lazy="false" fetch="select" >
             <key>
                 <column name="COD_SOLI" length="7" />
                 <column name="NUM_GRUPO" precision="8" scale="0" />
