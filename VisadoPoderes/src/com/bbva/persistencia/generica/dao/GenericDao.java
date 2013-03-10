@@ -22,6 +22,8 @@ public interface GenericDao<K, T> {
 
 	public abstract K modificar(K objeto) throws Exception;
 	
+	public abstract K guardarModificar(K objeto) throws Exception;
+	
 	public abstract List<K> buscarDinamico(final Busqueda filtro) throws Exception;
 	
 	public abstract List<Integer> buscarDinamicoInteger(final Busqueda filtro) throws Exception;
