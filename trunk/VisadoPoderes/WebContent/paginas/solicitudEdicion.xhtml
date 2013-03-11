@@ -456,7 +456,8 @@
 																 		action="#{consultarSolicitudMB.quitarDocumentosXTipoSolicitud}" 
 																 		update=":formSolicitudRegistro:listDocumentosXTipoSoli,
 																 				:formSolicitudRegistro:tblDocumentos,
-																 				:formSolicitudRegistro:idCodigoDocumentoSelected" 
+																 				:formSolicitudRegistro:idCodigoDocumentoSelected"																 				
+																 		ajax="false"
 																 		id="iconOnly" icon="ui-icon-circle-close"
 																 		disabled="#{s.alias.isEmpty()?true:false}"
 																 		oncomplete="return appletEliminarDocumento();">
