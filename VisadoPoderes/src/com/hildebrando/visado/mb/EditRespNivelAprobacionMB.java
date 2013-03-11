@@ -1,12 +1,12 @@
 package com.hildebrando.visado.mb;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -248,7 +248,7 @@ public class EditRespNivelAprobacionMB {
 			this.editar();
 
 		}
-
+		setFlagVisible(false);
 		return iniciar;
 	}
 
@@ -259,152 +259,264 @@ public class EditRespNivelAprobacionMB {
 		HttpSession session = request.getSession();
 		String editar = "";
 		editar = (String) session.getAttribute("editar");
-		if (editar.equals("1")) {
-			setbEditar(true);
-		} else {
+		if (editar == null) {
 			setbEditar(false);
-		}
-
-		if (codNivel.equals("-1")) {
-			Utilitarios.mensajeError("Error", "Debe seleccionar un nivel");
 		} else {
-
-			GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit
-					.getApplicationContext().getBean("genericoDao");
-			Busqueda filtroTiivsMiembroNivel = Busqueda
-					.forClass(TiivsMiembroNivel.class);
-
-			List<TiivsMiembroNivel> miembroNivels = new ArrayList<TiivsMiembroNivel>();
-
-			try {
-				// Cambio
-				miembroNivels = serviceTiivsMiembroNivel
-						.buscarDinamico(filtroTiivsMiembroNivel
-								.add(Restrictions.eq("tiivsMiembro.codMiembro",
-										miembroNivelDto.getRegistro())));
-			} catch (Exception e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR
-						+ "al consultar miembroNivels: " + e);
-			}
-			if (isbEditar()) {
-					
+			setbEditar(true);
+		}
+		if (miembroNivelDto.getEstado().equals("-1")) {
+			Utilitarios.mensajeError("Error", "Debe seleccionar el estado");
+		} else {
+			if (codNivel.equals("-1")) {
+				Utilitarios.mensajeError("Error", "Debe seleccionar un nivel");
 			} else {
-				if (miembroNivels.size() == 0) {
-					TiivsMiembroNivel miembroNivel = new TiivsMiembroNivel();
 
-					TiivsMiembro miembro = new TiivsMiembro();
-					miembro.setCodMiembro(miembroNivelDto.getRegistro());
-					miembro.setDescripcion(miembroNivelDto.getDescripcion());
-					miembroNivel.setTiivsMiembro(miembro);
+				GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit
+						.getApplicationContext().getBean("genericoDao");
+				Busqueda filtroTiivsMiembroNivel = Busqueda
+						.forClass(TiivsMiembroNivel.class);
 
-					miembroNivel.setCodNiv(getCodNivel());
-					miembroNivel.setTipoRol("R");
-					miembroNivel.setEstado(miembroNivelDto.getEstado());
+				List<TiivsMiembroNivel> miembroNivels = new ArrayList<TiivsMiembroNivel>();
 
-					if (logger.isDebugEnabled()) {
-						logger.debug("miembroNivelDto.getRegistro()->"
-								+ miembroNivelDto.getRegistro());
-						logger.debug("miembroNivelDto.getDescripcion()->"
-								+ miembroNivelDto.getDescripcion());
-						logger.debug("miembroNivelDto.getEstado()->"
-								+ miembroNivelDto.getEstado());
-					}
+				try {
+					// Cambio Editar
+					miembroNivels = serviceTiivsMiembroNivel
+							.buscarDinamico(filtroTiivsMiembroNivel
+									.add(Restrictions.eq(
+											"tiivsMiembro.codMiembro",
+											miembroNivelDto.getRegistro()))
+									.add(Restrictions.eq("codNiv", codNivel))
+									.add(Restrictions.eq("tipoRol", "R")));
 
-					GenericDao<TiivsNivel, Object> serviceTiivsNivel = (GenericDao<TiivsNivel, Object>) SpringInit
-							.getApplicationContext().getBean("genericoDao");
+					// Cambio Nuevo.
 
-					String descEstado = "";
-					String desNivel = "";
+				} catch (Exception e) {
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR
+							+ "al consultar miembroNivels: " + e);
+				}
+				if (isbEditar()) {
+					if (miembroNivels.size() == 0) {
+						TiivsMiembroNivel miembroNivel = new TiivsMiembroNivel();
 
-					descEstado = respNivelAprobacionService
-							.obtenerDesEstado(miembroNivel.getCodNiv());
-					desNivel = respNivelAprobacionService
-							.obtenerDesNivel(miembroNivel.getCodNiv());
+						TiivsMiembro miembro = new TiivsMiembro();
+						miembro.setCodMiembro(miembroNivelDto.getRegistro());
+						miembro.setDescripcion(miembroNivelDto.getDescripcion());
+						miembroNivel.setTiivsMiembro(miembro);
 
-					List<TiivsNivel> tiivsNivels = new ArrayList<TiivsNivel>();
-					Busqueda filtroTiivsNivelMoneda = Busqueda
-							.forClass(TiivsNivel.class);
-					try {
-						tiivsNivels = serviceTiivsNivel
-								.buscarDinamico(filtroTiivsNivelMoneda
-										.add(Restrictions.eq("codNiv",
-												miembroNivel.getCodNiv())));
-					} catch (Exception e1) {
-						logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR
-								+ "al obtener nivelesMonedas: " + e1);
-					}
+						miembroNivel.setCodNiv(getCodNivel());
+						miembroNivel.setTipoRol("R");
+						miembroNivel.setEstado(miembroNivelDto.getEstado());
 
-					int ris = 0;
-					int rfs = 0;
-
-					int rid = 0;
-					int rfd = 0;
-
-					int rie = 0;
-					int rfe = 0;
-
-					if (tiivsNivels != null) {
-						logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA
-								+ "tiivsNivels es: [" + tiivsNivels.size()
-								+ "]");
-					}
-					for (TiivsNivel nivel : tiivsNivels) {
-
-						if (nivel.getMoneda().compareTo(
-								ConstantesVisado.MONEDAS.COD_SOLES) == 0) {
-							ris = nivel.getRangoInicio();
-							rfs = nivel.getRangoFin();
+						if (logger.isDebugEnabled()) {
+							logger.debug("miembroNivelDto.getRegistro()->"
+									+ miembroNivelDto.getRegistro());
+							logger.debug("miembroNivelDto.getDescripcion()->"
+									+ miembroNivelDto.getDescripcion());
+							logger.debug("miembroNivelDto.getEstado()->"
+									+ miembroNivelDto.getEstado());
 						}
 
-						if (nivel.getMoneda().compareTo(
-								ConstantesVisado.MONEDAS.COD_DOLAR) == 0) {
-							rid = nivel.getRangoInicio();
-							rfd = nivel.getRangoFin();
+						GenericDao<TiivsNivel, Object> serviceTiivsNivel = (GenericDao<TiivsNivel, Object>) SpringInit
+								.getApplicationContext().getBean("genericoDao");
+
+						String descEstado = "";
+						String desNivel = "";
+
+						descEstado = respNivelAprobacionService
+								.obtenerDesEstado(miembroNivel.getCodNiv());
+						desNivel = respNivelAprobacionService
+								.obtenerDesNivel(miembroNivel.getCodNiv());
+
+						List<TiivsNivel> tiivsNivels = new ArrayList<TiivsNivel>();
+						Busqueda filtroTiivsNivelMoneda = Busqueda
+								.forClass(TiivsNivel.class);
+						try {
+							tiivsNivels = serviceTiivsNivel
+									.buscarDinamico(filtroTiivsNivelMoneda
+											.add(Restrictions.eq("codNiv",
+													miembroNivel.getCodNiv())));
+						} catch (Exception e1) {
+							logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR
+									+ "al obtener nivelesMonedas: " + e1);
 						}
 
-						if (nivel.getMoneda().compareTo(
-								ConstantesVisado.MONEDAS.COD_EUROS) == 0) {
-							rie = nivel.getRangoInicio();
-							rfe = nivel.getRangoFin();
+						int ris = 0;
+						int rfs = 0;
+
+						int rid = 0;
+						int rfd = 0;
+
+						int rie = 0;
+						int rfe = 0;
+
+						if (tiivsNivels != null) {
+							logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA
+									+ "tiivsNivels es: ["
+									+ tiivsNivels.size()
+									+ "]");
 						}
+						for (TiivsNivel nivel : tiivsNivels) {
 
-					}
-
-					IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios
-							.getObjectInSession("USUARIO_SESION");
-					logger.debug("usuario.getUID(): " + usuario.getUID());
-
-					if (respNiveles.size() > 0) {
-						for (int i = 0; i < respNiveles.size(); i++) {
-							if (respNiveles.get(i).getDesNivel()
-									.equals(desNivel)) {
-
+							if (nivel.getMoneda().compareTo(
+									ConstantesVisado.MONEDAS.COD_SOLES) == 0) {
+								ris = nivel.getRangoInicio();
+								rfs = nivel.getRangoFin();
 							}
+
+							if (nivel.getMoneda().compareTo(
+									ConstantesVisado.MONEDAS.COD_DOLAR) == 0) {
+								rid = nivel.getRangoInicio();
+								rfd = nivel.getRangoFin();
+							}
+
+							if (nivel.getMoneda().compareTo(
+									ConstantesVisado.MONEDAS.COD_EUROS) == 0) {
+								rie = nivel.getRangoInicio();
+								rfe = nivel.getRangoFin();
+							}
+
 						}
+
+						IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios
+								.getObjectInSession("USUARIO_SESION");
+						logger.debug("usuario.getUID(): " + usuario.getUID());
+
+						if (respNiveles.size() > 0) {
+							for (int i = 0; i < respNiveles.size(); i++) {
+								if (respNiveles.get(i).getDesNivel()
+										.equals(desNivel)) {
+
+								}
+							}
+						} else {
+
+						}
+						respNiveles.add(new MiembroNivelDTO(1, miembroNivel
+								.getTiivsMiembro().getDescripcion(),
+								miembroNivel.getCodNiv(), desNivel,
+								miembroNivel.getTiivsMiembro().getCodMiembro(),
+								(new Date()).toString(), usuario.getUID(),
+								miembroNivel.getEstado(), descEstado, ris, rfs,
+								rid, rfd, rie, rfe));
+
+						logger.debug("== despues de agregar.. ===");
+
 					} else {
 
+						Utilitarios.mensajeInfo("Mensaje",
+								"Ya existe un miembro nivel");
+						logger.debug("ya existe un miembro nivel");
 					}
-					respNiveles.add(new MiembroNivelDTO(1, miembroNivel
-							.getTiivsMiembro().getDescripcion(), miembroNivel
-							.getCodNiv(), desNivel, miembroNivel
-							.getTiivsMiembro().getCodMiembro(), (new Date())
-							.toString(), usuario.getUID(), miembroNivel
-							.getEstado(), descEstado, ris, rfs, rid, rfd, rie,
-							rfe));
-
-					logger.debug("== despues de agregar.. ===");
 
 				} else {
+					if (miembroNivels.size() == 0) {
+						TiivsMiembroNivel miembroNivel = new TiivsMiembroNivel();
 
-					Utilitarios.mensajeInfo("Mensaje",
-							"Ya existe un miembro nivel");
-					logger.debug("ya existe un miembro nivel");
+						TiivsMiembro miembro = new TiivsMiembro();
+						miembro.setCodMiembro(miembroNivelDto.getRegistro());
+						miembro.setDescripcion(miembroNivelDto.getDescripcion());
+						miembroNivel.setTiivsMiembro(miembro);
+
+						miembroNivel.setCodNiv(getCodNivel());
+						miembroNivel.setTipoRol("R");
+						miembroNivel.setEstado(miembroNivelDto.getEstado());
+
+						GenericDao<TiivsNivel, Object> serviceTiivsNivel = (GenericDao<TiivsNivel, Object>) SpringInit
+								.getApplicationContext().getBean("genericoDao");
+
+						String descEstado = "";
+						String desNivel = "";
+
+						descEstado = respNivelAprobacionService
+								.obtenerDesEstado(miembroNivel.getCodNiv());
+						desNivel = respNivelAprobacionService
+								.obtenerDesNivel(miembroNivel.getCodNiv());
+
+						List<TiivsNivel> tiivsNivels = new ArrayList<TiivsNivel>();
+						Busqueda filtroTiivsNivelMoneda = Busqueda
+								.forClass(TiivsNivel.class);
+						try {
+							tiivsNivels = serviceTiivsNivel
+									.buscarDinamico(filtroTiivsNivelMoneda
+											.add(Restrictions.eq("codNiv",
+													miembroNivel.getCodNiv())));
+						} catch (Exception e1) {
+							logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR
+									+ "al obtener nivelesMonedas: " + e1);
+						}
+
+						int ris = 0;
+						int rfs = 0;
+
+						int rid = 0;
+						int rfd = 0;
+
+						int rie = 0;
+						int rfe = 0;
+
+						if (tiivsNivels != null) {
+							logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA
+									+ "tiivsNivels es: ["
+									+ tiivsNivels.size()
+									+ "]");
+						}
+						for (TiivsNivel nivel : tiivsNivels) {
+
+							if (nivel.getMoneda().compareTo(
+									ConstantesVisado.MONEDAS.COD_SOLES) == 0) {
+								ris = nivel.getRangoInicio();
+								rfs = nivel.getRangoFin();
+							}
+
+							if (nivel.getMoneda().compareTo(
+									ConstantesVisado.MONEDAS.COD_DOLAR) == 0) {
+								rid = nivel.getRangoInicio();
+								rfd = nivel.getRangoFin();
+							}
+
+							if (nivel.getMoneda().compareTo(
+									ConstantesVisado.MONEDAS.COD_EUROS) == 0) {
+								rie = nivel.getRangoInicio();
+								rfe = nivel.getRangoFin();
+							}
+
+						}
+
+						IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios
+								.getObjectInSession("USUARIO_SESION");
+						logger.debug("usuario.getUID(): " + usuario.getUID());
+
+						if (respNiveles.size() > 0) {
+							for (int i = 0; i < respNiveles.size(); i++) {
+								if (respNiveles.get(i).getDesNivel()
+										.equals(desNivel)) {
+
+								}
+							}
+						} else {
+
+						}
+						respNiveles.add(new MiembroNivelDTO(1, miembroNivel
+								.getTiivsMiembro().getDescripcion(),
+								miembroNivel.getCodNiv(), desNivel,
+								miembroNivel.getTiivsMiembro().getCodMiembro(),
+								(new Date()).toString(), usuario.getUID(),
+								miembroNivel.getEstado(), descEstado, ris, rfs,
+								rid, rfd, rie, rfe));
+
+						logger.debug("== despues de agregar.. ===");
+
+					} else {
+						Utilitarios.mensajeInfo("Mensaje",
+								"Ya existe un miembro nivel");
+						logger.debug("ya existe un miembro nivel");
+					}
+
 				}
-
 			}
 		}
-	}
 
+	}
 
 	public void confirmarCambios(ActionEvent ae) {
 
@@ -477,6 +589,7 @@ public class EditRespNivelAprobacionMB {
 
 		}
 		logger.info("=== saliendo de confirmarCambios() ===");
+
 	}
 
 	public void obtenerDatosMiembro() {

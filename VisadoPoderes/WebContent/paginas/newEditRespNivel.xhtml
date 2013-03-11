@@ -42,10 +42,12 @@
 					</tr>
 					<tr>
 						<td><h:outputText value="Estado:" /></td>
-						<td><h:selectOneRadio
-								value="#{editRespNivel.miembroNivelDto.estado}">
-								<f:selectItem itemLabel="ACTIVO" itemValue="1" />
-							</h:selectOneRadio></td>
+						<td><p:selectOneMenu
+								value="#{editRespNivel.miembroNivelDto.estado}">								
+								<f:selectItem itemLabel="--Seleccione--" itemValue="-1" />
+								<f:selectItem itemLabel="ACTIVO" itemValue="1" />	
+								<f:selectItem itemLabel="INACTIVO" itemValue="0" />
+							</p:selectOneMenu></td>
 					</tr>
 					<tr>
 
