@@ -31,7 +31,7 @@
 						<td ><h:outputText styleClass="outputText" id="txtEstado" value="Estado" /></td>
 						<td >
 							<p:selectCheckboxMenu id="scmEstados" label="--Todos--" value="#{seguimientoMB.lstEstadoSelected}" 
-								panelStyle="width:220px;" style="width:162px;">  
+								panelStyle="width:220px;" style="width:162px;" scrollHeight="250">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.estados}"/>  
 						    </p:selectCheckboxMenu>  
 						</td>	
@@ -52,7 +52,7 @@
 						<td ><h:outputText styleClass="outputText" id="txtTipoSol" value="T. de Solicitud" /></td>
 						<td >
 							<p:selectCheckboxMenu id="scmTSolicitud" label="--Todos--" value="#{seguimientoMB.lstTipoSolicitudSelected}" 
-								panelStyle="width:220px;" style="width:167px;">  
+								panelStyle="width:300px;" style="width:167px;" scrollHeight="250">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.tiposSolicitud}" />  
 						    </p:selectCheckboxMenu>
 						</td>
@@ -167,8 +167,8 @@
 							<h:outputText styleClass="outputText" id="txtNivel" value="Nivel" />
 						</td>
 						<td >
-							<p:selectCheckboxMenu id="scmNivel" label="--Todos--" value="#{seguimientoMB.lstNivelSelected}" style="width:177px;" 
-								>  
+							<p:selectCheckboxMenu id="scmNivel" label="--Todos--" value="#{seguimientoMB.lstNivelSelected}" panelStyle="width:100px;"  
+								style="width:150px;" scrollHeight="200">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.niveles}" />  
 						    </p:selectCheckboxMenu>  
 						</td>
@@ -179,7 +179,7 @@
 						</td>
 						<td >
 							<p:selectCheckboxMenu id="scmEstadoNivel" label="--Todos--" value="#{seguimientoMB.lstEstadoNivelSelected}" 
-									panelStyle="width:100px;" style="width:135px;">  
+									panelStyle="width:100px;" style="width:135px;" scrollHeight="80">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.estadosNivel}"/>  
 						    </p:selectCheckboxMenu> 
 						</td>
@@ -189,8 +189,8 @@
 							<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio" />
 						</td>
 						<td >
-							<p:selectCheckboxMenu id="scmEstudio" label="--Todos--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:120px;" style="width:160px;" 
-								>  
+							<p:selectCheckboxMenu id="scmEstudio" label="--Todos--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:120px;" 
+								style="width:160px;" scrollHeight="100">  
 						        <f:selectItems value="#{consultarSolicitudMB.combosMB.estudios}" />  
 						    </p:selectCheckboxMenu>  
 						</td>
