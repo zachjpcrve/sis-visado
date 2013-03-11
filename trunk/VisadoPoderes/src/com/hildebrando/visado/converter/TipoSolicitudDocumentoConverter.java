@@ -54,7 +54,7 @@ public class TipoSolicitudDocumentoConverter
   {
     if ((submittedValue == null) || (submittedValue.trim().equals("")))
       return null;
-    if (submittedValue.equals(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
+    if (submittedValue.contains(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
       TiivsTipoSolicDocumento docu = new TiivsTipoSolicDocumento();
 //    docu.setCodDoc(submittedValue);
       docu.setId(new TiivsTipoSolicDocumentoId("",submittedValue));
@@ -62,7 +62,7 @@ public class TipoSolicitudDocumentoConverter
     }
     try {
       for (TiivsTipoSolicDocumento doc : documentosDB)
-        if (doc.getId().getCodDoc().equals(submittedValue))
+        if (submittedValue.equals(doc.getId().getCodDoc()+"_"+doc.getId().getCodTipoSolic()))
         {
           return doc;
         }
@@ -80,7 +80,7 @@ public class TipoSolicitudDocumentoConverter
     if ((value == null) || (value.equals("")))
     {
       return "";
-    }if (((value instanceof String)) && (value.equals(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)))
+    }if (((value instanceof String)) && (((String) value).contains(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)))
     {
       return (String)value;
     }
@@ -88,7 +88,7 @@ public class TipoSolicitudDocumentoConverter
     TiivsTipoSolicDocumento docu = (TiivsTipoSolicDocumento)value;
     
     if(docu.getId()!=null)
-    	return docu.getId().getCodDoc();
+    	return docu.getId().getCodDoc()+"_"+docu.getId().getCodTipoSolic();
     
     return null;
   }
