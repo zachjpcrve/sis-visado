@@ -596,6 +596,9 @@ public class EditRespNivelAprobacionMB {
 		}
 		logger.info("=== saliendo de confirmarCambios() ===");
 		try {
+			
+			RespNivelAprobacionMB instancia = new RespNivelAprobacionMB();
+			instancia.listarRespxNivel();
 			FacesContext.getCurrentInstance().getExternalContext().redirect("/VisadoPoderes/faces/paginas/respNivel.xhtml");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
