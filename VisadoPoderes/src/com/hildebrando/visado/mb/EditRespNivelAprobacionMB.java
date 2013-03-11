@@ -524,6 +524,7 @@ public class EditRespNivelAprobacionMB {
 	public void confirmarCambios() {
 
 		logger.info("=== inicia confirmarCambios() ===");
+		List<TiivsMiembro> miembroBuscar = new ArrayList<TiivsMiembro>();
 		GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsMiembro, Object> serviceTiivsMiembro = (GenericDao<TiivsMiembro, Object>) SpringInit
@@ -543,11 +544,13 @@ public class EditRespNivelAprobacionMB {
 				TiivsMiembro miembro = new TiivsMiembro();
 				miembro.setCodMiembro(miembroNivelDTO.getRegistro());
 				miembro.setDescripcion(miembroNivelDTO.getDescripcion());
+				miembroBuscar = obtenerMiembro(miembro.getCodMiembro());
+				
 				TiivsGrupo tiivsGrupo = new TiivsGrupo();
-				tiivsGrupo.setCodGrupo(ConstantesVisado.COD_GRUPO_JRD);
+				tiivsGrupo.setCodGrupo(miembroBuscar.get(0).getTiivsGrupo().getCodGrupo());	
 				miembro.setTiivsGrupo(tiivsGrupo);
-				miembro.setCriterio("T030001");
-				miembro.setActivo("1");
+				miembro.setCriterio(miembroBuscar.get(0).getCriterio());
+				miembro.setActivo(miembroBuscar.get(0).getActivo());
 				/*
 				 * try { miembro = serviceTiivsMiembro.save(miembro); } catch
 				 * (Exception e1) { e1.printStackTrace(); }
@@ -599,6 +602,17 @@ public class EditRespNivelAprobacionMB {
 			e.printStackTrace();
 		}
 		
+	}
+
+	private List<TiivsMiembro> obtenerMiembro(String codMiembro) {
+		logger.info("EditRespNivelAprobacionMB : obtenerMiembro");
+		List<TiivsMiembro> miembro = new ArrayList<TiivsMiembro>();
+		try{
+			miembro = respNivelAprobacionService.obtenerMiembro(codMiembro);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return miembro;
 	}
 
 	public void obtenerDatosMiembro() {
