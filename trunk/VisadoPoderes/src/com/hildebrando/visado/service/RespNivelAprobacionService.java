@@ -1,6 +1,5 @@
 package com.hildebrando.visado.service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class RespNivelAprobacionService {
 			.getLogger(RespNivelAprobacionService.class);
 
 	public String obtenerDesNivel(String codNivel) {
-		logger.info("RespNivelAprobacionService : obtenerDesNivel");
+		//logger.info("RespNivelAprobacionService : obtenerDesNivel");
 		List<TiivsNivel> nivel = new ArrayList<TiivsNivel>();
 		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
@@ -38,7 +37,7 @@ public class RespNivelAprobacionService {
 	}
 
 	public String obtenerDesEstado(String codNivel) {
-		logger.info("RespNivelAprobacionService : obtenerDesEstado");
+		//logger.info("RespNivelAprobacionService : obtenerDesEstado");
 		String estado = null;
 		List<TiivsNivel> nivel = new ArrayList<TiivsNivel>();
 		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit
