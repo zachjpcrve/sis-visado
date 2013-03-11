@@ -632,7 +632,7 @@ public class ConsultarSolicitudMB {
 			this.iTipoSolicitud =solicitudRegistrarT.getTiivsTipoSolicitud().getCodTipSolic(); 
 			
 			//descargar anexos
-			//descargarAnexosFileServer();			
+			descargarAnexosFileServer();			
 			
 			boolean isEditar=false;
 			if(this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)){
@@ -2515,7 +2515,7 @@ public class ConsultarSolicitudMB {
 		logger.info("this.getLstPersonas  "+ this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
 		
 		
-		//combosMB=new CombosMB();
+		combosMB=new CombosMB();
 		lstClasificacionPersona=combosMB.getLstClasificacionPersona();
 		logger.info("tamanioo actual de la lista de Clasificacion **** " +lstClasificacionPersona.size());
 		
@@ -2569,7 +2569,7 @@ public class ConsultarSolicitudMB {
 		  objTiivsPersonaBusqueda=new TiivsPersona();
 		  objTiivsPersonaResultado=new TiivsPersona();
 		  flagUpdatePoderdanteApoderados=false;
-		  //combosMB=new CombosMB();
+		  combosMB=new CombosMB();
 		  lstClasificacionPersona=combosMB.getLstClasificacionPersona();
 		  logger.info("tamanioo actual **** " +combosMB.getLstClasificacionPersona().size());
 		 listaTemporalAgrupacionesPersonaBorradores=new ArrayList<TiivsAgrupacionPersona>();
@@ -3733,9 +3733,15 @@ public class ConsultarSolicitudMB {
 				
 				/** Se agrega a la lista de personas en la grilla*/				
 				if (!flagUpdatePersona) {
+					if(objTiivsPersonaResultado.getCodPer()==0){
+						objTiivsPersonaResultado = actualizarPersona(objTiivsPersonaResultado);						
+					}
 					lstTiivsPersona.add(objTiivsPersonaResultado);
 				} else {
 					// update
+					
+					objTiivsPersonaResultado = actualizarPersona(objTiivsPersonaResultado);
+					
 					logger.info("Index Update: " + indexUpdatePersona);
 					this.lstTiivsPersona.set(indexUpdatePersona,objTiivsPersonaResultado);
 					
@@ -3761,6 +3767,37 @@ public class ConsultarSolicitudMB {
 			}
 
 		}
+	}
+
+
+	private TiivsPersona actualizarPersona(TiivsPersona persona) {
+		logger.info("********actualizarPersona******************");
+		TiivsPersona personaRetorno = new TiivsPersona();
+		
+		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit
+		.getApplicationContext().getBean("genericoDao");
+		
+		try {
+			persona.setUsuarioRegistro(this.usuario.getUID());
+			persona.setFechaRegistro(new Timestamp(new Date().getTime()));
+			personaRetorno=servicePers.insertarMerge(persona);
+			
+			logger.info("Codigo de la persona a Insertar : "+personaRetorno.getCodPer());
+						
+			persona.setCodPer(personaRetorno.getCodPer());
+			persona.setCodCen(personaRetorno.getCodCen());
+			persona.setTipDoi(personaRetorno.getTipDoi());
+			persona.setNumDoi(personaRetorno.getNumDoi());
+			persona.setNombre(personaRetorno.getNombre());
+			persona.setApeMat(personaRetorno.getApeMat());
+			persona.setApePat(personaRetorno.getApePat());
+			persona.setNumCel(personaRetorno.getNumCel());
+			persona.setEmail(personaRetorno.getEmail());
+			
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR,e);
+		}
+		return persona;
 	}
 
 	public void buscarPersona() {
