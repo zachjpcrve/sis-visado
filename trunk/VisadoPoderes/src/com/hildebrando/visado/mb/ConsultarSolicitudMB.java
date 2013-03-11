@@ -2575,16 +2575,13 @@ public class ConsultarSolicitudMB {
 		 listaTemporalAgrupacionesPersonaBorradores=new ArrayList<TiivsAgrupacionPersona>();
 		 listaTemporalPersonasBorradores=new ArrayList<TiivsPersona>();
 		 lstTiivsPersonaCopia=new ArrayList<TiivsPersona>();
-		 int primerNumeroGrupo=0, NumeroGrupoMax=0;
+		 int NumeroGrupoMax=0;
 		 NumeroGrupoMax= lstAgrupacionSimpleDto.get(0).getId().getNumGrupo();
 		 for (int i = 0; i < lstAgrupacionSimpleDto.size(); i++) {
 			 logger.info("lstAgrupacionSimpleDto.get(i).getId().getNumGrupo() :: " +lstAgrupacionSimpleDto.get(i).getId().getNumGrupo());
 			 if(lstAgrupacionSimpleDto.get(i).getId().getNumGrupo()>=NumeroGrupoMax) {
 				 NumeroGrupoMax=lstAgrupacionSimpleDto.get(i).getId().getNumGrupo();
 			 }
-//			 else{
-//				 NumeroGrupoMax=primerNumeroGrupo;
-//			 }
 		}
 		 
 		 		 
