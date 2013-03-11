@@ -32,6 +32,7 @@ public class TiivsPersona implements java.io.Serializable {
 	private String sDesctipPartic;
 	private String sDescclasifPer;
 	private String sDesctipDoi;
+	private Integer idAgrupacion;
 	
 	private String nombreCompletoMayuscula;
 
@@ -242,6 +243,16 @@ public class TiivsPersona implements java.io.Serializable {
 				+ ", tiivsAgrupacionPersonas=" + this.tiivsAgrupacionPersonas
 				+ "]";
 	}
+
+	public void setIdAgrupacion(Integer idAgrupacion) {
+		this.idAgrupacion = idAgrupacion;
+		
+	}
+
+	public Integer getIdAgrupacion() {
+		return idAgrupacion;
+	}
+	
 	
 	
 	
