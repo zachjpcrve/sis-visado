@@ -563,10 +563,14 @@ public class SolicitudRegistroMB {
 					agruPersona.setClasifPer(objTiivsPersonaResultado.getClasifPer());
 					agruPersona.setTipPartic(objTiivsPersonaResultado.getTipPartic());
 					agruPersona.setCodPer(objTiivsPersonaResultado.getCodPer());
-					//agruPersona.setNumGrupo(tiivsSolicitudAgrupacionCapturado.get)
-					agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);
-					this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().add(agruPersona);
 					
+					agruPersona.setNumGrupo(tiivsSolicitudAgrupacionCapturado.getId().getNumGrupo()); 
+					agruPersona.setCodSoli(tiivsSolicitudAgrupacionCapturado.getId().getCodSoli()); 
+					agruPersona.setIdAgrupacion(tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size()+1); 
+					
+					agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);					
+					objTiivsPersonaResultado.setIdAgrupacion(agruPersona.getIdAgrupacion());					
+					this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().add(agruPersona);					
 					lstTiivsPersona.add(objTiivsPersonaResultado);
 				} else {
 					// update
@@ -730,7 +734,11 @@ public class SolicitudRegistroMB {
 		//Captura agrupacion persona
 		for(TiivsAgrupacionPersona agruPersona: this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas()){
 			//Si Personacapturado es igual a algun elemento de  this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas
+			
 			//if(agruPersona.getCodPer().equals(objTiivsPersonaCapturado.getCodPer()) && agruPersona.getTipPartic().equals(objTiivsPersonaCapturado.getTipPartic())){
+			
+			//if(agruPersona.getIdAgrupacion().equals(objTiivsPersonaCapturado.getIdAgrupacion())){
+			
 			if(agruPersona.getIdAgrupacion().equals(objTiivsPersonaCapturado.getIdAgrupacion())){
 				tiivsAgrupacionPersonaCapturado = agruPersona;
 				break;
@@ -2103,6 +2111,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					  for (TiivsAgrupacionPersona a : x.getTiivsAgrupacionPersonas()) {
 						a.setCodSoli(x.getId().getCodSoli());
 						a.setNumGrupo(x.getId().getNumGrupo());
+						a.setIdAgrupacion(null);//para que la bd asigne id agrupacion
 					}
 				}
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
@@ -2163,7 +2172,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						actualizarBandeja=true;
 					}
 					//redirect = "/faces/paginas/bandejaSeguimiento.xhtml";					
-					redirect = consultarSolicitudMB.redirectDetalleSolicitud(objResultado.getCodSoli());//eramos					
+					redirect = consultarSolicitudMB.redirectDetalleSolicitud(objResultado.getCodSoli());					
 				} else {
 					mensaje = "Error al generar la Solicitud ";
 					Utilitarios.mensajeInfo("INFO", mensaje);

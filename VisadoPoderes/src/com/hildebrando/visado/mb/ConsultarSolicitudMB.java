@@ -2574,13 +2574,18 @@ public class ConsultarSolicitudMB {
 		 listaTemporalPersonasBorradores=new ArrayList<TiivsPersona>();
 		 lstTiivsPersonaCopia=new ArrayList<TiivsPersona>();
 		 int NumeroGrupoMax=0;
-		 NumeroGrupoMax= lstAgrupacionSimpleDto.get(0).getId().getNumGrupo();
-		 for (int i = 0; i < lstAgrupacionSimpleDto.size(); i++) {
-			 logger.info("lstAgrupacionSimpleDto.get(i).getId().getNumGrupo() :: " +lstAgrupacionSimpleDto.get(i).getId().getNumGrupo());
-			 if(lstAgrupacionSimpleDto.get(i).getId().getNumGrupo()>=NumeroGrupoMax) {
-				 NumeroGrupoMax=lstAgrupacionSimpleDto.get(i).getId().getNumGrupo();
-			 }
+		
+		 if (lstAgrupacionSimpleDto.size() > 0) {
+			NumeroGrupoMax = lstAgrupacionSimpleDto.get(0).getId().getNumGrupo();
+			for (int i = 0; i < lstAgrupacionSimpleDto.size(); i++) {
+				logger.info("lstAgrupacionSimpleDto.get(i).getId().getNumGrupo() :: " + lstAgrupacionSimpleDto.get(i).getId().getNumGrupo());
+				if (lstAgrupacionSimpleDto.get(i).getId().getNumGrupo() >= NumeroGrupoMax) {
+					NumeroGrupoMax = lstAgrupacionSimpleDto.get(i).getId().getNumGrupo();
+				}
+			}
+
 		}
+		 
 		 
 		 		 
 		numGrupo=NumeroGrupoMax;
@@ -2737,7 +2742,7 @@ public class ConsultarSolicitudMB {
 			{
 				//lstSolicitudAgrupacion.remove(tiivsSolicitudAgrupacion);
 				
-				this.solicitudRegistrarT.getTiivsSolicitudAgrupacions().remove(tiivsSolicitudAgrupacion);//eramos
+				this.solicitudRegistrarT.getTiivsSolicitudAgrupacions().remove(tiivsSolicitudAgrupacion);
 				
 				break;
 			}
@@ -2791,7 +2796,7 @@ public class ConsultarSolicitudMB {
 			logger.info("Error al cargar el listado de documentos:",ex);			
 		}
 		
-		//eramos
+		
 		this.visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(this.lstTipoSolicitudDocumentos));
 	}
 
@@ -3035,7 +3040,7 @@ public class ConsultarSolicitudMB {
 	}
 	
 	
-	public void actualizarDocumentosXTipoSolicitud(ActionEvent ae){		//eramos
+	public void actualizarDocumentosXTipoSolicitud(ActionEvent ae){		
 		logger.info("*****************actualizarDocumentosXTipoSolicitud*****************");
 		
 		//logger.info("documentos Leidos: " + documentosLeidos);		
@@ -3738,8 +3743,13 @@ public class ConsultarSolicitudMB {
 					agruPersona.setClasifPer(objTiivsPersonaResultado.getClasifPer());
 					agruPersona.setTipPartic(objTiivsPersonaResultado.getTipPartic());
 					agruPersona.setCodPer(objTiivsPersonaResultado.getCodPer());
-					agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);
 					
+					if(tiivsSolicitudAgrupacionCapturado!=null){
+						agruPersona.setCodSoli(tiivsSolicitudAgrupacionCapturado.getId().getCodSoli());
+						agruPersona.setNumGrupo(tiivsSolicitudAgrupacionCapturado.getId().getNumGrupo());
+						agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);
+					}
+										
 					this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().add(agruPersona);
 					lstTiivsPersona.add(objTiivsPersonaResultado);
 				} else {
