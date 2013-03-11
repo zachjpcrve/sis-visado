@@ -21,6 +21,11 @@ import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
 
+/**
+ * Clase que se encarga de obtener la solicitud de visado (Estado, Moneda, Territorio 
+ * y Anexos) en base al codigo de solicitud enviado como parametro.
+ * */
+
 @ManagedBean(name = "solDetMB")
 @SessionScoped
 public class SolicitudDetalleMB {
@@ -46,35 +51,36 @@ public class SolicitudDetalleMB {
 		Map requestMap = context.getExternalContext().getRequestParameterMap();  
 		String codSolicitud = (String)requestMap.get("prm_codSoli");  		
 		obtenerDatosSolicitud(codSolicitud);
+		
 		return "/faces/paginas/detalleSolicitudEstadoEnviado.xhtml";
 	}
 	
 	private void obtenerDatosSolicitud(String codSolicitud) {	
 		//solicitudDTO = new SolicitudDTO(codSolicitud);
+		
 		// Obtención de solicitud
+		logger.debug("[obtenerDatosSolicitud-PARAM]-codSolicitud: "+codSolicitud);
 		
 		obtenerDetallesolicitud(codSolicitud);
 				
 		if (solicitud != null) {
 			moneda = getRowFromMultitabla(
-					ConstantesVisado.CODIGO_MULTITABLA_MONEDA,
-					solicitud.getMoneda());
+					ConstantesVisado.CODIGO_MULTITABLA_MONEDA,solicitud.getMoneda());
 
 			estado = getRowFromMultitabla(
-					ConstantesVisado.CODIGO_MULTITABLA_ESTADOS,
-					solicitud.getEstado());
+					ConstantesVisado.CODIGO_MULTITABLA_ESTADOS,solicitud.getEstado());
 
 			obtenerTerritorio(solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer());
 			
 			obtenerListadoAnexos(solicitud.getCodSoli());
 						
-			logger.info("Estado:" + estado.getValor1());
-			logger.info("moneda:" + moneda.getValor3());
-			logger.info("territorio:" + territorio.getCodTer());
-			logger.info("Cantidad Anexos:" + lstAnexos.size());
+			logger.info("[SOLICIT_OBTENIDA]-Estado:" + estado.getValor1());
+			logger.info("[SOLICIT_OBTENIDA]-moneda:" + moneda.getValor3());
+			logger.info("[SOLICIT_OBTENIDA]-territorio:" + territorio.getCodTer());
+			logger.info("[SOLICIT_OBTENIDA]-Cantidad Anexos:" + lstAnexos.size());
 
 		} else {
-			logger.info("Solictud nula");
+			logger.info("La solicitud es nula");
 		}
 	}
 		
@@ -87,10 +93,10 @@ public class SolicitudDetalleMB {
 		try {
 			lstAnexos = anexosDAO.buscarDinamico(filtro);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtenerListadoAnexos: "+e);
 		}
 		if(lstAnexos!=null){
-			logger.info("Se han cargado anexos:"+lstAnexos.size());
+			logger.info("Se han cargado ["+lstAnexos.size()+"] anexos.");
 		}
 	}
 
@@ -98,10 +104,9 @@ public class SolicitudDetalleMB {
 		GenericDao<TiivsTerritorio, Object> territorioDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		try {
-			territorio = territorioDAO.buscarById(TiivsTerritorio.class,
-					codTerr);
+			territorio = territorioDAO.buscarById(TiivsTerritorio.class,codTerr);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtenerTerritorio: "+e);
 		}
 	}
 
@@ -109,32 +114,25 @@ public class SolicitudDetalleMB {
 		GenericDao<TiivsSolicitud, Object> solicitudDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		try {
-			solicitud = solicitudDAO.buscarById(TiivsSolicitud.class,
-					codSolicitud);
-			logger.info("codigo:" + solicitud.getCodSoli());
+			solicitud = solicitudDAO.buscarById(TiivsSolicitud.class,codSolicitud);
+			logger.info("[SOLICITUD]-Codigo obtenido: " + solicitud.getCodSoli());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtenerDetallesolicitud: "+e);
 		}
-
 	}
 
 	private TiivsMultitabla getRowFromMultitabla(String codigoMultitablaMoneda,
 			String codigoCampo) {
-		// TODO Apéndice de método generado automáticamente
 		// Obtención de moneda
 		TiivsMultitabla resultMultiTabla = null;
 		GenericDao<TiivsMultitabla, Object> multiTablaDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
-
 		try {
-			TiivsMultitablaId tablaId = new TiivsMultitablaId(
-					codigoMultitablaMoneda, codigoCampo);			
-			resultMultiTabla = multiTablaDAO.buscarById(TiivsMultitabla.class,
-					tablaId);
+			TiivsMultitablaId tablaId = new TiivsMultitablaId(codigoMultitablaMoneda, codigoCampo);			
+			resultMultiTabla = multiTablaDAO.buscarById(TiivsMultitabla.class,tablaId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener Monedas: "+e);
 		}
-
 		return resultMultiTabla;
 	}
 
@@ -146,7 +144,7 @@ public class SolicitudDetalleMB {
 		try {
 			lstMultitabla = multiDAO.buscarDinamico(filtroMultitabla);
 		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de multitablas");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"multitabla: "+e);
 		}
 	}
 
@@ -188,7 +186,5 @@ public class SolicitudDetalleMB {
 
 	public void setLstAnexos(List<TiivsAnexoSolicitud> lstAnexos) {
 		this.lstAnexos = lstAnexos;
-	}
-
-	
+	}	
 }
