@@ -253,13 +253,17 @@
 															</p:commandButton>
 															
 															</td>
-															<td><p:commandButton icon="ui-icon-pencil"  oncomplete ="dlgRegistrarPersona.show()" update=":formRegistrar:tlbPersonasPopup,:formRegistrar:cboTipoDoi,
-																				:formRegistrar:cboTipoDoi2,:formRegistrar:cboClasificacion"
-																		ajax="false"	  action="#{consultarSolicitudMB.verEditarAgrupacion}">
-																<f:setPropertyActionListener target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}"
-																							  value="#{s}">
-																</f:setPropertyActionListener>
-															</p:commandButton>
+															<td>
+																<p:commandButton 
+																	icon="ui-icon-pencil"  
+																	oncomplete ="dlgRegistrarPersona.show()" 
+																	update=":formRegistrar:tlbPersonasPopup,:formRegistrar:cboTipoDoi,
+																			:formRegistrar:cboTipoDoi2,:formRegistrar:cboClasificacion"  
+																	action="#{consultarSolicitudMB.verEditarAgrupacion}">
+																	<f:setPropertyActionListener 
+																		target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}" value="#{s}">
+																	</f:setPropertyActionListener>
+																</p:commandButton>
 															</td>
 															<td>
 															<p:commandButton icon="ui-icon-trash"
@@ -874,9 +878,9 @@
 			</p:column>
 			<p:column headerText="Editar">
 			<p:commandButton icon="ui-icon-pencil" id="ed" action="#{consultarSolicitudMB.editarPersona}"  update=":formRegistrar" >
-			<f:setPropertyActionListener target="#{consultarSolicitudMB.objTiivsPersonaCapturado}"
-					  value="#{s}" for="ed">
-			</f:setPropertyActionListener>
+				<f:setPropertyActionListener target="#{consultarSolicitudMB.objTiivsPersonaCapturado}"
+						  value="#{s}" for="ed">
+				</f:setPropertyActionListener>
 			</p:commandButton>
 			</p:column>
 			<p:column headerText="Eliminar">
