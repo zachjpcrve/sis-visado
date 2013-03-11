@@ -648,7 +648,7 @@ public class RevocadosMB {
 		Busqueda filtroSolicitudImprocedente = Busqueda.forClass(TiivsSolicitud.class);
 		filtroSolicitudImprocedente.add(Restrictions.in("estado", codigosParaPasarSolicitudImprocedente));
 		filtroSolicitudImprocedente.add(Restrictions.in("codSoli", solicitudes));
-		listaTiivsSolicitudImprocedentes=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroSolicitudRechazado);
+		listaTiivsSolicitudImprocedentes=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroSolicitudImprocedente);
 		for (TiivsSolicitud xx : listaTiivsSolicitudImprocedentes) {
 			xx.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
 			xx=serviceSolicitudAgrupacionPersona.modificar(xx);
