@@ -1684,8 +1684,6 @@ public class ConsultarSolicitudMB {
 			num = 1;
 		}
 		numeroMovimiento = num + "";
-		logger.info("Numero de Movimiento a registrar para el CodSolicitud : "
-				+ solicitud.getCodSoli());
 		TiivsHistSolicitud objHistorial = new TiivsHistSolicitud();
 		objHistorial.setId(new TiivsHistSolicitudId(solicitud.getCodSoli(),
 				numeroMovimiento));

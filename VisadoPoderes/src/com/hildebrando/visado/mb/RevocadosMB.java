@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
+import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.converter.PersonaDataModal;
@@ -45,7 +47,10 @@ import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.Revocado;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
+import com.hildebrando.visado.modelo.TiivsHistSolicitud;
+import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
+import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsRevocado;
@@ -507,13 +512,13 @@ public class RevocadosMB {
 			int i=0;
 			for (ComboDto m : listaNum_ListaPersonas) {
 				if(m.getListaPersonas().size()==lstRevocadosComboDto.size()){
-				    for (ComboDto comboDto : m.getListaPersonas()) {
+			/*	    for (ComboDto comboDto : m.getListaPersonas()) {
 						System.out.println("###### comboDto.getKey()  " +  comboDto.getKey() +" %%%%% " +comboDto.getDescripcion() );
 					}
 					for (ComboDto comboDto : lstRevocadosComboDto) {
 						System.out.println("&&&&&&& comboDto.getKey()  " +  comboDto.getKey() +" T_T " +comboDto.getDescripcion() );
 					}
-					
+					*/
 					for (ComboDto an : m.getListaPersonas()) {
 						for (ComboDto bn : lstRevocadosComboDto) {
 							
@@ -542,6 +547,7 @@ public class RevocadosMB {
 		/** Por ultimo modificar el estado de las combinaciones iguales, pasarlas al estado Revocados */
 		this.actualizarEstadoA_Revocado_SolicitudAgrupacion(listaTiivsSolicitudAgrupacionId);
 		bBooleanPopup=false;
+		Utilitarios.mensaje("INFO", "La Revocación fue ejecutada, correctamente");
 		buscarRevocado();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -563,6 +569,11 @@ public class RevocadosMB {
 	}
 	//@Samira 09/03/2012
 	public void actualizarEstadoA_Revocado_SolicitudAgrupacion(List<TiivsSolicitudAgrupacionId> listaTiivsSolicitudAgrupacionId) throws Exception{
+		
+		for (TiivsSolicitudAgrupacionId x : listaTiivsSolicitudAgrupacionId) {
+			System.out.println(x.toString());
+		}
+		if(listaTiivsSolicitudAgrupacionId.size()>0){
 		List<TiivsSolicitudAgrupacion> listaTiivsSolicitudAgrupacion=new ArrayList<TiivsSolicitudAgrupacion>();
 		GenericDao<TiivsSolicitudAgrupacion, Object> serviceSolicitudAgrupacionPersona = (GenericDao<TiivsSolicitudAgrupacion, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSolicitudAgrupacion = Busqueda.forClass(TiivsSolicitudAgrupacion.class);
@@ -572,7 +583,7 @@ public class RevocadosMB {
 			xx.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_3);
 			xx=serviceSolicitudAgrupacionPersona.modificar(xx);
 		}
-		
+		}
 		/** Luego validar si se cambiara el estado de la Solicitud */
 		this.validarSolicitudesSiTodasCombinacionesRevocadas();
 	}
@@ -586,7 +597,7 @@ public class RevocadosMB {
 			Busqueda filtroSolicitudAgrupacion = Busqueda.forClass(TiivsSolicitudAgrupacion.class);
 			//filtroSolicitudAgrupacion.add(Restrictions.eq("estado", ""))
 			listaTiivsSolicitudAgrupacion=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroSolicitudAgrupacion);
-			logger.info("Tmanio listaTiivsSolicitudAgrupacion desde bd" +listaTiivsSolicitudAgrupacion.size());
+			logger.info("Tmanio listaTiivsSolicitudAgrupacion desde bd :::" +listaTiivsSolicitudAgrupacion.size());
 			List<String> lstString = new ArrayList<String>();
 			 lstString = this.listaCodSoli(listaTiivsSolicitudAgrupacion);
 			 if(lstString!=null){
@@ -604,12 +615,14 @@ public class RevocadosMB {
             	 }
             	}
 			}
-             logger.info(" Contador i  "+i + " Contador j : " +j) ;
+            // logger.info("Total "  +" Contador i  "+i + " Contador j : " +j) ;
              if(i==j){
+            	 if(i!=0&&j!=0){
             	 logger.info(" Todas las combinaciones estan revocadas , se cambiara el estado de la solicitud, segun corresponda");
             	 solicitudes.add(cc);
+            	 }
              }else{
-            	 logger.info(" No todas las combinaciones estan revocadas, no se cambia el estado de la solicitud");
+            	// logger.info(" No todas las combinaciones estan revocadas, no se cambia el estado de la solicitud");
              }
              
 		}
@@ -622,6 +635,16 @@ public class RevocadosMB {
 	
 	//@Samira 09/03/2012
 	public void actualizarEstadoSolicitudes(List<String> solicitudes) throws Exception{
+
+		 /**Insertando la GLosa La solicitud ha sido revocada ... desde base de datos*/
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("id.codMult", "T16"));
+		filtroMultitabla.add(Restrictions.eq("id.codElem", "0001"));
+		TiivsMultitabla parametroGlosa = new TiivsMultitabla();
+		parametroGlosa=multiDAO.buscarDinamico(filtroMultitabla).get(0);
+		
+		logger.info("parametroGlosa " +parametroGlosa.getValor1());
 		    String[] codigosParaPasarSolicitudRechazada  =new String[4];
 		    String[] codigosParaPasarSolicitudImprocedente  =new String[3];
 		    codigosParaPasarSolicitudRechazada[0]=ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02;
@@ -642,7 +665,9 @@ public class RevocadosMB {
 		listaTiivsSolicitudRechazdas=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroSolicitudRechazado);
 		for (TiivsSolicitud xx : listaTiivsSolicitudRechazdas) {
 			xx.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
+			xx.setObs(parametroGlosa.getValor1());
 			xx=serviceSolicitudAgrupacionPersona.modificar(xx);
+			registraSolicitudHistorial(xx);
 		}
 		
 		Busqueda filtroSolicitudImprocedente = Busqueda.forClass(TiivsSolicitud.class);
@@ -651,8 +676,33 @@ public class RevocadosMB {
 		listaTiivsSolicitudImprocedentes=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroSolicitudImprocedente);
 		for (TiivsSolicitud xx : listaTiivsSolicitudImprocedentes) {
 			xx.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
+			xx.setObs(parametroGlosa.getValor1());
 			xx=serviceSolicitudAgrupacionPersona.modificar(xx);
+			registraSolicitudHistorial(xx);
 		}
+		
+	}
+	
+	public void registraSolicitudHistorial (TiivsSolicitud solicitudModificado) throws Exception{
+		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+		String numeroMovimiento = serviceMaxMovi.obtenerMaximoMovimiento(solicitudModificado.getCodSoli());
+
+		int num = 0;
+		if (!numeroMovimiento.equals("")) {
+			num = Integer.parseInt(numeroMovimiento) + 1;
+		} else {
+			num = 1;
+		}
+		numeroMovimiento = num + "";
+		  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
+		  objHistorial.setId(new TiivsHistSolicitudId(solicitudModificado.getCodSoli(),numeroMovimiento));
+		  objHistorial.setEstado(solicitudModificado.getEstado());
+		  objHistorial.setNomUsuario(usuario.getNombre());
+		  objHistorial.setObs(solicitudModificado.getObs());
+		  objHistorial.setFecha(new Timestamp(new Date().getTime()));
+		  objHistorial.setRegUsuario(usuario.getUID());
+		  serviceHistorialSolicitud.insertar(objHistorial);
 	}
 	//@Samira 09/03/2012
 	public List<String>listaCodSoli(List<TiivsSolicitudAgrupacion> listaTiivsSolicitudAgrupacion)throws Exception{
@@ -1299,7 +1349,7 @@ public class RevocadosMB {
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		int flag=0;
-		
+		logger.info("personaClientesPendEdit.size :::: " +personaClientesPendEdit.size());
 		for(Revocado revocado: personaClientesPendEdit){
 			
 			for(TiivsPersona tiivsPersona:revocado.getApoderados()){
@@ -1847,9 +1897,9 @@ public class RevocadosMB {
 								nombreCompletoApoderados = nombreCompletoApoderados
 																+ " " + descDoiApod
 																+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
-																+ " - " + tiivsRevocado.getTiivsPersona().getApePat() 
-																+ " " + tiivsRevocado.getTiivsPersona().getApeMat()
-																+ " " + tiivsRevocado.getTiivsPersona().getNombre() + "\n";
+																+ " - " + tiivsRevocado.getTiivsPersona().getApePat()==null?"":tiivsRevocado.getTiivsPersona().getApePat() 
+																+ " " + tiivsRevocado.getTiivsPersona().getApeMat()==null?"":tiivsRevocado.getTiivsPersona().getApeMat()
+																+ " " + tiivsRevocado.getTiivsPersona().getNombre()==null?"":tiivsRevocado.getTiivsPersona().getNombre() + "\n";
 								
 								apoderado.setsDesctipDoi( descDoiApod);
 								apoderado.setsDesctipPartic(descTipPart);
@@ -1869,9 +1919,9 @@ public class RevocadosMB {
 								nombreCompletoPoderdantes = nombreCompletoPoderdantes 
 																	+ " " + descDoiPod
 																	+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
-																	+ " - " + tiivsRevocado.getTiivsPersona().getApePat() 
-																	+ " " + tiivsRevocado.getTiivsPersona().getApeMat() 
-																	+ " " + tiivsRevocado.getTiivsPersona().getNombre() + "\n";
+																	+ " - " + tiivsRevocado.getTiivsPersona().getApePat()==null?"":tiivsRevocado.getTiivsPersona().getApePat() 
+																    + " " + tiivsRevocado.getTiivsPersona().getApeMat()==null?"":tiivsRevocado.getTiivsPersona().getApeMat()
+																    + " " + tiivsRevocado.getTiivsPersona().getNombre()==null?"":tiivsRevocado.getTiivsPersona().getNombre() + "\n";
 								
 								poderdante.setsDesctipDoi( descDoiPod);
 								poderdante.setsDesctipPartic(descTipPart);

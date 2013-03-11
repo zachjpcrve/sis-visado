@@ -26,6 +26,7 @@ import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.service.RespNivelAprobacionService;
+import com.ibm.wsdl.extensions.mime.MIMEConstants;
 
 /**
  * Clase que maneja el mantenimiento de Responsable Nivel Aprobacion, contiene la 
@@ -146,6 +147,9 @@ public class RespNivelAprobacionMB {
 		
 		filtroTiivsMiembroNivel.createAlias("tiivsMiembro", "miemb");
 		
+		if(miembroNivelDto!=null&&miembroNivelDto.getCodGrupo()!=null&&miembroNivelDto.getEstado()!=null){
+			
+		
 		if(miembroNivelDto.getRegistro() != ""){
 			logger.debug("[BUSQ]-REGISTRO: "+miembroNivelDto.getRegistro());
 			filtroTiivsMiembroNivel.add(Restrictions.eq("miemb.codMiembro", miembroNivelDto.getRegistro()));
@@ -186,6 +190,8 @@ public class RespNivelAprobacionMB {
 			logger.debug("[BUSQ]-CODNIVEL: "+miembroNivelDto.getCodNivel());
 			filtroTiivsMiembroNivel.add(Restrictions.eq("codNiv", miembroNivelDto.getCodNivel()));
 		}
+		
+		}
 		//Se consulta los responsables por nivel en base al filtroTiivsMiembroNivel 
 		filtroTiivsMiembroNivel.add(Restrictions.eq("tipoRol", "R"));
 		
@@ -216,24 +222,6 @@ public class RespNivelAprobacionMB {
 			
 			descEstado = respNivelAprobacionService.obtenerDesEstado(e.getCodNiv());
 			desNivel = respNivelAprobacionService.obtenerDesNivel(e.getCodNiv());
-			
-		/*	if(e.getEstado().compareTo(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO)==0)
-				descEstado= ConstantesVisado.ESTADOS.ESTADO_ACTIVO;
-			
-			if(e.getEstado().compareTo(ConstantesVisado.ESTADOS.ESTADO_COD_DESACTIVO)==0)
-				descEstado = ConstantesVisado.ESTADOS.ESTADO_DESACTIVO;
-			
-			if(e.getCodNiv().compareTo(ConstantesVisado.COD_NIVEL1)==0)
-				desNivel = ConstantesVisado.CAMPO_NIVEL1;
-				
-			if(e.getCodNiv().compareTo(ConstantesVisado.COD_NIVEL2)==0)
-				desNivel = ConstantesVisado.CAMPO_NIVEL2;
-			
-			if(e.getCodNiv().compareTo(ConstantesVisado.COD_NIVEL3)==0)
-				desNivel = ConstantesVisado.CAMPO_NIVEL3;
-			
-			if(e.getCodNiv().compareTo(ConstantesVisado.COD_NIVEL4)==0)
-				desNivel = ConstantesVisado.CAMPO_NIVEL4;*/
 				
 			respNiveles.add(new MiembroNivelDTO(e.getId(), e.getCodNiv(),desNivel,e.getTiivsMiembro().getCodMiembro(),e.getTiivsMiembro().getDescripcion(),e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(),
 					grupo.getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),e.getEstado(),descEstado));
