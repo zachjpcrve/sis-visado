@@ -232,43 +232,64 @@ public class JasperController {
 	{
 		String resultado="";
 		
-		if (SOLICITUD_TEMP!=null)
-		{
-			String solicitud = SOLICITUD_TEMP.getCodSoli();
-			logger.info("Buscando poderdantes en la solicitud: " + solicitud);
+		try {
 			
-			List<TiivsAgrupacionPersona> lstTMP = new ArrayList<TiivsAgrupacionPersona>();
-			
-			GenericDao<TiivsAgrupacionPersona, Object> solicDAO = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			Busqueda filtroAgrp = Busqueda.forClass(TiivsAgrupacionPersona.class);
-			filtroAgrp.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, solicitud));
-			filtroAgrp.add(Restrictions.eq(ConstantesVisado.CAMPO_TIPO_PARTIC, ConstantesVisado.PODERDANTE));
-			
-			try {
-				lstTMP = solicDAO.buscarDinamico(filtroAgrp);
-				
-			} catch (Exception ex) {
-				logger.info("Error al buscar las agrupaciones de personas",ex);
-			}
-			
-			for (TiivsAgrupacionPersona tmp: lstTMP)
+			if (SOLICITUD_TEMP!=null)
 			{
-				if (tmp.getTiivsPersona().getNombre()!=null)
+				String solicitud = SOLICITUD_TEMP.getCodSoli();
+				logger.info("Buscando poderdantes en la solicitud: " + solicitud);
+				
+				List<TiivsAgrupacionPersona> lstTMP = new ArrayList<TiivsAgrupacionPersona>();
+				
+				GenericDao<TiivsAgrupacionPersona, Object> solicDAO = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+				Busqueda filtroAgrp = Busqueda.forClass(TiivsAgrupacionPersona.class);
+				filtroAgrp.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, solicitud));
+				filtroAgrp.add(Restrictions.eq(ConstantesVisado.CAMPO_TIPO_PARTIC, ConstantesVisado.PODERDANTE));
+				
+				try {
+					lstTMP = solicDAO.buscarDinamico(filtroAgrp);
+					
+				} catch (Exception ex) {
+					logger.info("Error al buscar las agrupaciones de personas",ex);
+				}
+				
+				for (TiivsAgrupacionPersona tmp: lstTMP)
 				{
-					if (resultado.length()>0)
+					if (tmp.getTiivsPersona().getNombre()!=null)
 					{
-						resultado = resultado.concat(",").concat(tmp.getTiivsPersona().getNombre().
+						if (resultado.length()>0)
+						{
+							
+							
+							resultado = resultado.concat(",").concat(tmp.getTiivsPersona().getNombre().
 									concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApePat()).
 									concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApeMat())); 
-					}
-					else
-					{
-						resultado = tmp.getTiivsPersona().getNombre().
-									concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApePat()).
-									concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApeMat());
+							
+							resultado = resultado.concat(",").concat(tmp.getTiivsPersona().getNombre());						
+							if(tmp.getTiivsPersona().getApePat()!=null){
+								resultado = resultado.concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApePat());
+							}						
+							if(tmp.getTiivsPersona().getApeMat()!=null){
+								resultado = resultado.concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApeMat());
+							}						
+						}
+						else
+						{
+							resultado = tmp.getTiivsPersona().getNombre();						
+							if(tmp.getTiivsPersona().getApePat()!=null){
+								resultado = resultado.concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApePat());
+							}						
+							if(tmp.getTiivsPersona().getApeMat()!=null){
+								resultado = resultado.concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApeMat());
+							}																		
+						}
 					}
 				}
 			}
+			
+			
+		}catch(Exception e){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION + " al obtener Poderdantes", e);
 		}
 		
 		return resultado;
