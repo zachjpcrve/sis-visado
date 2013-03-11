@@ -1,6 +1,5 @@
 package com.hildebrando.visado.mb;
 
-import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,17 +7,17 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Expression;
-import org.omg.PortableInterceptor.USER_EXCEPTION;
+
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.general.entities.Feriado;
-import com.bbva.general.service.ConfigBean;
 import com.bbva.general.service.TablaGeneral;
 import com.bbva.general.service.TablaGeneralServiceLocator;
 import com.bbva.persistencia.generica.dao.Busqueda;
@@ -34,8 +33,10 @@ import com.bbva.persistencia.generica.dao.impl.GenericDaoImpl;
 @ManagedBean(name = "admJobs")
 @SessionScoped
 public class JobsMB {
+	@ManagedProperty(value = "#{consultarSolicitudMB}")
+	private static ConsultarSolicitudMB consultarMB;
 	public static Logger logger = Logger.getLogger(JobsMB.class);
-
+	
 	public static void cargarFeriados() {
 		try {
 
@@ -183,6 +184,12 @@ public class JobsMB {
 		}
 		return existe;
 	}
+	
+	public static void validarSolicitudesVencidas()
+	{
+		consultarMB = new ConsultarSolicitudMB();
+		consultarMB.validarCambioEstadoVencido();
+	}
 
 	public static TablaGeneral obtenerDatosWebService() {
 		TablaGeneral tbGeneralWS = null;
@@ -205,4 +212,11 @@ public class JobsMB {
 		return a;
 	}
 
+	public ConsultarSolicitudMB getConsultarMB() {
+		return consultarMB;
+	}
+
+	public void setConsultarMB(ConsultarSolicitudMB consultarMB) {
+		this.consultarMB = consultarMB;
+	}
 }
