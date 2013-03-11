@@ -746,6 +746,10 @@ public class ConsultarSolicitudMB {
 				    d.getTiivsPersona().setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
 				    d.getTiivsPersona().setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getClasifPer().trim()));
 				    d.getTiivsPersona().setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
+				    if(d.getIdAgrupacion()!=null){
+				    	d.getTiivsPersona().setIdAgrupacion(d.getIdAgrupacion());
+				    }
+				    
 				    lstPersonas.add(d.getTiivsPersona());
 				   
 					if(d.getTipPartic().trim().equals(ConstantesVisado.PODERDANTE))
@@ -2664,7 +2668,8 @@ public class ConsultarSolicitudMB {
 				boolean existe = false;
 				for (TiivsAgrupacionPersona agruPersona : lstTiivsAgrupacionPersonas) {					
 					// Si persona ya existe
-					if (agruPersona.getCodPer().equals(n.getCodPer())) { 
+					//if (agruPersona.getCodPer().equals(n.getCodPer())) { 
+					if (n.getIdAgrupacion()!=null && agruPersona.getIdAgrupacion().equals(n.getIdAgrupacion())) {
 						existe = true;
 						break;
 					}
@@ -3479,6 +3484,7 @@ public class ConsultarSolicitudMB {
 		this.objTiivsPersonaResultado.setEmail(this.objTiivsPersonaCapturado.getEmail());
 		this.objTiivsPersonaResultado.setNumCel(this.objTiivsPersonaCapturado.getNumCel());
 		this.objTiivsPersonaResultado.setCodPer(this.objTiivsPersonaCapturado.getCodPer());
+		this.objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
 		this.flagUpdatePersona = true;
 	}
 
@@ -3733,6 +3739,7 @@ public class ConsultarSolicitudMB {
 					this.lstTiivsPersona.set(indexUpdatePersona,objTiivsPersonaResultado);
 					
 					if(tiivsAgrupacionPersonaCapturado!=null){
+						objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
 						this.tiivsAgrupacionPersonaCapturado.setTiivsPersona(objTiivsPersonaResultado);
 						this.tiivsAgrupacionPersonaCapturado.setClasifPer(objTiivsPersonaResultado.getClasifPer());
 						this.tiivsAgrupacionPersonaCapturado.setTipPartic(objTiivsPersonaResultado.getTipPartic());
