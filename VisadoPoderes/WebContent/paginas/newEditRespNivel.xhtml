@@ -7,7 +7,6 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
-
 		<fieldset>
 			<legend class="fielset">Niveles por Registro</legend>
 
@@ -137,11 +136,11 @@
 					header="Mensaje de Confirmación">
 
 					<p:commandButton id="cmbSi" value="Sí" ajax="true"
-						actionListener="#{editRespNivel.confirmarCambios}"
+						action="#{editRespNivel.confirmarCambios}"
 						oncomplete="confirmarCambios.hide();"
 						update=":frmMantenimientoNivReg:dtbRespNivel">
 					</p:commandButton>
-
+					
 					<p:commandButton id="cmbNo" value="No"
 						onclick="confirmarCambios.hide();">
 					</p:commandButton>
@@ -149,7 +148,7 @@
 				</p:confirmDialog>
 
 			</h:form>
-
+	
 		</fieldset>
 
 	</ui:define>

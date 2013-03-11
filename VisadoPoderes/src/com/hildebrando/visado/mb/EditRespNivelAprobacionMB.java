@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -46,6 +47,8 @@ public class EditRespNivelAprobacionMB {
 
 	public static Logger logger = Logger
 			.getLogger(EditRespNivelAprobacionMB.class);
+	
+	
 	private DelegadosService delegadosService;
 	private RespNivelAprobacionService respNivelAprobacionService;
 	private MiembroNivelDTO miembroNivelDto;
@@ -518,7 +521,7 @@ public class EditRespNivelAprobacionMB {
 
 	}
 
-	public void confirmarCambios(ActionEvent ae) {
+	public void confirmarCambios() {
 
 		logger.info("=== inicia confirmarCambios() ===");
 		GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit
@@ -589,7 +592,13 @@ public class EditRespNivelAprobacionMB {
 
 		}
 		logger.info("=== saliendo de confirmarCambios() ===");
-
+		try {
+			FacesContext.getCurrentInstance().getExternalContext().redirect("/VisadoPoderes/faces/paginas/respNivel.xhtml");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	public void obtenerDatosMiembro() {
