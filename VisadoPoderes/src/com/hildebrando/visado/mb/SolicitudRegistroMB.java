@@ -147,8 +147,6 @@ public class SolicitudRegistroMB {
 	List<TiivsAgrupacionPersona> listaTemporalAgrupacionesPersonaBorradores;
 	List<TiivsPersona> listaTemporalPersonasBorradores;
 	List<TiivsPersona> lstTiivsPersonaCopia;
-	//private String documentosLeer="";
-	//private String documentosLeidos="";
 	
 	/*private boolean boleanoMensajeInfoGeneral=true;
 	private boolean boleanoMensajeApoderdantePoderdante=true;
@@ -733,11 +731,7 @@ public class SolicitudRegistroMB {
 		
 		//Captura agrupacion persona
 		for(TiivsAgrupacionPersona agruPersona: this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas()){
-			//Si Personacapturado es igual a algun elemento de  this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas
-			
-			//if(agruPersona.getCodPer().equals(objTiivsPersonaCapturado.getCodPer()) && agruPersona.getTipPartic().equals(objTiivsPersonaCapturado.getTipPartic())){
-			
-			//if(agruPersona.getIdAgrupacion().equals(objTiivsPersonaCapturado.getIdAgrupacion())){
+			//Si Personacapturado es igual a algun elemento de  this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas		
 			
 			if(agruPersona.getIdAgrupacion().equals(objTiivsPersonaCapturado.getIdAgrupacion())){
 				tiivsAgrupacionPersonaCapturado = agruPersona;
@@ -900,7 +894,7 @@ public class SolicitudRegistroMB {
 		  objTiivsPersonaBusqueda=new TiivsPersona();
 		  objTiivsPersonaResultado=new TiivsPersona();
 		  flagUpdatePoderdanteApoderados=false;
-		  //combosMB=new CombosMB();
+		  combosMB=new CombosMB();
 		  lstClasificacionPersona=combosMB.getLstClasificacionPersona();
 		  logger.info("tamanioo actual **** " +combosMB.getLstClasificacionPersona().size());
 		 listaTemporalAgrupacionesPersonaBorradores=new ArrayList<TiivsAgrupacionPersona>();
