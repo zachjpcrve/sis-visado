@@ -25,8 +25,9 @@
   
   <p:tieredMenu style="width:140px; position:relative; z-index:1;"> 
   		<p:submenu label="Registros" icon="ui-icon-pencil">
-      		<p:menuitem icon="ui-icon-pencil" value="Solicitud Visado" url="/faces/paginas/solicitud.xhtml" 
-      		 onclick="activador();" ajax="false" update=":formSolicitudRegistro">      		
+      		<p:menuitem icon="ui-icon-pencil" value="Solicitud Visado"  
+      			onclick="document.getElementById('frmMenu:btnNuevo').click();" 
+      			ajax="false" update=":formSolicitudRegistro" >      		
       		  </p:menuitem>
       		<p:menuitem icon="ui-icon-pencil" value="Calculadora" url="/faces/paginas/calculadoraComision.xhtml"></p:menuitem>
   		</p:submenu>
@@ -48,6 +49,7 @@
   			<p:menuitem icon="ui-icon-pencil" value="Responsable Nivel Aprobacion"        url="/faces/paginas/respNivel.xhtml"></p:menuitem>				
   			<p:menuitem icon="ui-icon-pencil" value="Nivel Aprobacion"        url="/faces/paginas/nivel.xhtml"></p:menuitem>	
   			<p:menuitem icon="ui-icon-pencil" value="Delegacion Nivel"        url="/faces/paginas/delegacion.xhtml"></p:menuitem>
+  			<p:menuitem icon="ui-icon-pencil" value="Programador de Tareas"        url="/faces/paginas/AdmJobs.xhtml"></p:menuitem>
   		</p:submenu>	
   		<p:submenu label="Reportes" icon="ui-icon-pencil">
   			<p:menuitem style="font-size: 9px" value="Liquidacion Mensual" url="/faces/paginas/rptLiquidacion2.xhtml"></p:menuitem>  	
@@ -57,8 +59,13 @@
   			<p:menuitem style="font-size: 9px" value="Extractor" url="/faces/paginas/rptExtractor.xhtml"></p:menuitem>  			
   		</p:submenu>    	    
   </p:tieredMenu>
+  
+  <p:commandButton id="btnNuevo" style="width:0;height:0" ajax="false" value="" action="#{solicitudRegMB.instanciarSolicitudRegistro}" />
+  
+  <!-- 
   <p:remoteCommand name="activador" update=":frmMenu"
-  action="#{solicitudRegMB.instanciarSolicitudRegistro}" /> 
+  action="{solicitudRegMB.instanciarSolicitudRegistro}" />
+   --> 
   
     <p:remoteCommand name="actualizarListas"
   action="#{consultarSolicitudMB.actualizarListas}" /> 
