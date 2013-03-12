@@ -2639,8 +2639,6 @@ public class ConsultarSolicitudMB {
 		if (validarAgregarAgrupacion()) {
 			logger.info("***************************** agregarAgrupacion ***************************************");
 			
-			
-			
 			lstTiivsAgrupacionPersonas = this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas();
 			
 			if (lstTiivsAgrupacionPersonas == null){
@@ -2652,8 +2650,6 @@ public class ConsultarSolicitudMB {
 			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
 
-			
-
 			for (TiivsPersona n : lstTiivsPersona) {
 				if (n.getTipPartic().equals(ConstantesVisado.PODERDANTE)) {
 					lstPoderdantes.add(n);
@@ -2664,29 +2660,9 @@ public class ConsultarSolicitudMB {
 					logger.info(" apoderado : " + n.getCodPer());
 				}
 
-
-				boolean existe = false;
-				for (TiivsAgrupacionPersona agruPersona : lstTiivsAgrupacionPersonas) {					
-					// Si persona ya existe
-					//if (agruPersona.getCodPer().equals(n.getCodPer())) { 
-					if (n.getIdAgrupacion()!=null && agruPersona.getIdAgrupacion().equals(n.getIdAgrupacion())) {
-						existe = true;
-						break;
-					}
-				}
-
-//				if (!existe) {
-//					TiivsAgrupacionPersona tiivsAgrupacionPersona = new TiivsAgrupacionPersona();					
-//					tiivsAgrupacionPersona.setNumGrupo(this.tiivsSolicitudAgrupacionCapturado.getId().getNumGrupo());
-//					tiivsAgrupacionPersona.setCodSoli(this.tiivsSolicitudAgrupacionCapturado.getId().getCodSoli());
-//					tiivsAgrupacionPersona.setCodPer(n.getCodPer());
-//					tiivsAgrupacionPersona.setClasifPer(n.getClasifPer());
-//					tiivsAgrupacionPersona.setTipPartic(n.getTipPartic());
-//					tiivsAgrupacionPersona.setTiivsPersona(n);
-//					tiivsAgrupacionPersona.setTiivsSolicitudAgrupacion(this.tiivsSolicitudAgrupacionCapturado);
-//					lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
-//				} 
 			}
+			
+			this.llamarComision();
 			
 			logger.info("lstTiivsAgrupacionPersonas: fin " + lstTiivsAgrupacionPersonas.size());
 			
