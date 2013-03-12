@@ -14,7 +14,7 @@
 	<ui:define name="contenido">
 	<script type="text/JavaScript" src="../resources/js/visado.js" />
 		<h:form  id="frmConsRev">
-
+<p:growl id="msmPopup"></p:growl>
 			<table>
 				<tr>
 					<td>
@@ -703,6 +703,8 @@
 			header="Apoderado/Poderdante" showEffect="fade" hideEffect="explode" width="#{revocadosMB.ancho_Popup_Revoc_Poder}">
 
 			<h:form id="frmApodPodVer">
+			
+			<p:messages id="msmPopupMessages"/>
 
 				<h:panelGrid columns="2" id="gridTitulo">
 					<p:outputLabel value="Estado:" />
