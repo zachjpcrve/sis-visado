@@ -547,7 +547,7 @@ public class RevocadosMB {
 		/** Por ultimo modificar el estado de las combinaciones iguales, pasarlas al estado Revocados */
 		this.actualizarEstadoA_Revocado_SolicitudAgrupacion(listaTiivsSolicitudAgrupacionId);
 		bBooleanPopup=false;
-		Utilitarios.mensaje("INFO", "La Revocación fue ejecutada, correctamente");
+		Utilitarios.mensajeInfo("INFO", "La Revocación fue ejecutada, correctamente");
 		buscarRevocado();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1103,7 +1103,14 @@ public class RevocadosMB {
 					
 					objTiivsPersonaAgregar = new TiivsPersona();
 					this.bBooleanPopup = false;
-					Utilitarios.mensajeInfo("INFO","No se encontro resultados para la busqueda.");
+					if ((objTiivsPersonaBusquedaDlg.getTipDoi() == null 
+							  || objTiivsPersonaBusquedaDlg.getTipDoi().equals("")) 
+							 || (objTiivsPersonaBusquedaDlg.getNumDoi() == null
+							  || objTiivsPersonaBusquedaDlg.getNumDoi().equals(""))) {
+					}else{
+						Utilitarios.mensajeInfo("INFO","No se encontro resultados para la busqueda.");
+					}
+					
 					
 				} else if (lstTiivsPersonaReniec.size() == 1) {
 					this.bBooleanPopup = false;
@@ -1897,9 +1904,9 @@ public class RevocadosMB {
 								nombreCompletoApoderados = nombreCompletoApoderados
 																+ " " + descDoiApod
 																+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
-																+ " - " + tiivsRevocado.getTiivsPersona().getApePat()==null?"":tiivsRevocado.getTiivsPersona().getApePat() 
-																+ " " + tiivsRevocado.getTiivsPersona().getApeMat()==null?"":tiivsRevocado.getTiivsPersona().getApeMat()
-																+ " " + tiivsRevocado.getTiivsPersona().getNombre()==null?"":tiivsRevocado.getTiivsPersona().getNombre() + "\n";
+															  + " - " + (tiivsRevocado.getTiivsPersona().getApePat()==null?"":tiivsRevocado.getTiivsPersona().getApePat()) 
+																+ " " + (tiivsRevocado.getTiivsPersona().getApeMat()==null?"":tiivsRevocado.getTiivsPersona().getApeMat())
+																+ " " + (tiivsRevocado.getTiivsPersona().getNombre()==null?"":tiivsRevocado.getTiivsPersona().getNombre()) + "\n";
 								
 								apoderado.setsDesctipDoi( descDoiApod);
 								apoderado.setsDesctipPartic(descTipPart);
@@ -1919,9 +1926,9 @@ public class RevocadosMB {
 								nombreCompletoPoderdantes = nombreCompletoPoderdantes 
 																	+ " " + descDoiPod
 																	+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
-																	+ " - " + tiivsRevocado.getTiivsPersona().getApePat()==null?"":tiivsRevocado.getTiivsPersona().getApePat() 
-																    + " " + tiivsRevocado.getTiivsPersona().getApeMat()==null?"":tiivsRevocado.getTiivsPersona().getApeMat()
-																    + " " + tiivsRevocado.getTiivsPersona().getNombre()==null?"":tiivsRevocado.getTiivsPersona().getNombre() + "\n";
+																	 + " - " + (tiivsRevocado.getTiivsPersona().getApePat()==null?"":tiivsRevocado.getTiivsPersona().getApePat()) 
+																+ " " + (tiivsRevocado.getTiivsPersona().getApeMat()==null?"":tiivsRevocado.getTiivsPersona().getApeMat())
+																+ " " + (tiivsRevocado.getTiivsPersona().getNombre()==null?"":tiivsRevocado.getTiivsPersona().getNombre()) + "\n";
 								
 								poderdante.setsDesctipDoi( descDoiPod);
 								poderdante.setsDesctipPartic(descTipPart);
