@@ -1072,30 +1072,9 @@ public class SolicitudRegistroMB {
 					lstApoderdantes.add(n);
 					logger.info(" apoderado : " + n.getCodPer());
 				}
-
-
-//				boolean existe = false;
-//				for (TiivsAgrupacionPersona agruPersona : lstTiivsAgrupacionPersonas) {					
-//					// Si persona ya existe
-//					//if (agruPersona.getCodPer().equals(n.getCodPer())) { 
-//					if (n.getIdAgrupacion()!=null && agruPersona.getIdAgrupacion().equals(n.getIdAgrupacion())) {
-//						existe = true;
-//						break;
-//					}
-//				}
-
-//				if (!existe) {
-//					TiivsAgrupacionPersona tiivsAgrupacionPersona = new TiivsAgrupacionPersona();					
-//					tiivsAgrupacionPersona.setNumGrupo(this.tiivsSolicitudAgrupacionCapturado.getId().getNumGrupo());
-//					tiivsAgrupacionPersona.setCodSoli(this.tiivsSolicitudAgrupacionCapturado.getId().getCodSoli());
-//					tiivsAgrupacionPersona.setCodPer(n.getCodPer());
-//					tiivsAgrupacionPersona.setClasifPer(n.getClasifPer());
-//					tiivsAgrupacionPersona.setTipPartic(n.getTipPartic());
-//					tiivsAgrupacionPersona.setTiivsPersona(n);
-//					tiivsAgrupacionPersona.setTiivsSolicitudAgrupacion(this.tiivsSolicitudAgrupacionCapturado);
-//					lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersona);
-//				} 
 			}
+			
+			this.llamarComision();
 			
 			logger.info("lstTiivsAgrupacionPersonas: fin " + lstTiivsAgrupacionPersonas.size());
 			
@@ -1188,7 +1167,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}
 	return descripcion;
 }
-	public void instanciarSolicitudRegistro() {
+	public String instanciarSolicitudRegistro() {
 		logger.info("********************** instanciarSolicitudRegistro *********************");
 		sEstadoSolicitud = "BORRADOR";
 		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
@@ -1251,6 +1230,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 		// }
 
+		return "/faces/paginas/solicitud.xhtml";
 	}
 
 	public void actualizarListaDocumentosXTipo(TiivsAnexoSolicitud objAnexo) {
