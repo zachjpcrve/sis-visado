@@ -135,8 +135,7 @@ public class RegistroUtilesMB {
 			} else {
 				if (sonTodasNaturales(lstPoderdantes)) {
 					sTipoComision = ConstantesVisado.CODIGO_CAMPO_PERSONA_NATURAL;
-				} 
-				else if (sonTodasJuridicas(lstPoderdantes)) {
+				} else if (sonTodasJuridicas(lstPoderdantes)) {
 					sTipoComision = ConstantesVisado.CODIGO_CAMPO_PERSONA_JURIDICA;
 				} else {
 					// Regla no permitida
@@ -364,7 +363,7 @@ public class RegistroUtilesMB {
 				TiivsMultitabla multi = getRowFromMultitabla(
 						ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC,persona.getTipDoi());
 				if (multi != null) {
-					if (multi.getValor1().equalsIgnoreCase(ConstantesVisado.TIPO_DOCUMENTO_RUC)) {
+					if (multi.getId().getCodElem().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC)) {
 						cont++;
 					}
 				}
@@ -402,8 +401,7 @@ public class RegistroUtilesMB {
 						ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC,
 						tipopersona);
 				if (multi != null) {
-					if (!multi.getValor1().equalsIgnoreCase(
-							ConstantesVisado.TIPO_DOCUMENTO_RUC)) {
+					if (!multi.getId().getCodElem().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC)) {
 						cont++;
 					}
 				}
@@ -432,7 +430,7 @@ public class RegistroUtilesMB {
 					ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA,
 					agruPersonaId.getClasifPer());
 			if (multi != null) {
-				if (multi.getValor1().equalsIgnoreCase(ConstantesVisado.TIPO_CLASIFICACION_FALLECIDO)) {
+				if (multi.getId().getCodElem().equalsIgnoreCase(ConstantesVisado.CODIGO_TIPO_CLASIFICACION_FALLECIDO)) {
 					bRet = true;
 					break;
 				}
