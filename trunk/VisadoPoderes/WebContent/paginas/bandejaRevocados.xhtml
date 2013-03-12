@@ -14,12 +14,13 @@
 	<ui:define name="contenido">
 	<script type="text/JavaScript" src="../resources/js/visado.js" />
 		<h:form  id="frmConsRev">
-<p:growl id="msmPopup"></p:growl>
+
 			<table>
 				<tr>
 					<td>
 						<fieldset>
 							<legend class="fielset">CONSULTA DE REVOCADOS</legend>
+							<p:growl id="msmGrowlPopup"></p:growl>
 
 							<h:panelGrid columns="9" style="width: 800px">
 								<h:outputLabel value="Tipo de Registro: " />
@@ -263,7 +264,7 @@
 					<p:message for="txtNumDoi"></p:message>
 
 					<p:commandButton id="btnBuscar"
-						update=":frmCliente, :frmPendEdit:gridApodPod,
+						update=":frmCliente, :frmPendEdit:gridApodPod, :frmPendEdit:dtClientes,
 							:frmPendEdit:gridApodPod2, :frmPendEdit:gridApodPod3"
 						icon="ui-icon-seek-next"
 						action="#{revocadosMB.buscarPersona}" ajax="true" />
@@ -292,17 +293,17 @@
 
 				<h:panelGrid columns="6" id="gridApodPod2">
 
-					<h:outputText styleClass="outputTextPopup" id="outApPaterno"
+					<h:outputText  id="outApPaterno"
 						value="Ap.Paterno:" />
 					<p:inputText styleClass="inputTextPopup" id="txtApellidoPaterno"
 						size="25" value="#{revocadosMB.objTiivsPersonaAgregar.apePat}" />
 
-					<h:outputText styleClass="outputTextPopup" id="outApMaterno"
+					<h:outputText  id="outApMaterno"
 						value="Ap.Materno:" />
 					<p:inputText styleClass="inputTextPopup" id="txtApellidoMaterno"
 						size="25" value="#{revocadosMB.objTiivsPersonaAgregar.apeMat}" />
 
-					<h:outputText styleClass="outputTextPopup" id="outNombres"
+					<h:outputText  id="outNombres"
 						value="Nombres:" />
 					<p:inputText styleClass="inputTextPopup" id="txtNombres" size="25"
 						value="#{revocadosMB.objTiivsPersonaAgregar.nombre}" />
@@ -703,8 +704,6 @@
 			header="Apoderado/Poderdante" showEffect="fade" hideEffect="explode" width="#{revocadosMB.ancho_Popup_Revoc_Poder}">
 
 			<h:form id="frmApodPodVer">
-			
-			<p:messages id="msmPopupMessages"/>
 
 				<h:panelGrid columns="2" id="gridTitulo">
 					<p:outputLabel value="Estado:" />
