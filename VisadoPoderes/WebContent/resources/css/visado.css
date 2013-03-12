@@ -17,6 +17,11 @@
 background-color: #254077 !important;
 background-image :url("/VisadoPoderes/faces/javax.faces.resource/images/ui-bg_highlight-soft_100_deedf7_1x100.png?ln=primefaces-cupertino")
 }
+
+.ui-menu .ui-menu-parent .ui-menu-child{
+width: 20.5em;	
+}
+
 .fielset {
 	 font-family: Verdana, sans-serif;
 	font-size:10px;
