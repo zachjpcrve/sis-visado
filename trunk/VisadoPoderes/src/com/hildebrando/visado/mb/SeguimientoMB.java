@@ -29,7 +29,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.joda.time.LocalDate;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.beans.BeansException;
@@ -231,7 +230,6 @@ public class SeguimientoMB
 		}
 	}	
 	
-	
 	// Descripcion: Metodo que se encarga de cargar las solicitudes en la grilla
 	// @Autor: Cesar La Rosa
 	// @Version: 1.0
@@ -277,7 +275,6 @@ public class SeguimientoMB
 				setMostrarColumna(false);
 			}
 		}
-		
 	}
 	
 	public String buscarEstudioxAbogado()
@@ -410,9 +407,6 @@ public class SeguimientoMB
 	private void actualizarDatosGrilla() 
 	{	
 		String cadena="";
-		Double importeTMP=0.0;
-		Double rangoIni=0.0;
-		Double rangoFin=0.0;
 		
 		// Se obtiene y setea la descripcion del Estado en la grilla
 		for (TiivsSolicitud tmpSol : solicitudes) 
@@ -562,9 +556,6 @@ public class SeguimientoMB
 			
 			for (TiivsSolicitudNivel tmp: combosMB.getLstSolicNivel())
 			{
-				int j=0;
-				//int cont=1;
-				
 				if (tmp.getTiivsSolicitud().getCodSoli().trim().equals(tmpSol.getCodSoli()))
 				{
 					String nivel = nivelService.buscarNivelxCodigo(tmp.getCodNiv());
@@ -577,7 +568,6 @@ public class SeguimientoMB
 					{
 						cadNiveles = cadNiveles.concat(nivel);
 					}
-					
 				}
 			}
 			
@@ -1487,8 +1477,6 @@ public class SeguimientoMB
 		
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
-		LocalDate newFechaInicio = null;
-		LocalDate newFechaFin = null;
 
 		// solicitudes = new ArrayList<TiivsSolicitud>();
 
@@ -1607,7 +1595,6 @@ public class SeguimientoMB
 					filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 					
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			 	
@@ -2495,11 +2482,8 @@ public class SeguimientoMB
 	public void buscarOficinaPorCodigo(ValueChangeEvent e) 
 	{
 		logger.debug("Buscando oficina por codigo: " + e.getNewValue());
-		// System.out.println("Buscando oficina por codigo: " +
-		// e.getNewValue());
-
-		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		
+		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
 		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,
 				e.getNewValue()));
