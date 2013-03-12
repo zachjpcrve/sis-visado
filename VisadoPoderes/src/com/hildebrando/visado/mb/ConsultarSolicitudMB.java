@@ -2646,6 +2646,14 @@ public class ConsultarSolicitudMB {
 			}
 			
 			logger.info("lstTiivsAgrupacionPersonas: inicio " + lstTiivsAgrupacionPersonas.size());
+			
+			Set<TiivsSolicitudAgrupacion> lstSolAgruToRemove = new HashSet<TiivsSolicitudAgrupacion>();
+			for(TiivsSolicitudAgrupacion solAgru: this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()){
+				if(solAgru.getTiivsAgrupacionPersonas().size()==0){					
+					lstSolAgruToRemove.add(solAgru);
+				}
+			}			
+			this.solicitudRegistrarT.getTiivsSolicitudAgrupacions().removeAll(lstSolAgruToRemove);
 
 			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
