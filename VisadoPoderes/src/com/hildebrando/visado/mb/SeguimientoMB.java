@@ -1745,7 +1745,7 @@ public class SeguimientoMB
 				}
 			}
 			
-			logger.debug("Filtro por apoderado: " + getTxtNomApoderado());
+			logger.info("Filtro por apoderado: " + getTxtNomApoderado());
 			for (; ind <= lstSolicitudes.size() - 1; ind++) 
 			{
 				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
@@ -1769,7 +1769,7 @@ public class SeguimientoMB
 				}
 			}
 			
-			logger.debug("Filtro por nro documento poderdante: " + getNroDOIPoderdante());
+			logger.info("Filtro por nro documento poderdante: " + getNroDOIPoderdante());
 			for (; ind <= lstSolicitudes.size() - 1; ind++) 
 			{
 				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
@@ -1797,7 +1797,7 @@ public class SeguimientoMB
 				}
 			}
 			
-			logger.debug("Filtro por poderdante: " + getTxtNomPoderdante());
+			logger.info("Filtro por poderdante: " + getTxtNomPoderdante());
 			for (; ind <= lstSolicitudes.size() - 1; ind++) 
 			{
 				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
@@ -1841,7 +1841,7 @@ public class SeguimientoMB
 			try {
 				lstSolNivel = busqSolNivDAO.buscarDinamico(filtro);
 			} catch (Exception e) {
-				logger.debug("Error al buscar los estados de los niveles en las solicitudes");
+				logger.info("Error al buscar los estados de los niveles en las solicitudes");
 			}
 			
 			lstSolicitudesSelected.clear();
@@ -1895,7 +1895,7 @@ public class SeguimientoMB
 			try {
 				lstHistorial = busqHisDAO.buscarDinamico(filtro);
 			} catch (Exception e) {
-				logger.debug("Error al buscar en historial de solicitudes");
+				logger.info("Error al buscar en historial de solicitudes");
 			}
 			
 			lstSolicitudesSelected.clear();
@@ -1931,7 +1931,7 @@ public class SeguimientoMB
 			try {
 				lstHistorial = busqHisDAO.buscarDinamico(filtro);
 			} catch (Exception e) {
-				logger.debug("Error al buscar en historial de solicitudes");
+				logger.info("Error al buscar en historial de solicitudes");
 			}
 			
 			lstSolicitudesSelected.clear();
@@ -1945,7 +1945,7 @@ public class SeguimientoMB
 				try {
 					lstSolNivel = busqSolNivDAO.buscarDinamico(filtro2);
 				} catch (Exception e) {
-					logger.debug("Error al buscar los estados de los niveles en las solicitudes");
+					logger.info("Error al buscar los estados de los niveles en las solicitudes");
 				}
 				
 				for (TiivsSolicitudNivel tmp: lstSolNivel)
@@ -1979,7 +1979,7 @@ public class SeguimientoMB
 			try {
 				lstHistorial = busqHisDAO.buscarDinamico(filtro);
 			} catch (Exception e) {
-				logger.debug("Error al buscar en historial de solicitudes");
+				logger.info("Error al buscar en historial de solicitudes");
 			}
 			
 			lstSolicitudesSelected.clear();
