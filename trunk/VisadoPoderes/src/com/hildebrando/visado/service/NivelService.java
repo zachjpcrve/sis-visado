@@ -49,7 +49,7 @@ public class NivelService {
 			niveles = service.buscarDinamico(filtro.addOrder(Order.asc("id")));
 			
 			for (int i = 0; i < niveles.size(); i++) {
-				if(niveles.get(i).getEstado().intValue() == 1){
+				if(niveles.get(i).getEstado() == 1){
 					niveles.get(i).setDesEstado(ConstantesVisado.VALOR2_ESTADO_ACTIVO_LISTA);
 				}else{
 					niveles.get(i).setDesEstado(ConstantesVisado.VALOR2_ESTADO_INACTIVO_LISTA);
@@ -96,8 +96,7 @@ public class NivelService {
 	public void registrar(TiivsNivel tiivsNivel) {
 		logger.info("NivelService : registrar");
 		try{
-			GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit
-					.getApplicationContext().getBean("genericoDao");
+			GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			
 			service.insertarMerge(tiivsNivel);
 			
@@ -196,7 +195,7 @@ public class NivelService {
 	{
 		String nivel="";
 		
-		logger.info("Buscando nivel por codigo: " + codigo);
+		//logger.info("Buscando nivel por codigo: " + codigo);
 		
 		List<TiivsNivel> lista = new ArrayList<TiivsNivel>();
 		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -206,8 +205,7 @@ public class NivelService {
 			lista = service.buscarDinamico(filtro.add(Restrictions.eq("codNiv", codigo)));
 		}catch(Exception ex){
 			ex.printStackTrace();
-			logger.error("NivelService : buscarNivelxCodigo: "
-					+ ex.getLocalizedMessage());
+			logger.error("NivelService : buscarNivelxCodigo: "+ ex.getLocalizedMessage());
 		}
 		
 		if (lista!=null)
@@ -218,7 +216,7 @@ public class NivelService {
 			}
 		}
 		
-		logger.info("Resultado obtenido: " + nivel);
+		//logger.info("Resultado obtenido: " + nivel);
 		
 		return nivel;
 	}
