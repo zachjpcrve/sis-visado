@@ -35,7 +35,7 @@
         <property name="usuarioAct" type="string">
             <column name="USUARIO_ACT" length="50" />
         </property>
-        <property name="estado" type="big_decimal">
+        <property name="estado" type="integer">
             <column name="ESTADO" precision="22" scale="0" />
         </property>
     </class>
