@@ -99,7 +99,7 @@ public class NivelMB {
 		try {
 			nivelesMant = nivelService.editarNivel(codNiv);
 			for (int i = 0; i < nivelesMant.size(); i++) {
-				if (nivelesMant.get(i).getEstado().intValue() ==1) {
+				if (nivelesMant.get(i).getEstado() ==1) {
 					nivelesMant.get(i).setDesEstado("1");
 				} else {
 					nivelesMant.get(i).setDesEstado("0");
@@ -203,11 +203,9 @@ public class NivelMB {
 
 								if (nivelesMant.get(i).getDesEstado()
 										.equals("1")) {
-									nivelesMant.get(i).setEstado(
-											new BigDecimal(1));
+									nivelesMant.get(i).setEstado(1);
 								} else {
-									nivelesMant.get(i).setEstado(
-											new BigDecimal(0));
+									nivelesMant.get(i).setEstado(0);
 								}
 								logger.info("Niveles Mantenimiento  : " + " "
 										+ i + " " + nivelesMant.get(i).getId());
