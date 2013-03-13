@@ -1468,13 +1468,11 @@ public class SeguimientoMB
 	// Descripcion: Metodo que se encarga de buscar las solicitudes de acuerdo a
 	// los filtros seleccionados.
 	// @Autor: Cesar La Rosa
-	// @Version: 3.0
+	// @Version: 4.0
 	// @param: -
 	@SuppressWarnings("unchecked")
 	public void busquedaSolicitudes() 
 	{
-		logger.info("Buscando solicitudes");
-		
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
 
@@ -1483,7 +1481,7 @@ public class SeguimientoMB
 		// 1. Filtro por codigo de solicitud (funciona)
 		if (getCodSolicitud().compareTo("") != 0) 
 		{
-			logger.debug("Filtro por codigo de solicitud: " + getCodSolicitud());
+			logger.info("Filtro por codigo de solicitud: " + getCodSolicitud());
 			String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getCodSolicitud().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
 			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_COD_SOLICITUD,"%"+filtroNuevo));
 		}
@@ -1506,27 +1504,27 @@ public class SeguimientoMB
 		{
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
 			{
-				logger.debug("Filtro por importe: " + getIdImporte());
+				logger.info("Filtro por importe: " + getIdImporte());
 				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_CINCUENTA)));
 			}
 
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE)) 
 			{
-				logger.debug("Filtro por importe: " + getIdImporte());
+				logger.info("Filtro por importe: " + getIdImporte());
 				filtroSol.add(Restrictions.gt(ConstantesVisado.CAMPO_IMPORTE,ConstantesVisado.VALOR_RANGO_CINCUENTA));
 				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_IMPORTE,ConstantesVisado.VALOR_RANGO_CIENTO_VEINTE));
 			}
 
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA)) 
 			{
-				logger.debug("Filtro por importe: " + getIdImporte());
+				logger.info("Filtro por importe: " + getIdImporte());
 				filtroSol.add(Restrictions.gt(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_CIENTO_VEINTE)));
 				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_DOSCIENTOS_CINCUENTA)));
 			}
 
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA)) 
 			{
-				logger.debug("Filtro por importe: " + getIdImporte());
+				logger.info("Filtro por importe: " + getIdImporte());
 				filtroSol.add(Restrictions.gt(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_DOSCIENTOS_CINCUENTA)));
 			}
 		}
@@ -1669,7 +1667,7 @@ public class SeguimientoMB
 				}
 			}
 			
-			logger.debug("Filtro por operacion bancaria");
+			logger.info("Filtro por operacion bancaria");
 			
 			if (lstSolicitudesxOpeBan.size()>0)
 			{
@@ -1684,11 +1682,9 @@ public class SeguimientoMB
 			}
 			else
 			{
-				logger.debug("No se selecciono ninguna operacion bancaria");
+				logger.info("No se selecciono ninguna operacion bancaria");
 				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
-			}
-			
-			//filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_OPE_BANCARIAS,	getIdOpeBan()));
+			}			
 		}
 
 		// 8. Filtro por nombre de oficina (funciona)
@@ -1697,7 +1693,7 @@ public class SeguimientoMB
 			if (getOficina() != null) 
 			{
 				if(getOficina().getDesOfi()!=null){
-					logger.debug("Filtro Oficina: " + getOficina().getCodOfi());		
+					logger.info("Filtro Oficina: " + getOficina().getCodOfi());		
 					filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
 					String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getOficina().getDesOfi().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
 					filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
@@ -1708,28 +1704,33 @@ public class SeguimientoMB
 		if (getNroDOIApoderado().compareTo("") != 0) 
 		{
 			String codSol="";
+			int ind=0;
+			List<String> lstSolicitudes = new ArrayList<String>();
 			
 			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
 			{
-				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIApoderado()) && tmp.getClasifPer().equals(ConstantesVisado.APODERADO))
+				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIApoderado()) && tmp.getTipPartic().equals(ConstantesVisado.APODERADO))
 				{
 					codSol = tmp.getCodSoli();
-					break;
+					lstSolicitudes.add(codSol);
 				}
 			}
 			
-			logger.debug("Filtro por numero de documento apoderado: " + getNroDOIApoderado());
+			logger.info("Filtro por numero de documento apoderado: " + getNroDOIApoderado());
 			
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,codSol));
+			for (; ind <= lstSolicitudes.size() - 1; ind++) 
+			{
+				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
+			}
+			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 		}
 
 		// 12. Filtro por nombre de apoderado (funciona)
 		if (getTxtNomApoderado().compareTo("") != 0) 
 		{
-			//String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getTxtNomApoderado().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
-			//filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_APODERADO, filtroNuevo));
-			
 			String codSol="";
+			int ind=0;
+			List<String> lstSolicitudes = new ArrayList<String>();
 			
 			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
 			{
@@ -1737,44 +1738,51 @@ public class SeguimientoMB
 					|| tmp.getTiivsPersona().getApeMat().indexOf(getTxtNomApoderado().toUpperCase())!=-1 
 					|| tmp.getTiivsPersona().getApePat().indexOf(getTxtNomApoderado().toUpperCase())!=-1)
 					
-					&& tmp.getClasifPer().equals(ConstantesVisado.APODERADO))
+					&& tmp.getTipPartic().equals(ConstantesVisado.APODERADO))
 				{
 					codSol = tmp.getCodSoli();
-					break;
+					lstSolicitudes.add(codSol);
 				}
 			}
 			
 			logger.debug("Filtro por apoderado: " + getTxtNomApoderado());
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,codSol));
+			for (; ind <= lstSolicitudes.size() - 1; ind++) 
+			{
+				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
+			}
+			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 		}
 		
 		// 13. Filtro por numero de documento de poderdante (funciona)
 		if (getNroDOIPoderdante().compareTo("") != 0) 
 		{
-			//filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_NUMDOC_PODERDANTE,	getNroDOIPoderdante()));
-			
 			String codSol="";
+			int ind=0;
+			List<String> lstSolicitudes = new ArrayList<String>();
 			
 			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
 			{
-				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIPoderdante()) && tmp.getClasifPer().equals(ConstantesVisado.PODERDANTE))
+				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIPoderdante()) && tmp.getTipPartic().equals(ConstantesVisado.PODERDANTE))
 				{
 					codSol = tmp.getCodSoli();
-					break;
+					lstSolicitudes.add(codSol);
 				}
 			}
 			
 			logger.debug("Filtro por nro documento poderdante: " + getNroDOIPoderdante());
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,codSol));
+			for (; ind <= lstSolicitudes.size() - 1; ind++) 
+			{
+				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
+			}
+			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 		}
 
 		// 14. Filtro por nombre de poderdante (funciona)
 		if (getTxtNomPoderdante().compareTo("") != 0) 
 		{
-			/*String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getTxtNomPoderdante().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
-			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_PODERDANTE,filtroNuevo));*/
-			
 			String codSol="";
+			int ind=0;
+			List<String> lstSolicitudes = new ArrayList<String>();
 			
 			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
 			{
@@ -1782,15 +1790,19 @@ public class SeguimientoMB
 					|| tmp.getTiivsPersona().getApeMat().indexOf(getTxtNomPoderdante().toUpperCase())!=-1 
 					|| tmp.getTiivsPersona().getApePat().indexOf(getTxtNomPoderdante().toUpperCase())!=-1)
 					
-					&& tmp.getClasifPer().equals(ConstantesVisado.PODERDANTE))
+					&& tmp.getTipPartic().equals(ConstantesVisado.PODERDANTE))
 				{
 					codSol = tmp.getCodSoli();
-					break;
+					lstSolicitudes.add(codSol);
 				}
 			}
 			
 			logger.debug("Filtro por poderdante: " + getTxtNomPoderdante());
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,codSol));
+			for (; ind <= lstSolicitudes.size() - 1; ind++) 
+			{
+				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
+			}
+			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 		}
 
 		// 15. Filtro por nivel (funciona)
