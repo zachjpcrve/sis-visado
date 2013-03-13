@@ -12,8 +12,8 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
-	<script type="text/JavaScript" src="../resources/js/visado.js" />
-		<h:form  id="frmConsRev">
+		<script type="text/JavaScript" src="../resources/js/visado.js" />
+		<h:form id="frmConsRev">
 
 			<table>
 				<tr>
@@ -28,8 +28,8 @@
 									value="#{revocadosMB.objTiivsPersonaBusqueda.tipPartic}"
 									style="width: 120px">
 									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
-									<f:selectItems value="#{revocadosMB.listTipoRegistro}"
-										var="t" itemValue="#{t.id.codElem}" itemLabel="#{t.valor1}" />
+									<f:selectItems value="#{revocadosMB.listTipoRegistro}" var="t"
+										itemValue="#{t.id.codElem}" itemLabel="#{t.valor1}" />
 								</p:selectOneMenu>
 
 								<h:outputLabel value="T.DOI/ C.Central: " />
@@ -39,15 +39,16 @@
 									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 									<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 										itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
-									
+
 								</p:selectOneMenu>
 
 								<h:outputLabel value="Nro de DOI: " />
 								<p:inputText id="txtNroDoi" styleClass="inputText"
-									value="#{revocadosMB.objTiivsPersonaBusqueda.numDoi}"  onkeypress="return validaNumero(event,'0',this,'0');"
+									value="#{revocadosMB.objTiivsPersonaBusqueda.numDoi}"
+									onkeypress="return validaNumero(event,'0',this,'0');"
 									onblur="validaNumero(event,'0',this,'1');">
 								</p:inputText>
-								<p:message for="txtNroDoi" ></p:message>
+								<p:message for="txtNroDoi"></p:message>
 
 								<h:outputLabel value="Nombre: " />
 								<p:autoComplete completeMethod="#{revocadosMB.completePersona}"
@@ -64,10 +65,11 @@
 								<h:outputLabel value="Estado: " />
 								<p:selectOneMenu id="cboEstado"
 									value="#{revocadosMB.estadoRevocado}" style="width: 120px">
-									
+
 									<f:selectItem itemLabel="--Seleccione--" itemValue="S" />
-									<f:selectItems value="#{revocadosMB.listEstadoRevocados}" var="est"
-										itemLabel="#{est.valor1}" itemValue="#{est.id.codElem}" />
+									<f:selectItems value="#{revocadosMB.listEstadoRevocados}"
+										var="est" itemLabel="#{est.valor1}"
+										itemValue="#{est.id.codElem}" />
 								</p:selectOneMenu>
 
 								<h:outputLabel for="calFecIni" value="Fecha de Inicio: " />
@@ -89,9 +91,9 @@
 					</td>
 				</tr>
 			</table>
-			
+
 			<h:panelGrid columns="4">
-				
+
 				<p:commandButton value="Nuevo"
 					actionListener="#{revocadosMB.editPendRevocadoNuevo}"
 					oncomplete="dlgApoPodPendEdit.show();" update=":frmPendEdit"
@@ -99,15 +101,16 @@
 
 				<h:outputLabel id="outLblTotal"
 					value="Total de registros: #{revocadosMB.nroRegistros} Registros" />
-				
+
 				<p:commandButton value="Buscar"
 					action="#{revocadosMB.buscarRevocado}" ajax="false" update="tbl" />
-				
+
 				<p:commandButton value="Exportar"
-					actionListener="#{revocadosMB.descargarArchivoRecaudacion}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)" >
-					<p:fileDownload value="#{revocadosMB.file}" />  
+					actionListener="#{revocadosMB.descargarArchivoRecaudacion}"
+					ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)">
+					<p:fileDownload value="#{revocadosMB.file}" />
 				</p:commandButton>
-				
+
 			</h:panelGrid>
 
 
@@ -167,27 +170,26 @@
 
 				<p:column headerText="Eliminar">
 
-					<p:commandButton id="idDel"
-						rendered="#{revocado.flagDelete}" icon="ui-icon-closethick"
-						oncomplete="cfdEliminar.show();"
+					<p:commandButton id="idDel" rendered="#{revocado.flagDelete}"
+						icon="ui-icon-closethick" oncomplete="cfdEliminar.show();"
 						title="Eliminar Combinación">
-						<f:setPropertyActionListener target="#{revocadosMB.revocadoDelete}"
-							value="#{revocado}"></f:setPropertyActionListener>
+						<f:setPropertyActionListener
+							target="#{revocadosMB.revocadoDelete}" value="#{revocado}"></f:setPropertyActionListener>
 					</p:commandButton>
 
 				</p:column>
 			</p:dataTable>
 
-			
+
 
 		</h:form>
 
-<h:form id="frmCliente">
+		<h:form id="frmCliente">
 
-		<!-- Buscar Clientes -->
-		<p:dialog widgetVar="dlgCliente" modal="true" id="idDlgCliente"
-			visible="#{revocadosMB.bBooleanPopup}"
-			header="Buscar Cliente/Nro cliente">
+			<!-- Buscar Clientes -->
+			<p:dialog widgetVar="dlgCliente" modal="true" id="idDlgCliente"
+				visible="#{revocadosMB.bBooleanPopup}"
+				header="Buscar Cliente/Nro cliente">
 
 				<h:panelGrid columns="1" id="gridMsj">
 					<p:messages globalOnly="true" />
@@ -219,28 +221,30 @@
 						</p:column>
 						<f:facet name="footer">
 							<p:commandButton id="btnAgregarBusqueda" value="Agregar"
-								icon="ui-icon-check"
-								ajax="true"
+								icon="ui-icon-check" ajax="true" 
 								actionListener="#{revocadosMB.obtenerPersonaSeleccionada}"
-								onclick="dlgCliente.hide()" update=":frmPendEdit:gridApodPod, 
+								onclick="dlgCliente.hide()"
+								update=":frmPendEdit:gridApodPod, 
 								:frmPendEdit:gridApodPod2, :frmPendEdit:gridApodPod3" />
 						</f:facet>
 
 					</p:dataTable>
 				</p:outputPanel>
 
-		</p:dialog>
+			</p:dialog>
 
-			</h:form>
+		</h:form>
 
 		<!-- Pendiente/Editar -->
 		<p:dialog widgetVar="dlgApoPodPendEdit" modal="true" id="idDlgApoPod"
-			header="Apoderado/Poderdante" width="#{revocadosMB.ancho_Popup_Revoc_Poder}" height="#{revocadosMB.alto_Popup_Revoc_Poder}">
+			header="Apoderado/Poderdante"
+			width="#{revocadosMB.ancho_Popup_Revoc_Poder}"
+			height="#{revocadosMB.alto_Popup_Revoc_Poder}">
 
 			<h:form id="frmPendEdit">
 
 				<h:panelGrid columns="1" id="gridMsj">
-					<p:messages globalOnly="true"  showDetail="true" />
+					<p:messages globalOnly="true" showDetail="true" />
 				</h:panelGrid>
 
 				<h:panelGrid columns="12" id="gridApodPod">
@@ -252,22 +256,24 @@
 						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 						<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 							itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
-						
+
 					</p:selectOneMenu>
 
 					<h:outputLabel value="Nro*: " />
 					<p:inputText id="txtNumDoi" styleClass="inputText"
 						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.numDoi}"
-						validatorMessage="Numero requerido" onkeypress="return validaNumero(event,'0',this,'0');" onblur="validaNumero(event,'0',this,'1');">
+						validatorMessage="Numero requerido"
+						onkeypress="return validaNumero(event,'0',this,'0');"
+						onblur="validaNumero(event,'0',this,'1');">
 						<f:validateLongRange minimum="1" maximum="999999999"></f:validateLongRange>
 					</p:inputText>
 					<p:message for="txtNumDoi"></p:message>
 
 					<p:commandButton id="btnBuscar"
 						update=":frmCliente, :frmPendEdit:gridApodPod, :frmPendEdit:dtClientes,
-							:frmPendEdit:gridApodPod2, :frmPendEdit:gridApodPod3"
-						icon="ui-icon-seek-next"
-						action="#{revocadosMB.buscarPersona}" ajax="true" />
+			:frmPendEdit:gridApodPod2, :frmPendEdit:gridApodPod3 , :frmPendEdit:gridMsj"
+						icon="ui-icon-seek-next" action="#{revocadosMB.buscarPersona}"
+						ajax="true" />
 
 					<h:outputLabel value="T.DOI/ C.Central*: " />
 					<p:selectOneMenu id="cboTipoDoi2"
@@ -276,35 +282,36 @@
 						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 						<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 							itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
-						
+
 					</p:selectOneMenu>
 
 					<h:outputLabel value="Nro de DOI*: " />
 					<p:inputText styleClass="inputText"
-						value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}" onkeypress="return validaNumero(event,'0',this,'0');" onblur="validaNumero(event,'0',this,'1');">
+						value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}"
+						onkeypress="return validaNumero(event,'0',this,'0');"
+						onblur="validaNumero(event,'0',this,'1');">
 					</p:inputText>
 
 					<h:outputLabel value="C. Central: " />
 					<p:inputText styleClass="inputText"
 						value="#{revocadosMB.objTiivsPersonaAgregar.codCen}"
-						maxlength="13"  onkeypress="return validaNumero(event,'0',this,'0');" onblur="validaNumero(event,'0',this,'1');"/>
+						maxlength="13"
+						onkeypress="return validaNumero(event,'0',this,'0');"
+						onblur="validaNumero(event,'0',this,'1');" />
 
 				</h:panelGrid>
 
 				<h:panelGrid columns="6" id="gridApodPod2">
 
-					<h:outputText  id="outApPaterno"
-						value="Ap.Paterno:" />
+					<h:outputText id="outApPaterno" value="Ap.Paterno:" />
 					<p:inputText styleClass="inputTextPopup" id="txtApellidoPaterno"
 						size="25" value="#{revocadosMB.objTiivsPersonaAgregar.apePat}" />
 
-					<h:outputText  id="outApMaterno"
-						value="Ap.Materno:" />
+					<h:outputText id="outApMaterno" value="Ap.Materno:" />
 					<p:inputText styleClass="inputTextPopup" id="txtApellidoMaterno"
 						size="25" value="#{revocadosMB.objTiivsPersonaAgregar.apeMat}" />
 
-					<h:outputText  id="outNombres"
-						value="Nombres:" />
+					<h:outputText id="outNombres" value="Nombres:" />
 					<p:inputText styleClass="inputTextPopup" id="txtNombres" size="25"
 						value="#{revocadosMB.objTiivsPersonaAgregar.nombre}" />
 
@@ -317,8 +324,8 @@
 						value="#{revocadosMB.objTiivsPersonaAgregar.tipPartic}"
 						style="width: 120px">
 						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
-						<f:selectItems value="#{revocadosMB.listTipoRegistro}" 
-						var="t" itemValue="#{t.id.codElem}" itemLabel="#{t.valor1}" />
+						<f:selectItems value="#{revocadosMB.listTipoRegistro}" var="t"
+							itemValue="#{t.id.codElem}" itemLabel="#{t.valor1}" />
 					</p:selectOneMenu>
 
 				</h:panelGrid>
@@ -326,9 +333,9 @@
 				<h:panelGrid columns="3">
 
 					<p:commandButton id="btnAgregar" value="Agregar"
-						icon="ui-icon-plus" update="gridMsj gridApodPod gridApodPod2 gridApodPod3 dtClientes"
-						actionListener="#{revocadosMB.agregarRevocado}" ajax="true"
-						/>
+						icon="ui-icon-plus"
+						update="gridMsj gridApodPod gridApodPod2 gridApodPod3 dtClientes"
+						actionListener="#{revocadosMB.agregarRevocado}" ajax="true" />
 
 					<p:spacer width="10" height="20" />
 
@@ -342,8 +349,8 @@
 
 
 				<p:outputPanel id="dtClientes">
-				
-					<p:messages globalOnly="true" showDetail="true" ></p:messages>
+
+					<!-- <p:messages globalOnly="true" showDetail="true"></p:messages> -->
 
 					<table border="0" width="100%">
 						<tbody>
@@ -496,7 +503,7 @@
 
 				</p:outputPanel>
 
-				
+
 
 			</h:form>
 
@@ -517,7 +524,7 @@
 					<p:commandButton id="btnInactivar" value="Inactivar"
 						update=":frmActEdit:dtClientes, :frmConsRev:tbl"
 						actionListener="#{revocadosMB.inactivarCombinacion}" ajax="true"
-						process="@form" oncomplete="dlgApoPodActEdit.hide();"/>
+						process="@form" oncomplete="dlgApoPodActEdit.hide();" />
 				</h:panelGrid>
 
 				<p:outputPanel id="dtClientes">
@@ -639,16 +646,16 @@
 			</h:form>
 
 		</p:dialog>
-		
+
 		<p:confirmDialog widgetVar="cfdRevocar"
 			message="¿Está seguro de revocar los poderes? "
 			header="Mensaje de Información" appendToBody="true"
 			showEffect="explode" hideEffect="explode" severity="alert"
 			modal="true">
-			
+
 			<h:form>
 				<p:commandButton value="Sí" process=":frmPendEdit:dtClientes"
-					actionListener="#{revocadosMB.revocarApodPod}" 
+					actionListener="#{revocadosMB.revocarApodPod}"
 					update=":frmPendEdit:gridMsj" ajax="false"
 					oncomplete="cfdRevocar.hide();">
 				</p:commandButton>
@@ -663,45 +670,43 @@
 			header="Mensaje de Información" appendToBody="true"
 			showEffect="explode" hideEffect="explode" severity="alert"
 			modal="true">
-			
+
 			<h:form>
 				<p:commandButton value="Sí" process=":frmPendEdit:dtClientes"
 					actionListener="#{revocadosMB.guardarApodPod}" ajax="true"
-					update=":frmPendEdit:dtClientes"
-					oncomplete="cfdGuardar.hide();">
+					update=":frmPendEdit:dtClientes, :frmCliente:idDlgCliente" oncomplete="cfdGuardar.hide();">
 				</p:commandButton>
 
 				<p:commandButton value="No" onclick="cfdGuardar.hide();">
 				</p:commandButton>
-				
+
 			</h:form>
-			
+
 		</p:confirmDialog>
-		
+
 		<p:confirmDialog widgetVar="cfdEliminar"
 			message="¿Está seguro de eliminar la combinación? "
 			header="Mensaje de Información" appendToBody="true"
 			showEffect="explode" hideEffect="explode" severity="alert"
 			modal="true">
-			
+
 			<h:form>
 				<p:commandButton value="Sí" process=":frmConsRev:tbl"
-					actionListener="#{revocadosMB.deleteCombinacion}" 
-					ajax="true"
-					update=":frmConsRev:tbl"
-					oncomplete="cfdEliminar.hide();">
+					actionListener="#{revocadosMB.deleteCombinacion}" ajax="true"
+					update=":frmConsRev:tbl" oncomplete="cfdEliminar.hide();">
 				</p:commandButton>
 
 				<p:commandButton value="No" onclick="cfdEliminar.hide();">
 				</p:commandButton>
-				
+
 			</h:form>
-			
+
 		</p:confirmDialog>
 
 		<!-- Ver -->
 		<p:dialog widgetVar="dlgApoPodVer" modal="true" id="idDlgApoPodVer"
-			header="Apoderado/Poderdante" showEffect="fade" hideEffect="explode" width="#{revocadosMB.ancho_Popup_Revoc_Poder}">
+			header="Apoderado/Poderdante" showEffect="fade" hideEffect="explode"
+			width="#{revocadosMB.ancho_Popup_Revoc_Poder}">
 
 			<h:form id="frmApodPodVer">
 
