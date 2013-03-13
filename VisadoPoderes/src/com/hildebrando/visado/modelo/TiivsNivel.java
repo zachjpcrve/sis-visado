@@ -2,7 +2,6 @@ package com.hildebrando.visado.modelo;
 
 // Generated Feb 20, 2013 12:11:27 PM by Hibernate Tools 3.4.0.CR1
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -20,7 +19,7 @@ public class TiivsNivel implements java.io.Serializable {
 	private String usuarioReg;
 	private Date fechaAct;
 	private String usuarioAct;
-	private BigDecimal estado;
+	private int estado;
 	private String desEstado;
 
 	public TiivsNivel() {
@@ -33,7 +32,7 @@ public class TiivsNivel implements java.io.Serializable {
 	public TiivsNivel(int id, String codNiv, String desNiv,
 			Integer rangoInicio, Integer rangoFin, String moneda,
 			Date fechaReg, String usuarioReg, Date fechaAct, String usuarioAct,
-			BigDecimal estado) {
+			int estado) {
 		this.id = id;
 		this.codNiv = codNiv;
 		this.desNiv = desNiv;
@@ -127,11 +126,11 @@ public class TiivsNivel implements java.io.Serializable {
 		this.usuarioAct = usuarioAct;
 	}
 
-	public BigDecimal getEstado() {
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(BigDecimal estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
 
