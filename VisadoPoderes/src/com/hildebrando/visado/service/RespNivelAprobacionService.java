@@ -49,7 +49,7 @@ public class RespNivelAprobacionService {
 					codNivel)));
 
 			for (int i = 0; i < nivel.size(); i++) {
-				if (nivel.get(i).getEstado().intValue() == 1) {
+				if (nivel.get(i).getEstado() == 1) {
 					nivel.get(i).setDesEstado(
 							ConstantesVisado.VALOR2_ESTADO_ACTIVO_LISTA);
 				} else {
