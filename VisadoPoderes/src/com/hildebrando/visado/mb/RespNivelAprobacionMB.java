@@ -2,6 +2,7 @@ package com.hildebrando.visado.mb;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,8 @@ import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
+import com.bbva.persistencia.generica.util.Utilitarios;
+import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.GrupoDto;
 import com.hildebrando.visado.dto.MiembroNivelDTO;
 import com.hildebrando.visado.dto.NivelDto;
@@ -40,6 +43,15 @@ public class RespNivelAprobacionMB {
 	public static Logger logger = Logger.getLogger(RespNivelAprobacionMB.class);
 	
 	private MiembroNivelDTO miembroNivelDto;
+	private String codNivel;
+	public String getCodNivel() {
+		return this.codNivel;
+	}
+
+	public void setCodNivel(String codNivel) {
+		this.codNivel = codNivel;
+	}
+
 	private List<GrupoDto> grupos;
 	private List<NivelDto> niveles;
 	private boolean limpiar;
@@ -87,7 +99,7 @@ public class RespNivelAprobacionMB {
 		}
 	}
 	
-	public void editarRespNivelAprob(){
+/*	public void editarRespNivelAprob(){
 		logger.debug("=== inicia editarRespNivelAprob() ====");
 		GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		
@@ -97,9 +109,12 @@ public class RespNivelAprobacionMB {
 		idResp = params.get("idResp");
 		editar = params.get("editar");
 		TiivsMiembroNivel miembroNivel= new TiivsMiembroNivel();
-		
+		Busqueda filtroMiembro= Busqueda.forClass(TiivsMiembroNivel.class);
+		filtroMiembro.add(Restrictions.eq("tiivsMiembro.codMiembro", idResp));
+		filtroMiembro.add(Restrictions.eq("tipoRol", "R"));
 		try {
 			miembroNivel= serviceTiivsMiembroNivel.buscarById(TiivsMiembroNivel.class, Integer.parseInt(idResp));
+			logger.info("miembroNivel.toString() :::: "+miembroNivel.toString());
 		} catch (NumberFormatException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al formatear: "+e);
 		} catch (Exception e) {
@@ -117,7 +132,7 @@ public class RespNivelAprobacionMB {
 		logger.debug("=== saliendo de editarRespNivelAprob() ====");
 		//setLimpiar(false);
 	}
-	
+	*/
 	public void nuevoRespxNivel(){
 		logger.debug("=== inicia nuevoRespxNivel() ====");
 		TiivsMiembroNivel miembroNivel= new TiivsMiembroNivel();
@@ -136,16 +151,15 @@ public class RespNivelAprobacionMB {
 	public void listarRespxNivel(){
 		logger.debug("=== inicia listarRespxNivel() ====");
 		GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		
-		Busqueda filtroTiivsMiembroNivel = Busqueda.forClass(TiivsMiembroNivel.class);
-		List<TiivsMiembroNivel> list= new ArrayList<TiivsMiembroNivel>();
-		
 		GenericDao<TiivsMiembro, Object> serviceTiivsMiembro = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		
 		GenericDao<TiivsGrupo, Object> serviceTiivsGrupo = (GenericDao<TiivsGrupo, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		
+		Busqueda filtroTiivsMiembroNivel = Busqueda.forClass(TiivsMiembroNivel.class);
+		//Se consulta los responsables por nivel en base al filtroTiivsMiembroNivel 
+		filtroTiivsMiembroNivel.add(Restrictions.eq("tipoRol", "R"));
 		filtroTiivsMiembroNivel.createAlias("tiivsMiembro", "miemb");
 		
+		List<TiivsMiembroNivel> list= new ArrayList<TiivsMiembroNivel>();
 		if(miembroNivelDto!=null&&miembroNivelDto.getCodGrupo()!=null&&miembroNivelDto.getEstado()!=null){
 			
 		
@@ -180,6 +194,7 @@ public class RespNivelAprobacionMB {
 			List<String> codigos= new ArrayList<String>();
 			for(TiivsMiembro tiivsMiembro: miembros){
 				codigos.add(tiivsMiembro.getCodMiembro());
+			logger.info("codigos filtrar" + codigos);
 			}
 			filtroTiivsMiembroNivel.add(Restrictions.in("miemb.codMiembro", codigos));
 			
@@ -191,8 +206,7 @@ public class RespNivelAprobacionMB {
 		}
 		
 		}
-		//Se consulta los responsables por nivel en base al filtroTiivsMiembroNivel 
-		filtroTiivsMiembroNivel.add(Restrictions.eq("tipoRol", "R"));
+	
 		
 		try {
 			list = serviceTiivsMiembroNivel.buscarDinamico(filtroTiivsMiembroNivel);
@@ -208,10 +222,10 @@ public class RespNivelAprobacionMB {
 		
 		for(TiivsMiembroNivel  e:list){
 			TiivsGrupo grupo= new TiivsGrupo();
-			TiivsMiembro miembro= new TiivsMiembro();
+			//TiivsMiembro miembro= new TiivsMiembro();
 			try {
 				grupo = serviceTiivsGrupo.buscarById(TiivsGrupo.class, e.getTiivsMiembro().getTiivsGrupo().getCodGrupo());
-				miembro = serviceTiivsMiembro.buscarById(TiivsMiembro.class, e.getTiivsMiembro().getCodMiembro());
+				//miembro = serviceTiivsMiembro.buscarById(TiivsMiembro.class, e.getTiivsMiembro().getCodMiembro());
 			} catch (Exception ex) {
 				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener Grupo/Miembro: "+ex);
 			}
@@ -236,8 +250,106 @@ public class RespNivelAprobacionMB {
 		
 		logger.debug("=== saliendo de listarRespxNivel() ===");
 	}
-	
+	public List<TiivsNivel> listarNivelesXusuario(String codNiv){
+		GenericDao<TiivsNivel, Object> serviceTiivsNivel = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 
+		List<TiivsNivel> tiivsNivels = new ArrayList<TiivsNivel>();
+		Busqueda filtroTiivsNivelMoneda = Busqueda.forClass(TiivsNivel.class);
+		try {
+			tiivsNivels = serviceTiivsNivel.buscarDinamico(filtroTiivsNivelMoneda.add(Restrictions.eq("codNiv",codNiv)));
+		} catch (Exception e1) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al obtener nivelesMonedas: " + e1);
+		}
+    return tiivsNivels;
+	}
+	//@Autor Samira
+	public void listarNivelesPorResponsable()  throws Exception {
+		    GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			String idResp=Utilitarios.capturarParametro("idResp");
+			/*Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+			idResp = params.get("idResp");*/
+			List<TiivsMiembroNivel> listaDeMiembrosNivel= new ArrayList<TiivsMiembroNivel>();
+			Busqueda filtroMiembro= Busqueda.forClass(TiivsMiembroNivel.class);
+			filtroMiembro.add(Restrictions.eq("tiivsMiembro.codMiembro", idResp));
+			filtroMiembro.add(Restrictions.eq("tipoRol", "R"));
+			listaDeMiembrosNivel=serviceTiivsMiembroNivel.buscarDinamico(filtroMiembro);
+			logger.info("Tamanio de la lista de miembro " +listaDeMiembrosNivel);
+			
+	}
+	private boolean  validarRegistroResponsableNivel(){
+		boolean retorno=true;
+		if (miembroNivelDto.getEstado().equals("-1")) {
+			retorno=false;
+			Utilitarios.mensajeError("Info", "Debe seleccionar el estado");
+		} else {
+			if (codNivel.equals("-1")) {
+				retorno=false;
+				Utilitarios.mensajeError("Info", "Debe seleccionar un nivel");
+			}
+		}
+		return retorno;
+	}
+	private void nuevoResponsable(){
+		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
+		logger.info("Creando nuevo Responsable");
+		int ris = 0, rfs = 0;
+		int rid = 0, rfd = 0;
+		int rie = 0, rfe = 0;
+		TiivsMiembroNivel miembroNivel = new TiivsMiembroNivel();
+		TiivsMiembro miembro = new TiivsMiembro();
+		miembro.setCodMiembro(miembroNivelDto.getRegistro());
+		miembro.setDescripcion(miembroNivelDto.getDescripcion());
+		miembroNivel.setTiivsMiembro(miembro);
+		miembroNivel.setCodNiv(getCodNivel());
+		miembroNivel.setTipoRol("R");
+		miembroNivel.setEstado(miembroNivelDto.getEstado());
+		miembroNivel.setDescNiv(respNivelAprobacionService.obtenerDesNivel(miembroNivel.getCodNiv()));
+		miembroNivel.setDescEstado(respNivelAprobacionService.obtenerDesEstado(miembroNivel.getCodNiv()));
+		List<TiivsNivel> tiivsNivels=this.listarNivelesXusuario(miembroNivel.getCodNiv());
+		miembroNivel.setListaNiveles(tiivsNivels);
+		for (TiivsNivel nivel : tiivsNivels) {
+			if (nivel.getMoneda().compareTo(ConstantesVisado.MONEDAS.COD_SOLES) == 0) {
+				ris = nivel.getRangoInicio();rfs = nivel.getRangoFin();}
+			if (nivel.getMoneda().compareTo(ConstantesVisado.MONEDAS.COD_DOLAR) == 0) {
+				rid = nivel.getRangoInicio();rfd = nivel.getRangoFin();}
+			if (nivel.getMoneda().compareTo(ConstantesVisado.MONEDAS.COD_EUROS) == 0) {
+				rie = nivel.getRangoInicio();rfe = nivel.getRangoFin();}
+		}
+		respNiveles.add(new MiembroNivelDTO(1, miembroNivel.getTiivsMiembro().getDescripcion(),
+											   miembroNivel.getCodNiv(), miembroNivel.getDescNiv(),
+											   miembroNivel.getTiivsMiembro().getCodMiembro(),
+											   (new Date()).toString(), usuario.getUID(),
+											   miembroNivel.getEstado(), miembroNivel.getDescEstado(), ris, rfs, rid, rfd, rie, rfe));
+												}
+	//@Autor Samira
+	private void agregarlistarRespxNivel() throws Exception {
+		logger.debug("=== inicia agregarlistarRespxNivel() ====");
+		if(validarRegistroResponsableNivel()){
+			nuevoResponsable();
+			listarNivelesPorResponsable();
+			respNiveles.add(miembroNivelDto);
+		}
+		
+		
+	}
+	//@Autor Samira
+	public void editarRespNivelAprob(){
+		logger.debug("=== inicia editarRespNivelAprob() ====");
+		try {
+		listarNivelesPorResponsable();
+		ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
+			ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
+		} catch (IOException e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel: "+e);
+		}catch(Exception e){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel: "+e);
+		}
+		logger.debug("=== saliendo de editarRespNivelAprob() ====");
+		//setLimpiar(false);
+	}
+	
+	
+	
 	public MiembroNivelDTO getMiembroNivelDto() {
 		return miembroNivelDto;
 	}
