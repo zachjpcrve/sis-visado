@@ -37,11 +37,9 @@ public class RespNivelAprobacionService {
 	}
 
 	public String obtenerDesEstado(String codNivel) {
-		//logger.info("RespNivelAprobacionService : obtenerDesEstado");
 		String estado = null;
 		List<TiivsNivel> nivel = new ArrayList<TiivsNivel>();
-		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
 
 		try {
