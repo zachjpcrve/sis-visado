@@ -1343,6 +1343,7 @@ public class RevocadosMB {
 			
 			objTiivsPersonaAgregar = new TiivsPersona();
 			objTiivsPersonaBusquedaDlg = new TiivsPersona();
+			bBooleanPopup=true;
 		}
 		
 		
@@ -1407,7 +1408,7 @@ public class RevocadosMB {
 			
 		}
 		
-		
+		bBooleanPopup=false;
 	}
 	
 	public int getMaximoCodAgrupacion(){
@@ -1589,12 +1590,12 @@ public class RevocadosMB {
 			Utilitarios.mensajeInfo("INFO", sMensaje);
 		}
 		
-		if (objTiivsPersonaAgregar.getCodCen() == null ||  objTiivsPersonaAgregar.getCodCen().equals("")) {
+	/*	if (objTiivsPersonaAgregar.getCodCen() == null ||  objTiivsPersonaAgregar.getCodCen().equals("")) {
 			sMensaje = "Ingrese el Cod Cen";
 			bResult = false;
 			Utilitarios.mensajeInfo("INFO", sMensaje);
 		}
-		
+		*/
 		if (objTiivsPersonaAgregar.getApePat() == null ||  objTiivsPersonaAgregar.getApePat().equals("")) {
 			sMensaje = "Ingrese el Apellido Paterno";
 			bResult = false;
@@ -1988,7 +1989,7 @@ public class RevocadosMB {
 			
 			
 		}
-		
+		bBooleanPopup=false;
 	}
 	
 	public List<Integer> obtenerListCodAgrupacion(){
