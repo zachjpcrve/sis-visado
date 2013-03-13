@@ -58,47 +58,55 @@ public class FileTransferController {
 		String result="";
 		
 		
-		FileItemFactory factory = new DiskFileItemFactory();
-		
-		ServletFileUpload upload = new ServletFileUpload(factory);
-	    upload.setSizeMax(1000000);
+			FileItemFactory factory = new DiskFileItemFactory();
+			
+			ServletFileUpload upload = new ServletFileUpload(factory);
+		    upload.setSizeMax(1000000);
 
-	    List<FileItem> fileItems = upload.parseRequest(request);
-	    // Process the uploaded items 
-	    
-	    String path = request.getRealPath(File.separator) + File.separator + ConstantesVisado.FILES;
-	    List<String> listaArchivos = new ArrayList<String>();
-	    StringBuilder sb = new StringBuilder();
-	    sb.append(FIELD_FILES_LOADED);
-	    
-	    logger.info("Carpeta Files : " + path);
-	    File filePath = new File(path);
-	    if(!filePath.exists()){
-	    	filePath.mkdir();
-	    }
-	    
-	    //for(FileItem item : fileItems){	
-	    for(int i=0; i<fileItems.size();i++){
-	    	FileItem item = fileItems.get(i);
-	    	String name = FilenameUtils.getBaseName(item.getName());
-	    	String ext = FilenameUtils.getExtension(item.getName());
-	    	logger.info("Archivo recibido " + name + "." + ext);
-	    	File file = File.createTempFile(name + "_", "." + ext, filePath);
-	    	logger.info("Archivo copiado " + file.getName());
-	        item.write(file);
-	        listaArchivos.add(file.getName());
-	        sb.append(file.getName());
-	        if(i == fileItems.size()-1){
-	        	sb.append(FIELD_END);
-	        } else {
-	        	sb.append(FIELD_SEPARATOR);
-	        }	        
-	    }	   	 	   	    
-	   
-	    result = sb.toString();
+		    List<FileItem> fileItems = upload.parseRequest(request);
+		    // Process the uploaded items 
+		    
+		    String path = request.getRealPath(File.separator) + File.separator + ConstantesVisado.FILES;
+		    List<String> listaArchivos = new ArrayList<String>();
+		    StringBuilder sb = new StringBuilder();
+		    sb.append(FIELD_FILES_LOADED);
+		    
+		    logger.info("Carpeta Files : " + path);
+		    File filePath = new File(path);
+		    if(!filePath.exists()){
+		    	filePath.mkdir();
+		    }
+		    	
+		    for(int i=0; i<fileItems.size();i++){
+		    	FileItem item = fileItems.get(i);
+		    	String name = FilenameUtils.getBaseName(item.getName());
+		    	String ext = FilenameUtils.getExtension(item.getName());
+		    	logger.info("Archivo recibido " + name + "." + ext);		    	
+		    	File file=null;
+		    	try {
+		    		file = File.createTempFile(name + "_", "." + ext, filePath);
+		    		logger.info("Archivo copiado " + file.getName());
+			        item.write(file);
+			        listaArchivos.add(file.getName());
+			        sb.append(file.getName());
+			        if(i == fileItems.size()-1){
+			        	sb.append(FIELD_END);
+			        } else {
+			        	sb.append(FIELD_SEPARATOR);
+			        }	     
+		    	}catch(Exception e){
+		    		logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR + " " + e);
+		    	} finally{
+		    		if(file!=null){
+		    			file.deleteOnExit();
+		    		}
+		    	}
+		    }	   	 	   	    		   
+		    result = sb.toString();
+		
 	    
 	    logger.info("*************** procesoCarga: FIN ******************");
-		return sb.toString();
+		return result;
 	}
 	
 }
