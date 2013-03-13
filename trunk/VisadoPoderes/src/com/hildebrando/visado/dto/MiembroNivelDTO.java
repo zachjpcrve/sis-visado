@@ -34,14 +34,9 @@ public class MiembroNivelDTO implements Serializable {
 	public MiembroNivelDTO(int nuevo, int id,String codNivel, String desNivel, String registro,
 			String descripcion, String codGrupo, String desGrupo,
 			String fechaRegistroToString, String usuarioRegistro,String codEstado, String estado,
-			int rangoInicioSoles,
-		int rangoFinSoles,
-	
-	int rangoInicioDolares,
-	int rangoFinDolares,
-	
-	int rangoInicioEuros,
-	int rangoFinEuros) {
+			int rangoInicioSoles,int rangoFinSoles,int rangoInicioDolares,
+			int rangoFinDolares,int rangoInicioEuros,int rangoFinEuros) 
+	{
 		super();
 		
 		this.nuevo =  nuevo;
@@ -64,7 +59,7 @@ public class MiembroNivelDTO implements Serializable {
 		this.rangoFinEuros = rangoFinEuros;
 	}
 	public MiembroNivelDTO() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	public MiembroNivelDTO(int id,String codNivel, String desNivel, String registro,
 			String descripcion, String codGrupo, String desGrupo,
@@ -167,8 +162,6 @@ public class MiembroNivelDTO implements Serializable {
 	public void setCodEstado(String codEstado) {
 		this.codEstado = codEstado;
 	}
-	
-	
 	public String getFechaActualizacionToString() {
 		return fechaActualizacionToString;
 	}
@@ -223,6 +216,4 @@ public class MiembroNivelDTO implements Serializable {
 	public void setNuevo(int nuevo) {
 		this.nuevo = nuevo;
 	}
-	
-
 }

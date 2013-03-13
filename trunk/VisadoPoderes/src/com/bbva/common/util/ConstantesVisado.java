@@ -17,9 +17,7 @@ public class ConstantesVisado {
 	public static final String VALOR2_ESTADO_ACTIVO_LISTA ="Activo";
 	public static final String VALOR2_ESTADO_INACTIVO ="0";	
 	public static final String VALOR2_ESTADO_INACTIVO_LISTA ="Inactivo";
-	
-
-	
+		
 	public static final String USUARIO_ID = "usuarioId";
 	public static final String USUARIO_NOMBRE = "usuarioNombre";
 	public static final String USUARIO_CODIGO = "usuarioCodigo";
@@ -128,6 +126,7 @@ public class ConstantesVisado {
 	public static final String CAMPO_COD_OFICINA="codOfi";
 	public static final String CAMPO_ESTADO="estado";
 	public static final String CAMPO_COD_MIEMBRO="codMiembro";
+	public static final String CAMPO_ALIAS_COD_MIEMBRO="tiivsMiembro.codMiembro";
 	public static final String CAMPO_ALIAS_ANEXO_ARCHIVO = "aliasArchivo";
 	public static final String CAMPO_TIPO_PARTIC="tipPartic";
 	
@@ -156,10 +155,12 @@ public class ConstantesVisado {
 	public static final String CAMPO_ESTADO_VERIFICACION_B="En Verificación B";
 	public static final String CAMPO_ESTADO_EN_REVISION="En Revisión";
 	public static final String CAMPO_ESTADO_REVOCADO="Revocado";
-	
+	public static final String CAMPO_ID = "id";
+	public static final String CAMPO_COD_NIVEL = "codNiv";
 	public static final String CAMPO_RANGO_INICIO = "rangoInicio";
 	public static final String CAMPO_RANGO_FIN = "rangoFin";
 	public static final String CAMPO_MONEDA= "moneda";
+	public static final String CAMPO_TIPO_ROL = "tipoRol";
 	public static final String CAMPO_SOLES_TBL_MONEDA="PEN NUEVO SOL PERUANO";
 	public static final String CAMPO_DOLARES_TBL_MONEDA="USD  D¿AR USA";
 	public static final String CAMPO_EUROS_TBL_MONEDA ="EUR EURO";

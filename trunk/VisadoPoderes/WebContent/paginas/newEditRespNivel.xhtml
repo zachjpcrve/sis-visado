@@ -72,7 +72,9 @@
 					var="r" paginator="true" rows="50" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
 					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
-					emptyMessage="No hay responsables por niveles">
+					emptyMessage="No hay responsables por niveles" editable="true">
+					
+					<p:ajax event="rowEdit" listener="#{editRespNivel.editarNivAprobacion}" />
 
 					<p:column headerText="Nivel">
 						<h:outputText value="#{r.desNivel}" />
@@ -116,7 +118,23 @@
 					</p:column>
 
 					<p:column headerText="Estado">
-						<h:outputText value="#{r.estado}" />
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{r.estado}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:selectOneMenu effect="fade"
+									value="#{r.codEstado}"
+									style="width:120px;">
+									<f:selectItem itemLabel="Activo" itemValue="1" />  
+           							<f:selectItem itemLabel="Inactivo" itemValue="0" />  
+								</p:selectOneMenu>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column headerText="Editar" style="width:50px">
+						<p:rowEditor  />
 					</p:column>
 
 				</p:dataTable>

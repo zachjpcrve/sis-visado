@@ -26,7 +26,6 @@ import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.service.RespNivelAprobacionService;
-import com.ibm.wsdl.extensions.mime.MIMEConstants;
 
 /**
  * Clase que maneja el mantenimiento de Responsable Nivel Aprobacion, contiene la 
@@ -45,7 +44,7 @@ public class RespNivelAprobacionMB {
 	private List<NivelDto> niveles;
 	private boolean limpiar;
 	private List<MiembroNivelDTO> respNiveles;
-	
+		
 	private RespNivelAprobacionService respNivelAprobacionService;
 	public RespNivelAprobacionMB(){
 		
@@ -55,7 +54,7 @@ public class RespNivelAprobacionMB {
 		niveles = new ArrayList<NivelDto>();
 		respNiveles = new ArrayList<MiembroNivelDTO>();
 		cargarCombos();
-		limpiar = false;
+		limpiar = false;	
 	}
 	
 	private void cargarCombos(){
@@ -279,8 +278,4 @@ public class RespNivelAprobacionMB {
 	public void setLimpiar(boolean limpiar) {
 		this.limpiar = limpiar;
 	}
-
-	
-	
-	
 }

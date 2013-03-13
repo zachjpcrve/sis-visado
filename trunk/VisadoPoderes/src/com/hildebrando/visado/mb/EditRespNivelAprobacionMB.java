@@ -2,24 +2,26 @@ package com.hildebrando.visado.mb;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.primefaces.event.RowEditEvent;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.consulta.reniec.util.Constantes;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
@@ -30,6 +32,7 @@ import com.hildebrando.visado.modelo.TiivsGrupo;
 import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsNivel;
+import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.service.DelegadosService;
 import com.hildebrando.visado.service.RespNivelAprobacionService;
 
@@ -45,9 +48,7 @@ import com.hildebrando.visado.service.RespNivelAprobacionService;
 @SessionScoped
 public class EditRespNivelAprobacionMB {
 
-	public static Logger logger = Logger
-			.getLogger(EditRespNivelAprobacionMB.class);
-	
+	public static Logger logger = Logger.getLogger(EditRespNivelAprobacionMB.class);
 	
 	private DelegadosService delegadosService;
 	private RespNivelAprobacionService respNivelAprobacionService;
@@ -65,25 +66,22 @@ public class EditRespNivelAprobacionMB {
 	private String iniciar;
 	private TiivsMiembroNivel miembroNivel;
 	private GenericDao<TiivsNivel, Object> serviceTiivsNivel;
-
+	private String[] estados;
 	private boolean bEditar;
 
-	public EditRespNivelAprobacionMB() {
+	public EditRespNivelAprobacionMB() 
+	{
 		iniciar = "";
 		delegadosService = new DelegadosService();
 		respNivelAprobacionService = new RespNivelAprobacionService();
 		setFlagVisible(true);
-		HttpServletRequest request = (HttpServletRequest) FacesContext
-				.getCurrentInstance().getExternalContext().getRequest();
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		HttpSession session = request.getSession();
 		miembroNivel = (TiivsMiembroNivel) session.getAttribute("miembroNivel");
-		// session.removeAttribute("miembroNivel");
+		
+		RespNivelAprobacionMB temp = (RespNivelAprobacionMB) session.getAttribute("respNivel");
 
-		RespNivelAprobacionMB temp = (RespNivelAprobacionMB) session
-				.getAttribute("respNivel");
-
-		serviceTiivsNivel = (GenericDao<TiivsNivel, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		serviceTiivsNivel = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 
 		if (temp.isLimpiar()) {
 			this.limpiarCampos();
@@ -91,31 +89,29 @@ public class EditRespNivelAprobacionMB {
 			session.setAttribute("respNivel", temp);
 		} else {
 			this.editar();
-
 		}
+		
+		estados=  new String[2];
+		estados[0] = "Activo";
+		estados[1] = "Inactivo";
 	}
 
 	private void editar() {
-		HttpServletRequest request = (HttpServletRequest) FacesContext
-				.getCurrentInstance().getExternalContext().getRequest();
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		HttpSession session = request.getSession();
-		String editar = "";
 		setbEditar(false);
 		miembroNivel = (TiivsMiembroNivel) session.getAttribute("miembroNivel");
 
-		if (miembroNivel.getTiivsMiembro() != null) {
+		if (miembroNivel.getTiivsMiembro() != null) 
+		{
 			miembroNivelDto = new MiembroNivelDTO();
-			miembroNivelDto.setRegistro(miembroNivel.getTiivsMiembro()
-					.getCodMiembro());
-			miembroNivelDto.setDesGrupo(miembroNivel.getTiivsMiembro()
-					.getTiivsGrupo().getDesGrupo());
-			miembroNivelDto.setDescripcion(miembroNivel.getTiivsMiembro()
-					.getDescripcion());
+			miembroNivelDto.setRegistro(miembroNivel.getTiivsMiembro().getCodMiembro());
+			miembroNivelDto.setDesGrupo(miembroNivel.getTiivsMiembro().getTiivsGrupo().getDesGrupo());
+			miembroNivelDto.setDescripcion(miembroNivel.getTiivsMiembro().getDescripcion());
 			miembroNivelDto.setEstado(miembroNivel.getEstado());
 			miembroNivelDto.setCodNivel(miembroNivel.getCodNiv());
 
-			GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit
-					.getApplicationContext().getBean("genericoDao");
+			GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtroTiivsMiembroNivel = Busqueda
 					.forClass(TiivsMiembroNivel.class);
 			list = new ArrayList<TiivsMiembroNivel>();
@@ -124,8 +120,7 @@ public class EditRespNivelAprobacionMB {
 				list = serviceTiivsMiembroNivel
 						.buscarDinamico(filtroTiivsMiembroNivel
 								.add(Restrictions.eq("tiivsMiembro.codMiembro",
-										miembroNivel.getTiivsMiembro()
-												.getCodMiembro())));
+										miembroNivel.getTiivsMiembro().getCodMiembro())));
 			} catch (Exception e) {
 				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR
 						+ "al obtener ListaRespNivel: " + e);
@@ -230,43 +225,115 @@ public class EditRespNivelAprobacionMB {
 				niveles.add(new NivelDto(s, des));
 			}
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR
-					+ "al obtener la lista CodAgrup: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR + "al obtener la lista CodAgrup: " + e);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void editarNivAprobacion(RowEditEvent event)
+	{
+		List<TiivsMiembroNivel> lstTmp = new ArrayList<TiivsMiembroNivel>();
+		
+		MiembroNivelDTO mNivel = ((MiembroNivelDTO) event.getObject());
+		logger.debug("modificando nivel con codigo:" + mNivel.getId());
+		logger.debug("estado modificado:" + mNivel.getCodEstado());
+		
+		GenericDao<TiivsMiembroNivel, Object> mNivelDAO = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMiem = Busqueda.forClass(TiivsMiembroNivel.class);
+		filtroMiem.add(Restrictions.eq(ConstantesVisado.CAMPO_ALIAS_COD_MIEMBRO,mNivel.getUsuarioRegistro()));
+		filtroMiem.add(Restrictions.eq(ConstantesVisado.CAMPO_TIPO_ROL, "R"));
+		filtroMiem.add(Restrictions.eq(ConstantesVisado.CAMPO_ID, mNivel.getId()));
+		filtroMiem.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_NIVEL,mNivel.getCodNivel()));
+		
+		try {
+			lstTmp = mNivelDAO.buscarDinamico(filtroMiem);
+		} catch (Exception e) {
+			logger.debug("No se pudo encontrar los datos de miembro nivel",e);
+		}
+		
+		if (lstTmp.size()==1)
+		{
+			for (TiivsMiembroNivel tmp: lstTmp )
+			{
+				tmp.setEstado(mNivel.getCodEstado());
+				tmp.setUsuarioAct(tmp.getUsuarioRegistro());
+				
+				java.util.Date date= new java.util.Date();
+				tmp.setFechaAct(new Timestamp(date.getTime()));
+				
+				try {
+					mNivelDAO.modificar(tmp);
+					logger.info("Se modifico correctamente el estado de miembro nivel");
+				} catch (Exception e) {
+					logger.info("Error al actualizar la informacion de miembro nivel",e);
+				}
+			}
+		}
+	}
+	
+	public String devuelveDatosUsuario(String usuario, String filtro)
+	{
+		String resultado="";
+		
+		GenericDao<TiivsMiembro, Object> mNivelDAO = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMiem = Busqueda.forClass(TiivsMiembro.class);
+		filtroMiem.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_MIEMBRO,usuario));
+		
+		List<TiivsMiembro> lstTmp = new ArrayList<TiivsMiembro>();
 
-	public String getIniciar() {
-		HttpServletRequest request = (HttpServletRequest) FacesContext
-				.getCurrentInstance().getExternalContext().getRequest();
+		try {
+			lstTmp = mNivelDAO.buscarDinamico(filtroMiem);
+		} catch (Exception e) {
+			logger.debug("No se pudo encontrar los datos de usuario",e);
+		}
+		
+		if (lstTmp.size()==1)
+		{
+			if (filtro.trim().equals("criterio"))
+			{
+				resultado=lstTmp.get(0).getCriterio();
+			}
+		}
+		
+		return resultado;
+	}
+
+	public String getIniciar() 
+	{
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		HttpSession session = request.getSession();
-		RespNivelAprobacionMB temp = (RespNivelAprobacionMB) session
-				.getAttribute("respNivel");
-		if (temp.isLimpiar()) {
+		RespNivelAprobacionMB temp = (RespNivelAprobacionMB) session.getAttribute("respNivel");
+		
+		if (temp.isLimpiar()) 
+		{
 			this.limpiarCampos();
-			// list = new ArrayList<TiivsMiembroNivel>();
 			respNiveles.clear();
 			temp.setLimpiar(false);
 			session.setAttribute("respNivel", temp);
-		} else {
+		} 
+		else 
+		{
 			this.editar();
 
 		}
+		
 		setFlagVisible(false);
 		return iniciar;
 	}
 
-	public void agregarlistarRespxNivel() {
-
-		HttpServletRequest request = (HttpServletRequest) FacesContext
-				.getCurrentInstance().getExternalContext().getRequest();
+	public void agregarlistarRespxNivel() 
+	{
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		HttpSession session = request.getSession();
 		String editar = "";
 		editar = (String) session.getAttribute("editar");
+		
 		if (editar == null) {
 			setbEditar(false);
 		} else {
 			setbEditar(true);
 		}
+		
 		if (miembroNivelDto.getEstado().equals("-1")) {
 			Utilitarios.mensajeError("Error", "Debe seleccionar el estado");
 		} else {
@@ -276,8 +343,7 @@ public class EditRespNivelAprobacionMB {
 
 				GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit
 						.getApplicationContext().getBean("genericoDao");
-				Busqueda filtroTiivsMiembroNivel = Busqueda
-						.forClass(TiivsMiembroNivel.class);
+				Busqueda filtroTiivsMiembroNivel = Busqueda.forClass(TiivsMiembroNivel.class);
 
 				List<TiivsMiembroNivel> miembroNivels = new ArrayList<TiivsMiembroNivel>();
 
@@ -319,8 +385,7 @@ public class EditRespNivelAprobacionMB {
 									+ miembroNivelDto.getEstado());
 						}
 
-						GenericDao<TiivsNivel, Object> serviceTiivsNivel = (GenericDao<TiivsNivel, Object>) SpringInit
-								.getApplicationContext().getBean("genericoDao");
+						GenericDao<TiivsNivel, Object> serviceTiivsNivel = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 
 						String descEstado = "";
 						String desNivel = "";
@@ -380,8 +445,7 @@ public class EditRespNivelAprobacionMB {
 
 						}
 
-						IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios
-								.getObjectInSession("USUARIO_SESION");
+						IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 						logger.debug("usuario.getUID(): " + usuario.getUID());
 
 						if (respNiveles.size() > 0) {
@@ -406,8 +470,7 @@ public class EditRespNivelAprobacionMB {
 
 					} else {
 
-						Utilitarios.mensajeInfo("Mensaje",
-								"Ya existe un miembro nivel");
+						Utilitarios.mensajeInfo("Mensaje","Ya existe un miembro nivel");
 						logger.debug("ya existe un miembro nivel");
 					}
 
@@ -423,17 +486,14 @@ public class EditRespNivelAprobacionMB {
 						miembroNivel.setCodNiv(getCodNivel());
 						miembroNivel.setTipoRol("R");
 						miembroNivel.setEstado(miembroNivelDto.getEstado());
-
-						GenericDao<TiivsNivel, Object> serviceTiivsNivel = (GenericDao<TiivsNivel, Object>) SpringInit
-								.getApplicationContext().getBean("genericoDao");
+	
+						GenericDao<TiivsNivel, Object> serviceTiivsNivel = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 
 						String descEstado = "";
 						String desNivel = "";
 
-						descEstado = respNivelAprobacionService
-								.obtenerDesEstado(miembroNivel.getCodNiv());
-						desNivel = respNivelAprobacionService
-								.obtenerDesNivel(miembroNivel.getCodNiv());
+						descEstado = respNivelAprobacionService.obtenerDesEstado(miembroNivel.getCodNiv());
+						desNivel = respNivelAprobacionService.obtenerDesNivel(miembroNivel.getCodNiv());
 
 						List<TiivsNivel> tiivsNivels = new ArrayList<TiivsNivel>();
 						Busqueda filtroTiivsNivelMoneda = Busqueda
@@ -485,8 +545,7 @@ public class EditRespNivelAprobacionMB {
 
 						}
 
-						IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios
-								.getObjectInSession("USUARIO_SESION");
+						IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 						logger.debug("usuario.getUID(): " + usuario.getUID());
 
 						if (respNiveles.size() > 0) {
@@ -510,8 +569,7 @@ public class EditRespNivelAprobacionMB {
 						logger.debug("== despues de agregar.. ===");
 
 					} else {
-						Utilitarios.mensajeInfo("Mensaje",
-								"Ya existe un miembro nivel");
+						Utilitarios.mensajeInfo("Mensaje","Ya existe un miembro nivel");
 						logger.debug("ya existe un miembro nivel");
 					}
 
@@ -601,7 +659,6 @@ public class EditRespNivelAprobacionMB {
 			instancia.listarRespxNivel();
 			FacesContext.getCurrentInstance().getExternalContext().redirect("/VisadoPoderes/faces/paginas/respNivel.xhtml");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -733,4 +790,11 @@ public class EditRespNivelAprobacionMB {
 		this.bEditar = bEditar;
 	}
 
+	public String[] getEstados() {
+		return estados;
+	}
+
+	public void setEstados(String[] estados) {
+		this.estados = estados;
+	}
 }
