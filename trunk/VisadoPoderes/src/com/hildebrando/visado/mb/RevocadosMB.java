@@ -532,10 +532,11 @@ public class RevocadosMB {
 			listaPersonasXAgrupacionXSolicitud =new ArrayList<ComboDto>();
 			for (TiivsAgrupacionPersona x : listaAgrupacionPersonacontraQuienComparar) {
 				if(a.getCodSoli().equals(x.getCodSoli())){
+					logger.info("Codigo Solicitud - 1 - ::::: " +a.getCodSoli() + " x.getCodPer()::: " +x.getCodPer() +" x.getTipPartic() ::: " +x.getTipPartic() +" x.getNumGrupo():: " +x.getNumGrupo());
 					listaPersonasXAgrupacionXSolicitud.add(new ComboDto(x.getCodPer().toString(),x.getTipPartic(),x.getNumGrupo()));
 				}
 			}
-			
+			logger.info("Tamanio listaPersonasXAgrupacionXSolicitud " +listaPersonasXAgrupacionXSolicitud.size());
 		    listaStringCodAgrupacionesXCodSol=new ArrayList<Integer>();
 			listaStringCodAgrupacionesXCodSol=existe(listaPersonasXAgrupacionXSolicitud);
 			listaNum_ListaPersonas =new ArrayList<ComboDto>();
@@ -554,18 +555,17 @@ public class RevocadosMB {
 			int i=0;
 			for (ComboDto m : listaNum_ListaPersonas) {
 				if(m.getListaPersonas().size()==lstRevocadosComboDto.size()){
-			/*	    for (ComboDto comboDto : m.getListaPersonas()) {
+				    for (ComboDto comboDto : m.getListaPersonas()) {
 						System.out.println("###### comboDto.getKey()  " +  comboDto.getKey() +" %%%%% " +comboDto.getDescripcion() );
 					}
 					for (ComboDto comboDto : lstRevocadosComboDto) {
 						System.out.println("&&&&&&& comboDto.getKey()  " +  comboDto.getKey() +" T_T " +comboDto.getDescripcion() );
 					}
-					*/
+					
 					for (ComboDto an : m.getListaPersonas()) {
 						for (ComboDto bn : lstRevocadosComboDto) {
 							
-							if(an.getKey().equals(bn.getKey()) 
-									&& an.getDescripcion().equals(bn.getDescripcion()) ){
+							if(an.getKey().equals(bn.getKey()) && an.getDescripcion().equals(bn.getDescripcion()) ){
 									//logger.info("Una combinacion es igual " + an.getNumGrupo());
 										i++;
 									}
@@ -604,6 +604,7 @@ public class RevocadosMB {
 		Busqueda filtroTiivsRevocado = Busqueda.forClass(TiivsRevocado.class);
 		filtroTiivsRevocado.add(Restrictions.eq("codAgrup", Integer.parseInt(revocadoEdit.getCodAgrupacion())));
 		listaTiivsRevocado=serviceTiivsRevocado.buscarDinamico(filtroTiivsRevocado);
+		logger.info("Tamanio de listaTiivsRevocado " +listaTiivsRevocado.size());
 		for (TiivsRevocado yy : listaTiivsRevocado) {
 			yy.setEstado(ConstantesVisado.ESTADOS.ESTADO_ACTIVO_REVOCADO);
 			serviceTiivsRevocado.modificar(yy);

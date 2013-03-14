@@ -81,11 +81,13 @@ public class AbogadoMB {
 					if(	!abogado.getTiivsGrupo().getCodGrupo().equals(ConstantesVisado.COD_GRUPO_JRD)){
 						abogado.setEstudio(null);						
 					}
+					abogado.setDescripcion(abogado.getDescripcion().toUpperCase());
 					abogadoService.registrar(abogado);
 					Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
 				}else{
 					contador = abogadoService.validarCodigo(abogado);
 					if(contador.equals("0")){
+						abogado.setDescripcion(abogado.getDescripcion().toUpperCase());
 						abogadoService.registrar(abogado);
 						Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
 					}else{
