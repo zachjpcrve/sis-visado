@@ -85,7 +85,6 @@ public class ConsultarSolicitudMB {
 	private TiivsSolicitud solicitudRegistrarT;
 	private TiivsSolicitud solicitudRegistrarTCopia;
 	private List<TiivsSolicitudOperban> lstSolicBancarias;
-	private List<TiivsAnexoSolicitud> lstAnexosSolicitudes;
 	private List<AgrupacionSimpleDto> lstAgrupacionSimpleDto;
 	private AgrupacionSimpleDto objAgrupacionSimpleDtoCapturado;
 	private List<DocumentoTipoSolicitudDTO> lstdocumentos;
@@ -131,7 +130,7 @@ public class ConsultarSolicitudMB {
 	private String sNivelSolicitud;
 	private String sMonedaImporteGlobal;
 	private String sCodDocumento;
-	private String ubicacionTemporal;
+	private String ubicacionTemporal  = "";
 	private String sEstadoSolicitud = "";
 	String cadenaEscanerFinal = "";
 //	private boolean verPnlEvaluarNivel = false;
@@ -434,7 +433,7 @@ public class ConsultarSolicitudMB {
 		solicitudRegistrarT = new TiivsSolicitud();
 
 		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
-		lstAnexosSolicitudes = new ArrayList<TiivsAnexoSolicitud>();
+//		lstAnexosSolicitudes = new ArrayList<TiivsAnexoSolicitud>();
 		//lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		objAgrupacionSimpleDtoCapturado = new AgrupacionSimpleDto();
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
@@ -456,6 +455,8 @@ public class ConsultarSolicitudMB {
 		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
 		
 		listaTemporalEliminarOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();
+		
+		this.ubicacionTemporal = Utilitarios.getProjectPath() + File.separator + ConstantesVisado.FILES + File.separator;
 			
 	}
 
@@ -628,11 +629,15 @@ public class ConsultarSolicitudMB {
 			
 			obtenerImporteTotalxSolicitud(lstSolicBancarias);
 			
-			this.lstAnexosSolicitudes = solicitudService.obtenerListarAnexosSolicitud(solicitud);			
+			//this.lstAnexosSolicitudes = solicitudService.obtenerListarAnexosSolicitud(solicitud);			
+			this.lstAnexoSolicitud = solicitudService.obtenerListarAnexosSolicitud(solicitud);
+			
+			logger.info("Cantidad de documentos(anexos):" + this.lstAnexoSolicitud.size());
+			
 			this.iTipoSolicitud =solicitudRegistrarT.getTiivsTipoSolicitud().getCodTipSolic(); 
 			
 			//descargar anexos
-			descargarAnexosFileServer();			
+			descargarAnexosFileServer();						
 			
 			boolean isEditar=false;
 			if(this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)){
@@ -643,6 +648,8 @@ public class ConsultarSolicitudMB {
 				bBooleanPopup=false;
 			}
 			llenarListaDocumentosSolicitud(isEditar);
+			
+			logger.info("despues llenar this.lstAnexoSolicitud.size()" + this.lstAnexoSolicitud.size());
 			
 			solicitudRegistrarT.setLstDocumentos(lstdocumentos); //Para reportes
 			solicitudRegistrarTCopia=new TiivsSolicitud();
@@ -788,9 +795,9 @@ public class ConsultarSolicitudMB {
 			listarDocumentosXSolicitud(scodTipoSolicitud);
 			
 			
-			logger.info("lstAnexosSolicitudes:" + this.lstAnexosSolicitudes);
-
-			for(TiivsAnexoSolicitud anexo : lstAnexosSolicitudes){				
+			logger.info("lstAnexoSolicitud.size:" + this.lstAnexoSolicitud.size());
+		
+			for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){
 				if(anexo.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS)){
 					DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO();
 					doc.setItem(anexo.getId().getCodDoc());
@@ -822,7 +829,8 @@ public class ConsultarSolicitudMB {
 			
 		} else {	//Para consulta		
 			lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
-			for (TiivsAnexoSolicitud v : this.lstAnexosSolicitudes) 
+			//for (TiivsAnexoSolicitud v : this.lstAnexosSolicitudes) 
+			for (TiivsAnexoSolicitud v : this.lstAnexoSolicitud)
 			{				
 				if (v.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS))
 				{
@@ -1844,13 +1852,14 @@ public class ConsultarSolicitudMB {
 
 		boolean iRet = true;
 
-		String ubicacionTemporal = Utilitarios.getProjectPath()
-				+ File.separator + ConstantesVisado.FILES + File.separator;
-		logger.debug("ubicacion temporal " + ubicacionTemporal);
+		String sUbicacionTemporal = this.getUbicacionTemporal();
+		logger.debug("ubicacion temporal " + sUbicacionTemporal);
 
-		for (TiivsAnexoSolicitud a : this.lstAnexosSolicitudes) 
+
+		logger.debug("Cantidad de anexos a descargar: " + this.lstAnexoSolicitud.size());
+		for (TiivsAnexoSolicitud a : this.lstAnexoSolicitud)
 		{
-			File fileTemporal = new File(ubicacionTemporal
+			File fileTemporal = new File(sUbicacionTemporal
 					+ a.getAliasTemporal());
 			if (!fileTemporal.exists()) 
 			{
@@ -1859,7 +1868,7 @@ public class ConsultarSolicitudMB {
 				File fichTemp = null;
 				boolean bSaved = false;
 				try {
-					File fDirectory = new File(ubicacionTemporal);
+					File fDirectory = new File(sUbicacionTemporal);
 					if (!fDirectory.exists()) {
 						fDirectory.mkdirs();
 					}
@@ -1869,7 +1878,7 @@ public class ConsultarSolicitudMB {
 							.lastIndexOf("."));
 					String sNombreTemporal = "";
 					fichTemp = File.createTempFile("temp", extension, new File(
-							ubicacionTemporal));
+							sUbicacionTemporal));
 					sNombreTemporal = fichTemp.getName().substring(
 							1 + fichTemp.getName().lastIndexOf(File.separator));
 					logger.debug("sNombreTemporal: " + sNombreTemporal);
@@ -1987,28 +1996,27 @@ public class ConsultarSolicitudMB {
 		sEstadoSolicitud = "ENVIADO";
 	}
 
-	public boolean validarRegistroSolicitud() throws Exception {
+	private boolean validarRegistroSolicitud() throws Exception {
 		boolean retorno = true;
-		String mensaje = "";
-		/*
-		 * if(solicitudRegistrarT.getTiivsOficina1()==null){
-		 * //solicitudRegistrarT.getTiivsOficina1().getCodOfi().equals(""))
-		 * 
-		 * mensaje="Ingrese la Oficina"; retorno=false;
-		 * Utilitarios.mensajeInfo("INFO", mensaje); }
-		 * if(solicitudRegistrarT.getNroVoucher
-		 * ()==null||solicitudRegistrarT.getNroVoucher().equals("")){
-		 * mensaje="Ingrese el Nro Voucher"; retorno=false;
-		 * Utilitarios.mensajeInfo("INFO", mensaje); }else
-		 * if(solicitudRegistrarT.getNroVoucher().length()<11){
-		 * mensaje="Ingrese Nro Voucher correcto de 11 digitos"; retorno=false;
-		 * Utilitarios.mensajeInfo("INFO", mensaje); }
-		 */
+		String mensaje = "";	
 		
-		/*if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size()==0)
-		{
-			this.obtenerSolicitud();
-		}*/
+		logger.info("solicitudRegistrarT.getTiivsOficina1() "+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+		if (solicitudRegistrarT.getTiivsOficina1() == null) {
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if(solicitudRegistrarT.getTiivsOficina1().getCodOfi()==null){
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if (solicitudRegistrarT.getTiivsOficina1().getCodOfi().equals("")) {
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+		
+		
 		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
 			mensaje = "Ingrese la sección Apoderado y Poderdante";
 			retorno = false;
@@ -2033,8 +2041,8 @@ public class ConsultarSolicitudMB {
 					}
 				}
 				if(contPoderdante==0||contApoderado==0){
-					//retorno= false;
-					Utilitarios.mensajeInfo("INFO", "Ingrese por lo menos un Poderdante y un Apoderado, por cada Combinación");
+//					retorno= false;
+//					Utilitarios.mensajeInfo("INFO", "Ingrese por lo menos un Poderdante y un Apoderado, por cada Combinación");
 					break;
 					
 				}
@@ -2049,14 +2057,12 @@ public class ConsultarSolicitudMB {
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
-		
-		for (TiivsTipoSolicDocumento b : lstTipoSolicitudDocumentos) {
-			if(b.getObligatorio().equals("1")){
-				mensaje = "Ingrese los documentos Obligatorios";
-				retorno = false;
-				Utilitarios.mensajeInfo("INFO", mensaje);
-				break;
-			}
+
+		logger.info("lstAnexoSolicitud.size()" + this.lstAnexoSolicitud.size());
+		if (this.lstAnexoSolicitud.size() == 0) {
+			mensaje = "Ingrese los documentos Obligatorios";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
 		
 		if (this.lstSolicBancarias.size() == 0) {
@@ -2068,6 +2074,114 @@ public class ConsultarSolicitudMB {
 		/*if (!this.validarNroVoucher()) {
 			retorno = false;
 		}*/
+		return retorno;
+	}
+	
+	private boolean validarEnvioSolicitud() throws Exception {
+		
+		  
+		boolean retorno = true;
+		String mensaje = "";
+		
+		logger.info("solicitudRegistrarT.getTiivsOficina1() "+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+		
+		//Validacion de oficina
+		if (solicitudRegistrarT.getTiivsOficina1() == null) {
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if(solicitudRegistrarT.getTiivsOficina1().getCodOfi()==null){
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if (solicitudRegistrarT.getTiivsOficina1().getCodOfi().equals("")) {
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+		//Validacion de numero de voucher
+		if (solicitudRegistrarT.getNroVoucher() == null ) {
+			mensaje = "Ingrese el Nro Voucher";
+			retorno =this.validarNroVoucher();;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+			
+		}else if (solicitudRegistrarT.getNroVoucher().equals("")){
+			mensaje = "Ingrese el Nro Voucher";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+			
+		} 
+//		else if (solicitudRegistrarT.getNroVoucher().length() < 11) {
+//			mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
+//			retorno = false;
+//			Utilitarios.mensajeInfo("INFO", mensaje);
+//		}
+				 
+		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
+			mensaje = "Ingrese la sección Apoderado y Poderdante";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}else{
+			Set<TiivsAgrupacionPersona> lstAgrupacionPersona=null;
+			int conuntNumAgru=0;
+			
+			for (TiivsSolicitudAgrupacion a : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+				conuntNumAgru=a.getId().getNumGrupo();
+				logger.info("conuntNumAgru : " +conuntNumAgru);
+				lstAgrupacionPersona=a.getTiivsAgrupacionPersonas();
+				logger.info("lstAgrupacionPersona : " +lstAgrupacionPersona.size());
+				int contPoderdante=0, contApoderado=0;
+				for (TiivsAgrupacionPersona xa : lstAgrupacionPersona) {
+					if(xa.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+					   contPoderdante++;
+					
+					}else if(xa.getTipPartic().equals(ConstantesVisado.APODERADO)){
+						contApoderado++;
+						
+					}
+				}
+				if(contPoderdante==0||contApoderado==0){
+					retorno= false;
+					Utilitarios.mensajeInfo("INFO", "Ingrese por lo menos un Poderdante y un Apoderado, por cada Combinación");
+					break;
+					
+				}
+				logger.info("contPoderdante : " +contPoderdante);
+				logger.info("contApoderado : " +contApoderado);
+			}
+			
+		}
+		if (solicitudRegistrarT.getTiivsTipoSolicitud() == (null)) {
+			mensaje = "Seleccione el Tipo de Solicitud ";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+		if (this.lstAnexoSolicitud.size() == 0) {
+			mensaje = "Ingrese los documentos Obligatorios";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+		for(TiivsTipoSolicDocumento docRequerido :  lstTipoSolicitudDocumentos){
+			if(docRequerido.getObligatorio().equals("1")){
+				mensaje = "Ingrese los documentos Obligatorios";
+				retorno = false;
+				Utilitarios.mensajeInfo("INFO", mensaje);
+				break;
+			}
+		}
+
+		if (this.lstSolicBancarias.size() == 0) {
+
+			mensaje = "Ingrese al menos una Operación Bancaria";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+			
+		
 		return retorno;
 	}
 
@@ -2216,7 +2330,15 @@ public class ConsultarSolicitudMB {
 			
 			logger.info("this.sEstadoSolicitud " + this.sEstadoSolicitud);
 			
-			if (this.validarRegistroSolicitud()) 
+			boolean esValido = false;
+			if(!this.sEstadoSolicitud.equals("BORRADOR")){ 	//Validacion para envio de solicitud a SSJJ
+				esValido = this.validarEnvioSolicitud();
+			} else { 	//Validacion para registro de solicitud (Borrador)
+				esValido = this.validarRegistroSolicitud();
+			}
+			
+			//if (this.validarRegistroSolicitud()) 
+			if (esValido)
 			{
 				if (!this.sEstadoSolicitud.equals("BORRADOR"))  //ssjj
 				{
@@ -2298,12 +2420,18 @@ public class ConsultarSolicitudMB {
 				// Elimina archivos temporales
 				eliminarArchivosTemporales();
 
+				
+				//Eliminar tabla de anexos anteriores menos el listado: lstAnexoSolicitud
+				eliminaAnexosAnterioresMenos(solicitudRegistrarT,lstAnexoSolicitud);
+				
+				logger.info("Numero de anexos a insertar: " + this.lstAnexoSolicitud.size());
 				for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) 
-				{
+				{				
+					logger.info("insertar anexo: " + n.getId().getCodSoli() + "_" + n.getId().getCodDoc());
 					serviceAnexos.insertarMerge(n);
 				}	
 				
-				
+
 				 logger.info("Tamanio Lista original que se trajo de base : "+lstSolicBancariasCopia.size());
 				 logger.info("Tamanio Lista Temporal a Eliminar  : "+this.listaTemporalEliminarOperacionesBancarias.size());
 				 logger.info("Tamanio Lista que se tiene en memoria : "+lstSolicBancarias.size());
@@ -2374,6 +2502,26 @@ public class ConsultarSolicitudMB {
 		}
 	}
 	
+	private void eliminaAnexosAnterioresMenos(TiivsSolicitud solicitudRegistrarT2, List<TiivsAnexoSolicitud> lstAnexoSolicitud2) throws Exception {
+		
+		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");		
+		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+		
+		List<TiivsAnexoSolicitud> lstAnexoSolicitudActual = solicitudService.obtenerListarAnexosSolicitud(this.solicitudRegistrarT);
+		
+		logger.info("Numero de anexos actuales: " + lstAnexoSolicitudActual.size());
+		int i=0;
+		for(TiivsAnexoSolicitud anexoActual: lstAnexoSolicitudActual){
+			for(TiivsAnexoSolicitud anexoNuevo : lstAnexoSolicitud){
+				if(!anexoActual.getId().equals(anexoNuevo.getId())){
+					i++;
+					serviceAnexos.eliminar(anexoActual);
+				}
+			}
+		}	
+		
+	}
+
 	public void depurarTablas()
 	{
 		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -2755,7 +2903,8 @@ public class ConsultarSolicitudMB {
 	public void listarDocumentosXSolicitud(ValueChangeEvent e) {
 		// logger.info("ValuechanceEvent :  " + e.getNewValue());		
 		String sCodTipoSol = (String) e.getNewValue();		
-		listarDocumentosXSolicitud(sCodTipoSol);				
+		listarDocumentosXSolicitud(sCodTipoSol);	
+		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
 	}
 	
 	public void listarDocumentosXSolicitud(String sCodTipoSol){
@@ -2821,7 +2970,7 @@ public class ConsultarSolicitudMB {
 			}
 		}
 
-		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
+//		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
 	}
 
 	public void addArchivosTemporalesToDelete() {
@@ -2989,13 +3138,17 @@ public class ConsultarSolicitudMB {
 			return;
 		}
 		
+		TiivsAnexoSolicitud anexoToRemove = null;
 		for (TiivsAnexoSolicitud anexo : lstAnexoSolicitud) {
 			if (anexo.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {
-				lstAnexoSolicitud.remove(anexo);
+				anexoToRemove  = anexo;				
 				this.aliasFilesToDelete.add(anexo.getAliasTemporal());
 				break;
 			}
 		}
+		
+		if(anexoToRemove!=null)
+			lstAnexoSolicitud.remove(anexoToRemove);
 
 		// Para el llenado del listado (listBox)
 		int i = 0;
@@ -3057,7 +3210,7 @@ public class ConsultarSolicitudMB {
 							
 							//agregar a lista de anexos de la solicitud
 							TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
-							objAnexo.setId(new TiivsAnexoSolicitudId(null, doc.getItem()));
+							objAnexo.setId(new TiivsAnexoSolicitudId(this.solicitudRegistrarT.getCodSoli(), doc.getItem()));
 							objAnexo.setAliasArchivo(doc.getAlias());
 							objAnexo.setAliasTemporal(doc.getAliasTemporal());
 							lstAnexoSolicitud.add(objAnexo);
@@ -4426,15 +4579,6 @@ public class ConsultarSolicitudMB {
 
 	public void setSolicitudRegistrarT(TiivsSolicitud solicitudRegistrarT) {
 		this.solicitudRegistrarT = solicitudRegistrarT;
-	}
-
-	public List<TiivsAnexoSolicitud> getLstAnexosSolicitudes() {
-		return lstAnexosSolicitudes;
-	}
-
-	public void setLstAnexosSolicitudes(
-			List<TiivsAnexoSolicitud> lstAnexosSolicitudes) {
-		this.lstAnexosSolicitudes = lstAnexosSolicitudes;
 	}
 
 	public List<AgrupacionSimpleDto> getLstAgrupacionSimpleDto() {
