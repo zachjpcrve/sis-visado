@@ -265,7 +265,7 @@
 						validatorMessage="Numero requerido"
 						onkeypress="return validaNumero(event,'0',this,'0');"
 						onblur="validaNumero(event,'0',this,'1');">
-						<f:validateLongRange minimum="1" maximum="999999999"></f:validateLongRange>
+						<f:validateLongRange minimum="1" maximum="99999999999"></f:validateLongRange>
 					</p:inputText>
 					<p:message for="txtNumDoi"></p:message>
 
@@ -426,9 +426,9 @@
 														<td><p:commandButton icon="ui-icon-close"
 																action="#{revocadosMB.eliminarRevocado}"
 																update=":frmPendEdit:dtClientes"
-																rendered="#{revocadosMB.flagRevocar}">
+																>
 																<f:setPropertyActionListener
-																	target="#{revocadosMB.deletePersonaEdit}" value="#{n}">
+																	target="#{revocadosMB.deletePersonaEdit}" value="#{n}" >
 																</f:setPropertyActionListener>
 															</p:commandButton></td>
 
@@ -465,7 +465,7 @@
 														<td><p:commandButton icon="ui-icon-close"
 																action="#{revocadosMB.eliminarRevocado}"
 																update=":frmPendEdit:dtClientes"
-																rendered="#{revocadosMB.flagRevocar}">
+																>
 																<f:setPropertyActionListener
 																	target="#{revocadosMB.deletePersonaEdit}" value="#{n}">
 																</f:setPropertyActionListener>
