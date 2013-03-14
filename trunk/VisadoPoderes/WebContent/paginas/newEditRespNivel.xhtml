@@ -18,11 +18,14 @@
 					<tr>
 						<td><h:outputText value="Registro: " /></td>
 						<td><p:inputText id="txtRegistro"
-								readonly="#{respNivel.flagVisible}"
+								readonly="#{respNivel.bEditar}"
 								value="#{respNivel.miembroNivelDto.registro}" maxlength="10"
 								size="10">
 								<p:ajax event="blur"
-									update=":frmMantenimientoNivReg:dtbRespNivel :frmMantenimientoNivReg:txtPerfil :frmMantenimientoNivReg:txtDescrip"
+									update=":frmMantenimientoNivReg:dtbRespNivel 
+									        :frmMantenimientoNivReg:txtPerfil 
+									        :frmMantenimientoNivReg:txtDescrip 
+									        :frmMantenimientoNivReg:idMsmNivReg"
 									listener="#{respNivel.obtenerDatosMiembro}"></p:ajax>
 							</p:inputText></td>
 
