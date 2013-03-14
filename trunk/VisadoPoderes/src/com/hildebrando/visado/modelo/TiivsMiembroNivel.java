@@ -172,7 +172,7 @@ public class TiivsMiembroNivel implements java.io.Serializable {
 				+ ", fechaRegistro=" + this.fechaRegistro + ", usuarioAct="
 				+ this.usuarioAct + ", fechaAct=" + this.fechaAct
 				+ ", estadoMiembro=" + this.estadoMiembro + ", descNiv="
-				+ this.descNiv + ", listaNiveles.size() =" + this.listaNiveles.size()+ "]";
+				+ this.descNiv + ", listaNiveles.size() =" + this.listaNiveles+ "]";
 	}
 
 	
