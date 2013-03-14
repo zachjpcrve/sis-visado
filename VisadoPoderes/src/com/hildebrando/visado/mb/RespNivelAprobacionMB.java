@@ -193,7 +193,8 @@ public class RespNivelAprobacionMB {
 		
 		if(!miembroNivelDto.getDescripcion().equals("")){
 			logger.debug("[BUSQ]-DESCRIPCION: "+miembroNivelDto.getDescripcion());
-			filtroTiivsMiembroNivel.add(Restrictions.eq("miemb.descripcion", miembroNivelDto.getDescripcion()));
+			filtroTiivsMiembroNivel.add(Restrictions.like("miemb.descripcion", "%"+miembroNivelDto.getDescripcion().toUpperCase()+"%"));
+			//filtroTiivsMiembroNivel.add(Restrictions. like("miemb.descripcion", miembroNivelDto.getDescripcion()));
 		}
 		
 		if((!miembroNivelDto.getEstado().equals("")) && miembroNivelDto.getEstado().compareTo("-1") != 0 ){
