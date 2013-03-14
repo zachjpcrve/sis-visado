@@ -38,19 +38,15 @@ public class DelegadosService {
 	}
 
 	public List<TiivsMiembro> obtenerDatosMiembro(String codRegistro) {
-		logger.info("DelegadosService : obtenerDatosMiembro ");
+		//logger.info("DelegadosService : obtenerDatosMiembro ");
 		List<TiivsMiembro> miembro = new ArrayList<TiivsMiembro>();
-
-		GenericDao<TiivsMiembro, Object> service = (GenericDao<TiivsMiembro, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsMiembro, Object> service = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsMiembro.class);
 		try {
-			miembro = service.buscarDinamico(filtro.add(Restrictions.eq(
-					"codMiembro", codRegistro)));
+			miembro = service.buscarDinamico(filtro.add(Restrictions.eq("codMiembro", codRegistro)));
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			logger.error("DelegadosService : obtenerDatosMiembro: "
-					+ ex.getLocalizedMessage());
+			logger.error("DelegadosService : obtenerDatosMiembro: "+ ex.getLocalizedMessage());
 		}
 		return miembro;
 	}

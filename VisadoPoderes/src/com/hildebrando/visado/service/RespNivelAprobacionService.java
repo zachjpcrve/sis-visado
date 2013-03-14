@@ -36,23 +36,21 @@ public class RespNivelAprobacionService {
 		return nivel.get(0).getDesNiv();
 	}
 
-	public String obtenerDesEstado(String codNivel) {
+	
+	public String obtenerDesEstado_2(String codNivel) {
 		String estado = null;
 		List<TiivsNivel> nivel = new ArrayList<TiivsNivel>();
 		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
 
 		try {
-			nivel = service.buscarDinamico(filtro.add(Restrictions.eq("codNiv",
-					codNivel)));
+			nivel = service.buscarDinamico(filtro.add(Restrictions.eq("codNiv",codNivel)));
 
 			for (int i = 0; i < nivel.size(); i++) {
 				if (nivel.get(i).getEstado() == 1) {
-					nivel.get(i).setDesEstado(
-							ConstantesVisado.VALOR2_ESTADO_ACTIVO_LISTA);
-				} else {
-					nivel.get(i).setDesEstado(
-							ConstantesVisado.VALOR2_ESTADO_INACTIVO_LISTA);
+					nivel.get(i).setDesEstado(ConstantesVisado.VALOR2_ESTADO_ACTIVO_LISTA);
+				} else if(nivel.get(i).getEstado() ==0){
+					nivel.get(i).setDesEstado(ConstantesVisado.VALOR2_ESTADO_INACTIVO_LISTA);
 				}
 			}
 			estado = nivel.get(0).getDesEstado();
