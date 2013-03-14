@@ -322,7 +322,11 @@ public class RespNivelAprobacionMB {
 	}
 	private boolean  validarRegistroResponsableNivel(){
 		boolean retorno=true;
-		if (miembroNivelDto.getEstado().equals("-1")) {
+		if(miembroNivelDto.getRegistro().equals("")||miembroNivelDto.getRegistro()==null){
+			retorno=false;
+			Utilitarios.mensajeError("Info", "No se encontro al usuario, ingrese uno nuevo");
+		}
+		else if (miembroNivelDto.getEstado().equals("-1")) {
 			retorno=false;
 			Utilitarios.mensajeError("Info", "Debe seleccionar el estado");
 		} else {
