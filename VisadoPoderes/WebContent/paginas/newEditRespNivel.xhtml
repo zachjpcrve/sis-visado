@@ -13,36 +13,36 @@
 			<h:form id="frmMantenimientoNivReg">
 
 				<p:messages id="idMsmNivReg"></p:messages>
-				<h:outputLabel value="#{editRespNivel.iniciar}" />
+				<h:outputLabel value="#{respNivel.iniciar}" />
 				<table>
 					<tr>
 						<td><h:outputText value="Registro: " /></td>
 						<td><p:inputText id="txtRegistro"
-								readonly="#{editRespNivel.flagVisible}"
-								value="#{editRespNivel.miembroNivelDto.registro}" maxlength="10"
+								readonly="#{respNivel.flagVisible}"
+								value="#{respNivel.miembroNivelDto.registro}" maxlength="10"
 								size="10">
 								<p:ajax event="blur"
-									update=":frmMantenimientoNivReg:txtPerfil :frmMantenimientoNivReg:txtDescrip"
-									listener="#{editRespNivel.obtenerDatosMiembro}"></p:ajax>
+									update=":frmMantenimientoNivReg:dtbRespNivel :frmMantenimientoNivReg:txtPerfil :frmMantenimientoNivReg:txtDescrip"
+									listener="#{respNivel.obtenerDatosMiembro}"></p:ajax>
 							</p:inputText></td>
 
 						<td><h:outputText value="Perfil:" /></td>
 						<td><p:inputText id="txtPerfil"
 								disabled="true"
-								value="#{editRespNivel.miembroNivelDto.desGrupo}" maxlength="20"
+								value="#{respNivel.miembroNivelDto.desGrupo}" maxlength="20"
 								size="20" /></td>
 					</tr>
 					<tr>
 						<td><h:outputText value="Descripcion:" /></td>
 						<td><p:inputText id="txtDescrip"
 								disabled="true"
-								value="#{editRespNivel.miembroNivelDto.descripcion}"
+								value="#{respNivel.miembroNivelDto.descripcion}"
 								maxlength="60" size="60" /></td>
 					</tr>
 					<tr>
 						<td><h:outputText value="Estado:" /></td>
 						<td><p:selectOneMenu
-								value="#{editRespNivel.miembroNivelDto.estado}">								
+								value="#{respNivel.miembroNivelDto.estado}">								
 								<f:selectItem itemLabel="--Seleccione--" itemValue="-1" />
 								<f:selectItem itemLabel="ACTIVO" itemValue="1" />	
 								<f:selectItem itemLabel="INACTIVO" itemValue="0" />
@@ -51,30 +51,30 @@
 					<tr>
 
 						<td><h:outputText value="Nivel: " /></td>
-						<td><p:selectOneMenu value="#{editRespNivel.codNivel}">
+						<td><p:selectOneMenu value="#{respNivel.codNivel}">
 								<f:selectItem itemLabel="--Seleccione--" itemValue="-1" />
-								<f:selectItems var="n" value="#{editRespNivel.niveles}"
+								<f:selectItems var="n" value="#{respNivel.niveles}"
 									itemLabel="#{n.des}" itemValue="#{n.cod}">
 								</f:selectItems>
 
 							</p:selectOneMenu></td>
-						<td><p:commandButton id="bsAgreg" value="Agregar" ajax="true"
-								action="#{editRespNivel.agregarlistarRespxNivel}"
+						<td ><p:commandButton id="bsAgreg" value="Agregar" ajax="true"
+								action="#{respNivel.agregarlistarRespxNivel}"
 								update=":frmMantenimientoNivReg:dtbRespNivel :frmMantenimientoNivReg:idMsmNivReg">
 							</p:commandButton></td>
 
-					</tr>
+					</tr >
 
 
 				</table>
 
-				<p:dataTable id="dtbRespNivel" value="#{editRespNivel.respNiveles}"
+				<p:dataTable id="dtbRespNivel" value="#{respNivel.respNiveles}" style="width:50%"
 					var="r" paginator="true" rows="50" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
 					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
 					emptyMessage="No hay responsables por niveles" editable="true">
 					
-					<p:ajax event="rowEdit" listener="#{editRespNivel.editarNivAprobacion}" />
+					<p:ajax event="rowEdit" listener="#{respNivel.editarNivAprobacion}" />
 
 					<p:column headerText="Nivel">
 						<h:outputText value="#{r.desNivel}" />
@@ -154,7 +154,7 @@
 					header="Mensaje de Confirmación">
 
 					<p:commandButton id="cmbSi" value="Sí" ajax="true"
-						action="#{editRespNivel.confirmarCambios}"
+						action="#{respNivel.confirmarCambios}"
 						oncomplete="confirmarCambios.hide();"
 						update=":frmMantenimientoNivReg:dtbRespNivel">
 					</p:commandButton>
