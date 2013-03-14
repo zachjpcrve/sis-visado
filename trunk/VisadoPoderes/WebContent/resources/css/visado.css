@@ -19,7 +19,7 @@ background-image :url("/VisadoPoderes/faces/javax.faces.resource/images/ui-bg_hi
 }
 
 .ui-menu .ui-menu-parent .ui-menu-child{
-width: 20.5em;	
+width: 20.5em !important;	
 }
 
 .fielset {
