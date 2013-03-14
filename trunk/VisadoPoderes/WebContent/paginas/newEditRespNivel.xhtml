@@ -16,7 +16,7 @@
 				<h:outputLabel value="#{respNivel.iniciar}" />
 				<table>
 					<tr>
-						<td><h:outputText value="Registro: #{respNivel.bEditar}" /></td>
+						<td><h:outputText value="Registro:" /></td>
 						<td><p:inputText id="txtRegistro" 
 								readonly="#{respNivel.bEditar}"
 								value="#{respNivel.miembroNivelDto.registro}" maxlength="10"
@@ -77,7 +77,7 @@
 					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
 					emptyMessage="No hay responsables por niveles" editable="true">
 					
-					<p:ajax event="rowEdit" listener="#{respNivel.editarNivAprobacion}" />
+					<!-- <p:ajax event="rowEdit" listener="{respNivel.editarNivAprobacion}" /> -->
 
 					<p:column headerText="Nivel">
 						<h:outputText value="#{r.desNivel}" />
@@ -120,25 +120,15 @@
 						<h:outputText value="#{r.usuarioActualizacion}" />
 					</p:column>
 
-					<p:column headerText="Estado">
-						<p:cellEditor>
-							<f:facet name="output">
-								<h:outputText value="#{r.estado}" />
-							</f:facet>
-							<f:facet name="input">
-								<p:selectOneMenu effect="fade"
-									value="#{r.codEstado}"
-									style="width:120px;">
-									<f:selectItem itemLabel="Activo" itemValue="1" />  
-           							<f:selectItem itemLabel="Inactivo" itemValue="0" />  
-								</p:selectOneMenu>
-							</f:facet>
-						</p:cellEditor>
-					</p:column>
+					<p:column headerText="Accion">
+					<p:commandLink id="clickEstado" 
+					update=":frmMantenimientoNivReg:dtbRespNivel"
+					action="#{respNivel.editarNivAprobacion}">
+						<f:setPropertyActionListener target="#{respNivel.miembroCapturado_Edit}" value="#{r}"></f:setPropertyActionListener>
+					<h:outputText value="#{r.estado}"  />
+						</p:commandLink>
+						</p:column>
 					
-					<p:column headerText="Editar" style="width:50px">
-						<p:rowEditor  />
-					</p:column>
 
 				</p:dataTable>
 
