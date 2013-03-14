@@ -1734,9 +1734,9 @@ public class SeguimientoMB
 			
 			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
 			{
-				if ((tmp.getTiivsPersona().getNombre().indexOf(getTxtNomApoderado().toUpperCase())!=-1  
-					|| tmp.getTiivsPersona().getApeMat().indexOf(getTxtNomApoderado().toUpperCase())!=-1 
-					|| tmp.getTiivsPersona().getApePat().indexOf(getTxtNomApoderado().toUpperCase())!=-1)
+				if ((tmp.getTiivsPersona().getNombre().toUpperCase().indexOf(getTxtNomApoderado().toUpperCase())!=-1  
+					|| tmp.getTiivsPersona().getApeMat().toUpperCase().indexOf(getTxtNomApoderado().toUpperCase())!=-1 
+					|| tmp.getTiivsPersona().getApePat().toUpperCase().indexOf(getTxtNomApoderado().toUpperCase())!=-1)
 					
 					&& tmp.getTipPartic().equals(ConstantesVisado.APODERADO))
 				{
@@ -1786,9 +1786,9 @@ public class SeguimientoMB
 			
 			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
 			{
-				if ((tmp.getTiivsPersona().getNombre().indexOf(getTxtNomPoderdante().toUpperCase())!=-1  
-					|| tmp.getTiivsPersona().getApeMat().indexOf(getTxtNomPoderdante().toUpperCase())!=-1 
-					|| tmp.getTiivsPersona().getApePat().indexOf(getTxtNomPoderdante().toUpperCase())!=-1)
+				if ((tmp.getTiivsPersona().getNombre().toUpperCase().indexOf(getTxtNomPoderdante().toUpperCase())!=-1  
+					|| tmp.getTiivsPersona().getApeMat().toUpperCase().indexOf(getTxtNomPoderdante().toUpperCase())!=-1 
+					|| tmp.getTiivsPersona().getApePat().toUpperCase().indexOf(getTxtNomPoderdante().toUpperCase())!=-1)
 					
 					&& tmp.getTipPartic().equals(ConstantesVisado.PODERDANTE))
 				{
