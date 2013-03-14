@@ -173,7 +173,6 @@ public class RespNivelAprobacionMB {
 		logger.debug("=== inicia listarRespxNivel() ====");
 		GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsMiembro, Object> serviceTiivsMiembro = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		GenericDao<TiivsGrupo, Object> serviceTiivsGrupo = (GenericDao<TiivsGrupo, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		
 		Busqueda filtroTiivsMiembroNivel = Busqueda.forClass(TiivsMiembroNivel.class);
 		//Se consulta los responsables por nivel en base al filtroTiivsMiembroNivel 
@@ -184,23 +183,23 @@ public class RespNivelAprobacionMB {
 		if(miembroNivelDto!=null&&miembroNivelDto.getCodGrupo()!=null&&miembroNivelDto.getEstado()!=null){
 			
 		
-		if(miembroNivelDto.getRegistro() != ""){
+		if(!miembroNivelDto.getRegistro().equals("")){
 			logger.debug("[BUSQ]-REGISTRO: "+miembroNivelDto.getRegistro());
 			filtroTiivsMiembroNivel.add(Restrictions.eq("miemb.codMiembro", miembroNivelDto.getRegistro()));
 		}
 		
-		if(miembroNivelDto.getDescripcion() != ""){
+		if(!miembroNivelDto.getDescripcion().equals("")){
 			logger.debug("[BUSQ]-DESCRIPCION: "+miembroNivelDto.getDescripcion());
 			filtroTiivsMiembroNivel.add(Restrictions.eq("miemb.descripcion", miembroNivelDto.getDescripcion()));
 		}
 		
-		if(miembroNivelDto.getEstado() != "" && miembroNivelDto.getEstado().compareTo("-1") != 0 ){
+		if((!miembroNivelDto.getEstado().equals("")) && miembroNivelDto.getEstado().compareTo("-1") != 0 ){
 			logger.debug("[BUSQ]-ESTADO: "+miembroNivelDto.getEstado());
 			filtroTiivsMiembroNivel.add(Restrictions.eq("estado", miembroNivelDto.getEstado()));
 		}
 		
 
-		if(miembroNivelDto.getCodGrupo() != "" && miembroNivelDto.getCodGrupo().compareTo("-1") != 0 ){
+	/*	if(miembroNivelDto.getCodGrupo() != "" && miembroNivelDto.getCodGrupo().compareTo("-1") != 0 ){
 			logger.debug("[BUSQ]-CODGRUPO: "+miembroNivelDto.getCodGrupo());
 			Busqueda filtroTiivsMiembro= Busqueda.forClass(TiivsMiembro.class);
 			filtroTiivsMiembro.createAlias("tiivsGrupo", "grupo");
@@ -219,7 +218,7 @@ public class RespNivelAprobacionMB {
 			}
 			filtroTiivsMiembroNivel.add(Restrictions.in("miemb.codMiembro", codigos));
 			
-		}
+		}*/
 		
 		if(miembroNivelDto.getCodNivel() != "" && miembroNivelDto.getCodNivel().compareTo("-1") != 0 ){
 			logger.debug("[BUSQ]-CODNIVEL: "+miembroNivelDto.getCodNivel());
@@ -242,15 +241,6 @@ public class RespNivelAprobacionMB {
 		}
 		
 		for(TiivsMiembroNivel  e:list){
-			TiivsGrupo grupo= new TiivsGrupo();
-			//TiivsMiembro miembro= new TiivsMiembro();
-			try {
-				grupo = serviceTiivsGrupo.buscarById(TiivsGrupo.class, e.getTiivsMiembro().getTiivsGrupo().getCodGrupo());
-				//miembro = serviceTiivsMiembro.buscarById(TiivsMiembro.class, e.getTiivsMiembro().getCodMiembro());
-			} catch (Exception ex) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener Grupo/Miembro: "+ex);
-			}
-			
 			String descEstado="" ;
 			String desNivel="";
 			
@@ -258,7 +248,7 @@ public class RespNivelAprobacionMB {
 			desNivel = respNivelAprobacionService.obtenerDesNivel(e.getCodNiv());
 				
 			respNiveles.add(new MiembroNivelDTO(e.getId(), e.getCodNiv(),desNivel,e.getTiivsMiembro().getCodMiembro(),e.getTiivsMiembro().getDescripcion(),e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(),
-					grupo.getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),e.getEstado(),descEstado));
+					"Grupo vacio",e.getFechaRegistro().toString(),e.getUsuarioRegistro(),e.getEstado(),descEstado));
 		}
 		if(respNiveles!=null && respNiveles.size()>0){
 			for(int i=0;i <=respNiveles.size(); i++ ){
