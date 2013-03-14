@@ -1850,6 +1850,7 @@ public class RevocadosMB {
 	public void buscarRevocado() {
 		revocados = new ArrayList<Revocado>();
 		List<TiivsRevocado> tiivsrevocados = new ArrayList<TiivsRevocado>();
+		List<TiivsRevocado> lstRevocadosPre = new ArrayList<TiivsRevocado>();
 		
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
@@ -1896,11 +1897,34 @@ public class RevocadosMB {
 		
 		
 		try {
-			tiivsrevocados = service.buscarDinamico(filtro.addOrder(Order.desc("codAgrup")).addOrder(Order.desc("fechaRevocatoria")));
+			lstRevocadosPre = service.buscarDinamico(filtro.addOrder(Order.desc("codAgrup")).addOrder(Order.desc("fechaRevocatoria")));
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug("erro al obtener la lista de revocados "+  e.toString());
+			logger.debug("error al obtener la lista de revocados "+  e.toString());
 		}
+		
+		List<Integer> tmpAgrup = new ArrayList<Integer>();
+		
+		for (TiivsRevocado tmp: lstRevocadosPre)
+		{
+			if (tmp!=null)
+			{
+				tmpAgrup.add(tmp.getCodAgrup());
+			}
+		}
+		
+		//Busqueda de agrupaciones de revocados
+		GenericDao<TiivsRevocado, Object> serviceRev = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroRev = Busqueda.forClass(TiivsRevocado.class);
+		filtroRev.add(Restrictions.in("codAgrup", tmpAgrup));
+		
+		try {
+			tiivsrevocados = serviceRev.buscarDinamico(filtroRev.addOrder(Order.desc("codAgrup")).addOrder(Order.desc("fechaRevocatoria")));
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("error al obtener la lista final de revocados "+  e.toString());
+		}
+		
 		
 		if (tiivsrevocados.size()>0)
 		{
