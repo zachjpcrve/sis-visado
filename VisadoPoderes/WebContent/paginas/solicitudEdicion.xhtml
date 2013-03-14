@@ -124,7 +124,9 @@
 																value="#{consultarSolicitudMB.solicitudRegistrarT.nroVoucher}"
 																onkeypress="return validaNumero(event,'0',this,'0');"
 															                onblur="validaNumero(event,'0',this,'1');"
-																 /></td>
+																 >
+																  <f:ajax event="keypress" />
+																 </h:inputText></td>
 														<td><p:message for="txtNroVaucher"></p:message><p:graphicImage
 																value="/resources/images/pregunta.jpg"
 																id="tooltxtNroVaucher" /></td>
