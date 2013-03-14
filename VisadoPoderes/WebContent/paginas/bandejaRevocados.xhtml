@@ -672,9 +672,10 @@
 			modal="true">
 
 			<h:form>
+				
 				<p:commandButton value="Sí" process=":frmPendEdit:dtClientes"
 					actionListener="#{revocadosMB.guardarApodPod}" ajax="true"
-					update=":frmPendEdit:dtClientes, :frmCliente:idDlgCliente" oncomplete="cfdGuardar.hide();">
+					update=":frmPendEdit:dtClientes, :frmCliente:idDlgCliente" oncomplete="cfdGuardar.hide();dlgApoPodPendEdit.hide();">
 				</p:commandButton>
 
 				<p:commandButton value="No" onclick="cfdGuardar.hide();">
