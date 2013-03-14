@@ -1971,7 +1971,7 @@ public class SeguimientoMB
 		// 21. Filtrar solicitudes que se hayan Revocado (funciona)
 		if (getbRevocatoria()) 
 		{
-			String codigoSolicRevocado = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_REVOCADO);
+			/*String codigoSolicRevocado = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_REVOCADO);
 			GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
 			filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicRevocado));
@@ -1998,6 +1998,35 @@ public class SeguimientoMB
 			else 
 			{
 				logger.info("No hay solicitudes en el historial con estado Revocado");
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
+			}*/
+			List<TiivsSolicitudAgrupacion> lstRev = new ArrayList<TiivsSolicitudAgrupacion>();
+			GenericDao<TiivsSolicitudAgrupacion, Object> busqSolAgrp = (GenericDao<TiivsSolicitudAgrupacion, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsSolicitudAgrupacion.class);
+			filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_3));
+			
+			try {
+				lstRev = busqSolAgrp.buscarDinamico(filtro);
+			} catch (Exception e) {
+				logger.info("Error al buscar en solicitud agrupacion");
+			}
+			
+			lstSolicitudesSelected.clear();
+			for (TiivsSolicitudAgrupacion tmp: lstRev)
+			{
+				if (lstRev!=null && lstRev.size()>0)
+				{
+					lstSolicitudesSelected.add(tmp.getId().getCodSoli());
+				}
+			}
+			
+			if (lstRev.size()>0)
+			{
+				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudesSelected));
+			}
+			else 
+			{
+				logger.info("No hay solicitudes con combinaciones revocadas");
 				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
 			}
 		}
