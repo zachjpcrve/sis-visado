@@ -52,7 +52,7 @@ public class RespNivelAprobacionMB {
 	private RespNivelAprobacionService respNivelAprobacionService;
 	private List<MiembroNivelDTO> respNiveles;
 	private boolean flagVisible;
-
+    private MiembroNivelDTO miembroCapturado;
 	private List<TiivsMiembroNivel> list;
 	private String codRegistro;
 	private List<TiivsMiembro> miembros;
@@ -81,6 +81,7 @@ public class RespNivelAprobacionMB {
 		delegadosService = new DelegadosService();
 		respNivelAprobacionService = new RespNivelAprobacionService();
 		miembroNivelDto= new MiembroNivelDTO();
+		miembroNivel = new TiivsMiembroNivel();
 		grupos = new ArrayList<GrupoDto>();
 		niveles = new ArrayList<NivelDto>();
 		respNiveles = new ArrayList<MiembroNivelDTO>();
@@ -407,18 +408,17 @@ public class RespNivelAprobacionMB {
 	public void editarRespNivelAprob(){
 		logger.debug("=== inicia editarRespNivelAprob() ====");
 		try {
-		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+	/*	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String idResp = params.get("idResp");
-		listarNivelesPorResponsable(idResp);
-		ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
-			ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
+		//listarNivelesPorResponsable(idResp);
+*/		ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
+			            ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel: "+e);
 		}catch(Exception e){
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel: "+e);
 		}
 		logger.debug("=== saliendo de editarRespNivelAprob() ====");
-		//setLimpiar(false);
 	}
 	
 	public void obtenerDatosMiembro() {
@@ -435,7 +435,7 @@ public class RespNivelAprobacionMB {
 					listarNivelesPorResponsable(miembroNivelDto.getRegistro());
 					//listarRespxNivel();
 				} else {
-					Utilitarios.mensajeError("Error","No se encuentra Registrado el codigo del Delegado");
+					Utilitarios.mensajeError("Error","No se encuentra Registrado el codigo del Responsable");
 					/*
 					 * desRegistro = ""; perfilRegistro = ""; criterioRegistro =
 					 * "";
@@ -486,11 +486,19 @@ public class RespNivelAprobacionMB {
 		return iniciar;
 	}
 	
-	private void editar() {
-		/*HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		HttpSession session = request.getSession();*/
+	private void editar(){
+		logger.info("Here here .... editar ");
+
+		miembroNivelDto.setRegistro(miembroCapturado.getRegistro());
+		this.obtenerDatosMiembro();
+		/*
+		miembroNivelDto.setCodEstado(miembroCapturado.getCodEstado());
+		miembroNivelDto.setCodNivel(miembroCapturado.getCodNivel());
+		miembroNivelDto.setDescripcion(miembroCapturado.getDescripcion());
+		miembroNivelDto.set*/
+	}
+	/*private void editar() {
 		setbEditar(false);
-	/*	miembroNivel = (TiivsMiembroNivel) session.getAttribute("miembroNivel");*/
 
 		if (miembroNivel.getTiivsMiembro() != null) 
 		{
@@ -597,19 +605,13 @@ public class RespNivelAprobacionMB {
 
 		niveles = new ArrayList<NivelDto>();
 
-		Busqueda filtroTiivsNivel = Busqueda.forClass(TiivsNivel.class)
-				.setProjection(
-						Projections.distinct(Projections.property("codNiv")));
+		Busqueda filtroTiivsNivel = Busqueda.forClass(TiivsNivel.class).setProjection(Projections.distinct(Projections.property("codNiv")));
 
 		try {
-			List<String> tiivsNivels = serviceTiivsNivel
-					.buscarDinamicoString(filtroTiivsNivel);
+			List<String> tiivsNivels = serviceTiivsNivel.buscarDinamicoString(filtroTiivsNivel);
 			for (String s : tiivsNivels) {
-				Busqueda filtroTiivsNivel2 = Busqueda
-						.forClass(TiivsNivel.class);
-				List<TiivsNivel> list = serviceTiivsNivel
-						.buscarDinamico(filtroTiivsNivel2.add(Restrictions.eq(
-								"codNiv", s)));
+				Busqueda filtroTiivsNivel2 = Busqueda.forClass(TiivsNivel.class);
+				List<TiivsNivel> list = serviceTiivsNivel.buscarDinamico(filtroTiivsNivel2.add(Restrictions.eq("codNiv", s)));
 				String des = list.get(0).getDesNiv();
 				niveles.add(new NivelDto(s, des));
 			}
@@ -617,7 +619,7 @@ public class RespNivelAprobacionMB {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR + "al obtener la lista CodAgrup: " + e);
 		}
 	}
-	
+	*/
 	//@Autor Cesar
 	@SuppressWarnings("unchecked")
 	public void editarNivAprobacion(RowEditEvent event)
@@ -837,6 +839,14 @@ public class RespNivelAprobacionMB {
 
 	public void setLimpiar(boolean limpiar) {
 		this.limpiar = limpiar;
+	}
+
+	public MiembroNivelDTO getMiembroCapturado() {
+		return this.miembroCapturado;
+	}
+
+	public void setMiembroCapturado(MiembroNivelDTO miembroCapturado) {
+		this.miembroCapturado = miembroCapturado;
 	}
 
 	
