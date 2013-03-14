@@ -58,4 +58,10 @@ public class TiivsSolicitudAgrupacionId implements java.io.Serializable {
 		return result;
 	}
 
+	@Override
+	public String toString() {
+		return "TiivsSolicitudAgrupacionId [codSoli=" + this.codSoli
+				+ ", numGrupo=" + this.numGrupo + "]";
+	}
+
 }
