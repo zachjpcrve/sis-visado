@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -62,8 +61,8 @@ public class RespNivelAprobacionMB {
 	private TiivsMiembroNivel miembroNivel;
 	private GenericDao<TiivsNivel, Object> serviceTiivsNivel;
 	private String[] estados;
-	private boolean bEditar;
-	
+	private boolean bEditar=true;
+	private boolean bFlagDisabled;
 
 	private List<GrupoDto> grupos;
 	public List<GrupoDto> getGrupos() {
@@ -156,6 +155,7 @@ public class RespNivelAprobacionMB {
 	public void nuevoRespxNivel(){
 		logger.debug("=== inicia nuevoRespxNivel() ====");
 		//TiivsMiembroNivel miembroNivel= new TiivsMiembroNivel();
+		bEditar=true;
 		miembroNivel= new TiivsMiembroNivel();
 		ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
 		/*ec.getSessionMap().put("miembroNivel", miembroNivel);*/
@@ -199,7 +199,7 @@ public class RespNivelAprobacionMB {
 		}
 		
 
-	/*	if(miembroNivelDto.getCodGrupo() != "" && miembroNivelDto.getCodGrupo().compareTo("-1") != 0 ){
+	    if(miembroNivelDto.getCodGrupo() != "" && miembroNivelDto.getCodGrupo().compareTo("-1") != 0 ){
 			logger.debug("[BUSQ]-CODGRUPO: "+miembroNivelDto.getCodGrupo());
 			Busqueda filtroTiivsMiembro= Busqueda.forClass(TiivsMiembro.class);
 			filtroTiivsMiembro.createAlias("tiivsGrupo", "grupo");
@@ -218,7 +218,7 @@ public class RespNivelAprobacionMB {
 			}
 			filtroTiivsMiembroNivel.add(Restrictions.in("miemb.codMiembro", codigos));
 			
-		}*/
+		}
 		
 		if(miembroNivelDto.getCodNivel() != "" && miembroNivelDto.getCodNivel().compareTo("-1") != 0 ){
 			logger.debug("[BUSQ]-CODNIVEL: "+miembroNivelDto.getCodNivel());
@@ -248,7 +248,7 @@ public class RespNivelAprobacionMB {
 			desNivel = respNivelAprobacionService.obtenerDesNivel(e.getCodNiv());
 				
 			respNiveles.add(new MiembroNivelDTO(e.getId(), e.getCodNiv(),desNivel,e.getTiivsMiembro().getCodMiembro(),e.getTiivsMiembro().getDescripcion(),e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(),
-					"Grupo vacio",e.getFechaRegistro().toString(),e.getUsuarioRegistro(),e.getEstado(),descEstado));
+					e.getTiivsMiembro().getTiivsGrupo().getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),e.getEstado(),descEstado));
 		}
 		if(respNiveles!=null && respNiveles.size()>0){
 			for(int i=0;i <=respNiveles.size(); i++ ){
@@ -380,7 +380,7 @@ public class RespNivelAprobacionMB {
 			respNiveles.add(new MiembroNivelDTO(1, miembroNivel.getTiivsMiembro().getDescripcion(),
 					   miembroNivel.getCodNiv(), miembroNivel.getDescNiv(),
 					   miembroNivel.getTiivsMiembro().getCodMiembro(),
-					   (new Date()).toString(), usuario.getUID(),
+					   Utilitarios.formatoFecha(new Date()) ,  usuario.getUID(),
 					   miembroNivel.getEstado(), miembroNivel.getDescEstado(), ris, rfs, rid, rfd, rie, rfe));
 		}
 		
@@ -458,6 +458,8 @@ public class RespNivelAprobacionMB {
 		} else {
 			miembroNivelDto = new MiembroNivelDTO();
 		}
+		respNiveles= new ArrayList<MiembroNivelDTO>();
+		bEditar=true;
 	}
 	public String getIniciar() 
 	{
@@ -723,6 +725,7 @@ public class RespNivelAprobacionMB {
 					serviceTiivsMiembroNivel.save(miembroNivel);
 					logger.info(ConstantesVisado.MENSAJE.REGISTRO_OK + " el: "
 							+ miembroNivelDTO.getRegistro());
+					Utilitarios.mensajeInfo("Info", ConstantesVisado.MENSAJE.REGISTRO_OK + " el: "+ miembroNivelDTO.getRegistro());
 				} catch (Exception e) {
 					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR
 							+ "al guardar MiembroNivel :"
@@ -733,9 +736,8 @@ public class RespNivelAprobacionMB {
 		}
 		logger.info("=== saliendo de confirmarCambios() ===");
 		try {
-			
-			RespNivelAprobacionMB instancia = new RespNivelAprobacionMB();
-			instancia.listarRespxNivel();
+			//limpiarCampos();
+			listarRespxNivel();
 			FacesContext.getCurrentInstance().getExternalContext().redirect("/VisadoPoderes/faces/paginas/respNivel.xhtml");
 		} catch (IOException e) {
 			e.printStackTrace();
