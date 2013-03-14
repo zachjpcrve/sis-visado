@@ -92,7 +92,7 @@
 				</tr>
 			</table>
 
-			<h:panelGrid columns="4">
+			<h:panelGrid columns="4" id="pnlBotones">
 
 				<p:commandButton value="Nuevo"
 					actionListener="#{revocadosMB.editPendRevocadoNuevo}"
@@ -103,9 +103,9 @@
 					value="Total de registros: #{revocadosMB.nroRegistros} Registros" />
 
 				<p:commandButton value="Buscar"
-					action="#{revocadosMB.buscarRevocado}" ajax="false" update="tbl" />
+					action="#{revocadosMB.buscarRevocado}" ajax="false" update="tbl :frmConsRev:pnlBotones"  />
 
-				<p:commandButton value="Exportar"
+				<p:commandButton value="Exportar" disabled="#{revocadosMB.deshabilitarExportar}"
 					actionListener="#{revocadosMB.descargarArchivoRecaudacion}"
 					ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)">
 					<p:fileDownload value="#{revocadosMB.file}" />
