@@ -157,19 +157,18 @@ public class RespNivelAprobacionMB {
 		//TiivsMiembroNivel miembroNivel= new TiivsMiembroNivel();
 		
 		miembroNivel= new TiivsMiembroNivel();
-		ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
 		bEditar=false;
 		/*ec.getSessionMap().put("miembroNivel", miembroNivel);*/
 		 
 		try{
 			this.setLimpiar(true);
-     		ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
+			ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
+            ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
 			logger.debug("=== bEditar ==== ::: "+bEditar);
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel.xhtml: "+e);
 		}
 		logger.debug("=== saliendo nuevoRespxNivel() ====");
-		//return "newEditRespNivel.xhtml";
 	}
 	
 	public void listarRespxNivel(){
