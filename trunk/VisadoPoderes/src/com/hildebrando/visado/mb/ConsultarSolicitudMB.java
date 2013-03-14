@@ -2321,6 +2321,9 @@ public class ConsultarSolicitudMB {
 				}
 			}
 
+			
+			this.limpiarAgrupacionesVacias();
+			
 			logger.info("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : " + solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
 			
 			for(TiivsSolicitudAgrupacion agrusol : solicitudRegistrarT.getTiivsSolicitudAgrupacions()){
@@ -2791,17 +2794,11 @@ public class ConsultarSolicitudMB {
 			
 			if (lstTiivsAgrupacionPersonas == null){
 				lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
-			}
+			}			
+			
+			limpiarAgrupacionesVacias();					
 			
 			logger.info("lstTiivsAgrupacionPersonas: inicio " + lstTiivsAgrupacionPersonas.size());
-			
-			Set<TiivsSolicitudAgrupacion> lstSolAgruToRemove = new HashSet<TiivsSolicitudAgrupacion>();
-			for(TiivsSolicitudAgrupacion solAgru: this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()){
-				if(solAgru.getTiivsAgrupacionPersonas().size()==0){					
-					lstSolAgruToRemove.add(solAgru);
-				}
-			}			
-			this.solicitudRegistrarT.getTiivsSolicitudAgrupacions().removeAll(lstSolAgruToRemove);
 
 			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
@@ -2831,6 +2828,18 @@ public class ConsultarSolicitudMB {
 	}
 			  
 
+
+	private void limpiarAgrupacionesVacias() {
+		
+		Set<TiivsSolicitudAgrupacion> lstSolAgruToRemove = new HashSet<TiivsSolicitudAgrupacion>();
+		for(TiivsSolicitudAgrupacion solAgru: this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()){
+			if(solAgru.getTiivsAgrupacionPersonas().size()==0){					
+				lstSolAgruToRemove.add(solAgru);
+			}
+		}			
+		this.solicitudRegistrarT.getTiivsSolicitudAgrupacions().removeAll(lstSolAgruToRemove);
+		
+	}
 
 	public Set<TiivsSolicitudAgrupacion> agregarSolicitudArupacion(int iNumGrupo) {
 		logger.info("iNumGrupo : " + iNumGrupo);

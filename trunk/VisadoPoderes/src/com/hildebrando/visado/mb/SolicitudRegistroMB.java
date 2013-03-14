@@ -1060,15 +1060,7 @@ public class SolicitudRegistroMB {
 			
 			logger.info("lstTiivsAgrupacionPersonas: inicio " + lstTiivsAgrupacionPersonas.size());
 			
-			
-			Set<TiivsSolicitudAgrupacion> lstSolAgruToRemove = new HashSet<TiivsSolicitudAgrupacion>();
-			for(TiivsSolicitudAgrupacion solAgru: this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()){
-				if(solAgru.getTiivsAgrupacionPersonas().size()==0){					
-					lstSolAgruToRemove.add(solAgru);
-				}
-			}			
-			this.solicitudRegistrarT.getTiivsSolicitudAgrupacions().removeAll(lstSolAgruToRemove);
-			
+			limpiarAgrupacionesVacias();			
 
 			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
@@ -1097,6 +1089,18 @@ public class SolicitudRegistroMB {
 		this.tiivsSolicitudAgrupacionCapturado = null;
 		
 	}
+
+	private void limpiarAgrupacionesVacias() {
+		
+		Set<TiivsSolicitudAgrupacion> lstSolAgruToRemove = new HashSet<TiivsSolicitudAgrupacion>();
+		for(TiivsSolicitudAgrupacion solAgru: this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()){
+			if(solAgru.getTiivsAgrupacionPersonas().size()==0){					
+				lstSolAgruToRemove.add(solAgru);
+			}
+		}			
+		this.solicitudRegistrarT.getTiivsSolicitudAgrupacions().removeAll(lstSolAgruToRemove);		
+	}
+
 private void armaAgrupacionSimple() {
 		
 		
@@ -2071,6 +2075,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					break;
 				} 
 			}
+			
+			this.limpiarAgrupacionesVacias();
 
 			logger.info("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : "+ solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
 			
