@@ -52,6 +52,7 @@ public class RespNivelAprobacionMB {
 	private List<MiembroNivelDTO> respNiveles;
 	private boolean flagVisible;
     private MiembroNivelDTO miembroCapturado;
+    private MiembroNivelDTO  miembroCapturado_Edit;
 	private List<TiivsMiembroNivel> list;
 	private String codRegistro;
 	private List<TiivsMiembro> miembros;
@@ -624,23 +625,23 @@ public class RespNivelAprobacionMB {
 	*/
 	//@Autor Cesar
 	@SuppressWarnings("unchecked")
-	public void editarNivAprobacion(RowEditEvent event)
+	public void editarNivAprobacion()
 	{
 		List<TiivsMiembroNivel> lstTmp = new ArrayList<TiivsMiembroNivel>();
 		
-		MiembroNivelDTO mNivel = ((MiembroNivelDTO) event.getObject());
-		logger.debug("modificando nivel con codigo:" + mNivel.getId());
-		logger.debug("estado modificado:" + mNivel.getCodEstado());
+		/*MiembroNivelDTO mNivel = ((MiembroNivelDTO) event.getObject());
+		logger.debug("modificando nivel con codigo:" + mNivel.getId());*/
 		
+		MiembroNivelDTO mNivel=miembroCapturado_Edit;
+		logger.debug("estado a modificar:" + mNivel.getCodEstado());
 		GenericDao<TiivsMiembroNivel, Object> mNivelDAO = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroMiem = Busqueda.forClass(TiivsMiembroNivel.class);
-		filtroMiem.add(Restrictions.eq(ConstantesVisado.CAMPO_ALIAS_COD_MIEMBRO,mNivel.getUsuarioRegistro()));
-		filtroMiem.add(Restrictions.eq(ConstantesVisado.CAMPO_TIPO_ROL, "R"));
 		filtroMiem.add(Restrictions.eq(ConstantesVisado.CAMPO_ID, mNivel.getId()));
-		filtroMiem.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_NIVEL,mNivel.getCodNivel()));
+		
 		
 		try {
 			lstTmp = mNivelDAO.buscarDinamico(filtroMiem);
+			logger.info(" lstTmp " +lstTmp.size());
 		} catch (Exception e) {
 			logger.debug("No se pudo encontrar los datos de miembro nivel",e);
 		}
@@ -649,15 +650,27 @@ public class RespNivelAprobacionMB {
 		{
 			for (TiivsMiembroNivel tmp: lstTmp )
 			{
-				tmp.setEstado(mNivel.getCodEstado());
-				tmp.setUsuarioAct(tmp.getUsuarioRegistro());
-				
-				java.util.Date date= new java.util.Date();
-				tmp.setFechaAct(new Timestamp(date.getTime()));
-				
+				//tmp.setEstado(mNivel.getCodEstado());
 				try {
+					
+					if(tmp.getEstado().equals("1")){
+						tmp.setEstado("0");
+					}else if(tmp.getEstado().equals("0")){
+						tmp.setEstado("1");
+					}
+					
+					tmp.setUsuarioAct(tmp.getUsuarioRegistro());
+					
+					java.util.Date date= new java.util.Date();
+					tmp.setFechaAct(new Timestamp(date.getTime()));
+					
 					mNivelDAO.modificar(tmp);
 					logger.info("Se modifico correctamente el estado de miembro nivel");
+					/// LISTAR TODO DE NUEVO
+					miembroNivelDto.setRegistro(tmp.getTiivsMiembro().getCodMiembro());
+					/*miembroNivelDto.setDescripcion("");*/
+					obtenerDatosMiembro();
+				//	listarRespxNivel();
 				} catch (Exception e) {
 					logger.info("Error al actualizar la informacion de miembro nivel",e);
 				}
@@ -849,6 +862,14 @@ public class RespNivelAprobacionMB {
 
 	public void setMiembroCapturado(MiembroNivelDTO miembroCapturado) {
 		this.miembroCapturado = miembroCapturado;
+	}
+
+	public MiembroNivelDTO getMiembroCapturado_Edit() {
+		return this.miembroCapturado_Edit;
+	}
+
+	public void setMiembroCapturado_Edit(MiembroNivelDTO miembroCapturado_Edit) {
+		this.miembroCapturado_Edit = miembroCapturado_Edit;
 	}
 
 	
