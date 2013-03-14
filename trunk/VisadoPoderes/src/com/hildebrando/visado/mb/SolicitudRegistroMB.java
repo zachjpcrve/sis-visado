@@ -1316,7 +1316,6 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		String aliasCortoDocumento="";
 		if(selectedTipoDocumento!=null){
 			sCodDocumento = selectedTipoDocumento.getId().getCodDoc();
-			//sCodDocumento = selectedTipoDocumento.getTiivsDocumento().getNombre();
 		} else {
 			sCodDocumento = null;
 		}
@@ -1344,17 +1343,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			}
 			
 			String sExtension = sAliasTemporal.substring(sAliasTemporal.lastIndexOf("."));
-			//String sAliasArchivo = this.solicitudRegistrarT.getCodSoli() + "_" +
-			//String sAliasArchivo = sCodDocumento + sExtension;
 			aliasCortoDocumento += sExtension;
 			
-			//logger.info("aliasArchivo *** " + sAliasArchivo);
 			logger.info("aliasArchivo *** " + aliasCortoDocumento);
 			logger.info("aliasArchivoTemporal *** " + sAliasTemporal);
 			
 			TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
 			objAnexo.setId(new TiivsAnexoSolicitudId(null, sCodDocumento));
-			//objAnexo.setAliasArchivo(sAliasArchivo);
 			objAnexo.setAliasArchivo(aliasCortoDocumento.toUpperCase());
 			objAnexo.setAliasTemporal(sAliasTemporal);
 			lstAnexoSolicitud.add(objAnexo);
@@ -2073,16 +2068,25 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
 				if (tiivsOficina1.getCodOfi().equals(this.solicitudRegistrarT.getTiivsOficina1().getCodOfi())) {
 					this.solicitudRegistrarT.setTiivsOficina1(tiivsOficina1);
-				}
+					break;
+				} 
 			}
 
 			logger.info("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : "+ solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
-			if (this.validarRegistroSolicitud()) 
+			
+			boolean esValido = false;
+			if(!this.sEstadoSolicitud.equals("BORRADOR")){ 	//Validacion para envio de solicitud a SSJJ
+				esValido = this.validarEnvioSolicitud();
+			} else { 	//Validacion para registro de solicitud (Borrador)
+				esValido = this.validarRegistroSolicitud();
+			}
+			
+			//if (this.validarRegistroSolicitud()) 
+			if (esValido)
 			{
 				if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 					this.enviarSolicitudSSJJ();
-					logger.info(solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
-					
+					logger.info(solicitudRegistrarT.getTiivsEstudio().getCodEstudio());					
 				}
 				
 				SolicitudDao<TiivsPersona, Object> servicePK = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
@@ -2101,23 +2105,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					}
 				}
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
-				//TiivsSolicitud objResultado = service.guardarModificar(this.solicitudRegistrarT);
-				/*TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
-				this.solicitudRegistrarT.setCodSoli(objResultado.getCodSoli());
-				  for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
-					  x.setTiivsSolicitud(this.solicitudRegistrarT);
-					  x.getId().setCodSoli(this.solicitudRegistrarT.getCodSoli());
-				  for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) { 
-					  logger.info("b.getTiivsPersona().getCodPer()  " +b.getTiivsPersona().getCodPer());
-					  objPersonaRetorno=servicePers.insertarMerge(b.getTiivsPersona());
-					     b.setCodSoli(this.solicitudRegistrarT.getCodSoli());
-					     b.setTiivsPersona(null);
-					     logger.info("objPersonaRetorno.getCodPer() " +objPersonaRetorno.getCodPer());
-					     b.setCodPer(objPersonaRetorno.getCodPer());
-					     serviceAgru.insertar(b);
-					     } 
-				  
-				  }*/
+				
 				  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 				  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),1+""));
 				  objHistorial.setEstado(this.solicitudRegistrarT.getEstado());
@@ -2166,18 +2154,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 				logger.info("objResultado.getCodSoli(); "+ objResultado.getCodSoli());
 				logger.info("objResultado.getTiivsSolicitudAgrupacions() "+ objResultado.getTiivsSolicitudAgrupacions().size());
-				logger.info("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getImporte());
-				
-				//instanciarSolicitudRegistro();
-				/*if (!this.sEstadoSolicitud.equals("BORRADOR")) {
-					ConsultarSolicitudMB a =new ConsultarSolicitudMB(solicitudRegistrarT);
-					//a.obtenerSolicitud();
-					redirect = "/faces/paginas/detalleSolicitud.xhtml";
-				}else{
-					ConsultarSolicitudMB a =new ConsultarSolicitudMB(solicitudRegistrarT);
-					a.obtenerSolicitud();
-					redirect = "/faces/paginas/solicitudEdicion.xhtml";
-				}*/
+				logger.info("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getImporte());					
 				
 				if (actualizarBandeja)
 				{
@@ -2187,9 +2164,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			}
 		} catch (Exception e) {
 			redirect="";
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage(),e);
 			Utilitarios.mensajeError("ERROR", "Ocurrio un Error al grabar la Solicitud");
-			e.printStackTrace();
 
 		}
 		logger.info("Redirec:" + redirect);
@@ -2207,6 +2183,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		for (TiivsEstudio x : combosMB.getLstEstudio()) {
 			if (x.getCodEstudio().equals(sCodigoEstudio)) {
 				this.solicitudRegistrarT.setTiivsEstudio(x);
+				break;
 			}
 		}
 		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02);
@@ -2247,17 +2224,28 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		sEstadoSolicitud = "ENVIADO";
 	}
 
-	public boolean validarRegistroSolicitud() throws Exception {
+	private boolean validarRegistroSolicitud() throws Exception {
 		
 		  
 		boolean retorno = true;
 		String mensaje = "";
-		System.out.println("solicitudRegistrarT.getTiivsOficina1() "+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
-		/*if (solicitudRegistrarT.getTiivsOficina1() == null) {
-			mensaje = "Ingrese la Oficina";
+		
+		logger.info("solicitudRegistrarT.getTiivsOficina1() "+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+		if (solicitudRegistrarT.getTiivsOficina1() == null) {
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if(solicitudRegistrarT.getTiivsOficina1().getCodOfi()==null){
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if (solicitudRegistrarT.getTiivsOficina1().getCodOfi().equals("")) {
+			mensaje = "Ingrese una Oficina";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
+		
+		/*
 		if (solicitudRegistrarT.getNroVoucher() == null ) {
 			mensaje = "Ingrese el Nro Voucher";
 			retorno =this.validarNroVoucher();;
@@ -2272,8 +2260,104 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
-		}*/
+		}
+		*/
 		 
+		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
+			mensaje = "Ingrese la sección Apoderado y Poderdante";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}else{
+			Set<TiivsAgrupacionPersona> lstAgrupacionPersona=null;
+			int conuntNumAgru=0;
+			
+			for (TiivsSolicitudAgrupacion a : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+				conuntNumAgru=a.getId().getNumGrupo();
+				logger.info("conuntNumAgru : " +conuntNumAgru);
+				lstAgrupacionPersona=a.getTiivsAgrupacionPersonas();
+				logger.info("lstAgrupacionPersona : " +lstAgrupacionPersona.size());
+				int contPoderdante=0, contApoderado=0;
+				for (TiivsAgrupacionPersona xa : lstAgrupacionPersona) {
+					if(xa.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+					   contPoderdante++;
+					
+					}else if(xa.getTipPartic().equals(ConstantesVisado.APODERADO)){
+						contApoderado++;
+						
+					}
+				}
+				if(contPoderdante==0||contApoderado==0){
+//					retorno= false;
+//					Utilitarios.mensajeInfo("INFO", "Ingrese por lo menos un Poderdante y un Apoderado, por cada Combinación");
+					break;
+					
+				}
+				logger.info("contPoderdante : " +contPoderdante);
+				logger.info("contApoderado : " +contApoderado);
+			}
+			
+		}
+		if (solicitudRegistrarT.getTiivsTipoSolicitud() == (null)) {
+			mensaje = "Seleccione el Tipo de Solicitud ";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		if (this.lstAnexoSolicitud.size() == 0) {
+			mensaje = "Ingrese los documentos Obligatorios";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+
+		if (this.lstSolicBancarias.size() == 0) {
+
+			mensaje = "Ingrese al menos una Operación Bancaria";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+		return retorno;
+	}
+	
+	private boolean validarEnvioSolicitud() throws Exception {
+		
+		  
+		boolean retorno = true;
+		String mensaje = "";
+		
+		logger.info("solicitudRegistrarT.getTiivsOficina1() "+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+		
+		//Validacion de oficina
+		if (solicitudRegistrarT.getTiivsOficina1() == null) {
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if(solicitudRegistrarT.getTiivsOficina1().getCodOfi()==null){
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if (solicitudRegistrarT.getTiivsOficina1().getCodOfi().equals("")) {
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+		//Validacion de numero de voucher
+		if (solicitudRegistrarT.getNroVoucher() == null ) {
+			mensaje = "Ingrese el Nro Voucher";
+			retorno =this.validarNroVoucher();;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+			
+		}else if (solicitudRegistrarT.getNroVoucher().equals("")){
+			mensaje = "Ingrese el Nro Voucher";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+			
+		} else if (solicitudRegistrarT.getNroVoucher().length() < 11) {
+			mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+				 
 		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
 			mensaje = "Ingrese la sección Apoderado y Poderdante";
 			retorno = false;
@@ -2313,10 +2397,20 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
+		
 		if (this.lstAnexoSolicitud.size() == 0) {
 			mensaje = "Ingrese los documentos Obligatorios";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+		for(TiivsTipoSolicDocumento docRequerido :  lstTipoSolicitudDocumentos){
+			if(docRequerido.getObligatorio().equals("1")){
+				mensaje = "Ingrese los documentos Obligatorios";
+				retorno = false;
+				Utilitarios.mensajeInfo("INFO", mensaje);
+				break;
+			}
 		}
 
 		if (this.lstSolicBancarias.size() == 0) {
