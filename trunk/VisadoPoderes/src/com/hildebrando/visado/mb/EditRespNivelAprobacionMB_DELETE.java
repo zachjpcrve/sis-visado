@@ -46,9 +46,9 @@ import com.hildebrando.visado.service.RespNivelAprobacionService;
 
 @ManagedBean(name = "editRespNivel")
 @SessionScoped
-public class EditRespNivelAprobacionMB {
+public class EditRespNivelAprobacionMB_DELETE {
 
-	public static Logger logger = Logger.getLogger(EditRespNivelAprobacionMB.class);
+	public static Logger logger = Logger.getLogger(EditRespNivelAprobacionMB_DELETE.class);
 	
 	private DelegadosService delegadosService;
 	private RespNivelAprobacionService respNivelAprobacionService;
@@ -69,7 +69,7 @@ public class EditRespNivelAprobacionMB {
 	private String[] estados;
 	private boolean bEditar;
 
-	public EditRespNivelAprobacionMB() 
+	public EditRespNivelAprobacionMB_DELETE() 
 	{
 		iniciar = "";
 		delegadosService = new DelegadosService();
@@ -132,8 +132,7 @@ public class EditRespNivelAprobacionMB {
 				String descEstado = "";
 				String desNivel = "";
 
-				descEstado = respNivelAprobacionService.obtenerDesEstado(e
-						.getCodNiv());
+				descEstado = Utilitarios.obternerDescripcionEstado(e.getEstado());
 				desNivel = respNivelAprobacionService.obtenerDesNivel(e
 						.getCodNiv());
 
@@ -390,8 +389,7 @@ public class EditRespNivelAprobacionMB {
 						String descEstado = "";
 						String desNivel = "";
 
-						descEstado = respNivelAprobacionService
-								.obtenerDesEstado(miembroNivel.getCodNiv());
+						descEstado = Utilitarios.obternerDescripcionEstado(miembroNivel.getEstado());
 						desNivel = respNivelAprobacionService
 								.obtenerDesNivel(miembroNivel.getCodNiv());
 
@@ -492,7 +490,7 @@ public class EditRespNivelAprobacionMB {
 						String descEstado = "";
 						String desNivel = "";
 
-						descEstado = respNivelAprobacionService.obtenerDesEstado(miembroNivel.getCodNiv());
+						descEstado = Utilitarios.obternerDescripcionEstado(miembroNivel.getEstado());
 						desNivel = respNivelAprobacionService.obtenerDesNivel(miembroNivel.getCodNiv());
 
 						List<TiivsNivel> tiivsNivels = new ArrayList<TiivsNivel>();

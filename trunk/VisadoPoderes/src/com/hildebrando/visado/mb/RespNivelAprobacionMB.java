@@ -429,13 +429,14 @@ public class RespNivelAprobacionMB {
 					listarNivelesPorResponsable(miembroNivelDto.getRegistro());
 					//listarRespxNivel();
 				} else {
-					Utilitarios.mensajeError("Error","No se encuentra Registrado el codigo del Responsable");
+					Utilitarios.mensajeInfo("Info","No se encuentra Registrado el código del Responsable");
 					/*
 					 * desRegistro = ""; perfilRegistro = ""; criterioRegistro =
 					 * "";
 					 */
 					miembroNivelDto.setDescripcion("");
 					miembroNivelDto.setDesGrupo("");
+					respNiveles=new ArrayList<MiembroNivelDTO>();
 					validarCodRegistro = false;
 				}
 			}
