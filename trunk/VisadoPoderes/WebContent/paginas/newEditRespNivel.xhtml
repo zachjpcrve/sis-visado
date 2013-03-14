@@ -16,8 +16,8 @@
 				<h:outputLabel value="#{respNivel.iniciar}" />
 				<table>
 					<tr>
-						<td><h:outputText value="Registro: " /></td>
-						<td><p:inputText id="txtRegistro"
+						<td><h:outputText value="Registro: #{respNivel.bEditar}" /></td>
+						<td><p:inputText id="txtRegistro" 
 								readonly="#{respNivel.bEditar}"
 								value="#{respNivel.miembroNivelDto.registro}" maxlength="10"
 								size="10">
