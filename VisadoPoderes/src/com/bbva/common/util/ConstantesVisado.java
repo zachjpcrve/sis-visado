@@ -291,7 +291,7 @@ public class ConstantesVisado {
 	
 	public static final String TITULO_REPORTE_REVOCADOS ="REVOCADOS";
 	public static final String ETIQUETA_COLUMNA_NRO ="Nro";
-	public static final String ETIQUETA_COLUMNA_F_REVOCACION ="Apoderado";
+	public static final String ETIQUETA_COLUMNA_F_REVOCACION ="F.Revocacion";
 		
 	///****************************Constantes para Reporte de Estado de Solicitudes por Oficinas********************************
 	

@@ -684,26 +684,6 @@ public class CombosMB {
 	public void setLstSolicNivel(List<TiivsSolicitudNivel> lstSolicNivel) {
 		this.lstSolicNivel = lstSolicNivel;
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	public TipoDocumento getTmpTipoDoc() {
 		return tmpTipoDoc;
