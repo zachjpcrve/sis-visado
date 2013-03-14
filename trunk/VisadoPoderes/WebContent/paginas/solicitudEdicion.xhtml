@@ -103,6 +103,7 @@
 														<td style="font-size:0.9em">
 															<p:selectOneMenu id="cboOficina" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsOficina1.codOfi}" 
 																required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
+																<p:ajax update=":formSolicitudRegistro:cboOficina" event="change" />
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 																 <f:selectItems  value="#{combosMB.lstOficina}" var="lOf" itemValue="#{lOf.codOfi}" itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.tiivsTerritorio.codTer}-#{lOf.tiivsTerritorio.desTer})" /> 
 															</p:selectOneMenu></td>
