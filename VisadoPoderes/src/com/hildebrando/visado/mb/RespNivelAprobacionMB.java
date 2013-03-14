@@ -155,18 +155,21 @@ public class RespNivelAprobacionMB {
 	public void nuevoRespxNivel(){
 		logger.debug("=== inicia nuevoRespxNivel() ====");
 		//TiivsMiembroNivel miembroNivel= new TiivsMiembroNivel();
-		bEditar=true;
+		
 		miembroNivel= new TiivsMiembroNivel();
 		ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
+		bEditar=false;
 		/*ec.getSessionMap().put("miembroNivel", miembroNivel);*/
 		 
 		try{
 			this.setLimpiar(true);
-			ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
+     		ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
+			logger.debug("=== bEditar ==== ::: "+bEditar);
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel.xhtml: "+e);
 		}
 		logger.debug("=== saliendo nuevoRespxNivel() ====");
+		//return "newEditRespNivel.xhtml";
 	}
 	
 	public void listarRespxNivel(){
@@ -472,6 +475,7 @@ public class RespNivelAprobacionMB {
 			this.limpiarCampos();
 			respNiveles.clear();
 			setLimpiar(false);
+			bEditar=false;
 		}
 		else 
 		{
@@ -485,9 +489,10 @@ public class RespNivelAprobacionMB {
 	
 	private void editar(){
 		logger.info("Here here .... editar ");
-
+		bEditar=true;
 		miembroNivelDto.setRegistro(miembroCapturado.getRegistro());
 		this.obtenerDatosMiembro();
+		logger.info("bEditar :: :: "+bEditar);
 		/*
 		miembroNivelDto.setCodEstado(miembroCapturado.getCodEstado());
 		miembroNivelDto.setCodNivel(miembroCapturado.getCodNivel());
