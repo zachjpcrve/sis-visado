@@ -101,8 +101,10 @@
 					<p:column headerText="Accion">
 						<p:commandLink id="clinkEditar" ajax="true"
 							action="#{respNivel.editarRespNivelAprob}">
-							<f:param name="idResp" value="#{r.id}"></f:param>
+							<f:param name="idResp" value="#{r.registro}"></f:param>
 							<f:param name ="editar" value="1"></f:param>
+							<f:setPropertyActionListener target="#{respNivel.miembroCapturado}" 
+							value="#{r}"></f:setPropertyActionListener>
 							<h:outputText value="Editar" />
 						</p:commandLink>
 					</p:column>
