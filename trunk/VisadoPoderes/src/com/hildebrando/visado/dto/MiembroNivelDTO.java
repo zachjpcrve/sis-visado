@@ -28,7 +28,7 @@ public class MiembroNivelDTO implements Serializable {
 	
 	private int rangoInicioEuros;
 	private int rangoFinEuros;
-	
+	private String labelAccion;
 	private int nuevo;
 	
 	public MiembroNivelDTO(int nuevo, int id,String codNivel, String desNivel, String registro,
@@ -95,6 +95,40 @@ public class MiembroNivelDTO implements Serializable {
 		this.rangoFinDolares = rfd;
 		this.rangoInicioEuros = rie;
 		this.rangoFinEuros = rfe;
+	}
+	
+	
+	
+	
+	public MiembroNivelDTO(int id, String codNivel, String desNivel,
+			String registro, String descripcion, String codGrupo,
+			String desGrupo, String fechaRegistroToString,
+			String usuarioRegistro, String fechaActualizacionToString,
+			String usuarioActualizacion, String codEstado, String estado,
+			int rangoInicioSoles, int rangoFinSoles, int rangoInicioDolares,
+			int rangoFinDolares, int rangoInicioEuros, int rangoFinEuros,
+			String labelAccion) {
+		super();
+		this.id = id;
+		this.codNivel = codNivel;
+		this.desNivel = desNivel;
+		this.registro = registro;
+		this.descripcion = descripcion;
+		this.codGrupo = codGrupo;
+		this.desGrupo = desGrupo;
+		this.fechaRegistroToString = fechaRegistroToString;
+		this.usuarioRegistro = usuarioRegistro;
+		this.fechaActualizacionToString = fechaActualizacionToString;
+		this.usuarioActualizacion = usuarioActualizacion;
+		this.codEstado = codEstado;
+		this.estado = estado;
+		this.rangoInicioSoles = rangoInicioSoles;
+		this.rangoFinSoles = rangoFinSoles;
+		this.rangoInicioDolares = rangoInicioDolares;
+		this.rangoFinDolares = rangoFinDolares;
+		this.rangoInicioEuros = rangoInicioEuros;
+		this.rangoFinEuros = rangoFinEuros;
+		this.labelAccion = labelAccion;
 	}
 	public String getRegistro() {
 		return registro;
@@ -216,4 +250,11 @@ public class MiembroNivelDTO implements Serializable {
 	public void setNuevo(int nuevo) {
 		this.nuevo = nuevo;
 	}
+	public String getLabelAccion() {
+		return this.labelAccion;
+	}
+	public void setLabelAccion(String labelAccion) {
+		this.labelAccion = labelAccion;
+	}
+	
 }
