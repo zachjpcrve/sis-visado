@@ -434,30 +434,30 @@
 													</tr>
 												</c:forEach>
 
-												<c:forEach items="#{s.poderdantes}" var="n">
+												<c:forEach items="#{s.poderdantes}" var="a">
 
 													<tr class="ui-widget-content ui-datatable-even">
 														<td>
 															<div class="ui-dt-c">
-																<SPAN>#{n.sDesctipDoi}:#{n.numDoi}</SPAN>
+																<SPAN>#{a.sDesctipDoi}:#{a.numDoi}</SPAN>
 															</div>
 														</td>
 
 														<td>
 															<div class="ui-dt-c">
-																<SPAN>#{n.codCen}</SPAN>
+																<SPAN>#{a.codCen}</SPAN>
 															</div>
 														</td>
 
 														<td>
 															<div class="ui-dt-c">
-																<SPAN> #{n.apePat} #{n.apeMat} #{n.nombre}</SPAN>
+																<SPAN> #{a.apePat} #{a.apeMat} #{a.nombre}</SPAN>
 															</div>
 														</td>
 
 														<td>
 															<div class="ui-dt-c">
-																<SPAN> #{n.sDesctipPartic}</SPAN>
+																<SPAN> #{a.sDesctipPartic}</SPAN>
 															</div>
 														</td>
 
@@ -466,7 +466,7 @@
 																update=":frmPendEdit:dtClientes"
 																>
 																<f:setPropertyActionListener
-																	target="#{revocadosMB.deletePersonaEdit}" value="#{n}">
+																	target="#{revocadosMB.deletePersonaEdit}" value="#{a}">
 																</f:setPropertyActionListener>
 															</p:commandButton></td>
 
