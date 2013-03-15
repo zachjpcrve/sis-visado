@@ -1088,13 +1088,19 @@ public class RevocadosMB {
 	}
 	
 	public void editPendRevocado() {
-		
+		logger.info("******************** editPendRevocado ************" );
 		objTiivsPersonaBusquedaDlg= new TiivsPersona();
 		objTiivsPersonaAgregar = new TiivsPersona();
 
 		personaClientesPendEdit = new ArrayList<Revocado>();
 		personaClientesPendEdit.add(revocadoEdit);
 		
+		for (TiivsPersona p : revocadoEdit.getApoderados()) {
+			System.out.println(p.getCodPer()+ " - " +p.getTipPartic() + " - " +p.getsDesctipPartic());
+		}
+		for (TiivsPersona a : revocadoEdit.getPoderdantes()) {
+			System.out.println(a.getCodPer()+ " - " +a.getTipPartic() + " - " +a.getsDesctipPartic());
+		}
 		setFlagRevocar(true);
 		setFlagGuardar(false);
 	}
@@ -1805,7 +1811,7 @@ public class RevocadosMB {
 		return lstTiivsPersona;
 	}
 	public void inactivarCombinacion(ActionEvent actionEvent) {
-
+   logger.info( " ********* Iniciando inactivarCombinacion *****************");
 		List<TiivsMultitabla> tiivsMultitablas2 = new ArrayList<TiivsMultitabla>();
 		
 		GenericDao<TiivsMultitabla, Object> service3 = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -1816,7 +1822,6 @@ public class RevocadosMB {
 		try {
 			tiivsMultitablas2 = service3.buscarDinamico(filtro4);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -1842,6 +1847,7 @@ public class RevocadosMB {
 			
 
 			logger.debug("exitoso al inactivar revocados!");
+		 Utilitarios.mensajeInfo("Info", "Se inactivo correctamente");
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -1904,6 +1910,7 @@ public class RevocadosMB {
 	}
 
 	public void buscarRevocado() {
+		logger.info("############  buscarRevocado ###############");
 		revocados = new ArrayList<Revocado>();
 		List<TiivsRevocado> tiivsrevocados = new ArrayList<TiivsRevocado>();
 		List<TiivsRevocado> lstRevocadosPre = new ArrayList<TiivsRevocado>();
@@ -1942,7 +1949,7 @@ public class RevocadosMB {
 		}
 		
 		if(estadoRevocado.compareTo("S")!=0){
-			
+			logger.info(" **************** estadoRevocado "+estadoRevocado);
 			filtro.add(Restrictions.eq("estado", estadoRevocado));
 		}
 		
@@ -2019,7 +2026,11 @@ public class RevocadosMB {
 							
 							fecha=getDate(tiivsRevocado.getFechaRevocatoria());
 							estado=getValor1(tiivsRevocado.getEstado(),listEstados);
-							
+							logger.info("-------------------------------");
+							logger.info("TipPartic() ::: " +tiivsRevocado.getTipPartic());
+							logger.info("TipPartic() ::: " +tiivsRevocado.getTipPartic());
+							logger.info("getCodPer() ::: " +tiivsRevocado.getTiivsPersona().getCodPer());
+							logger.info("getNumDoi() ::: " +tiivsRevocado.getTiivsPersona().getNumDoi());
 							if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
 								
 								apoderado= new TiivsPersona();
@@ -2037,7 +2048,7 @@ public class RevocadosMB {
 								
 								apoderado.setsDesctipDoi( descDoiApod);
 								apoderado.setsDesctipPartic(descTipPart);
-								
+								apoderado.setTipPartic(tiivsRevocado.getTipPartic());
 								apoderados.add(apoderado);
 							}
 								
@@ -2059,7 +2070,7 @@ public class RevocadosMB {
 								
 								poderdante.setsDesctipDoi( descDoiPod);
 								poderdante.setsDesctipPartic(descTipPart);
-								
+								poderdante.setTipPartic(tiivsRevocado.getTipPartic());
 								poderdantes.add(poderdante);
 							}
 							
