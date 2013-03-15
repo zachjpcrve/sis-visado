@@ -313,7 +313,11 @@ public class RespNivelAprobacionMB {
 					if (nivel.getMoneda().compareTo(ConstantesVisado.MONEDAS.COD_EUROS) == 0) {
 						rie = nivel.getRangoInicio();rfe = nivel.getRangoFin();}
 				}
-			
+				if(e.getEstado().equals("1")){
+					e.setLabelAccion("Inactivar");
+				}else if(e.getEstado().equals("0")){
+					e.setLabelAccion("Activar");
+				}
 				respNiveles.add(new MiembroNivelDTO(0, e.getId(),
 						e.getCodNiv(), desNivel, e.getTiivsMiembro().getCodMiembro(),
 						e.getTiivsMiembro().getDescripcion(), e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(), 
