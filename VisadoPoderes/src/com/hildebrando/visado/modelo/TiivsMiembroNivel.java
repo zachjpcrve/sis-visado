@@ -21,7 +21,7 @@ public class TiivsMiembroNivel implements java.io.Serializable {
 	private String usuarioAct;
 	private Timestamp fechaAct;
 	private String estadoMiembro;
-	
+	private String labelAccion;
 	/** Samira*/
 	private String descNiv;
 	private String descEstado;
@@ -173,6 +173,14 @@ public class TiivsMiembroNivel implements java.io.Serializable {
 				+ this.usuarioAct + ", fechaAct=" + this.fechaAct
 				+ ", estadoMiembro=" + this.estadoMiembro + ", descNiv="
 				+ this.descNiv + ", listaNiveles.size() =" + this.listaNiveles+ "]";
+	}
+
+	public String getLabelAccion() {
+		return this.labelAccion;
+	}
+
+	public void setLabelAccion(String labelAccion) {
+		this.labelAccion = labelAccion;
 	}
 
 	
