@@ -439,7 +439,7 @@ public class ConstantesVisado {
 		
 		
 		public static final String ESTADO_ACTIVO="Activo";
-		public static final String ESTADO_DESACTIVO="Desactivo";
+		public static final String ESTADO_DESACTIVO="Inactivo";
 		
 		public static final String ESTADO_REGISTRADO_T02="Registrado";					
 		public static final String ESTADO_RESERVADO_T02="Reservado";					
