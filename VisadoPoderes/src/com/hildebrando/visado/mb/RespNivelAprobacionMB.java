@@ -171,7 +171,10 @@ public class RespNivelAprobacionMB {
 		}
 		logger.debug("=== saliendo nuevoRespxNivel() ====");
 	}
-	
+	public String listarRespxNivelTodos(){
+		listarRespxNivel();
+		return "/paginas/respNivel.xhtml";
+	}
 	public void listarRespxNivel(){
 		logger.debug("=== inicia listarRespxNivel() ====");
 		GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -387,11 +390,18 @@ public class RespNivelAprobacionMB {
 				if (nivel.getMoneda().compareTo(ConstantesVisado.MONEDAS.COD_EUROS) == 0) {
 					rie = nivel.getRangoInicio();rfe = nivel.getRangoFin();}
 			}
+			if(miembroNivel.getEstado().equals("1")){
+				miembroNivel.setLabelAccion("Inactivar");
+			}else if(miembroNivel.getEstado().equals("0")){
+				miembroNivel.setLabelAccion("Activar");
+			}
+			logger.info("Datos a mostrar al registrar :: " +miembroNivel.toString());
 			respNiveles.add(new MiembroNivelDTO(1, miembroNivel.getTiivsMiembro().getDescripcion(),
 					   miembroNivel.getCodNiv(), miembroNivel.getDescNiv(),
 					   miembroNivel.getTiivsMiembro().getCodMiembro(),
 					   Utilitarios.formatoFecha(new Date()) ,  usuario.getUID(),
-					   miembroNivel.getEstado(), miembroNivel.getDescEstado(), ris, rfs, rid, rfd, rie, rfe));
+					   miembroNivel.getEstado(), miembroNivel.getDescEstado(), ris, rfs, rid, rfd, rie, rfe,
+					   miembroNivel.getLabelAccion()));
 		}
 		
 		//return miembroNivel;
@@ -684,6 +694,16 @@ public class RespNivelAprobacionMB {
 					logger.info("Error al actualizar la informacion de miembro nivel",e);
 				}
 			}
+		}else if(lstTmp.size()==0){
+			logger.info("La lista es nueva ::: " +miembroCapturado_Edit.getEstado());
+			if(miembroCapturado_Edit.getEstado().equals("1")){
+				miembroCapturado_Edit.setEstado("0");
+				miembroCapturado_Edit.setLabelAccion("Inactivar");
+			}else if(miembroCapturado_Edit.getEstado().equals("0")){
+				miembroCapturado_Edit.setEstado("1");
+				miembroCapturado_Edit.setLabelAccion("Activar");
+			}
+			//obtenerDatosMiembro();
 		}
 	}
 	
