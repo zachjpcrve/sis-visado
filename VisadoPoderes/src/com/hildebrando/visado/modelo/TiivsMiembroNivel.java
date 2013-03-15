@@ -163,6 +163,15 @@ public class TiivsMiembroNivel implements java.io.Serializable {
 		this.listaNiveles = listaNiveles;
 	}
 
+
+	public String getLabelAccion() {
+		return this.labelAccion;
+	}
+
+	public void setLabelAccion(String labelAccion) {
+		this.labelAccion = labelAccion;
+	}
+
 	@Override
 	public String toString() {
 		return "TiivsMiembroNivel [id=" + this.id + ", tiivsMiembro="
@@ -171,16 +180,10 @@ public class TiivsMiembroNivel implements java.io.Serializable {
 				+ this.estado + ", usuarioRegistro=" + this.usuarioRegistro
 				+ ", fechaRegistro=" + this.fechaRegistro + ", usuarioAct="
 				+ this.usuarioAct + ", fechaAct=" + this.fechaAct
-				+ ", estadoMiembro=" + this.estadoMiembro + ", descNiv="
-				+ this.descNiv + ", listaNiveles.size() =" + this.listaNiveles+ "]";
-	}
-
-	public String getLabelAccion() {
-		return this.labelAccion;
-	}
-
-	public void setLabelAccion(String labelAccion) {
-		this.labelAccion = labelAccion;
+				+ ", estadoMiembro=" + this.estadoMiembro + ", labelAccion="
+				+ this.labelAccion + ", descNiv=" + this.descNiv
+				+ ", descEstado=" + this.descEstado + ", listaNiveles="
+				+ this.listaNiveles + "]";
 	}
 
 	
