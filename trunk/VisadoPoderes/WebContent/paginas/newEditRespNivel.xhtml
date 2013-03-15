@@ -119,13 +119,16 @@
 					<p:column headerText="Usuario de Act.">
 						<h:outputText value="#{r.usuarioActualizacion}" />
 					</p:column>
+					<p:column headerText="Estado">
+						<h:outputText value="#{r.estado}" />
+					</p:column>
 
 					<p:column headerText="Accion">
 					<p:commandLink id="clickEstado" 
 					update=":frmMantenimientoNivReg:dtbRespNivel"
 					action="#{respNivel.editarNivAprobacion}">
 						<f:setPropertyActionListener target="#{respNivel.miembroCapturado_Edit}" value="#{r}"></f:setPropertyActionListener>
-					<h:outputText value="#{r.estado}"  />
+					<h:outputText value="#{r.labelAccion}"  />
 						</p:commandLink>
 						</p:column>
 					
