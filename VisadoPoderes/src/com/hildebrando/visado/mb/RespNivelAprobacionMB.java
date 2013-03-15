@@ -164,7 +164,7 @@ public class RespNivelAprobacionMB {
 		try{
 			this.setLimpiar(true);
 			ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
-            ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
+            ec.redirect("paginas/newEditRespNivel.xhtml?faces-redirect=true");
 			logger.debug("=== bEditar ==== ::: "+bEditar);
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel.xhtml: "+e);
@@ -188,7 +188,7 @@ public class RespNivelAprobacionMB {
 		
 		if(!miembroNivelDto.getRegistro().equals("")){
 			logger.debug("[BUSQ]-REGISTRO: "+miembroNivelDto.getRegistro().toUpperCase());
-			filtroTiivsMiembroNivel.add(Restrictions.eq("miemb.codMiembro", miembroNivelDto.getRegistro()));
+			filtroTiivsMiembroNivel.add(Restrictions.eq("miemb.codMiembro", miembroNivelDto.getRegistro().toUpperCase()));
 		}
 		
 		if(!miembroNivelDto.getDescripcion().equals("")){
@@ -427,6 +427,7 @@ public class RespNivelAprobacionMB {
 		logger.info("EditRespNivelAprobacionMB : obtenerDatosMiembro");
 		try {
 			if (!miembroNivelDto.getRegistro().equals("")) {
+				logger.info("----------------- Entro con Registro no vacio");
 				miembros = delegadosService.obtenerDatosMiembro(miembroNivelDto.getRegistro().toUpperCase());
 				if (miembros.size() > 0) {
 
@@ -434,7 +435,7 @@ public class RespNivelAprobacionMB {
 					miembroNivelDto.setDesGrupo(miembros.get(0).getTiivsGrupo().getDesGrupo());
 					// criterioRegistro = miembros.get(0).getCriterio();
 					validarCodRegistro = true;
-					listarNivelesPorResponsable(miembroNivelDto.getRegistro());
+					listarNivelesPorResponsable(miembroNivelDto.getRegistro().toUpperCase());
 					//listarRespxNivel();
 				} else {
 					Utilitarios.mensajeInfo("Info","No se encuentra Registrado el código del Responsable");
@@ -450,7 +451,7 @@ public class RespNivelAprobacionMB {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			logger.error("EditRespNivelAprobacionMB : obtenerDatosMiembro"+ ex.getLocalizedMessage());
+			logger.error("EditRespNivelAprobacionMB : obtenerDatosMiembro:: Error ::: "+ ex.getLocalizedMessage()+" - Cause " +ex.getCause()+ " - " +ex.getMessage());
 		}
 	}
 	
@@ -700,8 +701,7 @@ public class RespNivelAprobacionMB {
 
 		for (MiembroNivelDTO miembroNivelDTO : respNiveles) {
 
-			logger.debug("miembroNivelDTO.getNuevo(): "
-					+ miembroNivelDTO.getNuevo());
+			logger.debug("miembroNivelDTO.getNuevo(): "+ miembroNivelDTO.getNuevo());
 			if (miembroNivelDTO.getNuevo() == 1) {
 
 				TiivsMiembro miembro = new TiivsMiembro();
@@ -761,6 +761,7 @@ public class RespNivelAprobacionMB {
 		logger.info("=== saliendo de confirmarCambios() ===");
 		try {
 			//limpiarCampos();
+			miembroNivelDto.setEstado("");
 			listarRespxNivel();
 			FacesContext.getCurrentInstance().getExternalContext().redirect("/VisadoPoderes/faces/paginas/respNivel.xhtml");
 		} catch (IOException e) {
