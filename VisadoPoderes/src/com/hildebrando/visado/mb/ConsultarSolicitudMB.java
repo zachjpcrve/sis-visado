@@ -1653,8 +1653,8 @@ public class ConsultarSolicitudMB {
 				soliNivel.setCodNiv(codNivel);
 				soliNivel.setEstadoSolicitud(solicitud.getEstado());
 				soliNivel.setTiivsSolicitud(solicitud);
-				//soliNivel.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
-				soliNivel.setEstadoNivel(null);
+				soliNivel.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
+				//soliNivel.setEstadoNivel(null);
 				soliNivel.setUsuarioRegistro(usuario.getUID());
 				soliNivel.setFechaRegistro(new Timestamp(Calendar.DATE));
 				
