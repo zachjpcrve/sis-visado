@@ -260,12 +260,11 @@
 					</p:selectOneMenu>
 
 					<h:outputLabel value="Nro*: " />
-					<p:inputText id="txtNumDoi" styleClass="inputText"
+					<p:inputText id="txtNumDoi" styleClass="inputText" maxlength="12"
 						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.numDoi}"
-						validatorMessage="Numero requerido"
 						onkeypress="return validaNumero(event,'0',this,'0');"
 						onblur="validaNumero(event,'0',this,'1');">
-						<f:validateLongRange minimum="1" maximum="99999999999"></f:validateLongRange>
+						
 					</p:inputText>
 					<p:message for="txtNumDoi"></p:message>
 
