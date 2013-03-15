@@ -1830,7 +1830,13 @@ public class SeguimientoMB
 			GenericDao<TiivsSolicitudNivel, Object> busqSolNivDAO = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda.forClass(TiivsSolicitudNivel.class);
 			List<TiivsSolicitudNivel> lstSolNivel = new ArrayList<TiivsSolicitudNivel>();
-			filtro.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO, lstEstadoNivelSelected));
+			/*for(int i=0;i<lstEstadoNivelSelected.size() ; i++){
+				if(lstEstadoNivelSelected.get(i).equals("0001")){
+					lstEstadoNivelSelected.add("");
+				}
+			}*/
+			
+			filtro.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO_NIVEL, lstEstadoNivelSelected));
 			
 			try {
 				lstSolNivel = busqSolNivDAO.buscarDinamico(filtro);
@@ -1842,13 +1848,7 @@ public class SeguimientoMB
 			
 			for (TiivsSolicitudNivel sol : lstSolNivel) 
 			{
-				for (TiivsSolicitud soli: solicitudes)
-				{	
-					if (sol.getTiivsSolicitud().getCodSoli().equals(soli.getCodSoli()) && soli.getTxtNivel().length()>0)
-					{
-						lstSolicitudesSelected.add(sol.getTiivsSolicitud().getCodSoli());
-					}
-				}
+				lstSolicitudesSelected.add(sol.getTiivsSolicitud().getCodSoli());
 			}
 			
 			int ind = 0;
@@ -1921,6 +1921,9 @@ public class SeguimientoMB
 			GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
 			filtro.add(Restrictions.or(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO, codigoSolicVerA),Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicVerB)));
+			filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_NIVEL_ROL, ConstantesVisado.CODIGO_CAMPO_TIPO_ROL_DELEGADO));
+			filtro.add(Restrictions.or(Restrictions.eq(ConstantesVisado.CAMPO_NIVEL_ESTADO, ConstantesVisado.ESTADOS.ESTADO_COD_Desaprobado_T09),
+					   				   Restrictions.eq(ConstantesVisado.CAMPO_NIVEL_ESTADO,ConstantesVisado.ESTADOS.ESTADO_COD_Aprobado_T09)));
 
 			try {
 				lstHistorial = busqHisDAO.buscarDinamico(filtro);
@@ -1929,10 +1932,10 @@ public class SeguimientoMB
 			}
 			
 			lstSolicitudesSelected.clear();
-			if (lstHistorial.size() > 0) 
+			if (lstHistorial!=null) 
 			{
 				// Colocar aqui la logica para filtrar los niveles aprobados o rechazados
-				GenericDao<TiivsSolicitudNivel, Object> busqSolNivDAO = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+				/*GenericDao<TiivsSolicitudNivel, Object> busqSolNivDAO = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 				Busqueda filtro2 = Busqueda.forClass(TiivsSolicitudNivel.class);
 				List<TiivsSolicitudNivel> lstSolNivel = new ArrayList<TiivsSolicitudNivel>();
 								
@@ -1951,6 +1954,11 @@ public class SeguimientoMB
 							lstSolicitudesSelected.add(hist.getId().getCodSoli());
 						}
 					}
+				}*/
+				
+				for (TiivsHistSolicitud hist: lstHistorial)
+				{
+					lstSolicitudesSelected.add(hist.getId().getCodSoli());
 				}
 				
 				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
