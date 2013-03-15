@@ -432,9 +432,11 @@ public class EvaluacionNivelesMB {
 		boolean iRet = false;
 		int i=0;
 		for(TiivsSolicitudNivel sn : lstSolicitudNivel){
-			if(sn.getEstadoNivel()!=null && sn.getEstadoNivel().equals(sEstado)){
-				i++;
-			}
+			if(sn.getEstadoNivel()!=null){				
+				if(!sn.getEstadoNivel().equals(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09) && sn.getEstadoNivel().equals(sEstado)){
+					i++;
+				}				
+			}			
 		}
 		if(i==lstSolicitudNivel.size()){
 			iRet = true;
