@@ -126,7 +126,12 @@
 							<h:outputText styleClass="outputText" id="txtApod" value="Apoderado:" />
 						</td>
 						<td >
-							<h:inputText styleClass="inputText" id="text15" value="#{seguimientoMB.txtNomApoderado}" disabled="false" maxlength="60" size="25"/>
+							<p:autoComplete completeMethod="#{seguimientoMB.completePersona}"
+									value="#{seguimientoMB.objTiivsPersonaBusquedaNomApod}"
+									forceSelection="true" var="ap" converter="personaCvtr"
+									itemLabel="#{ap.nombreCompletoMayuscula}" itemValue="#{ap}"
+									size="25">
+							</p:autoComplete>
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolApoderado" /></td>
 						<p:tooltip for="toolApoderado" value="Apoderado" showEffect="fade" hideEffect="fade" />
@@ -144,8 +149,12 @@
 							<h:outputText styleClass="outputText" id="txtPoder" value="Poderdante" />
 						</td>
 						<td >
-							<h:inputText styleClass="inputText"
-							id="text14" value="#{seguimientoMB.txtNomPoderdante}" disabled="false" maxlength="60" size="23"/>
+							<p:autoComplete completeMethod="#{seguimientoMB.completePersona}"
+									value="#{seguimientoMB.objTiivsPersonaBusquedaNomPoder}"
+									forceSelection="true" var="pod" converter="personaCvtr"
+									itemLabel="#{pod.nombreCompletoMayuscula}" itemValue="#{pod}"
+									size="23">
+							</p:autoComplete>
 						</td>	
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolPoderdante" /></td>	
 						<p:tooltip for="toolPoderdante" value="Poderdante" showEffect="fade" hideEffect="fade" />			

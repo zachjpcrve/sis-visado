@@ -29,9 +29,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.mapping.Array;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.beans.BeansException;
+import org.springframework.jca.cci.CciOperationNotSupportedException;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -53,6 +55,7 @@ import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
+import com.hildebrando.visado.modelo.TiivsRevocado;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
@@ -112,6 +115,8 @@ public class SeguimientoMB
 	private String PERFIL_USUARIO ;
 	private boolean bloquearOficina=false;
 	private NivelService nivelService;
+	private TiivsPersona objTiivsPersonaBusquedaNomApod;
+	private TiivsPersona objTiivsPersonaBusquedaNomPoder;
 	
 //	private List<TiivsHistSolicitud> lstHistorial;
 	private List<SeguimientoDTO> lstSeguimientoDTO;
@@ -792,7 +797,7 @@ public class SeguimientoMB
 						}
 						else
 						{
-							cadena=cadena.concat(buscarEstadoxCodigo((lstEstadoSelected.get(j).toString().concat(","))));
+							cadena=cadena.concat(buscarEstadoxCodigo(lstEstadoSelected.get(j).toString()).concat(","));
 							cont++;
 						}
 					}
@@ -857,7 +862,7 @@ public class SeguimientoMB
 						}
 						else
 						{
-							cadena=cadena.concat(buscarTipoSolxCodigo((lstTipoSolicitudSelected.get(j).toString().concat(","))));
+							cadena=cadena.concat(buscarTipoSolxCodigo(lstTipoSolicitudSelected.get(j).toString()).concat(","));
 							cont++;
 						}
 					}
@@ -1007,17 +1012,17 @@ public class SeguimientoMB
 					{
 						if (cont==getLstNivelSelected().size())
 						{
-							cadena=cadena.concat(buscarNivelxCodigo((getLstNivelSelected().get(j).toString())));
+							cadena=cadena.concat(getLstNivelSelected().get(j).toString());
 						}
 						else
 						{
-							cadena=cadena.concat(buscarNivelxCodigo((getLstNivelSelected().get(j).toString().concat(","))));
+							cadena=cadena.concat(getLstNivelSelected().get(j).toString()).concat(",");
 							cont++;
 						}
 					}
 					else
 					{
-						cadena = buscarNivelxCodigo(getLstNivelSelected().get(j).toString());
+						cadena = getLstNivelSelected().get(j).toString();
 					}		
 				}
 				
@@ -1053,7 +1058,7 @@ public class SeguimientoMB
 						}
 						else
 						{
-							cadena=cadena.concat(buscarEstNivelxCodigo((getLstEstadoNivelSelected().get(j).toString().concat(","))));
+							cadena=cadena.concat(buscarEstNivelxCodigo(getLstEstadoNivelSelected().get(j).toString()).concat(","));
 							cont++;
 						}
 					}
@@ -1095,7 +1100,7 @@ public class SeguimientoMB
 						}
 						else
 						{
-							cadena=cadena.concat(buscarEstudioxCodigo((getLstEstudioSelected().get(j).toString().concat(","))));
+							cadena=cadena.concat(buscarEstudioxCodigo(getLstEstudioSelected().get(j).toString()).concat(","));
 							cont++;
 						}
 					}
@@ -1470,6 +1475,7 @@ public class SeguimientoMB
 	// @Autor: Cesar La Rosa
 	// @Version: 4.0
 	// @param: -
+	// Corregir: nivel, poder, apod, exportacion filtros de combos con mas de un valor
 	@SuppressWarnings("unchecked")
 	public void busquedaSolicitudes() 
 	{
@@ -1547,33 +1553,7 @@ public class SeguimientoMB
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_ENVIO)) // Es fecha de envio
 			{
 				logger.info("Filtrando por fecha de envio");
-				/*DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss");
-				DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-				
-				String tmpFecIni = formato.format(getFechaInicio());
-				String tmpFecFin = formato.format(getFechaFin());
-				
-				newFechaInicio=fmt.parseLocalDate(tmpFecIni);
-				newFechaFin= fmt.parseLocalDate(tmpFecFin);
-				
-				Date dFechaIni = newFechaInicio.toDateTimeAtStartOfDay().toDate();
-				Date dFechaFin = newFechaFin.toDateTimeAtStartOfDay().toDate();
-				
-				logger.info("Fecha de inicio:" + dFechaIni);
-				logger.info("Fecha de Fin:" + dFechaFin);
-				
-				filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaIni));
-				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_REGISTRO, dFechaFin));*/
-				
-				/*Date fromDate = Utilitarios.getDateWithoutTime(getFechaInicio());
-				Date toDate = Utilitarios.getDateWithoutTime(getFechaFin());
-				
-				logger.info("Fecha Inicio: " + fromDate);
-				logger.info("Fecha Fin: " + toDate);
-				
-				filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_ENVIO, fromDate));
-				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_ENVIO, toDate));*/
-				
+								
 			 	try {
 					SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 					String fecIni = formatter.format(getFechaInicio());
@@ -1601,30 +1581,7 @@ public class SeguimientoMB
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_RPTA)) // Sino es fecha de respuesta
 			{
 				logger.info("Filtrando por fecha de rpta");
-				/*DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss");
-				DateFormat formato = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-				
-				String tmpFecIni = formato.format(getFechaInicio());
-				String tmpFecFin = formato.format(getFechaFin());
-				
-				newFechaInicio=fmt.parseLocalDate(tmpFecIni);
-				newFechaFin= fmt.parseLocalDate(tmpFecFin);
-				
-				Date dateIni = newFechaInicio.toDateTimeAtStartOfDay().toDate();
-				Date dateFin = newFechaFin.toDateTimeAtStartOfDay().toDate();
-				
-				logger.info("Fecha Inicio: " + dateIni);
-				logger.info("Fecha Fin: " + dateFin);*/
-				
-				/*Date fromDate = Utilitarios.getDateWithoutTime(getFechaInicio());
-				Date toDate = Utilitarios.getDateWithoutTime(getFechaFin());
-				
-				logger.info("Fecha Inicio: " + fromDate);
-				logger.info("Fecha Fin: " + toDate);
-				
-				filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_RPTA, fromDate));
-				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_RPTA, toDate));*/
-				
+								
 				try {
 					SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 					String fecIni = formatter.format(getFechaInicio());
@@ -1726,13 +1683,16 @@ public class SeguimientoMB
 		}
 
 		// 12. Filtro por nombre de apoderado (funciona)
-		if (getTxtNomApoderado().compareTo("") != 0) 
+		if (objTiivsPersonaBusquedaNomApod!=null) 
 		{
-			String codSol="";
+			/*String codSol="";
 			int ind=0;
 			List<String> lstSolicitudes = new ArrayList<String>();
 			
-			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
+			//ss
+			
+			
+			for (TiivsAgrupacionPersona tmp: obtenerSolicitudesxFiltroPersonas())
 			{
 				if ((tmp.getTiivsPersona().getNombre().toUpperCase().indexOf(getTxtNomApoderado().toUpperCase())!=-1  
 					|| tmp.getTiivsPersona().getApeMat().toUpperCase().indexOf(getTxtNomApoderado().toUpperCase())!=-1 
@@ -1749,7 +1709,17 @@ public class SeguimientoMB
 			for (; ind <= lstSolicitudes.size() - 1; ind++) 
 			{
 				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
+			}*/
+			logger.info("Filtro por apoderado: " + objTiivsPersonaBusquedaNomApod.getNombreCompletoMayuscula());
+			List<String> lstSolicitudes = new ArrayList<String>();
+			int ind=0;
+			lstSolicitudes = obtenerSolicitudesxFiltroPersonas(objTiivsPersonaBusquedaNomApod,ConstantesVisado.CAMPO_APODERADO);
+			
+			for (; ind <= lstSolicitudes.size() - 1; ind++) 
+			{
+				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
 			}
+			
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 		}
 		
@@ -1778,9 +1748,9 @@ public class SeguimientoMB
 		}
 
 		// 14. Filtro por nombre de poderdante (funciona)
-		if (getTxtNomPoderdante().compareTo("") != 0) 
+		if (objTiivsPersonaBusquedaNomPoder!=null) 
 		{
-			String codSol="";
+			/*String codSol="";
 			int ind=0;
 			List<String> lstSolicitudes = new ArrayList<String>();
 			
@@ -1801,14 +1771,24 @@ public class SeguimientoMB
 			for (; ind <= lstSolicitudes.size() - 1; ind++) 
 			{
 				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
+			}*/
+			logger.info("Filtro por poderdante: " + objTiivsPersonaBusquedaNomPoder.getNombreCompletoMayuscula());
+			List<String> lstSolicitudes = new ArrayList<String>();
+			int ind=0;
+			lstSolicitudes = obtenerSolicitudesxFiltroPersonas(objTiivsPersonaBusquedaNomPoder,ConstantesVisado.CAMPO_PODERDANTE);
+			
+			for (; ind <= lstSolicitudes.size() - 1; ind++) 
+			{
+				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
 			}
+			
 			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 		}
 
 		// 15. Filtro por nivel (funciona)
 		if (lstNivelSelected.size() > 0) 
 		{
-			lstSolicitudesSelected.clear();
+			/*lstSolicitudesSelected.clear();
 			for (TiivsSolicitud sol : solicitudes) 
 			{
 				if (sol.getTxtNivel() != null && sol.getTxtNivel().length() > 0) 
@@ -1826,8 +1806,22 @@ public class SeguimientoMB
 			{
 				logger.info("Filtro nivel" + "[" + ind + "]" + lstNivelSelected.get(ind));
 			}
+			*/
+			int ind = 0;
+			List<String> lstCodNiv = new ArrayList<String>();
 			
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
+			for (; ind <= lstNivelSelected.size() - 1; ind++) 
+			{
+				logger.info("Filtro nivel" + "[" + ind + "]" + lstNivelSelected.get(ind));
+				String nivel = nivelService.buscarNivelxDescrip(lstNivelSelected.get(ind));
+				
+				if (nivel!=null)
+				{
+					lstCodNiv.add(nivel);
+				}
+			}
+						
+			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	obtenerSolicitudesxFiltroNivels(lstCodNiv)));
 		}
 		
 		// 16. Filtro por estado nivel (funciona)
@@ -1971,35 +1965,6 @@ public class SeguimientoMB
 		// 21. Filtrar solicitudes que se hayan Revocado (funciona)
 		if (getbRevocatoria()) 
 		{
-			/*String codigoSolicRevocado = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_REVOCADO);
-			GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
-			filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicRevocado));
-
-			try {
-				lstHistorial = busqHisDAO.buscarDinamico(filtro);
-			} catch (Exception e) {
-				logger.info("Error al buscar en historial de solicitudes");
-			}
-			
-			lstSolicitudesSelected.clear();
-			for (TiivsHistSolicitud tmp: lstHistorial)
-			{
-				if (lstHistorial!=null && lstHistorial.size()>0)
-				{
-					lstSolicitudesSelected.add(tmp.getId().getCodSoli());
-				}
-			}
-
-			if (lstSolicitudesSelected.size() > 0) 
-			{
-				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudesSelected));
-			} 
-			else 
-			{
-				logger.info("No hay solicitudes en el historial con estado Revocado");
-				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
-			}*/
 			List<TiivsSolicitudAgrupacion> lstRev = new ArrayList<TiivsSolicitudAgrupacion>();
 			GenericDao<TiivsSolicitudAgrupacion, Object> busqSolAgrp = (GenericDao<TiivsSolicitudAgrupacion, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda.forClass(TiivsSolicitudAgrupacion.class);
@@ -2062,6 +2027,85 @@ public class SeguimientoMB
 			actualizarDatosGrilla();
 			setNoHabilitarExportar(false);
 		}
+	}
+	
+	public List<String> obtenerSolicitudesxFiltroPersonas(TiivsPersona filtroPer, String tipo)
+	{
+		List<TiivsAgrupacionPersona> lstAgrpPerTMP = new ArrayList<TiivsAgrupacionPersona>();
+		
+		GenericDao<TiivsAgrupacionPersona, Object> service = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsAgrupacionPersona.class);
+		filtro.createAlias("tiivsPersona", "persona");
+		
+		if(filtroPer != null)
+		{
+			if(filtroPer.getNombreCompletoMayuscula().compareTo("")!=0)
+			{
+				filtro.add(Restrictions.eq("persona.nombre", filtroPer.getNombreCompletoMayuscula().split(" ")[0]));
+				filtro.add(Restrictions.eq("persona.apePat", filtroPer.getNombreCompletoMayuscula().split(" ")[1]));
+				filtro.add(Restrictions.eq("persona.apeMat", filtroPer.getNombreCompletoMayuscula().split(" ")[2]));
+				
+				if (tipo.equals(ConstantesVisado.CAMPO_PODERDANTE))
+				{
+					filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_TIPO_PARTIC,ConstantesVisado.PODERDANTE));
+				}
+				else
+				{
+					filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_TIPO_PARTIC,ConstantesVisado.APODERADO));
+				}
+			}
+		}
+		
+		try {
+			lstAgrpPerTMP = service.buscarDinamico(filtro.addOrder(Order.desc("codSoli")));
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("error al obtener la lista de revocados "+  e.toString());
+		}
+		
+		List<String> tmpAgrupSol = new ArrayList<String>();
+		
+		for (TiivsAgrupacionPersona tmp: lstAgrpPerTMP)
+		{
+			if (tmp!=null)
+			{
+				tmpAgrupSol.add(tmp.getCodSoli());
+			}
+		}
+		
+		return tmpAgrupSol;
+	}
+	
+	public List<String> obtenerSolicitudesxFiltroNivels(List<String> lstTMP)
+	{
+		List<TiivsSolicitudNivel> lstSolNivTMP = new ArrayList<TiivsSolicitudNivel>();
+		
+		GenericDao<TiivsSolicitudNivel, Object> service = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsSolicitudNivel.class);
+		
+		if(lstTMP != null)
+		{
+			filtro.add(Restrictions.in(ConstantesVisado.CAMPO_COD_NIVEL, lstTMP));
+		}
+		
+		try {
+			lstSolNivTMP = service.buscarDinamico(filtro);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("error al obtener la lista de solicitudes x nivel "+  e.toString());
+		}
+		
+		List<String> tmpSol = new ArrayList<String>();
+		
+		for (TiivsSolicitudNivel tmp: lstSolNivTMP)
+		{
+			if (tmp!=null)
+			{
+				tmpSol.add(tmp.getTiivsSolicitud().getCodSoli());
+			}
+		}
+		
+		return tmpSol;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -2255,6 +2299,19 @@ public class SeguimientoMB
 		for (; i < combosMB.getLstNivel().size(); i++) {
 			if (combosMB.getLstNivel().get(i).getCodNiv().equalsIgnoreCase(codigo)) {
 				res = combosMB.getLstNivel().get(i).getDesNiv();
+				break;
+			}
+		}
+		return res;
+	}
+	
+	public String buscarNivelxAbrev(String codigo) 
+	{
+		int i = 0;
+		String res = "";
+		for (; i < combosMB.getLstNivel().size(); i++) {
+			if (combosMB.getLstNivel().get(i).getDesNiv().equalsIgnoreCase(codigo)) {
+				res = combosMB.getLstNivel().get(i).getCodNiv();
 				break;
 			}
 		}
@@ -2518,6 +2575,56 @@ public class SeguimientoMB
 		}
 
 		return results;
+	}
+	
+	public List<TiivsPersona> completePersona(String query) 
+	{
+		List<TiivsPersona> lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
+		List<TiivsPersona> lstTiivsPersonaBusqueda = new ArrayList<TiivsPersona>();
+
+		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
+		try {
+			lstTiivsPersonaBusqueda = service.buscarDinamico(filtro);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		for (TiivsPersona pers : lstTiivsPersonaBusqueda) 
+		{
+			if(pers!= null)
+			{	
+				if (pers.getApePat()!=null && pers.getApeMat()!=null)
+				{
+					if (pers.getNombre().toUpperCase() != ""
+							&& pers.getApePat().toUpperCase() != ""
+							&& pers.getApeMat().toUpperCase() != "") 
+					{
+						
+						String nombreCompletoMayuscula = pers.getNombre().toUpperCase()
+								+ " " + pers.getApePat().toUpperCase() + " "
+								+ pers.getApeMat().toUpperCase();
+
+						String nombreCompletoMayusculaBusqueda = pers.getApePat()
+								.toUpperCase()
+								+ " "
+								+ pers.getApeMat().toUpperCase()
+								+ " " + pers.getNombre().toUpperCase();
+
+						if (nombreCompletoMayusculaBusqueda.contains(query
+								.toUpperCase())) {
+
+							pers.setNombreCompletoMayuscula(nombreCompletoMayuscula);
+
+							lstTiivsPersonaResultado.add(pers);
+						}
+					}
+				}
+				
+			}
+		}
+
+		return lstTiivsPersonaResultado;
 	}
 	
 	public void buscarOficinaPorCodigo(ValueChangeEvent e) 
@@ -3097,6 +3204,22 @@ public class SeguimientoMB
 	public void setNivelService(NivelService nivelService) {
 		this.nivelService = nivelService;
 	}
-	
-	
+
+	public TiivsPersona getObjTiivsPersonaBusquedaNomApod() {
+		return objTiivsPersonaBusquedaNomApod;
+	}
+
+	public void setObjTiivsPersonaBusquedaNomApod(
+			TiivsPersona objTiivsPersonaBusquedaNomApod) {
+		this.objTiivsPersonaBusquedaNomApod = objTiivsPersonaBusquedaNomApod;
+	}
+
+	public TiivsPersona getObjTiivsPersonaBusquedaNomPoder() {
+		return objTiivsPersonaBusquedaNomPoder;
+	}
+
+	public void setObjTiivsPersonaBusquedaNomPoder(
+			TiivsPersona objTiivsPersonaBusquedaNomPoder) {
+		this.objTiivsPersonaBusquedaNomPoder = objTiivsPersonaBusquedaNomPoder;
+	}
 }
