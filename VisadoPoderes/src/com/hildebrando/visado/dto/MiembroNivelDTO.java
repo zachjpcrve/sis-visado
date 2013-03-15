@@ -79,7 +79,7 @@ public class MiembroNivelDTO implements Serializable {
 	}
 	public MiembroNivelDTO(int nuevo,String descripcion, String codNiv, String desNivel, String codMiembro,
 			String fechaRegistroToString, String usuarioRegistro, String codEstado, String descEstado,
-			int ris, int rfs, int rid, int rfd, int rie, int rfe) {
+			int ris, int rfs, int rid, int rfd, int rie, int rfe, String labelAccion) {
 		
 		this.nuevo =  nuevo;
 		this.descripcion = descripcion;
@@ -96,6 +96,7 @@ public class MiembroNivelDTO implements Serializable {
 		this.rangoFinDolares = rfd;
 		this.rangoInicioEuros = rie;
 		this.rangoFinEuros = rfe;
+	    this.labelAccion=labelAccion;
 	}
 	
 	public MiembroNivelDTO(int id, String codNivel, String desNivel,
