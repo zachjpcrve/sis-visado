@@ -98,7 +98,35 @@ public class MiembroNivelDTO implements Serializable {
 		this.rangoFinEuros = rfe;
 	}
 	
-	
+	public MiembroNivelDTO(int id, String codNivel, String desNivel,
+			String registro, String descripcion, String codGrupo,
+			String desGrupo, String fechaRegistroToString,
+			String usuarioRegistro, String fechaActualizacionToString,
+			String usuarioActualizacion, String codEstado, String estado,
+			int rangoInicioSoles, int rangoFinSoles, int rangoInicioDolares,
+			int rangoFinDolares, int rangoInicioEuros, int rangoFinEuros) {
+		super();
+		this.id = id;
+		this.codNivel = codNivel;
+		this.desNivel = desNivel;
+		this.registro = registro;
+		this.descripcion = descripcion;
+		this.codGrupo = codGrupo;
+		this.desGrupo = desGrupo;
+		this.fechaRegistroToString = fechaRegistroToString;
+		this.usuarioRegistro = usuarioRegistro;
+		this.fechaActualizacionToString = fechaActualizacionToString;
+		this.usuarioActualizacion = usuarioActualizacion;
+		this.codEstado = codEstado;
+		this.estado = estado;
+		this.rangoInicioSoles = rangoInicioSoles;
+		this.rangoFinSoles = rangoFinSoles;
+		this.rangoInicioDolares = rangoInicioDolares;
+		this.rangoFinDolares = rangoFinDolares;
+		this.rangoInicioEuros = rangoInicioEuros;
+		this.rangoFinEuros = rangoFinEuros;
+		
+	}
 	
 	
 	public MiembroNivelDTO(int id, String codNivel, String desNivel,
