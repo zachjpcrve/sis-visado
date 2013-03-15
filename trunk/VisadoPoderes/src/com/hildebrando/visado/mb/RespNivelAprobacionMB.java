@@ -234,9 +234,7 @@ public class RespNivelAprobacionMB {
 		
 		try {
 			list = serviceTiivsMiembroNivel.buscarDinamico(filtroTiivsMiembroNivel);
-		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar Responsables por Nivel: "+e);
-		}
+		
 		
 		respNiveles = new ArrayList<MiembroNivelDTO>();
 		
@@ -250,9 +248,11 @@ public class RespNivelAprobacionMB {
 			
 			descEstado = Utilitarios.obternerDescripcionEstado(e.getEstado());
 			desNivel = respNivelAprobacionService.obtenerDesNivel(e.getCodNiv());
-				
+			
+			logger.info("Data a mostrar :: " +e.toString());
+			
 			respNiveles.add(new MiembroNivelDTO(e.getId(), e.getCodNiv(),desNivel,e.getTiivsMiembro().getCodMiembro(),e.getTiivsMiembro().getDescripcion(),e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(),
-					e.getTiivsMiembro().getTiivsGrupo().getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),e.getEstado(),descEstado));
+					e.getTiivsMiembro().getTiivsGrupo().getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),(e.getEstado()==null?"":e.getEstado()),descEstado));
 		}
 		if(respNiveles!=null && respNiveles.size()>0){
 			for(int i=0;i <=respNiveles.size(); i++ ){
@@ -262,7 +262,9 @@ public class RespNivelAprobacionMB {
 			}	
 		}
 		
-		
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar Responsables por Nivel: "+e);
+		}
 		logger.debug("=== saliendo de listarRespxNivel() ===");
 	}
 	public List<TiivsNivel> listarNivelesXusuario(String codNiv){
@@ -357,7 +359,7 @@ public class RespNivelAprobacionMB {
 		}
 	 return	retorno;
 	}
-	private /*TiivsMiembroNivel*/ void nuevoResponsable(){
+	private  void nuevoResponsable(){
 		if(validarNivelPorPersona(getCodNivel())){
 			IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 			logger.info(" ************** Creando nuevo Responsable ************"  );
@@ -398,8 +400,8 @@ public class RespNivelAprobacionMB {
 	public void agregarlistarRespxNivel()  {
 		logger.debug("=== inicia agregarlistarRespxNivel() ====");
 		if(validarRegistroResponsableNivel()){
-			nuevoResponsable();
 			try {
+				nuevoResponsable();
 			//	listarNivelesPorResponsable(miembroNivel.getTiivsMiembro().getCodMiembro());
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -670,7 +672,7 @@ public class RespNivelAprobacionMB {
 					
 					java.util.Date date= new java.util.Date();
 					tmp.setFechaAct(new Timestamp(date.getTime()));
-					
+					tmp.setEstadoMiembro(tmp.getEstado());
 					mNivelDAO.modificar(tmp);
 					logger.info("Se modifico correctamente el estado de miembro nivel");
 					/// LISTAR TODO DE NUEVO
@@ -724,6 +726,7 @@ public class RespNivelAprobacionMB {
 				miembroNivel.setCodNiv(miembroNivelDTO.getCodNivel());
 				miembroNivel.setTipoRol("R");
 				miembroNivel.setEstado(miembroNivelDTO.getCodEstado());
+				miembroNivel.setEstadoMiembro(miembroNivelDTO.getCodEstado());
 
 				Date date = new Date();
 				miembroNivel.setFechaRegistro(new Timestamp(date.getTime()));
