@@ -187,7 +187,7 @@ public class RespNivelAprobacionMB {
 			
 		
 		if(!miembroNivelDto.getRegistro().equals("")){
-			logger.debug("[BUSQ]-REGISTRO: "+miembroNivelDto.getRegistro());
+			logger.debug("[BUSQ]-REGISTRO: "+miembroNivelDto.getRegistro().toUpperCase());
 			filtroTiivsMiembroNivel.add(Restrictions.eq("miemb.codMiembro", miembroNivelDto.getRegistro()));
 		}
 		
@@ -319,7 +319,7 @@ public class RespNivelAprobacionMB {
 						e.getTiivsMiembro().getDescripcion(), e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(), 
 						e.getTiivsMiembro().getTiivsGrupo().getDesGrupo(),
 						e.getFechaRegistro().toString(),
-						e.getUsuarioRegistro(), e.getEstado(), descEstado, ris,rfs, rid, rfd, rie, rfe));
+						e.getUsuarioRegistro(), e.getEstado(), descEstado, ris,rfs, rid, rfd, rie, rfe,e.getLabelAccion()));
 			}
 			
 			
@@ -655,8 +655,10 @@ public class RespNivelAprobacionMB {
 					
 					if(tmp.getEstado().equals("1")){
 						tmp.setEstado("0");
+						tmp.setLabelAccion("Inactivar");
 					}else if(tmp.getEstado().equals("0")){
 						tmp.setEstado("1");
+						tmp.setLabelAccion("Activar");
 					}
 					
 					tmp.setUsuarioAct(tmp.getUsuarioRegistro());
