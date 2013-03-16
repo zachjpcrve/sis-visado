@@ -38,12 +38,18 @@ public class PersonaConverter implements Converter {
             try {  
                 int number = Integer.parseInt(value);  
   
+                String nombre="";
+                String apePat="";
+                String apeMat="";
+                
                 for (TiivsPersona p : personas) {
                     if (p.getCodPer() == number) {  
                     	
-                    	String nombreCompletoMayuscula = p.getNombre().toUpperCase()
-    							+ " " + p.getApePat().toUpperCase() + " "
-    							+ p.getApeMat().toUpperCase();
+                    	nombre = p.getNombre()!=null?p.getNombre().toUpperCase():"";
+                    	apePat = p.getApePat()!=null?p.getApePat().toUpperCase():"";
+                    	apeMat = p.getApeMat()!=null?p.getApeMat().toUpperCase():"";
+                    	
+                    	String nombreCompletoMayuscula = nombre + " " + apePat + " " + apeMat;
                     	
                     	p.setNombreCompletoMayuscula(nombreCompletoMayuscula);
                     	
