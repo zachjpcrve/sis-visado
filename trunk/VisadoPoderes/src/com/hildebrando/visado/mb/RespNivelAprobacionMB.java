@@ -165,7 +165,7 @@ public class RespNivelAprobacionMB {
 		try{
 			this.setLimpiar(true);
 			ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
-            ec.redirect("paginas/newEditRespNivel.xhtml?faces-redirect=true");
+            ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
 			logger.debug("=== bEditar ==== ::: "+bEditar);
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel.xhtml: "+e);
@@ -448,16 +448,11 @@ public class RespNivelAprobacionMB {
 
 					miembroNivelDto.setDescripcion(miembros.get(0).getDescripcion());
 					miembroNivelDto.setDesGrupo(miembros.get(0).getTiivsGrupo().getDesGrupo());
-					// criterioRegistro = miembros.get(0).getCriterio();
 					validarCodRegistro = true;
 					listarNivelesPorResponsable(miembroNivelDto.getRegistro().toUpperCase());
 					//listarRespxNivel();
 				} else {
 					Utilitarios.mensajeInfo("Info","No se encuentra Registrado el código del Responsable");
-					/*
-					 * desRegistro = ""; perfilRegistro = ""; criterioRegistro =
-					 * "";
-					 */
 					miembroNivelDto.setDescripcion("");
 					miembroNivelDto.setDesGrupo("");
 					respNiveles=new ArrayList<MiembroNivelDTO>();
@@ -478,6 +473,7 @@ public class RespNivelAprobacionMB {
 			miembroNivelDto.setDesGrupo("");
 			miembroNivelDto.setEstado("");
 			miembroNivelDto.setCodNivel("-1");
+			miembroNivelDto.setCodGrupo("-1");
 			validarCodRegistro = false;
 		} else {
 			miembroNivelDto = new MiembroNivelDTO();
@@ -690,8 +686,19 @@ public class RespNivelAprobacionMB {
 					logger.info("Se modifico correctamente el estado de miembro nivel");
 					/// LISTAR TODO DE NUEVO
 					miembroNivelDto.setRegistro(tmp.getTiivsMiembro().getCodMiembro());
+					List<MiembroNivelDTO> lstTemp=new ArrayList<MiembroNivelDTO>();
+					List<MiembroNivelDTO> lstTempFinal=new ArrayList<MiembroNivelDTO>();
+					lstTemp.addAll(respNiveles);
 					/*miembroNivelDto.setDescripcion("");*/
 					obtenerDatosMiembro();
+					lstTempFinal.addAll(respNiveles);
+					for (MiembroNivelDTO a : lstTemp) {
+							if(a.getId()==0){
+								lstTempFinal.add(a);
+							}
+					}
+					respNiveles=new ArrayList<MiembroNivelDTO>();
+					respNiveles.addAll(lstTempFinal);
 				//	listarRespxNivel();
 				} catch (Exception e) {
 					logger.info("Error al actualizar la informacion de miembro nivel",e);
@@ -699,20 +706,29 @@ public class RespNivelAprobacionMB {
 			}
 		}else if(lstTmp.size()==0){
 			logger.info("La lista es nueva ::: " +miembroCapturado_Edit.getEstado());
-			if(miembroCapturado_Edit.getEstado().equals("1")){
-				miembroCapturado_Edit.setEstado("0");
-				miembroCapturado_Edit.setLabelAccion("Inactivar");
-			}else if(miembroCapturado_Edit.getEstado().equals("0")){
-				miembroCapturado_Edit.setEstado("1");
-				miembroCapturado_Edit.setLabelAccion("Activar");
-			}
+			
 			for (int i = 0; i < respNiveles.size(); i++) {
+				
 				if(respNiveles.get(i).equals(miembroCapturado_Edit)){
-					logger.info("Entro dentro del for ..de la lista respNiveles");
+					logger.info("Estado antes :::: " +miembroCapturado_Edit.getCodEstado());
+					logger.info("Entro dentro del for ..de la lista respNiveles:::: " +miembroCapturado_Edit.getDesNivel());
+					if(miembroCapturado_Edit.getCodEstado().equals("1")){
+						miembroCapturado_Edit.setCodEstado("0");
+						miembroCapturado_Edit.setEstado("Inactivo");
+						miembroCapturado_Edit.setLabelAccion("Activar");
+					}else if(miembroCapturado_Edit.getCodEstado().equals("0")){
+						miembroCapturado_Edit.setCodEstado("1");
+						miembroCapturado_Edit.setEstado("Activo");
+						miembroCapturado_Edit.setLabelAccion("Inactivar");
+					}
 					respNiveles.set(i, miembroCapturado_Edit);
+					logger.info("Estado despues :::: " +respNiveles.get(i).getCodEstado());
+					//
 				}
 			}
-			//obtenerDatosMiembro();
+			/*respNiveles=new ArrayList<MiembroNivelDTO>();
+			obtenerDatosMiembro();
+			respNiveles.add(miembroCapturado_Edit);*/
 		}
 	}
 	 
