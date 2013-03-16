@@ -715,7 +715,7 @@ public class RespNivelAprobacionMB {
 			//obtenerDatosMiembro();
 		}
 	}
-	
+	 
 	public void confirmarCambios() {
 
 		logger.info("=== inicia confirmarCambios() ===");
