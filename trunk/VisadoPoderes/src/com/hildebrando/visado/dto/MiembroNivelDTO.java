@@ -161,6 +161,12 @@ public class MiembroNivelDTO implements Serializable {
 		this.labelAccion = labelAccion;
 	}
 
+	public MiembroNivelDTO(int i, String descripcion2, String codNiv,
+			String desNivel2, String codMiembro, String string, String uid,
+			String estado2, String descEstado, int ris, int rfs, int rid,
+			int rfd, int rie, int rfe) {
+		// TODO Auto-generated constructor stub
+	}
 	public String getRegistro() {
 		return registro;
 	}
