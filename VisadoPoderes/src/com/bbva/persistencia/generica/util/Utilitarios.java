@@ -272,7 +272,7 @@ public class Utilitarios {
 	public static String formatoFecha(Date fecha) {
 
 		String fechaActualizacion = "";
-		String horaActualizacion = "";
+		String horaActualizacion = "";  
 
 		Calendar calFechaAct = Calendar.getInstance();
 		calFechaAct.setTimeInMillis(fecha.getTime());
