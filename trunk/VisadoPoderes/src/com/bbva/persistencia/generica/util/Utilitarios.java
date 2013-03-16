@@ -276,6 +276,22 @@ public class Utilitarios {
 
 		Calendar calFechaAct = Calendar.getInstance();
 		calFechaAct.setTimeInMillis(fecha.getTime());
+		fechaActualizacion = calFechaAct.get(Calendar.YEAR)+ "-"+
+		                     calFechaAct.get(Calendar.MONTH) + "-"+
+		                     calFechaAct.get(Calendar.DATE) + "";
+		horaActualizacion = calFechaAct.get(Calendar.HOUR) + ":"
+				+ calFechaAct.get(Calendar.MINUTE) + ":"
+				+ calFechaAct.get(Calendar.SECOND);
+
+		return fechaActualizacion + " " + horaActualizacion;
+	}
+	public static String formatoFecha_2(Date fecha) {
+
+		String fechaActualizacion = "";
+		String horaActualizacion = "";
+
+		Calendar calFechaAct = Calendar.getInstance();
+		calFechaAct.setTimeInMillis(fecha.getTime());
 		fechaActualizacion = calFechaAct.get(Calendar.DATE) + "/"
 				+ calFechaAct.get(Calendar.MONTH) + "/"
 				+ calFechaAct.get(Calendar.YEAR);
@@ -285,7 +301,6 @@ public class Utilitarios {
 
 		return fechaActualizacion + " " + horaActualizacion;
 	}
-	
 	public static void crearTituloCell(HSSFWorkbook wb, Row row, int column, short halign, short valign, String strContenido, int iTamanioTitulo) 
 	{
 		CreationHelper ch = wb.getCreationHelper();
