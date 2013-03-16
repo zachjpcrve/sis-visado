@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -362,7 +363,7 @@ public class RespNivelAprobacionMB {
 		}
 	 return	retorno;
 	}
-	private  void nuevoResponsable(){
+	private  void nuevoResponsable()throws Exception{
 		if(validarNivelPorPersona(getCodNivel())){
 			IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 			logger.info(" ************** Creando nuevo Responsable ************"  );
@@ -371,12 +372,14 @@ public class RespNivelAprobacionMB {
 			int rie = 0, rfe = 0;
 			TiivsMiembroNivel miembroNivel = new TiivsMiembroNivel();
 			TiivsMiembro miembro = new TiivsMiembro();
-			logger.info("miembroNivelDto.getRegistro() " +miembroNivelDto.getRegistro());
+			logger.info("****** nuevo responsable ****** miembroNivelDto.getRegistro() " +miembroNivelDto.getRegistro());
 			miembro.setCodMiembro(miembroNivelDto.getRegistro());
 			miembro.setDescripcion(miembroNivelDto.getDescripcion());
 			miembroNivel.setTiivsMiembro(miembro);
 			miembroNivel.setCodNiv(getCodNivel());
 			miembroNivel.setTipoRol("R");
+			miembroNivel.setEstadoMiembro(miembroNivelDto.getEstado());
+			logger.info("****** nuevo responsable ****** miembroNivelDto.getEstado():::: " +miembroNivelDto.getEstado());
 			miembroNivel.setEstado(miembroNivelDto.getEstado());
 			miembroNivel.setDescNiv(respNivelAprobacionService.obtenerDesNivel(miembroNivel.getCodNiv()));
 			miembroNivel.setDescEstado(Utilitarios.obternerDescripcionEstado(miembroNivel.getEstado()));
@@ -400,7 +403,7 @@ public class RespNivelAprobacionMB {
 					   miembroNivel.getCodNiv(), miembroNivel.getDescNiv(),
 					   miembroNivel.getTiivsMiembro().getCodMiembro(),
 					   Utilitarios.formatoFecha(new Date()) ,  usuario.getUID(),
-					   miembroNivel.getEstado(), miembroNivel.getDescEstado(), ris, rfs, rid, rfd, rie, rfe,
+					   (miembroNivel.getEstado()==null?"":miembroNivel.getEstado()), miembroNivel.getDescEstado(), ris, rfs, rid, rfd, rie, rfe,
 					   miembroNivel.getLabelAccion()));
 		}
 		
@@ -702,6 +705,12 @@ public class RespNivelAprobacionMB {
 			}else if(miembroCapturado_Edit.getEstado().equals("0")){
 				miembroCapturado_Edit.setEstado("1");
 				miembroCapturado_Edit.setLabelAccion("Activar");
+			}
+			for (int i = 0; i < respNiveles.size(); i++) {
+				if(respNiveles.get(i).equals(miembroCapturado_Edit)){
+					logger.info("Entro dentro del for ..de la lista respNiveles");
+					respNiveles.set(i, miembroCapturado_Edit);
+				}
 			}
 			//obtenerDatosMiembro();
 		}
