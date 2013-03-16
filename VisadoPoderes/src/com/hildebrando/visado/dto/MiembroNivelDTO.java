@@ -165,7 +165,7 @@ public class MiembroNivelDTO implements Serializable {
 			String desNivel2, String codMiembro, String string, String uid,
 			String estado2, String descEstado, int ris, int rfs, int rid,
 			int rfd, int rie, int rfe) {
-		// TODO Auto-generated constructor stub
+		// TODO Apéndice de constructor generado automáticamente
 	}
 	public String getRegistro() {
 		return registro;
