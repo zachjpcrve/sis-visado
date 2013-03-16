@@ -75,9 +75,8 @@
 					var="r" paginator="true" rows="50" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
 					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
-					emptyMessage="No hay responsables por niveles" editable="true">
+					emptyMessage="No hay responsables por niveles" >
 					
-					<!-- <p:ajax event="rowEdit" listener="{respNivel.editarNivAprobacion}" /> -->
 
 					<p:column headerText="Nivel">
 						<h:outputText value="#{r.desNivel}" />
@@ -127,7 +126,8 @@
 					<p:commandLink id="clickEstado" 
 					update=":frmMantenimientoNivReg:dtbRespNivel"
 					action="#{respNivel.editarNivAprobacion}">
-						<f:setPropertyActionListener target="#{respNivel.miembroCapturado_Edit}" value="#{r}"></f:setPropertyActionListener>
+						<f:setPropertyActionListener target="#{respNivel.miembroCapturado_Edit}" value="#{r}">
+						</f:setPropertyActionListener>
 					<h:outputText value="#{r.labelAccion}"  />
 						</p:commandLink>
 						</p:column>
