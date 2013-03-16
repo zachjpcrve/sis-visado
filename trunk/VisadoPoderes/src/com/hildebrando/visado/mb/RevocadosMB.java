@@ -84,14 +84,18 @@ public class RevocadosMB {
 	//busqueda de los nuevos
 	private TiivsPersona objTiivsPersonaBusquedaDlg;
 	//el resultado de la busqueda y se utilizara para agregarlo
+	
 	private TiivsPersona objTiivsPersonaAgregar;
+	
+//	private TiivsRevocado objTiivsPersonaAgregar;
 	
 	private IILDPeUsuario usuario;
 	
 	boolean bBooleanPopup = false;
 	
 	
-	private TiivsPersona deletePersonaEdit;
+//	private TiivsPersona deletePersonaEdit;
+	private TiivsRevocado deletePersonaEdit;
 
 	private List<TiivsPersona> personaClientes;
 	private List<Revocado> personaClientesActivoEdit;
@@ -121,8 +125,11 @@ public class RevocadosMB {
 	private List<TiivsMultitabla> listTipoRegistro;
 	private List<TiivsMultitabla> listEstadoRevocados;
 	
-	private List<TiivsPersona> apoderadosNuevo;
-	private List<TiivsPersona> poderdantesNuevo;
+//	private List<TiivsPersona> apoderadosNuevo;
+//	private List<TiivsPersona> poderdantesNuevo;
+	
+	private List<TiivsRevocado> apoderadosNuevo;
+	private List<TiivsRevocado> poderdantesNuevo;
 	
 	private String msjResultRevocados;
 	private String ancho_Popup_Revoc_Poder;
@@ -516,11 +523,18 @@ public class RevocadosMB {
 		///revocadoEdit.get
 		/** Pasar Revocados a lista de ComboDto y comparar */
 		List<ComboDto> lstRevocadosComboDto = new ArrayList<ComboDto>();
-		for (TiivsPersona a : revocadoEdit.getApoderados()) {
-			lstRevocadosComboDto.add(new ComboDto(a.getCodPer()+"", ConstantesVisado.APODERADO));
+//		for (TiivsPersona a : revocadoEdit.getApoderados()) {
+//			lstRevocadosComboDto.add(new ComboDto(a.getCodPer()+"", ConstantesVisado.APODERADO));
+//		}
+//		for (TiivsPersona b : revocadoEdit.getPoderdantes()) {
+//			lstRevocadosComboDto.add(new ComboDto(b.getCodPer()+"", ConstantesVisado.PODERDANTE));
+//		}
+		
+		for (TiivsRevocado a : revocadoEdit.getApoderados()) {
+			lstRevocadosComboDto.add(new ComboDto(a.getTiivsPersona().getCodPer()+"", ConstantesVisado.APODERADO));
 		}
-		for (TiivsPersona b : revocadoEdit.getPoderdantes()) {
-			lstRevocadosComboDto.add(new ComboDto(b.getCodPer()+"", ConstantesVisado.PODERDANTE));
+		for (TiivsRevocado b : revocadoEdit.getPoderdantes()) {
+			lstRevocadosComboDto.add(new ComboDto(b.getTiivsPersona().getCodPer()+"", ConstantesVisado.PODERDANTE));
 		}
 		logger.info("******** Tamanio de la lista de Solicitu ********** ::: " +lstRevocadosComboDto.size());
 		List<ComboDto> listaPersonasXAgrupacionXSolicitud=null;
@@ -1089,20 +1103,16 @@ public class RevocadosMB {
 	
 	public void editPendRevocado() {
 		logger.info("******************** editPendRevocado ************" );
+		
 		objTiivsPersonaBusquedaDlg= new TiivsPersona();
 		objTiivsPersonaAgregar = new TiivsPersona();
 
 		personaClientesPendEdit = new ArrayList<Revocado>();
 		personaClientesPendEdit.add(revocadoEdit);
 		
-		for (TiivsPersona p : revocadoEdit.getApoderados()) {
-			System.out.println(p.getCodPer()+ " - " +p.getTipPartic() + " - " +p.getsDesctipPartic());
-		}
-		for (TiivsPersona a : revocadoEdit.getPoderdantes()) {
-			System.out.println(a.getCodPer()+ " - " +a.getTipPartic() + " - " +a.getsDesctipPartic());
-		}
 		setFlagRevocar(true);
 		setFlagGuardar(false);
+		
 	}
 	
 	public void editPendRevocadoNuevo() {
@@ -1111,8 +1121,11 @@ public class RevocadosMB {
 		objTiivsPersonaAgregar = new TiivsPersona();
 
 		personaClientesPendEdit = new ArrayList<Revocado>();
-		apoderadosNuevo = new ArrayList<TiivsPersona>();
-		poderdantesNuevo = new ArrayList<TiivsPersona>();
+//		apoderadosNuevo = new ArrayList<TiivsPersona>();
+//		poderdantesNuevo = new ArrayList<TiivsPersona>();
+		
+		apoderadosNuevo = new ArrayList<TiivsRevocado>();
+		poderdantesNuevo = new ArrayList<TiivsRevocado>();
 		
 		setFlagRevocar(false);
 		setFlagGuardar(true);
@@ -1295,8 +1308,12 @@ public class RevocadosMB {
 			}
 			
 			
-			List<TiivsPersona> apoderados= new ArrayList<TiivsPersona>();
-			List<TiivsPersona> poderdantes= new ArrayList<TiivsPersona>();
+//			List<TiivsPersona> apoderados= new ArrayList<TiivsPersona>();
+//			List<TiivsPersona> poderdantes= new ArrayList<TiivsPersona>();
+			
+			List<TiivsRevocado> apoderados= new ArrayList<TiivsRevocado>();
+			List<TiivsRevocado> poderdantes= new ArrayList<TiivsRevocado>();
+			
 			TiivsPersona apoderado;
 			TiivsPersona poderdante;
 			List<Revocado> revocadosAux= new ArrayList<Revocado>();
@@ -1305,33 +1322,42 @@ public class RevocadosMB {
 					
 						if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
 							
-							apoderado= new TiivsPersona();
-							apoderado = tiivsRevocado.getTiivsPersona();
+//							apoderado= new TiivsPersona();
+//							apoderado = tiivsRevocado.getTiivsPersona();
 							
 							String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
 							String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
 							
 							
-							apoderado.setsDesctipDoi( descDoiApod);
-							apoderado.setsDesctipPartic(descTipPart);
+//							apoderado.setsDesctipDoi( descDoiApod);
+//							apoderado.setsDesctipPartic(descTipPart);
 							
-							apoderados.add(apoderado);
+							tiivsRevocado.setsDesctipDoi( descDoiApod);
+							tiivsRevocado.setsDesctipPartic(descTipPart);
+							
+//							apoderados.add(apoderado);
+							apoderados.add(tiivsRevocado);
 						}
 							
 						if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 							
-							poderdante = new TiivsPersona();
-							poderdante = tiivsRevocado.getTiivsPersona();
+//							poderdante = new TiivsPersona();
+//							poderdante = tiivsRevocado.getTiivsPersona();
 							
 							String descDoiPod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
 							String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
 							
 							
 							
-							poderdante.setsDesctipDoi( descDoiPod);
-							poderdante.setsDesctipPartic(descTipPart);
+//							poderdante.setsDesctipDoi( descDoiPod);
+//							poderdante.setsDesctipPartic(descTipPart);
 							
-							poderdantes.add(poderdante);
+							tiivsRevocado.setsDesctipDoi( descDoiPod);
+							tiivsRevocado.setsDesctipPartic(descTipPart);
+							
+//							poderdantes.add(poderdante);
+							poderdantes.add(tiivsRevocado);
+							
 						}
 				
 				
@@ -1351,35 +1377,57 @@ public class RevocadosMB {
 			
 		}else{
 			
-			TiivsPersona apoderado;
-			TiivsPersona poderdante;
+//			TiivsPersona apoderado;
+//			TiivsPersona poderdante;
+			
+			TiivsRevocado apoderado;
+			TiivsRevocado poderdante;
+			
 			int maximoCodAgrupacion = getMaximoCodAgrupacion();
 			List<Revocado> revocadosAux= new ArrayList<Revocado>();
 			
 			if(objTiivsPersonaAgregar.getTipPartic().equals(ConstantesVisado.APODERADO)){
 				
-				apoderado= new TiivsPersona();
-				apoderado = objTiivsPersonaAgregar;
+
+				
+//				apoderado= new TiivsPersona();
+//				apoderado = objTiivsPersonaAgregar;
 				
 				String descDoiApod =  getValor1(objTiivsPersonaAgregar.getTipDoi(),listDocumentos);
 				String descTipPart =  getValor1(objTiivsPersonaAgregar.getTipPartic(), listTipoRegistro);
 				
+//				apoderado.setsDesctipDoi( descDoiApod);
+//				apoderado.setsDesctipPartic(descTipPart);
+				
+				apoderado = new TiivsRevocado();				
+				apoderado.setTiivsPersona(objTiivsPersonaAgregar);
+				apoderado.setTipPartic(objTiivsPersonaAgregar.getTipPartic());
 				apoderado.setsDesctipDoi( descDoiApod);
-				apoderado.setsDesctipPartic(descTipPart);
+				apoderado.setsDesctipPartic(descTipPart);			
 				
 				apoderadosNuevo.add(apoderado);
 			}
 							
 			if(objTiivsPersonaAgregar.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 				
-				poderdante = new TiivsPersona();
-				poderdante = objTiivsPersonaAgregar;
+//				poderdante = new TiivsPersona();
+//				poderdante = objTiivsPersonaAgregar;
 				
 				String descDoiPod =  getValor1(objTiivsPersonaAgregar.getTipDoi(),listDocumentos);
 				String descTipPart =  getValor1(objTiivsPersonaAgregar.getTipPartic(), listTipoRegistro);
 				
+				poderdante = new TiivsRevocado();
+				poderdante.setTiivsPersona(objTiivsPersonaAgregar);
+				poderdante.setTipPartic(objTiivsPersonaAgregar.getTipPartic());
 				poderdante.setsDesctipDoi( descDoiPod);
 				poderdante.setsDesctipPartic(descTipPart);
+				
+
+				
+//				poderdante.setsDesctipDoi( descDoiPod);
+//				poderdante.setsDesctipPartic(descTipPart);
+				
+
 				
 				poderdantesNuevo.add(poderdante);
 			}
@@ -1404,7 +1452,7 @@ public class RevocadosMB {
 	
 	public void guardarApodPod(ActionEvent  actionEvent){
 		
-		TiivsRevocado tiivsRevocadoAux;
+//		TiivsRevocado tiivsRevocadoAux;
 		
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
@@ -1412,36 +1460,55 @@ public class RevocadosMB {
 		logger.info("personaClientesPendEdit.size :::: " +personaClientesPendEdit.size());
 		for(Revocado revocado: personaClientesPendEdit){
 			
-			for(TiivsPersona tiivsPersona:revocado.getApoderados()){
+//			for(TiivsPersona tiivsPersona:revocado.getApoderados()){
+			for(TiivsRevocado tiivsRevocado:revocado.getApoderados()){
 				
-				tiivsRevocadoAux= new TiivsRevocado();
-				tiivsRevocadoAux.setCodRevocado(0);
-				tiivsRevocadoAux.setTiivsPersona(tiivsPersona);
-				tiivsRevocadoAux.setTipPartic(tiivsPersona.getTipPartic());
-				tiivsRevocadoAux.setFechaRevocatoria(new Date());
-				tiivsRevocadoAux.setEstado(ConstantesVisado.ESTADOS.ESTADO_PENDIENTE_REVOCADO);
-				tiivsRevocadoAux.setCodAgrup(Integer.parseInt(revocado.getCodAgrupacion()));
+//				tiivsRevocadoAux= new TiivsRevocado();
+//				tiivsRevocadoAux.setCodRevocado(0);
+//				tiivsRevocadoAux.setTiivsPersona(tiivsPersona);
+//				tiivsRevocadoAux.setTipPartic(tiivsPersona.getTipPartic());
+//				tiivsRevocadoAux.setFechaRevocatoria(new Date());
+//				tiivsRevocadoAux.setEstado(ConstantesVisado.ESTADOS.ESTADO_PENDIENTE_REVOCADO);
+//				tiivsRevocadoAux.setCodAgrup(Integer.parseInt(revocado.getCodAgrupacion()));
+				
+//				tiivsRevocadoAux= new TiivsRevocado();
+				tiivsRevocado.setCodRevocado(0);
+//				tiivsRevocado.setTipPartic(tiivsRevocado.getTipPartic());
+				tiivsRevocado.setFechaRevocatoria(new Date());
+				tiivsRevocado.setEstado(ConstantesVisado.ESTADOS.ESTADO_PENDIENTE_REVOCADO);
+				tiivsRevocado.setCodAgrup(Integer.parseInt(revocado.getCodAgrupacion()));
 				
 				try {
-					service.save(tiivsRevocadoAux);
+//					service.save(tiivsRevocadoAux);
+					service.save(tiivsRevocado);
 					flag=1;
 				} catch (Exception e) {
 					logger.error("error al guardar revocado");
 				}
 			}
 			
-			for(TiivsPersona tiivsPersona:revocado.getPoderdantes()){
+//			for(TiivsPersona tiivsPersona:revocado.getPoderdantes()){
+			for(TiivsRevocado tiivsRevocado:revocado.getPoderdantes()){
 				
-				tiivsRevocadoAux= new TiivsRevocado();
-				tiivsRevocadoAux.setCodRevocado(0);
-				tiivsRevocadoAux.setTiivsPersona(tiivsPersona);
-				tiivsRevocadoAux.setTipPartic(tiivsPersona.getTipPartic());
-				tiivsRevocadoAux.setFechaRevocatoria(new Date());
-				tiivsRevocadoAux.setEstado(ConstantesVisado.ESTADOS.ESTADO_PENDIENTE_REVOCADO);
-				tiivsRevocadoAux.setCodAgrup(Integer.parseInt(revocado.getCodAgrupacion()));
+//				tiivsRevocadoAux= new TiivsRevocado();
+//				tiivsRevocadoAux.setCodRevocado(0);
+//				tiivsRevocadoAux.setTiivsPersona(tiivsPersona);
+//				tiivsRevocadoAux.setTipPartic(tiivsPersona.getTipPartic());
+//				tiivsRevocadoAux.setFechaRevocatoria(new Date());
+//				tiivsRevocadoAux.setEstado(ConstantesVisado.ESTADOS.ESTADO_PENDIENTE_REVOCADO);
+//				tiivsRevocadoAux.setCodAgrup(Integer.parseInt(revocado.getCodAgrupacion()));
+				
+//				tiivsRevocadoAux= new TiivsRevocado();
+				tiivsRevocado.setCodRevocado(0);
+//				tiivsRevocado.setTiivsPersona(tiivsPersona);
+//				tiivsRevocadoAux.setTipPartic(tiivsPersona.getTipPartic());
+				tiivsRevocado.setFechaRevocatoria(new Date());
+				tiivsRevocado.setEstado(ConstantesVisado.ESTADOS.ESTADO_PENDIENTE_REVOCADO);
+				tiivsRevocado.setCodAgrup(Integer.parseInt(revocado.getCodAgrupacion()));
 				
 				try {
-					service.save(tiivsRevocadoAux);
+//					service.save(tiivsRevocadoAux);
+					service.save(tiivsRevocado);
 					flag=1;
 				} catch (Exception e) {
 					logger.error("error al guardar revocado");
@@ -1498,10 +1565,14 @@ public class RevocadosMB {
 						
 			for(Revocado revocado : this.personaClientesPendEdit){
 
-				TiivsPersona personaRemover=null;
-				for(TiivsPersona persona: revocado.getPoderdantes()){
-					if(persona.getCodPer()==deletePersonaEdit.getCodPer()){
-						personaRemover = persona;
+//				TiivsPersona personaRemover=null;
+				TiivsRevocado personaRemover=null;
+//				for(TiivsPersona persona: revocado.getPoderdantes()){
+				for(TiivsRevocado personaRevocado: revocado.getPoderdantes()){
+//					if(persona.getCodPer()==deletePersonaEdit.getCodPer()){
+					if(personaRevocado.getTiivsPersona().getCodPer()==deletePersonaEdit.getTiivsPersona().getCodPer()){
+//						personaRemover = persona;
+						personaRemover = personaRevocado;
 						break;
 					}
 				}
@@ -1511,9 +1582,12 @@ public class RevocadosMB {
 				}
 				
 				personaRemover=null;
-				for(TiivsPersona persona: revocado.getApoderados()){
-					if(persona.getCodPer()==deletePersonaEdit.getCodPer()){
-						personaRemover = persona;
+//				for(TiivsPersona persona: revocado.getApoderados()){
+				for(TiivsRevocado personaRevocado: revocado.getApoderados()){
+//					if(persona.getCodPer()==deletePersonaEdit.getCodPer()){
+					if(personaRevocado.getTiivsPersona().getCodPer()==deletePersonaEdit.getTiivsPersona().getCodPer()){
+//						personaRemover = persona;
+						personaRemover = personaRevocado;
 						break;
 					}
 				}
@@ -1540,7 +1614,8 @@ public class RevocadosMB {
 			
 			try {
 				filtro.add(Restrictions.eq("codAgrup", Integer.parseInt(codAgrup)));
-				tiivsrevocados = service.buscarDinamico(filtro.add(Restrictions.eq("tiivsPersona.codPer", deletePersonaEdit.getCodPer())));
+//				tiivsrevocados = service.buscarDinamico(filtro.add(Restrictions.eq("tiivsPersona.codPer", deletePersonaEdit.getCodPer())));
+				tiivsrevocados = service.buscarDinamico(filtro.add(Restrictions.eq("tiivsPersona.codPer", deletePersonaEdit.getTiivsPersona().getCodPer())));
 				
 				if (tiivsrevocados!=null)
 				{
@@ -1555,43 +1630,57 @@ public class RevocadosMB {
 				e.printStackTrace();
 			}
 			
-			List<TiivsPersona> apoderados= new ArrayList<TiivsPersona>();
-			List<TiivsPersona> poderdantes= new ArrayList<TiivsPersona>();
-			TiivsPersona apoderado;
-			TiivsPersona poderdante;
+//			List<TiivsPersona> apoderados= new ArrayList<TiivsPersona>();
+//			List<TiivsPersona> poderdantes= new ArrayList<TiivsPersona>();
+//			TiivsPersona apoderado;
+//			TiivsPersona poderdante;
+			
+			List<TiivsRevocado> apoderados= new ArrayList<TiivsRevocado>();
+			List<TiivsRevocado> poderdantes= new ArrayList<TiivsRevocado>();
+			TiivsRevocado apoderado;
+			TiivsRevocado poderdante;
 			List<Revocado> revocadosAux= new ArrayList<Revocado>();
 				
 			for(TiivsRevocado tiivsRevocado:tiivsrevocados2)
 			{
 					if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO))
 					{
-						apoderado= new TiivsPersona();
-						apoderado = tiivsRevocado.getTiivsPersona();
+//						apoderado= new TiivsPersona();
+//						apoderado = tiivsRevocado.getTiivsPersona();
+						
 						
 						String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
 						String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
 						
+
+//						apoderado.setsDesctipDoi( descDoiApod);
+//						apoderado.setsDesctipPartic(descTipPart);
 						
-						apoderado.setsDesctipDoi( descDoiApod);
-						apoderado.setsDesctipPartic(descTipPart);
+						tiivsRevocado.setsDesctipDoi( descDoiApod);
+						tiivsRevocado.setsDesctipPartic(descTipPart);
 						
-						apoderados.add(apoderado);
+//						apoderados.add(apoderado);
+						apoderados.add(tiivsRevocado);
 					}
 						
 					if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE))
 					{
-						poderdante = new TiivsPersona();
-						poderdante = tiivsRevocado.getTiivsPersona();
+//						poderdante = new TiivsPersona();
+//						poderdante = tiivsRevocado.getTiivsPersona();
 						
 						String descDoiPod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
 						String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
+
+						
+//						poderdante.setsDesctipDoi( descDoiPod);
+//						poderdante.setsDesctipPartic(descTipPart);
+						
+						tiivsRevocado.setsDesctipDoi( descDoiPod);
+						tiivsRevocado.setsDesctipPartic(descTipPart);
 						
 						
-						
-						poderdante.setsDesctipDoi( descDoiPod);
-						poderdante.setsDesctipPartic(descTipPart);
-						
-						poderdantes.add(poderdante);
+//						poderdantes.add(poderdante);
+						poderdantes.add(tiivsRevocado);
 					}
 			}
 		
@@ -1628,12 +1717,17 @@ public class RevocadosMB {
 		
 		for (Revocado rev : personaClientesPendEdit) {
 			
-			for(TiivsPersona  tiivsPersona:rev.getApoderados()){
-				if (objTiivsPersonaAgregar.getTipDoi().equals(tiivsPersona.getTipDoi())
-						&& objTiivsPersonaAgregar.getNumDoi().equals(tiivsPersona.getNumDoi())) {
+//			for(TiivsPersona  tiivsPersona:rev.getApoderados()){
+			for(TiivsRevocado  persona:rev.getApoderados()){
+//				if (objTiivsPersonaAgregar.getTipDoi().equals(tiivsPersona.getTipDoi())
+//						&& objTiivsPersonaAgregar.getNumDoi().equals(tiivsPersona.getNumDoi())) {
+				if (objTiivsPersonaAgregar.getTipDoi().equals(persona.getTiivsPersona().getTipDoi())
+						&& objTiivsPersonaAgregar.getNumDoi().equals(persona.getTiivsPersona().getNumDoi())) {
 					bResult = false;
+//					sMensaje = "Ya existe una persona con número de Doi :  "
+//							+ tiivsPersona.getNumDoi() ;
 					sMensaje = "Ya existe una persona con número de Doi :  "
-							+ tiivsPersona.getNumDoi() ;
+							+ persona.getTiivsPersona().getNumDoi() ;
 					Utilitarios.mensajeInfo("INFO", sMensaje);
 					break;
 				}
@@ -1641,13 +1735,18 @@ public class RevocadosMB {
 			
 			if(bResult){
 				
-				for(TiivsPersona  tiivsPersona:rev.getPoderdantes()){
+//				for(TiivsPersona  tiivsPersona:rev.getPoderdantes()){
+				for(TiivsRevocado  persona:rev.getPoderdantes()){
 					
-					if (objTiivsPersonaAgregar.getTipDoi().equals(tiivsPersona.getTipDoi())
-							&& objTiivsPersonaAgregar.getNumDoi().equals(tiivsPersona.getNumDoi())) {
-						bResult = false;
+//					if (objTiivsPersonaAgregar.getTipDoi().equals(tiivsPersona.getTipDoi())
+//							&& objTiivsPersonaAgregar.getNumDoi().equals(tiivsPersona.getNumDoi())) {
+					if (objTiivsPersonaAgregar.getTipDoi().equals(persona.getTiivsPersona().getTipDoi())
+							&& objTiivsPersonaAgregar.getNumDoi().equals(persona.getTiivsPersona().getNumDoi())) {
+//						bResult = false;
+//						sMensaje = "Ya existe una persona con número de Doi :  "
+//								+ tiivsPersona.getNumDoi() ;
 						sMensaje = "Ya existe una persona con número de Doi :  "
-								+ tiivsPersona.getNumDoi() ;
+								+ persona.getTiivsPersona().getNumDoi() ;
 						Utilitarios.mensajeInfo("INFO", sMensaje);
 						break;
 					}
@@ -1876,32 +1975,32 @@ public class RevocadosMB {
 		{
 			if(pers!= null)
 			{	
-				if (pers.getApePat()!=null && pers.getApeMat()!=null)
-				{
-					if (pers.getNombre().toUpperCase() != ""
-							&& pers.getApePat().toUpperCase() != ""
-							&& pers.getApeMat().toUpperCase() != "") 
-					{
+//				if (pers.getApePat()!=null && pers.getApeMat()!=null)
+//				{
+					String nombre = pers.getNombre()!=null?pers.getNombre().toUpperCase():"";
+					String apePat = pers.getApePat()!=null?pers.getApePat().toUpperCase():"";
+					String apeMat = pers.getApeMat()!=null?pers.getApeMat().toUpperCase():"";;
+					
+//					if (nombre != "" && apePat != "" && apeMat != "") 
+//					{
 						
-						String nombreCompletoMayuscula = pers.getNombre().toUpperCase()
-								+ " " + pers.getApePat().toUpperCase() + " "
-								+ pers.getApeMat().toUpperCase();
+						String nombreCompletoMayuscula = nombre+ " " + apePat + " " + apeMat;
 
-						String nombreCompletoMayusculaBusqueda = pers.getApePat()
-								.toUpperCase()
-								+ " "
-								+ pers.getApeMat().toUpperCase()
-								+ " " + pers.getNombre().toUpperCase();
+						if(nombreCompletoMayuscula.trim() != ""){
 
-						if (nombreCompletoMayusculaBusqueda.contains(query
-								.toUpperCase())) {
+							String nombreCompletoMayusculaBusqueda = apePat + " " + apePat + " " + nombre;
 
-							pers.setNombreCompletoMayuscula(nombreCompletoMayuscula);
+							if (nombreCompletoMayusculaBusqueda.trim().contains(query.toUpperCase())) {
 
-							lstTiivsPersonaResultado.add(pers);
+								pers.setNombreCompletoMayuscula(nombreCompletoMayuscula);
+
+								lstTiivsPersonaResultado.add(pers);
+							}
+							
 						}
-					}
-				}
+						
+//					}
+//				}
 				
 			}
 		}
@@ -1940,9 +2039,15 @@ public class RevocadosMB {
 		if(objTiivsPersonaBusquedaNombre != null){
 			
 			if(objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().compareTo("")!=0){
-				filtro.add(Restrictions.eq("persona.nombre", objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().split(" ")[0]));
-				filtro.add(Restrictions.eq("persona.apePat", objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().split(" ")[1]));
-				filtro.add(Restrictions.eq("persona.apeMat", objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().split(" ")[2]));
+//				filtro.add(Restrictions.eq("persona.nombre", objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().split(" ")[0]));
+//				filtro.add(Restrictions.eq("persona.apePat", objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().split(" ")[1]));
+//				filtro.add(Restrictions.eq("persona.apeMat", objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().split(" ")[2]));
+				
+				filtro.add(Restrictions.eq("persona.nombre", objTiivsPersonaBusquedaNombre.getNombre()));
+				if(objTiivsPersonaBusquedaNombre.getApePat()!=null)
+					filtro.add(Restrictions.eq("persona.apePat", objTiivsPersonaBusquedaNombre.getApePat()));
+				if(objTiivsPersonaBusquedaNombre.getApeMat()!=null)
+					filtro.add(Restrictions.eq("persona.apeMat", objTiivsPersonaBusquedaNombre.getApeMat()));
 				
 			}
 			
@@ -2005,11 +2110,13 @@ public class RevocadosMB {
 		String fecha="";
 		String estado="";
 		int numCorrelativo=0;
-		List<TiivsPersona> apoderados;
-		TiivsPersona apoderado;
 		
-		List<TiivsPersona> poderdantes;
-		TiivsPersona poderdante;
+//		List<TiivsPersona> apoderados;				
+//		List<TiivsPersona> poderdantes;
+		
+		List<TiivsRevocado> apoderados;				
+		List<TiivsRevocado> poderdantes;
+		
 		 List<Integer>  listCodAgrup =  obtenerListCodAgrupacion();
 		
 		if(listCodAgrup != null){
@@ -2018,108 +2125,131 @@ public class RevocadosMB {
 				
 				for(Integer tiivsRevocado2:listCodAgrup){
 					numCorrelativo++;
-					apoderados= new ArrayList<TiivsPersona>();
-					poderdantes= new ArrayList<TiivsPersona>();
-					for(TiivsRevocado tiivsRevocado:tiivsrevocados){
+					//apoderados= new ArrayList<TiivsPersona>();
+					//poderdantes= new ArrayList<TiivsPersona>();
+					apoderados= new ArrayList<TiivsRevocado>();
+					poderdantes= new ArrayList<TiivsRevocado>();
+					
+					try{
 						
-						if(tiivsRevocado.getCodAgrup().compareTo(tiivsRevocado2)==0){
+					
+						for(TiivsRevocado tiivsRevocado:tiivsrevocados){
 							
-							fecha=getDate(tiivsRevocado.getFechaRevocatoria());
-							estado=getValor1(tiivsRevocado.getEstado(),listEstados);
-							logger.info("-------------------------------");
-							logger.info("TipPartic() ::: " +tiivsRevocado.getTipPartic());
-							logger.info("TipPartic() ::: " +tiivsRevocado.getTipPartic());
-							logger.info("getCodPer() ::: " +tiivsRevocado.getTiivsPersona().getCodPer());
-							logger.info("getNumDoi() ::: " +tiivsRevocado.getTiivsPersona().getNumDoi());
-							if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
+
+							if(tiivsRevocado.getCodAgrup().compareTo(tiivsRevocado2)==0){
+
 								
-								apoderado= new TiivsPersona();
-								apoderado = tiivsRevocado.getTiivsPersona();
+								fecha=getDate(tiivsRevocado.getFechaRevocatoria());
+								estado=getValor1(tiivsRevocado.getEstado(),listEstados);
 								
-								String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
-								String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
-								
-								nombreCompletoApoderados = nombreCompletoApoderados
-																+ " " + descDoiApod
-																+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
-															  + " - " + (tiivsRevocado.getTiivsPersona().getApePat()==null?"":tiivsRevocado.getTiivsPersona().getApePat()) 
-																+ " " + (tiivsRevocado.getTiivsPersona().getApeMat()==null?"":tiivsRevocado.getTiivsPersona().getApeMat())
-																+ " " + (tiivsRevocado.getTiivsPersona().getNombre()==null?"":tiivsRevocado.getTiivsPersona().getNombre()) + "\n";
-								
-								apoderado.setsDesctipDoi( descDoiApod);
-								apoderado.setsDesctipPartic(descTipPart);
-								apoderado.setTipPartic(tiivsRevocado.getTipPartic());
-								apoderados.add(apoderado);
-							}
-								
-							if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
-								
-								poderdante = new TiivsPersona();
-								poderdante = tiivsRevocado.getTiivsPersona();
-								
-								String descDoiPod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
-								String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
-								
-										
-								nombreCompletoPoderdantes = nombreCompletoPoderdantes 
-																	+ " " + descDoiPod
+								if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
+									
+	//								TiivsPersona apoderado;
+									
+	//								apoderado = new TiivsPersona();
+	//								apoderado = tiivsRevocado.getTiivsPersona();
+									
+									String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
+									String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
+									
+									nombreCompletoApoderados = nombreCompletoApoderados
+																	+ " " + descDoiApod
 																	+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
-																	 + " - " + (tiivsRevocado.getTiivsPersona().getApePat()==null?"":tiivsRevocado.getTiivsPersona().getApePat()) 
-																+ " " + (tiivsRevocado.getTiivsPersona().getApeMat()==null?"":tiivsRevocado.getTiivsPersona().getApeMat())
-																+ " " + (tiivsRevocado.getTiivsPersona().getNombre()==null?"":tiivsRevocado.getTiivsPersona().getNombre()) + "\n";
+																  + " - " + (tiivsRevocado.getTiivsPersona().getApePat()==null?"":tiivsRevocado.getTiivsPersona().getApePat()) 
+																	+ " " + (tiivsRevocado.getTiivsPersona().getApeMat()==null?"":tiivsRevocado.getTiivsPersona().getApeMat())
+																	+ " " + (tiivsRevocado.getTiivsPersona().getNombre()==null?"":tiivsRevocado.getTiivsPersona().getNombre()) + "\n";
+									
+									
+	//								apoderado.setsDesctipDoi( descDoiApod);
+	//								apoderado.setsDesctipPartic(descTipPart);								
+									tiivsRevocado.setsDesctipDoi( descDoiApod);
+									tiivsRevocado.setsDesctipPartic(descTipPart);
+									
+	//								apoderados.add(apoderado);
+									apoderados.add(tiivsRevocado);
+								}
+									
+								if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+									
+	//								TiivsPersona poderdante;
+									
+	//								poderdante = new TiivsPersona();
+	//								poderdante = tiivsRevocado.getTiivsPersona();
+									
+									String descDoiPod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
+									String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
+									
+											
+									nombreCompletoPoderdantes = nombreCompletoPoderdantes 
+																		+ " " + descDoiPod
+																		+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
+																		 + " - " + (tiivsRevocado.getTiivsPersona().getApePat()==null?"":tiivsRevocado.getTiivsPersona().getApePat()) 
+																	+ " " + (tiivsRevocado.getTiivsPersona().getApeMat()==null?"":tiivsRevocado.getTiivsPersona().getApeMat())
+																	+ " " + (tiivsRevocado.getTiivsPersona().getNombre()==null?"":tiivsRevocado.getTiivsPersona().getNombre()) + "\n";
+									
+	//								poderdante.setsDesctipDoi( descDoiPod);
+	//								poderdante.setsDesctipPartic(descTipPart);
+									
+									tiivsRevocado.setsDesctipDoi( descDoiPod);
+									tiivsRevocado.setsDesctipPartic(descTipPart);
+									
+									poderdantes.add(tiivsRevocado);
+								}
 								
-								poderdante.setsDesctipDoi( descDoiPod);
-								poderdante.setsDesctipPartic(descTipPart);
-								poderdante.setTipPartic(tiivsRevocado.getTipPartic());
-								poderdantes.add(poderdante);
+
 							}
+							
 							
 						}
 						
+						revocado = new Revocado();
+						revocado.setCodAgrupacion(tiivsRevocado2+"");
+						revocado.setFechaRegistro(fecha);
+						revocado.setEstado(estado);
+						revocado.setCorrelativo(String.valueOf(numCorrelativo));
 						
-					}
-					
-					revocado = new Revocado();
-					revocado.setCodAgrupacion(tiivsRevocado2+"");
-					revocado.setFechaRegistro(fecha);
-					revocado.setEstado(estado);
-					revocado.setCorrelativo(String.valueOf(numCorrelativo));
-					
-					revocado.setNombreCompletoApoderados(nombreCompletoApoderados.trim());
-					revocado.setApoderados(apoderados);
-						
-					revocado.setNombreCompletoPoderdantes(nombreCompletoPoderdantes.trim());
-					revocado.setPoderdantes(poderdantes);
-					
-					
-					if(estado.compareTo("Activo")==0){
-						revocado.setFlagEditAct(true);
-						revocado.setFlagEditPend(false);
-						revocado.setFlagDelete(false);
-					}
-					
-					if(estado.compareTo("Pendiente")==0){
-						revocado.setFlagEditPend(true);
-						revocado.setFlagEditAct(false);
-						revocado.setFlagDelete(true);
-					}
-					
-					if(estado.compareTo("Inactivo")==0){
-						revocado.setFlagEditPend(false);
-						revocado.setFlagEditAct(false);
-						revocado.setFlagDelete(false);
+						revocado.setNombreCompletoApoderados(nombreCompletoApoderados.trim());
+						revocado.setApoderados(apoderados);
+							
+						revocado.setNombreCompletoPoderdantes(nombreCompletoPoderdantes.trim());
+						revocado.setPoderdantes(poderdantes);
 						
 						
-					}
+						if(estado.compareTo("Activo")==0){
+							revocado.setFlagEditAct(true);
+							revocado.setFlagEditPend(false);
+							revocado.setFlagDelete(false);
+						}
+						
+						if(estado.compareTo("Pendiente")==0){
+							revocado.setFlagEditPend(true);
+							revocado.setFlagEditAct(false);
+							revocado.setFlagDelete(true);
+						}
+						
+						if(estado.compareTo("Inactivo")==0){
+							revocado.setFlagEditPend(false);
+							revocado.setFlagEditAct(false);
+							revocado.setFlagDelete(false);
+							
+							
+						}
+						
+						if(apoderados.size() > 0  || poderdantes.size() > 0){
+							revocados.add(revocado);
+						}
+						
+						nombreCompletoApoderados="";
+						nombreCompletoPoderdantes="";
+						fecha="";
+						estado="";
 					
-					if(apoderados.size() > 0  || poderdantes.size() > 0){
-						revocados.add(revocado);
+					} catch(Exception e){
+						
+						logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR,e);
+//						e.printStackTrace();
+											
 					}
-					
-					nombreCompletoApoderados="";
-					nombreCompletoPoderdantes="";
-					fecha="";
-					estado="";
 				}
 				
 			}
@@ -2339,13 +2469,22 @@ public class RevocadosMB {
 		this.revocadoEdit = revocadoEdit;
 	}
 
-	public TiivsPersona getDeletePersonaEdit() {
+//	public TiivsPersona getDeletePersonaEdit() {
+//		return deletePersonaEdit;
+//	}
+//
+//	public void setDeletePersonaEdit(TiivsPersona deletePersonaEdit) {
+//		this.deletePersonaEdit = deletePersonaEdit;
+//	}
+	
+	public TiivsRevocado getDeletePersonaEdit() {
 		return deletePersonaEdit;
 	}
 
-	public void setDeletePersonaEdit(TiivsPersona deletePersonaEdit) {
+	public void setDeletePersonaEdit(TiivsRevocado deletePersonaEdit) {
 		this.deletePersonaEdit = deletePersonaEdit;
 	}
+
 
 	public PersonaDataModal getPersonaDataModal() {
 		return personaDataModal;
@@ -2381,19 +2520,35 @@ public class RevocadosMB {
 		this.flagRevocar = flagRevocar;
 	}
 
-	public List<TiivsPersona> getApoderadosNuevo() {
+//	public List<TiivsPersona> getApoderadosNuevo() {
+//		return apoderadosNuevo;
+//	}
+//
+//	public void setApoderadosNuevo(List<TiivsPersona> apoderadosNuevo) {
+//		this.apoderadosNuevo = apoderadosNuevo;
+//	}
+//
+//	public List<TiivsPersona> getPoderdantesNuevo() {
+//		return poderdantesNuevo;
+//	}
+//
+//	public void setPoderdantesNuevo(List<TiivsPersona> poderdantesNuevo) {
+//		this.poderdantesNuevo = poderdantesNuevo;
+//	}
+	
+	public List<TiivsRevocado> getApoderadosNuevo() {
 		return apoderadosNuevo;
 	}
 
-	public void setApoderadosNuevo(List<TiivsPersona> apoderadosNuevo) {
+	public void setApoderadosNuevo(List<TiivsRevocado> apoderadosNuevo) {
 		this.apoderadosNuevo = apoderadosNuevo;
 	}
 
-	public List<TiivsPersona> getPoderdantesNuevo() {
+	public List<TiivsRevocado> getPoderdantesNuevo() {
 		return poderdantesNuevo;
 	}
 
-	public void setPoderdantesNuevo(List<TiivsPersona> poderdantesNuevo) {
+	public void setPoderdantesNuevo(List<TiivsRevocado> poderdantesNuevo) {
 		this.poderdantesNuevo = poderdantesNuevo;
 	}
 

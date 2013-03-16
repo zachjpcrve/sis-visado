@@ -2046,9 +2046,15 @@ public class SeguimientoMB
 		{
 			if(filtroPer.getNombreCompletoMayuscula().compareTo("")!=0)
 			{
-				filtro.add(Restrictions.eq("persona.nombre", filtroPer.getNombreCompletoMayuscula().split(" ")[0]));
-				filtro.add(Restrictions.eq("persona.apePat", filtroPer.getNombreCompletoMayuscula().split(" ")[1]));
-				filtro.add(Restrictions.eq("persona.apeMat", filtroPer.getNombreCompletoMayuscula().split(" ")[2]));
+//				filtro.add(Restrictions.eq("persona.nombre", filtroPer.getNombreCompletoMayuscula().split(" ")[0]));
+//				filtro.add(Restrictions.eq("persona.apePat", filtroPer.getNombreCompletoMayuscula().split(" ")[1]));
+//				filtro.add(Restrictions.eq("persona.apeMat", filtroPer.getNombreCompletoMayuscula().split(" ")[2]));				
+				filtro.add(Restrictions.eq("persona.nombre", filtroPer.getNombre()));
+				if(filtroPer.getApePat()!=null)
+					filtro.add(Restrictions.eq("persona.apePat", filtroPer.getApePat()));
+				if(filtroPer.getApeMat()!=null)
+					filtro.add(Restrictions.eq("persona.apeMat", filtroPer.getApeMat()));
+				
 				
 				if (tipo.equals(ConstantesVisado.CAMPO_PODERDANTE))
 				{
