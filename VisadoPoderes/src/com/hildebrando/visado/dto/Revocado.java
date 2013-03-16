@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.hildebrando.visado.modelo.TiivsPersona;
+import com.hildebrando.visado.modelo.TiivsRevocado;
 
 
 
@@ -15,15 +16,19 @@ public class Revocado {
 	private String correlativo;
 	private String codAgrupacion;
 	private String nombreCompletoApoderados;
-	private List<TiivsPersona> apoderados;
+//	private List<TiivsPersona> apoderados;
 	private String nombreCompletoPoderdantes;
-	private List<TiivsPersona> poderdantes;
+//	private List<TiivsPersona> poderdantes;
 	private String fechaRegistro;
 	private String estado;
 	
 	private boolean flagEditPend;
 	private boolean flagEditAct;
 	private boolean flagDelete;
+	
+	
+	private List<TiivsRevocado> apoderados;
+	private List<TiivsRevocado> poderdantes;
 
 	public Revocado(){
 		
@@ -108,17 +113,32 @@ public class Revocado {
 	public void setFlagDelete(boolean flagDelete) {
 		this.flagDelete = flagDelete;
 	}
-	public List<TiivsPersona> getApoderados() {
+	public List<TiivsRevocado> getApoderados() {
 		return apoderados;
 	}
-	public void setApoderados(List<TiivsPersona> apoderados) {
+	public void setApoderados(List<TiivsRevocado> apoderados) {
 		this.apoderados = apoderados;
 	}
-	public List<TiivsPersona> getPoderdantes() {
+	public List<TiivsRevocado> getPoderdantes() {
 		return poderdantes;
 	}
-	public void setPoderdantes(List<TiivsPersona> poderdantes) {
+	public void setPoderdantes(List<TiivsRevocado> poderdantes) {
 		this.poderdantes = poderdantes;
 	}
+	
+//	public List<TiivsPersona> getApoderados() {
+//		return apoderados;
+//	}
+//	public void setApoderados(List<TiivsPersona> apoderados) {
+//		this.apoderados = apoderados;
+//	}
+//	public List<TiivsPersona> getPoderdantes() {
+//		return poderdantes;
+//	}
+//	public void setPoderdantes(List<TiivsPersona> poderdantes) {
+//		this.poderdantes = poderdantes;
+//	}
+	
+	
 
 }
