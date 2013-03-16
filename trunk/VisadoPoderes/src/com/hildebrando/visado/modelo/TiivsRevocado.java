@@ -16,6 +16,10 @@ public class TiivsRevocado implements java.io.Serializable {
 	private Date fechaRevocatoria;
 	private Integer codAgrup;
 	private String tipPartic;
+	
+	
+	private String sDesctipPartic;
+	private String sDesctipDoi;
 
 	public TiivsRevocado() {
 	}
@@ -87,5 +91,23 @@ public class TiivsRevocado implements java.io.Serializable {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
+
+	public String getsDesctipPartic() {
+		return sDesctipPartic;
+	}
+
+	public void setsDesctipPartic(String sDesctipPartic) {
+		this.sDesctipPartic = sDesctipPartic;
+	}
+
+	public String getsDesctipDoi() {
+		return sDesctipDoi;
+	}
+
+	public void setsDesctipDoi(String sDesctipDoi) {
+		this.sDesctipDoi = sDesctipDoi;
+	}
+
+	
 
 }
