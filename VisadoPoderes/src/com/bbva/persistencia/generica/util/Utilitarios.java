@@ -786,4 +786,12 @@ public class Utilitarios {
 			}
 			return resultado;
 		}
+
+	public static String modificarExtension(String nombre) {		
+		if(nombre!=null && nombre.length()>2){ //nombre.PDF
+			String ext = nombre.substring(nombre.lastIndexOf("."), nombre.length()).toLowerCase();//.PDF
+			nombre = nombre.substring(0, nombre.lastIndexOf(".")) + ext;//nombre.pdf
+		}
+		return nombre;
+	}
 }
