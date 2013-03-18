@@ -15,7 +15,7 @@ public class TiivsMiembro implements java.io.Serializable {
 	private String descripcion;
 	private String criterio;
 	private String estudio;
-	private Set tiivsMiembroNivels = new HashSet(0);
+	private Set<TiivsMiembroNivel> tiivsMiembroNivels = new HashSet<TiivsMiembroNivel>();
 	private String activo;
 
 	public TiivsMiembro() {
@@ -78,11 +78,13 @@ public class TiivsMiembro implements java.io.Serializable {
 		this.estudio = estudio;
 	}
 
-	public Set getTiivsMiembroNivels() {
+	
+
+	public Set<TiivsMiembroNivel> getTiivsMiembroNivels() {
 		return this.tiivsMiembroNivels;
 	}
 
-	public void setTiivsMiembroNivels(Set tiivsMiembroNivels) {
+	public void setTiivsMiembroNivels(Set<TiivsMiembroNivel> tiivsMiembroNivels) {
 		this.tiivsMiembroNivels = tiivsMiembroNivels;
 	}
 
