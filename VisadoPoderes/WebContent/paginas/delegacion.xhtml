@@ -142,7 +142,7 @@
 						<p:commandLink id="clinkEditarDtb" ajax="true"
 							actionListener="#{delegadosMB.editarAgrupacion}"
 							oncomplete="dlgEditarDelegacion.show();"
-							update=":frmDataTableDelegacion:dtbListaDelegadoEditar">
+							update=":formDialogEditarDelegacion:dtbListaDelegadoEditar">
 							<f:param name="codGrupo" value="#{del.codGrupo}"></f:param>
 							<f:param name="desNivel" value="#{del.nivel}"></f:param>
 							<h:outputText value="Editar" />
@@ -159,9 +159,16 @@
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
-				<p:dialog widgetVar="dlgEditarDelegacion" modal="true"
-					header="Editar Delegacion por Nivel">
+				
+			</p:panel>
 
+		</h:form>
+		<!--Fin Data Table Oficina -->
+		
+		
+		<p:dialog widgetVar="dlgEditarDelegacion" modal="true" header="Editar Delegacion por Nivel">
+				<h:form id="formDialogEditarDelegacion">	
+					<p:messages id="idMsmDocumentog"></p:messages>
 					<p:panel>
 						<p:messages id="idMsmDocumento"></p:messages>
 						<table>
@@ -178,7 +185,9 @@
 								<td><p:inputText id="txtCodRegistroEditar"
 										value="#{delegadosMB.codRegistroEditar}" maxlength="7">
 										<p:ajax event="blur"
-											update=":frmDataTableDelegacion:txtDescRegMiembroEditar :frmDataTableDelegacion:txtPerfilRegMiembroEditar"
+											update=":formDialogEditarDelegacion:txtDescRegMiembroEditar 
+											        :formDialogEditarDelegacion:txtPerfilRegMiembroEditar 
+											        :formDialogEditarDelegacion:idMsmDocumentog"
 											listener="#{delegadosMB.obtenerDatosMiembroEditar}"></p:ajax>
 									</p:inputText></td>
 								<td><h:outputText value="Descripcion  " /></td>
@@ -196,7 +205,9 @@
 								<td><p:commandButton id="registrarDelegadoEditar"
 										value="Guardar"
 										actionListener="#{delegadosMB.agregarDelegadoEditar}"
-										update=":frmDataTableDelegacion:idMsmDocumento :frmDataTableDelegacion:dtbListaDelegadoEditar :frmDataTableDelegacion:txtCodRegistroEditar :frmDataTableDelegacion:txtDescRegMiembroEditar :frmDataTableDelegacion:txtPerfilRegMiembroEditar">
+										update=":formDialogEditarDelegacion:idMsmDocumento :formDialogEditarDelegacion:dtbListaDelegadoEditar 
+										:formDialogEditarDelegacion:txtCodRegistroEditar :formDialogEditarDelegacion:txtDescRegMiembroEditar
+										 :formDialogEditarDelegacion:txtPerfilRegMiembroEditar">
 									</p:commandButton></td>
 							</tr>
 
@@ -219,7 +230,7 @@
 							</p:column>
 							<p:column headerText="Eliminar">
 								<p:commandLink id="clkEliminar" ajax="true"
-									update=":frmDataTableDelegacion:dtbListaDelegadoEditar"
+									update=":formDialogEditarDelegacion:dtbListaDelegadoEditar"
 									actionListener="#{delegadosMB.eliminarDelegadoEditar}">
 									<f:param name="idEl" value="#{rowIndex}"></f:param>
 									<f:param name="codMiembroEditar"
@@ -235,17 +246,13 @@
 										actionListener="#{delegadosMB.actualizarAgrupacion}"
 										action="#{delegadosMB.listarAgrupacionesDelegados}"
 										oncomplete="dlgEditarDelegacion.hide()"
-										update=":frmDataTableDelegacion">
+										update=":formDialogEditarDelegacion">
 									</p:commandButton></td>
 							</tr>
 						</table>
 					</p:panel>
-
+				        </h:form>
 				</p:dialog>
-			</p:panel>
-
-		</h:form>
-		<!--Fin Data Table Oficina -->
 	</ui:define>
 </ui:composition>
 
