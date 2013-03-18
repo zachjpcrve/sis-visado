@@ -345,65 +345,6 @@ public class ConsultarSolicitudMB {
 	}
 	
 
-	@SuppressWarnings("unchecked")
-	public void validarCambioEstadoVencido() {
-		int diasUtiles = 0;
-		
-		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
-		
-		filtroSol.add(Restrictions.or(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO, ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02),
-									  Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)));
-		
-		List<TiivsSolicitud> solicitudes = new ArrayList<TiivsSolicitud>();
-		
-		try {
-			solicitudes = solicDAO.buscarDinamico(filtroSol);
-			
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.debug("Error al buscar las solicitudes");
-		}
-		
-		//Se obtiene los dias utiles de la Multitabla
-		for (TiivsMultitabla tmp : combosMB.getLstMultitabla()) 
-		{
-			if (tmp.getId().getCodMult().trim().equals(ConstantesVisado.CODIGO_MULTITABLA_DIAS_UTILES)) 
-			{
-				diasUtiles = Integer.valueOf(tmp.getValor2());
-				break;
-			}
-		}
-		
-		for (TiivsSolicitud tmpSol: solicitudes)
-		{
-			Date fechaSolicitud = tmpSol.getFechaEstado();
-
-			if (tmpSol.getFechaEstado()!=null)
-			{
-				Date fechaLimite = aumentarFechaxVen(fechaSolicitud, diasUtiles);
-
-				java.util.Date fechaActual = new java.util.Date();
-
-				if (fechaActual.after(fechaLimite)) 
-				{
-					logger.info("Se supero el plazo. Cambiar la solicitud a estado vencido");
-					
-					try {
-						actualizarEstadoVencidoSolicitud(tmpSol);
-					} catch (Exception e) {
-						logger.info("No se pudo cambiar el estado de la solicitud: " + tmpSol.getCodSoli()	+ " a vencida");
-						logger.info(e.getStackTrace());
-					}
-				} 
-				else 
-				{
-					logger.info("No se supero el plazo. El estado de la solicitud se mantiene");
-				}
-			}
-		}
-		
-	}
 
 	public Date aumentarFechaxVen(Date fecha, int nroDias) {
 		Calendar cal = Calendar.getInstance();
