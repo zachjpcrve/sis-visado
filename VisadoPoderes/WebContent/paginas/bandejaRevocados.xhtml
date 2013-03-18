@@ -661,7 +661,7 @@
 			<h:form>
 				<p:commandButton value="Sí" process=":frmPendEdit:dtClientes"
 					actionListener="#{revocadosMB.revocarApodPod}"
-					update=":frmPendEdit:gridMsj" ajax="false"
+					update=":frmPendEdit:gridMsj :frmConsRev:tbl :frmConsRev:pnlBotones" ajax="false"
 					oncomplete="cfdRevocar.hide();">
 				</p:commandButton>
 
