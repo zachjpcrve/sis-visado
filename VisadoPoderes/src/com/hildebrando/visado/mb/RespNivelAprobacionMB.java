@@ -253,7 +253,7 @@ public class RespNivelAprobacionMB {
 			descEstado = Utilitarios.obternerDescripcionEstado(e.getEstado());
 			desNivel = respNivelAprobacionService.obtenerDesNivel(e.getCodNiv());
 			
-			logger.info("Data a mostrar :: " +e.toString());
+			//logger.info("Data a mostrar :: " +e.toString());
 			
 			respNiveles.add(new MiembroNivelDTO(e.getId(), e.getCodNiv(),desNivel,e.getTiivsMiembro().getCodMiembro(),e.getTiivsMiembro().getDescripcion(),e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(),
 					e.getTiivsMiembro().getTiivsGrupo().getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),(e.getEstado()==null?"":e.getEstado()),descEstado));
@@ -439,17 +439,37 @@ public class RespNivelAprobacionMB {
 	}
 	
 	public void obtenerDatosMiembro() {
-		logger.info("EditRespNivelAprobacionMB : obtenerDatosMiembro");
+		logger.info("EditRespNivelAprobacionMB : obtenerDatosMiembro "+this.bEditar);
 		try {
 			if (!miembroNivelDto.getRegistro().equals("")) {
 				logger.info("----------------- Entro con Registro no vacio");
 				miembros = delegadosService.obtenerDatosMiembro(miembroNivelDto.getRegistro().toUpperCase());
+				boolean esDelegado=false;
 				if (miembros.size() > 0) {
-
-					miembroNivelDto.setDescripcion(miembros.get(0).getDescripcion());
-					miembroNivelDto.setDesGrupo(miembros.get(0).getTiivsGrupo().getDesGrupo());
-					validarCodRegistro = true;
-					listarNivelesPorResponsable(miembroNivelDto.getRegistro().toUpperCase());
+					for (TiivsMiembroNivel x : miembros.get(0).getTiivsMiembroNivels()) {
+						if(x.getTipoRol().equals("D")){
+							esDelegado=true;
+							break;
+						}
+					}
+//					for (TiivsMiembro a : miembros) {
+//						for (TiivsMiembroNivel x : a.getTiivsMiembroNivels()) {
+//							if(x.getTipoRol().equals("D")){
+//								esDelegado=true;
+//								break;
+//							}
+//						}
+//					}
+					
+					if(esDelegado){
+					Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Delegado, no puede ser Responsable");
+					}else{
+						logger.info("En el else... No es Delegado");
+						miembroNivelDto.setDescripcion(miembros.get(0).getDescripcion());
+						miembroNivelDto.setDesGrupo(miembros.get(0).getTiivsGrupo().getDesGrupo());
+						validarCodRegistro = true;
+						listarNivelesPorResponsable(miembroNivelDto.getRegistro().toUpperCase());
+					}
 					//listarRespxNivel();
 				} else {
 					Utilitarios.mensajeInfo("Info","No se encuentra Registrado el código del Responsable");
