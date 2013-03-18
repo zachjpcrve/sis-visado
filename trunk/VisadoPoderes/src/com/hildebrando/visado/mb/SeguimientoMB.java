@@ -2001,7 +2001,8 @@ public class SeguimientoMB
 			}
 		}
 		
-		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) ){
+		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) )
+		{
 			filtroSol.createAlias(ConstantesVisado.NOM_TBL_ESTUDIO,	ConstantesVisado.ALIAS_TBL_ESTUDIO);
 			filtroSol.add(Restrictions.eq(ConstantesVisado.ALIAS_COD_ESTUDIO, buscarEstudioxAbogado()));
 		}

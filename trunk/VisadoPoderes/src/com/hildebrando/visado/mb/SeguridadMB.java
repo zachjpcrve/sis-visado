@@ -142,9 +142,9 @@ public class SeguridadMB {
 	    {
 	    	request.getSession(true).setAttribute("ANCHO_FIELDSET", "105%");
 	    	request.getSession(true).setAttribute("ANCHO_FIELDSET_PODER", "105%");
-	    	request.getSession(true).setAttribute("ANCHO_POPUP_PODER", "850");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_PODER", "950");
 	    	request.getSession(true).setAttribute("ANCHO_REVOC_PODER", "150%");
-	    	request.getSession(true).setAttribute("ANCHO_POPUP_REVOC_PODER", "800");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_REVOC_PODER", "930");
 	    	request.getSession(true).setAttribute("ALTO_POPUP_REVOC_PODER", "400");
 	    }
 	    
@@ -152,9 +152,9 @@ public class SeguridadMB {
 	    {
 	    	request.getSession(true).setAttribute("ANCHO_FIELDSET", "105%");
 	    	request.getSession(true).setAttribute("ANCHO_FIELDSET_PODER", "105%");
-	    	request.getSession(true).setAttribute("ANCHO_POPUP_PODER", "850");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_PODER", "950");
 	    	request.getSession(true).setAttribute("ANCHO_REVOC_PODER", "150%");
-	    	request.getSession(true).setAttribute("ANCHO_POPUP_REVOC_PODER", "800");
+	    	request.getSession(true).setAttribute("ANCHO_POPUP_REVOC_PODER", "930");
 	    	request.getSession(true).setAttribute("ALTO_POPUP_REVOC_PODER", "400");
 	    }
           
