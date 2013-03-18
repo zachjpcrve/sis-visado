@@ -14,6 +14,8 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.hildebrando.visado.quartz.jobs.QuartzJob_SolicitudesVencidas;
+
 public class SpringInit implements ServletContextListener {
 
     @SuppressWarnings("unused")
@@ -22,6 +24,8 @@ public class SpringInit implements ServletContextListener {
     
     public void contextInitialized(ServletContextEvent event) {
         springContext = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
+        QuartzJob_SolicitudesVencidas job =new QuartzJob_SolicitudesVencidas();
+        job.ejecutar();
     }
     
     public void contextDestroyed(ServletContextEvent event) {
