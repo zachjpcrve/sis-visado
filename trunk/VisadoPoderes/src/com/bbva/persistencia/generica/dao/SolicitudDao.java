@@ -31,4 +31,5 @@ public interface SolicitudDao<K, T> extends GenericDao<K, T>{
 	public List<AgrupacionDelegadosDto>  obtenerDelegados() throws Exception;
 	public List<AgrupacionDelegadosDto>  obtenerPKDelegados() throws Exception ;
 	public List<TiivsNivel> listarNivelesDistinct() throws Exception;
+	public List<String> obtenerCodigosSolicitudesARevocarRechazar() throws Exception ;
 }

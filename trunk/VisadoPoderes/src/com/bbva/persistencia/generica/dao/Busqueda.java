@@ -25,7 +25,7 @@ public class Busqueda implements CriteriaSpecification, Serializable {
 	private final CriteriaImpl impl;
     private final Criteria criteria;
 
-    private int maxResults = 100;
+    private int maxResults = 1000;
     public int getMaxResults() { return maxResults; }
     public void setMaxResults(int maxResults) { this.maxResults = maxResults; }
 
