@@ -39,7 +39,37 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	
 	public SolicitudDaoImpl() {
 	}
+	@SuppressWarnings("unchecked")
+	public List<String> obtenerCodigosSolicitudesARevocarRechazar() throws Exception {
+		List<String> listaCodgiosSolicitud=new ArrayList<String>();
+		final String sql = " select a.cod_soli from tiivs_solicitud_agrupacion a " +
+				           " inner join tiivs_solicitud s " +
+				           " on a.cod_soli = s.cod_soli" +
+				           " where a.estado = 3 and s.estado in ('0007','0002','0003','0009','0017','0012','0010') " +
+				           " group by a.cod_soli, s.estado " +
+				           " having count(a.num_grupo) = (select count(b.cod_soli) " +
+				           " from tiivs_solicitud_agrupacion b where b.cod_soli = a.cod_soli)";
 
+		//String codigoSol = "";
+		List ResultList = (List) getHibernateTemplate().execute(
+				new HibernateCallback() {
+					public List doInHibernate(Session session)
+							throws HibernateException {
+						SQLQuery sq = session.createSQLQuery(sql);
+						return sq.list();
+					}
+				});
+
+		if (ResultList.size() > 0) {
+			for (int i = 0; i <= ResultList.size() - 1; i++) {
+				listaCodgiosSolicitud.add(ResultList.get(i).toString());
+				///codigoSol = (String) ResultList.get(i);
+			}
+		}
+		return listaCodgiosSolicitud;
+
+	}
+	
 	@SuppressWarnings("unchecked")
 	public String obtenerPKNuevaSolicitud() throws Exception {
 
