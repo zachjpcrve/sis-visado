@@ -452,15 +452,6 @@ public class RespNivelAprobacionMB {
 							break;
 						}
 					}
-//					for (TiivsMiembro a : miembros) {
-//						for (TiivsMiembroNivel x : a.getTiivsMiembroNivels()) {
-//							if(x.getTipoRol().equals("D")){
-//								esDelegado=true;
-//								break;
-//							}
-//						}
-//					}
-					
 					if(esDelegado){
 					Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Delegado, no puede ser Responsable");
 					}else{
