@@ -51,7 +51,6 @@ public class FileTransferController {
 	private static final String FIELD_SEPARATOR = ",";
 			
 	@RequestMapping(value = "/cargar", method = RequestMethod.POST)	
-	//public ModelAndView  procesoCarga(HttpServletResponse response, HttpServletRequest request) throws Exception {
 	public @ResponseBody String procesoCarga(HttpServletResponse response, HttpServletRequest request) throws Exception {
 		logger.info("*************** procesoCargas ******************");
 		
@@ -61,7 +60,7 @@ public class FileTransferController {
 			FileItemFactory factory = new DiskFileItemFactory();
 			
 			ServletFileUpload upload = new ServletFileUpload(factory);
-		    upload.setSizeMax(1000000);
+		    //upload.setSizeMax(1000000);
 
 		    List<FileItem> fileItems = upload.parseRequest(request);
 		    // Process the uploaded items 
