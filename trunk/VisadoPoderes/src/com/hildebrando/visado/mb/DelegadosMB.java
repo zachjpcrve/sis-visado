@@ -112,15 +112,25 @@ public class DelegadosMB {
 		logger.info("DelegadosMB : obtenerDatosMiembro");
 		try {
 			if (!codRegistro.equals("")) {
-				miembros = delegadosService.obtenerDatosMiembro(codRegistro
-						.toUpperCase());
+				miembros = delegadosService.obtenerDatosMiembro(codRegistro.toUpperCase());
+				boolean esDelegado=false;
 				if (miembros.size() > 0) {
-
-					desRegistro = miembros.get(0).getDescripcion();
-					perfilRegistro = miembros.get(0).getTiivsGrupo()
-							.getDesGrupo();
-					criterioRegistro = miembros.get(0).getCriterio();
-					validarCodRegistro = true;
+					for (TiivsMiembroNivel x : miembros.get(0).getTiivsMiembroNivels()) {
+						if(x.getTipoRol().equals("R")){
+							esDelegado=true;
+							break;
+						}
+					}
+					if(esDelegado){
+					Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Delegado, no puede ser Responsable");
+					}else{
+						desRegistro = miembros.get(0).getDescripcion();
+						perfilRegistro = miembros.get(0).getTiivsGrupo()
+								.getDesGrupo();
+						criterioRegistro = miembros.get(0).getCriterio();
+						validarCodRegistro = true;
+					}
+						
 				} else {
 					Utilitarios
 							.mensajeError("Error",
@@ -185,6 +195,9 @@ public class DelegadosMB {
 			iDelegadoGrupo = listaDelegadosEditar.get(0).getGrupo();
 			
 			listaDelegadosEditarCopia = listaDelegadosEditar;
+			
+			listaDelegadosEditarEliminar = new ArrayList<TiivsMiembroNivel>();//er
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("DelegadosMB : editarAgrupacion"
@@ -413,7 +426,7 @@ public class DelegadosMB {
 
 	public void eliminarDelegadoEditar() {
 		logger.info("DelegadosMB : eliminarDelegadoEditar");
-		listaDelegadosEditarEliminar = new ArrayList<TiivsMiembroNivel>();
+		//listaDelegadosEditarEliminar = new ArrayList<TiivsMiembroNivel>();
 		String idEl;
 		String codRegistro;
 		int codigo;
@@ -472,6 +485,9 @@ public class DelegadosMB {
 		int grupo = 0;
 		int id = 0;
 		if (listaDelegados.size() > 0) {
+			if(listaDelegados.size()>5){
+				Utilitarios.mensajeInfo("Info", "Solo se pueden registrar 5 delegados por combinación");
+			}else{
 			Date sysDate = new Date();/*
 									 * String utilDateString =
 									 * formatear.format(sysDate);
@@ -488,9 +504,10 @@ public class DelegadosMB {
 			}
 
 			limpiarListaAgrupaciones();
-		} else {
-			Utilitarios.mensajeError("Error",
-					"Debe asignar delegados a un nivel");
+			}
+		}
+		 else {
+			Utilitarios.mensajeError("Error","Debe asignar delegados a un nivel");
 			limpiarListaAgrupaciones();
 		}
 	}
@@ -529,14 +546,11 @@ public class DelegadosMB {
 	public void listarAgrupacionesDelegados() {
 		logger.info("DelegadosMB : listarAgrupacionesDelegados");
 		try {
-			SolicitudDao<TiivsMiembroNivel, Object> service = (SolicitudDao<TiivsMiembroNivel, Object>) SpringInit
-					.getApplicationContext().getBean("solicitudEspDao");
+			SolicitudDao<TiivsMiembroNivel, Object> service = (SolicitudDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 			List<AgrupacionDelegadosDto> lstDele = new ArrayList<AgrupacionDelegadosDto>();
 			List<AgrupacionDelegadosDto> lstDelegadosPK = new ArrayList<AgrupacionDelegadosDto>();
-			/* List<AgrupacionDelegadosDto> */lstDele = service
-					.obtenerDelegados();
-			/* List<AgrupacionDelegadosDto> */lstDelegadosPK = service
-					.obtenerPKDelegados();
+			/* List<AgrupacionDelegadosDto> */lstDele = service.obtenerDelegados();
+			/* List<AgrupacionDelegadosDto> */lstDelegadosPK = service.obtenerPKDelegados();
 			List<ComboDto> lstDuos = null;
 			ComboDto duo = null;
 			AgrupacionNivelDelegadoDto agrupacionNivelDelegadoDto = null;
@@ -552,8 +566,7 @@ public class DelegadosMB {
 				} else {
 					if (a.getEstado().equals("1")) {
 						agrupacionNivelDelegadoDto.setEstado("Activo");
-						agrupacionNivelDelegadoDto
-								.setEstadoEtiqueta("Inactivar");
+						agrupacionNivelDelegadoDto.setEstadoEtiqueta("Inactivar");
 
 					} else {
 						agrupacionNivelDelegadoDto.setEstado("Inactivo");
@@ -563,23 +576,20 @@ public class DelegadosMB {
 
 				agrupacionNivelDelegadoDto.setLstDelegados(lstDuos);
 				for (AgrupacionDelegadosDto b : lstDele) {
-					if (a.getDes_niv().equals(b.getDes_niv())
-							&& a.getGrupo().equals(b.getGrupo())) {
+					if (a.getDes_niv().equals(b.getDes_niv())&& a.getGrupo().equals(b.getGrupo())) {
 						duo = new ComboDto();
 						duo.setKey(b.getCod_miembro());
 						duo.setDescripcion(b.getDescripcion());
 						lstDuos.add(duo);
 					}
 				}
-				lstListaAgrupacionesNivelesDelegados
-						.add(agrupacionNivelDelegadoDto);
+				lstListaAgrupacionesNivelesDelegados.add(agrupacionNivelDelegadoDto);
 			}
 
 			for (AgrupacionNivelDelegadoDto c : lstListaAgrupacionesNivelesDelegados) {
 
 				if (c.getLstDelegados().size() == 1) {
-					c.setCod_delegado_A(c.getLstDelegados().get(0) == null ? ""
-							: c.getLstDelegados().get(0).getKey());
+					c.setCod_delegado_A(c.getLstDelegados().get(0) == null ? "": c.getLstDelegados().get(0).getKey());
 					c.setCod_nombre_delegado_A(c.getLstDelegados().get(0) == null ? ""
 							: c.getLstDelegados().get(0).getDescripcion());
 				} else {
