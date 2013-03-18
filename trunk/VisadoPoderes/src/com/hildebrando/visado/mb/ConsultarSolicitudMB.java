@@ -3214,7 +3214,7 @@ public class ConsultarSolicitudMB {
 						logger.info("nombreDoc = doc.getItem():" + nombreDoc + "=" + doc.getNombreCorto());
 						if(doc.getNombreCorto().equals(nombreDoc)){
 							doc.setAlias(documentoLeido);
-							doc.setAliasTemporal(documentoCargado);
+							doc.setAliasTemporal(Utilitarios.modificarExtension(documentoCargado));
 							logger.info("actualizo nombre documento:" + doc.getAlias());
 							
 							//agregar a lista de anexos de la solicitud
