@@ -501,14 +501,13 @@ public class RevocadosMB {
 		GenericDao<TiivsSolicitud, Object> serviceSolicitud = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsSolicitud.class);
 		filtro.add(Restrictions.in("estado", values));
-		listaSolicitudesDeDondeComparar=serviceSolicitud.buscarDinamico(filtro);
+		listaSolicitudesDeDondeComparar = serviceSolicitud.buscarDinamico(filtro);
 		logger.info("******** Tamanio de la lista de Solicitudes donde buscar ************* "+listaSolicitudesDeDondeComparar.size());
 		
-		List<String> listaCodSolicitudes =new ArrayList<String>();
+		List<String> listaCodSolicitudes = new ArrayList<String>();
 		for (TiivsSolicitud e : listaSolicitudesDeDondeComparar) {
 			listaCodSolicitudes.add(e.getCodSoli());
 		}
-		
 		
 		List<TiivsAgrupacionPersona> listaAgrupacionPersonacontraQuienComparar=new ArrayList<TiivsAgrupacionPersona>();
 		GenericDao<TiivsAgrupacionPersona, Object> serviceSolicitudAgrupacionPersona = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -532,9 +531,11 @@ public class RevocadosMB {
 		
 		for (TiivsRevocado a : revocadoEdit.getApoderados()) {
 			lstRevocadosComboDto.add(new ComboDto(a.getTiivsPersona().getCodPer()+"", ConstantesVisado.APODERADO));
+			logger.info("Apoderados ::: " +lstRevocadosComboDto.size());
 		}
 		for (TiivsRevocado b : revocadoEdit.getPoderdantes()) {
 			lstRevocadosComboDto.add(new ComboDto(b.getTiivsPersona().getCodPer()+"", ConstantesVisado.PODERDANTE));
+			logger.info("Poderdartes ::: " +lstRevocadosComboDto.size());
 		}
 		logger.info("******** Tamanio de la lista de Solicitu ********** ::: " +lstRevocadosComboDto.size());
 		List<ComboDto> listaPersonasXAgrupacionXSolicitud=null;
@@ -542,7 +543,8 @@ public class RevocadosMB {
 		List<ComboDto> listaPersonas=null;
 		 ComboDto combo=null;
 		 List<ComboDto> listaNum_ListaPersonas;
-		for (TiivsSolicitud a : listaSolicitudesDeDondeComparar) {
+		
+		 for (TiivsSolicitud a : listaSolicitudesDeDondeComparar) {
 			listaPersonasXAgrupacionXSolicitud =new ArrayList<ComboDto>();
 			for (TiivsAgrupacionPersona x : listaAgrupacionPersonacontraQuienComparar) {
 				if(a.getCodSoli().equals(x.getCodSoli())){
@@ -575,7 +577,7 @@ public class RevocadosMB {
 					for (ComboDto comboDto : lstRevocadosComboDto) {
 						System.out.println("&&&&&&& comboDto.getKey()  " +  comboDto.getKey() +" T_T " +comboDto.getDescripcion() );
 					}
-					
+					i = 0;
 					for (ComboDto an : m.getListaPersonas()) {
 						for (ComboDto bn : lstRevocadosComboDto) {
 							
@@ -647,51 +649,17 @@ public class RevocadosMB {
 	//@Samira 09/03/2012
 	public void validarSolicitudesSiTodasCombinacionesRevocadas() throws Exception{
 		List<String> solicitudes = new ArrayList<String>();
-		   
-			
-			List<TiivsSolicitudAgrupacion> listaTiivsSolicitudAgrupacion=new ArrayList<TiivsSolicitudAgrupacion>();
-			GenericDao<TiivsSolicitudAgrupacion, Object> serviceSolicitudAgrupacionPersona = (GenericDao<TiivsSolicitudAgrupacion, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			Busqueda filtroSolicitudAgrupacion = Busqueda.forClass(TiivsSolicitudAgrupacion.class);
-			//filtroSolicitudAgrupacion.add(Restrictions.eq("estado", ""))
-			listaTiivsSolicitudAgrupacion=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroSolicitudAgrupacion);
-			logger.info("Tmanio listaTiivsSolicitudAgrupacion desde bd :::" +listaTiivsSolicitudAgrupacion.size());
-			List<String> lstString = new ArrayList<String>();
-			 lstString = this.listaCodSoli(listaTiivsSolicitudAgrupacion);
-			 if(lstString!=null){
-			for (String cc : lstString) {
-			int i=0,j=0;
-             for (TiivsSolicitudAgrupacion vv : listaTiivsSolicitudAgrupacion) {
-            	 if(vv!=null){
-            	 if(vv.getId()!=null){
-				if(cc.equals(vv.getId().getCodSoli())){
-					j++;
-					if(vv.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_3)){
-						i++;
-					}
-				    }
-            	 }
-            	}
-			}
-            // logger.info("Total "  +" Contador i  "+i + " Contador j : " +j) ;
-             if(i==j){
-            	 if(i!=0&&j!=0){
-            	 logger.info(" Todas las combinaciones estan revocadas , se cambiara el estado de la solicitud, segun corresponda");
-            	 solicitudes.add(cc);
-            	 }
-             }else{
-            	// logger.info(" No todas las combinaciones estan revocadas, no se cambia el estado de la solicitud");
-             }
-             
-		}
-			
+		SolicitudDao<TiivsSolicitud, Object> service = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+		solicitudes=service.obtenerCodigosSolicitudesARevocarRechazar();	
 			/** Actualizar Estado Solicitudes**/
+		if(solicitudes.size()>0){
 			this.actualizarEstadoSolicitudes(solicitudes);
-		}	  
-			
+		}  
 	}
 	
 	//@Samira 09/03/2012
 	public void actualizarEstadoSolicitudes(List<String> solicitudes) throws Exception{
+		logger.info("**** actualizarEstadoSolicitudes ****");
 
 		 /**Insertando la GLosa La solicitud ha sido revocada ... desde base de datos*/
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -713,6 +681,8 @@ public class RevocadosMB {
 			codigosParaPasarSolicitudImprocedente[1]=ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02;
 			codigosParaPasarSolicitudImprocedente[2]=ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02;
 			
+		String codigoRetorno="";	
+		
 		List<TiivsSolicitud> listaTiivsSolicitudRechazdas=new ArrayList<TiivsSolicitud>();
 		List<TiivsSolicitud> listaTiivsSolicitudImprocedentes=new ArrayList<TiivsSolicitud>();
 		GenericDao<TiivsSolicitud, Object> serviceSolicitudAgrupacionPersona = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -725,6 +695,7 @@ public class RevocadosMB {
 			xx.setObs(parametroGlosa.getValor1());
 			xx=serviceSolicitudAgrupacionPersona.modificar(xx);
 			registraSolicitudHistorial(xx);
+			codigoRetorno+=xx.getCodSoli()+".  ";
 		}
 		
 		Busqueda filtroSolicitudImprocedente = Busqueda.forClass(TiivsSolicitud.class);
@@ -736,7 +707,13 @@ public class RevocadosMB {
 			xx.setObs(parametroGlosa.getValor1());
 			xx=serviceSolicitudAgrupacionPersona.modificar(xx);
 			registraSolicitudHistorial(xx);
+			codigoRetorno+=xx.getCodSoli()+".  ";
 		}
+
+		if(listaTiivsSolicitudRechazdas.size()>0||listaTiivsSolicitudImprocedentes.size()>0){
+			Utilitarios.mensajeInfo("INFO", "La(s) Solicitud(es) Revocada(s) es(son) : "+codigoRetorno);
+		}
+		
 		
 	}
 	
