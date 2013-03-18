@@ -165,12 +165,13 @@
 		</h:form>
 		<!--Fin Data Table Oficina -->
 		
-		
+		<p:growl id="xxx" for="all"></p:growl>
 		<p:dialog widgetVar="dlgEditarDelegacion" modal="true" header="Editar Delegacion por Nivel">
-				<h:form id="formDialogEditarDelegacion">	
-					<p:messages id="idMsmDocumentog"></p:messages>
+				<h:form id="formDialogEditarDelegacion">
+				<p:messages id="idMsmDocumento" globalOnly="true"></p:messages>	
+				
 					<p:panel>
-						<p:messages id="idMsmDocumento"></p:messages>
+						
 						<table>
 							<tr>
 								<td><h:outputText value="Nivel:  " /></td>
@@ -187,7 +188,7 @@
 										<p:ajax event="blur"
 											update=":formDialogEditarDelegacion:txtDescRegMiembroEditar 
 											        :formDialogEditarDelegacion:txtPerfilRegMiembroEditar 
-											        :formDialogEditarDelegacion:idMsmDocumentog"
+											        :formDialogEditarDelegacion:idMsmDocumento"
 											listener="#{delegadosMB.obtenerDatosMiembroEditar}"></p:ajax>
 									</p:inputText></td>
 								<td><h:outputText value="Descripcion  " /></td>
