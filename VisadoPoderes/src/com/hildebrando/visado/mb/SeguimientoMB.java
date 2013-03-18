@@ -258,7 +258,6 @@ public class SeguimientoMB
 		
 		try {
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
-			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.debug("Error al buscar las solicitudes");
@@ -1686,9 +1685,6 @@ public class SeguimientoMB
 			int ind=0;
 			List<String> lstSolicitudes = new ArrayList<String>();
 			
-			//ss
-			
-			
 			for (TiivsAgrupacionPersona tmp: obtenerSolicitudesxFiltroPersonas())
 			{
 				if ((tmp.getTiivsPersona().getNombre().toUpperCase().indexOf(getTxtNomApoderado().toUpperCase())!=-1  
@@ -1707,6 +1703,7 @@ public class SeguimientoMB
 			{
 				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
 			}*/
+			
 			logger.info("Filtro por apoderado: " + objTiivsPersonaBusquedaNomApod.getNombreCompletoMayuscula());
 			List<String> lstSolicitudes = new ArrayList<String>();
 			int ind=0;
@@ -1769,6 +1766,7 @@ public class SeguimientoMB
 			{
 				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
 			}*/
+			
 			logger.info("Filtro por poderdante: " + objTiivsPersonaBusquedaNomPoder.getNombreCompletoMayuscula());
 			List<String> lstSolicitudes = new ArrayList<String>();
 			int ind=0;
@@ -1804,6 +1802,7 @@ public class SeguimientoMB
 				logger.info("Filtro nivel" + "[" + ind + "]" + lstNivelSelected.get(ind));
 			}
 			*/
+			
 			int ind = 0;
 			List<String> lstCodNiv = new ArrayList<String>();
 			
