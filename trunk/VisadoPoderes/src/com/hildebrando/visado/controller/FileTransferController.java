@@ -79,7 +79,7 @@ public class FileTransferController {
 		    for(int i=0; i<fileItems.size();i++){
 		    	FileItem item = fileItems.get(i);
 		    	String name = FilenameUtils.getBaseName(item.getName());
-		    	String ext = FilenameUtils.getExtension(item.getName());
+		    	String ext = FilenameUtils.getExtension(item.getName()).toLowerCase();
 		    	logger.info("Archivo recibido " + name + "." + ext);		    	
 		    	File file=null;
 		    	try {
