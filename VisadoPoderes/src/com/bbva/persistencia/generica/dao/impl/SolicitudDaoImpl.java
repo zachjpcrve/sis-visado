@@ -104,6 +104,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					" where  n.cod_miembro = m.cod_miembro "+
 					  " and  n.cod_niv = ni.cod_niv "+
 					 " and n.tipo_rol = 'D' "+
+					 " and n.estado_miembro = '1' "+
 					 " group by ni.des_niv, n.grupo, n.estado, n.cod_miembro, m.descripcion "+
 					  " order by ni.des_niv, n.grupo asc";
 
