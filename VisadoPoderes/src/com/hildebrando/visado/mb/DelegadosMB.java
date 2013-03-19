@@ -64,8 +64,8 @@ public class DelegadosMB {
 
 	private int iDelegadoGrupo;
 	private String sDelegadoEstado;
-	
-	
+	//boolean esDelegadoEditar=false;
+	boolean esDelegado=false;
 	public DelegadosMB() {
 		criterioRegistro = "";
 		codRegistro = "";
@@ -113,35 +113,46 @@ public class DelegadosMB {
 		logger.info("DelegadosMB : obtenerDatosMiembro");
 		try {
 			if (!codRegistro.equals("")) {
+				if (miembroNivel.getCodNiv()!=null) {
 				miembros = delegadosService.obtenerDatosMiembro(codRegistro.toUpperCase());
-				boolean esDelegado=false;
+				 esDelegado=false;
 				if (miembros.size() > 0) {
 					for (TiivsMiembroNivel x : miembros.get(0).getTiivsMiembroNivels()) {
-						if(x.getTipoRol().equals("R")){
+						if(x.getTipoRol().equals("R")&&x.getCodNiv().equals(miembroNivel.getCodNiv())){
 							esDelegado=true;
 							break;
+						}else{
+							esDelegado=false;
 						}
 					}
 					if(esDelegado){
-					Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Delegado, no puede ser Responsable");
+					Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Responsable, no puede ser Delegado del mismo Nivel");
 					}else{
 						desRegistro = miembros.get(0).getDescripcion();
-						perfilRegistro = miembros.get(0).getTiivsGrupo()
-								.getDesGrupo();
+						perfilRegistro = miembros.get(0).getTiivsGrupo().getDesGrupo();
 						criterioRegistro = miembros.get(0).getCriterio();
 						validarCodRegistro = true;
+						esDelegado=false;
 					}
-						
+				   }else {
+						Utilitarios
+						.mensajeError("Error","No se encuentra Registrado el codigo del Delegado");
+				    desRegistro = "";
+				    perfilRegistro = "";
+				    criterioRegistro = "";
+				    validarCodRegistro = false;
+			        }
+				}else{
+					Utilitarios.mensajeInfo("Info", "Seleccione un Nivel");
+				}		
 				} else {
-					Utilitarios
-							.mensajeError("Error",
-									"No se encuentra Registrado el codigo del Delegado");
+					Utilitarios.mensajeError("Info","Ingrese el código del delegado");
 					desRegistro = "";
 					perfilRegistro = "";
 					criterioRegistro = "";
 					validarCodRegistro = false;
 				}
-			}
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("DelegadosMB : obtenerDatosMiembro"
@@ -153,25 +164,45 @@ public class DelegadosMB {
 		logger.info("DelegadosMB : obtenerDatosMiembroEditar");
 		try {
 			if (!codRegistroEditar.equals("")) {
-				miembros = delegadosService
-						.obtenerDatosMiembro(codRegistroEditar.toUpperCase());
+				if (miembroNivelEditar.getCodNiv()!=null) {
+				miembros = delegadosService.obtenerDatosMiembro(codRegistroEditar.toUpperCase());
+				
 				if (miembros.size() > 0) {
-
-					desRegistroEditar = miembros.get(0).getDescripcion();
-					perfilRegistroEditar = miembros.get(0).getTiivsGrupo()
-							.getDesGrupo();
-					criterioRegistroEditar = miembros.get(0).getCriterio();
-					validarCodRegistroEditar = true;
+					for (TiivsMiembroNivel x : miembros.get(0).getTiivsMiembroNivels()) {
+						if(x.getTipoRol().equals("R")&&x.getCodNiv().equals(miembroNivelEditar.getCodNiv())){
+							esDelegado=true;
+							break;
+						}else{
+							esDelegado=false;
+						}
+					}
+					if(esDelegado){
+					Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Responsable, no puede ser Delegado del mismo Nivel");
+					}else{
+						desRegistroEditar = miembros.get(0).getDescripcion();
+						perfilRegistroEditar = miembros.get(0).getTiivsGrupo().getDesGrupo();
+						criterioRegistroEditar = miembros.get(0).getCriterio();
+						validarCodRegistroEditar = true;
+						esDelegado=false;
+					}
+				   }else {
+						Utilitarios
+						.mensajeError("Error","No se encuentra Registrado el codigo del Delegado");
+				    desRegistroEditar = "";
+				    perfilRegistroEditar = "";
+				    criterioRegistroEditar = "";
+				    validarCodRegistroEditar = false;
+			        }
+				}else{
+					Utilitarios.mensajeInfo("Info", "Seleccione un Nivel");
+				}		
 				} else {
-					Utilitarios
-							.mensajeError("Error",
-									"No se encuentra Registrado el codigo del Delegado");
+					Utilitarios.mensajeError("Info","Ingrese el código del delegado");
 					desRegistroEditar = "";
 					perfilRegistroEditar = "";
 					criterioRegistroEditar = "";
 					validarCodRegistroEditar = false;
 				}
-			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("DelegadosMB : obtenerDatosMiembroEditar"
@@ -204,7 +235,14 @@ public class DelegadosMB {
 			listaDelegadosEditarCopia = listaDelegadosEditar;
 			
 			listaDelegadosEditarEliminar = new ArrayList<TiivsMiembroNivel>();//er
-			
+			/** Samira */
+			codRegistroEditar = "";
+			desRegistroEditar = "";
+			perfilRegistroEditar = "";
+			criterioRegistroEditar = "";
+			esDelegado=false;
+			miembroNivelEditar.setCodNiv(listaDelegadosEditar.get(0).getCodNiv());
+			validarCodRegistroEditar = true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("DelegadosMB : editarAgrupacion"
@@ -214,6 +252,7 @@ public class DelegadosMB {
 	}
 
 	public void agregarDelegado() {
+		if(esDelegado){
 		logger.info("DelegadosMB : agregarDelegado");
 		boolean codigoRepetido = false;
 		boolean nivelDiferente = false;
@@ -255,7 +294,7 @@ public class DelegadosMB {
 				if (codigoRepetido == false) {
 					if (nivelDiferente == false) {
 						listaDelegados.add(delegado);
-
+						esDelegado=false;
 					} else {
 						Utilitarios
 								.mensajeError("Error",
@@ -294,7 +333,7 @@ public class DelegadosMB {
 			validarCodRegistro = false;
 			//
 		}
-
+		}
 	}
 
 	public void estadoAgrupacion() {
@@ -351,10 +390,7 @@ public class DelegadosMB {
 				delegado.setTiivsMiembro(miembros.get(0));
 				for (int i = 0; i < listaDelegadosEditar.size(); i++) {
 					if (listaDelegadosEditar.size() > 0
-							&& codRegistroEditar.toUpperCase().equals(
-									listaDelegadosEditar.get(i)
-											.getTiivsMiembro().getCodMiembro()
-											.toUpperCase())) {
+							&& codRegistroEditar.toUpperCase().equals(listaDelegadosEditar.get(i).getTiivsMiembro().getCodMiembro().toUpperCase())) {
 						codigoRepetido = true;
 						break;
 					} else {
@@ -381,7 +417,10 @@ public class DelegadosMB {
 				if (codigoRepetido == false) {
 					if (nivelDiferente == false) {
 						listaDelegadosEditar.add(delegado);
-
+						codRegistroEditar = "";
+						desRegistroEditar = "";
+						perfilRegistroEditar = "";
+						criterioRegistroEditar = "";
 					} else {
 						Utilitarios
 								.mensajeError("Error",
@@ -395,14 +434,14 @@ public class DelegadosMB {
 				}
 
 				//
-				codRegistroEditar = "";
+				/*codRegistroEditar = "";
 				desRegistroEditar = "";
 				perfilRegistroEditar = "";
-				criterioRegistroEditar = "";
+				criterioRegistroEditar = "";*/
 				validarCodRegistroEditar = false;
 			} else {
 				Utilitarios.mensajeError("Error",
-						"Un Nivel no puede tener mas de 5 delegados");
+						"Un Nivel no puede tener más de 5 delegados");
 				//
 				codRegistroEditar = "";
 				desRegistroEditar = "";
