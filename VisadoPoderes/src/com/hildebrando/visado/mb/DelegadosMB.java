@@ -127,6 +127,8 @@ public class DelegadosMB {
 					}
 					if(esDelegado){
 					Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Responsable, no puede ser Delegado del mismo Nivel");
+					desRegistro = miembros.get(0).getDescripcion();
+					perfilRegistro = miembros.get(0).getTiivsGrupo().getDesGrupo();
 					}else{
 						desRegistro = miembros.get(0).getDescripcion();
 						perfilRegistro = miembros.get(0).getTiivsGrupo().getDesGrupo();
@@ -178,6 +180,8 @@ public class DelegadosMB {
 					}
 					if(esDelegado){
 					Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Responsable, no puede ser Delegado del mismo Nivel");
+					desRegistroEditar = miembros.get(0).getDescripcion();
+					perfilRegistroEditar = miembros.get(0).getTiivsGrupo().getDesGrupo();
 					}else{
 						desRegistroEditar = miembros.get(0).getDescripcion();
 						perfilRegistroEditar = miembros.get(0).getTiivsGrupo().getDesGrupo();
@@ -252,7 +256,7 @@ public class DelegadosMB {
 	}
 
 	public void agregarDelegado() {
-		if(esDelegado){
+		if(!esDelegado){
 		logger.info("DelegadosMB : agregarDelegado");
 		boolean codigoRepetido = false;
 		boolean nivelDiferente = false;
@@ -333,6 +337,8 @@ public class DelegadosMB {
 			validarCodRegistro = false;
 			//
 		}
+		}else{
+			Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Responsable, no puede ser Delegado del mismo Nivel");
 		}
 	}
 
@@ -378,6 +384,7 @@ public class DelegadosMB {
 
 	public void agregarDelegadoEditar() {
 		logger.info("DelegadosMB : agregarDelegadoEditar");
+		if(!esDelegado){
 		boolean codigoRepetido = false;
 		boolean nivelDiferente = false;
 		if (isValidarCodRegistroEditar() == true) {
@@ -459,7 +466,9 @@ public class DelegadosMB {
 			validarCodRegistroEditar = false;
 			//
 		}
-
+		}else{
+			Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Responsable, no puede ser Delegado del mismo Nivel");
+		}
 	}
 
 	public void eliminarDelegado() {

@@ -65,7 +65,7 @@ public class RespNivelAprobacionMB {
 	private String[] estados;
 	private boolean bEditar=true;
 	private boolean bFlagDisabled;
-
+	boolean esDelegado=false;
 	private List<GrupoDto> grupos;
 	public List<GrupoDto> getGrupos() {
 		return this.grupos;
@@ -412,6 +412,7 @@ public class RespNivelAprobacionMB {
 	//@Autor Samira
 	public void agregarlistarRespxNivel()  {
 		logger.debug("=== inicia agregarlistarRespxNivel() ====");
+		if(!esDelegado){
 		if(validarRegistroResponsableNivel()){
 			try {
 				nuevoResponsable();
@@ -420,6 +421,9 @@ public class RespNivelAprobacionMB {
 				e.printStackTrace();
 			}
 		}
+	}else{
+		Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Delegado, no puede ser Responsable del mismo Nivel");
+	}
 	}
 	//@Autor Samira
 	public void editarRespNivelAprob(){
@@ -445,7 +449,7 @@ public class RespNivelAprobacionMB {
 				if (codNivel!=null) {
 				logger.info("----------------- Entro con Registro no vacio");
 				miembros = delegadosService.obtenerDatosMiembro(miembroNivelDto.getRegistro().toUpperCase());
-				boolean esDelegado=false;
+				 esDelegado=false;
 				if (miembros.size() > 0) {
 					for (TiivsMiembroNivel x : miembros.get(0).getTiivsMiembroNivels()) {
 						if(x.getTipoRol().equals("D")&&x.getCodNiv().equals(codNivel)){
@@ -455,7 +459,9 @@ public class RespNivelAprobacionMB {
 					}
 					if(esDelegado){
 					Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Delegado, no puede ser Responsable del mismo Nivel");
-					respNiveles=new ArrayList<MiembroNivelDTO>();
+					miembroNivelDto.setDescripcion(miembros.get(0).getDescripcion());
+					miembroNivelDto.setDesGrupo(miembros.get(0).getTiivsGrupo().getDesGrupo());
+					listarNivelesPorResponsable(miembroNivelDto.getRegistro().toUpperCase());
 					}else{
 						logger.info("En el else... No es Delegado");
 						miembroNivelDto.setDescripcion(miembros.get(0).getDescripcion());
@@ -777,12 +783,12 @@ public class RespNivelAprobacionMB {
 				miembro.setCodMiembro(miembroNivelDTO.getRegistro());
 				miembro.setDescripcion(miembroNivelDTO.getDescripcion());
 				miembroBuscar = obtenerMiembro(miembro.getCodMiembro());
-				
+				logger.info("Tamanio de la lista miembroBuscar " +miembroBuscar.size());
 				TiivsGrupo tiivsGrupo = new TiivsGrupo();
-				tiivsGrupo.setCodGrupo(miembroBuscar.get(0).getTiivsGrupo().getCodGrupo());	
+				tiivsGrupo.setCodGrupo(miembroBuscar.size()==0?"":miembroBuscar.get(0).getTiivsGrupo().getCodGrupo());	
 				miembro.setTiivsGrupo(tiivsGrupo);
-				miembro.setCriterio(miembroBuscar.get(0).getCriterio());
-				miembro.setActivo(miembroBuscar.get(0).getActivo());
+				miembro.setCriterio(miembroBuscar.size()==0?"":miembroBuscar.get(0).getCriterio());
+				miembro.setActivo(miembroBuscar.size()==0?"":miembroBuscar.get(0).getActivo());
 				/*
 				 * try { miembro = serviceTiivsMiembro.save(miembro); } catch
 				 * (Exception e1) { e1.printStackTrace(); }
