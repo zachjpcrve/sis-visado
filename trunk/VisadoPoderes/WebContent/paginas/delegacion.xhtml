@@ -31,10 +31,14 @@
 					<table>
 						<tr>
 							<td><h:outputText value="Nivel:  " /></td>
-							<td><p:selectOneMenu
+							<td><p:selectOneMenu 
 									value="#{delegadosMB.miembroNivel.codNiv}">
+									<f:selectItem itemLabel="--Seleccione--" itemValue="-1" />
 									<f:selectItems value="#{delegadosMB.listaNiveles}"
 										itemLabel="#{n.desNiv}" itemValue="#{n.codNiv}" var="n"></f:selectItems>
+										<p:ajax event="change"
+										update=":frmMantenimientoDelegado:txtDescRegMiembro , idMsmDocumento , :frmMantenimientoDelegado:txtPerfilRegMiembro"
+										listener="#{delegadosMB.obtenerDatosMiembro}"></p:ajax>
 								</p:selectOneMenu></td>
 						</tr>
 						<tr>
@@ -42,7 +46,7 @@
 							<td><p:inputText id="txtCodRegistro"
 									value="#{delegadosMB.codRegistro}" maxlength="7">
 									<p:ajax event="blur"
-										update=":frmMantenimientoDelegado:txtDescRegMiembro :frmMantenimientoDelegado:txtPerfilRegMiembro"
+										update=":frmMantenimientoDelegado:txtDescRegMiembro :frmMantenimientoDelegado:txtPerfilRegMiembro , idMsmDocumento"
 										listener="#{delegadosMB.obtenerDatosMiembro}"></p:ajax>
 								</p:inputText></td>
 							<td><h:outputText value="Descripcion  " /></td>
@@ -143,7 +147,9 @@
 						<p:commandLink id="clinkEditarDtb" ajax="true"
 							actionListener="#{delegadosMB.editarAgrupacion}"
 							oncomplete="dlgEditarDelegacion.show();"
-							update=":formDialogEditarDelegacion:dtbListaDelegadoEditar">
+							update=":formDialogEditarDelegacion:dtbListaDelegadoEditar,
+							        :formDialogEditarDelegacion:cboEditarCodiNivel, 
+							        :formDialogEditarDelegacion:idMsmDocumento">
 							<f:param name="codGrupo" value="#{del.codGrupo}"></f:param>
 							<f:param name="desNivel" value="#{del.nivel}"></f:param>
 							<h:outputText value="Editar" />
@@ -176,7 +182,7 @@
 						<table>
 							<tr>
 								<td><h:outputText value="Nivel:  " /></td>
-								<td><p:selectOneMenu
+								<td><p:selectOneMenu disabled="true" id="cboEditarCodiNivel"
 										value="#{delegadosMB.miembroNivelEditar.codNiv}">
 										<f:selectItems value="#{delegadosMB.listaNiveles}"
 											itemLabel="#{nE.desNiv}" itemValue="#{nE.codNiv}" var="nE"></f:selectItems>
@@ -233,7 +239,7 @@
 							</p:column>
 							<p:column headerText="Eliminar">
 								<p:commandLink id="clkEliminar" ajax="true"
-									update=":formDialogEditarDelegacion:dtbListaDelegadoEditar"
+									update=":formDialogEditarDelegacion:dtbListaDelegadoEditar,:frmDataTableDelegacion:dtbDelegacion"
 									actionListener="#{delegadosMB.eliminarDelegadoEditar}">
 									<f:param name="idEl" value="#{rowIndex}"></f:param>
 									<f:param name="codMiembroEditar"
@@ -249,7 +255,7 @@
 										actionListener="#{delegadosMB.actualizarAgrupacion}"
 										action="#{delegadosMB.listarAgrupacionesDelegados}"
 										oncomplete="dlgEditarDelegacion.hide()"
-										update=":formDialogEditarDelegacion">
+										update=":formDialogEditarDelegacion, :formDialogEditarDelegacion:dtbListaDelegadoEditar, :frmDataTableDelegacion:dtbDelegacion">
 									</p:commandButton></td>
 							</tr>
 						</table>
