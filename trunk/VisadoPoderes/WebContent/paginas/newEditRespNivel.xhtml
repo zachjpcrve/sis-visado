@@ -21,7 +21,7 @@
 								readonly="#{respNivel.bEditar}"
 								value="#{respNivel.miembroNivelDto.registro}" maxlength="10"
 								size="10">
-								<p:ajax event="blur"
+								<p:ajax event="blur" 
 									update=":frmMantenimientoNivReg:dtbRespNivel 
 									        :frmMantenimientoNivReg:txtPerfil 
 									        :frmMantenimientoNivReg:txtDescrip 
@@ -58,7 +58,14 @@
 								<f:selectItem itemLabel="--Seleccione--" itemValue="-1" />
 								<f:selectItems var="n" value="#{respNivel.niveles}"
 									itemLabel="#{n.des}" itemValue="#{n.cod}">
+									
 								</f:selectItems>
+								<p:ajax event="change" 
+									update=":frmMantenimientoNivReg:dtbRespNivel 
+									        :frmMantenimientoNivReg:txtPerfil 
+									        :frmMantenimientoNivReg:txtDescrip 
+									        :frmMantenimientoNivReg:idMsmNivReg"
+									listener="#{respNivel.obtenerDatosMiembro}"></p:ajax>
 
 							</p:selectOneMenu></td>
 						<td ><p:commandButton id="bsAgreg" value="Agregar" ajax="true"
