@@ -28,6 +28,7 @@ import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.service.DelegadosService;
+import com.hildebrando.visado.service.NivelService;
 
 @ManagedBean(name = "delegadosMB")
 @SessionScoped
@@ -191,6 +192,12 @@ public class DelegadosMB {
 			listaDelegadosEditar = delegadosService.editarAgrupacion(
 					codigoGrupo, desNivel);
 			
+			//Agregar descripcion
+			NivelService nivelService = new NivelService();
+			for(TiivsMiembroNivel miembroNivel: listaDelegadosEditar){
+				miembroNivel.setDescNiv(nivelService.buscarNivelxCodigo(miembroNivel.getCodNiv()));
+			}
+			
 			sDelegadoEstado = listaDelegadosEditar.get(0).getEstado();
 			iDelegadoGrupo = listaDelegadosEditar.get(0).getGrupo();
 			
@@ -241,6 +248,8 @@ public class DelegadosMB {
 					}
 				}
 				delegado.setCodNiv(miembroNivel.getCodNiv());
+				NivelService nivelservice = new NivelService(); 
+				delegado.setDescNiv(nivelservice.buscarNivelxCodigo(miembroNivel.getCodNiv()));
 				delegado.setEstadoMiembro("1");
 				delegado.setTipoRol("D");
 				if (codigoRepetido == false) {
@@ -364,6 +373,8 @@ public class DelegadosMB {
 					}
 				}
 				delegado.setCodNiv(miembroNivelEditar.getCodNiv());
+				NivelService nivelService = new NivelService(); 
+				delegado.setDescNiv(nivelService.buscarNivelxCodigo(miembroNivelEditar.getCodNiv()));
 				delegado.setEstadoMiembro("1");
 				delegado.setTipoRol("D");
 				delegado.setGrupo(iDelegadoGrupo);
