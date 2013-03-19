@@ -1665,6 +1665,8 @@ public class RevocadosMB {
 			revocado.setCodAgrupacion(codAgrup);
 			revocado.setApoderados(apoderados);
 			revocado.setPoderdantes(poderdantes);
+			
+			this.revocadoEdit = revocado;
 		
 			revocadosAux.add(revocado);
 			
