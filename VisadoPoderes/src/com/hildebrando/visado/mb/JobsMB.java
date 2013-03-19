@@ -193,7 +193,7 @@ public class JobsMB {
 	}
 	
 	public  void validarSolicitudesVencidas()
-	{
+	{logger.debug("******** validarSolicitudesVencidas **************");
 			int diasUtiles = 0;
 			
 			GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
