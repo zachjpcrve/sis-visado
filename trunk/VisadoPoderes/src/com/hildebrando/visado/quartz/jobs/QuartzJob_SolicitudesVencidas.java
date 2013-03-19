@@ -6,14 +6,21 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
+import com.bbva.common.listener.SpringInit.SpringInit;
 import com.hildebrando.visado.mb.JobsMB;
 
 public class QuartzJob_SolicitudesVencidas  {
 	public static Logger logger = Logger.getLogger(QuartzJob_SolicitudesVencidas.class);
 	
+	public static void main(String []args){
+		QuartzJob_SolicitudesVencidas job = new QuartzJob_SolicitudesVencidas(); 
+		System.out.println("main");
+		job.ejecutar();
+	}
 	public void ejecutar(){
-		
 		logger.info("Iniciando Metodo ejecutar del  QuartzJob_SolicitudesVencidas");
+		if(SpringInit.getApplicationContext()!=null){
+			logger.info("Spring Init diferente de nulll");
 		Runnable run = new Runnable(){
 
 			@Override
@@ -43,7 +50,7 @@ public class QuartzJob_SolicitudesVencidas  {
 		Thread th = new Thread(run);
 		
 		th.start();
-
+		}
 		
 	}
 }
