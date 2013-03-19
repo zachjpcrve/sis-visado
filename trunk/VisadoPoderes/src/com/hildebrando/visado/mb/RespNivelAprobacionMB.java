@@ -442,18 +442,20 @@ public class RespNivelAprobacionMB {
 		logger.info("EditRespNivelAprobacionMB : obtenerDatosMiembro "+this.bEditar);
 		try {
 			if (!miembroNivelDto.getRegistro().equals("")) {
+				if (codNivel!=null) {
 				logger.info("----------------- Entro con Registro no vacio");
 				miembros = delegadosService.obtenerDatosMiembro(miembroNivelDto.getRegistro().toUpperCase());
 				boolean esDelegado=false;
 				if (miembros.size() > 0) {
 					for (TiivsMiembroNivel x : miembros.get(0).getTiivsMiembroNivels()) {
-						if(x.getTipoRol().equals("D")){
+						if(x.getTipoRol().equals("D")&&x.getCodNiv().equals(codNivel)){
 							esDelegado=true;
 							break;
 						}
 					}
 					if(esDelegado){
-					Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Delegado, no puede ser Responsable");
+					Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Delegado, no puede ser Responsable del mismo Nivel");
+					respNiveles=new ArrayList<MiembroNivelDTO>();
 					}else{
 						logger.info("En el else... No es Delegado");
 						miembroNivelDto.setDescripcion(miembros.get(0).getDescripcion());
@@ -461,15 +463,24 @@ public class RespNivelAprobacionMB {
 						validarCodRegistro = true;
 						listarNivelesPorResponsable(miembroNivelDto.getRegistro().toUpperCase());
 					}
-					//listarRespxNivel();
-				} else {
+				}else {
 					Utilitarios.mensajeInfo("Info","No se encuentra Registrado el código del Responsable");
 					miembroNivelDto.setDescripcion("");
 					miembroNivelDto.setDesGrupo("");
 					respNiveles=new ArrayList<MiembroNivelDTO>();
 					validarCodRegistro = false;
 				}
-			}
+				}else{
+					Utilitarios.mensajeInfo("Info", "Seleccione un Nivel");
+				}
+				} else {
+					Utilitarios.mensajeInfo("Info","Ingrese el código del Responsable");
+					miembroNivelDto.setDescripcion("");
+					miembroNivelDto.setDesGrupo("");
+					respNiveles=new ArrayList<MiembroNivelDTO>();
+					validarCodRegistro = false;
+				}
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error("EditRespNivelAprobacionMB : obtenerDatosMiembro:: Error ::: "+ ex.getLocalizedMessage()+" - Cause " +ex.getCause()+ " - " +ex.getMessage());
