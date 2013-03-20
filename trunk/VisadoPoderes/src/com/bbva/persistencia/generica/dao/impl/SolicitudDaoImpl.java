@@ -50,9 +50,12 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	
 		boolean existe =false;
 		if(listaDelegados.size()>0){
-			
-		if(listaDelegados.get(0).getGrupo()!=null||listaDelegados.get(0).getGrupo()!=0){
-			sqlGrupo=" AND GRUPO!="+listaDelegados.get(0).getGrupo();
+			if(listaDelegados.get(0)!=null){
+		     if(listaDelegados.get(0).getGrupo()!=null){
+			    if(listaDelegados.get(0).getGrupo()!=0){
+			      sqlGrupo=" AND GRUPO!="+listaDelegados.get(0).getGrupo();
+			}
+		  }
 		}
 		
 		
