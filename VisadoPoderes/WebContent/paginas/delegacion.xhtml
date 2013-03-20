@@ -10,6 +10,7 @@
 		<!-- Delegacion -->
 		<h:form id="frmMantenimientoDelegado">
 			<p:panel header="Delegacion por Nivel" style="width: 85%">
+			<p:growl id="idGrowlPrincipal"></p:growl>
 
 				<table>
 					<tr>
@@ -255,7 +256,8 @@
 										actionListener="#{delegadosMB.actualizarAgrupacion}"
 										action="#{delegadosMB.listarAgrupacionesDelegados}"
 										oncomplete="dlgEditarDelegacion.hide()"
-										update=":formDialogEditarDelegacion, :formDialogEditarDelegacion:dtbListaDelegadoEditar, :frmDataTableDelegacion:dtbDelegacion">
+										update=":formDialogEditarDelegacion, :formDialogEditarDelegacion:dtbListaDelegadoEditar, :frmDataTableDelegacion:dtbDelegacion ,
+										:frmMantenimientoDelegado:idGrowlPrincipal">
 									</p:commandButton></td>
 							</tr>
 						</table>
