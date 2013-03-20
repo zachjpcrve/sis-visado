@@ -1609,7 +1609,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						valorFinal=valorFinal+x.getImporte();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+					//Double valorTemp = (double) (Math.round(valorFinal*100)/100);
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+  ((double) Math.round(valorFinal*100)/100));
 	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 				}
 				if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) {
@@ -1618,7 +1619,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						valorFinal=valorFinal+x.getImporte();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+valorFinal);
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+  ((double)Math.round(valorFinal*100)/100));
 	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
 				}
 				if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) {
@@ -1627,7 +1628,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						valorFinal=valorFinal+x.getImporte();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+valorFinal);
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+ ( (double) Math.round(valorFinal*100)/100));
 	                this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_EUROS);
 				}
 				if (       icontDolares  > 0 && icontEuros > 0 && icontSoles == 0
@@ -1638,7 +1639,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						valorFinal=valorFinal+x.getImporteSoles();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+  ((double) Math.round(valorFinal*100)/100));
 	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 				}
 
@@ -1681,7 +1682,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						valorFinal=valorFinal+x.getImporte();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ ((double)Math.round(valorFinal*100)/100));
 	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 				}
 				if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) {
@@ -1690,7 +1691,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						valorFinal=valorFinal+x.getImporte();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+valorFinal);
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+((double)Math.round(valorFinal*100)/100));
 	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
 				}
 				if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) {
@@ -1699,7 +1700,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						valorFinal=valorFinal+x.getImporte();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+valorFinal);
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+((double)Math.round(valorFinal*100)/100));
 	                this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_EUROS);
 				}
 				if (       icontDolares  > 0 && icontEuros > 0 && icontSoles == 0
@@ -1710,7 +1711,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						valorFinal=valorFinal+x.getImporteSoles();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+valorFinal);
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+((double)Math.round(valorFinal*100)/100));
 	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 				}
 
