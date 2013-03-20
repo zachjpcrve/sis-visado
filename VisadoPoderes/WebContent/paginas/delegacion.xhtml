@@ -16,7 +16,11 @@
 					<tr>
 						<td><p:commandButton id="nuevaDelegacion"
 								actionListener="#{delegadosMB.limpiarNuevo}"
-								update=":frmMantenimientoDelegado:txtDescRegMiembro :frmMantenimientoDelegado:txtPerfilRegMiembro :frmMantenimientoDelegado:dtbListaDelegado :frmMantenimientoDelegado:txtCodRegistro"
+								update=":frmMantenimientoDelegado:txtDescRegMiembro 
+								        :frmMantenimientoDelegado:txtPerfilRegMiembro 
+								        :frmMantenimientoDelegado:dtbListaDelegado 
+								        :frmMantenimientoDelegado:txtCodRegistro
+								        cboCodNivelNew"
 								value="Nueva Agrupacion" oncomplete="dlgNuevaDelegacion.show();">
 							</p:commandButton></td>
 					</tr>
@@ -24,15 +28,15 @@
 				</table>
 
 			</p:panel>
-			<p:dialog widgetVar="dlgNuevaDelegacion" modal="true"  
+			<p:dialog widgetVar="dlgNuevaDelegacion" modal="true"  id="dlgNuevoDelegacion"
 				header="Nueva Delegacion por Nivel">
 
-				<p:panel>
+				<p:panel id="panelNuevo">
 					<p:messages id="idMsmDocumento"></p:messages>
 					<table>
 						<tr>
 							<td><h:outputText value="Nivel:  " /></td>
-							<td><p:selectOneMenu 
+							<td><p:selectOneMenu  id="cboCodNivelNew"
 									value="#{delegadosMB.miembroNivel.codNiv}">
 									<f:selectItem itemLabel="--Seleccione--" itemValue="-1" />
 									<f:selectItems value="#{delegadosMB.listaNiveles}"
@@ -62,7 +66,11 @@
 						<tr>
 							<td><p:commandButton id="registrarDelegado" value="Guardar"
 									actionListener="#{delegadosMB.agregarDelegado}"
-									update=":frmMantenimientoDelegado:dtbListaDelegado :frmMantenimientoDelegado:txtCodRegistro :frmMantenimientoDelegado:txtDescRegMiembro :frmMantenimientoDelegado:txtPerfilRegMiembro">
+									update=":frmMantenimientoDelegado:dtbListaDelegado
+									        :frmMantenimientoDelegado:txtCodRegistro 
+									        :frmMantenimientoDelegado:txtDescRegMiembro 
+									        :frmMantenimientoDelegado:txtPerfilRegMiembro
+									        idMsmDocumento, cboCodNivelNew">
 								</p:commandButton></td>
 						</tr>
 
@@ -240,7 +248,7 @@
 							</p:column>
 							<p:column headerText="Eliminar">
 								<p:commandLink id="clkEliminar" ajax="true"
-									update=":formDialogEditarDelegacion:dtbListaDelegadoEditar,:frmDataTableDelegacion:dtbDelegacion"
+									update=":formDialogEditarDelegacion:dtbListaDelegadoEditar,:frmDataTableDelegacion:dtbDelegacion "
 									actionListener="#{delegadosMB.eliminarDelegadoEditar}">
 									<f:param name="idEl" value="#{rowIndex}"></f:param>
 									<f:param name="codMiembroEditar"
@@ -256,8 +264,8 @@
 										actionListener="#{delegadosMB.actualizarAgrupacion}"
 										action="#{delegadosMB.listarAgrupacionesDelegados}"
 										oncomplete="dlgEditarDelegacion.hide()"
-										update=":formDialogEditarDelegacion, :formDialogEditarDelegacion:dtbListaDelegadoEditar, :frmDataTableDelegacion:dtbDelegacion ,
-										:frmMantenimientoDelegado:idGrowlPrincipal">
+										update=":formDialogEditarDelegacion, :formDialogEditarDelegacion:dtbListaDelegadoEditar, :frmDataTableDelegacion:dtbDelegacion 
+										">
 									</p:commandButton></td>
 							</tr>
 						</table>
