@@ -95,6 +95,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			existe=true;
 		}
 		} 
+		logger.info("existe :: " +existe);
 		return existe;
 	}
 	
