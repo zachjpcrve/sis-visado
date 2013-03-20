@@ -324,12 +324,12 @@ public class DelegadosMB {
 				}
                 logger.info("Tamanio listaDelegados "+listaDelegados.size());
 				//
-				codRegistro = "";
+				/*codRegistro = "";
 				desRegistro = "";
 				perfilRegistro = "";
 				criterioRegistro = "";
-				validarCodRegistro = false;
-                //validarCodRegistro = false;
+				validarCodRegistro = false;*/
+                validarCodRegistro = false;
 			} else {
 				Utilitarios.mensajeError("Error",
 						"Un Nivel no puede tener mas de 5 delegados");
