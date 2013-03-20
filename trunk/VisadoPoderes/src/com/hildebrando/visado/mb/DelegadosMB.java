@@ -70,6 +70,7 @@ public class DelegadosMB {
 	private String sDelegadoEstado;
 	//boolean esDelegadoEditar=false;
 	boolean esDelegado=false;
+	boolean disabledCodNivel=false;
 	public DelegadosMB() {
 		criterioRegistro = "";
 		codRegistro = "";
@@ -205,7 +206,7 @@ public class DelegadosMB {
 					Utilitarios.mensajeInfo("Info", "Seleccione un Nivel");
 				}		
 				} else {
-					Utilitarios.mensajeError("Info","Ingrese el código del delegado");
+					//
 					desRegistroEditar = "";
 					perfilRegistroEditar = "";
 					criterioRegistroEditar = "";
@@ -264,6 +265,10 @@ public class DelegadosMB {
 		logger.info("DelegadosMB : agregarDelegado");
 		boolean codigoRepetido = false;
 		boolean nivelDiferente = false;
+		if(miembroNivel.getCodNiv().equals("-1")){
+			Utilitarios.mensajeError("Error","Debe seleccionar un nivel para agregar");
+			return;
+		}
 		if (isValidarCodRegistro() == true) {
 			if (listaDelegados.size() < 5) {
 				delegado = new TiivsMiembroNivel();
@@ -304,15 +309,18 @@ public class DelegadosMB {
 						listaDelegados.add(delegado);
 						esDelegado=false;
 					} else {
-						Utilitarios
-								.mensajeError("Error",
-										"Debe seleccionar el mismo nivel para los delegados a agregar");
+						Utilitarios.mensajeError("Error","Debe seleccionar el mismo nivel para los delegados a agregar");
 					}
 
 				} else {
 					Utilitarios
 							.mensajeError("Error",
 									"El delegado ya ha sido seleccionado para este nivel");
+					/*codRegistro = "";
+					desRegistro = "";
+					perfilRegistro = "";
+					criterioRegistro = "";
+					validarCodRegistro = false;*/
 				}
                 logger.info("Tamanio listaDelegados "+listaDelegados.size());
 				//
@@ -321,6 +329,7 @@ public class DelegadosMB {
 				perfilRegistro = "";
 				criterioRegistro = "";
 				validarCodRegistro = false;
+                //validarCodRegistro = false;
 			} else {
 				Utilitarios.mensajeError("Error",
 						"Un Nivel no puede tener mas de 5 delegados");
@@ -339,11 +348,19 @@ public class DelegadosMB {
 			perfilRegistro = "";
 			criterioRegistro = "";
 			validarCodRegistro = false;
+			Utilitarios.mensajeError("Info","Ingrese el código del delegado");
 			//
 		}
 		}else{
 			Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Responsable, no puede ser Delegado del mismo Nivel");
 		}
+		if(listaDelegados.size()>0){
+			//Se cambia a Disabled true
+			disabledCodNivel=true;
+		}else{
+			disabledCodNivel=false;
+		}
+		
 	}
 
 	public void estadoAgrupacion() {
@@ -468,6 +485,7 @@ public class DelegadosMB {
 			perfilRegistroEditar = "";
 			criterioRegistroEditar = "";
 			validarCodRegistroEditar = false;
+			Utilitarios.mensajeError("Info","Ingrese el código del delegado");
 			//
 		}
 		}else{
@@ -484,6 +502,12 @@ public class DelegadosMB {
 		id = params.get("id");
 		codigo = Integer.parseInt(id);
 		listaDelegados.remove(codigo);
+		if(listaDelegados.size()>0){
+			//Se cambia a Disabled true
+			disabledCodNivel=true;
+		}else{
+			disabledCodNivel=false;
+		}
 
 	}
 
@@ -518,6 +542,7 @@ public class DelegadosMB {
 		perfilRegistro = "";
 		criterioRegistro = "";
 		validarCodRegistro = false;
+		disabledCodNivel=false;
 	}
 
 	public void actualizarAgrupacion() throws Exception {
@@ -968,4 +993,13 @@ public class DelegadosMB {
 	public void setsDelegadoEstado(String sDelegadoEstado) {
 		this.sDelegadoEstado = sDelegadoEstado;
 	}
+
+	public boolean isDisabledCodNivel() {
+		return this.disabledCodNivel;
+	}
+
+	public void setDisabledCodNivel(boolean disabledCodNivel) {
+		this.disabledCodNivel = disabledCodNivel;
+	}
+	
 }

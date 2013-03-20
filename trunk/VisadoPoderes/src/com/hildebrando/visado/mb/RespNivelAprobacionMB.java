@@ -446,10 +446,11 @@ public class RespNivelAprobacionMB {
 		logger.info("EditRespNivelAprobacionMB : obtenerDatosMiembro "+this.bEditar);
 		try {
 			if (!miembroNivelDto.getRegistro().equals("")) {
-				if (codNivel!=null) {
+				
 				logger.info("----------------- Entro con Registro no vacio");
 				miembros = delegadosService.obtenerDatosMiembro(miembroNivelDto.getRegistro().toUpperCase());
 				 esDelegado=false;
+				 if (codNivel!=null) {
 				if (miembros.size() > 0) {
 					for (TiivsMiembroNivel x : miembros.get(0).getTiivsMiembroNivels()) {
 						if(x.getTipoRol().equals("D")&&x.getCodNiv().equals(codNivel)){
@@ -478,6 +479,11 @@ public class RespNivelAprobacionMB {
 				}
 				}else{
 					Utilitarios.mensajeInfo("Info", "Seleccione un Nivel");
+					if(!miembroNivelDto.getRegistro().equals("")){
+						miembroNivelDto.setDescripcion(miembros.get(0).getDescripcion());
+						miembroNivelDto.setDesGrupo(miembros.get(0).getTiivsGrupo().getDesGrupo());
+					listarNivelesPorResponsable(miembroNivelDto.getRegistro().toUpperCase());
+					}
 				}
 				} else {
 					Utilitarios.mensajeInfo("Info","Ingrese el código del Responsable");
