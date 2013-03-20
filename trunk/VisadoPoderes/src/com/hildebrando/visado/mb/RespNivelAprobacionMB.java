@@ -289,6 +289,9 @@ public class RespNivelAprobacionMB {
 		    GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		logger.info("idResp " +idResp);
 			List<TiivsMiembroNivel> listaDeMiembrosNivel= new ArrayList<TiivsMiembroNivel>();
+			List<MiembroNivelDTO>  lstTempFinal= new ArrayList<MiembroNivelDTO>();
+			List<MiembroNivelDTO>  lstTemp= new ArrayList<MiembroNivelDTO>();
+			lstTemp.addAll(respNiveles);
 			Busqueda filtroMiembro= Busqueda.forClass(TiivsMiembroNivel.class);
 			if(idResp!=""||idResp!=null){
 			filtroMiembro.add(Restrictions.eq("tiivsMiembro.codMiembro", idResp));
@@ -330,8 +333,17 @@ public class RespNivelAprobacionMB {
 						e.getTiivsMiembro().getTiivsGrupo().getDesGrupo(),
 						e.getFechaRegistro().toString(),
 						e.getUsuarioRegistro(), e.getEstado(), descEstado, ris,rfs, rid, rfd, rie, rfe,e.getLabelAccion()));
+				
 			}
+			lstTempFinal.addAll(respNiveles);
 			
+			for (MiembroNivelDTO a : lstTemp) {
+					if(a.getId()==0){
+						lstTempFinal.add(a);
+					}
+			}
+			respNiveles=new ArrayList<MiembroNivelDTO>();
+			respNiveles.addAll(lstTempFinal);
 			
 	}
 	private boolean  validarRegistroResponsableNivel(){
@@ -480,8 +492,10 @@ public class RespNivelAprobacionMB {
 				}else{
 					Utilitarios.mensajeInfo("Info", "Seleccione un Nivel");
 					if(!miembroNivelDto.getRegistro().equals("")){
+						if(miembros.size()>0){
 						miembroNivelDto.setDescripcion(miembros.get(0).getDescripcion());
 						miembroNivelDto.setDesGrupo(miembros.get(0).getTiivsGrupo().getDesGrupo());
+						}
 					listarNivelesPorResponsable(miembroNivelDto.getRegistro().toUpperCase());
 					}
 				}
@@ -786,9 +800,9 @@ public class RespNivelAprobacionMB {
 			if (miembroNivelDTO.getNuevo() == 1) {
 
 				TiivsMiembro miembro = new TiivsMiembro();
-				miembro.setCodMiembro(miembroNivelDTO.getRegistro());
-				miembro.setDescripcion(miembroNivelDTO.getDescripcion());
-				miembroBuscar = obtenerMiembro(miembro.getCodMiembro());
+				miembro.setCodMiembro(miembroNivelDTO.getRegistro().toUpperCase());
+				miembro.setDescripcion(miembroNivelDTO.getDescripcion().toUpperCase());
+				miembroBuscar = obtenerMiembro(miembro.getCodMiembro().toUpperCase());
 				logger.info("Tamanio de la lista miembroBuscar " +miembroBuscar.size());
 				TiivsGrupo tiivsGrupo = new TiivsGrupo();
 				tiivsGrupo.setCodGrupo(miembroBuscar.size()==0?"":miembroBuscar.get(0).getTiivsGrupo().getCodGrupo());	
