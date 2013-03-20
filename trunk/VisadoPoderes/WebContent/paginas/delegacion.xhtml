@@ -264,7 +264,10 @@
 										actionListener="#{delegadosMB.actualizarAgrupacion}"
 										action="#{delegadosMB.listarAgrupacionesDelegados}"
 										oncomplete="dlgEditarDelegacion.hide()"
-										update=":formDialogEditarDelegacion, :formDialogEditarDelegacion:dtbListaDelegadoEditar, :frmDataTableDelegacion:dtbDelegacion 
+										update=":formDialogEditarDelegacion,
+										 :formDialogEditarDelegacion:dtbListaDelegadoEditar,
+										  :frmDataTableDelegacion:dtbDelegacion ,
+										  :frmMantenimientoDelegado:idGrowlPrincipal
 										">
 									</p:commandButton></td>
 							</tr>
