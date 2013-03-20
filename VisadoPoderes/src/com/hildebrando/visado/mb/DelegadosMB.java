@@ -314,7 +314,7 @@ public class DelegadosMB {
 							.mensajeError("Error",
 									"El delegado ya ha sido seleccionado para este nivel");
 				}
-
+                logger.info("Tamanio listaDelegados "+listaDelegados.size());
 				//
 				codRegistro = "";
 				desRegistro = "";
@@ -624,6 +624,7 @@ public class DelegadosMB {
 
 	public void listarAgrupacionesDelegados() {
 		logger.info("DelegadosMB : listarAgrupacionesDelegados");
+		limpiarListaAgrupaciones();
 		try {
 			SolicitudDao<TiivsMiembroNivel, Object> service = (SolicitudDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 			List<AgrupacionDelegadosDto> lstDele = new ArrayList<AgrupacionDelegadosDto>();
