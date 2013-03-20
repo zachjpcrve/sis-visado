@@ -10,6 +10,7 @@ import com.hildebrando.visado.modelo.RecaudacionTipoServ;
 import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.SolicitudesTipoServicio;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
+import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
@@ -32,4 +33,5 @@ public interface SolicitudDao<K, T> extends GenericDao<K, T>{
 	public List<AgrupacionDelegadosDto>  obtenerPKDelegados() throws Exception ;
 	public List<TiivsNivel> listarNivelesDistinct() throws Exception;
 	public List<String> obtenerCodigosSolicitudesARevocarRechazar() throws Exception ;
+	public boolean validarExisteGrupoDelegados(List<TiivsMiembroNivel> listaDelegados);
 }
