@@ -17,13 +17,17 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
+import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
+import com.bbva.persistencia.generica.dao.impl.SolicitudDaoImpl;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.AgrupacionDelegadosDto;
 import com.hildebrando.visado.dto.AgrupacionNivelDelegadoDto;
 import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.GrupoDto;
+import com.hildebrando.visado.dto.MiembroNivelDTO;
+import com.hildebrando.visado.modelo.TiivsGrupo;
 import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsNivel;
@@ -518,7 +522,7 @@ public class DelegadosMB {
 
 	public void actualizarAgrupacion() throws Exception {
 		logger.info("DelegadosMB : actualizarAgrupacion");
-		
+		if(!validarExisteGrupoDelegados(listaDelegadosEditar)){
 		Date sysDate = new Date();
 		Timestamp utilDateDate = new Timestamp(sysDate.getTime());
 		for (int i = 0; i < listaDelegadosEditarEliminar.size(); i++) {
@@ -536,7 +540,12 @@ public class DelegadosMB {
 		}
 		limpiarListaAgrupaciones();
 		sDelegadoEstado = null;
-		iDelegadoGrupo = 0;
+		iDelegadoGrupo = 0;  
+					
+		}else{
+			logger.debug("La combinación ya existe para el Nivel Seleccionado ");
+			Utilitarios.mensajeInfo("Info", "La combinación ya existe para el Nivel Seleccionado ");
+		}
 	}
 
 	public void registrarAgrupacion() throws Exception {
@@ -546,7 +555,11 @@ public class DelegadosMB {
 		if (listaDelegados.size() > 0) {
 			if(listaDelegados.size()>5){
 				Utilitarios.mensajeInfo("Info", "Solo se pueden registrar 5 delegados por combinación");
-			}else{
+			}else if(this.validarExisteGrupoDelegados(listaDelegados)){
+				Utilitarios.mensajeInfo("Info", "La combinación ya existe para el Nivel Seleccionado ");
+			}
+			else{
+			
 			Date sysDate = new Date();/*
 									 * String utilDateString =
 									 * formatear.format(sysDate);
@@ -571,6 +584,13 @@ public class DelegadosMB {
 		}
 	}
 
+	 private boolean validarExisteGrupoDelegados(List<TiivsMiembroNivel> listaDelegados){
+		 logger.info("****** validarExisteGrupoDelegados ********");
+		 boolean  retorno= false;
+		 SolicitudDao<Boolean, Object> serviceTiivsGrupo = (SolicitudDao<Boolean, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+		 retorno=serviceTiivsGrupo.validarExisteGrupoDelegados(listaDelegados);
+		 return  retorno;
+	 }
 	private int obtenerId() {
 		logger.info("DelegadosMB : obtenerId");
 		int id = 0;
