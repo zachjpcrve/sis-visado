@@ -27,6 +27,7 @@ import com.hildebrando.visado.modelo.RecaudacionTipoServ;
 import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.SolicitudesTipoServicio;
 import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
+import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
@@ -39,6 +40,61 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	
 	public SolicitudDaoImpl() {
 	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean validarExisteGrupoDelegados(List<TiivsMiembroNivel> listaDelegados ){
+		logger.info("******** validarExisteGrupoDelegados ****** ");
+		String sqlGrupo="";
+		final String sql;
+		logger.info("xxxx "+listaDelegados.size());
+	
+		boolean existe =false;
+		if(listaDelegados.size()>0){
+			
+		if(listaDelegados.get(0).getGrupo()!=null||listaDelegados.get(0).getGrupo()!=0){
+			sqlGrupo=" AND GRUPO!="+listaDelegados.get(0).getGrupo();
+		}
+		
+		
+		  String sqlAux ="SELECT COUNT(*) FROM " +
+				" (SELECT COUNT(*) MIEMBROS, GRUPO FROM tiivs_miembro_nivel " +
+				" where tipo_rol = 'D' AND cod_niv='"+listaDelegados.get(0).getCodNiv()+"'" +sqlGrupo+
+				" GROUP BY GRUPO ) T " +
+				" WHERE T.MIEMBROS = "+listaDelegados.size();
+				for (TiivsMiembroNivel x : listaDelegados) {
+					sqlAux+=" and (SELECT COUNT(*) FROM tiivs_miembro_nivel  WHERE tipo_rol = 'D' " +
+							" AND cod_niv='"+x.getCodNiv().trim()+"'" +
+							" AND GRUPO = T.GRUPO AND COD_MIEMBRO = '"+x.getTiivsMiembro().getCodMiembro().trim() +"')=1 " ;
+				}
+		
+		sql=sqlAux;
+		logger.info("sql ::: "+sql);
+		BigDecimal valorRetorno=new BigDecimal(0);
+		List ResultList = (List) getHibernateTemplate().execute(
+				new HibernateCallback() {
+					public List doInHibernate(Session session)
+							throws HibernateException {
+						SQLQuery sq = session.createSQLQuery(sql);
+						return sq.list();
+					}
+				});
+
+		if (ResultList.size() > 0) {
+			for (int i = 0; i <= ResultList.size() - 1; i++) {
+				valorRetorno = (BigDecimal) ResultList.get(i);
+
+			}
+		}
+		
+		if(valorRetorno.intValue()==0){
+			existe=false;
+		}else{
+			existe=true;
+		}
+		} 
+		return existe;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<String> obtenerCodigosSolicitudesARevocarRechazar() throws Exception {
 		List<String> listaCodgiosSolicitud=new ArrayList<String>();
