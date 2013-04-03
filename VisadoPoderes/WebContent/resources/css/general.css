@@ -1,0 +1,51 @@
+@CHARSET "ISO-8859-1";
+
+.completo {
+	width: 100%;
+	display: block;
+}
+
+.mitad {
+	width: 49%;
+	display: block;
+	float: left;
+}
+
+.centrar {
+	text-align: center;
+}
+
+.clear {
+	clear: both;
+}
+
+.tercio {
+	width: 30%;
+	display: block;
+	float: left;
+}
+
+.dostercios {
+	width: 70%;
+	display: block;
+	float: left;
+}
+
+.uncuarto {
+	width: 25%;
+	display: block;
+	float: left;
+}
+
+.input,.combo {
+	margin-top: 0.25em;
+}
+/* Estilo de primefaces modificado*/
+.ui-widget-content .update,.update .ui-panel,.update .ui-panel-content {
+	padding-left: 0em !important;
+	border: 0px !important;
+}
+
+.update .combo,.update .input {
+	margin-left: 0.4em !important;
+}
