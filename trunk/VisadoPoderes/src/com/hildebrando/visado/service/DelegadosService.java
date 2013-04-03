@@ -3,8 +3,7 @@ package com.hildebrando.visado.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.codehaus.groovy.tools.shell.ParseCode;
+import org.apache.log4j.Logger; 
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 

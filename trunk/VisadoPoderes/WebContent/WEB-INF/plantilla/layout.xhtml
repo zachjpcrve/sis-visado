@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='ISO-8859-1' ?>  
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -7,12 +7,13 @@
 	xmlns:p="http://primefaces.org/ui">
 	
 <h:head>
-
+	 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/> 
 	<title><ui:insert name="titulo">
 			<h:outputText value="#{msjs.titulo_defecto}" />
 		</ui:insert></title>
 
 <h:outputStylesheet library="css" name="visado.css" />
+<h:outputStylesheet library="css" name="general.css" />
 <!--[if IE 7]>
 <style type="text/css">
 .ui-menu .ui-menu-parent .ui-menu-child {
@@ -77,8 +78,8 @@
 
 	</div>
 
-   <p:confirmDialog message="驴Est&#225; seguro de cerrar sesi&#243;n?"
-		width="300" header="Mensaje de cerrar sesi贸n" severity="alert"
+   <p:confirmDialog message="縀st&#225; seguro de cerrar sesi&#243;n?"
+		width="300" header="Mensaje de cerrar sesi髇" severity="alert"
 		widgetVar="cfdCerrarSesion" modal="true">
 		<h:form id="frmCerrarSesion">
 			<p:commandButton value="Si" ajax="false"
@@ -91,13 +92,13 @@
 	
 	<p:idleMonitor onactive="sesionCaducada.show();"
 		timeout="#{session.maxInactiveInterval * 1000}" />
-	<p:dialog header="Sesi贸n caducada" widgetVar="sesionCaducada"
+	<p:dialog header="Sesi髇 caducada" widgetVar="sesionCaducada"
 		modal="true" fixedCenter="true" closable="false" width="400"
 		visible="false">
 		<h:outputText
-			value="La sesi贸n ha caducado, por favor vuelva a intentarlo" />
+			value="La sesi髇 ha caducado, por favor vuelva a intentarlo" />
 		<input id="confirmBackToLogin" type="button"
-			value="ir a iniciar sesi贸n"
+			value="ir a iniciar sesi髇"
 			onclick="window.location='seguridad.xhtml';" />
 	</p:dialog>
 
