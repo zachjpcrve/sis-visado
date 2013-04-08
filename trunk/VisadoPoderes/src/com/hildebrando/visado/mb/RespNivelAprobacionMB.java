@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.primefaces.event.RowEditEvent;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -375,8 +373,10 @@ public class RespNivelAprobacionMB {
 		}
 	 return	retorno;
 	}
-	private  void nuevoResponsable()throws Exception{
-		if(validarNivelPorPersona(getCodNivel())){
+	private  void nuevoResponsable()throws Exception
+	{
+		if(validarNivelPorPersona(getCodNivel()))
+		{
 			IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 			logger.info(" ************** Creando nuevo Responsable ************"  );
 			int ris = 0, rfs = 0;
@@ -397,7 +397,9 @@ public class RespNivelAprobacionMB {
 			miembroNivel.setDescEstado(Utilitarios.obternerDescripcionEstado(miembroNivel.getEstado()));
 			List<TiivsNivel> tiivsNivels=this.listarNivelesXusuario(miembroNivel.getCodNiv());
 			miembroNivel.setListaNiveles(tiivsNivels);
-			for (TiivsNivel nivel : tiivsNivels) {
+			
+			for (TiivsNivel nivel : tiivsNivels) 
+			{
 				if (nivel.getMoneda().compareTo(ConstantesVisado.MONEDAS.COD_SOLES) == 0) {
 					ris = nivel.getRangoInicio();rfs = nivel.getRangoFin();}
 				if (nivel.getMoneda().compareTo(ConstantesVisado.MONEDAS.COD_DOLAR) == 0) {
@@ -405,11 +407,15 @@ public class RespNivelAprobacionMB {
 				if (nivel.getMoneda().compareTo(ConstantesVisado.MONEDAS.COD_EUROS) == 0) {
 					rie = nivel.getRangoInicio();rfe = nivel.getRangoFin();}
 			}
-			if(miembroNivel.getEstado().equals("1")){
+			
+			if(miembroNivel.getEstado().equals("1"))
+			{
 				miembroNivel.setLabelAccion("Inactivar");
-			}else if(miembroNivel.getEstado().equals("0")){
+			}
+			else if(miembroNivel.getEstado().equals("0")){
 				miembroNivel.setLabelAccion("Activar");
 			}
+			
 			logger.info("Datos a mostrar al registrar :: " +miembroNivel.toString());
 			respNiveles.add(new MiembroNivelDTO(1, miembroNivel.getTiivsMiembro().getDescripcion(),
 					   miembroNivel.getCodNiv(), miembroNivel.getDescNiv(),
