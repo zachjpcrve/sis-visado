@@ -96,14 +96,14 @@
 
 				<p:commandButton value="Nuevo"
 					actionListener="#{revocadosMB.editPendRevocadoNuevo}"
-					oncomplete="dlgApoPodPendEdit.show();" update=":frmPendEdit"
+					oncomplete="dlgApoPodPendEdit.show();" update=":frmPendEdit:pnlRegistrarPendEdit"
 					ajax="true" />
 
 				<h:outputLabel id="outLblTotal"
 					value="Total de registros: #{revocadosMB.nroRegistros} Registros" />
 
 				<p:commandButton value="Buscar"
-					action="#{revocadosMB.buscarRevocado}" ajax="false" update="tbl :frmConsRev:pnlBotones"  />
+					action="#{revocadosMB.buscarRevocado}" ajax="false" update=":frmConsRev:pnlTablaRevocados :frmConsRev:pnlBotones"  />
 
 				<p:commandButton value="Exportar" disabled="#{revocadosMB.deshabilitarExportar}"
 					actionListener="#{revocadosMB.descargarArchivoRecaudacion}"
@@ -113,7 +113,7 @@
 
 			</h:panelGrid>
 
-
+                                                <p:outputPanel id="pnlTablaRevocados">
 			<p:dataTable style="width: 800px;" id="tbl" var="revocado"
 				value="#{revocadosMB.revocados}" paginator="true" rows="5"
 				paginatorPosition="bottom">
@@ -179,12 +179,13 @@
 
 				</p:column>
 			</p:dataTable>
-
+			</p:outputPanel>
 
 
 		</h:form>
 
 		<h:form id="frmCliente">
+		 <p:outputPanel id="pnlfrmCliente">
 
 			<!-- Buscar Clientes -->
 			<p:dialog widgetVar="dlgCliente" modal="true" id="idDlgCliente"
@@ -232,7 +233,7 @@
 				</p:outputPanel>
 
 			</p:dialog>
-
+</p:outputPanel>
 		</h:form>
 
 		<!-- Pendiente/Editar -->
@@ -242,6 +243,7 @@
 			height="#{revocadosMB.alto_Popup_Revoc_Poder}">
 
 			<h:form id="frmPendEdit">
+			<p:outputPanel id="pnlRegistrarPendEdit">
 
 				<h:panelGrid columns="1" id="gridMsj">
 					<p:messages globalOnly="true" showDetail="true" />
@@ -267,10 +269,10 @@
 						
 					</p:inputText>
 					<p:message for="txtNumDoi"></p:message>
-
+<!-- :gridApodPod, :frmPendEdit:dtClientes,
+			:frmPendEdit:gridApodPod2, :frmPendEdit:gridApodPod3 , :frmPendEdit:gridMsj -->
 					<p:commandButton id="btnBuscar"
-						update=":frmCliente, :frmPendEdit:gridApodPod, :frmPendEdit:dtClientes,
-			:frmPendEdit:gridApodPod2, :frmPendEdit:gridApodPod3 , :frmPendEdit:gridMsj"
+						update=":frmCliente:pnlfrmCliente, :frmPendEdit:pnlRegistrarPendEdit"
 						icon="ui-icon-seek-next" action="#{revocadosMB.buscarPersona}"
 						ajax="true" />
 
@@ -333,16 +335,18 @@
 
 					<p:commandButton id="btnAgregar" value="Agregar"
 						icon="ui-icon-plus"
-						update="gridMsj gridApodPod gridApodPod2 gridApodPod3 dtClientes"
+						update="frmPendEdit:pnlRegistrarPendEdit"
 						actionListener="#{revocadosMB.agregarRevocado}" ajax="true" />
-
+					<!-- gridMsj gridApodPod gridApodPod2 gridApodPod3 dtClientes -->
 					<p:spacer width="10" height="20" />
 
 					<p:commandButton id="btnLimpiar" value="Limpiar"
 						icon="ui-icon-trash"
 						actionListener="#{revocadosMB.limpiarCriteriosBusqueda}"
-						update=":frmPendEdit:gridApodPod :frmPendEdit:gridApodPod2 :frmPendEdit:gridApodPod3"
+						update=":frmPendEdit:pnlRegistrarPendEdit"
 						ajax="true" />
+						
+						<!-- :frmPendEdit:gridApodPod :frmPendEdit:gridApodPod2 :frmPendEdit:gridApodPod3" -->
 
 				</h:panelGrid>
 
@@ -509,7 +513,7 @@
 				</p:outputPanel>
 
 
-
+                                                        </p:outputPanel>
 			</h:form>
 
 		</p:dialog>
@@ -519,6 +523,7 @@
 			id="idDlgApoPodEdit" header="Apoderado/Poderdante">
 
 			<h:form id="frmActEdit">
+			<p:outputPanel id="pnlfrmActEdit"> 
 
 				<h:panelGrid columns="1" id="gridMsj">
 					<p:messages globalOnly="true" />
@@ -527,7 +532,7 @@
 				<h:panelGrid columns="1" id="gridBtn">
 
 					<p:commandButton id="btnInactivar" value="Inactivar"
-						update=":frmActEdit:dtClientes, :frmConsRev:tbl"
+						update=":frmActEdit:dtClientes, :frmConsRev:pnlTablaRevocados"
 						actionListener="#{revocadosMB.inactivarCombinacion}" ajax="true"
 						process="@form" oncomplete="dlgApoPodActEdit.hide();" />
 				</h:panelGrid>
@@ -648,7 +653,9 @@
 					</table>
 
 				</p:outputPanel>
+				</p:outputPanel>
 			</h:form>
+			
 
 		</p:dialog>
 
@@ -661,7 +668,7 @@
 			<h:form>
 				<p:commandButton value="Sí" process=":frmPendEdit:dtClientes"
 					actionListener="#{revocadosMB.revocarApodPod}"
-					update=":frmPendEdit:gridMsj :frmConsRev:tbl :frmConsRev:pnlBotones" ajax="false"
+					update=":frmPendEdit:gridMsj :frmConsRev:pnlTablaRevocados :frmConsRev:pnlBotones" ajax="false"
 					oncomplete="cfdRevocar.hide();">
 				</p:commandButton>
 
@@ -697,9 +704,9 @@
 			modal="true">
 
 			<h:form>
-				<p:commandButton value="Sí" process=":frmConsRev:tbl"
+				<p:commandButton value="Sí" process=":frmConsRev:pnlTablaRevocados"
 					actionListener="#{revocadosMB.deleteCombinacion}" ajax="true"
-					update=":frmConsRev:tbl" oncomplete="cfdEliminar.hide();">
+					update=":frmConsRev:pnlTablaRevocados" oncomplete="cfdEliminar.hide();">
 				</p:commandButton>
 
 				<p:commandButton value="No" onclick="cfdEliminar.hide();">
