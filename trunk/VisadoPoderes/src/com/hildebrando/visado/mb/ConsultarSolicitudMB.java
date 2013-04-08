@@ -1514,6 +1514,9 @@ public class ConsultarSolicitudMB {
 						this.bSeccionComentario = false;
 					}
 				}
+				
+				//actualizar secciones según estado/rol
+				this.actualizarEstadoReservadoSolicitud();						
 
 				this.obtenerHistorialSolicitud();
 				
