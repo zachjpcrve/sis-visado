@@ -71,6 +71,7 @@
 		</SCRIPT>
 		<!-- Mantenimiento Documentos -->
 		<h:form id="frmMantenimientoDocumentos">
+		                <p:outputPanel id="pnlfrmMantenimientoDocumentos"> 
 			<p:panel header="Documentos" style="width: 85%">
 				<p:messages id="idMsmDocumento"></p:messages>
 				<table>
@@ -99,17 +100,19 @@
 				<p:commandButton id="registrarDocumento" value="Guardar" ajax="true"
 					action="#{tiposDOIMB.listarDocumentos}"
 					actionListener="#{tiposDOIMB.registrar}"
-					update=":frmDataTableDocumentos :frmMantenimientoDocumentos">
+					update=":frmDataTableDocumentos:pnlfrmDataTableDocumentos :frmMantenimientoDocumentos:pnlfrmMantenimientoDocumentos">
 				</p:commandButton>
 				<p:commandButton id="limpiarDocumento" value="Limpiar" ajax="true"
 					action="#{tiposDOIMB.limpiarCampos}"
-					update=":frmMantenimientoDocumentos">
+					update=":frmMantenimientoDocumentos:pnlfrmMantenimientoDocumentos">
 				</p:commandButton>
 			</p:panel>
+			</p:outputPanel>
 		</h:form>
 		<!--Fin Mantenimiento Documentos -->
 		<!-- Data Table Documentos -->
 		<h:form id="frmDataTableDocumentos">
+		<p:outputPanel id="pnlfrmDataTableDocumentos">
 			<p:panel header="Documentos" style="width: 85%">
 				<p:dataTable id="dtbUsuarios" value="#{tiposDOIMB.documentos}"
 					var="doc" paginator="true" rows="50" paginatorPosition="bottom"
@@ -130,7 +133,7 @@
 					</p:column>
 					<p:column headerText="Accion">
 						<p:commandLink id="clinkEditar" ajax="true"
-							update=":frmMantenimientoDocumentos"
+							update=":frmMantenimientoDocumentos:pnlfrmMantenimientoDocumentos"
 							actionListener="#{tiposDOIMB.editarDocumento}">
 							<f:param name="codMultitabla" value="#{doc.id.codMult}"></f:param>
 							<f:param name="codElemento" value="#{doc.id.codElem}"></f:param>
@@ -139,6 +142,7 @@
 					</p:column>
 				</p:dataTable>
 			</p:panel>
+			</p:outputPanel>
 
 		</h:form>
 		<!--Fin Data Table Documentos -->
