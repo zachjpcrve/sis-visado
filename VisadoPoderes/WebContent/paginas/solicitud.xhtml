@@ -44,11 +44,15 @@
 							icon="ui-icon-document"
 							update=":formSolicitudRegistro:idMsmSolicitudRegistro"
 							onclick="confirmation.show()" />
+						
+						<!-- 
 						<p:commandButton value="Imprimir" id="btnImprimir3"
 							icon="ui-icon-document" />
+						 -->
 
 						<p:commandButton value="Salir" id="btnSalir3"
-							onclick="cfdCerrarSesion.show()" icon="ui-icon-document" />
+						    onclick="window.location.href='#{root}faces/paginas/bienvenido.xhtml'"
+							icon="ui-icon-document" />
 
 					</h:form>
 				</p:toolbarGroup>

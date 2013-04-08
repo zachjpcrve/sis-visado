@@ -14,7 +14,6 @@
 				<h:panelGrid columns="5">
 
 			<p:tabMenu activeIndex="0" style="width:750px;">
-				<p:menuitem value="Solicitud" url="/faces/paginas/detalleSolicitud.xhtml"
 					icon="ui-icon-star" />
 				<p:menuitem value="Seguimiento" actionListener="#{consultarSolicitudMB.obtenerHistorialSolicitud}"
 					url="/faces/paginas/seguimientoPestania.xhtml" icon="ui-icon-star" />
@@ -41,7 +40,7 @@
 		  <p:growl id="growlSolicitudSeguimiento" sticky="true" />		  		  
 		
 	      <p:spacer></p:spacer>
-	      <h:panelGrid columns="2">
+	      <h:panelGrid id="pnlGridformSolicitudSeguimiento" columns="2">
 	      <h:panelGrid rendered="#{consultarSolicitudMB.bSeccionComentario}">
 	      
 	        <!-- <p:messages id="idGrowlSolicitudRegistro"></p:messages>  -->
@@ -263,7 +262,7 @@
                 header="Confirmación" severity="alert" widgetVar="confirmation" >  
                   
         <center>
-        <p:commandButton id="confirmSiDic" value="Si" update=":formSolicitudSeguimiento" oncomplete="confirmation.hide()"   
+        <p:commandButton id="confirmSiDic" value="Si" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" oncomplete="confirmation.hide()"   
                     action="#{consultarSolicitudMB.dictaminarSolicitud}"  />  
         <p:commandButton id="declineNoDic" value="No" onclick="confirmation.hide()" type="button" />
         </center>   
@@ -289,7 +288,7 @@
               header="Revision" severity="alert" widgetVar="confirmation3" visible="true">  
             
             <center>    
-	        <p:commandButton id="confirmRev" value="Si"  oncomplete="confirmation3.hide()" update=":formSolicitudSeguimiento" 
+	        <p:commandButton id="confirmRev" value="Si"  oncomplete="confirmation3.hide()" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" 
 	            action="#{consultarSolicitudMB.mostrarCartaRevision}" actionListener="#{consultarSolicitudMB.actualizarEstadoEnRevisionSolicitud}" />  
 	        
 	        <p:commandButton id="declineRev" value="No" oncomplete="confirmation3.hide()" />
@@ -302,7 +301,7 @@
                 header="Confirmación" severity="alert" widgetVar="confirmationNivel" >  
         
         <center>          
-        <p:commandButton id="confirmSiDicNiv" value="Si" update=":formSolicitudSeguimiento :formSolicitudSeguimiento:growlSolicitudSeguimiento" oncomplete="confirmationNivel.hide()"   
+        <p:commandButton id="confirmSiDicNiv" value="Si" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento,:formSolicitudSeguimiento:growlSolicitudSeguimiento" oncomplete="confirmationNivel.hide()"   
                  action="#{consultarSolicitudMB.registrarEvaluacionNivel}"     />  
         <p:commandButton id="declineNoDicNiv" value="No" onclick="confirmationNivel.hide()" type="button" />
         </center>   
