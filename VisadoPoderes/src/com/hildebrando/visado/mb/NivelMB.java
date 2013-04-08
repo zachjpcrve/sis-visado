@@ -1,7 +1,5 @@
 package com.hildebrando.visado.mb;
 
-import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +13,6 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 
 import com.bbva.common.util.ConstantesVisado;
-import com.bbva.common.util.ConstantesVisado.MONEDAS;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
@@ -27,7 +24,6 @@ import com.hildebrando.visado.service.NivelService;
 public class NivelMB {
 	public static Logger logger = Logger.getLogger(NivelMB.class);
 	private SimpleDateFormat formatear = new SimpleDateFormat("dd/MM/yy");
-	private DateFormat df = DateFormat.getDateInstance();
 	private TiivsNivel nivel;
 	private List<TiivsMultitabla> moneda;
 	private List<TiivsNivel> niveles;
@@ -188,10 +184,10 @@ public class NivelMB {
 									seq = nivelService.obtenerSecuencialNivel();
 									nivelesMant.get(i).setId(seq);
 									nivelesMant.get(i).setFechaReg(new Date());
-									//nivelesMant.get(i).setUsuarioReg(usuario.getUID());
+									nivelesMant.get(i).setUsuarioReg(usuario.getUID());
 								}else{
 									nivelesMant.get(i).setFechaAct(new Date());
-									//nivelesMant.get(i).setUsuarioReg(usuario.getUID());
+									nivelesMant.get(i).setUsuarioReg(usuario.getUID());
 								}
 								nivelesMant.get(i).setDesNiv(nivelesMant.get(0).getDesNiv().toUpperCase());								
 								nivelesMant.get(i).setDesEstado(nivelesMant.get(0).getDesEstado());
