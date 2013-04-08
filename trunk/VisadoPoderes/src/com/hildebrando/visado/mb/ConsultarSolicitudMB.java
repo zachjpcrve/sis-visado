@@ -662,7 +662,7 @@ public class ConsultarSolicitudMB {
 							lstAbogados.add(x);
 						}
 						}else{
-							logger.info("LA SOLICITUD NO TIENE UN ESTUDIO ASIGNADO");
+							//logger.info("LA SOLICITUD NO TIENE UN ESTUDIO ASIGNADO");
 						}
 				}
 					}
@@ -1451,15 +1451,18 @@ public class ConsultarSolicitudMB {
 							  && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 	                    	 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
 						}else{
-							this.agregarNiveles(solicitudRegistrarT);
+							if(this.agregarNiveles(solicitudRegistrarT)){
+								this.bSeccionDictaminar = false;
+								this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
+								this.registrarHistorial(solicitudRegistrarT);
+								actualizarBandeja=true;
+								Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
+							}else{
+								logger.info("No se dictamino la solicitud, verificar los rangos del mantenimiento de Niveles");
+							}
 						}
 
-					this.bSeccionDictaminar = false;
-					this.solicitudRegistrarT = serviceS
-							.modificar(solicitudRegistrarT);
-					this.registrarHistorial(solicitudRegistrarT);
-					actualizarBandeja=true;
-					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
+			
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
 
@@ -1476,13 +1479,17 @@ public class ConsultarSolicitudMB {
                     		          && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
                     	 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
 					}else{
-						this.agregarNiveles(solicitudRegistrarT);
+						if(this.agregarNiveles(solicitudRegistrarT)){
+							this.bSeccionDictaminar = false;
+							this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
+							this.registrarHistorial(solicitudRegistrarT);
+							actualizarBandeja=true;
+							Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
+						}else{
+							logger.info("No se dictamino la solicitud, verificar los rangos del mantenimiento de Niveles");
+						}
 					}
-					this.bSeccionDictaminar = false;
-					this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
-					this.registrarHistorial(solicitudRegistrarT);
-					actualizarBandeja=true;
-					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
+					
 					
 					
 
@@ -1529,6 +1536,7 @@ public class ConsultarSolicitudMB {
 				
 	            Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
 	            		 filtro.add(Restrictions.eq("moneda",solicitud.getMoneda().trim()));
+	            		 filtro.add(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
 	            		 filtro.addOrder(Order.asc("codNiv"));
 	            		 
 				List<TiivsNivel> lstNiveles = service.buscarDinamico(filtro);
@@ -1568,20 +1576,21 @@ public class ConsultarSolicitudMB {
 	 }
 	
 	@SuppressWarnings({ "unchecked", "unused" })
-	public void agregarNiveles(TiivsSolicitud solicitud) throws Exception 
-	{
+	public boolean agregarNiveles(TiivsSolicitud solicitud) throws Exception 
+	{ boolean retorno=true;
 		logger.info("*********************************** agregarNiveles ********************************************");
 		List<String> lstCodNivel = new ArrayList<String>();
 		lstCodNivel=ObtenerNivelesXMoneda(solicitud);
-				logger.info(" ******************** Tamanio de la lista de Niveles *************** para probar: " + lstCodNivel.size());
+				
 		if(lstCodNivel==null){
 			String mensaje = "DATA INCONCISTENTE, EL RANGO FINAL DE TODOS LOS NIVELES , NO DEBE SER MENOR AL RANGO DE INICIO.";
 			Utilitarios.mensajeInfo("INFO", mensaje);
-			
+			retorno=false;
 		}
 		else if (lstCodNivel.size() > 0) {
-			// SI LA SOLICITUD SOPERA ALGUN NIVEL, ENTONCES PASA A ESTADO EN
-			// VERIFICACION A, SI NO A ACEPTADO
+			logger.info(" ******************** Tamanio de la lista de Niveles *************** para probar: " + lstCodNivel.size());
+			/** SI LA SOLICITUD SOPERA ALGUN NIVEL, ENTONCES PASA A ESTADO EN
+			 VERIFICACION A, SI NO A ACEPTADO*/
 			logger.info(" ******  LA SOLICITUD SUPERO ALGUN NIVEL, ENTONCES PASA A ESTADO EN  VERIFICACION A, SI NO A ACEPTADO");
 			if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
 				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
@@ -1615,15 +1624,16 @@ public class ConsultarSolicitudMB {
 				
 				serviceSolicitud.insertar(soliNivel);
 			}
-
+			retorno=true;
 		} else if (lstCodNivel.size() == 0) {
 			if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
 				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
 			} else if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
 				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
 			}
+			retorno=true;
 		}
-
+		return retorno;
 	}
 
 	public void registrarHistorial(TiivsSolicitud solicitud) throws Exception {
