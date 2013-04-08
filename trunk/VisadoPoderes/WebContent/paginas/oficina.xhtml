@@ -45,7 +45,7 @@
 					<tr>
 						<td><p:commandButton id="buscarOficina" value="Buscar"
 								ajax="true" action="#{oficinaMB.listarOficinasCombo}"
-								update=":frmDataTableOficina">
+								update=":frmDataTableOficina:pnlDataTableOficina">
 							</p:commandButton></td>
 					</tr>
 
@@ -55,38 +55,39 @@
 		<!-- Fin Oficina -->
 		<!-- Data Table Oficina -->
 		<h:form id="frmDataTableOficina">
-			<p:panel header="Habilitar Oficina" style="width: 85%">
-				<p:messages id="idMsmDocumento"></p:messages>
-				<p:dataTable id="dtbOficina" value="#{oficinaMB.oficinas}" var="ofi"
-					paginator="true" rows="50" paginatorPosition="bottom"
-					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
-					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
-					emptyMessage="No hay documentos">
-
-					<p:column headerText="Codigo">
-						<h:outputText value="#{ofi.codOfi}" />
-					</p:column>
-					<p:column headerText="Oficina">
-						<h:outputText value="#{ofi.desOfi}" />
-					</p:column>
-					<p:column headerText="Territorio">
-						<h:outputText value="#{ofi.descTerritorio}" />
-					</p:column>
-					<p:column headerText="Estado">
-						<h:outputText value="#{ofi.descEstado}" />
-					</p:column>
-					<p:column headerText="Accion">
-						<p:commandLink id="clinkEditar" ajax="true"
-							update=":frmDataTableOficina"
-							actionListener="#{oficinaMB.editarOficina}"
-							action="#{oficinaMB.cambiarEstado}">
-							<f:param name="codOficina" value="#{ofi.codOfi}"></f:param>
-							<h:outputText value="#{ofi.estado}" />
-						</p:commandLink>
-					</p:column>
-				</p:dataTable>
-			</p:panel>
-
+			<p:outputPanel id="pnlDataTableOficina">
+				<p:panel header="Habilitar Oficina" style="width: 85%">
+					<p:messages id="idMsmDocumento"></p:messages>
+					<p:dataTable id="dtbOficina" value="#{oficinaMB.oficinas}" var="ofi"
+						paginator="true" rows="50" paginatorPosition="bottom"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+						currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+						emptyMessage="No hay documentos">
+	
+						<p:column headerText="Codigo">
+							<h:outputText value="#{ofi.codOfi}" />
+						</p:column>
+						<p:column headerText="Oficina">
+							<h:outputText value="#{ofi.desOfi}" />
+						</p:column>
+						<p:column headerText="Territorio">
+							<h:outputText value="#{ofi.descTerritorio}" />
+						</p:column>
+						<p:column headerText="Estado">
+							<h:outputText value="#{ofi.descEstado}" />
+						</p:column>
+						<p:column headerText="Accion">
+							<p:commandLink id="clinkEditar" ajax="true"
+								update=":frmDataTableOficina:pnlDataTableOficina"
+								actionListener="#{oficinaMB.editarOficina}"
+								action="#{oficinaMB.cambiarEstado}">
+								<f:param name="codOficina" value="#{ofi.codOfi}"></f:param>
+								<h:outputText value="#{ofi.estado}" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</p:outputPanel>
 		</h:form>
 		<!--Fin Data Table Oficina -->
 	</ui:define>

@@ -9,88 +9,91 @@
 	<ui:define name="contenido">
 		<!-- Mantenimiento Documentos -->
 		<h:form id="frmMantenimientoDocumentos">
-			<p:panel header="Documentos por Tipo de Solicitud" style="width: 85%">
-				<p:messages id="idMsmDocumento"></p:messages>
-				<table>
-					<tr>
-						<td><h:outputText value="Documento:  " /></td>
-						<td><p:selectOneMenu disabled="#{documentoMB.bEditar}"
-								value="#{documentoMB.tipoSolicDocumento.id.codDoc}">
-								    <f:selectItem itemLabel="Seleccione un Documento" itemValue="-1" />  
-								<f:selectItems value="#{documentoMB.listaDocumentos}"
-									itemLabel="#{d.descripcion}" itemValue="#{d.codDocumento}"
-									var="d"></f:selectItems>
-							</p:selectOneMenu></td>
-					</tr>
-					<tr>
-						<td><h:outputText value="Tipo de Solicitud:  " /></td>
-						<td><p:selectOneMenu disabled="#{documentoMB.bEditar}"
-								value="#{documentoMB.tipoSolicDocumento.id.codTipoSolic}">
-								<f:selectItem itemLabel="Seleccione un Tipo de Solicitud" itemValue="-1" />  
-								<f:selectItems value="#{documentoMB.tipoSolicitud}"
-									itemLabel="#{t.desTipServicio}" itemValue="#{t.codTipSolic}"
-									var="t"></f:selectItems>
-							</p:selectOneMenu></td>
-					</tr>
-					<tr>
-						<td><h:outputText value="Estado" /></td>
-						<td><p:selectOneMenu value="#{documentoMB.tipoSolicDocumento.desActivo}">
-								<f:selectItem itemLabel="Activo" itemValue="1" />
-								<f:selectItem itemLabel="Inactivo" itemValue="0" />
-							</p:selectOneMenu></td>
-					</tr>
-					<tr>
-						<td><h:outputText value="Obligatorio: " /></td>
-						<td><p:selectBooleanCheckbox value="#{documentoMB.bValor4}" /></td>
-					</tr>
-				</table>
-				<p:commandButton id="registrarDocumento" value="Guardar" ajax="true"
-					action="#{documentoMB.listarDocumentos}"
-					actionListener="#{documentoMB.registrar}"
-					update=":frmDataTableDocumentos :frmMantenimientoDocumentos">
-				</p:commandButton>
-				<p:commandButton id="limpiarDocumento" value="Limpiar" ajax="true"
-					action="#{documentoMB.limpiarCampos}"
-					update=":frmMantenimientoDocumentos">
-				</p:commandButton>
-			</p:panel>
+			<p:outputPanel id="pnlMntDocumentos">
+				<p:panel header="Documentos por Tipo de Solicitud" style="width: 85%">
+					<p:messages id="idMsmDocumento"></p:messages>
+					<table>
+						<tr>
+							<td><h:outputText value="Documento:  " /></td>
+							<td><p:selectOneMenu disabled="#{documentoMB.bEditar}"
+									value="#{documentoMB.tipoSolicDocumento.id.codDoc}">
+									    <f:selectItem itemLabel="Seleccione un Documento" itemValue="-1" />  
+									<f:selectItems value="#{documentoMB.listaDocumentos}"
+										itemLabel="#{d.descripcion}" itemValue="#{d.codDocumento}"
+										var="d"></f:selectItems>
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><h:outputText value="Tipo de Solicitud:  " /></td>
+							<td><p:selectOneMenu disabled="#{documentoMB.bEditar}"
+									value="#{documentoMB.tipoSolicDocumento.id.codTipoSolic}">
+									<f:selectItem itemLabel="Seleccione un Tipo de Solicitud" itemValue="-1" />  
+									<f:selectItems value="#{documentoMB.tipoSolicitud}"
+										itemLabel="#{t.desTipServicio}" itemValue="#{t.codTipSolic}"
+										var="t"></f:selectItems>
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><h:outputText value="Estado" /></td>
+							<td><p:selectOneMenu value="#{documentoMB.tipoSolicDocumento.desActivo}">
+									<f:selectItem itemLabel="Activo" itemValue="1" />
+									<f:selectItem itemLabel="Inactivo" itemValue="0" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><h:outputText value="Obligatorio: " /></td>
+							<td><p:selectBooleanCheckbox value="#{documentoMB.bValor4}" /></td>
+						</tr>
+					</table>
+					<p:commandButton id="registrarDocumento" value="Guardar" ajax="true"
+						action="#{documentoMB.listarDocumentos}"
+						actionListener="#{documentoMB.registrar}"
+						update=":frmDataTableDocumentos:pnlDataTableDocumentos">
+					</p:commandButton>
+					<p:commandButton id="limpiarDocumento" value="Limpiar" ajax="true"
+						action="#{documentoMB.limpiarCampos}"
+						update=":frmMantenimientoDocumentos:pnlMntDocumentos">
+					</p:commandButton>
+				</p:panel>
+			</p:outputPanel>
 		</h:form>
 		<!--Fin Mantenimiento Documentos -->
 		<!-- Data Table Documentos -->
 		<h:form id="frmDataTableDocumentos">
-			<p:panel header="Documentos" style="width: 85%">
-				<p:dataTable id="dtbUsuarios" value="#{documentoMB.documentos}"
-					var="doc" paginator="true" rows="50" paginatorPosition="bottom"
-					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
-					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
-					emptyMessage="No hay documentos">
-
-					<p:column headerText="Codigo">
-						<h:outputText value="#{doc.tiivsDocumento.codDocumento}" />
-					</p:column>
-					<p:column headerText="Documento">
-						<h:outputText value="#{doc.tiivsDocumento.descripcion}" />
-					</p:column>
-					<p:column headerText="Tipo de Solicitud">
-						<h:outputText value="#{doc.tiivsTipoSolicitud.desTipServicio}" />
-					</p:column>
-					<p:column headerText="Obligatorio">
-						<h:outputText value="#{doc.obligatorio}" />
-					</p:column>
-					<p:column headerText="Estado">
-						<h:outputText value="#{doc.desActivo}" />
-					</p:column>
-					<p:column headerText="Accion">
-						<p:commandLink id="clinkEditar" ajax="true" update=":frmMantenimientoDocumentos"
-							actionListener="#{documentoMB.editarDocumento}">
-							<f:param name="codDocumento" value="#{doc.id.codDoc}"></f:param>
-							<f:param name="codTipoSolicitud" value="#{doc.id.codTipoSolic}"></f:param>
-							<h:outputText value="Editar" />
-						</p:commandLink>
-					</p:column>
-				</p:dataTable>
-			</p:panel>
-
+			<p:outputPanel id="pnlDataTableDocumentos">
+				<p:panel header="Documentos" style="width: 85%">
+					<p:dataTable id="dtbUsuarios" value="#{documentoMB.documentos}"
+						var="doc" paginator="true" rows="50" paginatorPosition="bottom"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+						currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+						emptyMessage="No hay documentos">
+	
+						<p:column headerText="Codigo">
+							<h:outputText value="#{doc.tiivsDocumento.codDocumento}" />
+						</p:column>
+						<p:column headerText="Documento">
+							<h:outputText value="#{doc.tiivsDocumento.descripcion}" />
+						</p:column>
+						<p:column headerText="Tipo de Solicitud">
+							<h:outputText value="#{doc.tiivsTipoSolicitud.desTipServicio}" />
+						</p:column>
+						<p:column headerText="Obligatorio">
+							<h:outputText value="#{doc.obligatorio}" />
+						</p:column>
+						<p:column headerText="Estado">
+							<h:outputText value="#{doc.desActivo}" />
+						</p:column>
+						<p:column headerText="Accion">
+							<p:commandLink id="clinkEditar" ajax="true" update=":frmMantenimientoDocumentos:pnlMntDocumentos"
+								actionListener="#{documentoMB.editarDocumento}">
+								<f:param name="codDocumento" value="#{doc.id.codDoc}"></f:param>
+								<f:param name="codTipoSolicitud" value="#{doc.id.codTipoSolic}"></f:param>
+								<h:outputText value="Editar" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</p:outputPanel>
 		</h:form>
 		<!--Fin Data Table Documentos -->
 	</ui:define>
