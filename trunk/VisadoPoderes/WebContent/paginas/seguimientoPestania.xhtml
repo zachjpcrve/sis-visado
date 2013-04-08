@@ -45,7 +45,7 @@
 	      
 	        <!-- <p:messages id="idGrowlSolicitudRegistro"></p:messages>  -->
 	        
-	        <p:commandButton id="comentar" value="Comentar" update=":formSolicitudSeguimiento" actionListener="#{consultarSolicitudMB.habilitarComentario}"/>
+	        <p:commandButton id="comentar" value="Comentar" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" actionListener="#{consultarSolicitudMB.habilitarComentario}"/>
 											
 			<p:editor id="editor" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="380" height="400" disabled="#{consultarSolicitudMB.bMostrarComentario}"/>
 
