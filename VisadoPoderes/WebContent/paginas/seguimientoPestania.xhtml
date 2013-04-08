@@ -212,7 +212,7 @@
 						<h:outputText title="Documentos" value="Documentos" styleClass="outputText" />
 						<p:separator styleClass="fielset" />
 						<!-- c:if test="{consultarSolicitudMB.bMostrarSolicitudVisado}" -->
-							<a href="#{root}main/download/pdfReportSolicitudVisado.htm">
+							<a href="../../main/download/pdfReportSolicitudVisado.htm">
 								<font color="blue">
 									<u>Solicitud de Visado</u>
 								</font>
@@ -232,21 +232,21 @@
 								Obtener la firma del cliente en la Carta de solicitud de revisión
 							</font>
 							<br/>
-							<a href="#{root}main/download/pdfReportCartaSolicitudRevision.htm" >
+							<a href="../../main/download/pdfReportCartaSolicitudRevision.htm" >
 								<font color="blue">
 									<u>Carta de solicitud de revisión</u>
 								</font>
 							</a>
 						</c:if>
 						<c:if test="#{consultarSolicitudMB.bMostrarCartaRechazo}">
-							<a href="#{root}main/download/pdfReportCartaRechazo.htm" >
+							<a href="../../main/download/pdfReportCartaRechazo.htm" >
 								<font color="blue">
 									<u>Carta Respuesta</u>
 								</font>
 							</a>
 						</c:if>
 						<c:if test="#{consultarSolicitudMB.bMostrarCartaImprocedente}">
-							<a href="#{root}main/download/pdfReportCartaImprocedente.htm">
+							<a href="../../main/download/pdfReportCartaImprocedente.htm">
 								<font color="blue">
 									Carta Improcedente
 								</font>
