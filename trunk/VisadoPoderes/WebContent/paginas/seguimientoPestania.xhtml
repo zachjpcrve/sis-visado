@@ -113,8 +113,11 @@
 						<h:outputText title="Accion" value="Accion" styleClass="outputText" />
 						<p:separator styleClass="fielset" />
 						<p:commandButton id="btnRevision" value="Generar Revisión" rendered="#{consultarSolicitudMB.bMostrarGenerarRevision}"
-							update=":formSolicitudSeguimiento" actionListener="#{consultarSolicitudMB.ocultarComentario}" 
+							 
+							actionListener="#{consultarSolicitudMB.ocultarComentario}" 
 							oncomplete="confirmation3.show()"/>
+							<!--  update=":formSolicitudSeguimiento" -->
+							
 					</p:panel>
 				</td>
 			</tr>
