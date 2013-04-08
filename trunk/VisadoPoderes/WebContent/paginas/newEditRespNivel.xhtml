@@ -9,165 +9,159 @@
 	<ui:define name="contenido">
 		<fieldset>
 			<legend class="fielset">Niveles por Registro</legend>
-
+			
 			<h:form id="frmMantenimientoNivReg">
-
-				<p:messages id="idMsmNivReg"></p:messages>
-				<h:outputLabel value="#{respNivel.iniciar}" />
-				<table>
-					<tr>
-						<td><h:outputText value="Registro:" /></td>
-						<td><p:inputText id="txtRegistro" 
-								readonly="#{respNivel.bEditar}"
-								value="#{respNivel.miembroNivelDto.registro}" maxlength="10"
-								size="10">
-								<p:ajax event="blur" 
-									update=":frmMantenimientoNivReg:dtbRespNivel 
-									        :frmMantenimientoNivReg:txtPerfil 
-									        :frmMantenimientoNivReg:txtDescrip 
-									        :frmMantenimientoNivReg:idMsmNivReg"
-									listener="#{respNivel.obtenerDatosMiembro}"></p:ajax>
-							</p:inputText></td>
-
-						<td><h:outputText value="Perfil:" /></td>
-						<td><p:inputText id="txtPerfil"
-								disabled="true"
-								value="#{respNivel.miembroNivelDto.desGrupo}" maxlength="20"
-								size="20" /></td>
-					</tr>
-					<tr>
-						<td><h:outputText value="Descripcion:" /></td>
-						<td><p:inputText id="txtDescrip"
-								disabled="true"
-								value="#{respNivel.miembroNivelDto.descripcion}"
-								maxlength="60" size="60" /></td>
-					</tr>
-					<tr>
-						<td><h:outputText value="Estado:" /></td>
-						<td><p:selectOneMenu
-								value="#{respNivel.miembroNivelDto.estado}">								
-								<f:selectItem itemLabel="--Seleccione--" itemValue="-1" />
-								<f:selectItem itemLabel="ACTIVO" itemValue="1" />	
-								<f:selectItem itemLabel="INACTIVO" itemValue="0" />
-							</p:selectOneMenu></td>
-					</tr>
-					<tr>
-
-						<td><h:outputText value="Nivel: " /></td>
-						<td><p:selectOneMenu value="#{respNivel.codNivel}">
-								<f:selectItem itemLabel="--Seleccione--" itemValue="-1" />
-								<f:selectItems var="n" value="#{respNivel.niveles}"
-									itemLabel="#{n.des}" itemValue="#{n.cod}">
+				<p:outputPanel id="pnlMntNivReg">
+						<p:messages id="idMsmNivReg"></p:messages>
+						<h:outputLabel value="#{respNivel.iniciar}" />
+						<table>
+							<tr>
+								<td><h:outputText value="Registro:"/></td>
+								<td><p:inputText id="txtRegistro" 
+										readonly="#{respNivel.bEditar}"
+										value="#{respNivel.miembroNivelDto.registro}" maxlength="10"
+										size="10">
+										<p:ajax event="blur" 
+											update=":frmMantenimientoNivReg:dtbRespNivel 
+											        :frmMantenimientoNivReg:txtPerfil 
+											        :frmMantenimientoNivReg:txtDescrip 
+											        :frmMantenimientoNivReg:idMsmNivReg"
+											listener="#{respNivel.obtenerDatosMiembro}"></p:ajax>
+									</p:inputText>
+								</td>
+								<td><h:outputText value="Perfil:" /></td>
+								<td><p:inputText id="txtPerfil"
+										disabled="true"
+										value="#{respNivel.miembroNivelDto.desGrupo}" maxlength="20"
+										size="20" /></td>
+							</tr>
+							<tr>
+								<td><h:outputText value="Descripcion:" /></td>
+								<td><p:inputText id="txtDescrip"
+										disabled="true"
+										value="#{respNivel.miembroNivelDto.descripcion}"
+										maxlength="60" size="60" /></td>
+							</tr>
+							<tr>
+								<td><h:outputText value="Estado:" /></td>
+								<td><p:selectOneMenu
+										value="#{respNivel.miembroNivelDto.estado}">								
+										<f:selectItem itemLabel="--Seleccione--" itemValue="-1" />
+										<f:selectItem itemLabel="ACTIVO" itemValue="1" />	
+										<f:selectItem itemLabel="INACTIVO" itemValue="0" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><h:outputText value="Nivel: " /></td>
+								<td><p:selectOneMenu value="#{respNivel.codNivel}">
+										<f:selectItem itemLabel="--Seleccione--" itemValue="-1" />
+										<f:selectItems var="n" value="#{respNivel.niveles}"
+											itemLabel="#{n.des}" itemValue="#{n.cod}">
+										</f:selectItems>
+										<p:ajax event="change" 
+											update=":frmMantenimientoNivReg:dtbRespNivel 
+											        :frmMantenimientoNivReg:txtPerfil 
+											        :frmMantenimientoNivReg:txtDescrip 
+											        :frmMantenimientoNivReg:idMsmNivReg"
+											listener="#{respNivel.obtenerDatosMiembro}"></p:ajax>
 									
-								</f:selectItems>
-								<p:ajax event="change" 
-									update=":frmMantenimientoNivReg:dtbRespNivel 
-									        :frmMantenimientoNivReg:txtPerfil 
-									        :frmMantenimientoNivReg:txtDescrip 
-									        :frmMantenimientoNivReg:idMsmNivReg"
-									listener="#{respNivel.obtenerDatosMiembro}"></p:ajax>
-
-							</p:selectOneMenu></td>
-						<td ><p:commandButton id="bsAgreg" value="Agregar" ajax="true" 
-								action="#{respNivel.agregarlistarRespxNivel}"
-								update=":frmMantenimientoNivReg:dtbRespNivel :frmMantenimientoNivReg:idMsmNivReg">
-							</p:commandButton></td>
-
-					</tr >
-
-
-				</table>
-
-				<p:dataTable id="dtbRespNivel" value="#{respNivel.respNiveles}" style="width:50%"
-					var="r" paginator="true" rows="50" paginatorPosition="bottom"
-					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
-					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
-					emptyMessage="No hay responsables por niveles" >
-					
-
-					<p:column headerText="Nivel">
-						<h:outputText value="#{r.desNivel}" />
-					</p:column>
-
-					<p:column headerText="Rango Inicio S/.">
-						<h:outputText value="#{r.rangoInicioSoles}" />
-					</p:column>
-					<p:column headerText="Rango Fin S/.">
-						<h:outputText value="#{r.rangoFinSoles}" />
-					</p:column>
-
-					<p:column headerText="Rango Inicio $">
-						<h:outputText value="#{r.rangoInicioDolares}" />
-					</p:column>
-					<p:column headerText="Rango Fin $">
-						<h:outputText value="#{r.rangoFinDolares}" />
-					</p:column>
-
-					<p:column headerText="Rango Inicio E">
-						<h:outputText value="#{r.rangoInicioEuros}" />
-					</p:column>
-					<p:column headerText="Rango Fin E">
-						<h:outputText value="#{r.rangoFinEuros}" />
-					</p:column>
-
-					<p:column headerText="Fecha de Reg.">
-						<h:outputText value="#{r.fechaRegistroToString}" />
-					</p:column>
-
-					<p:column headerText="Usuario de Reg.">
-						<h:outputText value="#{r.usuarioRegistro}" />
-					</p:column>
-
-					<p:column headerText="Fecha de Act.">
-						<h:outputText value="#{r.fechaActualizacionToString}" />
-					</p:column>
-
-					<p:column headerText="Usuario de Act.">
-						<h:outputText value="#{r.usuarioActualizacion}" />
-					</p:column>
-					<p:column headerText="Estado">
-						<h:outputText value="#{r.estado}" />
-					</p:column>
-
-					<p:column headerText="Accion">
-					<p:commandLink id="clickEstado" 
-					update=":frmMantenimientoNivReg:dtbRespNivel"
-					action="#{respNivel.editarNivAprobacion}">
-						<f:setPropertyActionListener target="#{respNivel.miembroCapturado_Edit}" value="#{r}">
-						</f:setPropertyActionListener>
-					<h:outputText value="#{r.labelAccion}"  />
-						</p:commandLink>
-						</p:column>
-					
-
-				</p:dataTable>
-
-				<table>
-					<tr>
-						<td><p:commandButton id="cmbConfirmar" value="Aceptar"
-								onclick="confirmarCambios.show();">
-							</p:commandButton></td>
-
-
-					</tr>
-				</table>
-
-				<p:confirmDialog widgetVar="confirmarCambios"
-					message="¿Esta seguro de guardar los cambios?"
-					header="Mensaje de Confirmación">
-
-					<p:commandButton id="cmbSi" value="Sí" ajax="true"
-						action="#{respNivel.confirmarCambios}"
-						oncomplete="confirmarCambios.hide();"
-						update=":frmMantenimientoNivReg:dtbRespNivel">
-					</p:commandButton>
-					
-					<p:commandButton id="cmbNo" value="No"
-						onclick="confirmarCambios.hide();">
-					</p:commandButton>
-
-				</p:confirmDialog>
-
+									</p:selectOneMenu>
+								</td>
+								<td ><p:commandButton id="bsAgreg" value="Agregar" ajax="true" 
+										action="#{respNivel.agregarlistarRespxNivel}"
+										update=":frmMantenimientoNivReg:dtbRespNivel :frmMantenimientoNivReg:idMsmNivReg">
+									</p:commandButton>
+								</td>
+							</tr>
+		
+						</table>
+		
+						<p:dataTable id="dtbRespNivel" value="#{respNivel.respNiveles}" style="width:50%"
+							var="r" paginator="true" rows="50" paginatorPosition="bottom"
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+							currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+							emptyMessage="No hay responsables por niveles" >
+		
+							<p:column headerText="Nivel">
+								<h:outputText value="#{r.desNivel}" />
+							</p:column>
+		
+							<p:column headerText="Rango Inicio S/.">
+								<h:outputText value="#{r.rangoInicioSoles}" />
+							</p:column>
+							<p:column headerText="Rango Fin S/.">
+								<h:outputText value="#{r.rangoFinSoles}" />
+							</p:column>
+		
+							<p:column headerText="Rango Inicio $">
+								<h:outputText value="#{r.rangoInicioDolares}" />
+							</p:column>
+							<p:column headerText="Rango Fin $">
+								<h:outputText value="#{r.rangoFinDolares}" />
+							</p:column>
+		
+							<p:column headerText="Rango Inicio E">
+								<h:outputText value="#{r.rangoInicioEuros}" />
+							</p:column>
+							<p:column headerText="Rango Fin E">
+								<h:outputText value="#{r.rangoFinEuros}" />
+							</p:column>
+		
+							<p:column headerText="Fecha de Reg.">
+								<h:outputText value="#{r.fechaRegistroToString}" />
+							</p:column>
+		
+							<p:column headerText="Usuario de Reg.">
+								<h:outputText value="#{r.usuarioRegistro}" />
+							</p:column>
+		
+							<p:column headerText="Fecha de Act.">
+								<h:outputText value="#{r.fechaActualizacionToString}" />
+							</p:column>
+		
+							<p:column headerText="Usuario de Act.">
+								<h:outputText value="#{r.usuarioActualizacion}" />
+							</p:column>
+							<p:column headerText="Estado">
+								<h:outputText value="#{r.estado}" />
+							</p:column>
+		
+							<p:column headerText="Accion">
+								<p:commandLink id="clickEstado" 
+									update=":frmMantenimientoNivReg:dtbRespNivel"
+									action="#{respNivel.editarNivAprobacion}">
+									<f:setPropertyActionListener target="#{respNivel.miembroCapturado_Edit}" value="#{r}"></f:setPropertyActionListener>
+									<h:outputText value="#{r.labelAccion}"/>
+								</p:commandLink>
+							</p:column>					
+		
+						</p:dataTable>
+		
+						<table>
+							<tr>
+								<td><p:commandButton id="cmbConfirmar" value="Aceptar"
+										onclick="confirmarCambios.show();">
+									</p:commandButton>
+								</td>
+							</tr>
+						</table>
+		
+						<p:confirmDialog widgetVar="confirmarCambios"
+							message="¿Esta seguro de guardar los cambios?"
+							header="Mensaje de Confirmación">
+		
+							<p:commandButton id="cmbSi" value="Sí" ajax="true"
+								action="#{respNivel.confirmarCambios}"
+								oncomplete="confirmarCambios.hide();"
+								update=":frmMantenimientoNivReg:dtbRespNivel">
+							</p:commandButton>
+							
+							<p:commandButton id="cmbNo" value="No"
+								onclick="confirmarCambios.hide();">
+							</p:commandButton>
+		
+						</p:confirmDialog>
+				</p:outputPanel>
 			</h:form>
 	
 		</fieldset>
