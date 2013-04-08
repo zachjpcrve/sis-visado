@@ -9,40 +9,40 @@
 	<ui:define name="contenido">
 		<!-- Delegacion -->
 		<h:form id="frmMantenimientoDelegado">
-			<p:outputPanel id="pnlMantenimientoDelegado">
-				<p:panel header="Delegacion por Nivel" style="width: 85%">
-					<p:growl id="idGrowlPrincipal"></p:growl>
+			<p:panel header="Delegacion por Nivel" style="width: 85%">
+			<p:growl id="idGrowlPrincipal"></p:growl>
 
-					<table>
-						<tr>
-							<td><p:commandButton id="nuevaDelegacion"
-									actionListener="#{delegadosMB.limpiarNuevo}"
-									update=":frmMantenimientoDelegado:pnlNuevaDelegacion,
+				<table>
+					<tr>
+						<td><p:commandButton id="nuevaDelegacion"
+								actionListener="#{delegadosMB.limpiarNuevo}"
+								update=":frmMantenimientoDelegado:txtDescRegMiembro 
+								        :frmMantenimientoDelegado:txtPerfilRegMiembro 
+								        :frmMantenimientoDelegado:dtbListaDelegado 
+								        :frmMantenimientoDelegado:txtCodRegistro
 								        cboCodNivelNew"
-									value="Nueva Agrupacion"
-									oncomplete="dlgNuevaDelegacion.show();">
-								</p:commandButton></td>
-						</tr>
+								value="Nueva Agrupacion" oncomplete="dlgNuevaDelegacion.show();">
+							</p:commandButton></td>
+					</tr>
 
-					</table>
+				</table>
 
-				</p:panel>
-			</p:outputPanel>
-			<p:dialog widgetVar="dlgNuevaDelegacion" modal="true"
-				id="dlgNuevoDelegacion" header="Nueva Delegacion por Nivel">
-				<p:outputPanel id="pnlNuevaDelegacion">
+			</p:panel>
+			<p:dialog widgetVar="dlgNuevaDelegacion" modal="true"  id="dlgNuevoDelegacion"
+				header="Nueva Delegacion por Nivel">
+
 				<p:panel id="panelNuevo">
 					<p:messages id="idMsmDocumento"></p:messages>
 					<table>
 						<tr>
 							<td><h:outputText value="Nivel:  " /></td>
-							<td><p:selectOneMenu id="cboCodNivelNew"
+							<td><p:selectOneMenu  id="cboCodNivelNew"
 									value="#{delegadosMB.miembroNivel.codNiv}">
 									<f:selectItem itemLabel="--Seleccione--" itemValue="-1" />
 									<f:selectItems value="#{delegadosMB.listaNiveles}"
 										itemLabel="#{n.desNiv}" itemValue="#{n.codNiv}" var="n"></f:selectItems>
-									<p:ajax event="change"
-										update=":frmMantenimientoDelegado:pnlNuevaDelegacion , idMsmDocumento "
+										<p:ajax event="change"
+										update=":frmMantenimientoDelegado:txtDescRegMiembro , idMsmDocumento , :frmMantenimientoDelegado:txtPerfilRegMiembro"
 										listener="#{delegadosMB.obtenerDatosMiembro}"></p:ajax>
 								</p:selectOneMenu></td>
 						</tr>
@@ -51,7 +51,7 @@
 							<td><p:inputText id="txtCodRegistro"
 									value="#{delegadosMB.codRegistro}" maxlength="7">
 									<p:ajax event="blur"
-										update=":frmMantenimientoDelegado:pnlNuevaDelegacion, idMsmDocumento"
+										update=":frmMantenimientoDelegado:txtDescRegMiembro :frmMantenimientoDelegado:txtPerfilRegMiembro , idMsmDocumento"
 										listener="#{delegadosMB.obtenerDatosMiembro}"></p:ajax>
 								</p:inputText></td>
 							<td><h:outputText value="Descripcion  " /></td>
@@ -66,7 +66,10 @@
 						<tr>
 							<td><p:commandButton id="registrarDelegado" value="Guardar"
 									actionListener="#{delegadosMB.agregarDelegado}"
-									update=":frmMantenimientoDelegado:pnlNuevaDelegacion,
+									update=":frmMantenimientoDelegado:dtbListaDelegado
+									        :frmMantenimientoDelegado:txtCodRegistro 
+									        :frmMantenimientoDelegado:txtDescRegMiembro 
+									        :frmMantenimientoDelegado:txtPerfilRegMiembro
 									        idMsmDocumento, cboCodNivelNew">
 								</p:commandButton></td>
 						</tr>
@@ -105,91 +108,90 @@
 									actionListener="#{delegadosMB.registrarAgrupacion}"
 									action="#{delegadosMB.listarAgrupacionesDelegados}"
 									oncomplete="dlgNuevaDelegacion.hide()"
-									update=":frmDataTableDelegacion:pnlDataTableDelegacion, :frmMantenimientoDelegado:idGrowlPrincipal">
-								</p:commandButton></td>
+									update=":frmDataTableDelegacion :frmMantenimientoDelegado:idGrowlPrincipal">
+								</p:commandButton>
+								</td>
 						</tr>
 					</table>
 				</p:panel>
-</p:outputPanel>
+
 			</p:dialog>
 		</h:form>
 		<!-- Fin Delegacion -->
 		<!-- Data Table Delegacion -->
 		<h:form id="frmDataTableDelegacion">
-			<p:outputPanel id="pnlDataTableDelegacion">
-				<p:panel header="Delegacion por Niveles" style="width: 85%">
-					<p:dataTable id="dtbDelegacion"
-						value="#{delegadosMB.lstListaAgrupacionesNivelesDelegados}"
-						var="del" paginator="true" rows="50" paginatorPosition="bottom"
-						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
-						currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
-						emptyMessage="No hay registros">
-						<p:column headerText="Nivel">
-							<h:outputText value="#{del.nivel}" />
-						</p:column>
-						<p:column headerText="Grupo">
-							<h:outputText value="#{del.codGrupo}" />
-						</p:column>
+			<p:panel header="Delegacion por Niveles" style="width: 85%">
+				<p:dataTable id="dtbDelegacion"
+					value="#{delegadosMB.lstListaAgrupacionesNivelesDelegados}"
+					var="del" paginator="true" rows="50" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+					emptyMessage="No hay registros">
+					<p:column headerText="Nivel">
+						<h:outputText value="#{del.nivel}" />
+					</p:column>
+					<p:column headerText="Grupo">
+						<h:outputText value="#{del.codGrupo}" />
+					</p:column>
 
-						<p:column headerText="Delegado A">
-							<h:outputText value="#{del.cod_nombre_delegado_A}" />
-						</p:column>
-						<p:column headerText="Delegado B">
-							<h:outputText value="#{del.cod_nombre_delegado_B}" />
-						</p:column>
-						<p:column headerText="Delegado C">
-							<h:outputText value="#{del.cod_nombre_delegado_C}" />
-						</p:column>
-						<p:column headerText="Delegado D">
-							<h:outputText value="#{del.cod_nombre_delegado_D}" />
-						</p:column>
-						<p:column headerText="Delegado E">
-							<h:outputText value="#{del.cod_nombre_delegado_E}" />
-						</p:column>
-						<p:column headerText="Estado">
-							<h:outputText value="#{del.estado}" />
-						</p:column>
-						<p:column headerText="Editar">
-							<p:commandLink id="clinkEditarDtb" ajax="true"
-								actionListener="#{delegadosMB.editarAgrupacion}"
-								oncomplete="dlgEditarDelegacion.show();"
-								update=":formDialogEditarDelegacion:pnlDialogEditarDelegacion">
-								<f:param name="codGrupo" value="#{del.codGrupo}"></f:param>
-								<f:param name="desNivel" value="#{del.nivel}"></f:param>
-								<h:outputText value="Editar" />
-							</p:commandLink>
-						</p:column>
+					<p:column headerText="Delegado A">
+						<h:outputText value="#{del.cod_nombre_delegado_A}" />
+					</p:column>
+					<p:column headerText="Delegado B">
+						<h:outputText value="#{del.cod_nombre_delegado_B}" />
+					</p:column>
+					<p:column headerText="Delegado C">
+						<h:outputText value="#{del.cod_nombre_delegado_C}" />
+					</p:column>
+					<p:column headerText="Delegado D">
+						<h:outputText value="#{del.cod_nombre_delegado_D}" />
+					</p:column>
+					<p:column headerText="Delegado E">
+						<h:outputText value="#{del.cod_nombre_delegado_E}" />
+					</p:column>
+					<p:column headerText="Estado">
+						<h:outputText value="#{del.estado}" />
+					</p:column>
+					<p:column headerText="Editar">
+						<p:commandLink id="clinkEditarDtb" ajax="true"
+							actionListener="#{delegadosMB.editarAgrupacion}"
+							oncomplete="dlgEditarDelegacion.show();"
+							update=":formDialogEditarDelegacion:dtbListaDelegadoEditar,
+							        :formDialogEditarDelegacion:cboEditarCodiNivel, 
+							        :formDialogEditarDelegacion:idMsmDocumento">
+							<f:param name="codGrupo" value="#{del.codGrupo}"></f:param>
+							<f:param name="desNivel" value="#{del.nivel}"></f:param>
+							<h:outputText value="Editar" />
+						</p:commandLink>
+					</p:column>
 						<p:column headerText="Accion">
-							<p:commandLink id="clickEstado" ajax="true"
-								update=":frmDataTableDelegacion:pnlDataTableDelegacion"
-								actionListener="#{delegadosMB.estadoAgrupacion}"
-								action="#{delegadosMB.listarAgrupacionesDelegados}">
-								<f:param name="nivel" value="#{del.nivel}"></f:param>
-								<f:param name="grupo" value="#{del.codGrupo}"></f:param>
-								<h:outputText value="#{del.estadoEtiqueta}" />
-							</p:commandLink>
-						</p:column>
-					</p:dataTable>
+						<p:commandLink id="clickEstado" ajax="true"
+							update=":frmDataTableDelegacion"
+							actionListener="#{delegadosMB.estadoAgrupacion}"
+							action="#{delegadosMB.listarAgrupacionesDelegados}">
+							<f:param name="nivel" value="#{del.nivel}"></f:param>
+							<f:param name="grupo" value="#{del.codGrupo}"></f:param>
+							<h:outputText value="#{del.estadoEtiqueta}"  />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+				
+			</p:panel>
 
-				</p:panel>
-			</p:outputPanel>
 		</h:form>
 		<!--Fin Data Table Oficina -->
 		
-		 aquiiiii
-		<p:dialog widgetVar="dlgEditarDelegacion" modal="true"
-			header="Editar Delegacion por Nivel">
-			<h:form id="formDialogEditarDelegacion">
-				<p:outputPanel id="pnlDialogEditarDelegacion">
-					<p:messages id="idMsmDocumento" globalOnly="true"></p:messages>
-
+		 
+		<p:dialog widgetVar="dlgEditarDelegacion" modal="true" header="Editar Delegacion por Nivel">
+				<h:form id="formDialogEditarDelegacion">
+				<p:messages id="idMsmDocumento" globalOnly="true"></p:messages>	
+				
 					<p:panel>
-
+						
 						<table>
 							<tr>
 								<td><h:outputText value="Nivel:  " /></td>
-								<td><p:selectOneMenu disabled="true"
-										id="cboEditarCodiNivel"
+								<td><p:selectOneMenu disabled="true" id="cboEditarCodiNivel"
 										value="#{delegadosMB.miembroNivelEditar.codNiv}">
 										<f:selectItems value="#{delegadosMB.listaNiveles}"
 											itemLabel="#{nE.desNiv}" itemValue="#{nE.codNiv}" var="nE"></f:selectItems>
@@ -200,8 +202,8 @@
 								<td><p:inputText id="txtCodRegistroEditar"
 										value="#{delegadosMB.codRegistroEditar}" maxlength="7">
 										<p:ajax event="blur"
-											update=":formDialogEditarDelegacion:txtDescRegMiembroEditar ,
-											        :formDialogEditarDelegacion:txtPerfilRegMiembroEditar, 
+											update=":formDialogEditarDelegacion:txtDescRegMiembroEditar 
+											        :formDialogEditarDelegacion:txtPerfilRegMiembroEditar 
 											        :formDialogEditarDelegacion:idMsmDocumento"
 											listener="#{delegadosMB.obtenerDatosMiembroEditar}"></p:ajax>
 									</p:inputText></td>
@@ -218,9 +220,11 @@
 							</tr>
 							<tr>
 								<td><p:commandButton id="registrarDelegadoEditar"
-										value="Guardar" 
+										value="Guardar"
 										actionListener="#{delegadosMB.agregarDelegadoEditar}"
-										update=":formDialogEditarDelegacion:pnlDialogEditarDelegacion">
+										update=":formDialogEditarDelegacion:idMsmDocumento :formDialogEditarDelegacion:dtbListaDelegadoEditar 
+										:formDialogEditarDelegacion:txtCodRegistroEditar :formDialogEditarDelegacion:txtDescRegMiembroEditar
+										 :formDialogEditarDelegacion:txtPerfilRegMiembroEditar">
 									</p:commandButton></td>
 							</tr>
 
@@ -260,7 +264,8 @@
 										actionListener="#{delegadosMB.actualizarAgrupacion}"
 										action="#{delegadosMB.listarAgrupacionesDelegados}"
 										oncomplete="dlgEditarDelegacion.hide()"
-										update=":formDialogEditarDelegacion:pnlDialogEditarDelegacion ,
+										update=":formDialogEditarDelegacion,
+										 :formDialogEditarDelegacion:dtbListaDelegadoEditar,
 										  :frmDataTableDelegacion:dtbDelegacion ,
 										  :frmMantenimientoDelegado:idGrowlPrincipal
 										">
@@ -268,9 +273,8 @@
 							</tr>
 						</table>
 					</p:panel>
-				</p:outputPanel>
-			</h:form>
-		</p:dialog>
+				        </h:form>
+				</p:dialog>
 	</ui:define>
 </ui:composition>
 

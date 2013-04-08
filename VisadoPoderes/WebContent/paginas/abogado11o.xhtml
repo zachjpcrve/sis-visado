@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+
+		<!-- Abogado -->
+
+		<SCRIPT type="text/javascript">
+			function validaLetraNumero(e, ent, obj, fn) {
+				//Se captura la tecla presionada             
+				var tecla = (document.all) ? e.keyCode : e.which;
+				var patron;
+				var te;
+				var result;
+				//Tecla de retroceso (para poder borrar)       
+				if (tecla == 8) {
+					return true;
+				}
+				/* if (tecla == 32) {
+					return true;
+				} */
+				if (ent == '0') {
+					if (fn == '1') {
+						if (obj.value == '') {
+							return true;
+						}
+						var puntos = obj.value.split('.');
+						if (puntos.length > 2) {
+							obj.value = '';
+							obj.focus();
+						}
+					}
+					if (tecla == 46) {
+						if (obj.value.indexOf('.') != -1) {
+							return false;
+						}
+						return true;
+					}
+				} else {
+					if (fn == '1') {
+						if (obj.value.indexOf('.') != -1) {
+							obj.value = '';
+							obj.focus();
+						}
+					}
+				}
+				//Dejar la línea de patron que se necesite y borrar el resto             
+				//patron = /[A-Za-z0-9]/; // Solo acepta letras             
+				//patron = /\d/; // Solo acepta números             
+				patron = /\w/; // Acepta números y letras             
+				//patron = /\D/; // No acepta números             
+				//
+				te = String.fromCharCode(tecla);
+				if (fn == '1') {
+					te = obj.value;
+				}
+				result = patron.test(te);
+				if (result == false) {
+					if (fn == '1') {
+						if (obj.value == '') {
+							return true;
+						}
+						obj.value = '';
+						obj.focus();
+					}
+				}
+				return result;
+			}
+		</SCRIPT>
+		<h:form id="frmMantenimientoAbogado">
+			<p:panel header="Perfil-Usuario" style="width: 85%">
+				<p:messages id="idMsmDocumento"></p:messages>
+				<table>
+					<tr>
+						<td><h:outputText value="Perfil " /></td>
+						<td><p:selectOneMenu id="cboGrupo"
+								value="#{abogadoMB.abogado.tiivsGrupo.codGrupo}">
+								<f:selectItems value="#{abogadoMB.grupos}"
+									itemLabel="#{cboGruG.desGrupo}" itemValue="#{cboGruG.codGrupo}"
+									var="cboGruG"></f:selectItems>
+								<p:ajax update="frmMantenimientoAbogado"
+									listener="#{abogadoMB.selecPerfilEstudioGuardar}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Criterio " /></td>
+						<td><p:selectOneMenu id="cboCriterio"
+								value="#{abogadoMB.abogado.criterio}">
+								<f:selectItems value="#{abogadoMB.criterios}"
+									itemLabel="#{cboCri.valor1}" itemValue="#{cboCri.id.codElem}"
+									var="cboCri"></f:selectItems>
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Codigo:  " /></td>
+						<td><p:inputText id="txtCodigo"
+								onkeypress="return validaLetraNumero(event,'0',this,'0');"
+								onblur="validaLetraNumero(event,'0',this,'1');"
+								disabled="#{abogadoMB.mostrarCodigoEditar}"
+								value="#{abogadoMB.abogado.codMiembro}" maxlength="7" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Descripcion:  " /></td>
+						<td><p:inputText id="txtDescripcion"
+								value="#{abogadoMB.abogado.descripcion}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText id="lblEstudioGuardar" value="Estudio "
+								rendered="#{abogadoMB.mostrarComboEstudioGuardar}" /></td>
+						<td><p:selectOneMenu id="cboEstudioGuardar"
+								rendered="#{abogadoMB.mostrarComboEstudioGuardar}"
+								value="#{abogadoMB.abogado.estudio}">
+								<f:selectItems value="#{abogadoMB.estudios}"
+									itemLabel="#{cboEstG.desEstudio}"
+									itemValue="#{cboEstG.codEstudio}" var="cboEstG"></f:selectItems>
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:commandButton id="registrar" value="Guardar"
+								ajax="true" action="#{abogadoMB.listarAbogados}"
+								actionListener="#{abogadoMB.registrar}"
+								update=":frmDataTableAbogado :frmMantenimientoAbogado">
+							</p:commandButton></td>
+						<td><p:commandButton id="limpiar" value="Limpiar" ajax="true"
+								action="#{abogadoMB.limpiarCampos}"
+								update=":frmMantenimientoAbogado">
+							</p:commandButton></td>
+					</tr>
+
+				</table>
+			</p:panel>
+		</h:form>
+		<!-- Fin Abogado -->
+		<!-- Data Table Abogado -->
+		<h:form id="frmDataTableAbogado">
+			<p:panel header="Perfil-Usuario" style="width: 85%">
+				<table>
+					<tr>
+						<td><h:outputText value="Perfil " /></td>
+						<td><p:selectOneMenu id="cboGrupo"
+								value="#{abogadoMB.abogadoLista.tiivsGrupo.codGrupo}">
+								<f:selectItem itemLabel="SELECCIONAR PERFIL" itemValue="-1" />
+								<f:selectItems value="#{abogadoMB.gruposFiltro}"
+									itemLabel="#{cboGru.desGrupo}" itemValue="#{cboGru.codGrupo}"
+									var="cboGru"></f:selectItems>
+								<p:ajax update=":frmDataTableAbogado"
+									listener="#{abogadoMB.selecPerfilEstudio}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><h:outputText id="lblEstudio" value="Estudio "
+								rendered="#{abogadoMB.mostrarComboEstudio}" /></td>
+						<td><p:selectOneMenu id="cboEstudio"
+								rendered="#{abogadoMB.mostrarComboEstudio}"
+								value="#{abogadoMB.abogadoLista.estudio}">
+								<f:selectItem itemLabel="SELECCIONAR ESTUDIO" itemValue="-1" />
+								<f:selectItems value="#{abogadoMB.estudiosFiltro}"
+									itemLabel="#{cboEst.desEstudio}"
+									itemValue="#{cboEst.codEstudio}" var="cboEst"></f:selectItems>
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:commandButton id="buscar" value="Buscar" ajax="true"
+								action="#{abogadoMB.listarAbogadosCombo}"
+								update=":frmDataTableAbogado">
+							</p:commandButton></td>
+					</tr>
+
+				</table>
+				<p:dataTable id="dtbAbogado" value="#{abogadoMB.abogados}" var="abo"
+					paginator="true" rows="50" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+					currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+					emptyMessage="No hay registros">
+
+					<p:column headerText="Codigo">
+						<h:outputText value="#{abo.codMiembro}" />
+					</p:column>
+					<p:column headerText="Descripcion">
+						<h:outputText value="#{abo.descripcion}" />
+					</p:column>
+					<p:column headerText="Criterio">
+						<h:outputText value="#{abo.criterio}" />
+					</p:column>
+					<p:column headerText="Estudio">
+						<h:outputText value="#{abo.estudio}" />
+					</p:column>
+					<p:column headerText="Accion">
+						<p:commandLink id="clinkEditar" ajax="false"
+							update=":frmMantenimientoAbogado"
+							actionListener="#{abogadoMB.editarAbogado}">
+							<f:param name="codAbogado" value="#{abo.codMiembro}"></f:param>
+							<h:outputText value="Editar" />
+						</p:commandLink>
+					</p:column>
+					<p:column headerText="Eliminar">
+						<p:commandLink id="clinkEliminar" ajax="false"
+							update=":frmDataTableAbogado"
+							action="#{abogadoMB.listarAbogados}"
+							actionListener="#{abogadoMB.eliminarAbogado}">
+							<f:param name="codAbogado" value="#{abo.codMiembro}"></f:param>
+							<h:outputText value="Eliminar" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+
+		</h:form>
+		<!--Fin Data Table Oficina -->
+	</ui:define>
+</ui:composition>
+
+</html>
