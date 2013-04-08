@@ -71,6 +71,7 @@
 		</SCRIPT>
 		<!-- Mantenimiento Clasificacion -->
 		<h:form id="frmMantenimientoClasificacion">
+		              <p:outputPanel id="pnlfrmMantenimientoClasificacion">
 			<p:panel header="Tipo de Clasificacion" style="width: 85%">
 				<p:messages id="idMsmDocumento"></p:messages>
 				<table>
@@ -99,17 +100,19 @@
 				<p:commandButton id="registrarClasificacion" value="Guardar"
 					ajax="true" action="#{clasificacionMB.listarClasificaciones}"
 					actionListener="#{clasificacionMB.registrar}"
-					update=":frmDataTableClasificacion :frmMantenimientoClasificacion">
+					update=":frmDataTableClasificacion:pnlfrmDataTableClasificacion :frmMantenimientoClasificacion:pnlfrmMantenimientoClasificacion">
 				</p:commandButton>
 				<p:commandButton id="limpiarDocumento" value="Limpiar" ajax="true"
 					action="#{clasificacionMB.limpiarCampos}"
-					update=":frmMantenimientoClasificacion">
+					update=":frmMantenimientoClasificacion:pnlfrmMantenimientoClasificacion">
 				</p:commandButton>
 			</p:panel>
+			</p:outputPanel>
 		</h:form>
 		<!--Fin Mantenimiento Clasificacion -->
 		<!-- Data Table Clasificacion -->
 		<h:form id="frmDataTableClasificacion">
+		<p:outputPanel id="pnlfrmDataTableClasificacion">
 			<p:panel header="Tipo de Clasificacion" style="width: 85%">
 				<p:dataTable id="dtbClasificacion"
 					value="#{clasificacionMB.clasificaciones}" var="cla"
@@ -129,7 +132,7 @@
 					</p:column>
 					<p:column headerText="Accion">
 						<p:commandLink id="clinkEditar" ajax="true"
-							update=":frmMantenimientoClasificacion"
+							update=":frmMantenimientoClasificacion:pnlfrmMantenimientoClasificacion"
 							actionListener="#{clasificacionMB.editarClasificacion}">
 							<f:param name="codMultitabla" value="#{cla.id.codMult}"></f:param>
 							<f:param name="codElemento" value="#{cla.id.codElem}"></f:param>
@@ -138,6 +141,7 @@
 					</p:column>
 				</p:dataTable>
 			</p:panel>
+			</p:outputPanel>
 
 		</h:form>
 		<!--Fin Data Table Documentos -->
