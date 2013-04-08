@@ -188,49 +188,29 @@ public class NivelMB {
 									seq = nivelService.obtenerSecuencialNivel();
 									nivelesMant.get(i).setId(seq);
 									nivelesMant.get(i).setFechaReg(new Date());
-									nivelesMant.get(i).setUsuarioReg(
-											usuario.getUID());
+									//nivelesMant.get(i).setUsuarioReg(usuario.getUID());
 								}else{
 									nivelesMant.get(i).setFechaAct(new Date());
-									nivelesMant.get(i).setUsuarioAct(
-											usuario.getUID());
+									//nivelesMant.get(i).setUsuarioReg(usuario.getUID());
 								}
-								nivelesMant.get(i).setDesNiv(
-										nivelesMant.get(0).getDesNiv()
-												.toUpperCase());								
-								nivelesMant.get(i).setDesEstado(
-										nivelesMant.get(0).getDesEstado());
+								nivelesMant.get(i).setDesNiv(nivelesMant.get(0).getDesNiv().toUpperCase());								
+								nivelesMant.get(i).setDesEstado(nivelesMant.get(0).getDesEstado());
 
-								if (nivelesMant.get(i).getDesEstado()
-										.equals("1")) {
+								if (nivelesMant.get(i).getDesEstado().equals("1")) {
 									nivelesMant.get(i).setEstado(1);
 								} else {
 									nivelesMant.get(i).setEstado(0);
 								}
-								logger.info("Niveles Mantenimiento  : " + " "
-										+ i + " " + nivelesMant.get(i).getId());
-								logger.info("Niveles Mantenimiento  : " + " "
-										+ i + " "
+								logger.info("Niveles Mantenimiento  : " + " " + i + " " + nivelesMant.get(i).getId());
+								logger.info("Niveles Mantenimiento  : " + " " + i + " "
 										+ nivelesMant.get(i).getRangoInicio());
-								logger.info("Niveles Mantenimiento  : " + " "
-										+ i + " "
-										+ nivelesMant.get(i).getRangoFin());
-								logger.info("Niveles Mantenimiento  : " + " "
-										+ i + " "
-										+ nivelesMant.get(i).getMoneda());
-								logger.info("Niveles Mantenimiento  : " + " "
-										+ i + " "
-										+ nivelesMant.get(i).getEstado());
-								logger.info("Niveles Mantenimiento  : " + " "
-										+ i + " "
-										+ nivelesMant.get(i).getFechaReg());
-								logger.info("Niveles Mantenimiento  : " + " "
-										+ i + " "
-										+ nivelesMant.get(i).getUsuarioReg());
+								logger.info("Niveles Mantenimiento  : " + " " + i + " " + nivelesMant.get(i).getRangoFin());
+								logger.info("Niveles Mantenimiento  : " + " " + i + " " + nivelesMant.get(i).getMoneda());
+								logger.info("Niveles Mantenimiento  : " + " " + i + " " + nivelesMant.get(i).getEstado());
+								logger.info("Niveles Mantenimiento  : " + " " + i + " "	+ nivelesMant.get(i).getFechaReg());
+								logger.info("Niveles Mantenimiento  : " + " " + i + " " + nivelesMant.get(i).getUsuarioReg());
 
 								nivelService.registrar(nivelesMant.get(i));
-						
-								
 								
 							} else {
 								Utilitarios

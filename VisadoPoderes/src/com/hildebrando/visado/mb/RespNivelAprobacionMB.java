@@ -425,17 +425,17 @@ public class RespNivelAprobacionMB {
 	public void agregarlistarRespxNivel()  {
 		logger.debug("=== inicia agregarlistarRespxNivel() ====");
 		if(!esDelegado){
-		if(validarRegistroResponsableNivel()){
-			try {
-				nuevoResponsable();
-			//	listarNivelesPorResponsable(miembroNivel.getTiivsMiembro().getCodMiembro());
-			} catch (Exception e) {
-				e.printStackTrace();
+			if(validarRegistroResponsableNivel()){
+				try {
+					nuevoResponsable();
+				//	listarNivelesPorResponsable(miembroNivel.getTiivsMiembro().getCodMiembro());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
+		}else{
+			Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Delegado, no puede ser Responsable del mismo Nivel");
 		}
-	}else{
-		Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Delegado, no puede ser Responsable del mismo Nivel");
-	}
 	}
 	//@Autor Samira
 	public void editarRespNivelAprob(){
