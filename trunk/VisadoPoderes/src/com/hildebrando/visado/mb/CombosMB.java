@@ -75,7 +75,6 @@ public class CombosMB {
 	private List<TiivsMiembro> lstAbogados;
 	private List<TiivsTipoSolicitud> lstTipoSolicitud;
 	private List<TiivsTiempo> lstTiempo;
-	private List<TiivsSolicitudNivel> lstSolicNivel;
 	
 	
 	private TipoDocumento tmpTipoDoc;
@@ -111,7 +110,6 @@ public class CombosMB {
 		lstTipoSolicitud=new ArrayList<TiivsTipoSolicitud>();
 		lstSolOperBan= new ArrayList<TiivsSolicitudOperban>();
 		lstAbogados=new ArrayList<TiivsMiembro>();
-		lstSolicNivel= new ArrayList<TiivsSolicitudNivel>();
 		
 		cargarMultitabla();
 		cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
@@ -452,17 +450,7 @@ public class CombosMB {
 		}	
 		
 		// Carga data de Solicitud Nivel
-		GenericDao<TiivsSolicitudNivel, Object> solNivDAO = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroSolNivel = Busqueda.forClass(TiivsSolicitudNivel.class);
-		filtroSolNivel.createAlias("tiivsSolicitud", "solNiv");
-		filtroOperBan.addOrder(Order.asc("solNiv.codSoli"));
-		
-		try {
-			lstSolicNivel = solNivDAO.buscarDinamico(filtroSolNivel);
-			//logger.debug("TAMANIOO DE LAS SOLICITUDES X NIVEL " +lstSolicNivel.size());
-		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de solicitudes x nivel: "+e);
-		}
+
 	}
 	
 	public TiivsMultitabla getRowFromMultiTabla(String codTabla, String codElem){
@@ -702,13 +690,6 @@ public class CombosMB {
 		this.lstTiempo = lstTiempo;
 	}
 
-	public List<TiivsSolicitudNivel> getLstSolicNivel() {
-		return lstSolicNivel;
-	}
-
-	public void setLstSolicNivel(List<TiivsSolicitudNivel> lstSolicNivel) {
-		this.lstSolicNivel = lstSolicNivel;
-	}
 	
 	public TipoDocumento getTmpTipoDoc() {
 		return tmpTipoDoc;

@@ -1615,8 +1615,8 @@ public class ConsultarSolicitudMB {
 				soliNivel.setTiivsSolicitud(solicitud);
 				soliNivel.setEstadoNivel(ConstantesVisado.ESTADOS.ESTADO_COD_Pendiente_T09);
 				//soliNivel.setEstadoNivel(null);
-				soliNivel.setUsuarioRegistro(usuario.getUID());
-				soliNivel.setFechaRegistro(new Timestamp(Calendar.DATE));
+				//soliNivel.setUsuarioRegistro(usuario.getUID());
+				//soliNivel.setFechaRegistro(new Timestamp(Calendar.DATE));
 				
 				logger.info("************************************************************");
 				logger.info("Datos del nivel a insertar: ");
@@ -1624,8 +1624,8 @@ public class ConsultarSolicitudMB {
 				logger.info("Cod Nivel: " + soliNivel.getCodNiv());
 				logger.info("Estado Solicitud: " + soliNivel.getEstadoSolicitud());
 				logger.info("Estado Nivel: " + soliNivel.getEstadoNivel());
-				logger.info("Usuario registro: " + soliNivel.getUsuarioRegistro());
-				logger.info("Fecha registro: " + soliNivel.getFechaRegistro());
+				//logger.info("Usuario registro: " + soliNivel.getUsuarioRegistro());
+				//logger.info("Fecha registro: " + soliNivel.getFechaRegistro());
 				logger.info("************************************************************");
 				
 				serviceSolicitud.insertar(soliNivel);
