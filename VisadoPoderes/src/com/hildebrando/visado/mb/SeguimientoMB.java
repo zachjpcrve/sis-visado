@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -553,22 +554,19 @@ public class SeguimientoMB
 			}
 			
 			tmpSol.setTxtOpeBan(cadena);
-			String cadNiveles = "";
+			String cadNiveles = "";			
 			
-			for (TiivsSolicitudNivel tmp: combosMB.getLstSolicNivel())
-			{
-				if (tmp.getTiivsSolicitud().getCodSoli().trim().equals(tmpSol.getCodSoli()))
+			for (Iterator iterator = tmpSol.getTiivsSolicitudNivels().iterator(); iterator.hasNext();) {
+				TiivsSolicitudNivel tmp = (TiivsSolicitudNivel) iterator.next();
+				String nivel = nivelService.buscarNivelxCodigo(tmp.getCodNiv());
+				
+				if (cadNiveles.length()>0)
 				{
-					String nivel = nivelService.buscarNivelxCodigo(tmp.getCodNiv());
-					
-					if (cadNiveles.length()>0)
-					{
-						cadNiveles = cadNiveles.concat(",").concat(nivel);
-					}
-					else
-					{
-						cadNiveles = cadNiveles.concat(nivel);
-					}
+					cadNiveles = cadNiveles.concat(",").concat(nivel);
+				}
+				else
+				{
+					cadNiveles = cadNiveles.concat(nivel);
 				}
 			}
 			
@@ -576,6 +574,7 @@ public class SeguimientoMB
 			{
 				cadNiveles = cadNiveles.substring(0,cadNiveles.length()-1);
 			}
+						
 			
 			//logger.info("Niveles encontrados:" + cadNiveles);
 			
