@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="542" pageHeight="795" columnWidth="502" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="70"/>
+	<property name="ireport.y" value="92"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<field name="numeroSolicitud" class="java.lang.String"/>
@@ -89,7 +89,15 @@ Mediante la presente le informamos que su solicitud es IMPROCEDENTE, por las sig
 		<band/>
 	</columnFooter>
 	<pageFooter>
-		<band/>
+		<band height="22">
+			<staticText>
+				<reportElement x="72" y="0" width="353" height="20" forecolor="#003399"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BBVA Banco Continental © Copyright - Todos los Derechos Reservados]]></text>
+			</staticText>
+		</band>
 	</pageFooter>
 	<summary>
 		<band/>
