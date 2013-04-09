@@ -10,63 +10,71 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
-		
+
 		<h:form id="frm">
-			
-			<p:spacer height="5"/>
-			
+
+			<p:spacer height="5" />
+
 			<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
 				<tbody>
 					<tr bordercolor="white">
-						<td ><h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" /></td>
-						<td >
-							<p:calendar  id="calFecIni" 
-								pattern="dd/MM/yyyy" value="#{reportesMB.fechaInicio}" 
-								showOn="button" maxlength="10" size="23"/>
-						</td>
-						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecIni" /></td>
-						<p:tooltip for="tooltxtFecIni" value="Fecha de Inicio" showEffect="fade" hideEffect="fade" />  
-						
-						<td ><h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin" /></td>
-						<td >
-							<p:calendar  id="calFecFin" 
-								pattern="dd/MM/yyyy" value="#{reportesMB.fechaFin}"
-								showOn="button" maxlength="10" size="21"/>
-						</td>
-						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecFin" /></td>
-						<p:tooltip for="tooltxtFecFin" value="Fecha de Fin" showEffect="fade" hideEffect="fade" />  
-						
+						<td><h:outputText styleClass="outputText"
+								id="txtFechaInicio" value="Fecha de Inicio:" /></td>
+						<td><p:calendar id="calFecIni" pattern="dd/MM/yyyy"
+								value="#{reportesMB.fechaInicio}" showOn="button" maxlength="10"
+								size="23" /></td>
+						<td><p:graphicImage value="/resources/images/pregunta.jpg"
+								id="tooltxtFecIni" /></td>
+						<p:tooltip for="tooltxtFecIni" value="Fecha de Inicio"
+							showEffect="fade" hideEffect="fade" />
+
+						<td><h:outputText styleClass="outputText" id="txtFechaFin"
+								value="Fecha de Fin" /></td>
+						<td><p:calendar id="calFecFin" pattern="dd/MM/yyyy"
+								value="#{reportesMB.fechaFin}" showOn="button" maxlength="10"
+								size="21" /></td>
+						<td><p:graphicImage value="/resources/images/pregunta.jpg"
+								id="tooltxtFecFin" /></td>
+						<p:tooltip for="tooltxtFecFin" value="Fecha de Fin"
+							showEffect="fade" hideEffect="fade" />
+
 					</tr>
 					<tr bordercolor="white">
-						<td ><h:outputText styleClass="outputText" id="txtEstado" value="Estado" /></td>
-						<td >
-							<p:selectCheckboxMenu id="scmEstados" label="--Todos--" value="#{reportesMB.lstEstadoSelected}" 
-								panelStyle="width:220px;" style="width:162px;">  
-						        <f:selectItems value="#{reportesMB.combosMB.estados}"/>  
-						    </p:selectCheckboxMenu>  
-						</td>	
-						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtEstado" /></td>
-						<p:tooltip for="tooltxtEstado" value="Estado de la solicitud" showEffect="fade" hideEffect="fade" /> 
+						<td><h:outputText styleClass="outputText" id="txtEstado"
+								value="Estado" /></td>
+						<td><p:selectCheckboxMenu id="scmEstados" label="--Todos--"
+								value="#{reportesMB.lstEstadoSelected}"
+								panelStyle="width:220px;" style="width:162px;">
+								<f:selectItems value="#{reportesMB.combosMB.estados}" />
+							</p:selectCheckboxMenu></td>
+						<td><p:graphicImage value="/resources/images/pregunta.jpg"
+								id="tooltxtEstado" /></td>
+						<p:tooltip for="tooltxtEstado" value="Estado de la solicitud"
+							showEffect="fade" hideEffect="fade" />
 					</tr>
 				</tbody>
 			</table>
-			
-			<p:spacer height="10"/>
-			
+
+			<p:spacer height="10" />
+
 			<table border="0">
 				<tr>
-					<td>
-						<p:commandButton id="cmdGenerar" value="Generar" actionListener="#{reportesMB.descargarArchivoExtractor}" ajax="false"
-							onclick="PrimeFaces.monitorDownload(start, stop)" >
-								<p:fileDownload value="#{reportesMB.file}" />  
-						</p:commandButton>  
-					</td>
+					<td><p:commandButton id="cmdGenerar" value="Generar"
+							actionListener="#{reportesMB.descargarArchivoExtractor}"
+							ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)">
+							<p:fileDownload value="#{reportesMB.file}" />
+						</p:commandButton> <h:commandLink value="Generar2"
+							disabled="#{reportesMB.noHabilitarExportar}"
+							actionListener="#{reportesMB.descargarArchivoExtractor}"
+							target="_blank" ajax="true">
+							<p:fileDownload value="#{reportesMB.file}" />
+						</h:commandLink></td>
 				</tr>
-			</table>	
-    			
+			</table>
+
 		</h:form>
-		
-			
+
+
 	</ui:define>
 </ui:composition>
 

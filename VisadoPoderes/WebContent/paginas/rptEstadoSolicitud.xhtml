@@ -10,248 +10,262 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
-		
+
 		<h:form id="frm">
-			
-			<p:spacer height="5"/>
-			
-			<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
-				<tbody>
-					<tr bordercolor="white">
-						<td><h:outputText styleClass="outputText" id="txtTerritorio" value="Territorio:" /></td>
-						<td>
-							<p:selectOneMenu value="#{reportesMB.idTerr}" id="somTerr" style="width:155px;">
+			<p:outputPanel id="oplFrm">
+				<p:spacer height="5" />
+
+				<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
+					<tbody>
+						<tr bordercolor="white">
+							<td><h:outputText styleClass="outputText" id="txtTerritorio"
+									value="Territorio" /></td>
+							<td><p:selectOneMenu value="#{reportesMB.idTerr}"
+									id="somTerr" style="width:155px;">
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
-									<f:selectItems value="#{reportesMB.combosMB.lstTerritorio}" var="ter"
-										itemValue="#{ter.codTer}" itemLabel="#{ter.desTer}" />
-									<p:ajax event="change" update=":frm:somOfi :frm:somNOfi" process="@this"
-									      listener="#{reportesMB.buscarOficinaPorTerritorio}" />
-							</p:selectOneMenu>
-						</td>
-					</tr>
-					
-					<tr bordercolor="white">
-						<td >
-							 <h:outputText styleClass="outputText" id="txtCodOficina" value="Código de Oficina:"/>
-						</td>
-						<td >
-							<p:selectOneMenu value="#{reportesMB.idOfi}" id="somOfi" style="width:155px;">
+									<f:selectItems value="#{reportesMB.combosMB.lstTerritorio}"
+										var="ter" itemValue="#{ter.codTer}" itemLabel="#{ter.desTer}" />
+									<p:ajax event="change" update=":frm:somOfi, :frm:somNOfi"
+										process="@this"
+										listener="#{reportesMB.buscarOficinaPorTerritorio}" />
+								</p:selectOneMenu></td>
+						</tr>
+
+						<tr bordercolor="white">
+							<td><h:outputText styleClass="outputText" id="txtCodOficina"
+									value="Codigo de Oficina" /></td>
+							<td><p:selectOneMenu value="#{reportesMB.idOfi}" id="somOfi"
+									style="width:155px;">
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
-									<f:selectItems value="#{reportesMB.combosMB.lstOficina1}" var="of"
-										itemValue="#{of.codOfi}" itemLabel="#{of.codOfi}" />
-									<p:ajax event="change" update=":frm:somNOfi :frm:somTerr" process="@this"
-									      listener="#{reportesMB.buscarOficinaPorCodigo}" />
-							</p:selectOneMenu>
-						</td>
-												
-						<td >
-							 <h:outputText styleClass="outputText" id="txtOficina" value="Oficina:"/>
-						</td>
-						<td >
-							<p:selectOneMenu value="#{reportesMB.idOfi1}" id="somNOfi" style="width:155px;">
+									<f:selectItems value="#{reportesMB.combosMB.lstOficina1}"
+										var="of" itemValue="#{of.codOfi}" itemLabel="#{of.codOfi}" />
+									<p:ajax event="change" update=":frm:somNOfi, :frm:somTerr"
+										process="@this"
+										listener="#{reportesMB.buscarOficinaPorCodigo}" />
+								</p:selectOneMenu></td>
+
+							<td><h:outputText styleClass="outputText" id="txtOficina"
+									value="Oficina" /></td>
+							<td><p:selectOneMenu value="#{reportesMB.idOfi1}"
+									id="somNOfi" style="width:155px;">
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
-									<f:selectItems value="#{reportesMB.combosMB.lstOficina1}" var="of"
-										itemValue="#{of.codOfi}" itemLabel="#{of.desOfi}" />
-									<p:ajax event="change" update=":frm:somOfi :frm:somTerr" process="@this"
-									      listener="#{reportesMB.buscarOficinaPorNombre}" />
-							</p:selectOneMenu>
-						</td>						
-					</tr>
-				
-					<tr bordercolor="white">
-						<td ><h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" /></td>
-						<td >
-							<p:calendar  id="calFecIni" 
-								pattern="dd/MM/yyyy" value="#{reportesMB.fechaInicio}" 
-								showOn="button" maxlength="10" size="20"/>
-						</td>
-												
-						<td ><h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin:" /></td>
-						<td >
-							<p:calendar  id="calFecFin" 
-								pattern="dd/MM/yyyy" value="#{reportesMB.fechaFin}"
-								showOn="button" maxlength="10" size="20"/>
-						</td>						
-					</tr>
-					
-					<tr bordercolor="white">
-						<td>
-						</td>
-					</tr>
-								
-					<tr bordercolor="white">
-						<td>
-							<p:commandButton value="Buscar" actionListener="#{reportesMB.buscarSolicitudesxOficina}" update=":frm"/>
-						</td>
-						<td>
-							<p:commandButton value="Exportar"  disabled="#{reportesMB.noHabilitarExportar}" 
-								actionListener="#{reportesMB.descargarArchivoEstadoSolicitud}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)" >
-								<p:fileDownload value="#{reportesMB.file}" />  
-							</p:commandButton> 
-						</td>
-					</tr>
-						
-				</tbody>
-			</table>
-			
-			<p:spacer height="20"/>
-			
-			<h:outputLabel value="#{reportesMB.textoTotalResultados}"/>
-			
-			<p:spacer height="30"/>
-			
-			<p:panel header="Resultados" id="panelRes" style="width: 1090px" >
-				<p:dataTable value="#{reportesMB.lstSolicitudesOficina}" var="tbl" rows="4" id="datosSol"
-						paginatorPosition="bottom" scrollable="true" scrollHeight="200"
-						paginator="true"
+									<f:selectItems value="#{reportesMB.combosMB.lstOficina1}"
+										var="of" itemValue="#{of.codOfi}" itemLabel="#{of.desOfi}" />
+									<p:ajax event="change" update=":frm:somOfi, :frm:somTerr"
+										process="@this"
+										listener="#{reportesMB.buscarOficinaPorNombre}" />
+								</p:selectOneMenu></td>
+						</tr>
+
+						<tr bordercolor="white">
+							<td><h:outputText styleClass="outputText"
+									id="txtFechaInicio" value="Fecha de Inicio:" /></td>
+							<td><p:calendar id="calFecIni" pattern="dd/MM/yyyy"
+									value="#{reportesMB.fechaInicio}" showOn="button"
+									maxlength="10" size="20" /></td>
+
+							<td><h:outputText styleClass="outputText" id="txtFechaFin"
+									value="Fecha de Fin" /></td>
+							<td><p:calendar id="calFecFin" pattern="dd/MM/yyyy"
+									value="#{reportesMB.fechaFin}" showOn="button" maxlength="10"
+									size="20" /></td>
+						</tr>
+
+						<tr bordercolor="white">
+							<td></td>
+						</tr>
+
+						<tr bordercolor="white">
+							<td><p:commandButton value="Buscar"
+									actionListener="#{reportesMB.buscarSolicitudesxOficina}"
+									update=":frm:oplFrm" /></td>
+							<td><p:commandButton value="Exportar"
+									disabled="#{reportesMB.noHabilitarExportar}"
+									actionListener="#{reportesMB.descargarArchivoEstadoSolicitud}"
+									ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)">
+									<p:fileDownload value="#{reportesMB.file}" />
+								</p:commandButton> <h:commandLink value="Exportar2"
+									disabled="#{reportesMB.noHabilitarExportar}"
+									actionListener="#{reportesMB.descargarArchivoEstadoSolicitud}"
+									target="_blank" ajax="true">
+									<p:fileDownload value="#{reportesMB.file}" />
+								</h:commandLink></td>
+						</tr>
+
+					</tbody>
+				</table>
+
+				<p:spacer height="20" />
+
+				<h:outputLabel value="#{reportesMB.textoTotalResultados}" />
+
+				<p:spacer height="30" />
+
+				<p:panel header="Resultados" id="panelRes" style="width: 1090px">
+					<p:dataTable value="#{reportesMB.lstSolicitudesOficina}" var="tbl"
+						rows="4" id="datosSol" paginatorPosition="bottom"
+						scrollable="true" scrollHeight="200" paginator="true"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-						rowsPerPageTemplate="5,10,15"
-						emptyMessage="">
-					
+						rowsPerPageTemplate="5,10,15" emptyMessage="">
+
 						<p:column width="38">
-							<f:facet name="header">  
-						         <h:outputText value="Territorio" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.territorio}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Territorio" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.territorio}" style="font-size: 9px" />
 						</p:column>
-					
+
 						<p:column width="15">
-							<f:facet name="header">  
-						         <h:outputText value="Cod." style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.codOficina}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Cod" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.codOficina}" style="font-size: 9px" />
 						</p:column>
-						
+
 						<p:column width="40">
-							<f:facet name="header">  
-						         <h:outputText value="Oficina" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.oficina}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Oficina" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.oficina}" style="font-size: 9px" />
 						</p:column>
-						
-						<p:column width="40">
-							<f:facet name="header">  
-						         <h:outputText value="Registrado" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalRegistrados}" style="font-size: 9px"/>	
-						</p:column>
-						
-						<p:column width="32">
-							<f:facet name="header">  
-						         <h:outputText value="Enviado" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalEnviados}" style="font-size: 9px"/>	
-						</p:column>
-						
+
 						<p:column width="37">
-							<f:facet name="header">  
-						         <h:outputText value="Reservado" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalReservado}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Registrado" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalRegistrados}"
+								style="font-size: 9px" />
 						</p:column>
-						
+
+						<p:column width="32">
+							<f:facet name="header">
+								<h:outputText value="Enviado" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalEnviados}" style="font-size: 9px" />
+						</p:column>
+
+						<p:column width="37">
+							<f:facet name="header">
+								<h:outputText value="Reservado" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalReservado}"
+								style="font-size: 9px" />
+						</p:column>
+
 						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="Aceptado" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalAceptado}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Aceptado" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalAceptado}" style="font-size: 9px" />
 						</p:column>
-						
-						<p:column width="70">
-							<f:facet name="header">  
-						         <h:outputText value="En Verificación A" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalVerificacionA}" style="font-size: 9px"/>	
+
+						<p:column width="68">
+							<f:facet name="header">
+								<h:outputText value="En Verificacion A" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalVerificacionA}"
+								style="font-size: 9px" />
 						</p:column>
-						
+
 						<p:column width="39">
-							<f:facet name="header">  
-						         <h:outputText value="Rechazado" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalRechazado}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Rechazado" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalRechazado}"
+								style="font-size: 9px" />
 						</p:column>
-						
+
 						<p:column width="42">
-							<f:facet name="header">  
-						         <h:outputText value="En revisión" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalEnRevision}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="En revision" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalEnRevision}"
+								style="font-size: 9px" />
 						</p:column>
-						
+
 						<p:column width="52">
-							<f:facet name="header">  
-						         <h:outputText value="Pre-Ejecutado" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalPreEjecutado}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Pre-Ejecutado" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalPreEjecutado}"
+								style="font-size: 9px" />
 						</p:column>
-						
+
 						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="Ejecutado" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalEjecutado}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Ejecutado" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalEjecutado}"
+								style="font-size: 9px" />
 						</p:column>
-						
+
 						<p:column width="44">
-							<f:facet name="header">  
-						         <h:outputText value="Procedente" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalProcedente}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Procedente" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalProcedente}"
+								style="font-size: 9px" />
 						</p:column>
-						
-						<p:column width="70">
-							<f:facet name="header">  
-						         <h:outputText value="En Verificación B" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalVerificacionB}" style="font-size: 9px"/>	
+
+						<p:column width="65">
+							<f:facet name="header">
+								<h:outputText value="En Verificacion B" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalVerificacionB}"
+								style="font-size: 9px" />
 						</p:column>
-						
+
 						<p:column width="52">
-							<f:facet name="header">  
-						         <h:outputText value="Improcedente" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalImprocedente}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Improcedente" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalImprocedente}"
+								style="font-size: 9px" />
 						</p:column>
-						
+
 						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="Vencido" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalVencido}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Vencido" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalVencido}" style="font-size: 9px" />
 						</p:column>
-						
+
 						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="Revocado" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalRevocado}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Revocado" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalRevocado}" style="font-size: 9px" />
 						</p:column>
-						
+
 						<p:column width="35">
-							<f:facet name="header">  
-						         <h:outputText value="Total" style="font-size: 9px"/>  
-						    </f:facet>  
-							<h:outputText value="#{tbl.totalFila}" style="font-size: 9px"/>	
+							<f:facet name="header">
+								<h:outputText value="Total" style="font-size: 9px" />
+							</f:facet>
+							<h:outputText value="#{tbl.totalFila}" style="font-size: 9px" />
 						</p:column>
-					
-				</p:dataTable>
-			</p:panel>
-    		
+
+					</p:dataTable>
+				</p:panel>
+			</p:outputPanel>
 		</h:form>
-		
-		<p:confirmDialog id="confirmDialog" message="Que desea hacer?" 
-		                header="Generar Reporte Extractor" severity="alert" widgetVar="confirmation">  
-	            <h:form>      
-			        <p:commandButton id="confirm" value="Abrir"  oncomplete="confirmation.hide()"  
-			                    actionListener="#{reportesMB.abrirExcelEstadoSolicitud}" />  
-			        
-			        <p:commandButton id="decline" value="Grabar" onclick="PrimeFaces.monitorDownload(start, stop)" ajax="false"   
-					        icon="ui-icon-arrowthichk-s" oncomplete="confirmation.hide()" actionListener="#{reportesMB.descargarArchivoEstadoSolicitud}" >
-					    <p:fileDownload value="#{reportesMB.file}" />  
-					</p:commandButton>  
-			   </h:form>
-		</p:confirmDialog>  
-		
+
+		<p:confirmDialog id="confirmDialog" message="Que desea hacer?"
+			header="Generar Reporte Extractor" severity="alert"
+			widgetVar="confirmation">
+			<h:form>
+				<p:commandButton id="confirm" value="Abrir"
+					oncomplete="confirmation.hide()"
+					actionListener="#{reportesMB.abrirExcelEstadoSolicitud}" />
+
+				<p:commandButton id="decline" value="Grabar"
+					onclick="PrimeFaces.monitorDownload(start, stop)" ajax="false"
+					icon="ui-icon-arrowthichk-s" oncomplete="confirmation.hide()"
+					actionListener="#{reportesMB.descargarArchivoEstadoSolicitud}">
+					<p:fileDownload value="#{reportesMB.file}" />
+				</p:commandButton>
+			</h:form>
+		</p:confirmDialog>
+
 	</ui:define>
 </ui:composition>
 
