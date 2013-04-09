@@ -1281,8 +1281,7 @@ public class RevocadosMB {
 			
 			List<TiivsRevocado> tiivsrevocados= new ArrayList<TiivsRevocado>();
 			
-			GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit
-					.getApplicationContext().getBean("genericoDao");
+			GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
 			
 			try {
