@@ -532,6 +532,7 @@
 													</td>
 													<p:remoteCommand id="valorImporteSoles" name="valorImporteSoles" actionListener="#{consultarSolicitudMB.obtenerAccionAgregarOperacionBancaria}"
 																 update=":formSolicitudRegistro:txtImporteSoles">
+																 </p:remoteCommand>
 													<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
 													
 													<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importeSoles}" readonly="true" id="txtImporteSoles">
