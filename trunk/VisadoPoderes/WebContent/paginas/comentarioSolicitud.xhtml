@@ -7,36 +7,43 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
+		
 
 		<h:panelGrid columns="5">
 
-		<p:tabMenu activeIndex="0" style="width:350px;">
-	                           <p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml" icon="ui-icon-star" />
-		           <p:menuitem value="Instrucciones" url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
-		</p:tabMenu>
+			<p:tabMenu activeIndex="0" style="width:350px;" >
+		               <p:menuitem value="Solicitud" onclick="actualizarEditor();" url="/faces/paginas/solicitud.xhtml" icon="ui-icon-star" />
+			           <p:menuitem value="Instrucciones" url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
+			</p:tabMenu>
 
-		<p:toolbar>
-		    <p:toolbarGroup align="rigth">
+			<p:toolbar>
+		    	<p:toolbarGroup align="rigth">
 					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro"
 						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"/>
 					<p:commandButton value="Enviar" id="btnEnviar3"  
-						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>
-					<p:commandButton value="Imprimir" id="btnImprimir3"
-						icon="ui-icon-document" />
+						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>					
 						
-					<p:commandButton value="Salir" id="btnSalir3" onclick="cfdCerrarSesion.show()"
-						icon="ui-icon-document" />
+					<p:commandButton value="Salir" id="btnSalir3"
+						    onclick="window.location.href='./bienvenido.xhtml'"
+							icon="ui-icon-document" />
 						
 				</p:toolbarGroup>
 			</p:toolbar>
+			
+			
+			
 
 		</h:panelGrid>
 		
 		
 		
 		<h:form id="formSolicitudRegistro">
-	      <p:messages id="idGrowlSolicitudRegistro"></p:messages>
-			<p:editor id="editor" value="#{solicitudRegMB.solicitudRegistrarT.obs}" width="400" height="400"/>
+					
+			
+	     	<p:messages id="idGrowlSolicitudRegistro"></p:messages>
+	      
+	      	
+			<p:editor id="editor" value="#{solicitudRegMB.solicitudRegistrarT.obs}" width="400" height="400" />									
 
 			<h:panelGrid columns="2" style="margin-top:10px">
 				<!-- <p:commandButton id="submitButton" value="Guardar" update="editor" actionListener="{solicitudRegMB.seterComentario}"
@@ -45,8 +52,10 @@
 					icon="ui-icon-close" />
 			</h:panelGrid>
 		
-
+			<p:remoteCommand name="actualizarEditor" update=":formSolicitudRegistro:editor" />
+			
 		</h:form>
+		
 
    <p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"  
                 header="Confirmación" severity="alert" widgetVar="confirmation" >  
