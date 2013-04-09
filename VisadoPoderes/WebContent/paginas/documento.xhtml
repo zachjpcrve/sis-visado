@@ -68,7 +68,7 @@
 						currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
 						emptyMessage="No hay documentos">
 	
-						<p:column headerText="Codigo">
+						<p:column headerText="Código">
 							<h:outputText value="#{doc.tiivsDocumento.codDocumento}" />
 						</p:column>
 						<p:column headerText="Documento">
@@ -83,7 +83,7 @@
 						<p:column headerText="Estado">
 							<h:outputText value="#{doc.desActivo}" />
 						</p:column>
-						<p:column headerText="Accion">
+						<p:column headerText="Acción">
 							<p:commandLink id="clinkEditar" ajax="true" update=":frmMantenimientoDocumentos:pnlMntDocumentos"
 								actionListener="#{documentoMB.editarDocumento}">
 								<f:param name="codDocumento" value="#{doc.id.codDoc}"></f:param>

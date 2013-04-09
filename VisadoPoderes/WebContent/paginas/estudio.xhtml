@@ -77,13 +77,13 @@
 					<p:messages id="idMsmDocumento"></p:messages>
 					<table>
 						<tr>
-							<td><h:outputText value="Codigo:  " /></td>
+							<td><h:outputText value="Código:  " /></td>
 							<td><p:inputText id="txtCodigo"
 									disabled="#{estudioMB.bMostrarCodigo}"
 									value="#{estudioMB.estudio.codEstudio}" maxlength="50" /></td>
 						</tr>
 						<tr>
-							<td><h:outputText value="Descripcion:  " /></td>
+							<td><h:outputText value="Descripción:  " /></td>
 							<td><p:inputText id="txtDescripcion"
 									value="#{estudioMB.estudio.desEstudio}" maxlength="50" /></td>
 						</tr>
@@ -126,10 +126,10 @@
 						currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
 						emptyMessage="No hay estudios">
 	
-						<p:column headerText="Codigo">
+						<p:column headerText="Código">
 							<h:outputText value="#{est.codEstudio}" />
 						</p:column>
-						<p:column headerText="Descripcion">
+						<p:column headerText="Descripción">
 							<h:outputText value="#{est.desEstudio}" />
 						</p:column>
 						<p:column headerText="Costo">
@@ -138,7 +138,7 @@
 						<p:column headerText="Estado">
 							<h:outputText value="#{est.desActivo}" />
 						</p:column>
-						<p:column headerText="Accion">
+						<p:column headerText="Acción">
 							<p:commandLink id="clinkEditar" ajax="true"
 								update=":frmMantenimientoEstudio:pnlMntEstudio"
 								actionListener="#{estudioMB.editarEstudio}">

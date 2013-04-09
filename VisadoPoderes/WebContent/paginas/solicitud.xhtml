@@ -87,7 +87,7 @@
 														<tbody>
 															<tr>
 																<td><h:outputText styleClass="outputText"
-																		id="txtCodNumSol" value="Nro Solicitud:" /></td>
+																		id="txtCodNumSol" value="Nro. Solicitud:" /></td>
 																<td><h:inputText styleClass="inputText" id="text1"
 																		style="width:100px;"
 																		value="#{solicitudRegMB.solicitudRegistrarT.codSoli}"
@@ -135,7 +135,7 @@
 															</tr>
 															<tr>
 																<td><h:outputText styleClass="outputText"
-																		id="outNroVaucher" value="Nro Voucher *" /></td>
+																		id="outNroVaucher" value="Nro. Voucher *" /></td>
 																<td><h:inputText styleClass="inputText"
 																		immediate="false" required="false"
 																		requiredMessage="Ingrese el Nro Voucher"
@@ -152,7 +152,7 @@
 																		value="Nro Vaucher" showEffect="slide" /></td>
 
 																<td><h:outputText styleClass="outputText"
-																		id="outComision" value="Comision" /></td>
+																		id="outComision" value="Comisión" /></td>
 																<td><h:inputText styleClass="inputText"
 																		id="txtComision" style="width:100px;"
 																		value="#{solicitudRegMB.solicitudRegistrarT.comision}"
@@ -200,7 +200,7 @@
 															<td><p:commandButton value="+"
 																	actionListener="#{solicitudRegMB.agregarActionListenerAgrupacion}"
 																	update=":formRegistrar:tlbPersonasPopup,:formRegistrar:cboTipoDoi,
-								:formRegistrar:cboTipoDoi2,:formRegistrar:cboClasificacion"
+																	:formRegistrar:cboTipoDoi2,:formRegistrar:cboClasificacion"
 																	oncomplete="dlgRegistrarPersona.show();" /></td>
 														</tr>
 													</table>
@@ -790,7 +790,7 @@
 						<h:panelGrid columns="15">
 
 							<h:panelGrid columns="4">
-								<h:outputText id="outTipoDoi" value="T DOI/C Central * :  " />
+								<h:outputText id="outTipoDoi" value="T. DOI/C Central * :  " />
 								<p:selectOneMenu id="cboTipoDoi"
 									value="#{solicitudRegMB.objTiivsPersonaBusqueda.tipDoi}"
 									style="width:150px;">
@@ -825,7 +825,7 @@
 							</h:panelGrid>
 
 
-							<h:outputText id="outTipoDoi2" value="T DOI/C *:" />
+							<h:outputText id="outTipoDoi2" value="T. DOI/C *:" />
 							<p:selectOneMenu id="cboTipoDoi2"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.tipDoi}"
 								style="width:150px;">
@@ -838,7 +838,7 @@
 							<p:tooltip for="toolcboTipoDoi2" value="Tipo DOI/Código Central"
 								showEffect="slide" />
 
-							<h:outputText id="outNumDoiBusqueda" value="Num DOI:" />
+							<h:outputText id="outNumDoiBusqueda" value="Num. DOI:" />
 							<h:inputText styleClass="inputText" id="txtNumDoiBusqueda"
 								size="12" maxlength="11"
 								onkeypress="return validaNumero(event,'0',this,'0');"
@@ -919,7 +919,7 @@
 
 							</h:panelGrid>
 
-							<h:outputText id="outClasificacion" value="Clasificacion*:" />
+							<h:outputText id="outClasificacion" value="Clasificación*:" />
 							<p:selectOneMenu id="cboClasificacion"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.clasifPer}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
@@ -977,7 +977,7 @@
 
 						<p:commandButton id="btnAgregarPersonaAgrupacion"
 							action="#{solicitudRegMB.agregarAgrupacion}"
-							value="Agregar Agrupacion" icon="ui-icon-search"
+							value="Agregar Agrupación" icon="ui-icon-search"
 							onclick="dlgRegistrarPersona.hide()"
 							update=":formRegistrar:pnlRegistrar,:formSolicitudRegistro:pnlSolicitudRegistro">
 						</p:commandButton>

@@ -42,7 +42,7 @@
 
 								</p:selectOneMenu>
 
-								<h:outputLabel value="Nro de DOI: " />
+								<h:outputLabel value="Nro. de DOI: " />
 								<p:inputText id="txtNroDoi" styleClass="inputText"
 									value="#{revocadosMB.objTiivsPersonaBusqueda.numDoi}"
 									onkeypress="return validaNumero(event,'0',this,'0');"
@@ -113,7 +113,7 @@
 
 			</h:panelGrid>
 
-                                                <p:outputPanel id="pnlTablaRevocados">
+            <p:outputPanel id="pnlTablaRevocados">
 			<p:dataTable style="width: 800px;" id="tbl" var="revocado"
 				value="#{revocadosMB.revocados}" paginator="true" rows="5"
 				paginatorPosition="bottom">
@@ -225,8 +225,8 @@
 								icon="ui-icon-check" ajax="true" 
 								actionListener="#{revocadosMB.obtenerPersonaSeleccionada}"
 								onclick="dlgCliente.hide()"
-								update=":frmPendEdit:gridApodPod, 
-								:frmPendEdit:gridApodPod2, :frmPendEdit:gridApodPod3" />
+								update=":frmPendEdit:gridApodPodEd, 
+								:frmPendEdit:gridApodPodEd2, :frmPendEdit:gridApodPodEd3" />
 						</f:facet>
 
 					</p:dataTable>
@@ -249,7 +249,7 @@
 					<p:messages globalOnly="true" showDetail="true" />
 				</h:panelGrid>
 
-				<h:panelGrid columns="12" id="gridApodPod">
+				<h:panelGrid columns="12" id="gridApodPodEd">
 
 					<h:outputLabel value="T.DOI/ C.Central*: " />
 					<p:selectOneMenu id="cboTipoDoi"
@@ -258,7 +258,6 @@
 						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 						<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 							itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
-
 					</p:selectOneMenu>
 
 					<h:outputLabel value="Nro*: " />
@@ -266,16 +265,16 @@
 						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.numDoi}"
 						onkeypress="return validaNumero(event,'0',this,'0');"
 						onblur="validaNumero(event,'0',this,'1');">
-						
 					</p:inputText>
 					<p:message for="txtNumDoi"></p:message>
-<!-- :gridApodPod, :frmPendEdit:dtClientes,
-			:frmPendEdit:gridApodPod2, :frmPendEdit:gridApodPod3 , :frmPendEdit:gridMsj -->
+					
 					<p:commandButton id="btnBuscar"
 						update=":frmCliente:pnlfrmCliente, :frmPendEdit:pnlRegistrarPendEdit"
 						icon="ui-icon-seek-next" action="#{revocadosMB.buscarPersona}"
 						ajax="true" />
-
+					
+				</h:panelGrid>
+				<h:panelGrid columns="6" id="gridApodPodEd2">
 					<h:outputLabel value="T.DOI/ C.Central*: " />
 					<p:selectOneMenu id="cboTipoDoi2"
 						value="#{revocadosMB.objTiivsPersonaAgregar.tipDoi}"
@@ -285,12 +284,12 @@
 							itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
 
 					</p:selectOneMenu>
-
+					
 					<h:outputLabel value="Nro de DOI*: " />
 					<p:inputText styleClass="inputText"
 						value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}"
 						onkeypress="return validaNumero(event,'0',this,'0');"
-						onblur="validaNumero(event,'0',this,'1');">
+						onblur="validaNumero(event,'0',this,'1');" size="25">
 					</p:inputText>
 
 					<h:outputLabel value="C. Central: " />
@@ -302,7 +301,7 @@
 
 				</h:panelGrid>
 
-				<h:panelGrid columns="6" id="gridApodPod2">
+				<h:panelGrid columns="6" id="gridApodPodEd3">
 
 					<h:outputText id="outApPaterno" value="Ap.Paterno:" />
 					<p:inputText styleClass="inputTextPopup" id="txtApellidoPaterno"
@@ -331,7 +330,7 @@
 
 				</h:panelGrid>
 
-				<h:panelGrid columns="3">
+				<h:panelGrid columns="4">
 
 					<p:commandButton id="btnAgregar" value="Agregar"
 						icon="ui-icon-plus"
