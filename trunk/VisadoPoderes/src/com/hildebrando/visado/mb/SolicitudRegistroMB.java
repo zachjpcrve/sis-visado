@@ -1961,11 +1961,22 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	
 	
 	int y=0;
-    public void obtenerAccionAgregarOperacionBancaria(){
-    	logger.info("**************************** obtenerAccionAgregarOperacionBancaria ****************************");
-    	logger.info("********************************************* : "+objSolicBancaria.getImporte());
-    	
-    }
+	public void obtenerAccionAgregarOperacionBancaria() {
+		logger.info("**************************** obtenerAccionAgregarOperacionBancaria ****************************");
+		logger.info("********************************************* : "+ objSolicBancaria.getImporte());
+		
+		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+			objSolicBancaria.setImporteSoles(objSolicBancaria.getImporte());
+		}
+		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) {
+			objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+		}
+		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) {
+			objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+		}
+		
+
+	}
 	public void editarOperacionBancaria() {
 		logger.info("**************************** editarOperacionBancaria ****************************");
 		
