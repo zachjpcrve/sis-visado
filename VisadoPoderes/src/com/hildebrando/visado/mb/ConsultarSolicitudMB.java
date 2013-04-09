@@ -1303,6 +1303,7 @@ public class ConsultarSolicitudMB {
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
 				this.bMostrarGenerarRevision = false;
+				this.listarComboDictamen();
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
@@ -1477,9 +1478,15 @@ public class ConsultarSolicitudMB {
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
 					
-                     if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)
+                    if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)
                     		          && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
                     	 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
+                    	 
+                    	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
+                    	 this.registrarHistorial(solicitudRegistrarT);
+                    	 actualizarBandeja=true;
+                    	 Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
+                    	 
 					}else{
 						if(this.agregarNiveles(solicitudRegistrarT)){
 							this.bSeccionDictaminar = false;
@@ -1491,8 +1498,6 @@ public class ConsultarSolicitudMB {
 							logger.info("No se dictamino la solicitud, verificar los rangos del mantenimiento de Niveles");
 						}
 					}
-					
-					
 					
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
