@@ -321,17 +321,19 @@
 																<td><h:outputText styleClass="outputText"
 																		id="text20" value="Tipo de Solicitud:"
 																		title="Tipo de solicitud"></h:outputText></td>
-																<td width="300"><p:selectOneMenu
-																		styleClass="selectOneMenu" id="cboTipoSolicitud"
+																<td width="300">
+																	<p:selectOneMenu
+																		style="font-size:0.98em;width:280px;" id="cboTipoSolicitud"
 																		value="#{solicitudRegMB.iTipoSolicitud}"
-																		immediate="true"
-																		valueChangeListener="#{solicitudRegMB.listarDocumentosXSolicitud}"
+																		immediate="true" valueChangeListener="#{solicitudRegMB.listarDocumentosXSolicitud}"
 																		disabled="false">
-																		<p:ajax
-																			update=":formSolicitudRegistro:listDocumentosXTipoSoli,
+																		
+																		<p:ajax	update=":formSolicitudRegistro:listDocumentosXTipoSoli,
 																				:formSolicitudRegistro:tblDocumentos,
 																				:formSolicitudRegistro:idVisorApplet"
-																			event="change"></p:ajax>
+																				event="change">
+																		</p:ajax>
+																		
 																		<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 																		<f:selectItems value="#{combosMB.lstTipoSolicitud}"
 																			var="lOf" itemValue="#{lOf.codTipSolic}"
@@ -415,7 +417,7 @@
 															<tr>
 																<td><h:outputText styleClass="outputText"
 																		id="text19" value="Documentos:"></h:outputText></td>
-																<td><p:selectOneMenu styleClass="selectOneMenu"
+																<td><p:selectOneMenu style="font-size:0.98em;width:280px;"
 																		id="listDocumentosXTipoSoli"
 																		value="#{solicitudRegMB.selectedTipoDocumento}"
 																		var="p" converter="tipoSolicitudDocumentoConverter">
@@ -936,8 +938,7 @@
 							<p:tooltip for="toolcboClasificacion" value="Clasificación"
 								showEffect="slide" />
 							<h:inputText styleClass="inputTextPopup" id="txtClasiSelect"
-								size="15"
-								value="#{solicitudRegMB.objTiivsPersonaResultado.clasifPerOtro}" />
+								size="15" value="#{solicitudRegMB.objTiivsPersonaResultado.clasifPerOtro}" />
 							<h:outputText id="outEmail" value="Email :" />
 							<h:inputText styleClass="inputTextPopup" id="txtEmail"
 								style="width:100px;"
