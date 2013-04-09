@@ -1528,6 +1528,7 @@ public class ConsultarSolicitudMB {
 			}
 
 		} catch (Exception e) {
+			logger.error("Error al dictaminar solicitud:",e);
 			e.printStackTrace();
 		}
 	}
@@ -1539,7 +1540,7 @@ public class ConsultarSolicitudMB {
 				
 	            Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
 	            		 filtro.add(Restrictions.eq("moneda",solicitud.getMoneda().trim()));
-	            		 filtro.add(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
+	            		 filtro.add(Restrictions.eq("estado", Integer.valueOf(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO)));
 	            		 filtro.addOrder(Order.asc("codNiv"));
 	            		 
 				List<TiivsNivel> lstNiveles = service.buscarDinamico(filtro);
@@ -1786,7 +1787,6 @@ public class ConsultarSolicitudMB {
 			}
 		} catch (Exception exp) {
 			logger.debug("No se pudo encontrar el historial de la solicitud");
-			exp.printStackTrace();
 		}
 
 	}
