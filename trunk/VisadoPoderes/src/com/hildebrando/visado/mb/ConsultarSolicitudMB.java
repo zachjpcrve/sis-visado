@@ -1453,6 +1453,10 @@ public class ConsultarSolicitudMB {
 					  if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)
 							  && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 	                    	 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+	                    	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
+	                    	 this.registrarHistorial(solicitudRegistrarT);
+	                    	 actualizarBandeja=true;
+	                    	 Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 						}else{
 							if(this.agregarNiveles(solicitudRegistrarT)){
 								this.bSeccionDictaminar = false;
