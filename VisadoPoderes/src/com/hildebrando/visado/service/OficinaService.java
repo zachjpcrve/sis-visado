@@ -201,9 +201,8 @@ public class OficinaService {
 						if(estado1.equals("-1")){
 							oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("codOfi", oficina1.getCodOfi())).add(Restrictions.eq("tiivsTerritorio.codTer", territorio.getCodTer())));	
 						}else{
-							
-						}
-						oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("codOfi", oficina1.getCodOfi())).add(Restrictions.eq("tiivsTerritorio.codTer", territorio.getCodTer())).add(Restrictions.eq("activo", estadoCharacter1)));
+							oficinas = service.buscarDinamico(filtro.add(Restrictions.eq("codOfi", oficina1.getCodOfi())).add(Restrictions.eq("tiivsTerritorio.codTer", territorio.getCodTer())).add(Restrictions.eq("activo", estadoCharacter1)));
+						}						
 					}
 				}
 				
