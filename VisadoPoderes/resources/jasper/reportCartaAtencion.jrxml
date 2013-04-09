@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="542" pageHeight="795" columnWidth="502" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="93"/>
+	<property name="ireport.y" value="260"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -92,15 +92,15 @@
 	<pageFooter>
 		<band height="23">
 			<staticText>
-				<reportElement x="374" y="3" width="126" height="20" forecolor="#003399"/>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
+				<reportElement x="374" y="3" width="128" height="20" forecolor="#003399"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[[USO INTERNO: BANCO]]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="3" width="353" height="20" forecolor="#003399"/>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
+				<reportElement x="0" y="3" width="402" height="20" forecolor="#003399"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[BBVA Banco Continental © Copyright - Todos los Derechos Reservados]]></text>
