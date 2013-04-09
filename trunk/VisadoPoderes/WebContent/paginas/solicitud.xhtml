@@ -112,10 +112,16 @@
 
 																<td><h:outputText styleClass="outputText"
 																		id="txtOficina" value="Oficina:" /></td>
-																<td style="font-size: 0.9em"><p:selectOneMenu
+																<td style="font-size: 0.9em">
+																	<p:autoComplete id="acNomOFina" value="#{solicitudRegMB.oficina}"
+																		completeMethod="#{solicitudRegMB.completeNomOficina}" var="ofi"
+																		converter="oficinaConverter" size="24" 
+																		itemLabel="#{ofi.desOfi}" itemValue="#{ofi}" rendered="#{solicitudRegMB.flagMostrarACOficina}"/>		
+																
+																	<p:selectOneMenu
 																		id="cboOficina"
 																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}"
-																		required="false"
+																		required="false" rendered="#{solicitudRegMB.flagMostrarSOMOficina}"
 																		requiredMessage="Seleccione al menos una Oficina"
 																		style="font-size:0.98em;width:120px;">
 																		<p:ajax update=":formSolicitudRegistro:cboOficina"
@@ -125,7 +131,8 @@
 																			value="#{solicitudRegMB.combosMB.lstOficina}"
 																			var="lOf" itemValue="#{lOf.codOfi}"
 																			itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.tiivsTerritorio.codTer}-#{lOf.tiivsTerritorio.desTer})" />
-																	</p:selectOneMenu></td>
+																	</p:selectOneMenu>
+																</td>
 																<td><p:message for="cboOficina" /> <p:graphicImage
 																		value="/resources/images/pregunta.jpg"
 																		id="toolcboOficina" /></td>

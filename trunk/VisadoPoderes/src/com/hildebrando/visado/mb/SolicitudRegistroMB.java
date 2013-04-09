@@ -120,6 +120,8 @@ public class SolicitudRegistroMB {
 	private boolean flagUpdateOperacionSolcAgrupac = false;
 	private boolean flagUpdateOperacionSolcDocumen = false;
 	private boolean flagUpdatePersona = false;
+	private boolean flagMostrarACOficina=false;
+	private boolean flagMostrarSOMOficina=true;
 	private String sEstadoSolicitud = "";
 	private TiivsSolicitudOperban objSolicitudOperacionCapturado;
 	private AgrupacionSimpleDto objAgrupacionSimpleDtoCapturado;
@@ -147,6 +149,7 @@ public class SolicitudRegistroMB {
 	List<TiivsAgrupacionPersona> listaTemporalAgrupacionesPersonaBorradores;
 	List<TiivsPersona> listaTemporalPersonasBorradores;
 	List<TiivsPersona> lstTiivsPersonaCopia;
+	private TiivsOficina1 oficina;
 	
 	/*private boolean boleanoMensajeInfoGeneral=true;
 	private boolean boleanoMensajeApoderdantePoderdante=true;
@@ -172,6 +175,7 @@ public class SolicitudRegistroMB {
 		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
 		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 		lstTipoSolicitudDocumentos = new ArrayList<TiivsTipoSolicDocumento>();
+		oficina = new TiivsOficina1();
 
 		lstDocumentosXTipoSolTemp = new ArrayList<TiivsTipoSolicDocumento>();
 		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
@@ -199,8 +203,36 @@ public class SolicitudRegistroMB {
 		
 		logger.info("Ancho Fieldset Datos Generales: " + ancho_FieldSet);
 		logger.info("Ancho Fieldset Datos Poderdantes: " + ancho_FieldSet_Poder);
+		
+		String sPerfilUsu=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		
+		if (sPerfilUsu.equals(ConstantesVisado.SSJJ))
+		{
+			setFlagMostrarSOMOficina(false);
+			setFlagMostrarACOficina(true);
+		}
 
 	}	
+	
+	public List<TiivsOficina1> completeNomOficina(String query) 
+	{	
+		List<TiivsOficina1> results = new ArrayList<TiivsOficina1>();
+
+		for (TiivsOficina1 oficina : combosMB.getLstOficina1()) 
+		{
+			if (oficina.getCodOfi() != null) 
+			{
+				String texto = oficina.getDesOfi();
+
+				if (texto.contains(query.toUpperCase())) 
+				{
+					results.add(oficina);
+				}
+			}
+		}
+
+		return results;
+	}
 	
 	public void eliminarPersona() {
 		logger.info("**************************** eliminarPersona ****************************");
@@ -2934,8 +2966,28 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			TiivsSolicitudAgrupacion tiivsSolicitudAgrupacionCapturado) {
 		this.tiivsSolicitudAgrupacionCapturado = tiivsSolicitudAgrupacionCapturado;
 	}
-	
-	
-	
-	
+
+	public boolean isFlagMostrarACOficina() {
+		return flagMostrarACOficina;
+	}
+
+	public void setFlagMostrarACOficina(boolean flagMostrarACOficina) {
+		this.flagMostrarACOficina = flagMostrarACOficina;
+	}
+
+	public boolean isFlagMostrarSOMOficina() {
+		return flagMostrarSOMOficina;
+	}
+
+	public void setFlagMostrarSOMOficina(boolean flagMostrarSOMOficina) {
+		this.flagMostrarSOMOficina = flagMostrarSOMOficina;
+	}
+
+	public TiivsOficina1 getOficina() {
+		return oficina;
+	}
+
+	public void setOficina(TiivsOficina1 oficina) {
+		this.oficina = oficina;
+	}
 }
