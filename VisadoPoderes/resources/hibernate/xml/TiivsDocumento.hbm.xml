@@ -9,13 +9,13 @@
             <generator class="assigned" />
         </id>
         <property name="descripcion" type="string">
-            <column name="DESCRIPCION" length="250" />
+            <column name="DESCRIPCION" length="50" />
         </property>
         <property name="activo" type="string">
             <column name="ACTIVO" length="1" />
         </property>
          <property name="nombre" type="string">
-            <column name="NOMBRE" length="200" unique="true" />                
+            <column name="NOMBRE" length="7" unique="true" />                
         </property>
         <property name="formato" type="string">
             <column name="FORMATO" length="20" />
