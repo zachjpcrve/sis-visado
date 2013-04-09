@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -99,6 +100,12 @@ public class Utilitarios {
 		
 		return mes;
 	}
+	
+	public static double redondear(double d, int decimalPlace){
+	    BigDecimal bd = new BigDecimal(Double.toString(d));
+	    bd = bd.setScale(decimalPlace,BigDecimal.ROUND_HALF_UP);
+	    return bd.doubleValue();
+	  }
 	
 	public static int buscarAnioxCodigo(int codigo)
 	{
