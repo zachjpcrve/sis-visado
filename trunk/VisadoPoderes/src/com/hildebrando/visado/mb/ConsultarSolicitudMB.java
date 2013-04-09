@@ -3277,6 +3277,17 @@ public class ConsultarSolicitudMB {
 		logger.info("**************************** obtenerAccionAgregarOperacionBancaria ****************************");
 		logger.info("********************************************* : "
 				+ objSolicBancaria.getImporte());
+		
+		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+			objSolicBancaria.setImporteSoles(objSolicBancaria.getImporte());
+		}
+		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) {
+			objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+		}
+		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) {
+			objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+		}
+		
 
 	}
 
