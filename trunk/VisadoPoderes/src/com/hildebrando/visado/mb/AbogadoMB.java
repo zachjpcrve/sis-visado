@@ -140,10 +140,12 @@ public class AbogadoMB {
 	
 	public void selecPerfilEstudio(){
 		logger.info("AbogadoMB : selecPerfilEstudio");
+		if(abogado.getTiivsGrupo().getCodGrupo()!=null){
 		if(abogado.getTiivsGrupo().getCodGrupo().equals("0000002")){
 			mostrarComboEstudio = true;
 		}else{
 			mostrarComboEstudio = false;
+		}
 		}
 	}
 	
