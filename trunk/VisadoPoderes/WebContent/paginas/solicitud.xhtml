@@ -529,7 +529,7 @@
 																	id="outTipoMoneda" value="Moneda" title="Moneda"></h:outputText>
 															</td>
 															<td><p:selectOneMenu style="width:160px;"
-																	id="cboMoneda"
+																	id="cboMoneda" onchange="valorImporteSoles();"
 																	value="#{solicitudRegMB.objSolicBancaria.id.moneda}"
 																	immediate="true" disabled="false"
 																	valueChangeListener="#{solicitudRegMB.validarTipoCambioDisabled}">
@@ -548,10 +548,10 @@
 																	id="outImporte" value="Importe:" title="Importe"></h:outputText>
 															</td>
 															<td><h:inputText
-																	value="#{solicitudRegMB.objSolicBancaria.importe}"
+																	value="#{solicitudRegMB.objSolicBancaria.importe}" 
 																	onkeypress="return validaNumero(event,'0',this,'0');"
-																	onblur="validaNumero(event,'0',this,'1');"
-																	id="intImporte" maxlength="16">
+																	onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();"
+																	id="intImporte" maxlength="16" >
 																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
 																</h:inputText></td>
 														</tr>
@@ -559,19 +559,23 @@
 															<td><h:outputText styleClass="outputText"
 																	id="outImporteTipoCambio" value="Tipo Cambio"
 																	title="Tipo Cambio"></h:outputText></td>
-															<td><h:inputText id="intTipoCambio" maxlength="8"
+															<td><h:inputText id="intTipoCambio" maxlength="8" 
 																	onkeypress="return validaNumero(event,'0',this,'0');"
-																	disabled="#{solicitudRegMB.bBooleanPopupTipoCambio}"
-																	onblur="validaNumero(event,'0',this,'1');"
+																	disabled="#{solicitudRegMB.bBooleanPopupTipoCambio}" 
+																	onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();"
 																	value="#{solicitudRegMB.objSolicBancaria.tipoCambio}">
 																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
 																</h:inputText></td>
+																<p:remoteCommand id="valorImporteSoles" name="valorImporteSoles" actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}"
+																 update=":formSolicitudRegistro:txtImporteSoles">
+																
+																</p:remoteCommand>
 
 
 															<td><h:outputText styleClass="outputText"
 																	id="outImporteSoles" value="Importe en Soles"
 																	title="Importe en Soles"></h:outputText></td>
-															<td><h:inputText
+															<td><h:inputText 
 																	value="#{solicitudRegMB.objSolicBancaria.importeSoles}"
 																	readonly="true" id="txtImporteSoles">
 																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
@@ -581,9 +585,9 @@
 																	action="#{solicitudRegMB.agregarOperacionBancaria}"
 																	actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}"
 																	update=":formSolicitudRegistro:idMsmSolicitudRegistro,:formSolicitudRegistro:tlbOperacionesBanca,
-													 :formSolicitudRegistro:txtImporteSoles,:formSolicitudRegistro:intImporte,
-													 :formSolicitudRegistro:intTipoCambio,:formSolicitudRegistro:cboMoneda,:formSolicitudRegistro:txtComision,
-													 :formSolicitudRegistro:cboTipoOperacion, :formSolicitudRegistro:txtImpTotal" /></td>
+													 				        :formSolicitudRegistro:txtImporteSoles,:formSolicitudRegistro:intImporte,
+													 				        :formSolicitudRegistro:intTipoCambio,:formSolicitudRegistro:cboMoneda,:formSolicitudRegistro:txtComision,
+													 				        :formSolicitudRegistro:cboTipoOperacion, :formSolicitudRegistro:txtImpTotal" /></td>
 															<td><p:commandButton value="Limpiar"
 																	id="btnLimpiarOpeBancaria"
 																	action="#{solicitudRegMB.limpiarListaSolicitudesBancarias}"
