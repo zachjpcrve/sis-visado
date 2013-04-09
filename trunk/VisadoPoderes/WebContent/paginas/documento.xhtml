@@ -15,7 +15,7 @@
 					<table>
 						<tr>
 							<td><h:outputText value="Documento:  " /></td>
-							<td><p:selectOneMenu disabled="#{documentoMB.bEditar}"
+							<td><p:selectOneMenu disabled="#{documentoMB.bEditar}" style="width:300px;"
 									value="#{documentoMB.tipoSolicDocumento.id.codDoc}">
 									    <f:selectItem itemLabel="Seleccione un Documento" itemValue="-1" />  
 									<f:selectItems value="#{documentoMB.listaDocumentos}"
@@ -25,7 +25,7 @@
 						</tr>
 						<tr>
 							<td><h:outputText value="Tipo de Solicitud:  " /></td>
-							<td><p:selectOneMenu disabled="#{documentoMB.bEditar}"
+							<td><p:selectOneMenu disabled="#{documentoMB.bEditar}" style="width:300px;"
 									value="#{documentoMB.tipoSolicDocumento.id.codTipoSolic}">
 									<f:selectItem itemLabel="Seleccione un Tipo de Solicitud" itemValue="-1" />  
 									<f:selectItems value="#{documentoMB.tipoSolicitud}"

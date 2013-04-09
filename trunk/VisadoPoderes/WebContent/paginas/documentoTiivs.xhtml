@@ -143,13 +143,13 @@
 							<td><h:outputText value="Descripción:  " /></td>
 							<td><p:inputText id="txtDescripcion" onkeypress="return validaLetraTilde(event,'0',this,'0');"
 									onblur="validaLetraTilde(event,'0',this,'1');"
-									value="#{documentoTiivsMB.documento.descripcion}" maxlength="250" /></td>
+									value="#{documentoTiivsMB.documento.descripcion}" maxlength="35" /></td>
 						</tr>
 						<tr>
 							<td><h:outputText value="Nombre:  " /></td>
 							<td><p:inputText id="txtNombre" onkeypress="return validaLetraTilde(event,'0',this,'0');"
 									onblur="validaLetraTilde(event,'0',this,'1');"
-									value="#{documentoTiivsMB.documento.nombre}" maxlength="200" /></td>
+									value="#{documentoTiivsMB.documento.nombre}" maxlength="7" /></td>
 						</tr>
 						<tr>
 							<td><h:outputText value="Formato  " /></td>
