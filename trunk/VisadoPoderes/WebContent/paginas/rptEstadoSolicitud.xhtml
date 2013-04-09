@@ -18,7 +18,7 @@
 			<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
 				<tbody>
 					<tr bordercolor="white">
-						<td><h:outputText styleClass="outputText" id="txtTerritorio" value="Territorio" /></td>
+						<td><h:outputText styleClass="outputText" id="txtTerritorio" value="Territorio:" /></td>
 						<td>
 							<p:selectOneMenu value="#{reportesMB.idTerr}" id="somTerr" style="width:155px;">
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
@@ -32,7 +32,7 @@
 					
 					<tr bordercolor="white">
 						<td >
-							 <h:outputText styleClass="outputText" id="txtCodOficina" value="Codigo de Oficina"/>
+							 <h:outputText styleClass="outputText" id="txtCodOficina" value="Código de Oficina:"/>
 						</td>
 						<td >
 							<p:selectOneMenu value="#{reportesMB.idOfi}" id="somOfi" style="width:155px;">
@@ -45,7 +45,7 @@
 						</td>
 												
 						<td >
-							 <h:outputText styleClass="outputText" id="txtOficina" value="Oficina"/>
+							 <h:outputText styleClass="outputText" id="txtOficina" value="Oficina:"/>
 						</td>
 						<td >
 							<p:selectOneMenu value="#{reportesMB.idOfi1}" id="somNOfi" style="width:155px;">
@@ -66,7 +66,7 @@
 								showOn="button" maxlength="10" size="20"/>
 						</td>
 												
-						<td ><h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin" /></td>
+						<td ><h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin:" /></td>
 						<td >
 							<p:calendar  id="calFecFin" 
 								pattern="dd/MM/yyyy" value="#{reportesMB.fechaFin}"
@@ -117,7 +117,7 @@
 					
 						<p:column width="15">
 							<f:facet name="header">  
-						         <h:outputText value="Cod" style="font-size: 9px"/>  
+						         <h:outputText value="Cod." style="font-size: 9px"/>  
 						    </f:facet>  
 							<h:outputText value="#{tbl.codOficina}" style="font-size: 9px"/>	
 						</p:column>
@@ -129,7 +129,7 @@
 							<h:outputText value="#{tbl.oficina}" style="font-size: 9px"/>	
 						</p:column>
 						
-						<p:column width="37">
+						<p:column width="38">
 							<f:facet name="header">  
 						         <h:outputText value="Registrado" style="font-size: 9px"/>  
 						    </f:facet>  
@@ -157,9 +157,9 @@
 							<h:outputText value="#{tbl.totalAceptado}" style="font-size: 9px"/>	
 						</p:column>
 						
-						<p:column width="68">
+						<p:column width="70">
 							<f:facet name="header">  
-						         <h:outputText value="En Verificacion A" style="font-size: 9px"/>  
+						         <h:outputText value="En Verificación A" style="font-size: 9px"/>  
 						    </f:facet>  
 							<h:outputText value="#{tbl.totalVerificacionA}" style="font-size: 9px"/>	
 						</p:column>
@@ -173,7 +173,7 @@
 						
 						<p:column width="42">
 							<f:facet name="header">  
-						         <h:outputText value="En revision" style="font-size: 9px"/>  
+						         <h:outputText value="En revisión" style="font-size: 9px"/>  
 						    </f:facet>  
 							<h:outputText value="#{tbl.totalEnRevision}" style="font-size: 9px"/>	
 						</p:column>
@@ -201,7 +201,7 @@
 						
 						<p:column width="65">
 							<f:facet name="header">  
-						         <h:outputText value="En Verificacion B" style="font-size: 9px"/>  
+						         <h:outputText value="En Verificación B" style="font-size: 9px"/>  
 						    </f:facet>  
 							<h:outputText value="#{tbl.totalVerificacionB}" style="font-size: 9px"/>	
 						</p:column>

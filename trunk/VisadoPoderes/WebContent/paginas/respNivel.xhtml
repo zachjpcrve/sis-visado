@@ -21,7 +21,7 @@
 						<td><p:inputText id="txtRegistro"
 								value="#{respNivel.miembroNivelDto.registro}" maxlength="10" size="10" /></td>
 						
-						<td><h:outputText value="Descripcion:" /></td>
+						<td><h:outputText value="Descripción:" /></td>
 						<td><p:inputText id="txtDescrip"
 								value="#{respNivel.miembroNivelDto.descripcion}" maxlength="60" size="60" /></td>
 					</tr>
@@ -102,7 +102,7 @@
 					<p:column headerText="Estado">
 						<h:outputText value="#{r.estado}" />
 					</p:column>
-					<p:column headerText="Accion">
+					<p:column headerText="Acción">
 						<p:commandLink id="clinkEditar" ajax="true" update=":frmMantenimientoRespNivelAprob:idMsmRespNivelAprob"
 							action="#{respNivel.editarRespNivelAprob}">
 							<f:param name="idResp" value="#{r.registro}"></f:param>

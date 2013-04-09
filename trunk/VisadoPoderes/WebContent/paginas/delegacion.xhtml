@@ -10,7 +10,7 @@
 		<!-- Delegacion -->
 		<h:form id="frmMantenimientoDelegado">
 			<p:outputPanel id="pnlMantenimientoDelegado">
-				<p:panel header="Delegacion por Nivel" style="width: 85%">
+				<p:panel header="Delegación por Nivel" style="width: 85%">
 					<p:growl id="idGrowlPrincipal"></p:growl>
 
 					<table>
@@ -29,7 +29,7 @@
 				</p:panel>
 			</p:outputPanel>
 			<p:dialog widgetVar="dlgNuevaDelegacion" modal="true"
-				id="dlgNuevoDelegacion" header="Nueva Delegacion por Nivel">
+				id="dlgNuevoDelegacion" header="Nueva Delegación por Nivel">
 				<p:outputPanel id="pnlNuevaDelegacion">
 				<p:panel id="panelNuevo">
 					<p:messages id="idMsmDocumento"></p:messages>
@@ -86,7 +86,7 @@
 						<p:column headerText="Registro">
 							<h:outputText value="#{lstDel.tiivsMiembro.codMiembro}" />
 						</p:column>
-						<p:column headerText="Descripcion">
+						<p:column headerText="Descripción">
 							<h:outputText value="#{lstDel.tiivsMiembro.descripcion}" />
 						</p:column>
 						<p:column headerText="Eliminar">
@@ -101,7 +101,7 @@
 					<table>
 						<tr>
 							<td><p:commandButton id="agregarAgrupacion"
-									value="Agregar Agrupacion"
+									value="Agregar Agrupación"
 									actionListener="#{delegadosMB.registrarAgrupacion}"
 									action="#{delegadosMB.listarAgrupacionesDelegados}"
 									oncomplete="dlgNuevaDelegacion.hide()"
@@ -159,7 +159,7 @@
 								<h:outputText value="Editar" />
 							</p:commandLink>
 						</p:column>
-						<p:column headerText="Accion">
+						<p:column headerText="Acción">
 							<p:commandLink id="clickEstado" ajax="true"
 								update=":frmDataTableDelegacion:pnlDataTableDelegacion"
 								actionListener="#{delegadosMB.estadoAgrupacion}"
@@ -176,9 +176,9 @@
 		</h:form>
 		<!--Fin Data Table Oficina -->
 		
-		 aquiiiii
+		 
 		<p:dialog widgetVar="dlgEditarDelegacion" modal="true"
-			header="Editar Delegacion por Nivel">
+			header="Editar Delegación por Nivel">
 			<h:form id="formDialogEditarDelegacion">
 				<p:outputPanel id="pnlDialogEditarDelegacion">
 					<p:messages id="idMsmDocumento" globalOnly="true"></p:messages>
@@ -205,7 +205,7 @@
 											        :formDialogEditarDelegacion:idMsmDocumento"
 											listener="#{delegadosMB.obtenerDatosMiembroEditar}"></p:ajax>
 									</p:inputText></td>
-								<td><h:outputText value="Descripcion  " /></td>
+								<td><h:outputText value="Descripción  " /></td>
 								<td><p:inputText id="txtDescRegMiembroEditar"
 										disabled="true" value="#{delegadosMB.desRegistroEditar}"
 										maxlength="45" /></td>
@@ -239,7 +239,7 @@
 							<p:column headerText="Registro">
 								<h:outputText value="#{lstDelEd.tiivsMiembro.codMiembro}" />
 							</p:column>
-							<p:column headerText="Descripcion">
+							<p:column headerText="Descripción">
 								<h:outputText value="#{lstDelEd.tiivsMiembro.descripcion}" />
 							</p:column>
 							<p:column headerText="Eliminar">
@@ -256,7 +256,7 @@
 						<table>
 							<tr>
 								<td><p:commandButton id="editarAgrupacion"
-										value="Editar Agrupacion"
+										value="Editar Agrupación"
 										actionListener="#{delegadosMB.actualizarAgrupacion}"
 										action="#{delegadosMB.listarAgrupacionesDelegados}"
 										oncomplete="dlgEditarDelegacion.hide()"

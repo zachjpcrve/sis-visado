@@ -64,7 +64,7 @@
 						currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
 						emptyMessage="No hay documentos">
 	
-						<p:column headerText="Codigo">
+						<p:column headerText="Código">
 							<h:outputText value="#{ofi.codOfi}" />
 						</p:column>
 						<p:column headerText="Oficina">
@@ -76,7 +76,7 @@
 						<p:column headerText="Estado">
 							<h:outputText value="#{ofi.descEstado}" />
 						</p:column>
-						<p:column headerText="Accion">
+						<p:column headerText="Acción">
 							<p:commandLink id="clinkEditar" ajax="true"
 								update=":frmDataTableOficina:pnlDataTableOficina"
 								actionListener="#{oficinaMB.editarOficina}"

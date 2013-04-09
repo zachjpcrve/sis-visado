@@ -19,10 +19,10 @@
 			<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
 				<tbody>
 					<tr bordercolor="white">
-						<td><h:outputText styleClass="outputText" id="txtAnio" value="Anio"/></td>
+						<td><h:outputText styleClass="outputText" id="txtAnio" value="Año"/></td>
 						<td>
-							<p:selectOneMenu id="somAnio" value="#{reportesMB.anio}" required="true" requiredMessage="Ingrese Año valido">
-								<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+							<p:selectOneMenu id="somAnio" value="#{reportesMB.anio}" required="true" requiredMessage="Ingrese año válido">
+								<f:selectItem itemLabel="--SELECCIONE--" itemValue="" />
 								<f:selectItem itemLabel="2013" itemValue="1" />
 								<f:selectItem itemLabel="2014" itemValue="2" />
 								<f:selectItem itemLabel="2015" itemValue="3" />
@@ -34,7 +34,7 @@
 							<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio" />
 						</td>
 						<td>
-							<p:selectCheckboxMenu id="scmEstudio" label="--Todos--" value="#{reportesMB.lstEstudioSelected}" 
+							<p:selectCheckboxMenu id="scmEstudio" label="--TODOS--" value="#{reportesMB.lstEstudioSelected}" 
 								panelStyle="width:150px;" style="width:150px;">  
 						        <f:selectItems value="#{reportesMB.combosMB.estudios}" />  
 						    </p:selectCheckboxMenu>  
@@ -44,8 +44,8 @@
 					<tr bordercolor="white">
 						<td ><h:outputText styleClass="outputText" id="txtMes" value="Mes" /></td>
 						<td >
-							<p:selectOneMenu id="somMes" value="#{reportesMB.mes}" required="true" requiredMessage="Ingrese mes valido">
-								<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+							<p:selectOneMenu id="somMes" value="#{reportesMB.mes}" required="true" requiredMessage="Ingrese mes válido">
+								<f:selectItem itemLabel="--SELECCIONE--" itemValue="" />
 								<f:selectItem itemLabel="Enero" itemValue="1" />
 								<f:selectItem itemLabel="Febrero" itemValue="2" />
 								<f:selectItem itemLabel="Marzo" itemValue="3" />

@@ -24,13 +24,15 @@
 			<table id="tablaBusSol" border="0" bordercolor="#00BFFF" >
 				<tbody>
 					<tr bordercolor="white">
-						<td ><h:outputText styleClass="outputText" id="txtCod" value="Nro Solicitud: " /></td>
-						<td ><p:inputText id="text100" value="#{seguimientoMB.codSolicitud}" maxlength="7" size="15" onkeypress="return validaNumero(event,'0',this,'0');" onblur="validaNumero(event,'0',this,'1');"/></td>
+						<td ><h:outputText styleClass="outputText" id="txtCod" value="Nro. Solicitud:" /></td>
+						<td ><p:inputText id="text100" value="#{seguimientoMB.codSolicitud}" maxlength="7" size="15" 
+							onkeypress="return validaNumero(event,'0',this,'0');" onblur="validaNumero(event,'0',this,'1');"/>
+						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtSolicitud" /></td>	
 						<p:tooltip for="tooltxtSolicitud" value="Numero de solicitud" showEffect="fade" hideEffect="fade" />  
-						<td ><h:outputText styleClass="outputText" id="txtEstado" value="Estado" /></td>
+						<td ><h:outputText styleClass="outputText" id="txtEstado" value="Estado:" /></td>
 						<td >
-							<p:selectCheckboxMenu id="scmEstados" label="--Todos--" value="#{seguimientoMB.lstEstadoSelected}" 
+							<p:selectCheckboxMenu id="scmEstados" label="--TODOS--" value="#{seguimientoMB.lstEstadoSelected}" 
 								panelStyle="width:220px;" style="width:162px;" scrollHeight="250">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.estados}"/>  
 						    </p:selectCheckboxMenu>  
@@ -41,7 +43,7 @@
 						<td ><h:outputText styleClass="outputText" id="txtImporte" value="Importe:" /></td>
 						<td >
 							<p:selectOneMenu value="#{seguimientoMB.idImporte}" id="somImporte" style="width:155px;">
-								<f:selectItem itemLabel="--Todos--" itemValue="" />
+								<f:selectItem itemLabel="--TODOS--" itemValue="" />
 								<f:selectItems value="#{seguimientoMB.combosMB.lstRangosImporte}" var="imp"
 									itemValue="#{imp.codigoRango}" itemLabel="#{imp.descripcion}" />
 							</p:selectOneMenu>
@@ -49,9 +51,9 @@
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtImporte" /></td>
 						<p:tooltip for="tooltxtImporte" value="Importe" showEffect="fade" hideEffect="fade" />  
 						
-						<td ><h:outputText styleClass="outputText" id="txtTipoSol" value="T. de Solicitud" /></td>
+						<td ><h:outputText styleClass="outputText" id="txtTipoSol" value="T. de Solicitud:" /></td>
 						<td >
-							<p:selectCheckboxMenu id="scmTSolicitud" label="--Todos--" value="#{seguimientoMB.lstTipoSolicitudSelected}" 
+							<p:selectCheckboxMenu id="scmTSolicitud" label="--TODOS--" value="#{seguimientoMB.lstTipoSolicitudSelected}" 
 								panelStyle="width:300px;" style="width:167px;" scrollHeight="250">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.tiposSolicitud}" />  
 						    </p:selectCheckboxMenu>
@@ -66,7 +68,7 @@
 						</td>
 						<td >
 							<p:selectOneMenu value="#{seguimientoMB.idTiposFecha}" id="somTiposFecha" style="width:120px;">
-								<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+								<f:selectItem itemLabel="--SELECCIONE--" itemValue="" />
 								<f:selectItems value="#{seguimientoMB.combosMB.lstTiposFecha}" var="tipoFec"
 									itemValue="#{tipoFec.codigoTipoFecha}" itemLabel="#{tipoFec.descripcion}" />
 							</p:selectOneMenu>
@@ -83,7 +85,7 @@
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecIni" /></td>
 						<p:tooltip for="tooltxtFecIni" value="Fecha de Inicio" showEffect="fade" hideEffect="fade" />  
 						
-						<td ><h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin" /></td>
+						<td ><h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin:" /></td>
 						<td >
 							<p:calendar  id="calFecFin" disabled="#{seguimientoMB.noMostrarFechas}"
 								pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaFin}"
@@ -93,11 +95,11 @@
 						<p:tooltip for="tooltxtFecFin" value="Fecha de Fin" showEffect="fade" hideEffect="fade" />  
 						
 						<td >
-							<h:outputText styleClass="outputText" id="txtTipoOpe" value="T. de Operacion" />
+							<h:outputText styleClass="outputText" id="txtTipoOpe" value="T. de Operación:" />
 						</td>
 						<td >
 							<p:selectOneMenu value="#{seguimientoMB.idOpeBan}" id="somTipoOpe" style="width:167px;">
-								<f:selectItem itemLabel="--Todos--" itemValue="" />
+								<f:selectItem itemLabel="--TODOS--" itemValue="" />
 								<f:selectItems value="#{seguimientoMB.combosMB.lstOpeBancaria}" var="tipoOpe"
 									itemValue="#{tipoOpe.codOperBan}" itemLabel="#{tipoOpe.desOperBan}" />
 							</p:selectOneMenu>
@@ -114,7 +116,7 @@
 				<tbody>
 					<tr bordercolor="white">
 						<td >
-							<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI Apoderado" />
+							<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI Apoderado:" />
 						</td>
 						<td >
 							<h:inputText styleClass="inputText" id="text18" maxlength="18" value="#{seguimientoMB.nroDOIApoderado}" disabled="false" size="11"/>
@@ -137,7 +139,7 @@
 						<p:tooltip for="toolApoderado" value="Apoderado" showEffect="fade" hideEffect="fade" />
 						
 						<td >
-							<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI Poderdante" />
+							<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI Poderdante:" />
 						</td>
 						<td >
 							<h:inputText styleClass="inputText" id="text17" maxlength="18" size="18" value="#{seguimientoMB.nroDOIPoderdante}" disabled="false" />
@@ -146,7 +148,7 @@
 						<p:tooltip for="toolDOIPoderdante" value="Numero de Documento del Poderdante" showEffect="fade" hideEffect="fade" />
 						
 						<td >
-							<h:outputText styleClass="outputText" id="txtPoder" value="Poderdante" />
+							<h:outputText styleClass="outputText" id="txtPoder" value="Poderdante:" />
 						</td>
 						<td >
 							<p:autoComplete completeMethod="#{seguimientoMB.completePersona}"
@@ -173,10 +175,10 @@
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtNomOfic" /></td>
 						<p:tooltip for="tooltxtNomOfic" value="Oficina" showEffect="fade" hideEffect="fade" /> 
 						<td >
-							<h:outputText styleClass="outputText" id="txtNivel" value="Nivel" />
+							<h:outputText styleClass="outputText" id="txtNivel" value="Nivel:" />
 						</td>
 						<td >
-							<p:selectCheckboxMenu id="scmNivel" label="--Todos--" value="#{seguimientoMB.lstNivelSelected}" panelStyle="width:100px;"  
+							<p:selectCheckboxMenu id="scmNivel" label="--TODOS--" value="#{seguimientoMB.lstNivelSelected}" panelStyle="width:100px;"  
 								style="width:150px;" scrollHeight="200">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.niveles}" />  
 						    </p:selectCheckboxMenu>  
@@ -187,18 +189,18 @@
 							<h:outputText styleClass="outputText" id="txtEstNivel" value="Estado del Nivel:" />
 						</td>
 						<td >
-							<p:selectCheckboxMenu id="scmEstadoNivel" label="--Todos--" value="#{seguimientoMB.lstEstadoNivelSelected}" 
-									panelStyle="width:100px;" style="width:135px;" scrollHeight="80">  
+							<p:selectCheckboxMenu id="scmEstadoNivel" label="--TODOS--" value="#{seguimientoMB.lstEstadoNivelSelected}" 
+									panelStyle="width:120px;" style="width:125px;">  
 						        <f:selectItems value="#{seguimientoMB.combosMB.estadosNivel}"/>  
 						    </p:selectCheckboxMenu> 
 						</td>
 						<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstNivel"  /></td>	
 						<p:tooltip for="toolEstNivel" value="Estados del Nivel" showEffect="fade" hideEffect="fade" />	
 						<td >
-							<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio" />
+							<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio:" />
 						</td>
 						<td >
-							<p:selectCheckboxMenu id="scmEstudio" label="--Todos--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:120px;" 
+							<p:selectCheckboxMenu id="scmEstudio" label="--TODOS--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:120px;" 
 								style="width:160px;" scrollHeight="100">  
 						        <f:selectItems value="#{consultarSolicitudMB.combosMB.estudios}" />  
 						    </p:selectCheckboxMenu>  
@@ -210,7 +212,7 @@
 					
 					<tr bordercolor="white">
 						<td>
-							<h:outputText styleClass="outputText" id="txtEnRev" value="En revision" />
+							<h:outputText styleClass="outputText" id="txtEnRev" value="En revisión:" />
 						</td>
 						<td >
 							<p:selectBooleanCheckbox id="bEnRevision" value="#{seguimientoMB.bRevision}"/>  
@@ -220,7 +222,7 @@
 							<p:tooltip for="toolEnRev" value="Solicitudes en revision" showEffect="fade" hideEffect="fade" />	
 						</td>			
 						<td>
-							<h:outputText styleClass="outputText" id="txtDel" value="Delegados" rendered="#{sessionScope.GRUPO_OFI == null}"/>
+							<h:outputText styleClass="outputText" id="txtDel" value="Delegados:" rendered="#{sessionScope.GRUPO_OFI == null}"/>
 						</td>
 						<td>
 							<p:selectBooleanCheckbox id="bDelegados" value="#{seguimientoMB.bDelegados}" rendered="#{sessionScope.GRUPO_OFI == null}"/>  
@@ -231,7 +233,7 @@
 						</td>
 											
 						<td>
-							<h:outputText styleClass="outputText" id="txtRevc" value="Revocatoria" />
+							<h:outputText styleClass="outputText" id="txtRevc" value="Revocatoria:" />
 						</td>
 						<td>
 							<p:selectBooleanCheckbox id="bExonerados" value="#{seguimientoMB.bRevocatoria}"/>  
@@ -326,7 +328,7 @@
 									
 									<p:column width="100">
 										<f:facet name="header">  
-									         <h:outputText value="T. Operacion" style="font-size: 9px"/>  
+									         <h:outputText value="T. Operación" style="font-size: 9px"/>  
 									    </f:facet>
 										<h:outputText value="#{tbl.txtOpeBan}" style="font-size: 9px"/>					
 									</p:column>
@@ -347,7 +349,7 @@
 									
 									<p:column width="60">
 										<f:facet name="header">  
-									         <h:outputText value="F. Envio" style="font-size: 9px"/>  
+									         <h:outputText value="F. Envío" style="font-size: 9px"/>  
 									    </f:facet>
 										<h:outputText value="#{tbl.fechaEnvio}" style="font-size: 9px"/>	
 									</p:column>

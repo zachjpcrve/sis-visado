@@ -223,10 +223,10 @@
 						currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
 						emptyMessage="No hay registros">
 
-						<p:column headerText="Codigo">
+						<p:column headerText="Código">
 							<h:outputText value="#{abo.codMiembro}" />
 						</p:column>
-						<p:column headerText="Descripcion">
+						<p:column headerText="Descripción">
 							<h:outputText value="#{abo.descripcion}" />
 						</p:column>
 						<p:column headerText="Criterio">
@@ -235,7 +235,7 @@
 						<p:column headerText="Estudio">
 							<h:outputText value="#{abo.estudio}" />
 						</p:column>
-						<p:column headerText="Accion">
+						<p:column headerText="Acción">
 							<p:commandLink id="clinkEditar" ajax="true"
 								update=":frmMantenimientoAbogado:pnlMantenimientoAbogado"
 								actionListener="#{abogadoMB.editarAbogado}">

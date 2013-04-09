@@ -96,24 +96,24 @@
 			<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
 				<tbody>
 					<tr bordercolor="white">
-						<td ><h:outputText styleClass="outputText" id="txtCod" value="Codigo Sol" /></td>
+						<td ><h:outputText styleClass="outputText" id="txtCod" value="Código Sol." /></td>
 						<td ><p:inputText id="codSol" value="#{reportesMB.codSolicitud}" onkeypress="return validaNumero(event,'0',this,'0');"
 							onblur="validaNumero(event,'0',this,'1');" maxlength="7" size="15"/></td>
 						
 						<td ><h:outputText styleClass="outputText" id="txtTipoSol" value="Tipo de Servicio" /></td>
 						<td >
-							<p:selectCheckboxMenu id="scmTSolicitud" label="--Todos--" value="#{reportesMB.lstTipoSolicitudSelected}" 
+							<p:selectCheckboxMenu id="scmTSolicitud" label="--TODOS--" value="#{reportesMB.lstTipoSolicitudSelected}" 
 								panelStyle="width:220px;" style="width:167px;">  
 						        <f:selectItems value="#{reportesMB.combosMB.tiposSolicitud}" />  
 						    </p:selectCheckboxMenu>
 						</td>
 						
 						<td >
-							<h:outputText styleClass="outputText" id="txtTipoOpe" value="Tipo de Operacion" />
+							<h:outputText styleClass="outputText" id="txtTipoOpe" value="Tipo de Operación" />
 						</td>
 						<td >
 							<p:selectOneMenu value="#{reportesMB.idOpeBan}" id="somTipoOpe" style="width:167px;">
-								<f:selectItem itemLabel="--Todos--" itemValue="" />
+								<f:selectItem itemLabel="--TODOS--" itemValue="" />
 								<f:selectItems value="#{reportesMB.combosMB.lstOpeBancaria}" var="tipoOpe"
 									itemValue="#{tipoOpe.codOperBan}" itemLabel="#{tipoOpe.desOperBan}" />
 							</p:selectOneMenu>
@@ -124,7 +124,7 @@
 						<td ><h:outputText styleClass="outputText" id="txtImporte" value="Rango Global" /></td>
 						<td >
 							<p:selectOneMenu value="#{reportesMB.idImporte}" id="somImporte" style="width:155px;">
-								<f:selectItem itemLabel="--Todos--" itemValue="" />
+								<f:selectItem itemLabel="--TODOS--" itemValue="" />
 								<f:selectItems value="#{reportesMB.combosMB.lstRangosImporte}" var="imp"
 									itemValue="#{imp.codigoRango}" itemLabel="#{imp.descripcion}" />
 							</p:selectOneMenu>
@@ -146,7 +146,7 @@
 							<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio" />
 						</td>
 						<td >
-							<p:selectCheckboxMenu id="scmEstudio" label="--Todos--" value="#{reportesMB.lstEstudioSelected}" 
+							<p:selectCheckboxMenu id="scmEstudio" label="--TODOS--" value="#{reportesMB.lstEstudioSelected}" 
 								panelStyle="width:120px;" style="width:160px;">  
 						        <f:selectItems value="#{reportesMB.combosMB.estudios}" />  
 						    </p:selectCheckboxMenu>  
@@ -168,7 +168,7 @@
 						
 						<td><h:outputText styleClass="outputText" id="txtMon" value="Moneda" /></td>
 						<td><p:selectOneMenu value="#{reportesMB.idMoneda}" id="somMoneda" style="width:155px;">
-								<f:selectItem itemLabel="--Todos--" itemValue="" />
+								<f:selectItem itemLabel="--TODOS--" itemValue="" />
 								<f:selectItems value="#{reportesMB.combosMB.lstMoneda}" var="mon"
 									itemValue="#{mon.codMoneda}" itemLabel="#{mon.desMoneda}" />
 							</p:selectOneMenu>
