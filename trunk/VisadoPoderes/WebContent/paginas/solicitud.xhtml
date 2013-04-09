@@ -875,7 +875,7 @@
 							<h:panelGrid columns="4">
 								<h:outputText id="outApPaterno" value="Ap.Paterno:" />
 								<h:inputText styleClass="inputTextPopup" id="txtApellidoPaterno"
-									size="30"
+									size="30" maxlength="25"
 									value="#{solicitudRegMB.objTiivsPersonaResultado.apePat}" />
 								<p:graphicImage value="/resources/images/pregunta.jpg"
 									id="tooltxtApellidoPaterno" />
@@ -885,7 +885,7 @@
 
 							<h:outputText id="outApMaterno" value="Ap.Materno:" />
 							<h:inputText styleClass="inputTextPopup" id="txtApellidoMaterno"
-								size="30"
+								size="30" maxlength="25"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.apeMat}" />
 							<p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtApellidoMaterno" />
@@ -893,7 +893,7 @@
 								showEffect="slide" />
 							<h:outputText id="outNombres" value="Nombres:" />
 							<h:inputText styleClass="inputTextPopup" id="txtNombres"
-								size="17"
+								size="17" maxlength="25"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.nombre}" />
 							<p:graphicImage value="/resources/images/pregunta.jpg"
 								id="tooltxtNombres" />
