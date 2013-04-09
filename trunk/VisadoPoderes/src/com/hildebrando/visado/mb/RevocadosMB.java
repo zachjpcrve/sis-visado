@@ -1048,6 +1048,18 @@ public class RevocadosMB {
 			logger.debug("error al obtener la lista de registros "+  e.toString());
 		}
 		
+		for (TiivsMultitabla tmpLista: listTipoRegistro)
+		{
+			if (tmpLista!=null)
+			{
+				if (tmpLista.getValor1()!=null)
+				{
+					String varText = tmpLista.getValor1().toUpperCase();
+					tmpLista.setValor1(varText);
+				}
+			}
+		}
+		
 		
 		String[] codEstadosRevocados= new String[3];
 		codEstadosRevocados[0] = ConstantesVisado.ESTADOS.ESTADO_ACTIVO_REVOCADO;
@@ -1064,6 +1076,18 @@ public class RevocadosMB {
 		} catch (Exception e) {
 			
 			logger.debug("error al obtener la lista de cod de agrupacion "+  e.toString());
+		}
+		
+		for (TiivsMultitabla tmpLista: listEstadoRevocados)
+		{
+			if (tmpLista!=null)
+			{
+				if (tmpLista.getValor1()!=null)
+				{
+					String varText = tmpLista.getValor1().toUpperCase();
+					tmpLista.setValor1(varText);
+				}
+			}
 		}
 		
 		
