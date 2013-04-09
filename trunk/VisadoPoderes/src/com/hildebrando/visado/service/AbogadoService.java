@@ -249,6 +249,7 @@ public class AbogadoService {
 		try {
 			existeCodigo = service.buscarDinamico(filtro.add(
 					Restrictions.eq("codMiembro", abogado.getCodMiembro()))
+					.add(Restrictions.eq("activo", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO))
 					.setProjection(Projections.rowCount()));
 			
 			List<E> parse = new ArrayList<E>();
