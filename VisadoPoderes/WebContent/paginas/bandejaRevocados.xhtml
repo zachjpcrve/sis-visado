@@ -248,88 +248,94 @@
 				<h:panelGrid columns="1" id="gridMsj">
 					<p:messages globalOnly="true" showDetail="true" />
 				</h:panelGrid>
+				
+				<p:panel header="Búsqueda">
+					<h:panelGrid columns="12" id="gridApodPodEd">
 
-				<h:panelGrid columns="12" id="gridApodPodEd">
-
-					<h:outputLabel value="T.DOI/ C.Central*: " />
-					<p:selectOneMenu id="cboTipoDoi"
-						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.tipDoi}"
-						style="width: 120px">
-						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
-						<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
-							itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
-					</p:selectOneMenu>
-
-					<h:outputLabel value="Nro*: " />
-					<p:inputText id="txtNumDoi" styleClass="inputText" maxlength="12"
-						value="#{revocadosMB.objTiivsPersonaBusquedaDlg.numDoi}"
-						onkeypress="return validaNumero(event,'0',this,'0');"
-						onblur="validaNumero(event,'0',this,'1');">
-					</p:inputText>
-					<p:message for="txtNumDoi"></p:message>
+						<h:outputLabel value="T.DOI/ C.Central*: " style="color:red" />
+						<p:selectOneMenu id="cboTipoDoi"
+							value="#{revocadosMB.objTiivsPersonaBusquedaDlg.tipDoi}"
+							style="width: 120px">
+							<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+							<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
+								itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
+						</p:selectOneMenu>
+	
+						<h:outputLabel value="Nro*: " style="color:red"/>
+						<p:inputText id="txtNumDoi" styleClass="inputText" maxlength="12"
+							value="#{revocadosMB.objTiivsPersonaBusquedaDlg.numDoi}"
+							onkeypress="return validaNumero(event,'0',this,'0');"
+							onblur="validaNumero(event,'0',this,'1');">
+						</p:inputText>
+						<p:message for="txtNumDoi"></p:message>
+						
+						<p:commandButton id="btnBuscar"
+							update=":frmCliente:pnlfrmCliente, :frmPendEdit:pnlRegistrarPendEdit"
+							icon="ui-icon-seek-next" action="#{revocadosMB.buscarPersona}"
+							ajax="true" />
 					
-					<p:commandButton id="btnBuscar"
-						update=":frmCliente:pnlfrmCliente, :frmPendEdit:pnlRegistrarPendEdit"
-						icon="ui-icon-seek-next" action="#{revocadosMB.buscarPersona}"
-						ajax="true" />
-					
-				</h:panelGrid>
-				<h:panelGrid columns="6" id="gridApodPodEd2">
-					<h:outputLabel value="T.DOI/ C.Central*: " />
-					<p:selectOneMenu id="cboTipoDoi2"
-						value="#{revocadosMB.objTiivsPersonaAgregar.tipDoi}"
-						style="width: 120px">
-						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
-						<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
-							itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
-
-					</p:selectOneMenu>
-					
-					<h:outputLabel value="Nro de DOI*: " />
-					<p:inputText styleClass="inputText"
-						value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}"
-						onkeypress="return validaNumero(event,'0',this,'0');"
-						onblur="validaNumero(event,'0',this,'1');" size="25">
-					</p:inputText>
-
-					<h:outputLabel value="C. Central: " />
-					<p:inputText styleClass="inputText"
-						value="#{revocadosMB.objTiivsPersonaAgregar.codCen}"
-						maxlength="13"
-						onkeypress="return validaNumero(event,'0',this,'0');"
-						onblur="validaNumero(event,'0',this,'1');" />
-
-				</h:panelGrid>
-
-				<h:panelGrid columns="6" id="gridApodPodEd3">
-
-					<h:outputText id="outApPaterno" value="Ap.Paterno:" />
-					<p:inputText styleClass="inputTextPopup" id="txtApellidoPaterno"
-						size="25" value="#{revocadosMB.objTiivsPersonaAgregar.apePat}" />
-
-					<h:outputText id="outApMaterno" value="Ap.Materno:" />
-					<p:inputText styleClass="inputTextPopup" id="txtApellidoMaterno"
-						size="25" value="#{revocadosMB.objTiivsPersonaAgregar.apeMat}" />
-
-					<h:outputText id="outNombres" value="Nombres:" />
-					<p:inputText styleClass="inputTextPopup" id="txtNombres" size="25"
-						value="#{revocadosMB.objTiivsPersonaAgregar.nombre}" />
-
-				</h:panelGrid>
-
-				<h:panelGrid columns="2" id="gridApodPod3">
-
-					<h:outputLabel value="Tipo de Registro: " />
-					<p:selectOneMenu id="cboTipoRegistro"
-						value="#{revocadosMB.objTiivsPersonaAgregar.tipPartic}"
-						style="width: 120px">
-						<f:selectItem itemLabel="--Seleccione--" itemValue="" />
-						<f:selectItems value="#{revocadosMB.listTipoRegistro}" var="t"
-							itemValue="#{t.id.codElem}" itemLabel="#{t.valor1}" />
-					</p:selectOneMenu>
-
-				</h:panelGrid>
-
+					</h:panelGrid>
+				</p:panel>
+				
+				<p:panel header="Nuevo Registro">
+				
+					<h:panelGrid columns="6" id="gridApodPodEd2">
+						<h:outputLabel value="T.DOI/ C.Central*: " style="color:red"/>
+						<p:selectOneMenu id="cboTipoDoi2"
+							value="#{revocadosMB.objTiivsPersonaAgregar.tipDoi}"
+							style="width: 120px">
+							<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+							<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
+								itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
+	
+						</p:selectOneMenu>
+						
+						<h:outputLabel value="Nro de DOI*: " style="color:red"/>
+						<p:inputText styleClass="inputText"
+							value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}"
+							onkeypress="return validaNumero(event,'0',this,'0');"
+							onblur="validaNumero(event,'0',this,'1');" size="25">
+						</p:inputText>
+	
+						<h:outputLabel value="C. Central: " />
+						<p:inputText styleClass="inputText"
+							value="#{revocadosMB.objTiivsPersonaAgregar.codCen}"
+							maxlength="13"
+							onkeypress="return validaNumero(event,'0',this,'0');"
+							onblur="validaNumero(event,'0',this,'1');" />
+	
+					</h:panelGrid>
+	
+					<h:panelGrid columns="6" id="gridApodPodEd3">
+	
+						<h:outputText id="outApPaterno" value="Ap.Paterno:" />
+						<p:inputText styleClass="inputTextPopup" id="txtApellidoPaterno"
+							size="25" value="#{revocadosMB.objTiivsPersonaAgregar.apePat}" />
+	
+						<h:outputText id="outApMaterno" value="Ap.Materno:" />
+						<p:inputText styleClass="inputTextPopup" id="txtApellidoMaterno"
+							size="25" value="#{revocadosMB.objTiivsPersonaAgregar.apeMat}" />
+	
+						<h:outputText id="outNombres" value="Nombres:" />
+						<p:inputText styleClass="inputTextPopup" id="txtNombres" size="25"
+							value="#{revocadosMB.objTiivsPersonaAgregar.nombre}" />
+	
+					</h:panelGrid>
+	
+					<h:panelGrid columns="2" id="gridApodPod3">
+	
+						<h:outputLabel value="Tipo de Registro: " />
+						<p:selectOneMenu id="cboTipoRegistro"
+							value="#{revocadosMB.objTiivsPersonaAgregar.tipPartic}"
+							style="width: 120px">
+							<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+							<f:selectItems value="#{revocadosMB.listTipoRegistro}" var="t"
+								itemValue="#{t.id.codElem}" itemLabel="#{t.valor1}" />
+						</p:selectOneMenu>
+	
+					</h:panelGrid>
+				</p:panel>
+				
 				<h:panelGrid columns="4">
 
 					<p:commandButton id="btnAgregar" value="Agregar"
