@@ -91,7 +91,7 @@
 							<td><h:outputText value="Costo:  " /></td>
 							<td><p:inputText id="txtCosto" 	onkeypress="return validaNumeroDecimal(event,'0',this,'0');"
 									onblur="validaNumeroDecimal(event,'0',this,'1');"
-									value="#{estudioMB.estudio.costo}" maxlength="13">
+									value="#{estudioMB.estudio.costo}" maxlength="9">
 									<f:convertNumber pattern="#,###,##0.00" locale="en" />
 								</p:inputText></td>
 						</tr>
@@ -106,7 +106,7 @@
 					<p:commandButton id="registrarEstudio" value="Guardar" ajax="true"
 						action="#{estudioMB.listarEstudios}"
 						actionListener="#{estudioMB.registrar}"
-						update=":frmDataTableEstudio:pnlDataTableEstudio">
+						update=":frmDataTableEstudio:pnlDataTableEstudio,:frmMantenimientoEstudio:pnlMntEstudio">
 					</p:commandButton>
 					<p:commandButton id="limpiarEstudio" value="Limpiar" ajax="true"
 						action="#{estudioMB.limpiarCampos}"
