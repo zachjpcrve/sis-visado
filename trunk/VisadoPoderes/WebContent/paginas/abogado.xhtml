@@ -245,7 +245,7 @@
 						</p:column>
 						<p:column headerText="Eliminar">
 							<p:commandLink id="clinkEliminar" ajax="true"
-								update=":frmDataTableAbogado:pnlDataTableAbogado" 
+								update=":frmDataTableAbogado:pnlDataTableAbogado,:frmMantenimientoAbogado:pnlMantenimientoAbogado" 
 								action="#{abogadoMB.listarAbogados}"
 								actionListener="#{abogadoMB.eliminarAbogado}">
 								<f:param name="codAbogado" value="#{abo.codMiembro}"></f:param>
