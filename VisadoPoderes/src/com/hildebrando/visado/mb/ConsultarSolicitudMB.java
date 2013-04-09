@@ -1087,7 +1087,9 @@ public class ConsultarSolicitudMB {
 			evaluacionNivelesMB = new EvaluacionNivelesMB(solicitudRegistrarT);
 			TiivsSolicitudNivel solNivel = evaluacionNivelesMB.obtenerNivelSolicitud();
 			if (solNivel != null) {
-				this.sNivelSolicitud = solNivel.getCodNiv();
+				String sCodigoNivel = solNivel.getCodNiv();				
+				NivelService nivelService = new NivelService(); 
+				this.sNivelSolicitud = nivelService.buscarNivelxCodigo(sCodigoNivel);
 			}
 			
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
