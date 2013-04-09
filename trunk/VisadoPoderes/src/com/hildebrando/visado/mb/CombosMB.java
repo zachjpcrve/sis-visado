@@ -170,7 +170,7 @@ public class CombosMB {
 					&&res.getValor2().trim().equals("1")) {
 				ComboDto tmpComboClasi = new ComboDto();
 				tmpComboClasi.setKey(res.getId().getCodElem());
-				tmpComboClasi.setDescripcion(res.getValor1());
+				tmpComboClasi.setDescripcion(res.getValor1().toUpperCase());
 				lstClasificacionPersona.add(tmpComboClasi);
 			}
 			
@@ -179,7 +179,7 @@ public class CombosMB {
 			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA)) {
 				ComboDto tmpCombo = new ComboDto();
 				tmpCombo.setKey(res.getId().getCodElem());
-				tmpCombo.setDescripcion(res.getValor1());
+				tmpCombo.setDescripcion(res.getValor1().toUpperCase());
 				lstTipoRegistroPersona.add(tmpCombo);
 			}
 			
@@ -187,7 +187,7 @@ public class CombosMB {
 			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES)) {
 				RangosImporte tmpRangos = new RangosImporte();
 				tmpRangos.setCodigoRango(res.getId().getCodElem());
-				tmpRangos.setDescripcion(res.getValor1());
+				tmpRangos.setDescripcion(res.getValor1().toUpperCase());
 				lstRangosImporte.add(tmpRangos);
 
 				
@@ -197,13 +197,13 @@ public class CombosMB {
 			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS)) {
 				Estado tmpEstado = new Estado();
 				tmpEstado.setCodEstado(res.getId().getCodElem());
-				tmpEstado.setDescripcion(res.getValor1());
+				tmpEstado.setDescripcion(res.getValor1().toUpperCase());
 				lstEstado.add(tmpEstado);
 
 				int j = 0;
 
 				for (; j <= lstEstado.size() - 1; j++) {
-					estados.put(lstEstado.get(j).getDescripcion(), lstEstado.get(j).getCodEstado());
+					estados.put(lstEstado.get(j).getDescripcion().toUpperCase(), lstEstado.get(j).getCodEstado());
 				}
 
 				
@@ -213,14 +213,14 @@ public class CombosMB {
 			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS_NIVEL)) {
 				EstadosNivel tmpEstadoNivel = new EstadosNivel();
 				tmpEstadoNivel.setCodigoEstadoNivel(res.getId().getCodElem());
-				tmpEstadoNivel.setDescripcion(res.getValor1());
+				tmpEstadoNivel.setDescripcion(res.getValor1().toUpperCase());
 				lstEstadoNivel.add(tmpEstadoNivel);
 
 
 				int j = 0;
 
 				for (; j <= lstEstadoNivel.size() - 1; j++) {
-					estadosNivel.put(lstEstadoNivel.get(j).getDescripcion(),
+					estadosNivel.put(lstEstadoNivel.get(j).getDescripcion().toUpperCase(),
 							lstEstadoNivel.get(j).getCodigoEstadoNivel());
 				}
 
@@ -231,7 +231,7 @@ public class CombosMB {
 			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPOS_FECHA)) {
 				TiposFecha tmpTiposFecha = new TiposFecha();
 				tmpTiposFecha.setCodigoTipoFecha(res.getId().getCodElem());
-				tmpTiposFecha.setDescripcion(res.getValor1());
+				tmpTiposFecha.setDescripcion(res.getValor1().toUpperCase());
 				lstTiposFecha.add(tmpTiposFecha);
 
 				
@@ -241,24 +241,23 @@ public class CombosMB {
 			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_MONEDA)) {
 				Moneda tmpMoneda = new Moneda();
 				tmpMoneda.setCodMoneda(res.getId().getCodElem());
-				tmpMoneda.setDesMoneda(res.getValor1());
+				tmpMoneda.setDesMoneda(res.getValor1().toUpperCase());
 				lstMoneda.add(tmpMoneda);
 
 				
 			}
 
 			// Carga combo Tipos de documento
-			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC)
-					&& res.getValor2().equals("1")) {
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC) && res.getValor2().equals("1")) {
 				 tmpTipoDoc = new TipoDocumento();
 			
 				if(res.getValor5()!=null){
 					tmpTipoDoc.setCodTipoDoc(res.getId().getCodElem());
-					tmpTipoDoc.setDescripcion(res.getValor1());
+					tmpTipoDoc.setDescripcion(res.getValor1().toUpperCase());
 					lstTipoDocumentosExtra.add(tmpTipoDoc);
 				}else{
 					tmpTipoDoc.setCodTipoDoc(res.getId().getCodElem());
-					tmpTipoDoc.setDescripcion(res.getValor1());
+					tmpTipoDoc.setDescripcion(res.getValor1().toUpperCase());
 					lstTipoDocumentosExtra2.add(tmpTipoDoc);
 				}				
 				
@@ -299,12 +298,25 @@ public class CombosMB {
 		// Carga combo de Operacion Bancaria
 		GenericDao<TiivsOperacionBancaria, Object> openBanDAO = (GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroOpenBan = Busqueda.forClass(TiivsOperacionBancaria.class);
-       try {
+        try {
 			lstOpeBancaria = openBanDAO.buscarDinamico(filtroOpenBan);
 			logger.debug("lstOpeBancaria size " + lstOpeBancaria.size());
 		} catch (Exception e) {
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de operaciones bancarias: "+e);
 		}
+       
+        for (TiivsOperacionBancaria tmpLista: lstOpeBancaria)
+        {
+    	   if (tmpLista!=null)
+    	   {
+    		   if (tmpLista.getDesOperBan()!=null)
+    		   {
+    			   String texto =tmpLista.getDesOperBan().toUpperCase();
+    	    	   tmpLista.setDesOperBan(texto);
+    		   }
+    	   }
+        	
+        }
        
         // Carga combo de Tipo de Solicitud
 		GenericDao<TiivsTipoSolicitud, Object> genTipoSolcDAO = (GenericDao<TiivsTipoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -321,7 +333,7 @@ public class CombosMB {
 		int x = 0;
 		for (; x <= lstTipoSolicitud.size() - 1; x++) 
 		{
-			tiposSolicitud.put(lstTipoSolicitud.get(x).getDesTipServicio(),	lstTipoSolicitud.get(x).getCodTipSolic());
+			tiposSolicitud.put(lstTipoSolicitud.get(x).getDesTipServicio().toUpperCase(),	lstTipoSolicitud.get(x).getCodTipSolic());
 		}
 		
 		// Carga combo de Territorio
@@ -334,6 +346,19 @@ public class CombosMB {
 			e.printStackTrace();
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de territorios :"+e);
 		}
+		
+		for (TiivsTerritorio tmpLista: lstTerritorio)
+        {
+    	   if (tmpLista!=null)
+    	   {
+    		   if (tmpLista.getDesTer()!=null)
+    		   {
+    			   String texto =tmpLista.getDesTer().toUpperCase();
+    	    	   tmpLista.setDesTer(texto);
+    		   }
+    	   }
+        	
+        }
 
 		// Carga combo de Oficinas
 		GenericDao<TiivsOficina1, Object> oficDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -351,18 +376,18 @@ public class CombosMB {
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de oficinas: "+e);
 		}
 		
-		// Carga data de Agrupacion de Personas
-		GenericDao<TiivsAgrupacionPersona, Object> agrupPerDAO = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroPer = Busqueda.forClass(TiivsAgrupacionPersona.class);
-		filtroPer.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
-		
-		try {
-			lstTiposPersona = agrupPerDAO.buscarDinamico(filtroPer);
-			logger.debug("TAMANIOO DE LOS TIPOS DE PERSONA EN EL COMBOMB " +lstTiposPersona.size());
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de persona: "+e);
-		}
+		for (TiivsOficina1 tmpLista: lstOficina1)
+        {
+    	   if (tmpLista!=null)
+    	   {
+    		   if (tmpLista.getDesOfi()!=null)
+    		   {
+    			   String texto =tmpLista.getDesOfi().toUpperCase();
+    	    	   tmpLista.setDesOfi(texto);
+    		   }
+    	   }
+        	
+        }
 		
 		// Carga data de Operaciones Bancarias por Solicitud
 		GenericDao<TiivsSolicitudOperban, Object> operBanDAO = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -394,7 +419,7 @@ public class CombosMB {
 
 		for (; w <= lstNivel.size() - 1; w++) {
 			if (tmp.compareTo(lstNivel.get(w).getDesNiv()) != 0) {
-				niveles.put(lstNivel.get(w).getDesNiv(), lstNivel.get(w).getDesNiv());
+				niveles.put(lstNivel.get(w).getDesNiv().toUpperCase(), lstNivel.get(w).getDesNiv());
 				tmp = lstNivel.get(w).getCodNiv();
 			}
 		}
@@ -412,7 +437,7 @@ public class CombosMB {
 		int j = 0;
 
 		for (; j <= lstEstudio.size() - 1; j++) {
-			estudios.put(lstEstudio.get(j).getDesEstudio(), lstEstudio.get(j)
+			estudios.put(lstEstudio.get(j).getDesEstudio().toUpperCase(), lstEstudio.get(j)
 					.getCodEstudio());
 		}
 		
