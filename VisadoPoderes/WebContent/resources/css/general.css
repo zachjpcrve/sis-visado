@@ -49,3 +49,51 @@
 .update .combo,.update .input {
 	margin-left: 0.4em !important;
 }
+.codigo,.codigo .ui-dt-c {
+	width: 20px !important;
+	text-align: center;
+}
+
+.territorio,.territorio .ui-dt-c {
+	width: 38px !important;
+	text-align: center;
+}
+
+.oficina,.oficina .ui-dt-c {
+	width: 120px !important;
+	text-align: center;
+}
+
+.persona ,.persona .ui-dt-c {
+	width: 75px !important;
+	text-align: center;
+}
+
+.total .ui-dt-c {
+	width: 73px !important;
+	text-align: center;
+}
+
+.recaudacion .ui-dt-c {
+	width: 50px !important;
+	text-align: center;
+}
+
+.fallecida .ui-dt-c {
+	width: 120px !important;
+	text-align: center;
+}
+
+.cantidad .ui-dt-c {
+	width: 73px !important;
+	text-align: center;
+}
+
+
+table.anchoGrilla {
+	width: 100% !important;
+}
+
+.ui-datatable-data-empty .ui-dt-c {
+	width: 100% !important
+}
