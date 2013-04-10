@@ -1713,6 +1713,9 @@ public class ConsultarSolicitudMB {
 		objHistorial.setObs(solicitud.getObs());
 		objHistorial.setFecha(new Timestamp(new Date().getTime()));
 		objHistorial.setRegUsuario(usuario.getUID());
+		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)){
+		objHistorial.setRegAbogado(usuario.getUID());
+		}
 		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		serviceHistorialSolicitud.insertar(objHistorial);
