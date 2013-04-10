@@ -2293,19 +2293,16 @@ public class ConsultarSolicitudMB {
 
 	@SuppressWarnings({ "unused", "unchecked" })
 	@Transactional (rollbackFor=Exception.class)
-	public void registrarSolicitud() 
+	public String registrarSolicitud() 
 	{
 		String mensaje = "";
+		String redirect = "";
 		boolean actualizarBandeja=false;
 		
 		logger.info("*********************** registrarSolicitud ************************");
-		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+//		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit
+//				.getApplicationContext().getBean("genericoDao");
 		
-		GenericDao<TiivsSolicitudAgrupacion, Object> serviceSolAgru = (GenericDao<TiivsSolicitudAgrupacion, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
-		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit
@@ -2382,65 +2379,7 @@ public class ConsultarSolicitudMB {
 								
 				Set<TiivsSolicitudAgrupacion> listaTMP = this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
 				logger.info("listaTMP listaTMP "+listaTMP.size());
-			
-//				if(listaTemporalAgrupacionesPersonaBorradores!=null){
-//				for (TiivsAgrupacionPersona c : listaTemporalAgrupacionesPersonaBorradores) {
-//					serviceAgru.eliminar(c);
-//				}
-//				}
-//				TiivsSolicitudAgrupacion  solicAgruTempDelete = null;
-//				for (TiivsSolicitudAgrupacion d : listaTemporalSolicitudAgrupacionesBorradores){
-//					
-//					for (TiivsAgrupacionPersona e : d.getTiivsAgrupacionPersonas()) {
-//						serviceAgru.eliminar(e);
-//					}
-//					solicAgruTempDelete=new TiivsSolicitudAgrupacion();
-//					solicAgruTempDelete.setId(d.getId());
-//					serviceSolAgru.eliminar(solicAgruTempDelete);
-//				}
-//				
-//				
-//				for (TiivsSolicitudAgrupacion x1 : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) 
-//				{
-//					if (!existeSolicitudAgrupacion(x1))
-//					  {
-//						  serviceSolAgru.insertar(x1);
-//					  }
-//					
-//					logger.debug("Tamanio agrupaciones: " + x1.getTiivsAgrupacionPersonas().size());
-//					TiivsPersona personaTemporal=null;
-//					for (TiivsAgrupacionPersona b :x1.getTiivsAgrupacionPersonas()) 
-//				    { 
-//						//for (TiivsSolicitudAgrupacion c : listaSolicitudAgrupacionesCopia) {
-//							
-//							
-//							
-//							//if(!c.get .equals(b)){
-//								logger.info("b.getTiivsPersona()::::::: "+b.getNumGrupo());
-//							      personaTemporal=b.getTiivsPersona();
-//								  objPersonaRetorno=servicePers.insertarMerge(personaTemporal);
-//								  logger.info("Codigo de la persona a Insertar : "+objPersonaRetorno.getCodPer());
-//								  b.setTiivsPersona(null);
-//								  b.setCodPer(objPersonaRetorno.getCodPer());
-//								  System.out.println(" -------------------------------- "+ b.toString());
-//								  if (existeAgrupacionPersona(b)!=(null))
-//								  {  System.out.println(" -------------if-----------------");
-//									  b.setIdAgrupacion(existeAgrupacionPersona(b).getIdAgrupacion());
-//									  serviceAgru.modificar(b);
-//								  }
-//								  else
-//								  { System.out.println(" ---------------else----------------");
-//									  serviceAgru.insertar(b);
-//								  }
-//								  b.setTiivsPersona(personaTemporal);
-//								
-//							//}
-//						//} 
-//						
-//						
-//				   }
-//				}
-																				
+																						
 
 				TiivsSolicitud objResultado = service.guardarModificar(this.solicitudRegistrarT);
 								  
@@ -2498,11 +2437,13 @@ public class ConsultarSolicitudMB {
 						Utilitarios.mensajeInfo("INFO", mensaje);
 						actualizarBandeja=true;
 					} 
-					else 
+					else //Enviar solicitud
 					{
 						mensaje = "Se envio a SSJJ correctamente la Solicitud con codigo : " + objResultado.getCodSoli();
 						Utilitarios.mensajeInfo("INFO", mensaje);
 						actualizarBandeja=true;
+						redirect = this.redirectDetalleSolicitud(objResultado.getCodSoli());
+						logger.info("redirect:" + redirect);
 					}
 
 				} 
@@ -2530,6 +2471,8 @@ public class ConsultarSolicitudMB {
 		}catch(Throwable t){
 			logger.error("Throwable ::: "+ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+t.getMessage());
 		}
+		
+		return redirect;
 	}
 	
 	private void eliminaAnexosAnterioresMenos(TiivsSolicitud solicitudRegistrarT2, List<TiivsAnexoSolicitud> lstAnexoSolicitud2) throws Exception {
