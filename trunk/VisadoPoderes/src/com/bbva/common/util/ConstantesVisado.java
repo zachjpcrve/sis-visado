@@ -520,6 +520,10 @@ public class ConstantesVisado {
 		public static final String COD_CARNET_DIPLOMATICO = "0009";
 		
 	}
+	static public class DIAS_FOR_EJECUCION{
+		public static final String COD_DIAS_FOR_EJECUCION = "NO DEFINIDO";
+		
+	}
 }
 
 
