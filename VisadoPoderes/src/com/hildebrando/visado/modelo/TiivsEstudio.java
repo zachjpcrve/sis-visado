@@ -14,7 +14,7 @@ public class TiivsEstudio implements java.io.Serializable {
 	private String desEstudio;
 	private Character activo;
 	private Set<TiivsSolicitud> tiivsSolicituds = new HashSet<TiivsSolicitud>();
-	private double costo;
+	private Double costo;
 	private String desActivo;
 
 	public TiivsEstudio() {
@@ -64,11 +64,11 @@ public class TiivsEstudio implements java.io.Serializable {
 		this.tiivsSolicituds = tiivsSolicituds;
 	}
 
-	public double getCosto() {
+	public Double getCosto() {
 		return costo;
 	}
 
-	public void setCosto(double costo) {
+	public void setCosto(Double costo) {
 		this.costo = costo;
 	}
 
@@ -79,4 +79,14 @@ public class TiivsEstudio implements java.io.Serializable {
 	public void setDesActivo(String desActivo) {
 		this.desActivo = desActivo;
 	}
+
+	@Override
+	public String toString() {
+		return "TiivsEstudio [codEstudio=" + this.codEstudio + ", desEstudio="
+				+ this.desEstudio + ", activo=" + this.activo
+				+ ", tiivsSolicituds=" + this.tiivsSolicituds + ", costo="
+				+ this.costo + ", desActivo=" + this.desActivo + "]";
+	}
+	
+	
 }
