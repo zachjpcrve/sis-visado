@@ -216,6 +216,26 @@ public class ConsultarSolicitudMB {
 
 		logger.info("Texto Ventana: " + getTextoMensajeCartaAtencion());
 	}
+	
+	public List<TiivsOficina1> completeNomOficina(String query) 
+	{	
+		List<TiivsOficina1> results = new ArrayList<TiivsOficina1>();
+
+		for (TiivsOficina1 oficina : combosMB.getLstOficina1()) 
+		{
+			if (oficina.getCodOfi() != null) 
+			{
+				String texto = oficina.getDesOfi();
+
+				if (texto.contains(query.toUpperCase())) 
+				{
+					results.add(oficina);
+				}
+			}
+		}
+
+		return results;
+	}
 
 	/*
 	public void mostrarCartaAtencion() {
