@@ -116,7 +116,7 @@
 																	<p:autoComplete id="acNomOFina" value="#{solicitudRegMB.oficina}"
 																		completeMethod="#{solicitudRegMB.completeNomOficina}" var="ofi"
 																		converter="oficinaConverter" size="24" 
-																		itemLabel="#{ofi.desOfi}" itemValue="#{ofi}" rendered="#{solicitudRegMB.flagMostrarACOficina}"/>
+																		itemLabel="#{ofi.codOfi}-#{ofi.desOfi}(#{ofi.tiivsTerritorio.codTer}-#{ofi.tiivsTerritorio.desTer})" itemValue="#{ofi}" rendered="#{solicitudRegMB.flagMostrarACOficina}"/>
 																	<h:inputText styleClass="inputText" rendered="#{solicitudRegMB.flagMostrarSOMOficina}"
 																		id="cboOficina" style="width:100px;"
 																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.desOfi}(#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.codTer}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.desTer}"
