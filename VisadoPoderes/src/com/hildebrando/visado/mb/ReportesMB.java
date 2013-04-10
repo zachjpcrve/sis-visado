@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,13 +17,9 @@ import java.util.concurrent.TimeUnit;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
@@ -37,10 +32,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.primefaces.component.log.Log;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -743,48 +734,33 @@ public class ReportesMB {
 
 		// Busqueda por fecha de Registro
 		if (getFechaInicio() != null && getFechaFin() != null) {
-			/*
-			 * logger.info("Buscando por fecha de registro");
-			 * 
-			 * LocalDate newFechaInicio = null; LocalDate newFechaFin = null;
-			 * 
-			 * DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
-			 * DateFormat formato = new SimpleDateFormat("dd/MM/yy");
-			 * 
-			 * String tmpFecIni = formato.format(getFechaInicio()); String
-			 * tmpFecFin = formato.format(getFechaFin());
-			 * 
-			 * newFechaInicio=fmt.parseLocalDate(tmpFecIni); newFechaFin=
-			 * fmt.parseLocalDate(tmpFecFin);
-			 * 
-			 * Date dFechaIni =
-			 * newFechaInicio.toDateTimeAtStartOfDay().toDate(); Date dFechaFin
-			 * = newFechaFin.toDateTimeAtStartOfDay().toDate();
-			 * 
-			 * logger.info("Fecha Inicio: " +dFechaIni );
-			 * logger.info("Fecha Fin: " +dFechaFin );
-			 * 
-			 * filtroSol.add(Restrictions.between(ConstantesVisado.
-			 * CAMPO_FECHA_REGISTRO, dFechaIni,dFechaFin));
-			 */
-			try {
-				SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-				String fecIni = formatter.format(getFechaInicio());
-				Date minDate = formatter.parse(fecIni);
-				String fecFin = formatter.format(getFechaFin());
-				Date maxDate = formatter.parse(fecFin);
-				Date rangoFin = new Date(maxDate.getTime()
-						+ TimeUnit.DAYS.toMillis(1));
+			
+			if (getFechaFin().before(getFechaInicio()))
+			{
+				logger.debug("La fecha de inicio debe ser menor a la fecha de fin");
+				Utilitarios.mensajeInfo("", "La fecha de inicio debe ser menor a la fecha de fin");
+			}
+			else
+			{
+				try {
+					SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+					String fecIni = formatter.format(getFechaInicio());
+					Date minDate = formatter.parse(fecIni);
+					String fecFin = formatter.format(getFechaFin());
+					Date maxDate = formatter.parse(fecFin);
+					Date rangoFin = new Date(maxDate.getTime()
+							+ TimeUnit.DAYS.toMillis(1));
 
-				logger.info("Fecha Inicio: " + minDate);
-				logger.info("Fecha Fin: " + rangoFin);
+					logger.info("Fecha Inicio: " + minDate);
+					logger.info("Fecha Fin: " + rangoFin);
 
-				filtroSol.add(Restrictions.ge(
-						ConstantesVisado.CAMPO_FECHA_REGISTRO, minDate));
-				filtroSol.add(Restrictions.le(
-						ConstantesVisado.CAMPO_FECHA_REGISTRO, rangoFin));
-			} catch (ParseException e) {
-				logger.info("Hubo un error al convertir la fecha: ", e);
+					filtroSol.add(Restrictions.ge(
+							ConstantesVisado.CAMPO_FECHA_REGISTRO, minDate));
+					filtroSol.add(Restrictions.le(
+							ConstantesVisado.CAMPO_FECHA_REGISTRO, rangoFin));
+				} catch (ParseException e) {
+					logger.info("Hubo un error al convertir la fecha: ", e);
+				}
 			}
 		}
 
@@ -4045,7 +4021,13 @@ public class ReportesMB {
 						HSSFCellStyle.VERTICAL_CENTER,
 						ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_DELEGACION,
 						true, true, false, HSSFColor.DARK_BLUE.index);
-
+				
+				//Definir estilo para celdas
+				CellStyle estilo = Utilitarios.definirSoloEstiloCelda(wb,
+						HSSFCellStyle.ALIGN_LEFT,
+						HSSFCellStyle.VERTICAL_CENTER, true, false, true,
+						HSSFColor.DARK_BLUE.index);				
+				
 				int numReg = 8;
 				int contador = 0;
 				for (TiivsSolicitud tmp : solicitudes) {
@@ -4151,11 +4133,6 @@ public class ReportesMB {
 					int filaTmp = row.getRowNum();
 					List<AgrupacionSimpleDto> tmpListaAgrupaciones = buscarAgrupacionesxSolicitud(tmp
 							.getCodSoli());
-
-					CellStyle estilo = Utilitarios.definirSoloEstiloCelda(wb,
-							HSSFCellStyle.ALIGN_LEFT,
-							HSSFCellStyle.VERTICAL_CENTER, true, false, true,
-							HSSFColor.DARK_BLUE.index);
 
 					for (AgrupacionSimpleDto tmpAgrup : tmpListaAgrupaciones) {
 						if (tmpAgrup.getId().getCodSoli()
