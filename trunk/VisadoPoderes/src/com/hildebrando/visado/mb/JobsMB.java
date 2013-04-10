@@ -224,7 +224,8 @@ public class JobsMB {
 			//Se obtiene los dias utiles de la Multitabla
 			for (TiivsMultitabla tmp : lstMultitabla) 
 			{
-				if (tmp.getId().getCodMult().trim().equals(ConstantesVisado.CODIGO_MULTITABLA_DIAS_UTILES)) 
+				if (tmp.getId().getCodMult().trim().equals(ConstantesVisado.DIAS_FOR_EJECUCION.CODIGO_MULTITABLA_DIAS)
+						&& tmp.getValor2().trim().equals(ConstantesVisado.DIAS_FOR_EJECUCION.CODIGO_MULTITABLA_DIAS_VENCIDOS)) 
 				{
 					diasUtiles = Integer.valueOf(tmp.getValor2());
 					break;
