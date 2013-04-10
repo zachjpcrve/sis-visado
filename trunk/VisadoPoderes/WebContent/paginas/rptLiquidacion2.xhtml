@@ -14,6 +14,9 @@
 	<ui:define name="contenido">
 
 		<h:form id="frm">
+			
+			<h2>Reporte de Liquidación</h2>
+			
 			<p:outputPanel id="oplFrm">
 				<p:growl life="10000" globalOnly="false" showDetail="true"
 					id="growl" />
@@ -24,7 +27,7 @@
 					<tbody>
 						<tr bordercolor="white">
 							<td><h:outputText styleClass="outputText" id="txtAnio"
-									value="Anio" /></td>
+									value="Año:" /></td>
 							<td><p:selectOneMenu id="somAnio" value="#{reportesMB.anio}"
 									required="true" requiredMessage="Ingrese Año valido">
 									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
@@ -35,7 +38,7 @@
 								</p:selectOneMenu></td>
 
 							<td><h:outputText styleClass="outputText" id="txtEstudio"
-									value="Estudio" /></td>
+									value="Estudio:" /></td>
 							<td><p:selectCheckboxMenu id="scmEstudio" label="--Todos--"
 									value="#{reportesMB.lstEstudioSelected}"
 									panelStyle="width:150px;" style="width:150px;">
@@ -45,7 +48,7 @@
 
 						<tr bordercolor="white">
 							<td><h:outputText styleClass="outputText" id="txtMes"
-									value="Mes" /></td>
+									value="Mes:" /></td>
 							<td><p:selectOneMenu id="somMes" value="#{reportesMB.mes}"
 									required="true" requiredMessage="Ingrese mes valido">
 									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
