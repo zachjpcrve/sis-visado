@@ -51,7 +51,6 @@ import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMiembro;
-import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
@@ -117,6 +116,8 @@ public class ConsultarSolicitudMB {
 	private boolean bMostrarCartaRevision = false;
 	private boolean bRevision = false;
 	private boolean flagUpdateOperacionSolic = false;
+	private boolean flagMostrarACOficina=false;
+	private boolean flagMostrarSOMOficina=true;
 	IILDPeUsuario usuario;
 	private boolean bMostrarGenerarRevision = true;
 	private boolean bMostrarComentario = true;
@@ -142,6 +143,7 @@ public class ConsultarSolicitudMB {
 	private TiivsPersona objTiivsPersonaResultado;
 	private TiivsPersona objTiivsPersonaSeleccionado;
 	private TiivsPersona objTiivsPersonaCapturado;
+	private TiivsOficina1 oficina;
 	private DocumentoTipoSolicitudDTO selectedDocumentoDTO = new DocumentoTipoSolicitudDTO();
 	private String iTipoSolicitud = "";
 	private TiivsTipoSolicDocumento selectedTipoDocumento;
@@ -186,6 +188,12 @@ public class ConsultarSolicitudMB {
 		this.cadenaEscanerFinal = this.prepararURLEscaneo();
 		combosMB = new CombosMB();
 		combosMB.cargarMultitabla();
+		
+		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ))
+		{
+			setFlagMostrarSOMOficina(false);
+			setFlagMostrarACOficina(true);
+		}
 	}
 	
 	/*
@@ -568,6 +576,12 @@ public class ConsultarSolicitudMB {
 					}
 				}
 			}
+			
+			if (solicitudRegistrarT.getTiivsOficina1()!=null)
+			{
+				setOficina(solicitudRegistrarT.getTiivsOficina1());
+			}
+			
 			
 			obtenerImporteTotalxSolicitud(lstSolicBancarias);
 			
@@ -2284,11 +2298,24 @@ public class ConsultarSolicitudMB {
 			this.solicitudRegistrarT.setNomUsuario(usuario.getNombre());
 			logger.info("tiivsOficina1.codOfi ::::::: "	+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
 			
-			for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) 
+			if (flagMostrarACOficina)
 			{
-				if (tiivsOficina1.getCodOfi().equals(this.solicitudRegistrarT.getTiivsOficina1().getCodOfi())) 
-				{
-					this.solicitudRegistrarT.setTiivsOficina1(tiivsOficina1);
+				logger.info("tiivsOficina1.codOfi ::::::: "+ oficina.getCodOfi());
+				for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
+					if (tiivsOficina1.getCodOfi().equals(oficina.getCodOfi())) {
+						this.solicitudRegistrarT.setTiivsOficina1(oficina);
+						break;
+					} 
+				}
+			}
+			else
+			{
+				logger.info("tiivsOficina1.codOfi ::::::: "+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+				for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
+					if (tiivsOficina1.getCodOfi().equals(this.solicitudRegistrarT.getTiivsOficina1().getCodOfi())) {
+						this.solicitudRegistrarT.setTiivsOficina1(tiivsOficina1);
+						break;
+					} 
 				}
 			}
 
@@ -5124,6 +5151,29 @@ public class ConsultarSolicitudMB {
 	public void setCadenaEscanerFinal(String cadenaEscanerFinal) {
 		this.cadenaEscanerFinal = cadenaEscanerFinal;
 	}
-	
+
+	public boolean isFlagMostrarACOficina() {
+		return flagMostrarACOficina;
+	}
+
+	public void setFlagMostrarACOficina(boolean flagMostrarACOficina) {
+		this.flagMostrarACOficina = flagMostrarACOficina;
+	}
+
+	public boolean isFlagMostrarSOMOficina() {
+		return flagMostrarSOMOficina;
+	}
+
+	public void setFlagMostrarSOMOficina(boolean flagMostrarSOMOficina) {
+		this.flagMostrarSOMOficina = flagMostrarSOMOficina;
+	}
+
+	public TiivsOficina1 getOficina() {
+		return oficina;
+	}
+
+	public void setOficina(TiivsOficina1 oficina) {
+		this.oficina = oficina;
+	}
 	
 }
