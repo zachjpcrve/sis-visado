@@ -37,7 +37,7 @@
 							icon="ui-icon-document"
 							action="#{solicitudRegMB.registrarSolicitud}"
 							actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"
-							ajax="true">
+							ajax="false">
 						</p:commandButton>
 
 						<p:commandButton value="Enviar" id="btnEnviar3"
@@ -1059,7 +1059,7 @@
 					update=":formSolicitudRegistro:idMsmSolicitudRegistro,
 	        					:formSolicitudRegistro:idCodigoSolicitud"
 					oncomplete="confirmation.hide();"
-					action="#{solicitudRegMB.registrarSolicitud}" ajax="true"
+					action="#{solicitudRegMB.registrarSolicitud}" ajax="false"
 					actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />
 				<p:commandButton id="decline" value="No"
 					onclick="confirmation.hide()" type="button" />
