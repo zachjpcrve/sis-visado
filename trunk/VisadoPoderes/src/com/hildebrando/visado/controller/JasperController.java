@@ -50,8 +50,7 @@ public class JasperController {
 	public String generarReporteCartaAtencion(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
 		logger.info("==== generarReporteCartaAtencion ==== ");
 		try {
-			TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request
-					.getSession(true).getAttribute("SOLICITUD_TEMP");
+			TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 
 			if (SOLICITUD_TEMP == null) {
 				logger.info("La solicitud es nula");
@@ -61,17 +60,14 @@ public class JasperController {
 			List<FormatosDTO> cabecera = new ArrayList<FormatosDTO>();
 			FormatosDTO uno = new FormatosDTO();
 			uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
-			uno.setNumeroDiasForEjecucion("NO DEFINIDO");
+			uno.setNumeroDiasForEjecucion(ConstantesVisado.DIAS_FOR_EJECUCION.COD_DIAS_FOR_EJECUCION);
 			uno.setInstrucciones(SOLICITUD_TEMP.getObs());
-			uno.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getCodOfi()
-					+ " - " + SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
+			uno.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getCodOfi()+ " - " + SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
 
 			// Add lista datasource
 			List<OperacionesPDF> lstOperaciones = new ArrayList<OperacionesPDF>();
-			for (TiivsSolicitudOperban op : SOLICITUD_TEMP
-					.getLstSolicBancarias()) {
-				OperacionesPDF oper = new OperacionesPDF(op.getsItem(), op
-						.getTiivsOperacionBancaria().getDesOperBan(),
+			for (TiivsSolicitudOperban op : SOLICITUD_TEMP.getLstSolicBancarias()) {
+				OperacionesPDF oper = new OperacionesPDF(op.getsItem(), op.getTiivsOperacionBancaria().getDesOperBan(),
 						op.getId().getsDescMoneda(), op.getImporte(),
 						op.getTipoCambio(), op.getImporteSoles());
 				lstOperaciones.add(oper);
@@ -92,12 +88,10 @@ public class JasperController {
 			os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
-					+ "al generar el archivo: " + e);
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al generar el archivo: " + e);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
-					+ "al generar el archivo: " + e);
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al generar el archivo: " + e);
 		}
 		return ("pdfReportCartaAtencion");
 	}
