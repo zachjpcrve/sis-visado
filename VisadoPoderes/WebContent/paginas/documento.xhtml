@@ -48,7 +48,7 @@
 					<p:commandButton id="registrarDocumento" value="Guardar" ajax="true"
 						action="#{documentoMB.listarDocumentos}"
 						actionListener="#{documentoMB.registrar}"
-						update=":frmDataTableDocumentos:pnlDataTableDocumentos">
+						update=":frmDataTableDocumentos:pnlDataTableDocumentos,:frmMantenimientoDocumentos:pnlMntDocumentos">
 					</p:commandButton>
 					<p:commandButton id="limpiarDocumento" value="Limpiar" ajax="true"
 						action="#{documentoMB.limpiarCampos}"
