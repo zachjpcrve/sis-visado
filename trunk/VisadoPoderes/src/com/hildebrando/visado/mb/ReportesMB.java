@@ -357,9 +357,9 @@ public class ReportesMB {
 		}
 	}
 
-	public void buscarRecaudacionxTipoServ() {
-		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit
-				.getApplicationContext().getBean("solicitudEspDao");
+	public void buscarRecaudacionxTipoServ() 
+	{
+		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		Date fechaIni = null;
 		Date fechaFin = null;
 
@@ -388,9 +388,7 @@ public class ReportesMB {
 		tmpSolicitud.setTiivsOficina1(tmpOficina);
 
 		try {
-			this.lstRecaudacionTipoServ = solicitudService
-					.obtenerListarRecaudacionxTipoServicio(tmpSolicitud,
-							fechaIni, fechaFin);
+			this.lstRecaudacionTipoServ = solicitudService.obtenerListarRecaudacionxTipoServicio(tmpSolicitud,fechaIni, fechaFin);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

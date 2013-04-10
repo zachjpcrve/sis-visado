@@ -516,6 +516,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				sWhere += " and so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
 											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02 + "'," +
 											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
+											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02 + "'," +
 											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_T02 + "'," +
 											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02 + "')" ;
 						
@@ -525,6 +526,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				sWhere = " where so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02 + "')" ;
 			}
@@ -1678,7 +1680,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "') " ;
 			}
 			
-			sql="select distinct terr.des_ter, so.cod_ofi, ofi.des_ofi, NVL(PN.cont,0) Persona_Natural, " +
+			/*sql="select distinct terr.des_ter, so.cod_ofi, ofi.des_ofi, NVL(PN.cont,0) Persona_Natural, " +
 				"NVL((PN.cont*PN.valor2),0) Recaudacion, NVL(PJ.cont,0) Persona_Juridica,NVL((PJ.cont*PJ.valor2),0) Recaudacion1, " +
 				"NVL(PF.cont,0) Persona_FallecidaX, NVL((PF.cont*PF.valor2),0) Recaudacion2, " +
 				"NVL(PFX.cont,0) Persona_FallecidaX1, NVL((PFX.cont*PFX.valor2),0) Recaudacion3, " +
@@ -1711,8 +1713,44 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				"          multPFX.cod_elem='0004' " + sWhere +
 				"group by cod_ofi,multPFX.valor2 " +
 				") PFX on so.cod_ofi = PFX.cod_ofi " + sWhere +
-				"order by so.cod_ofi " ;
+				"order by so.cod_ofi " ;*/
 			 
+			sql = "select distinct terr.des_ter, so.cod_ofi, ofi.des_ofi, NVL(PN.cont,0) Persona_Natural, " +
+					"NVL((PN.cont*PN.valor2),0) Recaudacion, NVL(PJ.cont,0) Persona_Juridica,NVL((PJ.cont*PJ.valor2),0) Recaudacion1, " +
+					"NVL(PF.cont,0) Persona_FallecidaX, NVL((PF.cont*PF.valor2),0) Recaudacion2, NVL(PFX.cont,0) Persona_FallecidaX1, " +
+					"NVL((PFX.cont*PFX.valor2),0) Recaudacion3, NVL((PN.cont*PN.valor2),0) + NVL((PJ.cont*PJ.valor2),0) + NVL((PF.cont*PF.valor2),0) " +
+					"+ NVL((PFX.cont*PFX.valor2),0) as Recaudacion_Total " +
+					"from tiivs_solicitud so " +
+					"join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+					"left join tiivs_oficina1 ofi on so.cod_ofi = ofi.cod_ofi " +
+					"join tiivs_territorio terr on ofi.cod_terr = terr.cod_ter " +
+					"left join (select cod_ofi,multPN.valor2, " +
+					"          count(so.tipo_comision) cont " +       
+					"          from tiivs_solicitud so " +
+					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+					"          join tiivs_multitabla multPN on multPN.cod_elem = so.tipo_comision and multPN.cod_mult = 'T11' and " +
+					"          multPN.cod_elem='0001'  where hst.estado in ('0003', '0004', '0009')  and hst.reg_abogado <> null " +
+					"          group by cod_ofi,multPN.valor2) PN on so.cod_ofi = PN.cod_ofi " +
+					"left join (select cod_ofi,multPJ.valor2, count(so.tipo_comision) cont " +    
+					"          from tiivs_solicitud so " +
+					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+					"          join tiivs_multitabla multPJ on multPJ.cod_elem = so.tipo_comision and multPJ.cod_mult = 'T11' and " +          
+					"          multPJ.cod_elem='0002'  where hst.estado in ('0003', '0004', '0009')  and hst.reg_abogado <> null " +
+					"          group by cod_ofi,multPJ.valor2) PJ on so.cod_ofi = PJ.cod_ofi " + 
+					"left join (select cod_ofi,multPF.valor2, count(so.tipo_comision) cont " +
+					"          from tiivs_solicitud so " +
+					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+					"          join tiivs_multitabla multPF on multPF.cod_elem = so.tipo_comision and multPF.cod_mult = 'T11' and " +          
+					"          multPF.cod_elem='0003'  where hst.estado in ('0003', '0004', '0009')  and hst.reg_abogado <> null " +
+					"          group by cod_ofi,multPF.valor2) PF on so.cod_ofi = PF.cod_ofi " +
+					"left join (select cod_ofi,multPFX.valor2, count(so.tipo_comision) cont " +          
+					"          from tiivs_solicitud so " +
+					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+					"          join tiivs_multitabla multPFX on multPFX.cod_elem = so.tipo_comision and multPFX.cod_mult = 'T11' and " +
+					"          multPFX.cod_elem='0004'  where hst.estado in ('0003', '0004', '0009') and hst.reg_abogado <> null " +
+					"          group by cod_ofi,multPFX.valor2) PFX on so.cod_ofi = PFX.cod_ofi " +
+					"where hst.estado in ('0003', '0004', '0009') and hst.reg_abogado <> null " +
+					"order by so.cod_ofi " ;
 			
 			logger.info("SQL : "+sql);
 			 
