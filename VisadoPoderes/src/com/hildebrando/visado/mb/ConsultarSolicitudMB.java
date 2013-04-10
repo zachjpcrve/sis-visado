@@ -1713,6 +1713,8 @@ public class ConsultarSolicitudMB {
 		this.obtenerHistorialSolicitud();
 		this.seguimientoMB.busquedaSolicitudxCodigo(solicitudRegistrarT.getCodSoli());
 		
+		Utilitarios.mensajeInfo("INFO",	"Se generó revisión correctamente");
+		
 		this.actualizarEstadoReservadoSolicitud();
 	}
 
