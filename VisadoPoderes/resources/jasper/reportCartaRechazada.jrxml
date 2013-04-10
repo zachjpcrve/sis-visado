@@ -106,9 +106,9 @@ Mediante la presente le informamos que su solicitud ha sido RECHAZADA, por las s
 	<pageFooter>
 		<band height="22">
 			<staticText>
-				<reportElement x="0" y="0" width="472" height="20" forecolor="#003399"/>
+				<reportElement x="0" y="0" width="447" height="20" forecolor="#003399"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="10" isBold="true"/>
+					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[BBVA Banco Continental © Copyright - Todos los Derechos Reservados]]></text>
 			</staticText>
