@@ -444,6 +444,8 @@ public class Utilitarios {
 		cell.setCellStyle(cellStyle);
 	}
 	
+	
+	
 	public static CellStyle definirSoloEstiloCelda(Workbook wb, short halign, short valign, boolean booBorde,
 			boolean booCabecera, boolean booFiltrosBus, Short color) 
 	{
