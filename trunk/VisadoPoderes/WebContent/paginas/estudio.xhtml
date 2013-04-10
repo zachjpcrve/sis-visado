@@ -69,6 +69,59 @@
 				}
 				return result;
 			}
+			/*JAVASCRIPT CESAR DECIMALES*/
+			
+				function addCommas(num ,valorHidden){
+				limpo = limpiarComas(num.value);		
+				var num_ = new Number(limpo);
+				var pot = Math.pow(10,2);
+				var aux = parseInt(num_ * pot) / pot;
+				nStr = aux.toFixed(2);		
+				var imp = aux.toFixed(2);
+				document.getElementById("frmMantenimientoEstudio:"+valorHidden).value = nStr;
+				var txtMontoPre = document.getElementById("frmMantenimientoEstudio:costo");
+				var opcionMontoPre = txtMontoPre.getAttribute('value');
+				document.getElementById("frmMantenimientoEstudio:txtCosto").value = opcionMontoPre;
+				
+				nStr += '';
+				x = nStr.split('.');
+				x1 = x[0];
+				x2 = x.length &gt; 1 ? '.' + x[1] : '';
+				var rgx = /(\d+)(\d{3})/;
+				while (rgx.test(x1)) {
+					x1 = x1.replace(rgx, '$1' + ',' + '$2');
+				}		
+				num.value= x1 + x2;	
+				return x1 + x2;		
+			}
+				function soloRealesMiles(e, elemento){
+					var keynum;
+					var keychar;
+					var numcheck;
+					var caracteresValidos = "1234567890.,";
+					
+					if(window.event) // IE
+					{
+						keynum = e.keyCode;
+					}
+					else if(e.which) // Netscape/Firefox/Opera
+					{
+						keynum = e.which;
+					}
+					if((keynum == 8) || (keynum == undefined)){
+						return true;
+					}
+					keychar = String.fromCharCode(keynum);
+					return (caracteresValidos.indexOf("" + keychar) &gt; -1);
+				}
+				
+				function limpiarComas(num){
+					do {    
+						num = num.replace(',','');
+					} while(num.indexOf(',') &gt;= 0);
+					return num;
+				}
+			
 		</SCRIPT>
 		<!-- Mantenimiento Estudio -->
 		<h:form id="frmMantenimientoEstudio">
@@ -84,16 +137,19 @@
 						</tr>
 						<tr>
 							<td><h:outputText value="Descripción:  " /></td>
-							<td><p:inputText id="txtDescripcion"
+							<td><p:inputText id="txtDescripcion" required="true" requiredMessage="Ingrese la descripción"
 									value="#{estudioMB.estudio.desEstudio}" maxlength="50" /></td>
 						</tr>
 						<tr>
 							<td><h:outputText value="Costo:  " /></td>
-							<td><p:inputText id="txtCosto" 	onkeypress="return validaNumeroDecimal(event,'0',this,'0');"
-									onblur="validaNumeroDecimal(event,'0',this,'1');"
-									value="#{estudioMB.estudio.costo}" maxlength="9">
+							<td><p:inputText id="txtCosto" 	validatorMessage="Especifique el costo entre 1 y 999,999.99"
+							onkeypress="return soloRealesMiles(event, this);"
+									onblur="addCommas(this,'costo');"
+									value="#{estudioMB.estudio.costo}" maxlength="10">
 									<f:convertNumber pattern="#,###,##0.00" locale="en" />
+									<f:validateDoubleRange minimum="1.00" maximum="999999.99"></f:validateDoubleRange>
 								</p:inputText></td>
+							<h:inputHidden id="costo"  value="#{estudioMB.estudio.costo}" />
 						</tr>
 						<tr>
 							<td><h:outputText value="Estado" /></td>
@@ -104,7 +160,6 @@
 						</tr>
 					</table>
 					<p:commandButton id="registrarEstudio" value="Guardar" ajax="true"
-						action="#{estudioMB.listarEstudios}"
 						actionListener="#{estudioMB.registrar}"
 						update=":frmDataTableEstudio:pnlDataTableEstudio,:frmMantenimientoEstudio:pnlMntEstudio">
 					</p:commandButton>
