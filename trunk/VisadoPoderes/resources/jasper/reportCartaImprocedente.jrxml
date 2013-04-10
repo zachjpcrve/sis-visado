@@ -91,9 +91,9 @@ Mediante la presente le informamos que su solicitud es IMPROCEDENTE, por las sig
 	<pageFooter>
 		<band height="22">
 			<staticText>
-				<reportElement x="0" y="0" width="502" height="20" forecolor="#003399"/>
+				<reportElement x="0" y="0" width="485" height="20" forecolor="#003399"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="10" isBold="true"/>
+					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[BBVA Banco Continental © Copyright - Todos los Derechos Reservados]]></text>
 			</staticText>

@@ -3,7 +3,7 @@
 	<property name="ireport.zoom" value="1.2100000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-    <property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
+	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -203,7 +203,7 @@
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="112" splitType="Stretch">
+		<band height="57" splitType="Stretch">
 			<textField>
 				<reportElement x="43" y="2" width="74" height="20"/>
 				<textElement/>
@@ -217,7 +217,7 @@
 				<text><![CDATA[Estadoo]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement key="table 7" style="table 7" x="0" y="23" width="555" height="89" forecolor="#000000"/>
+				<reportElement key="table 7" style="table 7" x="0" y="23" width="555" height="32" forecolor="#000000"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Table Dataset 1">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{lstPersonas})]]></dataSourceExpression>
@@ -245,7 +245,7 @@
 								<textElement>
 									<font size="8"/>
 								</textElement>
-								<textFieldExpression class="java.lang.String"><![CDATA[$F{sDesctipDoi} + " " + $F{numDoi}]]></textFieldExpression>
+								<textFieldExpression class="java.lang.String"><![CDATA[($F{sDesctipDoi}!=null?$F{sDesctipDoi}:"") + " " + ($F{numDoi}!=null?$F{numDoi}:"")]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -267,19 +267,19 @@
 								<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
-							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="43" height="20"/>
+							<textField>
+								<reportElement x="0" y="0" width="42" height="20"/>
 								<textElement>
 									<font size="8"/>
 								</textElement>
-								<textFieldExpression class="java.lang.String"><![CDATA[$F{codCen}]]></textFieldExpression>
+								<textFieldExpression class="java.lang.String"><![CDATA[($F{codCen}!=null?$F{codCen}:" ") + " "]]></textFieldExpression>
 							</textField>
 							<textField>
-								<reportElement x="43" y="0" width="136" height="20"/>
+								<reportElement x="42" y="0" width="137" height="20"/>
 								<textElement>
 									<font size="8"/>
 								</textElement>
-								<textFieldExpression class="java.lang.String"><![CDATA[$F{apePat} + " " + $F{apeMat} + " " + $F{nombre} + "   "]]></textFieldExpression>
+								<textFieldExpression class="java.lang.String"><![CDATA[($F{apePat}!=null?$F{apePat}:"") + " " + ($F{apeMat}!=null?$F{apeMat}:"") + " " + ($F{nombre}!=null?$F{nombre}:"") + "   "]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -303,7 +303,9 @@
 							</box>
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="69" height="20"/>
-								<textElement/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
 								<textFieldExpression class="java.lang.String"><![CDATA[$F{sDesctipPartic}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
@@ -328,7 +330,9 @@
 							</box>
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="63" height="20"/>
-								<textElement/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
 								<textFieldExpression class="java.lang.String"><![CDATA[$F{sDescclasifPer}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
@@ -353,8 +357,10 @@
 							</box>
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="57" height="20"/>
-								<textElement/>
-								<textFieldExpression class="java.lang.String"><![CDATA[$F{numCel}]]></textFieldExpression>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{numCel}!=null?$F{numCel}:""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -378,8 +384,10 @@
 							</box>
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="71" height="20"/>
-								<textElement/>
-								<textFieldExpression class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{email}!=null?$F{email}:""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
