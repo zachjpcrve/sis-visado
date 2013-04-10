@@ -415,13 +415,21 @@ public class ReportesMB {
 					ConstantesVisado.ALIAS_TBL_TERRITORIO);
 			filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_TERR_ALIAS,
 					getIdTerr()));
+			
+			Busqueda filtroOfic1 = Busqueda.forClass(TiivsOficina1.class);
+			filtroOfic1.createAlias(ConstantesVisado.NOM_TBL_TERRITORIO,
+					ConstantesVisado.ALIAS_TBL_TERRITORIO);
+			filtroOfic1.add(Restrictions.eq(ConstantesVisado.CAMPO_TERR_ALIAS,
+					getIdTerr()));
 
 			List<TiivsOficina1> lstTmp = new ArrayList<TiivsOficina1>();
 
 			try {
 				lstTmp = ofiDAO.buscarDinamico(filtroOfic);
+				filtroOfic.addOrder(Order.asc("codOfi"));
 				combosMB.setLstOficina(ofiDAO.buscarDinamico(filtroOfic));
-				combosMB.setLstOficina1(ofiDAO.buscarDinamico(filtroOfic));
+				filtroOfic1.addOrder(Order.asc("desOfi"));
+				combosMB.setLstOficina1(ofiDAO.buscarDinamico(filtroOfic1));
 
 			} catch (Exception exp) {
 				logger.debug("No se pudo encontrar la oficina");
