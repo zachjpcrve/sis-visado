@@ -89,7 +89,7 @@
 									<p:fileDownload value="#{reportesMB.file}" />
 								</p:commandButton> <h:commandLink value="Exportar2"
 									disabled="#{reportesMB.noHabilitarExportar}"
-									actionListener="#{reportesMB.descargarArchivoRecaudacion}"
+									actionListener="#{reportesMB.descargarArchivoRecaudacion}"  rendered="false"
 									target="_blank" ajax="true">
 									<p:fileDownload value="#{reportesMB.file}" />
 								</h:commandLink></td>
