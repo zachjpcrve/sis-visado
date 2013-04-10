@@ -40,7 +40,7 @@
 							<td><p:selectOneMenu value="#{reportesMB.idOfi}" id="somOfi"
 									style="width:155px;">
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
-									<f:selectItems value="#{reportesMB.combosMB.lstOficina1}"
+									<f:selectItems value="#{reportesMB.combosMB.lstOficina}"
 										var="of" itemValue="#{of.codOfi}" itemLabel="#{of.codOfi}" />
 									<p:ajax event="change" update=":frm:somNOfi, :frm:somTerr"
 										process="@this"
