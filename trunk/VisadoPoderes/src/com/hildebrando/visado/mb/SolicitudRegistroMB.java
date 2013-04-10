@@ -1244,8 +1244,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 		if (lstOficinas1 != null && lstOficinas1.size() != 0) {
 			for (TiivsOficina1 o : lstOficinas1) {
-				if (usuario.getBancoOficina().getCodigo().equals(o.getCodOfi())) {
+			//	logger.debug("codigo ofi usuario : "+ usuario.getBancoOficina().getCodigo().trim()+" :::: "+o.getCodOfi());
+				if (usuario.getBancoOficina().getCodigo().trim().equals(o.getCodOfi())) {
 					this.solicitudRegistrarT.setTiivsOficina1(o);
+					break;
 				} else {
 					this.solicitudRegistrarT.setTiivsOficina1(new TiivsOficina1());
 				}
