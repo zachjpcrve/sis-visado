@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SolVisado" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.3310000000000008"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="400"/>
+	<property name="ireport.y" value="632"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<style name="table">
 		<box>
@@ -285,8 +285,8 @@
 	<pageFooter>
 		<band height="24" splitType="Stretch">
 			<staticText>
-				<reportElement x="90" y="0" width="353" height="20" forecolor="#003399"/>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
+				<reportElement x="0" y="0" width="555" height="20" forecolor="#003399"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[BBVA Banco Continental © Copyright - Todos los Derechos Reservados]]></text>
