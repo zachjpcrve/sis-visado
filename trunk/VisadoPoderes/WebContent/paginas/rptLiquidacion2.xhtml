@@ -81,7 +81,7 @@
 									ajax="true" onclick="PrimeFaces.monitorDownload(start, stop)">
 									<p:fileDownload value="#{reportesMB.file}" />
 								</p:commandButton> <h:commandLink value="Exportar2"
-									disabled="#{reportesMB.noHabilitarExportar}"
+									disabled="#{reportesMB.noHabilitarExportar}" rendered="false"
 									actionListener="#{reportesMB.descargarArchivoLiquidacion}"
 									target="_blank" ajax="true">
 									<p:fileDownload value="#{reportesMB.file}" />
