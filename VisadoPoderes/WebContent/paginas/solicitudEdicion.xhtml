@@ -103,7 +103,13 @@
 														<td><h:outputText styleClass="outputText"
 																id="txtOficina" value="Oficina:" /></td>
 														<td style="font-size:0.9em">
-															<p:selectOneMenu id="cboOficina" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsOficina1.codOfi}" 
+															<p:autoComplete id="acNomOFina" value="#{consultarSolicitudMB.oficina}"
+																		completeMethod="#{consultarSolicitudMB.completeNomOficina}" var="ofi"
+																		converter="oficinaConverter" size="24" 
+																		itemLabel="#{ofi.desOfi}" itemValue="#{ofi}" rendered="#{consultarSolicitudMB.flagMostrarACOficina}"/>
+																		
+															<p:selectOneMenu id="cboOficina" rendered="#{consultarSolicitudMB.flagMostrarSOMOficina}" 
+																value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsOficina1.codOfi}" 
 																required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
 																<p:ajax update=":formSolicitudRegistro:cboOficina" event="change" />
 																<f:selectItem itemLabel="-Seleccione-" itemValue="" />
@@ -903,15 +909,16 @@
 	
 	 	<p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"  
                 header="Confirmación" severity="alert" widgetVar="confirmation" >  
-                  
-        <p:commandButton id="confirm" value="Si" 
-        			update=":formSolicitudRegistro" 
-        			oncomplete="confirmation.hide();"   
-                    action="#{consultarSolicitudMB.registrarSolicitud}" 
-                    actionListener="#{consultarSolicitudMB.registrarSolicitudEnviado}" />  
-        <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
-                  
-    </p:confirmDialog> 
+            <h:form id="formRegistroConfirmDialog">      
+		        <p:commandButton id="confirm" value="Si" 
+		        			update=":formSolicitudRegistro:idMsmSolicitudRegistro,
+			        				:formSolicitudRegistro:idCodigoSolicitud"
+		        			oncomplete="confirmation.hide();"   
+		                    action="#{consultarSolicitudMB.registrarSolicitud}" ajax="false"
+		                    actionListener="#{consultarSolicitudMB.registrarSolicitudEnviado}" />  
+		        <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
+            </h:form>    
+    	</p:confirmDialog> 
     	
 	</ui:define>
 </ui:composition>
