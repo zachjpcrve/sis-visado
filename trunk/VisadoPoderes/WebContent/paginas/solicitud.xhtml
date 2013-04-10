@@ -116,8 +116,12 @@
 																	<p:autoComplete id="acNomOFina" value="#{solicitudRegMB.oficina}"
 																		completeMethod="#{solicitudRegMB.completeNomOficina}" var="ofi"
 																		converter="oficinaConverter" size="24" 
-																		itemLabel="#{ofi.desOfi}" itemValue="#{ofi}" rendered="#{solicitudRegMB.flagMostrarACOficina}"/>		
-																
+																		itemLabel="#{ofi.desOfi}" itemValue="#{ofi}" rendered="#{solicitudRegMB.flagMostrarACOficina}"/>
+																	<h:inputText styleClass="inputText" rendered="#{solicitudRegMB.flagMostrarSOMOficina}"
+																		id="cboOficina" style="width:100px;"
+																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.desOfi}(#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.codTer}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.desTer}"
+																		disabled="false" readonly="true" />			
+																<!-- 
 																	<p:selectOneMenu
 																		id="cboOficina"
 																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}"
@@ -131,7 +135,7 @@
 																			value="#{solicitudRegMB.combosMB.lstOficina}"
 																			var="lOf" itemValue="#{lOf.codOfi}"
 																			itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.tiivsTerritorio.codTer}-#{lOf.tiivsTerritorio.desTer})" />
-																	</p:selectOneMenu>
+																	</p:selectOneMenu> -->
 																</td>
 																<td><p:message for="cboOficina" /> <p:graphicImage
 																		value="/resources/images/pregunta.jpg"
