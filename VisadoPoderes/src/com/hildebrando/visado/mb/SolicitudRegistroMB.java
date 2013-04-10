@@ -355,8 +355,7 @@ public class SolicitudRegistroMB {
 			ex.printStackTrace();
 		}
 		
-		visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(lstDocumentosXTipoSolTemp));		
-		logger.info("Trama de documentos a Leer:" + visadoDocumentosMB.getDocumentosLeer());		
+		visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(lstDocumentosXTipoSolTemp));	
 		
 	}		
 
@@ -1401,6 +1400,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
 			if (tipoSoli.getCodTipSolic().equals(iTipoSolicitud)) {
 				solicitudRegistrarT.setTiivsTipoSolicitud(tipoSoli);
+				break;
+			} else {
+				solicitudRegistrarT.setTiivsTipoSolicitud(null);
 			}
 		}
 	}
@@ -2093,6 +2095,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		String redirect = "";
 		boolean actualizarBandeja=false;
 		
+		//if(solicitudRegistrarT.getTiivsTipoSolicitud()==null)
+		establecerTipoSolicitud();
+		
 		logger.info("*********************** registrarSolicitud ************************");
 		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -2368,11 +2373,12 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
-		if (this.lstAnexoSolicitud.size() == 0) {
-			mensaje = "Ingrese los documentos Obligatorios";
-			retorno = false;
-			Utilitarios.mensajeInfo("INFO", mensaje);
-		}
+		
+//		if (this.lstAnexoSolicitud.size() == 0) {
+//			mensaje = "Ingrese los documentos Obligatorios";
+//			retorno = false;
+//			Utilitarios.mensajeInfo("INFO", mensaje);
+//		}
 
 		if (this.lstSolicBancarias.size() == 0) {
 
