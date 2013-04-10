@@ -102,11 +102,12 @@
 				<p:spacer height="30" />
 
 				<p:panel header="Resultados" id="panelRes" style="width: 1090px">
+				
 					<p:dataTable value="#{reportesMB.lstSolicitudesOficina}" var="tbl"
-						rows="4" id="datosSol" paginatorPosition="bottom"
-						scrollable="true" scrollHeight="200" paginator="true"
-						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-						rowsPerPageTemplate="5,10,15" emptyMessage="">
+						rows="4" paginator="true" paginatorPosition="bottom"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+						scrollable="true" scrollHeight="200" 
+						currentPageReportTemplate="Mostrando {startRecord} de {totalRecords}">
 
 						<p:column width="38">
 							<f:facet name="header">
@@ -117,7 +118,7 @@
 
 						<p:column width="15">
 							<f:facet name="header">
-								<h:outputText value="Cod" style="font-size: 9px" />
+								<h:outputText value="Cod." style="font-size: 9px" />
 							</f:facet>
 							<h:outputText value="#{tbl.codOficina}" style="font-size: 9px" />
 						</p:column>
