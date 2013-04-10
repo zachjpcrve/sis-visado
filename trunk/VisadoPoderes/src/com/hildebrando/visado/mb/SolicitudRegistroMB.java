@@ -2095,18 +2095,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		String redirect = "";
 		boolean actualizarBandeja=false;
 		
-		//if(solicitudRegistrarT.getTiivsTipoSolicitud()==null)
 		establecerTipoSolicitud();
 		
 		logger.info("*********************** registrarSolicitud ************************");
-		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
         GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-	    TiivsPersona objPersonaRetorno=new TiivsPersona();
-	    TiivsAgrupacionPersona objAgruId=new TiivsAgrupacionPersona();
 	    
 		try {
 			logger.info("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getMoneda());
