@@ -76,11 +76,11 @@ public class EvaluacionNivelesMB {
 			return;
 		}	
 		
-		if(!(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))){ //confirmar que solo los usuarios de SSJJ pueden ser d|r
-			Utilitarios.mensajeInfo("INFO", ConstantesVisado.NIVELES.CAMBIO_EST_NO_PERMITIDO+"para el perfil");
-			logger.info(ConstantesVisado.NIVELES.CAMBIO_EST_NO_PERMITIDO+"para el perfil");		
-			return;
-		}	
+//		if(!(PERFIL_USUARIO.equals(ConstantesVisado.SSJJ) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))){ //confirmar que solo los usuarios de SSJJ pueden ser d|r
+//			Utilitarios.mensajeInfo("INFO", ConstantesVisado.NIVELES.CAMBIO_EST_NO_PERMITIDO+"para el perfil");
+//			logger.info(ConstantesVisado.NIVELES.CAMBIO_EST_NO_PERMITIDO+"para el perfil");		
+//			return;
+//		}	
 		
 		//llena variable: lstSolicitudNivel
 		solicitudNivel = obtenerNivelSolicitud();
