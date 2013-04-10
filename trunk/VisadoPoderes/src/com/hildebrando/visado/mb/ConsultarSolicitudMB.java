@@ -1521,7 +1521,16 @@ public class ConsultarSolicitudMB {
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
 
 					this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
-					solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
+					
+					System.out.println("this.solicitudRegistrarT.getTiivsEstudio() "+this.solicitudRegistrarT.getTiivsEstudio().toString());
+					try {
+						if(this.solicitudRegistrarT.getTiivsEstudio().getCodEstudio()==null){
+							this.solicitudRegistrarT.setTiivsEstudio(null);
+						}
+						solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					this.registrarHistorial(solicitudRegistrarT);
 					actualizarBandeja=true;
 					bMostrarCartaImprocedente=true;
