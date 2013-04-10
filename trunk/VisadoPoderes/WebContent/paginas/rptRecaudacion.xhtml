@@ -12,6 +12,9 @@
 	<ui:define name="contenido">
 
 		<h:form id="frm">
+			
+			<h2>Reporte de Recaudación</h2>
+		
 			<p:outputPanel id="oplFrm">
 				<p:spacer height="5" />
 
@@ -19,7 +22,7 @@
 					<tbody>
 						<tr bordercolor="white">
 							<td><h:outputText styleClass="outputText" id="txtTerritorio"
-									value="Territorio" /></td>
+									value="Territorio:" /></td>
 							<td><p:selectOneMenu value="#{reportesMB.idTerr}"
 									id="somTerr" style="width:155px;">
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
@@ -33,7 +36,7 @@
 
 						<tr bordercolor="white">
 							<td><h:outputText styleClass="outputText" id="txtCodOficina"
-									value="Codigo de Oficina" /></td>
+									value="Código de Oficina:" /></td>
 							<td><p:selectOneMenu value="#{reportesMB.idOfi}" id="somOfi"
 									style="width:155px;">
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
@@ -45,7 +48,7 @@
 								</p:selectOneMenu></td>
 
 							<td><h:outputText styleClass="outputText" id="txtOficina"
-									value="Oficina" /></td>
+									value="Oficina:" /></td>
 							<td><p:selectOneMenu value="#{reportesMB.idOfi1}"
 									id="somNOfi" style="width:155px;">
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
@@ -65,7 +68,7 @@
 									maxlength="10" size="20" /></td>
 
 							<td><h:outputText styleClass="outputText" id="txtFechaFin"
-									value="Fecha de Fin" /></td>
+									value="Fecha de Fin:" /></td>
 							<td><p:calendar id="calFecFin" pattern="dd/MM/yyyy"
 									value="#{reportesMB.fechaFin}" showOn="button" maxlength="10"
 									size="20" /></td>
@@ -120,7 +123,7 @@
 
 						<p:column styleClass="codigo">
 							<f:facet name="header">
-								<h:outputText value="Cod" style="font-size: 9px;" />
+								<h:outputText value="Cod." style="font-size: 9px;" />
 							</f:facet>
 							<h:outputText value="#{tbl.codOficina}" style="font-size: 9px" />
 						</p:column>
@@ -142,7 +145,7 @@
 
 						<p:column styleClass="recaudacion">
 							<f:facet name="header">
-								<h:outputText value="Recaudacion" style="font-size: 9px;" />
+								<h:outputText value="Recaudación" style="font-size: 9px;" />
 							</f:facet>
 							<h:outputText value="#{tbl.sTotalPersonasNat}"
 								style="font-size: 9px" />
@@ -150,7 +153,7 @@
 
 						<p:column styleClass="cantidad">
 							<f:facet name="header">
-								<h:outputText value="Persona Juridica" style="font-size: 9px;" />
+								<h:outputText value="Persona Jurídica" style="font-size: 9px;" />
 							</f:facet>
 							<h:outputText value="#{tbl.iContPersonasJuridicas}"
 								style="font-size: 9px" />
@@ -158,7 +161,7 @@
 
 						<p:column styleClass="recaudacion">
 							<f:facet name="header">
-								<h:outputText value="Recaudacion" style="font-size: 9px;" />
+								<h:outputText value="Recaudación" style="font-size: 9px;" />
 							</f:facet>
 							<h:outputText value="#{tbl.sTotalPersonasJurd}"
 								style="font-size: 9px" />
@@ -175,7 +178,7 @@
 
 						<p:column styleClass="total">
 							<f:facet name="header">
-								<h:outputText value="Recaudacion" style="font-size: 9px;" />
+								<h:outputText value="Recaudación" style="font-size: 9px;" />
 							</f:facet>
 							<h:outputText value="#{tbl.sTotalPersonasFallecX}"
 								style="font-size: 9px" />
@@ -192,7 +195,7 @@
 
 						<p:column styleClass="recaudacion">
 							<f:facet name="header">
-								<h:outputText value="Recaudacion" style="font-size: 9px;" />
+								<h:outputText value="Recaudación" style="font-size: 9px;" />
 							</f:facet>
 							<h:outputText value="#{tbl.sTotalPersonasFallecX1}"
 								style="font-size: 9px" />
@@ -200,7 +203,7 @@
 
 						<p:column styleClass="total">
 							<f:facet name="header">
-								<h:outputText value="Recaudacion Total" style="font-size: 9px;" />
+								<h:outputText value="Recaudación Total" style="font-size: 9px;" />
 							</f:facet>
 							<h:outputText value="#{tbl.sRecaudacionTotal}"
 								style="font-size: 9px" />
