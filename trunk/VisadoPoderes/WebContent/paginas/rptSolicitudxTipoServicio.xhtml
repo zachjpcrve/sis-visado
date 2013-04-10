@@ -91,6 +91,9 @@
 		</SCRIPT>
 
 		<h:form id="frm">
+			
+			<h2>Reporte de Solicitudes por Tipo de Servicio</h2>
+		
 			<p:outputPanel id="oplFrm">
 				<p:growl life="10000" globalOnly="false" showDetail="true"
 					id="growl" />
@@ -101,7 +104,7 @@
 					<tbody>
 						<tr bordercolor="white">
 							<td><h:outputText styleClass="outputText" id="txtCod"
-									value="Codigo Sol" /></td>
+									value="Código Sol.:" /></td>
 							<td><p:inputText id="codSol"
 									value="#{reportesMB.codSolicitud}"
 									onkeypress="return validaNumero(event,'0',this,'0');"
@@ -109,7 +112,7 @@
 									size="15" /></td>
 
 							<td><h:outputText styleClass="outputText" id="txtTipoSol"
-									value="Tipo de Servicio" /></td>
+									value="Tipo de Servicio:" /></td>
 							<td><p:selectCheckboxMenu id="scmTSolicitud"
 									label="--Todos--"
 									value="#{reportesMB.lstTipoSolicitudSelected}"
@@ -118,7 +121,7 @@
 								</p:selectCheckboxMenu></td>
 
 							<td><h:outputText styleClass="outputText" id="txtTipoOpe"
-									value="Tipo de Operacion" /></td>
+									value="Tipo de Operación:" /></td>
 							<td><p:selectOneMenu value="#{reportesMB.idOpeBan}"
 									id="somTipoOpe" style="width:167px;">
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
@@ -130,7 +133,7 @@
 
 						<tr bordercolor="white">
 							<td><h:outputText styleClass="outputText" id="txtImporte"
-									value="Rango Global" /></td>
+									value="Rango Global:" /></td>
 							<td><p:selectOneMenu value="#{reportesMB.idImporte}"
 									id="somImporte" style="width:155px;">
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
@@ -140,19 +143,19 @@
 								</p:selectOneMenu></td>
 
 							<td><h:outputText styleClass="outputText" id="impIni"
-									value="Importe Op Inicio" /></td>
+									value="Importe Op. Inicio:" /></td>
 							<td><p:inputText id="impOpIni"
 									value="#{reportesMB.importeIni}" maxlength="16" size="15" /></td>
 
 							<td><h:outputText styleClass="outputText" id="impFin"
-									value="Importe Op Fin" /></td>
+									value="Importe Op. Fin:" /></td>
 							<td><p:inputText id="impOpFin"
 									value="#{reportesMB.importeFin}" maxlength="16" size="15" /></td>
 						</tr>
 
 						<tr bordercolor="white">
 							<td><h:outputText styleClass="outputText" id="txtEstudio"
-									value="Estudio" /></td>
+									value="Estudio:" /></td>
 							<td><p:selectCheckboxMenu id="scmEstudio" label="--Todos--"
 									value="#{reportesMB.lstEstudioSelected}"
 									panelStyle="width:120px;" style="width:160px;">
@@ -166,13 +169,13 @@
 									maxlength="10" size="20" /></td>
 
 							<td><h:outputText styleClass="outputText" id="txtFechaFin"
-									value="Fecha de Fin" /></td>
+									value="Fecha de Fin:" /></td>
 							<td><p:calendar id="calFecFin" pattern="dd/MM/yyyy"
 									value="#{reportesMB.fechaFin}" showOn="button" maxlength="10"
 									size="20" /></td>
 
 							<td><h:outputText styleClass="outputText" id="txtMon"
-									value="Moneda" /></td>
+									value="Moneda:" /></td>
 							<td><p:selectOneMenu value="#{reportesMB.idMoneda}"
 									id="somMoneda" style="width:155px;">
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
@@ -216,9 +219,9 @@
 						currentPageReportTemplate="Mostrando {startRecord} de {totalRecords}" 
 						rowsPerPageTemplate="5,10,15">
 
-						<p:column width="65">
+						<p:column width="70">
 							<f:facet name="header">
-								<h:outputText value="Codigo Solicitud" style="font-size: 9px" />
+								<h:outputText value="Código Solicitud" style="font-size: 9px" />
 							</f:facet>
 							<h:outputText value="#{tbl.codSolicitud}" style="font-size: 9px" />
 						</p:column>
@@ -230,16 +233,16 @@
 							<h:outputText value="#{tbl.estudio}" style="font-size: 9px" />
 						</p:column>
 
-						<p:column width="62">
+						<p:column width="67">
 							<f:facet name="header">
 								<h:outputText value="Tipo de Servicio" style="font-size: 9px" />
 							</f:facet>
 							<h:outputText value="#{tbl.tipoServicio}" style="font-size: 9px" />
 						</p:column>
 
-						<p:column width="70">
+						<p:column width="73">
 							<f:facet name="header">
-								<h:outputText value="Tipo de Operacion" style="font-size: 9px" />
+								<h:outputText value="Tipo de Operación" style="font-size: 9px" />
 							</f:facet>
 							<h:outputText value="#{tbl.tipoOperacion}" style="font-size: 9px" />
 						</p:column>
