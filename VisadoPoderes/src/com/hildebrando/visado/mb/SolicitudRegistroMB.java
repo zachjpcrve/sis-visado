@@ -2112,13 +2112,29 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			logger.info("usuario.getUID() " + usuario.getUID());
 			this.solicitudRegistrarT.setRegUsuario(usuario.getUID());
 			this.solicitudRegistrarT.setNomUsuario(usuario.getNombre());
-			logger.info("tiivsOficina1.codOfi ::::::: "+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
-			for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
-				if (tiivsOficina1.getCodOfi().equals(this.solicitudRegistrarT.getTiivsOficina1().getCodOfi())) {
-					this.solicitudRegistrarT.setTiivsOficina1(tiivsOficina1);
-					break;
-				} 
+			
+			if (flagMostrarACOficina)
+			{
+				logger.info("tiivsOficina1.codOfi ::::::: "+ oficina.getCodOfi());
+				for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
+					if (tiivsOficina1.getCodOfi().equals(oficina.getCodOfi())) {
+						this.solicitudRegistrarT.setTiivsOficina1(oficina);
+						break;
+					} 
+				}
 			}
+			else
+			{
+				logger.info("tiivsOficina1.codOfi ::::::: "+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+				for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
+					if (tiivsOficina1.getCodOfi().equals(this.solicitudRegistrarT.getTiivsOficina1().getCodOfi())) {
+						this.solicitudRegistrarT.setTiivsOficina1(tiivsOficina1);
+						break;
+					} 
+				}
+			}
+			
+			
 			
 			this.limpiarAgrupacionesVacias();
 
