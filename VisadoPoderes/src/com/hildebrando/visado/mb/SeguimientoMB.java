@@ -1547,63 +1547,79 @@ public class SeguimientoMB
 		{
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_ENVIO)) // Es fecha de envio
 			{
-				logger.info("Filtrando por fecha de envio");
-								
-			 	try {
-					SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-					String fecIni = formatter.format(getFechaInicio());
-					Date minDate = formatter.parse(fecIni);
-					String fecFin = formatter.format(getFechaFin());
-					Date maxDate = formatter.parse(fecFin);
-					Date rangoFin = new Date(maxDate.getTime() + TimeUnit.DAYS.toMillis(1));
-					
-					logger.info("Fecha Inicio: " + minDate);
-					logger.info("Fecha Fin: " + rangoFin);
-					
-					filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_ENVIO, minDate));
-					filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_ENVIO, rangoFin));
-					
-					//Verificar que el campo estado no tenga espacios en blanco en BD
-					filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02));
-					filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
-					
-				} catch (ParseException e) {
-					e.printStackTrace();
+				if (getFechaFin().before(getFechaInicio()))
+				{
+					logger.debug("La fecha de inicio debe ser menor a la fecha de fin");
+					Utilitarios.mensajeInfo("", "La fecha de inicio debe ser menor a la fecha de fin");
 				}
-			 	
-			 	filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
+				else
+				{
+					logger.info("Filtrando por fecha de envio");
+					
+				 	try {
+						SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+						String fecIni = formatter.format(getFechaInicio());
+						Date minDate = formatter.parse(fecIni);
+						String fecFin = formatter.format(getFechaFin());
+						Date maxDate = formatter.parse(fecFin);
+						Date rangoFin = new Date(maxDate.getTime() + TimeUnit.DAYS.toMillis(1));
+						
+						logger.info("Fecha Inicio: " + minDate);
+						logger.info("Fecha Fin: " + rangoFin);
+						
+						filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_ENVIO, minDate));
+						filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_ENVIO, rangoFin));
+						
+						//Verificar que el campo estado no tenga espacios en blanco en BD
+						filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02));
+						filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
+						
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				 	
+				 	filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
+				}
 			}
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_RPTA)) // Sino es fecha de respuesta
 			{
-				logger.info("Filtrando por fecha de rpta");
-								
-				try {
-					SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-					String fecIni = formatter.format(getFechaInicio());
-					Date minDate = formatter.parse(fecIni);
-					String fecFin = formatter.format(getFechaFin());
-					Date maxDate = formatter.parse(fecFin);
-					Date rangoFin = new Date(maxDate.getTime() + TimeUnit.DAYS.toMillis(1));
-					
-					logger.info("Fecha Inicio: " + minDate);
-					logger.info("Fecha Fin: " + rangoFin);
-					
-					filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_RPTA, minDate));
-					filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_RPTA, rangoFin));
-					
-					List<String> tmpEstados = new ArrayList<String>();
-					tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
-					tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
-					tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
-					
-					//Verificar que el campo estado no tenga espacios en blanco en BD
-					filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,tmpEstados));
-					
-				} catch (ParseException e) {
-					logger.info("Hubo un error al convertir la fecha: ",e);
+				if (getFechaFin().before(getFechaInicio()))
+				{
+					logger.debug("La fecha de inicio debe ser menor a la fecha de fin");
+					Utilitarios.mensajeInfo("", "La fecha de inicio debe ser menor a la fecha de fin");
 				}
-
-				filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
+				else
+				{
+					logger.info("Filtrando por fecha de rpta");
+									
+					try {
+						SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+						String fecIni = formatter.format(getFechaInicio());
+						Date minDate = formatter.parse(fecIni);
+						String fecFin = formatter.format(getFechaFin());
+						Date maxDate = formatter.parse(fecFin);
+						Date rangoFin = new Date(maxDate.getTime() + TimeUnit.DAYS.toMillis(1));
+						
+						logger.info("Fecha Inicio: " + minDate);
+						logger.info("Fecha Fin: " + rangoFin);
+						
+						filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_RPTA, minDate));
+						filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_RPTA, rangoFin));
+						
+						List<String> tmpEstados = new ArrayList<String>();
+						tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+						tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
+						tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
+						
+						//Verificar que el campo estado no tenga espacios en blanco en BD
+						filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,tmpEstados));
+						
+					} catch (ParseException e) {
+						logger.info("Hubo un error al convertir la fecha: ",e);
+					}
+	
+					filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
+				}
 			}
 		}
 
