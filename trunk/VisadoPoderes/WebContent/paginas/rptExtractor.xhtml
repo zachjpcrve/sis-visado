@@ -12,7 +12,9 @@
 	<ui:define name="contenido">
 
 		<h:form id="frm">
-
+			
+			<h2>Reporte Extractor</h2>
+			
 			<p:spacer height="5" />
 
 			<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
@@ -29,7 +31,7 @@
 							showEffect="fade" hideEffect="fade" />
 
 						<td><h:outputText styleClass="outputText" id="txtFechaFin"
-								value="Fecha de Fin" /></td>
+								value="Fecha de Fin:" /></td>
 						<td><p:calendar id="calFecFin" pattern="dd/MM/yyyy"
 								value="#{reportesMB.fechaFin}" showOn="button" maxlength="10"
 								size="21" /></td>
@@ -41,7 +43,7 @@
 					</tr>
 					<tr bordercolor="white">
 						<td><h:outputText styleClass="outputText" id="txtEstado"
-								value="Estado" /></td>
+								value="Estado:" /></td>
 						<td><p:selectCheckboxMenu id="scmEstados" label="--Todos--"
 								value="#{reportesMB.lstEstadoSelected}"
 								panelStyle="width:220px;" style="width:162px;">
