@@ -24,8 +24,8 @@ public class SpringInit implements ServletContextListener {
     
     public void contextInitialized(ServletContextEvent event) {
         springContext = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
-      //  QuartzJob_SolicitudesVencidas job =new QuartzJob_SolicitudesVencidas();
-       // job.ejecutar();
+        /*QuartzJob_SolicitudesVencidas job =new QuartzJob_SolicitudesVencidas();
+        job.ejecutar();*/
     }
     
     public void contextDestroyed(ServletContextEvent event) {
