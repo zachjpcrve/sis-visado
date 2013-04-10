@@ -395,10 +395,6 @@ public class ConsultarSolicitudMB {
 		}		
 	}
 
-	public void ocultarComentario() {
-		setbSeccionComentario(false);
-	}
-
 	public void inicializarContructor() {
 		solicitudRegistrarT = new TiivsSolicitud();
 
