@@ -105,7 +105,8 @@
 					<p:dataTable value="#{reportesMB.lstRecaudacionTipoServ}" var="tbl"
 						rows="3" id="datosSol" paginatorPosition="bottom"
 						scrollable="true" scrollHeight="200" paginator="true"
-						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+						currentPageReportTemplate="Mostrando {startRecord} de {totalRecords}" 
 						rowsPerPageTemplate="5,10,15"
 						emptyMessage="No se encontraron registros que coinciden con los criterios de b&uacte;squeda ingresados"
 						styleClass="anchoGrilla">

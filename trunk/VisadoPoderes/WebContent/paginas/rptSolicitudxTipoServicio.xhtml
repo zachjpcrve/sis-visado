@@ -212,8 +212,9 @@
 					<p:dataTable value="#{reportesMB.lstSolicitudesTipoServicio}"
 						var="tbl" rows="3" id="datosSol" paginatorPosition="bottom"
 						scrollable="true" scrollHeight="200" paginator="true"
-						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-						rowsPerPageTemplate="5,10,15" emptyMessage="">
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+						currentPageReportTemplate="Mostrando {startRecord} de {totalRecords}" 
+						rowsPerPageTemplate="5,10,15">
 
 						<p:column width="65">
 							<f:facet name="header">
