@@ -292,7 +292,7 @@
               header="Revision" severity="alert" widgetVar="confirmation3" visible="true">  
             
             <center>    
-	        <p:commandButton id="confirmRev" value="Si"  oncomplete="confirmation3.hide()" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" 
+	        <p:commandButton id="confirmRev" value="Si"  oncomplete="confirmation3.hide()" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento,:formSolicitudSeguimiento:growlSolicitudSeguimiento" 
 	            action="#{consultarSolicitudMB.mostrarCartaRevision}" actionListener="#{consultarSolicitudMB.actualizarEstadoEnRevisionSolicitud}" />  
 	        
 	        <p:commandButton id="declineRev" value="No" oncomplete="confirmation3.hide()" />
