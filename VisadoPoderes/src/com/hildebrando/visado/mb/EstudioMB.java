@@ -56,13 +56,16 @@ public class EstudioMB {
 		try {
 			if (estudio.getDesEstudio().isEmpty() == false) {
 				if(estudio.getCosto() >= 0.0){
+					//if(estudio.getCosto().intValue())
+					System.out.println(" estudio.getCosto().intValue() " + estudio.getCosto().intValue());
 					if(isbEditar() == false){
 						estudioService.registrar(estudio);
 						Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
 					}else{
 						estudioService.registrar(estudio);
 						Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
-					}					
+					}	
+					this.listarEstudios();
 				}else{
 					Utilitarios.mensajeError("Error",
 							"El costo no puede ser negativo");
