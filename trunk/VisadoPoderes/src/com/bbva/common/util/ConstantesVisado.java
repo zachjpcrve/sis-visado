@@ -62,8 +62,7 @@ public class ConstantesVisado {
 	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_DELEGADO="D";
 	public static final java.lang.String PREFIJO_NOMBRE_SOLICITUD_VISADO="SolVisado";
 	
-	/*clarosa*/
-	public static final java.lang.String CODIGO_MULTITABLA_DIAS_UTILES = "T14";
+	
 	
 	/*SAMIRA*/
 	public static final java.lang.String CODIGO_MULTITABLA_CLASIFICACION_PERSONA = "T13";
@@ -522,7 +521,10 @@ public class ConstantesVisado {
 	}
 	static public class DIAS_FOR_EJECUCION{
 		public static final String COD_DIAS_FOR_EJECUCION = "NO DEFINIDO";
-		
+		/*clarosa*/
+		public static final java.lang.String CODIGO_MULTITABLA_DIAS = "T14"; //0001
+		public static final java.lang.String CODIGO_MULTITABLA_DIAS_UTILES = "0001"; //0002
+		public static final java.lang.String CODIGO_MULTITABLA_DIAS_VENCIDOS = "0002"; //0002
 	}
 }
 
