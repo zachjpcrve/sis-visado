@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.hssf.util.Region;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -3375,14 +3376,18 @@ public class ReportesMB {
 			// sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
 
 			// creo una nueva fila
-			Row trow = sheet.createRow((short) 0);
-			Utilitarios.crearTituloCell(wb, trow, 4, CellStyle.ALIGN_CENTER,
+			Row trow = sheet.createRow((short) 2);
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 2,6));
+			sheet.addMergedRegion(new CellRangeAddress(6, 6, 3,4));
+			
+			
+			Utilitarios.crearTituloCell(wb, trow, 2, CellStyle.ALIGN_CENTER,
 					CellStyle.VERTICAL_CENTER,
 					ConstantesVisado.TITULO_REPORTE_RPT_SOLICITUD, 14);
 
 			// Se crea la leyenda de quien genero el archivo y la hora
 			// respectiva
-			Row rowG = sheet.createRow((short) 1);
+			Row rowG = sheet.createRow((short) 3);
 			Utilitarios.crearCell(wb, rowG, 9, CellStyle.ALIGN_LEFT,
 					CellStyle.VERTICAL_CENTER,
 					ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false,
@@ -3391,7 +3396,7 @@ public class ReportesMB {
 					CellStyle.VERTICAL_CENTER, obtenerGenerador(), true, false,
 					true, HSSFColor.DARK_BLUE.index);
 
-			Row rowG1 = sheet.createRow((short) 2);
+			Row rowG1 = sheet.createRow((short) 4);
 			Utilitarios.crearCell(wb, rowG1, 9, CellStyle.ALIGN_LEFT,
 					CellStyle.VERTICAL_CENTER,
 					ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false,
@@ -3402,7 +3407,7 @@ public class ReportesMB {
 					HSSFColor.DARK_BLUE.index);
 
 			// Genera celdas con los filtros de busqueda
-			Row row2 = sheet.createRow((short) 4);
+			Row row2 = sheet.createRow((short) 6);
 
 			Utilitarios.crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,
 					CellStyle.VERTICAL_CENTER,
@@ -3413,14 +3418,14 @@ public class ReportesMB {
 				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,
 						CellStyle.VERTICAL_CENTER,
 						buscarNomTerrPorCodigo(getIdTerr()), true, false, true,
-						HSSFColor.DARK_BLUE.index);
+						HSSFColor.DARK_BLUE .index);
 			} else {
 				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,
 						CellStyle.VERTICAL_CENTER, "", true, false, true,
 						HSSFColor.DARK_BLUE.index);
 			}
 
-			Row row3 = sheet.createRow((short) 6);
+			Row row3 = sheet.createRow((short) 8);
 
 			Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,
 					CellStyle.VERTICAL_CENTER,
@@ -3452,7 +3457,7 @@ public class ReportesMB {
 						HSSFColor.DARK_BLUE.index);
 			}
 
-			Row row4 = sheet.createRow((short) 8);
+			Row row4 = sheet.createRow((short) 10);
 
 			Utilitarios.crearCell(wb, row4, 2, CellStyle.ALIGN_LEFT,
 					CellStyle.VERTICAL_CENTER,
@@ -3484,7 +3489,7 @@ public class ReportesMB {
 						HSSFColor.DARK_BLUE.index);
 			}
 
-			Row rowTot = sheet.createRow((short) 10);
+			Row rowTot = sheet.createRow((short) 12);
 			Utilitarios.crearCell(wb, rowTot, 0, CellStyle.ALIGN_LEFT,
 					CellStyle.VERTICAL_CENTER, "Total de Registros: "
 							+ (lstSolicitudesOficina.size() - 1), false, false,
@@ -4595,6 +4600,7 @@ public class ReportesMB {
 	}
 
 	public void descargarArchivoExtractor() {
+
 		
 		if (getFechaInicio()==null || getFechaFin()==null)
 		{
@@ -4627,6 +4633,9 @@ public class ReportesMB {
 				InputStream stream = null;
 				try {
 					stream = new FileInputStream(rutaArchivoExcel);
+				}catch (NullPointerException e) {
+					logger.debug("Error de nullPointerException: "+ rutaArchivoExcel+" :::: "+ e.getMessage());
+					
 				} catch (FileNotFoundException e) {
 					logger.debug("Error al obtener archivo excel debido a: "
 							+ e.getMessage());
@@ -4646,6 +4655,9 @@ public class ReportesMB {
 		InputStream stream = null;
 		try {
 			stream = new FileInputStream(rutaArchivoExcel);
+		}catch (NullPointerException e) {
+			logger.debug("Error de nullPointerException: "+ rutaArchivoExcel+" :::: "+ e.getMessage());
+			
 		} catch (FileNotFoundException e) {
 			logger.debug("Error al obtener archivo excel debido a: "
 					+ e.getMessage());
@@ -4663,6 +4675,9 @@ public class ReportesMB {
 		InputStream stream = null;
 		try {
 			stream = new FileInputStream(rutaArchivoExcel);
+		}catch (NullPointerException e) {
+			logger.debug("Error de nullPointerException: "+ rutaArchivoExcel+" :::: "+ e.getMessage());
+		
 		} catch (FileNotFoundException e) {
 			logger.error("Error al obtener archivo excel debido a: "
 					+ e.getMessage());
@@ -4684,6 +4699,9 @@ public class ReportesMB {
 		InputStream stream = null;
 		try {
 			stream = new FileInputStream(rutaArchivoExcel);
+		}catch (NullPointerException e) {
+			logger.debug("Error de nullPointerException: "+ rutaArchivoExcel+" :::: "+ e.getMessage());
+		
 		} catch (FileNotFoundException e) {
 			logger.debug("Error al obtener archivo excel debido a: "
 					+ e.getMessage());
