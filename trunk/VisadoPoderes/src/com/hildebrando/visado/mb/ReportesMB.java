@@ -646,7 +646,7 @@ public class ReportesMB {
 					} else {
 						cadTipoServ = cadTipoServ
 								.concat(lstTipoSolicitudSelected.get(j)
-										.toString().concat(","));
+										.toString().concat("','"));
 						cont++;
 					}
 				} else {
