@@ -164,7 +164,7 @@ public class ConstantesVisado {
 	public static final String CAMPO_MONEDA= "moneda";
 	public static final String CAMPO_TIPO_ROL = "tipoRol";
 	public static final String CAMPO_SOLES_TBL_MONEDA="PEN NUEVO SOL PERUANO";
-	public static final String CAMPO_DOLARES_TBL_MONEDA="USD  D¿AR USA";
+	public static final String CAMPO_DOLARES_TBL_MONEDA="USD  DOLAR USA";
 	public static final String CAMPO_EUROS_TBL_MONEDA ="EUR EURO";
 	public static final String CAMPO_SOLES = "soles";
 	public static final String CAMPO_ABREV_SOLES = "PEN";
