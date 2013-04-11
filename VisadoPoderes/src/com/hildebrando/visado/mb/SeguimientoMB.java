@@ -772,13 +772,7 @@ public class SeguimientoMB
 			if (lstEstadoSelected!=null)
 			{
 				String cadena = "";
-				/*int ind=0;
-				
-				for (; ind <= lstEstadoSelected.size() - 1; ind++) 
-				{
-					cadena+= buscarEstadoxCodigo(lstEstadoSelected.get(ind))+",";
-				}*/
-				
+								
 				int j=0;
 				int cont=1;
 				
@@ -837,13 +831,7 @@ public class SeguimientoMB
 			if (lstTipoSolicitudSelected!=null)
 			{
 				String cadena = "";
-				/*int ind=0;
-				
-				for (; ind <= lstTipoSolicitudSelected.size() - 1; ind++) 
-				{
-					cadena+= buscarTipoSolxCodigo(lstTipoSolicitudSelected.get(ind))+",";
-				}*/
-				
+								
 				int j=0;
 				int cont=1;
 				
@@ -991,12 +979,6 @@ public class SeguimientoMB
 			if (getLstNivelSelected()!=null)
 			{
 				String cadena = "";
-				/*int ind=0;
-				
-				for (; ind <= getLstNivelSelected().size() - 1; ind++) 
-				{
-					cadena+= buscarNivelxCodigo(getLstNivelSelected().get(ind))+",";
-				}*/
 				
 				int j=0;
 				int cont=1;
@@ -1033,12 +1015,6 @@ public class SeguimientoMB
 			if (getLstEstadoNivelSelected()!=null)
 			{
 				String cadena = "";
-				/*int ind=0;
-				
-				for (; ind <= getLstEstadoNivelSelected().size() - 1; ind++) 
-				{
-					cadena+= buscarEstNivelxCodigo(getLstEstadoNivelSelected().get(ind))+",";
-				}*/
 				
 				int j=0;
 				int cont=1;
@@ -1075,12 +1051,6 @@ public class SeguimientoMB
 			if (getLstEstudioSelected()!=null)
 			{
 				String cadena = "";
-				/*int ind=0;
-				
-				for (; ind <= getLstEstudioSelected().size() - 1; ind++) 
-				{
-					cadena+= buscarEstudioxCodigo(getLstEstudioSelected().get(ind))+",";
-				}*/
 				
 				int j=0;
 				int cont=1;
