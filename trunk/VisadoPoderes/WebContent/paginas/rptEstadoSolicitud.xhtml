@@ -13,6 +13,8 @@
 
 		<h:form id="frm">
 			
+			<p:growl id="idMsgReporte" sticky="true" />
+			
 			<h2>Reporte Estado de Solicitud por Oficina</h2>
 		
 			<p:outputPanel id="oplFrm">
@@ -81,7 +83,7 @@
 						<tr bordercolor="white">
 							<td><p:commandButton value="Buscar"
 									actionListener="#{reportesMB.buscarSolicitudesxOficina}"
-									update=":frm:oplFrm" /></td>
+									update=":frm:oplFrm,:frm:idMsgReporte" /></td>
 							<td><p:commandButton value="Exportar"
 									disabled="#{reportesMB.noHabilitarExportar}"
 									actionListener="#{reportesMB.descargarArchivoEstadoSolicitud}"
