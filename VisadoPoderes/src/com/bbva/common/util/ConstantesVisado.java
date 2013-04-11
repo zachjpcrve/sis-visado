@@ -305,10 +305,10 @@ public class ConstantesVisado {
 	public static final String TITULO_REPORTE_RPT_TIPO_SERV ="SOLICITUDES ATENDIDAS POR TIPO DE SERVICIO";
 	public static final String RPT_TIPO_SERV_FILTRO_COD_SOL = "Codigo Sol";
 	public static final String RPT_TIPO_SERV_FILTRO_TIPO_SERV = "Tipo de Servicio";
-	public static final String RPT_TIPO_SERV_FILTRO_TIPO_OP = "Tipo de Operacion";
+	public static final String RPT_TIPO_SERV_FILTRO_TIPO_OP = "Tipo de Operación";
 	public static final String RPT_TIPO_SERV_FILTRO_RANGO_GLO = "Rango Global";
-	public static final String RPT_TIPO_SERV_FILTRO_IMP_OP_INI = "Importe Op.Inicio";
-	public static final String RPT_TIPO_SERV_FILTRO_IMP_OP_FIN = "Importe Op.Fin";
+	public static final String RPT_TIPO_SERV_FILTRO_IMP_OP_INI = "Importe Op. Inicio";
+	public static final String RPT_TIPO_SERV_FILTRO_IMP_OP_FIN = "Importe Op. Fin";
 	public static final String RPT_TIPO_SERV_FILTRO_ESTUDIO = "Estudio";
 	public static final String RPT_TIPO_SERV_FILTRO_FECHA_INICIO = "Fecha Inicio (dd/mm/aaaa)";
 	public static final String RPT_TIPO_SERV_FILTRO_FECHA_FIN	 = "Fecha Fin (dd/mm/aaaa)";
@@ -528,5 +528,3 @@ public class ConstantesVisado {
 		public static final java.lang.String CODIGO_MULTITABLA_DIAS_VENCIDOS = "0002"; //0002
 	}
 }
-
-
