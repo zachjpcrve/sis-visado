@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.hssf.util.Region;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -1083,7 +1082,7 @@ public class ReportesMB {
 					ConstantesVisado.RPT_TIPO_SERV_FILTRO_TIPO_SERV, false,
 					false, false, HSSFColor.GREY_25_PERCENT.index);
 
-			if (lstTipoSolicitudSelected != null) 
+			if (lstTipoSolicitudSelected.size()>0) 
 			{
 				String cadena = "";
 
@@ -1202,7 +1201,7 @@ public class ReportesMB {
 					ConstantesVisado.RPT_TIPO_SERV_FILTRO_ESTUDIO, false,
 					false, false, HSSFColor.GREY_25_PERCENT.index);
 
-			if (lstEstudioSelected != null) {
+			if (lstEstudioSelected.size()>0) {
 				String cadena = "";
 				/*
 				 * int ind=0;
@@ -1212,26 +1211,32 @@ public class ReportesMB {
 				 * buscarEstudioxCodigo(getLstEstudioSelected().get(ind))+","; }
 				 */
 
-				int j = 0;
-				int cont = 1;
-
-				for (; j <= lstEstudioSelected.size() - 1; j++) {
-					if (lstEstudioSelected.size() > 1) {
-						if (cont == lstEstudioSelected.size()) {
-							cadena = cadena
-									.concat(buscarEstudioxCodigo((lstEstudioSelected
-											.get(j).toString())));
-						} else {
-							cadena = cadena
-									.concat(buscarEstudioxCodigo((lstEstudioSelected
-											.get(j).toString().concat(","))));
-							cont++;
-						}
-					} else {
-						cadena = buscarEstudioxCodigo(lstEstudioSelected.get(j)
-								.toString());
-					}
+//				int j = 0;
+//				int cont = 1;
+				
+				for (String estudio : lstEstudioSelected) 
+				{
+					cadena += "" + buscarEstudioxCodigo(estudio) + ",";
 				}
+				cadena = cadena.substring(0, cadena.lastIndexOf(","));
+
+//				for (; j <= lstEstudioSelected.size() - 1; j++) {
+//					if (lstEstudioSelected.size() > 1) {
+//						if (cont == lstEstudioSelected.size()) {
+//							cadena = cadena
+//									.concat(buscarEstudioxCodigo((lstEstudioSelected
+//											.get(j).toString())));
+//						} else {
+//							cadena = cadena
+//									.concat(buscarEstudioxCodigo((lstEstudioSelected
+//											.get(j).toString().concat(","))));
+//							cont++;
+//						}
+//					} else {
+//						cadena = buscarEstudioxCodigo(lstEstudioSelected.get(j)
+//								.toString());
+//					}
+//				}
 
 				Utilitarios.crearCell(wb, row4, 2, CellStyle.ALIGN_LEFT,
 						CellStyle.VERTICAL_CENTER, cadena, true, false, true,
@@ -1512,26 +1517,32 @@ public class ReportesMB {
 			// Busqueda por estudio
 			String cadEstudio = "";
 			if (lstEstudioSelected.size() > 0) {
-				int j = 0;
-				int cont = 1;
-
-				for (; j <= lstEstudioSelected.size() - 1; j++) {
-					if (lstEstudioSelected.size() > 1) {
-						if (cont == lstEstudioSelected.size()) {
-							cadEstudio = cadEstudio
-									.concat(buscarEstudioxCodigo(lstEstudioSelected
-											.get(j).toString()));
-						} else {
-							cadEstudio = cadEstudio
-									.concat(buscarEstudioxCodigo(lstEstudioSelected
-											.get(j).toString().concat(",")));
-							cont++;
-						}
-					} else {
-						cadEstudio = buscarEstudioxCodigo(lstEstudioSelected
-								.get(j).toString());
-					}
+//				int j = 0;
+//				int cont = 1;
+				
+				for (String estudio : lstEstudioSelected) 
+				{
+					cadEstudio += "" + buscarEstudioxCodigo(estudio) + ",";
 				}
+				cadEstudio = cadEstudio.substring(0, cadEstudio.lastIndexOf(","));
+
+//				for (; j <= lstEstudioSelected.size() - 1; j++) {
+//					if (lstEstudioSelected.size() > 1) {
+//						if (cont == lstEstudioSelected.size()) {
+//							cadEstudio = cadEstudio
+//									.concat(buscarEstudioxCodigo(lstEstudioSelected
+//											.get(j).toString()));
+//						} else {
+//							cadEstudio = cadEstudio
+//									.concat(buscarEstudioxCodigo(lstEstudioSelected
+//											.get(j).toString().concat(",")));
+//							cont++;
+//						}
+//					} else {
+//						cadEstudio = buscarEstudioxCodigo(lstEstudioSelected
+//								.get(j).toString());
+//					}
+//				}
 			}
 
 			Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,
@@ -1550,21 +1561,13 @@ public class ReportesMB {
 			if (getMes() != 0) {
 				mes = getMes();
 			}
-			Utilitarios.crearCell(wb, row3, 4, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
+			Utilitarios.crearCell(wb, row3, 4, CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,
 					Utilitarios.buscarMesxCodigo(mes), true, false, true,
 					HSSFColor.DARK_BLUE.index);
 
 			Row rowST = sheet.createRow((short) 9);
-			Utilitarios.crearCell(
-					wb,
-					rowST,
-					1,
-					CellStyle.ALIGN_CENTER,
-					CellStyle.VERTICAL_CENTER,
-					Utilitarios.buscarMesxCodigo(mes)
-							+ ConstantesVisado.ESPACIO_BLANCO
-							+ String.valueOf(pAnio), false, false, false,
+			Utilitarios.crearCell(wb,rowST,1,CellStyle.ALIGN_CENTER,CellStyle.VERTICAL_CENTER,
+					Utilitarios.buscarMesxCodigo(mes) + ConstantesVisado.ESPACIO_BLANCO + String.valueOf(pAnio), false, false, false,
 					HSSFColor.DARK_BLUE.index);
 
 			// Generando la estructura de la tabla de resultados
@@ -1574,347 +1577,154 @@ public class ReportesMB {
 				// Se crea la cabecera de la tabla de resultados
 				Row rowT = sheet.createRow((short) 10);
 
-				// Creo las celdas de mi fila, se puede poner un diseño a la
-				// celda
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								1,
-								CellStyle.ALIGN_CENTER,
+				// Creo las celdas de mi fila, se puede poner un diseño a la celda
+				Utilitarios.crearCellRPT(wb,rowT,1,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_ESTUDIO,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								2,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,2,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_PLAZO,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								3,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,3,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_1,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								4,
-								CellStyle.ALIGN_CENTER,
-								CellStyle.VERTICAL_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,4,CellStyle.ALIGN_CENTER,CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_2,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								5,
-								CellStyle.ALIGN_CENTER,
-								CellStyle.VERTICAL_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,5,CellStyle.ALIGN_CENTER,CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_3,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								6,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,6,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_4,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								7,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,7,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_5,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								8,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,8,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_6,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								9,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,9,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_7,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								10,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT,	10,	CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_8,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								11,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,11, CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_9,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								12,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 12,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_10,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								13,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,13,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_11,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								14,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,14,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_12,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								15,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,15,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_13,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								16,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,16,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_14,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								17,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,17,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_15,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								18,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT,	18,	CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_16,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								19,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,19,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_17,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								20,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,20,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_18,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								21,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,21,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_19,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								22,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,22,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_20,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								23,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,23,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_21,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								24,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,24,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_22,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								25,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,25,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_23,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								26,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,26,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_24,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								27,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,27,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_25,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								28,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,28,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_26,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								29,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,29,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_27,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								30,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,30,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_28,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								31,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,31,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_29,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								32,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,32,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_30,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								33,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,33,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_31,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								34,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,34,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_TOTAL_MES,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								35,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,35,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_COSTO,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								36,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,36,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_HONORARIOS,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								37,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,37,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_IMPUESTO,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								38,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,38,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_TOTAL,
 								true, true, false, HSSFColor.DARK_BLUE.index);
@@ -1932,11 +1742,6 @@ public class ReportesMB {
 
 					// Columna Estudio en Excel
 					Utilitarios.SetearEstiloCelda(wb, row, 1, tmp.getEstudio(),estilo);
-
-					// Utilitarios.crearCell(wb, row, 0,
-					// CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,
-					// tmp.getEstudio(),true,
-					// false,true,HSSFColor.DARK_BLUE.index);
 
 					if (tmp.getLstSolAT() != null) {
 						for (Liquidacion liqAT : tmp.getLstSolAT()) {
@@ -2305,26 +2110,32 @@ public class ReportesMB {
 			// Busqueda por estudio
 			String cadEstudio = "";
 			if (lstEstudioSelected.size() > 0) {
-				int j = 0;
-				int cont = 1;
-
-				for (; j <= lstEstudioSelected.size() - 1; j++) {
-					if (lstEstudioSelected.size() > 1) {
-						if (cont == lstEstudioSelected.size()) {
-							cadEstudio = cadEstudio
-									.concat(buscarEstudioxCodigo(lstEstudioSelected
-											.get(j).toString()));
-						} else {
-							cadEstudio = cadEstudio
-									.concat(buscarEstudioxCodigo(lstEstudioSelected
-											.get(j).toString().concat(",")));
-							cont++;
-						}
-					} else {
-						cadEstudio = buscarEstudioxCodigo(lstEstudioSelected
-								.get(j).toString());
-					}
+//				int j = 0;
+//				int cont = 1;
+//
+//				for (; j <= lstEstudioSelected.size() - 1; j++) {
+//					if (lstEstudioSelected.size() > 1) {
+//						if (cont == lstEstudioSelected.size()) {
+//							cadEstudio = cadEstudio
+//									.concat(buscarEstudioxCodigo(lstEstudioSelected
+//											.get(j).toString()));
+//						} else {
+//							cadEstudio = cadEstudio
+//									.concat(buscarEstudioxCodigo(lstEstudioSelected
+//											.get(j).toString().concat(",")));
+//							cont++;
+//						}
+//					} else {
+//						cadEstudio = buscarEstudioxCodigo(lstEstudioSelected
+//								.get(j).toString());
+//					}
+//				}
+				
+				for (String estudio : lstEstudioSelected) 
+				{
+					cadEstudio += "" + buscarEstudioxCodigo(estudio) + ",";
 				}
+				cadEstudio = cadEstudio.substring(0, cadEstudio.lastIndexOf(","));
 			}
 
 			Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,
@@ -2367,46 +2178,24 @@ public class ReportesMB {
 				// Se crea la cabecera de la tabla de resultados
 				Row rowT = sheet.createRow((short) 10);
 
-				// Creo las celdas de mi fila, se puede poner un diseño a la
-				// celda
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								1,
-								CellStyle.ALIGN_CENTER,
+				// Creo las celdas de mi fila, se puede poner un diseño a la celda
+				Utilitarios.crearCellRPT(wb,rowT,1,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_ESTUDIO,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								2,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,2,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_PLAZO,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								3,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,3,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_1,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								4,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,4,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_2,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								5,
@@ -2414,8 +2203,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_3,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								6,
@@ -2423,8 +2211,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_4,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								7,
@@ -2432,8 +2219,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_5,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								8,
@@ -2441,8 +2227,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_6,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								9,
@@ -2450,8 +2235,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_7,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								10,
@@ -2459,8 +2243,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_8,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								11,
@@ -2468,8 +2251,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_9,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								12,
@@ -2477,8 +2259,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_10,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								13,
@@ -2486,8 +2267,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_11,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								14,
@@ -2495,8 +2275,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_12,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								15,
@@ -2504,8 +2283,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_13,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								16,
@@ -2513,8 +2291,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_14,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								17,
@@ -2522,8 +2299,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_15,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								18,
@@ -2531,8 +2307,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_16,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								19,
@@ -2540,8 +2315,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_17,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								20,
@@ -2549,8 +2323,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_18,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								21,
@@ -2558,8 +2331,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_19,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								22,
@@ -2567,8 +2339,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_20,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								23,
@@ -2576,8 +2347,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_21,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								24,
@@ -2585,8 +2355,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_22,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								25,
@@ -2594,8 +2363,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_23,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								26,
@@ -2603,8 +2371,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_24,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								27,
@@ -2612,8 +2379,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_25,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								28,
@@ -2621,8 +2387,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_26,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								29,
@@ -2630,8 +2395,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_27,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								30,
@@ -2639,8 +2403,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_28,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								31,
@@ -2648,8 +2411,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_29,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								32,
@@ -2657,8 +2419,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_30,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								33,
@@ -2666,8 +2427,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_31,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								34,
@@ -2675,8 +2435,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_TOTAL_MES,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								35,
@@ -2684,8 +2443,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_COSTO,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								36,
@@ -2693,8 +2451,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_HONORARIOS,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								37,
@@ -2702,8 +2459,7 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_IMPUESTO,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
+				Utilitarios.crearCellRPT(
 								wb,
 								rowT,
 								38,
@@ -2713,7 +2469,7 @@ public class ReportesMB {
 								true, true, false, HSSFColor.DARK_BLUE.index);
 
 				int numReg = 11;
-				String plazo = "";
+				//String plazo = "";
 
 				CellStyle estilo = Utilitarios.definirSoloEstiloCelda(wb,
 						HSSFCellStyle.ALIGN_LEFT,
@@ -3136,113 +2892,52 @@ public class ReportesMB {
 				// Se crea la cabecera de la tabla de resultados
 				Row rowT = sheet.createRow((short) 12);
 
-				// Creo las celdas de mi fila, se puede poner un diseño a la
-				// celda
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								0,
-								CellStyle.ALIGN_CENTER,
+				// Creo las celdas de mi fila, se puede poner un diseño a la celda
+				Utilitarios.crearCellRPT(wb,rowT,0,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_TERRITORIO,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								1,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,1,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_CODIGO_OFICINA,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								2,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,2,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_OFICINA,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								3,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,3,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_PERSONA_NATURAL,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								4,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,4,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_RECAUDACION_PN,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								5,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,5,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_PERSONA_JURIDICA,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								6,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,6,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_RECAUDACION_PJ,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								7,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,7,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_PERSONA_FALLECIDA_MAYOR_X,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								8,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,8,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_RECAUDACION_FALLECIDA_X,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								9,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,9,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_PERSONA_FALLECIDA_MENOR_X,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								10,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,10,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_RECAUDACION_FALLECIDA_X1,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios
-						.crearCell(
-								wb,
-								rowT,
-								11,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCell(wb,rowT,11,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_RECAUDACION.COLUMNA_RECAUDACION_RECAUDACION_TOTAL,
 								true, true, false, HSSFColor.DARK_BLUE.index);
@@ -3501,77 +3196,76 @@ public class ReportesMB {
 				// Se crea la cabecera de la tabla de resultados
 				Row rowT = sheet.createRow((short) 12);
 
-				// Creo las celdas de mi fila, se puede poner un diseño a la
-				// celda
-				Utilitarios.crearCell(wb, rowT, 0, CellStyle.ALIGN_CENTER,
+				// Creo las celdas de mi fila, se puede poner un diseño a la celda
+				Utilitarios.crearCellRPT(wb, rowT, 0, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ETIQUETA_COLUMNA_TERRITORIO, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 1, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 1, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ETIQUETA_COLUMNA_COD_OFICINA, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 2, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 2, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ETIQUETA_COLUMNA_OFICINA, true, true,
 						false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 3, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 3, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_REGISTRADO_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 4, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 4, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_ENVIADOSSJJ_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 5, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 5, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_RESERVADO_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 6, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 6, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 7, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 7, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_EN_VERIFICACION_A_T02,
 						true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 8, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 8, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 9, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 9, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_EN_REVISION_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 10, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 10, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_PRE_EJECUTADO_T02,
 						true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 11, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 11, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_EJECUTADO_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 12, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 12, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 13, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 13, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_EN_VERIFICACION_B_T02,
 						true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 14, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 14, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_IMPROCEDENTE_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 15, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 15, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_VENCIDO_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 16, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 16, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_REVOCADO_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT, 17, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 17, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.RPT_SOLICITUD_COLUMNA_TOTAL, true,
 						true, false, HSSFColor.DARK_BLUE.index);
