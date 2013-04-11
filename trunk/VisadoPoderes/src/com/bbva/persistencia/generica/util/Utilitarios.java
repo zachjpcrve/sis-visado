@@ -26,8 +26,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
@@ -36,6 +38,7 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import com.bbva.common.util.ConstantesVisado;
 
@@ -311,9 +314,11 @@ public class Utilitarios {
 	public static void crearTituloCell(HSSFWorkbook wb, Row row, int column, short halign, short valign, String strContenido, int iTamanioTitulo) 
 	{
 		CreationHelper ch = wb.getCreationHelper();
+		//Cell cell = row.createCell(column);
 		Cell cell = row.createCell(column);
 		cell.setCellValue(ch.createRichTextString(strContenido));
 		
+
 		HSSFFont cellFont = wb.createFont();
 		cellFont.setFontHeightInPoints((short) iTamanioTitulo);
 		cellFont.setFontName(HSSFFont.FONT_ARIAL);
@@ -422,7 +427,7 @@ public class Utilitarios {
 			cellStyle.setFillForegroundColor(color);
 			
 			Font cellFont = wb.createFont();
-			cellFont.setColor((short) HSSFColor.BLACK.index);
+			cellFont.setColor((short) HSSFColor.WHITE.index);
 			cellStyle.setFont(cellFont);
 			
 			cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
