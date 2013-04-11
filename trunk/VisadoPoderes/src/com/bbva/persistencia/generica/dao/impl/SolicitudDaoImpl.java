@@ -1283,6 +1283,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				"order by so.cod_estudio) A "  +
 				"group by DES_ESTUDIO,dia_atencion,filtro,costo order by des_estudio";*/
 			
+			//and hst.reg_abogado <> null
+			
 			sql= "SELECT des_estudio,costo,dia_atencion, filtro, COUNT(filtro) contador " + 
 					"FROM (select es.des_estudio, to_char(hst.fecha,'dd') dia_atencion, es.costo, " +
 					"case when to_char(hst.fecha,'dd')<to_char(so.fecha_respuesta,'dd') then 'A' else 'B' END AS FILTRO " +
@@ -1290,7 +1292,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					"join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
 					"left join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"join tiivs_miembro m on hst.reg_usuario = m.cod_miembro " +
-					"where hst.estado in ('0003','0009','0004') and hst.reg_abogado <> null " + sWhere +
+					"where hst.estado in ('0003','0009','0004') " + sWhere +
 					"order by so.cod_estudio) A "  +
 					"group by DES_ESTUDIO,dia_atencion,filtro,costo order by des_estudio";
 			
