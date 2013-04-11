@@ -572,7 +572,12 @@ public class ReportesMB {
 		if (getFechaInicio() != null && getFechaFin() != null) {
 			fechaIni = getFechaInicio();
 			fechaFin = getFechaFin();
-		}
+			
+			if(fechaFin.compareTo(fechaIni)<0){ //Si Fecha fin es menor a fecha inicio
+				Utilitarios.mensaje(ConstantesVisado.MENSAJE.FECHAFIN_MENOR,"");
+				return;
+			}
+		}		
 
 		TiivsSolicitud tmpSolicitud = new TiivsSolicitud();
 		TiivsTerritorio tmpTerr = new TiivsTerritorio();
