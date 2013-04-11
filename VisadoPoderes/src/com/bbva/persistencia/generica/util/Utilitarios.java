@@ -427,7 +427,7 @@ public class Utilitarios {
 			cellStyle.setFillForegroundColor(color);
 			
 			Font cellFont = wb.createFont();
-			cellFont.setColor((short) HSSFColor.WHITE.index);
+			cellFont.setColor((short) HSSFColor.BLACK.index);
 			cellStyle.setFont(cellFont);
 			
 			cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
