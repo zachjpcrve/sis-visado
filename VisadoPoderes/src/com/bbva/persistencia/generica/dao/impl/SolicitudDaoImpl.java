@@ -534,7 +534,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			if (idOpeBan.trim().compareTo("")!=0)
 			{
 				sql = "select so.cod_soli,NVL(es.des_estudio,' ') Estudio, " +
-					  "ts.des_tip_servicio tipo_servicio,op.cod_oper_ban, op.des_oper_ban tipo_operacion," +
+					  //"ts.des_tip_servicio tipo_servicio,op.cod_oper_ban, op.des_oper_ban tipo_operacion," +
+					  "ts.des_tip_servicio tipo_servicio,op.des_oper_ban tipo_operacion," +
 					  "case  when mul.valor2 = 'PEN' then 'Soles' " +
 					  "      when  mul.valor2 = 'USD' then 'Dolares' " +
 					  "      when mul.valor2 = 'EUR' then 'Euros' " +
