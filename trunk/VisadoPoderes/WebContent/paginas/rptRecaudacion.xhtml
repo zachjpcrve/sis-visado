@@ -12,6 +12,8 @@
 	<ui:define name="contenido">
 
 		<h:form id="frm">
+		
+			<p:growl id="idMsgReporte" sticky="true" />
 			
 			<h2>Reporte de Recaudación</h2>
 		
@@ -81,7 +83,7 @@
 						<tr bordercolor="white">
 							<td><p:commandButton value="Buscar"
 									actionListener="#{reportesMB.buscarRecaudacionxTipoServ}"
-									update=":frm:oplFrm" /></td>
+									update=":frm:oplFrm,:frm:idMsgReporte" /></td>
 							<td><p:commandButton value="Exportar"
 									disabled="#{reportesMB.noHabilitarExportar}"
 									actionListener="#{reportesMB.descargarArchivoRecaudacion}"
