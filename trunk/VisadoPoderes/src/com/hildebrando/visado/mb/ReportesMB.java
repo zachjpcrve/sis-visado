@@ -4625,6 +4625,7 @@ public class ReportesMB {
 			{
 				logger.debug("Error en validacion de fechas en RPT Extractor: La fecha de inicio debe ser menor a la fecha de fin");
 				Utilitarios.mensajeInfo("", "La fecha de inicio debe ser menor a la fecha de fin");
+				file = null;
 			}
 			else
 			{
