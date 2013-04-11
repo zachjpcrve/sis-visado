@@ -30,9 +30,9 @@
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
 									<f:selectItems value="#{reportesMB.combosMB.lstTerritorio}"
 										var="ter" itemValue="#{ter.codTer}" itemLabel="#{ter.desTer}" />
-									<p:ajax event="change" update=":frm:somOfi, :frm:somNOfi"
+									<!--  <p:ajax event="change" update=":frm:somOfi, :frm:somNOfi"
 										process="@this"
-										listener="#{reportesMB.buscarOficinaPorTerritorio}" />
+										listener="#{reportesMB.buscarOficinaPorTerritorio}" />-->
 								</p:selectOneMenu></td>
 						</tr>
 
@@ -44,9 +44,9 @@
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
 									<f:selectItems value="#{reportesMB.combosMB.lstOficina}"
 										var="of" itemValue="#{of.codOfi}" itemLabel="#{of.codOfi}" />
-									<p:ajax event="change" update=":frm:somNOfi, :frm:somTerr"
+									<!-- <p:ajax event="change" update=":frm:somNOfi, :frm:somTerr"
 										process="@this"
-										listener="#{reportesMB.buscarOficinaPorCodigo}" />
+										listener="#{reportesMB.buscarOficinaPorCodigo}" />-->
 								</p:selectOneMenu></td>
 
 							<td><h:outputText styleClass="outputText" id="txtOficina"
@@ -56,9 +56,9 @@
 									<f:selectItem itemLabel="--Todos--" itemValue="" />
 									<f:selectItems value="#{reportesMB.combosMB.lstOficina1}"
 										var="of" itemValue="#{of.codOfi}" itemLabel="#{of.desOfi}" />
-									<p:ajax event="change" update=":frm:somOfi, :frm:somTerr"
+									<!--  <p:ajax event="change" update=":frm:somOfi, :frm:somTerr"
 										process="@this"
-										listener="#{reportesMB.buscarOficinaPorNombre}" />
+										listener="#{reportesMB.buscarOficinaPorNombre}" />-->
 								</p:selectOneMenu></td>
 						</tr>
 
