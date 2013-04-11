@@ -569,8 +569,7 @@ public class ReportesMB {
 	}
 
 	public void buscarSolicitudesxOficina() {
-		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit
-				.getApplicationContext().getBean("solicitudEspDao");
+		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		Date fechaIni = null;
 		Date fechaFin = null;
 
@@ -604,9 +603,7 @@ public class ReportesMB {
 		tmpSolicitud.setTiivsOficina1(tmpOficina);
 
 		try {
-			this.lstSolicitudesOficina = solicitudService
-					.obtenerListarTotalSolicitudesxEstado(tmpSolicitud,
-							fechaIni, fechaFin);
+			this.lstSolicitudesOficina = solicitudService.obtenerListarTotalSolicitudesxEstado(tmpSolicitud,fechaIni, fechaFin);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -622,16 +619,23 @@ public class ReportesMB {
 		}
 	}
 
-	public void buscarSolicitudesxTipoServicio() {
-		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit
-				.getApplicationContext().getBean("solicitudEspDao");
+	public void buscarSolicitudesxTipoServicio() 
+	{
+		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		Date fechaIni = null;
 		Date fechaFin = null;
+		boolean bFechasInvalidas=false;
 
 		// Busqueda de solicitudes por rango de fechas
 		if (getFechaInicio() != null && getFechaFin() != null) {
 			fechaIni = getFechaInicio();
 			fechaFin = getFechaFin();
+			
+			if (getFechaInicio().after(getFechaFin()))
+			{
+				bFechasInvalidas=true;
+				Utilitarios.mensaje(ConstantesVisado.MENSAJE.FECHAFIN_MENOR,"");
+			}
 		}
 
 		TiivsSolicitud tmpSolicitud = new TiivsSolicitud();
@@ -650,13 +654,9 @@ public class ReportesMB {
 			for (; j <= lstTipoSolicitudSelected.size() - 1; j++) {
 				if (lstTipoSolicitudSelected.size() > 1) {
 					if (cont == lstTipoSolicitudSelected.size()) {
-						cadTipoServ = cadTipoServ
-								.concat(lstTipoSolicitudSelected.get(j)
-										.toString());
+						cadTipoServ = cadTipoServ.concat(lstTipoSolicitudSelected.get(j).toString());
 					} else {
-						cadTipoServ = cadTipoServ
-								.concat(lstTipoSolicitudSelected.get(j)
-										.toString().concat("','"));
+						cadTipoServ = cadTipoServ.concat(lstTipoSolicitudSelected.get(j).toString().concat("','"));
 						cont++;
 					}
 				} else {
@@ -711,21 +711,27 @@ public class ReportesMB {
 		if (getIdMoneda() != null) {
 			tmpSolicitud.setMoneda(getIdMoneda());
 		}
-
-		try {
-			this.lstSolicitudesTipoServicio = solicitudService
-					.obtenerSolicitudesxTipoServicio(tmpSolicitud,
-							Utilitarios.validarCampoNull(getIdOpeBan()),
-							cadTipoServ, cadEstudio, rangoImpG, rangoIni,
-							rangoFin, fechaIni, fechaFin);
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		if (!bFechasInvalidas)
+		{
+			try 
+			{
+				this.lstSolicitudesTipoServicio = solicitudService.obtenerSolicitudesxTipoServicio(
+						tmpSolicitud,Utilitarios.validarCampoNull(getIdOpeBan()),cadTipoServ, cadEstudio, rangoImpG, rangoIni,rangoFin, fechaIni, fechaFin);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-
+		else
+		{
+			lstSolicitudesTipoServicio = new ArrayList<SolicitudesTipoServicio>();
+		}
+		
 		int iNuevoTotal = lstSolicitudesTipoServicio.size();
 
-		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS
-				+ iNuevoTotal + ConstantesVisado.MSG_REGISTROS, iNuevoTotal);
+		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS	+ iNuevoTotal + ConstantesVisado.MSG_REGISTROS, iNuevoTotal);
+		
 		if (lstSolicitudesTipoServicio.size() > 0) {
 			setNoHabilitarExportar(false);
 		} else {
@@ -2033,15 +2039,14 @@ public class ReportesMB {
 			HSSFWorkbook wb = new HSSFWorkbook();
 
 			// Creo la Hoja en Excel
-			Sheet sheet = wb
-					.createSheet(Utilitarios.obtenerFechaArchivoExcel());
+			Sheet sheet = wb.createSheet(Utilitarios.obtenerFechaArchivoExcel());
 
 			// quito las lineas del libro para darle un mejor acabado
 			sheet.setDisplayGridlines(false);
 			// sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
 
 			// creo una nueva fila
-			Row trow = sheet.createRow((short) 0);
+			Row trow = sheet.createRow((short) 1);
 			Utilitarios.crearTituloCell(wb, trow, 4, CellStyle.ALIGN_CENTER,
 					CellStyle.VERTICAL_CENTER,
 					ConstantesVisado.TITULO_REPORTE_RPT_RECAUDACION, 12);
@@ -2049,7 +2054,7 @@ public class ReportesMB {
 
 			// Se crea la leyenda de quien genero el archivo y la hora
 			// respectiva
-			Row rowG = sheet.createRow((short) 2);
+			Row rowG = sheet.createRow((short) 3);
 			Utilitarios.crearCell(wb, rowG, 16, CellStyle.ALIGN_LEFT,
 					CellStyle.VERTICAL_CENTER,
 					ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false,
@@ -2058,7 +2063,7 @@ public class ReportesMB {
 					CellStyle.VERTICAL_CENTER, obtenerGenerador(), true, false,
 					true, HSSFColor.DARK_BLUE.index);
 
-			Row rowG1 = sheet.createRow((short) 3);
+			Row rowG1 = sheet.createRow((short) 4);
 			Utilitarios.crearCell(wb, rowG1, 16, CellStyle.ALIGN_LEFT,
 					CellStyle.VERTICAL_CENTER,
 					ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false,
@@ -2069,7 +2074,7 @@ public class ReportesMB {
 					HSSFColor.DARK_BLUE.index);
 
 			// Genera celdas con los filtros de busqueda
-			Row row2 = sheet.createRow((short) 5);
+			Row row2 = sheet.createRow((short) 6);
 
 			Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,
 					CellStyle.VERTICAL_CENTER,
@@ -2109,7 +2114,8 @@ public class ReportesMB {
 
 			// Busqueda por estudio
 			String cadEstudio = "";
-			if (lstEstudioSelected.size() > 0) {
+			if (lstEstudioSelected.size() > 0) 
+			{
 //				int j = 0;
 //				int cont = 1;
 //
@@ -2141,7 +2147,16 @@ public class ReportesMB {
 			Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,
 					CellStyle.VERTICAL_CENTER, cadEstudio, true, false, true,
 					HSSFColor.DARK_BLUE.index);
-			// sheet.addMergedRegion(new CellRangeAddress(5, 5, 8, 11));
+			
+			/*if (cadEstudio.length()>=100)
+			{
+				sheet.addMergedRegion(new CellRangeAddress(6, 6, 8, 20));
+			}
+			else
+			{
+				sheet.addMergedRegion(new CellRangeAddress(6, 6, 8, 10));
+			}*/
+			
 
 			Row row3 = sheet.createRow((short) 7);
 			Utilitarios.crearCell(wb, row3, 3, CellStyle.ALIGN_LEFT,
@@ -2195,27 +2210,15 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_2,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								5,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,5,	CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_3,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								6,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,6,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_4,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								7,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,7,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_5,
 								true, true, false, HSSFColor.DARK_BLUE.index);
@@ -4318,7 +4321,7 @@ public class ReportesMB {
 			if (getFechaFin().before(getFechaInicio()))
 			{
 				logger.debug("Error en validacion de fechas en RPT Extractor: La fecha de inicio debe ser menor a la fecha de fin");
-				Utilitarios.mensajeInfo("", "La fecha de inicio debe ser menor a la fecha de fin");
+				Utilitarios.mensaje(ConstantesVisado.MENSAJE.FECHAFIN_MENOR,"");
 				file = null;
 			}
 			else
