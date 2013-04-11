@@ -20,6 +20,7 @@ import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
+import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.dto.AgrupacionDelegadosDto;
 import com.hildebrando.visado.dto.AgrupacionPlazoDto;
 import com.hildebrando.visado.modelo.Liquidacion;
@@ -1475,7 +1476,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			    	 objAgrp.setCosto(Double.valueOf(row[1].toString()));
 			    	 objAgrp.setSubTotalMes(suma);
 			    	 objAgrp.setHonorarios(objAgrp.getSubTotalMes()*objAgrp.getCosto());
-			    	 objAgrp.setImpuesto(objAgrp.getHonorarios()*impuesto);
+			    	 objAgrp.setImpuesto(Utilitarios.redondear(objAgrp.getHonorarios()*(impuesto/100)));
 			    	 objAgrp.setgTotal(objAgrp.getHonorarios()+objAgrp.getImpuesto());
 					
 					 //Agregar agrupacion
