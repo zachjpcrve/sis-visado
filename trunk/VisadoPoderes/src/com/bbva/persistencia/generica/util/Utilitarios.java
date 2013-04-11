@@ -104,11 +104,16 @@ public class Utilitarios {
 		return mes;
 	}
 	
-	public static double redondear(double d, int decimalPlace){
-	    BigDecimal bd = new BigDecimal(Double.toString(d));
+	public static double redondear(double numero){
+	   /* BigDecimal bd = new BigDecimal(Double.toString(d));
 	    bd = bd.setScale(decimalPlace,BigDecimal.ROUND_HALF_UP);
 	    return bd.doubleValue();
-	  }
+	    */
+	    //public double Redondear(double numero)
+	    //{
+	           return Math.rint(numero*100)/100;
+	    //}
+	}
 	
 	public static int buscarAnioxCodigo(int codigo)
 	{
