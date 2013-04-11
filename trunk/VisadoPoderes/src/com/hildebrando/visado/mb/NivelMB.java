@@ -208,20 +208,20 @@ public class NivelMB {
 
 								nivelService.registrar(nivelesMant.get(i));
 								
+								if(bEditar == false){
+									Utilitarios.mensajeInfo("NIVEL","Se registro correctamente");
+									continue;
+							}else{
+									Utilitarios.mensajeInfo("NIVEL","Se actualizo correctamente");
+									continue;
+							}
 							} else {
-								Utilitarios
-										.mensajeError("Error",
-												"El rango inicio no puede ser mayor que el rango fin de cada nivel");
+								Utilitarios.mensajeError("Error","El rango inicio no puede ser mayor que el rango fin de cada nivel");
+								continue;
 							}
 
 						}		
-						if(bEditar == false){
-							Utilitarios.mensajeInfo("NIVEL",
-									"Se registro correctamente");
-						}else{
-							Utilitarios.mensajeInfo("NIVEL",
-									"Se actualizo correctamente");
-						}
+						
 						descripcion = "";
 						bEditar = false;
 					} /*
