@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='ISO-8859-1' ?>  
+<?xml version="1.0" encoding="UTF-8"?> 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -7,7 +7,7 @@
 	xmlns:p="http://primefaces.org/ui">
 	
 <h:head>
-	 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/> 
+	<!--  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>  -->
 	<title><ui:insert name="titulo">
 			<h:outputText value="#{msjs.titulo_defecto}" />
 		</ui:insert></title>
@@ -42,7 +42,7 @@
 				 <h:panelGrid columns="1" style="padding-left:180px; width:500px;"> 
 				 <h:outputText styleClass="outputText" value=" ${usuarioId} : ${usuarioNombre}  " />
 				 <h:outputText styleClass="outputText" value=" ${PERFIL_USUARIO}" />
-				 <p:commandLink styleClass="outputText" onclick="cfdCerrarSesion.show()" value="Cerrar Sesión"> </p:commandLink>
+				 <p:commandLink styleClass="outputText" onclick="cfdCerrarSesion.show()" value="Cerrar SesiÃ³n"> </p:commandLink>
 		         </h:panelGrid>
 				</h:panelGrid>
 			</div>
@@ -78,8 +78,8 @@
 
 	</div>
 
-   <p:confirmDialog message="¿Est&#225; seguro de cerrar sesi&#243;n?"
-		width="300" header="Mensaje de cerrar sesión" severity="alert"
+   <p:confirmDialog message="Â¿Est&#225; seguro de cerrar sesi&#243;n?"
+		width="300" header="Mensaje de cerrar sesiÃ³n" severity="alert"
 		widgetVar="cfdCerrarSesion" modal="true">
 		<h:form id="frmCerrarSesion">
 			<p:commandButton value="Si" ajax="false"
@@ -92,13 +92,13 @@
 	
 	<p:idleMonitor onactive="sesionCaducada.show();"
 		timeout="#{session.maxInactiveInterval * 1000}" />
-	<p:dialog header="Sesión caducada" widgetVar="sesionCaducada"
+	<p:dialog header="SesiÃ³n caducada" widgetVar="sesionCaducada"
 		modal="true" fixedCenter="true" closable="false" width="400"
 		visible="false">
 		<h:outputText
-			value="La sesión ha caducado, por favor vuelva a intentarlo" />
+			value="La sesiÃ³n ha caducado, por favor vuelva a intentarlo" />
 		<input id="confirmBackToLogin" type="button"
-			value="ir a iniciar sesión"
+			value="ir a iniciar sesiÃ³n"
 			onclick="window.location='seguridad.xhtml';" />
 	</p:dialog>
 
