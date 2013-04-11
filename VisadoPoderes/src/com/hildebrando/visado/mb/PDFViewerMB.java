@@ -99,7 +99,11 @@ public class PDFViewerMB {
 	{
 		try {
 		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
-		setCodUsuario(usuario.getUID());
+		
+		if (usuario.getUID()!=null)
+		{
+			setCodUsuario(usuario.getUID());
+		}
 		
 		GenericDao<TiivsParametros, Object> paramDAO = (GenericDao<TiivsParametros, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroParam = Busqueda.forClass(TiivsParametros.class);
