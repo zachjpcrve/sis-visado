@@ -605,7 +605,7 @@ public class RevocadosMB {
 		/** Por ultimo modificar el estado de las combinaciones iguales, pasarlas al estado Revocados */
 		this.actualizarEstadoA_Revocado_SolicitudAgrupacion(listaTiivsSolicitudAgrupacionId);
 		bBooleanPopup=false;
-		Utilitarios.mensajeInfo("INFO", "La Revocación fue ejecutada, correctamente");
+		//Utilitarios.mensajeInfo("INFO", "La Revocación fue ejecutada, correctamente");
 		buscarRevocado();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -712,6 +712,8 @@ public class RevocadosMB {
 
 		if(listaTiivsSolicitudRechazdas.size()>0||listaTiivsSolicitudImprocedentes.size()>0){
 			Utilitarios.mensajeInfo("INFO", "La(s) Solicitud(es) Revocada(s) es(son) : "+codigoRetorno);
+		}else{
+			Utilitarios.mensajeInfo("INFO", "La Revocación fue ejecutada, correctamente");
 		}
 		
 		
