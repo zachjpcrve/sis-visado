@@ -72,7 +72,7 @@
 											<h:outputText title="Información General"
 												value="Información General" styleClass="outputText" />
 											<p:separator />
-											<!-- <p:messages id="idMsmSolicitudRegistro"></p:messages> -->
+											
 											<table border="0">
 												<tbody>
 													<tr>
@@ -106,11 +106,11 @@
 															<p:autoComplete id="acNomOFina" value="#{consultarSolicitudMB.oficina}"
 																		completeMethod="#{consultarSolicitudMB.completeNomOficina}" var="ofi"
 																		converter="oficinaConverter" size="24" 
-																		itemLabel="#{ofi.codOfi}-#{ofi.desOfi}(#{ofi.tiivsTerritorio.codTer}-#{ofi.tiivsTerritorio.desTer})" itemValue="#{ofi}" rendered="#{consultarSolicitudMB.flagMostrarACOficina}"/>
+																		itemLabel="#{ofi.descripcionMostrar}" itemValue="#{ofi}" rendered="#{consultarSolicitudMB.flagMostrarACOficina}"/>
 																		
 															<h:inputText styleClass="inputText" rendered="#{consultarSolicitudMB.flagMostrarSOMOficina}"
 																		id="cboOficina" style="width:100px;"
-																		value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsOficina1.codOfi}-#{consultarSolicitudMB.solicitudRegistrarT.tiivsOficina1.desOfi}(#{consultarSolicitudMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.codTer}-#{consultarSolicitudMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.desTer}"
+																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.descripcionMostrar}"
 																		disabled="false" readonly="true" />			
 																<!-- 
 																	<p:selectOneMenu
@@ -924,7 +924,7 @@
                 header="Confirmación" severity="alert" widgetVar="confirmation" >  
             <h:form id="formRegistroConfirmDialog">      
 		        <p:commandButton id="confirm" value="Si" 
-		        			update=":formSolicitudRegistro:idMsmSolicitudRegistro,
+		        			update=":formSolicitudRegistro:idMsmSolicitudEdicion,
 			        				:formSolicitudRegistro:idCodigoSolicitud"
 		        			oncomplete="confirmation.hide();"   
 		                    action="#{consultarSolicitudMB.registrarSolicitud}" ajax="false"
