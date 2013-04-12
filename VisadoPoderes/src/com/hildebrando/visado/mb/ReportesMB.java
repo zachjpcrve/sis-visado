@@ -3436,10 +3436,6 @@ public class ReportesMB {
 					ConstantesVisado.ETIQUETA_FILTRO_BUS_OFICINA, false, false,
 					false, HSSFColor.DARK_BLUE.index);
 			if (getIdOfi1().compareTo("") != 0) {
-//				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,
-//						CellStyle.VERTICAL_CENTER,
-//						buscarNomOficinaPorCodigo(getIdOfi1()), true, false,
-//						true, HSSFColor.DARK_BLUE.index);
 				Utilitarios.crearCeldaCombinada(sheet, row3.getRowNum(),row3.getRowNum(), 6,8, CellStyle.ALIGN_LEFT,
 						CellStyle.VERTICAL_CENTER,
 						buscarNomOficinaPorCodigo(getIdOfi1()), true, false,
@@ -3472,6 +3468,7 @@ public class ReportesMB {
 					CellStyle.VERTICAL_CENTER,
 					ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_FIN, false,
 					false, false, HSSFColor.DARK_BLUE.index);
+			sheet.autoSizeColumn(5);
 			if (getFechaFin() != null) {			
 				Utilitarios.crearCeldaCombinada(sheet, row4.getRowNum(),row4.getRowNum(), 6,8, CellStyle.ALIGN_LEFT,
 						CellStyle.VERTICAL_CENTER,
