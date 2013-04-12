@@ -201,7 +201,7 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_FILTRO_BUS_TIPO_FECHA="Tipo de Fecha";
 	public static final String ETIQUETA_FILTRO_BUS_COD_OFICINA="Código de Oficina";
 	public static final String ETIQUETA_FILTRO_BUS_DOI_APODERADO="DOI Apoderado";
-	public static final String ETIQUETA_FILTRO_BUS_REVISION="En Revision";
+	public static final String ETIQUETA_FILTRO_BUS_REVISION="En Revisión";
 	public static final String ETIQUETA_FILTRO_BUS_NIVEL="Nivel";
 	public static final String ETIQUETA_FILTRO_BUS_ESTADO_NIVEL="Estados de Nivel";
 	public static final String ETIQUETA_FILTRO_BUS_ESTADO="Estado";
@@ -210,7 +210,7 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_FILTRO_BUS_APODERADO="Apoderado";
 	public static final String ETIQUETA_FILTRO_BUS_DELEGADO="Delegado";
 	public static final String ETIQUETA_FILTRO_BUS_IMPORTE="Importe";
-	public static final String ETIQUETA_FILTRO_BUS_FECHA_FIN="Fecha Fin";
+	public static final String ETIQUETA_FILTRO_BUS_FECHA_FIN="Fecha de Fin";
 	public static final String ETIQUETA_FILTRO_BUS_COMB_COD_OFICINA="Código de Oficina";
 	public static final String ETIQUETA_FILTRO_BUS_DOI_PODERDANTE="DOI Poderdante";
 	public static final String ETIQUETA_FILTRO_BUS_REVOCATORIA="Revocatoria";
@@ -219,11 +219,11 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_FILTRO_BUS_COMB_OFICINA="Oficina";
 	public static final String ETIQUETA_FILTRO_BUS_PODERDANTE="Poderdante";
 	public static final String ETIQUETA_FILTRO_BUS_ESTUDIO="Estudio";
-	public static final String ETIQUETA_FILTRO_BUS_GENERADOR="Generador:";
-	public static final String ETIQUETA_FILTRO_BUS_FECHA_HORA = "Fecha y Hora:";
+	public static final String ETIQUETA_FILTRO_BUS_GENERADOR="Generador";
+	public static final String ETIQUETA_FILTRO_BUS_FECHA_HORA = "Fecha y Hora";
 	public static final String ETIQUETA_COLUMNA_ITEM = "Item";
-	public static final String ETIQUETA_COLUMNA_NRO_SOLICITUD = "Nro Solicitud";
-	public static final String ETIQUETA_COLUMNA_COD_OFICINA = "Cod Oficina";
+	public static final String ETIQUETA_COLUMNA_NRO_SOLICITUD = "Nro. Solicitud";
+	public static final String ETIQUETA_COLUMNA_COD_OFICINA = "Cod. Oficina";
 	public static final String ETIQUETA_COLUMNA_OFICINA = "Oficina";
 	public static final String ETIQUETA_COLUMNA_TERRITORIO = "Territorio";
 	public static final String ETIQUETA_COLUMNA_ESTADO = "Estado";
@@ -231,16 +231,16 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_COLUMNA_PODERDANTE = "Poderdante";
 	public static final String ETIQUETA_COLUMNA_APODERADO = "Apoderado";
 	public static final String ETIQUETA_COLUMNA_TIPO_SOL = "Tipo de Solicitud";
-	public static final String ETIQUETA_COLUMNA_TIPO_OPE = "Tipo de Operacion";
+	public static final String ETIQUETA_COLUMNA_TIPO_OPE = "Tipo de Operación";
 	public static final String ETIQUETA_COLUMNA_ESTUDIO = "Estudio";
 	public static final String ETIQUETA_COLUMNA_NIVEL = "Nivel";
 	public static final String ETIQUETA_COLUMNA_FECHA_ENVIO = "Fecha de Envio";
 	public static final String ETIQUETA_COLUMNA_FECHA_RPTA = "Fecha de Respuesta";
 	public static final String ETIQUETA_COLUMNA_FECHA_ESTADO = "Fecha de Estado";
-	public static final String ETIQUETA_COLUMNA_COMISION = "Comision";
+	public static final String ETIQUETA_COLUMNA_COMISION = "Comisión";
 	public static final String ETIQUETA_COLUMNA_LIBERADO = "Liberado";
 	public static final String ETIQUETA_COLUMNA_DELEGADO = "Delegado";
-	public static final String ETIQUETA_COLUMNA_EN_REVISION = "En revision";
+	public static final String ETIQUETA_COLUMNA_EN_REVISION = "En revisión";
 	public static final String ETIQUETA_COLUMNA_REVOCATORIA = "Revocatoria";
 
 	public static final String ETIQUETA_FILTRO_BUS_TIPO_REGISTRO ="Tipo de Registro";
@@ -252,11 +252,11 @@ public class ConstantesVisado {
 	
 	//Columnas para hoja Nro 1
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_ITEM = "Item";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_CODIGO = "Codigo";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_CODIGO = "Código";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_ESTADO = "Estado Actual";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_SOL = "Tipo de Solicitud";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_COM = "Tipo de comisión";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_COD_OFICINA = "Cod Oficina";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_COD_OFICINA = "Cod. Oficina";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_OFICINA = "Oficina";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_IMPORTE = "Importe Global";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_MONEDA = "Moneda";
@@ -266,19 +266,19 @@ public class ConstantesVisado {
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_NOMBRES = "Nombre Completo";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_DOI = "Tipo de DOI";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_NRO_DOI = "Nro de DOI";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_PARTICIPACION = "Tipo Participacion";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_CLASIFICACION = "Clasificacion";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_CELULAR = "Nro de celular";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_FIJO = "Nro Fijo";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_COMISION = "Tipo de comision";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_PARTICIPACION = "Tipo Participación";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_CLASIFICACION = "Clasificación";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_CELULAR = "Nro. de celular";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_FIJO = "Nro. Fijo";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_COMISION = "Tipo de comisión";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_ESTUDIO = "Estudio";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_RECLAMO = "Reclamo";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_NIVELES = "Niveles";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_DELEGACION = "Delegacion";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_DELEGACION = "Delegación";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_GRUPO = "Grupo";
 	
 	//Columnas para hoja Nro 2
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_NRO_SOLICITUD = "Nro Solicitud";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_NRO_SOLICITUD = "Nro. Solicitud";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_ESTADO_HOJA2 = "Estado";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_NIVEL = "Nivel";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_FECHA = "Fecha";
@@ -303,7 +303,7 @@ public class ConstantesVisado {
 	///****************************Constantes para Reporte de Solicitudes por Tipo de Servicio********************************
 	
 	public static final String TITULO_REPORTE_RPT_TIPO_SERV ="SOLICITUDES ATENDIDAS POR TIPO DE SERVICIO";
-	public static final String RPT_TIPO_SERV_FILTRO_COD_SOL = "Codigo Sol";
+	public static final String RPT_TIPO_SERV_FILTRO_COD_SOL = "Código Sol.";
 	public static final String RPT_TIPO_SERV_FILTRO_TIPO_SERV = "Tipo de Servicio";
 	public static final String RPT_TIPO_SERV_FILTRO_TIPO_OP = "Tipo de Operación";
 	public static final String RPT_TIPO_SERV_FILTRO_RANGO_GLO = "Rango Global";
@@ -313,10 +313,10 @@ public class ConstantesVisado {
 	public static final String RPT_TIPO_SERV_FILTRO_FECHA_INICIO = "Fecha Inicio (dd/mm/aaaa)";
 	public static final String RPT_TIPO_SERV_FILTRO_FECHA_FIN	 = "Fecha Fin (dd/mm/aaaa)";
 	
-	public static final String RPT_TIPO_SERV_COLUMNA_COD_SOL = "Codigo Solicitud";
+	public static final String RPT_TIPO_SERV_COLUMNA_COD_SOL = "Código Solicitud";
 	public static final String RPT_TIPO_SERV_COLUMNA_ESTUDIO = "Estudio";
 	public static final String RPT_TIPO_SERV_COLUMNA_TIPO_SERVICIO = "Tipo de Servicio";
-	public static final String RPT_TIPO_SERV_COLUMNA_TIPO_OPERACION = "Tipo de Operacion";
+	public static final String RPT_TIPO_SERV_COLUMNA_TIPO_OPERACION = "Tipo de Operación";
 	public static final String RPT_TIPO_SERV_COLUMNA_MONEDA = "Moneda";
 	public static final String RPT_TIPO_SERV_COLUMNA_IMPORTE = "Importe";
 	public static final String RPT_TIPO_SERV_COLUMNA_TIPO_CAMBIO = "Tipo de Cambio";
@@ -324,21 +324,21 @@ public class ConstantesVisado {
 	
 	///****************************Constantes para Reporte de Recaudacion x Tipo Comision********************************
 	
-		public static final String TITULO_REPORTE_RPT_RECAUDACION="RECAUDACION POR TIPO DE COMISION";		
+		public static final String TITULO_REPORTE_RPT_RECAUDACION="RECAUDACIÓN POR TIPO DE COMISIÓN";		
 		
 		static public class COLUMNAS_RPT_RECAUDACION{
 			public static final String COLUMNA_TERRITORIO = "Territorio";
-			public static final String COLUMNA_CODIGO_OFICINA = "Codigo oficina";
+			public static final String COLUMNA_CODIGO_OFICINA = "Código oficina";
 			public static final String COLUMNA_OFICINA = "Oficina";
 			public static final String COLUMNA_PERSONA_NATURAL = "Persona Natural";
-			public static final String COLUMNA_RECAUDACION_PN ="Recaudacion";
-			public static final String COLUMNA_PERSONA_JURIDICA ="Persona Juridica";
-			public static final String COLUMNA_RECAUDACION_PJ ="Recaudacion";
+			public static final String COLUMNA_RECAUDACION_PN ="Recaudación";
+			public static final String COLUMNA_PERSONA_JURIDICA ="Persona Jurídica";
+			public static final String COLUMNA_RECAUDACION_PJ ="Recaudación";
 			public static final String COLUMNA_PERSONA_FALLECIDA_MAYOR_X ="Persona Fallecida > X";
-			public static final String COLUMNA_RECAUDACION_FALLECIDA_X ="Recaudacion";
+			public static final String COLUMNA_RECAUDACION_FALLECIDA_X ="Recaudación";
 			public static final String COLUMNA_PERSONA_FALLECIDA_MENOR_X ="Persona Fallecida < X";
-			public static final String COLUMNA_RECAUDACION_FALLECIDA_X1 ="Recaudacion";
-			public static final String COLUMNA_RECAUDACION_RECAUDACION_TOTAL ="Recaudacion Total";
+			public static final String COLUMNA_RECAUDACION_FALLECIDA_X1 ="Recaudación";
+			public static final String COLUMNA_RECAUDACION_RECAUDACION_TOTAL ="Recaudación Total";
 		}
 		
 	///****************************Constantes para Reporte de Liquidacion Mensual Estudio Externo********************************
