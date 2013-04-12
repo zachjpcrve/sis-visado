@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.common.util.EstilosNavegador;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Persona;
@@ -142,7 +143,7 @@ public class SolicitudRegistroMB {
 	private String ancho_FieldSet_Poder;
 	private String ancho_Popup_Poder;
 	private String ancho_Revoc_Poder;
-	
+	EstilosNavegador estilosNavegador;
 	private TiivsAgrupacionPersona tiivsAgrupacionPersonaCapturado;
 	private TiivsSolicitudAgrupacion tiivsSolicitudAgrupacionCapturado;
 	private TiivsSolicitud solicitudRegistrarTCopia;
@@ -195,7 +196,8 @@ public class SolicitudRegistroMB {
 		//mapSolicitudes=new HashMap<Integer, TiivsSolicitudOperban>();
 		
 		this.cadenaEscanerFinal = this.prepararURLEscaneo();	
-		
+		 estilosNavegador=new EstilosNavegador();
+		estilosNavegador.estilosNavegador();
 		ancho_FieldSet = (String) Utilitarios.getObjectInSession("ANCHO_FIELDSET");
 		ancho_FieldSet_Poder = (String) Utilitarios.getObjectInSession("ANCHO_FIELDSET_PODER");
 		ancho_Popup_Poder=(String) Utilitarios.getObjectInSession("ANCHO_POPUP_PODER");

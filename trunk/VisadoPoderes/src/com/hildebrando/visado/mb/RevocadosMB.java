@@ -32,6 +32,7 @@ import org.primefaces.model.StreamedContent;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.common.util.EstilosNavegador;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.persistencia.generica.dao.Busqueda;
@@ -137,7 +138,7 @@ public class RevocadosMB {
 
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
-	
+	EstilosNavegador estilosNavegador;
 	private Boolean deshabilitarExportar=true;
 
 	public void setCombosMB(CombosMB combosMB) {
@@ -156,6 +157,8 @@ public class RevocadosMB {
 		
 		estadoRevocado= "S";
 		listSolicResult = new ArrayList<String>();
+		 estilosNavegador=new EstilosNavegador();
+		estilosNavegador.estilosNavegador();
 		ancho_Popup_Revoc_Poder=(String) Utilitarios.getObjectInSession("ANCHO_POPUP_REVOC_PODER");
 		alto_Popup_Revoc_Poder=(String) Utilitarios.getObjectInSession("ALTO_POPUP_REVOC_PODER");
 		
