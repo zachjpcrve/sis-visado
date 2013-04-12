@@ -27,14 +27,14 @@ public abstract class SeguridadDaoImpl<K, T extends Serializable>
 	//public  List<MiembroDto> buscarMiembroSql(IILDPeUsuario usuarioIILD) throws Exception;
 	//public  List<MiembroDto> buscarMiembroSql(Ldapperu2 usuarioIILD) throws Exception;
 	@SuppressWarnings("unchecked")
-	public  List<MiembroDto> buscarMiembroSql(IILDPeUsuario usuarioIILD) throws Exception{
+	public  List<MiembroDto> buscarMiembroSql(com.grupobbva.seguridad.client.domain.Usuario usuario) throws Exception{
 		logger.info(" *************** En el buscarMiembroSql **************************: ");
 		final String  sql ="select M.COD_MIEMBRO, M.DESCRIPCION, M.CRITERIO, M.COD_GRUPO, MT.VALOR1 AS DES_CRITERIO, M.ESTUDIO" +
  		" from TIIVS_MIEMBRO M " +
  		" left join TIIVS_MULTITABLA MT on M.CRITERIO = MT.COD_MULT || MT.COD_ELEM " +
- 		" where (trim(m.cod_miembro) = '"+usuarioIILD.getUID().trim()+"' and trim(m.criterio) = 'T030001') " +
- 		" OR (trim(m.cod_miembro)= '"+usuarioIILD.getCargo().getCodigo().trim()+"' and trim(m.criterio) = 'T030002') " +
- 		" OR (trim(m.cod_miembro)= '"+usuarioIILD.getBancoOficina().getCodigo().trim()+"' and trim(m.criterio) = 'T030003')"	+
+ 		" where (trim(m.cod_miembro) = '"+usuario.getUsuarioId().trim()+"' and trim(m.criterio) = 'T030001') " +
+ 		" OR (trim(m.cod_miembro)= '"+usuario.getPuestoId().trim()+"' and trim(m.criterio) = 'T030002') " +
+ 		" OR (trim(m.cod_miembro)= '"+usuario.getOficinaId().trim()+"' and trim(m.criterio) = 'T030003')"	+
  		" and activo =1";
        logger.info("SQL : "+sql);
 		
