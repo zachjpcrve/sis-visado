@@ -63,7 +63,6 @@ import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
-import com.sun.xml.internal.ws.util.UtilException;
 
 @ManagedBean(name = "reportesMB")
 @SessionScoped
