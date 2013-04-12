@@ -62,22 +62,21 @@ public class RegistroUtilesMB {
 			aHora = "00:00".split(":");
 		}
 		
-		//Query para obtener estudio con menos solicitudes pendientes
-		String sql = " SELECT "+ 
-			 " EST.COD_ESTUDIO,"+
-			 " COUNT(SOL.COD_SOLI) NRO_SOLICITUDES" +
-			 " FROM TIIVS_SOLICITUD SOL" +
-			 " INNER JOIN TIIVS_ESTUDIO EST ON EST.COD_ESTUDIO = SOL.COD_ESTUDIO" +
-			 " WHERE" +
-			 " TRIM(SOL.ESTADO) = '"+ codigoEstado +"'" + 
-			 " AND EST.ACTIVO = 1" + 			 
-			 " AND SOL.FECHA < " +			 
-			 " CAST((SYSDATE - (SYSDATE - TRUNC(SYSDATE)) + "+aHora[0]+"/24 + "+aHora[1]+"/1440) AS TIMESTAMP) "+		 
-			 " GROUP BY" +
-			 " EST.COD_ESTUDIO" +
-			 " ORDER BY NRO_SOLICITUDES ASC";	
+		//Query para obtener estudio con menos solicitudes pendientes			
+		String sql = "SELECT "+
+				" EST.COD_ESTUDIO,"+
+				" COUNT(sol.cod_soli) NRO_SOLICITUDES"+
+				" FROM tiivs_estudio EST"+ 
+				" LEFT JOIN TIIVS_SOLICITUD SOL" +
+				" ON EST.COD_ESTUDIO = SOL.COD_ESTUDIO " +
+				" AND TRIM(SOL.ESTADO) = '"+ codigoEstado +"'" + 
+				" AND SOL.FECHA < " + 
+				" CAST((SYSDATE - (SYSDATE - TRUNC(SYSDATE)) + "+aHora[0]+"/24 + "+aHora[1]+"/1440) AS TIMESTAMP) "+
+				" WHERE ACTIVO = 1 " + 
+				" GROUP BY EST.COD_ESTUDIO"+
+				" ORDER BY NRO_SOLICITUDES ASC";
 		
-		logger.debug("Consulta:"+sql);
+		logger.debug("Consulta Estudio Menor carga: "+sql);
 		
 
 		try {			
