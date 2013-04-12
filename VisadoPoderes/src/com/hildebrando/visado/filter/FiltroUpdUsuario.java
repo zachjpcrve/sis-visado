@@ -65,6 +65,7 @@ public class FiltroUpdUsuario implements Filter {
 				
 				IILDPeUsuario usuarioDto=new IILDPeUsuario();
 				usuarioDto.setUID(usuario.getUsuarioId());
+				usuarioDto.setNombre(usuario.getNombre());
 				usuarioDto.setApellido1(usuario.getApePat());
 				usuarioDto.setApellido2(usuario.getApeMat());
 				usuarioDto.setBancoOficina(new IILDPeOficina(usuario.getOficinaId(), usuario.getOficinaNombre(), "", "", ""));
