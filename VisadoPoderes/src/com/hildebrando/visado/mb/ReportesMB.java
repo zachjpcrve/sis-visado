@@ -2052,147 +2052,8 @@ public class ReportesMB {
 			sheet.setDisplayGridlines(false);
 			// sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
 
-			// creo una nueva fila
-			Row trow = sheet.createRow((short) 1);
-			Utilitarios.crearTituloCell(wb, trow, 4, CellStyle.ALIGN_CENTER,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.TITULO_REPORTE_RPT_RECAUDACION, 12);
-			sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, 16));
 
-			// Se crea la leyenda de quien genero el archivo y la hora
-			// respectiva
-			Row rowG = sheet.createRow((short) 3);
-			Utilitarios.crearCell(wb, rowG, 16, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false,
-					false, false, HSSFColor.DARK_BLUE.index);
-			Utilitarios.crearCell(wb, rowG, 17, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER, obtenerGenerador(), true, false,
-					true, HSSFColor.DARK_BLUE.index);
-
-			Row rowG1 = sheet.createRow((short) 4);
-			Utilitarios.crearCell(wb, rowG1, 16, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false,
-					false, false, HSSFColor.DARK_BLUE.index);
-			Utilitarios.crearCell(wb, rowG1, 17, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					Utilitarios.obtenerFechaHoraActual(), true, false, true,
-					HSSFColor.DARK_BLUE.index);
-
-			// Genera celdas con los filtros de busqueda
-			Row row2 = sheet.createRow((short) 6);
-
-			Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_ANIO,
-					false, false, false, HSSFColor.DARK_BLUE.index);
-
-			// Busqueda por anio
-			int pAnio = 0;
-
-			if (getAnio() != 0) {
-				switch (getAnio()) {
-				case 1:
-					pAnio = 2013;
-					break;
-				case 2:
-					pAnio = 2014;
-					break;
-				case 3:
-					pAnio = 2015;
-					break;
-				case 4:
-					pAnio = 2016;
-					break;
-				default:
-					break;
-				}
-			}
-
-			Utilitarios.crearCell(wb, row2, 4, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER, String.valueOf(pAnio), true,
-					false, true, HSSFColor.DARK_BLUE.index);
-
-			Utilitarios.crearCell(wb, row2, 7, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_ESTUDIO,
-					false, false, false, HSSFColor.DARK_BLUE.index);
-
-			// Busqueda por estudio
-			String cadEstudio = "";
-			if (lstEstudioSelected.size() > 0) 
-			{
-//				int j = 0;
-//				int cont = 1;
-//
-//				for (; j <= lstEstudioSelected.size() - 1; j++) {
-//					if (lstEstudioSelected.size() > 1) {
-//						if (cont == lstEstudioSelected.size()) {
-//							cadEstudio = cadEstudio
-//									.concat(buscarEstudioxCodigo(lstEstudioSelected
-//											.get(j).toString()));
-//						} else {
-//							cadEstudio = cadEstudio
-//									.concat(buscarEstudioxCodigo(lstEstudioSelected
-//											.get(j).toString().concat(",")));
-//							cont++;
-//						}
-//					} else {
-//						cadEstudio = buscarEstudioxCodigo(lstEstudioSelected
-//								.get(j).toString());
-//					}
-//				}
-				
-				for (String estudio : lstEstudioSelected) 
-				{
-					cadEstudio += "" + buscarEstudioxCodigo(estudio) + ",";
-				}
-				cadEstudio = cadEstudio.substring(0, cadEstudio.lastIndexOf(","));
-			}
-
-			Utilitarios.crearCell(wb, row2, 8, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER, cadEstudio, true, false, true,
-					HSSFColor.DARK_BLUE.index);
-			
-			/*if (cadEstudio.length()>=100)
-			{
-				sheet.addMergedRegion(new CellRangeAddress(6, 6, 8, 20));
-			}
-			else
-			{
-				sheet.addMergedRegion(new CellRangeAddress(6, 6, 8, 10));
-			}*/
-			
-
-			Row row3 = sheet.createRow((short) 7);
-			Utilitarios.crearCell(wb, row3, 3, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_MES,
-					false, false, false, HSSFColor.DARK_BLUE.index);
-			// Busqueda por mes
-			int mes = 0;
-
-			if (getMes() != 0) {
-				mes = getMes();
-			}
-			Utilitarios.crearCell(wb, row3, 4, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					Utilitarios.buscarMesxCodigo(mes), true, false, true,
-					HSSFColor.DARK_BLUE.index);
-
-			Row rowST = sheet.createRow((short) 9);
-			Utilitarios.crearCell(
-					wb,
-					rowST,
-					1,
-					CellStyle.ALIGN_CENTER,
-					CellStyle.VERTICAL_CENTER,
-					Utilitarios.buscarMesxCodigo(mes)
-							+ ConstantesVisado.ESPACIO_BLANCO
-							+ String.valueOf(pAnio), false, false, false,
-					HSSFColor.DARK_BLUE.index);
-
+			/********************INICIO DEL CUERPO DEL REPORTE********************/
 			// Generando la estructura de la tabla de resultados
 			if (lstLiquidacion.size() == 0) {
 				logger.info("Sin registros para exportar");
@@ -2729,12 +2590,182 @@ public class ReportesMB {
 					numReg++;
 				}
 			}
+			
+			/******************FIN DE CUERPO DE REPORTE**************/
 
 			// Arregla ancho de columnas
 			int pos = 0;
-			for (; pos <= 37; pos++) {
-				sheet.autoSizeColumn(pos);
+			for (; pos <= 38; pos++) {				
+				sheet.autoSizeColumn(pos);				
 			}
+			
+			pos = 3;
+			for (; pos <= 33; pos++) {				
+				//sheet.autoSizeColumn(pos);		
+				sheet.setColumnWidth(pos, 4*256);
+			}
+			
+			
+			/************INICIO DE CABECERA DEL REPORTE**************/
+			
+			// creo una nueva fila
+			Row trow = sheet.createRow((short) 1);
+			//trow.getRowNum();
+			Utilitarios.crearTituloCell(wb, trow, 3, CellStyle.ALIGN_CENTER,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.TITULO_REPORTE_RPT_RECAUDACION, 12);
+			sheet.addMergedRegion(new CellRangeAddress(1, 1, 3, 34));			
+
+			// Se crea la leyenda de quien genero el archivo y la hora
+			// respectiva
+			Row rowG = sheet.createRow((short) 3);
+			Utilitarios.crearCell(wb, rowG, 27, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR + obtenerGenerador(), false,
+					false, false, HSSFColor.DARK_BLUE.index);
+
+			/*Utilitarios.crearCell(wb, rowG, 17, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER, obtenerGenerador(), true, false,
+					true, HSSFColor.DARK_BLUE.index);*/
+
+			Row rowG1 = sheet.createRow((short) 4);
+			Utilitarios.crearCell(wb, rowG1, 27, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA + Utilitarios.obtenerFechaHoraActual(), false,
+					false, false, HSSFColor.DARK_BLUE.index);
+			
+			/*Utilitarios.crearCell(wb, rowG1, 17, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					Utilitarios.obtenerFechaHoraActual(), true, false, true,
+					HSSFColor.DARK_BLUE.index);*/
+
+			// Genera celdas con los filtros de busqueda
+			Row row2 = sheet.createRow((short) 5);
+
+			Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_ANIO,
+					false, false, false, HSSFColor.DARK_BLUE.index);
+
+			// Busqueda por anio
+			int pAnio = 0;
+
+			if (getAnio() != 0) {
+				switch (getAnio()) {
+				case 1:
+					pAnio = 2013;
+					break;
+				case 2:
+					pAnio = 2014;
+					break;
+				case 3:
+					pAnio = 2015;
+					break;
+				case 4:
+					pAnio = 2016;
+					break;
+				case 5:
+					pAnio = 2017;
+					break;
+				case 6:
+					pAnio = 2018;
+					break;
+				default:
+					break;
+				}
+			}
+
+			Utilitarios.crearCeldaCombinada(sheet, row2.getRowNum(), row2.getRowNum(), 5, 7, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER, String.valueOf(pAnio), true, false, true,
+					HSSFColor.DARK_BLUE.index);
+
+			Utilitarios.crearCell(wb, row2, 14, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_ESTUDIO,
+					false, false, false, HSSFColor.DARK_BLUE.index);
+
+			// Busqueda por estudio
+			String cadEstudio = "";
+			if (lstEstudioSelected.size() > 0) 
+			{
+//				int j = 0;
+//				int cont = 1;
+//
+//				for (; j <= lstEstudioSelected.size() - 1; j++) {
+//					if (lstEstudioSelected.size() > 1) {
+//						if (cont == lstEstudioSelected.size()) {
+//							cadEstudio = cadEstudio
+//									.concat(buscarEstudioxCodigo(lstEstudioSelected
+//											.get(j).toString()));
+//						} else {
+//							cadEstudio = cadEstudio
+//									.concat(buscarEstudioxCodigo(lstEstudioSelected
+//											.get(j).toString().concat(",")));
+//							cont++;
+//						}
+//					} else {
+//						cadEstudio = buscarEstudioxCodigo(lstEstudioSelected
+//								.get(j).toString());
+//					}
+//				}
+				
+				for (String estudio : lstEstudioSelected) 
+				{
+					cadEstudio += "" + buscarEstudioxCodigo(estudio) + ",";
+				}
+				cadEstudio = cadEstudio.substring(0, cadEstudio.lastIndexOf(","));
+			}
+			
+			logger.info("cadEstudio: " + cadEstudio);
+		
+			Utilitarios.crearCeldaCombinada(sheet, row2.getRowNum(), row2.getRowNum(), 16, 20, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER, cadEstudio, true, false, true,
+					HSSFColor.DARK_BLUE.index);
+			
+			
+			/*if (cadEstudio.length()>=100)
+			{
+				sheet.addMergedRegion(new CellRangeAddress(6, 6, 8, 20));
+			}
+			else
+			{
+				sheet.addMergedRegion(new CellRangeAddress(6, 6, 8, 10));
+			}*/
+			
+
+			Row row3 = sheet.createRow((short) 7);
+			Utilitarios.crearCell(wb, row3, 3, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_MES,
+					false, false, false, HSSFColor.DARK_BLUE.index);
+			// Busqueda por mes
+			int mes = 0;
+
+			if (getMes() != 0) {
+				mes = getMes();
+			}
+			
+//			Utilitarios.crearCell(wb, row3, 4, CellStyle.ALIGN_LEFT,
+//					CellStyle.VERTICAL_CENTER,
+//					Utilitarios.buscarMesxCodigo(mes), true, false, true,
+//					HSSFColor.DARK_BLUE.index);
+			
+			Utilitarios.crearCeldaCombinada(sheet, row3.getRowNum(), row3.getRowNum(), 5, 7, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER, Utilitarios.buscarMesxCodigo(mes), true, false, true,
+					HSSFColor.DARK_BLUE.index);
+
+			Row rowST = sheet.createRow((short) 9);
+			Utilitarios.crearCell(
+					wb,
+					rowST,
+					1,
+					CellStyle.ALIGN_CENTER,
+					CellStyle.VERTICAL_CENTER,
+					Utilitarios.buscarMesxCodigo(mes)
+							+ ConstantesVisado.ESPACIO_BLANCO
+							+ String.valueOf(pAnio), false, false, false,
+					HSSFColor.DARK_BLUE.index);
+			/************FIN DE CEBECERA DEL REPORTE*****************/
 
 			// Se crea el archivo con la informacion y estilos definidos
 			// previamente
