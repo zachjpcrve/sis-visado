@@ -176,18 +176,22 @@ public class NivelMB {
 			if (validacionCampoDesNulo.equals("0")) {
 				if (valor.equals("0")) {
 					if (validacionDescripcion.equals("0")) {
-						/* if (validacionRangoInicio.equals("0")) { */
+						if (this.validarRegistroNivel()) { 
 						for (int i = 0; i < nivelesMant.size(); i++) {
-							if (nivelesMant.get(i).getRangoInicio() < nivelesMant
-									.get(i).getRangoFin()) {
+							/*if (nivelesMant.get(i).getRangoInicio() < nivelesMant
+									.get(i).getRangoFin()) {*/
 								if(bEditar == false){
 									seq = nivelService.obtenerSecuencialNivel();
 									nivelesMant.get(i).setId(seq);
 									nivelesMant.get(i).setFechaReg(new Date());
+									if(usuario.getUID()!=null){
 									nivelesMant.get(i).setUsuarioReg(usuario.getUID());
+									}
 								}else{
 									nivelesMant.get(i).setFechaAct(new Date());
-									nivelesMant.get(i).setUsuarioReg(usuario.getUID());
+									if(usuario.getUID()!=null){
+										nivelesMant.get(i).setUsuarioReg(usuario.getUID());
+									}
 								}
 								nivelesMant.get(i).setDesNiv(nivelesMant.get(0).getDesNiv().toUpperCase());								
 								nivelesMant.get(i).setDesEstado(nivelesMant.get(0).getDesEstado());
@@ -198,8 +202,7 @@ public class NivelMB {
 									nivelesMant.get(i).setEstado(0);
 								}
 								logger.info("Niveles Mantenimiento  : " + " " + i + " " + nivelesMant.get(i).getId());
-								logger.info("Niveles Mantenimiento  : " + " " + i + " "
-										+ nivelesMant.get(i).getRangoInicio());
+								logger.info("Niveles Mantenimiento  : " + " " + i + " " + nivelesMant.get(i).getRangoInicio());
 								logger.info("Niveles Mantenimiento  : " + " " + i + " " + nivelesMant.get(i).getRangoFin());
 								logger.info("Niveles Mantenimiento  : " + " " + i + " " + nivelesMant.get(i).getMoneda());
 								logger.info("Niveles Mantenimiento  : " + " " + i + " " + nivelesMant.get(i).getEstado());
@@ -208,19 +211,25 @@ public class NivelMB {
 
 								nivelService.registrar(nivelesMant.get(i));
 								
-								if(bEditar == false){
-									Utilitarios.mensajeInfo("NIVEL","Se registro correctamente");
-									continue;
-							}else{
-									Utilitarios.mensajeInfo("NIVEL","Se actualizo correctamente");
-									continue;
-							}
-							} else {
-								Utilitarios.mensajeError("Error","El rango inicio no puede ser mayor que el rango fin de cada nivel");
-								continue;
-							}
+							
+							/*} else {
+								//Utilitarios.mensajeError("Error","El rango inicio no puede ser mayor que el rango fin de cada nivel");
+								break;
+							}*/
 
-						}		
+						}
+						
+						if(bEditar == false){
+							Utilitarios.mensajeInfo("NIVEL","Se registro correctamente");
+					     }else{
+							Utilitarios.mensajeInfo("NIVEL","Se actualizo correctamente");
+					    }
+						this.listarNiveles();
+						
+						}
+						
+						
+						
 						
 						descripcion = "";
 						bEditar = false;
@@ -254,6 +263,22 @@ public class NivelMB {
 			logger.error("ComisionMB : actualizar :" + e.getLocalizedMessage());
 			Utilitarios.mensajeError("Error", "No se pudo actualizar");
 		}
+	}
+	
+	public boolean validarRegistroNivel(){
+		boolean retorno=true;
+		for (int i = 0; i < nivelesMant.size(); i++) {
+			if (nivelesMant.get(i).getRangoInicio() < nivelesMant.get(i).getRangoFin()) {
+				retorno=true;
+			}
+			else{
+				retorno=false;
+				Utilitarios.mensajeError("Error","El rango inicio no puede ser mayor que el rango fin de cada nivel");
+				break;
+			}
+		}
+		
+		return retorno;
 	}
 	
 	public void limpiarNiveles(){
