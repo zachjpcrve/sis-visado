@@ -464,6 +464,7 @@ public class Utilitarios {
 				CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
 				cellStyle.setAlignment(halign);
 				cellStyle.setVerticalAlignment(valign);
+				cellStyle.setWrapText(true);
 				
 				if(i==row1 && j == col1){
 					cell.setCellValue(ch.createRichTextString(strContenido));
