@@ -56,11 +56,33 @@ public class JasperController {
 				logger.info("La solicitud es nula");
 				return null;
 			}
+			
+			GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+			filtroMultitabla.add(Restrictions.eq("id.codMult", ConstantesVisado.DIAS_FOR_EJECUCION.CODIGO_MULTITABLA_DIAS));
+			List<TiivsMultitabla> lstMultitabla=new ArrayList<TiivsMultitabla>();
+			try {
+				lstMultitabla = multiDAO.buscarDinamico(filtroMultitabla);
+				logger.info("lstMultitabla  :::" +lstMultitabla.size());
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			String diasUtilesForEjecucion="";
+			//Se obtiene los dias utiles de la Multitabla
+			for (TiivsMultitabla tmp : lstMultitabla) 
+			{
+				if (tmp.getId().getCodElem().trim().equals(ConstantesVisado.DIAS_FOR_EJECUCION.COD_DIAS_FOR_EJECUCION)) 
+				{
+					diasUtilesForEjecucion = tmp.getValor2();
+					logger.info("diasUtilesForEjecucion :::" +diasUtilesForEjecucion);
+					break;
+				}
+			}
 
 			List<FormatosDTO> cabecera = new ArrayList<FormatosDTO>();
 			FormatosDTO uno = new FormatosDTO();
 			uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
-			uno.setNumeroDiasForEjecucion(ConstantesVisado.DIAS_FOR_EJECUCION.COD_DIAS_FOR_EJECUCION);
+			uno.setNumeroDiasForEjecucion(diasUtilesForEjecucion);
 			uno.setInstrucciones(SOLICITUD_TEMP.getObs());
 			uno.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getCodOfi()+ " - " + SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
 
