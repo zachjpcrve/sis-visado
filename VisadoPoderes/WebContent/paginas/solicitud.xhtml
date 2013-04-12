@@ -82,7 +82,7 @@
 													<h:outputText title="Información General"
 														value="Información General" styleClass="outputText" />
 													<p:separator />
-													<!-- <p:messages id="idMsmSolicitudRegistro" ></p:messages>  -->
+													
 													<table border="0">
 														<tbody>
 															<tr>
@@ -116,12 +116,15 @@
 																	<p:autoComplete id="acNomOFina" value="#{solicitudRegMB.oficina}"
 																		completeMethod="#{solicitudRegMB.completeNomOficina}" var="ofi"
 																		converter="oficinaConverter" size="24" 
-																		itemLabel="#{ofi.codOfi}-#{ofi.desOfi}(#{ofi.tiivsTerritorio.codTer}-#{ofi.tiivsTerritorio.desTer})" itemValue="#{ofi}" rendered="#{solicitudRegMB.flagMostrarACOficina}"/>
+																		itemLabel="#{ofi.descripcionMostrar}" itemValue="#{ofi}" rendered="#{consultarSolicitudMB.flagMostrarACOficina}"
+																		/>
 																	<h:inputText styleClass="inputText" rendered="#{solicitudRegMB.flagMostrarSOMOficina}"
 																		id="cboOficina" style="width:100px;"
-																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.desOfi}(#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.codTer}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.desTer}"
+																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.descripcionMostrar}"
+																		
 																		disabled="false" readonly="true" />			
-																<!-- 
+																<!--  itemLabel="#{ofi.codOfi}-#{ofi.desOfi}(#{ofi.tiivsTerritorio.codTer}-#{ofi.tiivsTerritorio.desTer})" itemValue="#{ofi}" rendered="#{solicitudRegMB.flagMostrarACOficina}"
+																   value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.desOfi}(#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.codTer}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.desTer}"
 																	<p:selectOneMenu
 																		id="cboOficina"
 																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}"
