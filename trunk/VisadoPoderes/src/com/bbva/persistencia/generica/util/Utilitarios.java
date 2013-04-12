@@ -37,6 +37,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
@@ -452,6 +453,74 @@ public class Utilitarios {
 		}
 		
 		cell.setCellStyle(cellStyle);
+	}
+	
+	
+	public static void crearCeldaCombinada(Sheet sheet, int row1, int row2, int col1, int col2, short halign, short valign, String strContenido, boolean booBorde,
+			boolean booCabecera, boolean booFiltrosBus, Short color) 
+	{
+		
+		CreationHelper ch = sheet.getWorkbook().getCreationHelper();
+		for(int i=row1;i<=row2;i++){
+			for(int j=col1;j<=col2;j++){
+				Cell cell = sheet.getRow(row1).createCell(j);
+				CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+				cellStyle.setAlignment(halign);
+				cellStyle.setVerticalAlignment(valign);
+				
+				if(i==row1 && j == col1){
+					cell.setCellValue(ch.createRichTextString(strContenido));
+				}
+				
+				if (booBorde) 
+				{
+					cellStyle.setBorderBottom(HSSFCellStyle.BORDER_DOTTED);
+					cellStyle.setBottomBorderColor((short) 8);
+					cellStyle.setBorderLeft(HSSFCellStyle.BORDER_DOTTED);
+					cellStyle.setLeftBorderColor((short) 8);
+					cellStyle.setBorderRight(HSSFCellStyle.BORDER_DOTTED);
+					cellStyle.setRightBorderColor((short) 8);
+					cellStyle.setBorderTop(HSSFCellStyle.BORDER_DOTTED);
+					cellStyle.setTopBorderColor((short) 8);
+				}
+				
+				if (booCabecera) 
+				{
+					cellStyle.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
+					cellStyle.setBottomBorderColor((short) 8);
+					cellStyle.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
+					cellStyle.setLeftBorderColor((short) 8);
+					cellStyle.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
+					cellStyle.setRightBorderColor((short) 8);
+					cellStyle.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
+					cellStyle.setTopBorderColor((short) 8);
+
+					cellStyle.setFillForegroundColor(color);
+					
+					Font cellFont = sheet.getWorkbook().createFont();
+					cellFont.setColor((short) HSSFColor.BLACK.index);
+					cellStyle.setFont(cellFont);
+					
+					cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+				}
+				
+				if (booFiltrosBus) 
+				{
+					cellStyle.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
+					cellStyle.setBottomBorderColor((short) 8);
+					cellStyle.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
+					cellStyle.setLeftBorderColor((short) 8);
+					cellStyle.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
+					cellStyle.setRightBorderColor((short) 8);
+					cellStyle.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
+					cellStyle.setTopBorderColor((short) 8);
+					//cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+				}
+				
+				cell.setCellStyle(cellStyle);
+			}
+		}		
+		sheet.addMergedRegion(new CellRangeAddress(row1, row2, col1, col2));
 	}
 	
 	public static void crearCellRevocados(Workbook wb, Row row, int column, short halign, short valign, String strContenido, boolean booBorde,
