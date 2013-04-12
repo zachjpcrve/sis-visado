@@ -35,6 +35,8 @@
 									<f:selectItem itemLabel="2014" itemValue="2" />
 									<f:selectItem itemLabel="2015" itemValue="3" />
 									<f:selectItem itemLabel="2016" itemValue="4" />
+									<f:selectItem itemLabel="2017" itemValue="5" />
+									<f:selectItem itemLabel="2018" itemValue="6" />
 								</p:selectOneMenu></td>
 
 							<td><h:outputText styleClass="outputText" id="txtEstudio"
@@ -74,7 +76,7 @@
 						<tr bordercolor="white">
 							<td><p:commandButton value="Buscar"
 									actionListener="#{reportesMB.buscarLiquidacion}"
-									update=":frm:oplFrm" /></td>
+									update=":frm:oplFrm,:frm:growl" /></td>
 							<td><p:commandButton value="Exportar"
 									disabled="#{reportesMB.noHabilitarExportar}"
 									actionListener="#{reportesMB.descargarArchivoLiquidacion}"
