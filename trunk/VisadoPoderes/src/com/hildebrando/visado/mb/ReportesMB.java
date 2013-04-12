@@ -63,6 +63,7 @@ import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
+import com.sun.xml.internal.ws.util.UtilException;
 
 @ManagedBean(name = "reportesMB")
 @SessionScoped
@@ -333,6 +334,12 @@ public class ReportesMB {
 			case 4:
 				pAnio = 2016;
 				break;
+			case 5:
+				pAnio = 2017;
+				break;
+			case 6:
+				pAnio = 2018;
+				break;
 			default:
 				break;
 			}
@@ -355,6 +362,7 @@ public class ReportesMB {
 			setNoHabilitarExportar(false);
 		} else {
 			setNoHabilitarExportar(true);
+			Utilitarios.mensaje(ConstantesVisado.MENSAJE.NO_RESULTADOS, "");
 		}
 	}
 
