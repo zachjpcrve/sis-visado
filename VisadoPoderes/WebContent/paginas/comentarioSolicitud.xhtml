@@ -12,8 +12,8 @@
 		<h:panelGrid columns="5">
 
 			<p:tabMenu activeIndex="0" style="width:350px;" >
-		               <p:menuitem value="Solicitud" onclick="actualizarEditor();" url="/faces/paginas/solicitud.xhtml" icon="ui-icon-star" />
-			           <p:menuitem value="Instrucciones" onclick="actualizarEditor();" url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
+		               <p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml" icon="ui-icon-star" />
+			           <p:menuitem value="Instrucciones" url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
 			</p:tabMenu>
 
 			<p:toolbar>
@@ -43,7 +43,7 @@
 	     	<p:messages id="idGrowlSolicitudRegistro"></p:messages>
 	      
 	      	
-			<p:editor id="editor" value="#{solicitudRegMB.solicitudRegistrarT.obs}" width="400" height="400" />									
+			<p:editor id="editor" onchange="actualizarEditor();" value="#{solicitudRegMB.solicitudRegistrarT.obs}" width="400" height="400" />									
 
 			<h:panelGrid columns="2" style="margin-top:10px">
 				<!-- <p:commandButton id="submitButton" value="Guardar" update="editor" actionListener="{solicitudRegMB.seterComentario}"
