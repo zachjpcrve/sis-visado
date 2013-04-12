@@ -83,6 +83,63 @@
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
 	</resource-ref>
+	 <filter>
+		<description>Filtro de Seguridad</description>
+		<display-name>SessionFilter</display-name>
+		<filter-name>SessionFilter</filter-name>
+		<filter-class>com.grupobbva.seguridad.client.filter.ValidacionSessionFilter</filter-class>
+		<init-param>
+			<param-name>MODO_DESARROLLO</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+		    <param-name>JNDI</param-name>
+			<param-value>java:comp/env/wsdl/SEGAPP</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>SessionFilter</filter-name>
+		<url-pattern>*.xhtml</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SessionFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SessionFilter</filter-name>
+		<url-pattern>*.jsf</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	
+	<filter>
+		<description>Filtro Usuario</description>
+		<display-name>SessionFilterUsuario</display-name>
+		<filter-name>SessionFilterUsuario</filter-name>
+		<filter-class>com.hildebrando.visado.filter.FiltroUpdUsuario</filter-class>    
+	</filter>  
+	<filter-mapping>
+		<filter-name>SessionFilterUsuario</filter-name>
+		<url-pattern>*.xhtml</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SessionFilterUsuario</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SessionFilterUsuario</filter-name>
+		<url-pattern>*.jsf</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
 	
 
 	<filter>
@@ -94,6 +151,6 @@
 		<servlet-name>Faces Servlet</servlet-name>
 	</filter-mapping>
 
-  
+                 
   
 </web-app>
