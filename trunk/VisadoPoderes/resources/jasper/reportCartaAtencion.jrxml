@@ -20,7 +20,7 @@
 		<band height="102">
 			<frame>
 				<reportElement mode="Transparent" x="0" y="11" width="502" height="91" backcolor="#99FF99"/>
-				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy hh.mm.ss a">
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy hh:mm:ss a">
 					<reportElement x="360" y="0" width="140" height="13"/>
 					<textElement/>
 					<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
