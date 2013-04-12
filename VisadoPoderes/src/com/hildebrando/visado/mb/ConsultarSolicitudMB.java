@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.common.util.EstilosNavegador;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Persona;
@@ -81,7 +82,7 @@ public class ConsultarSolicitudMB {
 	@ManagedProperty(value = "#{visadoDocumentosMB}")
 	private VisadoDocumentosMB visadoDocumentosMB;
 
-
+	EstilosNavegador estilosNavegador;
 	private TiivsSolicitud solicitudRegistrarT;
 	private TiivsSolicitud solicitudRegistrarTCopia;
 	private List<TiivsSolicitudOperban> lstSolicBancarias;
@@ -194,6 +195,7 @@ public class ConsultarSolicitudMB {
 			setFlagMostrarSOMOficina(false);
 			setFlagMostrarACOficina(true);
 		}
+		estilosNavegador=new EstilosNavegador();
 	}
 	
 	/*

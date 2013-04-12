@@ -62,12 +62,13 @@ public class SeguridadMB {
 	public void setUsuarioCodigo(String usuarioCodigo) {
 		this.usuarioCodigo = usuarioCodigo;
 	}
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unused" })
 	public void iniciarSession(){
 	String explorador="";
 	logger.info("===== entrando a iniciarSession() ====");				
 	ServiciosSeguridadBbva objSeguridad;
-	IILDPeUsuario usuarioIILD = null;
+	//IILDPeUsuario usuarioIILD = null;
+	com.grupobbva.seguridad.client.domain.Usuario usuarioIILD=null;
 	//Ldapperu2 usuarioIILD = new Ldapperu2();;
     request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
     response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
@@ -79,7 +80,7 @@ public class SeguridadMB {
     try {
         	__Conexion2 con = new __Conexion2();
             String codigoUsuario = sCodUsuarioBBVA;                                
-            usuarioIILD = con.recuperarUsuario(codigoUsuario);	
+          //  usuarioIILD = con.recuperarUsuario(codigoUsuario);	
         
         //Valida explorador
         String agente = FacesContext.getCurrentInstance()
@@ -183,10 +184,10 @@ public class SeguridadMB {
 		}else{
 			if(logger.isInfoEnabled()){
 				logger.info("==== [USU_LDAP] encontrado === ");
-				logger.info("[USU_LDAP]-Codcargo: "+usuarioIILD.getCargo().getCodigo());
+				/*logger.info("[USU_LDAP]-Codcargo: "+usuarioIILD.getCargo().getCodigo());
 				logger.info("[USU_LDAP]-Codofi: "+usuarioIILD.getBancoOficina().getCodigo());
 				logger.info("[USU_LDAP]-Codusu: "+usuarioIILD.getUID());
-				logger.info("[USU_LDAP]-Nombres: "+usuarioIILD.getNombre()+" "+usuarioIILD.getApellido1());
+				logger.info("[USU_LDAP]-Nombres: "+usuarioIILD.getNombre()+" "+usuarioIILD.getApellido1());*/
 			}
 			
 			this.bNoLogeado = false;
@@ -213,14 +214,7 @@ public class SeguridadMB {
 			request.getSession(true).setAttribute("GRUPO_JRD", null);
 			request.getSession(true).setAttribute("GRUPO_OFI", null);
 			request.getSession(true).setAttribute("DES_GRUPO", null);			
-			request.getSession(true).setAttribute("TAREA_CONSULTA_SOLICITUDES", null);
-			request.getSession(true).setAttribute("TAREA_MANTENIMIENTOS", null);
-			request.getSession(true).setAttribute("TAREA_ADMINISTRAR_GRUPOS", null);
-			request.getSession(true).setAttribute("TAREA_ADMINISTRAR_TAREAS", null);
-			request.getSession(true).setAttribute("TAREA_APROBAR_RECHAZAR_SOLICITUD", null);
-			request.getSession(true).setAttribute("TAREA_MODIFICAR_SOLICITUD", null);
-			request.getSession(true).setAttribute("TAREA_REGISTRO_SOLICITUDES", null);		
-			
+
 			SeguridadDao<MiembroDto, Object> miembroService = (SeguridadDao<MiembroDto, Object>) SpringInit.getApplicationContext().getBean("miembroEspDao");
 			logger.info("**************** miembroService : "+miembroService);
 			if(miembroService==null){
@@ -254,17 +248,18 @@ public class SeguridadMB {
 					request.getSession(true).setAttribute("DES_GRUPO", ConstantesVisado.DES_GRUPO_OFI);
                   }
 			}
-        	request.getSession(true).setAttribute("USUARIO_SESION", usuarioIILD);
+/*        	request.getSession(true).setAttribute("USUARIO_SESION", usuarioIILD);
         	request.getSession(true).setAttribute(ConstantesVisado.USUARIO_ID, usuarioIILD.getUID());
         	request.getSession(true).setAttribute(ConstantesVisado.USUARIO_NOMBRE, usuarioIILD.getNombre()
-        			                                                              + " " + usuarioIILD.getApellido1() );
+        			                                                              + " " + usuarioIILD.getApellido1() );*/
+        	
         	String grupoAdm = (String) Utilitarios.getObjectInSession("GRUPO_ADM");
     		String grupoOfi = (String) Utilitarios.getObjectInSession("GRUPO_OFI");
     		String grupoJrd = (String) Utilitarios.getObjectInSession("GRUPO_JRD");
     		
     		// DES_GRUPO_ADM= "SERVICIOS JURIDICOS";	
     		// DES_GRUPO_JRD= "ABOGADO";
-    		// DES_GRUPO_OFI= "OFICINA";
+    		// DES_GRUPO_OFI= "OFICINA";<
         	if(grupoAdm ==null && grupoJrd==null ){
         		logger.info("ROL OFICINA");
         		request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.OFICINA);
@@ -277,6 +272,8 @@ public class SeguridadMB {
             		 request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.SSJJ);
         		 }
         	}
+        	
+        	
         	
         	if(ListaMiembros.size()>0){
         		logger.debug(ConstantesVisado.SEGURIDAD.USER_ACCESO_OK);
@@ -300,7 +297,6 @@ public class SeguridadMB {
 	
 	public String cerrarSesion() {
 		logger.info(" === cerrarSesion() ==> " +idSesion);
-		Sesion.cerrarSesion(Integer.parseInt(idSesion));
 		this.idSesion = "";
 		this.usuarioCodigo = "";
 		try {
@@ -312,7 +308,7 @@ public class SeguridadMB {
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.SEGURIDAD.ERROR_CERRAR_SESION +": "+e);
 		}
-		return "/faces/paginas/seguridad.xhtml";
+		return "/faces/paginas/bienvenido.xhtml";
 	}
 	
 	public String getsCodUsuarioBBVA() {
