@@ -4,7 +4,7 @@
 <html>
 <head>
 <script type="text/javascript">
-window.location = "faces/paginas/seguridad.xhtml";
+window.location = "faces/paginas/bienvenido.xhtml";
 </script>
 </head>
 <body>
