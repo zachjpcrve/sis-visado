@@ -3164,114 +3164,7 @@ public class ReportesMB {
 			sheet.addMergedRegion(new CellRangeAddress(6, 6, 3,4));
 			
 			
-			Utilitarios.crearTituloCell(wb, trow, 2, CellStyle.ALIGN_CENTER,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.TITULO_REPORTE_RPT_SOLICITUD, 14);
-
-			// Se crea la leyenda de quien genero el archivo y la hora
-			// respectiva
-			Row rowG = sheet.createRow((short) 3);
-			Utilitarios.crearCell(wb, rowG, 9, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR, false,
-					false, false, HSSFColor.DARK_BLUE.index);
-			Utilitarios.crearCell(wb, rowG, 10, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER, obtenerGenerador(), true, false,
-					true, HSSFColor.DARK_BLUE.index);
-
-			Row rowG1 = sheet.createRow((short) 4);
-			Utilitarios.crearCell(wb, rowG1, 9, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA, false,
-					false, false, HSSFColor.DARK_BLUE.index);
-			Utilitarios.crearCell(wb, rowG1, 10, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					Utilitarios.obtenerFechaHoraActual(), true, false, true,
-					HSSFColor.DARK_BLUE.index);
-
-			// Genera celdas con los filtros de busqueda
-			Row row2 = sheet.createRow((short) 6);
-
-			Utilitarios.crearCell(wb, row2, 2, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.ETIQUETA_COLUMNA_TERRITORIO, false, false,
-					false, HSSFColor.DARK_BLUE.index);
-
-			if (getIdTerr() != null) {
-				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,
-						CellStyle.VERTICAL_CENTER,
-						buscarNomTerrPorCodigo(getIdTerr()), true, false, true,
-						HSSFColor.DARK_BLUE .index);
-			} else {
-				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,
-						CellStyle.VERTICAL_CENTER, "", true, false, true,
-						HSSFColor.DARK_BLUE.index);
-			}
-
-			Row row3 = sheet.createRow((short) 8);
-
-			Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.ETIQUETA_FILTRO_BUS_COD_OFICINA, false,
-					false, false, HSSFColor.DARK_BLUE.index);
-
-			if (getIdOfi().compareTo("") != 0) {
-				Utilitarios.crearCell(wb, row3, 3, CellStyle.ALIGN_LEFT,
-						CellStyle.VERTICAL_CENTER, getIdOfi(), true, false,
-						true, HSSFColor.DARK_BLUE.index);
-			} else {
-				Utilitarios.crearCell(wb, row3, 3, CellStyle.ALIGN_LEFT,
-						CellStyle.VERTICAL_CENTER, "", true, false, true,
-						HSSFColor.DARK_BLUE.index);
-			}
-
-			Utilitarios.crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.ETIQUETA_FILTRO_BUS_OFICINA, false, false,
-					false, HSSFColor.DARK_BLUE.index);
-			if (getIdOfi1().compareTo("") != 0) {
-				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,
-						CellStyle.VERTICAL_CENTER,
-						buscarNomOficinaPorCodigo(getIdOfi1()), true, false,
-						true, HSSFColor.DARK_BLUE.index);
-			} else {
-				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,
-						CellStyle.VERTICAL_CENTER, "", true, false, true,
-						HSSFColor.DARK_BLUE.index);
-			}
-
-			Row row4 = sheet.createRow((short) 10);
-
-			Utilitarios.crearCell(wb, row4, 2, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_INICIO, false,
-					false, false, HSSFColor.DARK_BLUE.index);
-			if (getFechaInicio() != null) {
-				Utilitarios.crearCell(wb, row4, 3, CellStyle.ALIGN_LEFT,
-						CellStyle.VERTICAL_CENTER,
-						Utilitarios.formatoFechaSinHora(getFechaInicio()),
-						true, false, true, HSSFColor.DARK_BLUE.index);
-			} else {
-				Utilitarios.crearCell(wb, row4, 3, CellStyle.ALIGN_LEFT,
-						CellStyle.VERTICAL_CENTER, "", true, false, true,
-						HSSFColor.DARK_BLUE.index);
-			}
-
-			Utilitarios.crearCell(wb, row4, 5, CellStyle.ALIGN_LEFT,
-					CellStyle.VERTICAL_CENTER,
-					ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_FIN, false,
-					false, false, HSSFColor.DARK_BLUE.index);
-			if (getFechaFin() != null) {
-				Utilitarios.crearCell(wb, row4, 6, CellStyle.ALIGN_LEFT,
-						CellStyle.VERTICAL_CENTER,
-						Utilitarios.formatoFechaSinHora(getFechaFin()), true,
-						false, true, HSSFColor.DARK_BLUE.index);
-			} else {
-				Utilitarios.crearCell(wb, row4, 6, CellStyle.ALIGN_LEFT,
-						CellStyle.VERTICAL_CENTER, "", true, false, true,
-						HSSFColor.DARK_BLUE.index);
-			}
-
+			/***********cuerpo reporte************************/
 			Row rowTot = sheet.createRow((short) 12);
 			Utilitarios.crearCell(wb, rowTot, 0, CellStyle.ALIGN_LEFT,
 					CellStyle.VERTICAL_CENTER, "Total de Registros: "
@@ -3471,12 +3364,126 @@ public class ReportesMB {
 					numReg++;
 				}
 			}
+			
+			/***************fin cuerpo*************************/
 
 			// Arregla ancho de columnas
 			int pos = 0;
 			for (; pos <= 18; pos++) {
 				sheet.autoSizeColumn(pos);
 			}
+			
+			
+			
+			/******************CABECERA******************************************/
+			Utilitarios.crearTituloCell(wb, trow, 2, CellStyle.ALIGN_CENTER,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.TITULO_REPORTE_RPT_SOLICITUD, 14);
+
+			// Se crea la leyenda de quien genero el archivo y la hora
+			// respectiva
+			Row rowG = sheet.createRow((short) 3);
+			Utilitarios.crearCell(wb, rowG, 8, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.ETIQUETA_FILTRO_BUS_GENERADOR + " " + obtenerGenerador(), false,
+					false, false, HSSFColor.DARK_BLUE.index);
+
+			Row rowG1 = sheet.createRow((short) 4);
+			Utilitarios.crearCell(wb, rowG1, 8, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_HORA + " " + Utilitarios.obtenerFechaHoraActual(), false,
+					false, false, HSSFColor.DARK_BLUE.index);
+
+			// Genera celdas con los filtros de busqueda
+			Row row2 = sheet.createRow((short) 6);
+
+			Utilitarios.crearCell(wb, row2, 1, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.ETIQUETA_COLUMNA_TERRITORIO, false, false,
+					false, HSSFColor.DARK_BLUE.index);
+
+			if (getIdTerr() != null) {
+				Utilitarios.crearCeldaCombinada(sheet, row2.getRowNum(),row2.getRowNum(), 2,2, CellStyle.ALIGN_LEFT,
+						CellStyle.VERTICAL_CENTER,
+						buscarNomTerrPorCodigo(getIdTerr()), true, false, true,
+						HSSFColor.DARK_BLUE .index);
+			} else {
+				Utilitarios.crearCell(wb, row2, 3, CellStyle.ALIGN_LEFT,
+						CellStyle.VERTICAL_CENTER, "", true, false, true,
+						HSSFColor.DARK_BLUE.index);
+			}
+
+			Row row3 = sheet.createRow((short) 8);
+
+			Utilitarios.crearCell(wb, row3, 1, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.ETIQUETA_FILTRO_BUS_COD_OFICINA, false,
+					false, false, HSSFColor.DARK_BLUE.index);			
+			sheet.autoSizeColumn(1);
+
+			if (getIdOfi().compareTo("") != 0) {
+				Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,
+						CellStyle.VERTICAL_CENTER, getIdOfi(), true, false,
+						true, HSSFColor.DARK_BLUE.index);
+			} else {
+				Utilitarios.crearCell(wb, row3, 2, CellStyle.ALIGN_LEFT,
+						CellStyle.VERTICAL_CENTER, "", true, false, true,
+						HSSFColor.DARK_BLUE.index);
+			}
+
+			Utilitarios.crearCell(wb, row3, 5, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.ETIQUETA_FILTRO_BUS_OFICINA, false, false,
+					false, HSSFColor.DARK_BLUE.index);
+			if (getIdOfi1().compareTo("") != 0) {
+//				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,
+//						CellStyle.VERTICAL_CENTER,
+//						buscarNomOficinaPorCodigo(getIdOfi1()), true, false,
+//						true, HSSFColor.DARK_BLUE.index);
+				Utilitarios.crearCeldaCombinada(sheet, row3.getRowNum(),row3.getRowNum(), 6,8, CellStyle.ALIGN_LEFT,
+						CellStyle.VERTICAL_CENTER,
+						buscarNomOficinaPorCodigo(getIdOfi1()), true, false,
+						true, HSSFColor.DARK_BLUE.index);
+			} else {
+				Utilitarios.crearCell(wb, row3, 6, CellStyle.ALIGN_LEFT,
+						CellStyle.VERTICAL_CENTER, "", true, false, true,
+						HSSFColor.DARK_BLUE.index);
+			}
+
+			Row row4 = sheet.createRow((short) 10);
+
+			Utilitarios.crearCell(wb, row4, 1, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_INICIO, false,
+					false, false, HSSFColor.DARK_BLUE.index);
+			if (getFechaInicio() != null) {
+				Utilitarios.crearCeldaCombinada(sheet, row4.getRowNum(),row4.getRowNum(), 2,2, CellStyle.ALIGN_LEFT,
+						CellStyle.VERTICAL_CENTER,
+						Utilitarios.formatoFechaSinHora(getFechaInicio()), true, false,
+						true, HSSFColor.DARK_BLUE.index);
+			} else {
+				Utilitarios.crearCeldaCombinada(sheet, row4.getRowNum(),row4.getRowNum(), 2,2, CellStyle.ALIGN_LEFT,
+						CellStyle.VERTICAL_CENTER,
+						"", true, false,
+						true, HSSFColor.DARK_BLUE.index);
+			}
+
+			Utilitarios.crearCell(wb, row4, 5, CellStyle.ALIGN_LEFT,
+					CellStyle.VERTICAL_CENTER,
+					ConstantesVisado.ETIQUETA_FILTRO_BUS_FECHA_FIN, false,
+					false, false, HSSFColor.DARK_BLUE.index);
+			if (getFechaFin() != null) {			
+				Utilitarios.crearCeldaCombinada(sheet, row4.getRowNum(),row4.getRowNum(), 6,8, CellStyle.ALIGN_LEFT,
+						CellStyle.VERTICAL_CENTER,
+						Utilitarios.formatoFechaSinHora(getFechaFin()), true, false,
+						true, HSSFColor.DARK_BLUE.index);
+			} else {
+				Utilitarios.crearCeldaCombinada(sheet, row4.getRowNum(),row4.getRowNum(), 6,8, CellStyle.ALIGN_LEFT,
+						CellStyle.VERTICAL_CENTER,
+						"", true, false,
+						true, HSSFColor.DARK_BLUE.index);
+			}
+			/*********************fin cabecera*****************************/
 
 			// Se crea el archivo con la informacion y estilos definidos
 			// previamente
