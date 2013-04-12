@@ -224,6 +224,7 @@ public class NivelMB {
 					     }else{
 							Utilitarios.mensajeInfo("NIVEL","Se actualizo correctamente");
 					    }
+						this.limpiarNiveles();
 						this.listarNiveles();
 						
 						}
@@ -254,10 +255,10 @@ public class NivelMB {
 						"El campo Descripcion es Obligatorio");
 			}
 			
-			nivelesMant = new ArrayList<TiivsNivel>();
+			/*nivelesMant = new ArrayList<TiivsNivel>();
 			obtenerMaximo();
 			bEditar = false;
-
+*/  
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("ComisionMB : actualizar :" + e.getLocalizedMessage());
@@ -268,6 +269,7 @@ public class NivelMB {
 	public boolean validarRegistroNivel(){
 		boolean retorno=true;
 		for (int i = 0; i < nivelesMant.size(); i++) {
+			if(nivelesMant.get(i).getRangoFin()!=0){
 			if (nivelesMant.get(i).getRangoInicio() < nivelesMant.get(i).getRangoFin()) {
 				retorno=true;
 			}
@@ -276,10 +278,16 @@ public class NivelMB {
 				Utilitarios.mensajeError("Error","El rango inicio no puede ser mayor que el rango fin de cada nivel");
 				break;
 			}
-		}
 		
+			}else{
+			retorno=false;
+			Utilitarios.mensajeError("Error","El rango fin no puede ser 0, ingrese rangos validos");
+			break;
+		     }
+		}
 		return retorno;
 	}
+		
 	
 	public void limpiarNiveles(){
 		logger.info("NivelMB: limpiarNiveles");	
@@ -288,6 +296,7 @@ public class NivelMB {
 		bEditar = false;
 		
 	}
+	
 	private Integer compararDesNivel(String desNivel) {
 		logger.info("NivelMB: compararDesNivel");
 		int compararDes = 0;
