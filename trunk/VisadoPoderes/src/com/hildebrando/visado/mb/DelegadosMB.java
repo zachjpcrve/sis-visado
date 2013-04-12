@@ -308,6 +308,11 @@ public class DelegadosMB {
 					if (nivelDiferente == false) {
 						listaDelegados.add(delegado);
 						esDelegado=false;
+						codRegistro="";
+						desRegistro = "";
+						perfilRegistro = "";
+						criterioRegistro = "";
+						validarCodRegistro = false;
 					} else {
 						Utilitarios.mensajeError("Error","Debe seleccionar el mismo nivel para los delegados a agregar");
 					}
