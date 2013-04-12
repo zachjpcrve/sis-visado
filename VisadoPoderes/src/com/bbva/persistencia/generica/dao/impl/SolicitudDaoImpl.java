@@ -1293,7 +1293,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					"join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
 					"left join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"join tiivs_miembro m on hst.reg_usuario = m.cod_miembro " +
-					"where hst.estado in ('0003','0009','0004') and hst.reg_abogado <> null " + sWhere +
+					"where hst.estado in ('0003','0009','0004') and hst.reg_abogado is not null " + sWhere +
 					"order by so.cod_estudio) A "  +
 					"group by DES_ESTUDIO,dia_atencion,filtro,costo " +
 					"order by des_estudio,filtro,dia_atencion";
@@ -1699,13 +1699,13 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			{
 				sWhere += " and hst.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
 											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
-											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "') and hst.reg_abogado <> null " ;
+											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "') and hst.reg_abogado is not null " ;
 			}
 			else
 			{
 				sWhere = " where hst.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
-						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "') and hst.reg_abogado <> null " ;
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "') and hst.reg_abogado is not null " ;
 			}
 			
 			
@@ -1724,28 +1724,28 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"          join tiivs_multitabla multPN on multPN.cod_elem = so.tipo_comision and multPN.cod_mult = 'T11' and " +
 					"          multPN.cod_elem='0001' " +
-					"		   where hst.estado in ('0003', '0004', '0009') and hst.reg_abogado <> null " +
+					"		   where hst.estado in ('0003', '0004', '0009') and hst.reg_abogado is not null " +
 					"          group by cod_ofi,multPN.valor2) PN on so.cod_ofi = PN.cod_ofi " +
 					"left join (select cod_ofi,multPJ.valor2, count(so.tipo_comision) cont " +    
 					"          from tiivs_solicitud so " +
 					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"          join tiivs_multitabla multPJ on multPJ.cod_elem = so.tipo_comision and multPJ.cod_mult = 'T11' and " +          
 					"          multPJ.cod_elem='0002' " + 
-					"		   where hst.estado in ('0003', '0004', '0009') and hst.reg_abogado <> null " +
+					"		   where hst.estado in ('0003', '0004', '0009') and hst.reg_abogado is not null " +
 					"          group by cod_ofi,multPJ.valor2) PJ on so.cod_ofi = PJ.cod_ofi " + 
 					"left join (select cod_ofi,multPF.valor2, count(so.tipo_comision) cont " +
 					"          from tiivs_solicitud so " +
 					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"          join tiivs_multitabla multPF on multPF.cod_elem = so.tipo_comision and multPF.cod_mult = 'T11' and " +          
 					"          multPF.cod_elem='0003' " + 
-					"		   where hst.estado in ('0003', '0004', '0009') and hst.reg_abogado <> null " +
+					"		   where hst.estado in ('0003', '0004', '0009') and hst.reg_abogado is not null " +
 					"          group by cod_ofi,multPF.valor2) PF on so.cod_ofi = PF.cod_ofi " +
 					"left join (select cod_ofi,multPFX.valor2, count(so.tipo_comision) cont " +          
 					"          from tiivs_solicitud so " +
 					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"          join tiivs_multitabla multPFX on multPFX.cod_elem = so.tipo_comision and multPFX.cod_mult = 'T11' and " +
 					"          multPFX.cod_elem='0004' " + 
-					"		   where hst.estado in ('0003', '0004', '0009') and hst.reg_abogado <> null " +
+					"		   where hst.estado in ('0003', '0004', '0009') and hst.reg_abogado is not null " +
 					"          group by cod_ofi,multPFX.valor2) PFX on so.cod_ofi = PFX.cod_ofi " +
 					sWhere +
 					"order by so.cod_ofi " ;
