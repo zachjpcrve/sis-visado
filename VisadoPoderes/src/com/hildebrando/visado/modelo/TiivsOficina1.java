@@ -21,6 +21,7 @@ public class TiivsOficina1 implements java.io.Serializable {
 	private String descEstado;
 	/**/
 	
+	private String descripcionMostrar;
 	private String nombreDetallado;
 
 	public TiivsOficina1() {
@@ -109,6 +110,18 @@ public class TiivsOficina1 implements java.io.Serializable {
 
 	public void setDescEstado(String descEstado) {
 		this.descEstado = descEstado;
+	}
+
+	public String getDescripcionMostrar() {
+		if(getCodOfi()!=null){
+		if(getCodOfi()!=""){
+		descripcionMostrar=getCodOfi()+"-"+getDesOfi()+"("+getTiivsTerritorio().getCodTer()+"-"+getTiivsTerritorio().getDesTer()+")";
+		}}
+		return this.descripcionMostrar;
+	}
+
+	public void setDescripcionMostrar(String descripcionMostrar) {
+		this.descripcionMostrar = descripcionMostrar;
 	}
 	
 	
