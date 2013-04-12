@@ -82,9 +82,14 @@
 		width="300" header="Mensaje de cerrar sesión" severity="alert"
 		widgetVar="cfdCerrarSesion" modal="true">
 		<h:form id="frmCerrarSesion">
-			<p:commandButton value="Si" ajax="false"
-				action="#{seguridadMB.cerrarSesion}"
-				oncomplete="cfdCerrarSesion.hide();closeWindows();"/>
+			<p:commandButton value="Si" ajax="true"
+				onclick="window.location.href='../../logout.jsp'"
+				/>
+			<!-- 	
+			<h:outputLink value="../../logout.jsp">
+				<h:outputText value="Si"></h:outputText>
+			</h:outputLink>
+			 -->
 			<p:commandButton value="No" onclick="cfdCerrarSesion.hide()"
 				type="button" />
 		</h:form>

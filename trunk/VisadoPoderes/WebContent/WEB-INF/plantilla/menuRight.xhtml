@@ -2,10 +2,11 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+ xmlns:ui="http://java.sun.com/jsf/facelets"
+ xmlns:h="http://java.sun.com/jsf/html"
+ xmlns:f="http://java.sun.com/jsf/core"
+ xmlns:p="http://primefaces.org/ui"
+ xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <ui:composition>
 
@@ -13,18 +14,40 @@
 
 
  <h:form id="frmMenu">
- 	<!--  
-  <p:menu>
-    <p:submenu label="Opciones" icon="ui-icon-pencil">
-	    <p:menuitem icon="ui-icon-pencil" value="Registros" url="/faces/paginas/solicitud.xhtml"></p:menuitem>
-	    <p:menuitem icon="ui-icon-pencil" value="Consultas" url="/faces/paginas/bandejaSeguimiento.xhtml"></p:menuitem>
-	    <p:menuitem icon="ui-icon-pencil" value="Reportes" url="/faces/paginas/reportes.xhtml"></p:menuitem>
-	    <p:menuitem icon="ui-icon-pencil" value="Mantenimiento" url="/faces/paginas/mantenimientos.xhtml"></p:menuitem>
-    </p:submenu>
-  </p:menu>-->
+ 	
+
   
   <p:tieredMenu style="width:140px; position:relative; z-index:1;"> 
-  		<p:submenu label="Registros" icon="ui-icon-pencil">
+  
+  
+     <c:forEach items="${usuario.opciones}" var="opcion" varStatus="count">
+                               <!-- Registros / Solicitud Visado  -->
+	  	<c:if test="${opcion.value.nivel == 1 and opcion.value.tipoId==5}">
+	  	<p:submenu label="${opcion.value.nombre}" icon="ui-icon-pencil">
+	  	
+	  	<c:forEach items="${usuario.opciones}" var="opcion2" varStatus="count2">
+	  	<c:if test="${opcion.value.opcionId == opcion2.value.opcionPadreId and opcion2.value.opcionId==2}">
+	  	<p:menuitem value="${opcion2.value.nombre}"  onclick="document.getElementById('frmMenu:btnNuevo').click();" icon="ui-icon-pencil"
+      			ajax="false" update=":formSolicitudRegistro">
+	  	</p:menuitem>
+	  	</c:if>
+	  	<c:if test="${opcion.value.opcionId == opcion2.value.opcionPadreId and opcion2.value.opcionId!=2 and opcion2.value.opcionId!=5}">
+	  	<p:menuitem value="${opcion2.value.nombre}" url="${opcion2.value.url}"  icon="ui-icon-pencil">
+	  	</p:menuitem>
+	  	</c:if>
+	  	<!-- Consultas / Solicitudes  -->
+	  	<c:if test="${opcion.value.opcionId == opcion2.value.opcionPadreId and opcion2.value.opcionId==5}">
+	  	<p:menuitem value="${opcion2.value.nombre}" url="${opcion2.value.url}"  icon="ui-icon-pencil" onclick="actualizarListas();">
+	  	</p:menuitem>
+	  	</c:if>
+	  	
+	  	</c:forEach>
+	  	
+	  	</p:submenu>
+	  	</c:if>
+	  	</c:forEach>
+	  	
+  		<!-- <p:submenu label="Registros" icon="ui-icon-pencil">
       		<p:menuitem icon="ui-icon-pencil" value="Solicitud Visado"  
       			onclick="document.getElementById('frmMenu:btnNuevo').click();" 
       			ajax="false" update=":formSolicitudRegistro" >      		
@@ -55,15 +78,10 @@
   			<p:menuitem icon="ui-icon-pencil" style="font-size: 9px" value="Solicitudes atendidas por Tipo de Servicio" url="/faces/paginas/rptSolicitudxTipoServicio.xhtml"></p:menuitem>
   			<p:menuitem icon="ui-icon-pencil" style="font-size: 9px" value="Recaudación" url="/faces/paginas/rptRecaudacion.xhtml"></p:menuitem>  			
   			<p:menuitem icon="ui-icon-pencil" style="font-size: 9px" value="Extractor" url="/faces/paginas/rptExtractor.xhtml"></p:menuitem>  			
-  		</p:submenu>    	    
+  		</p:submenu>    	 -->    
   </p:tieredMenu>
   
   <p:commandButton id="btnNuevo" style="width:0;height:0" ajax="false" value="" action="#{solicitudRegMB.instanciarSolicitudRegistro}" />
-  
-  <!-- 
-  <p:remoteCommand name="activador" update=":frmMenu"
-  action="{solicitudRegMB.instanciarSolicitudRegistro}" />
-   --> 
   
     <p:remoteCommand name="actualizarListas"
   action="#{consultarSolicitudMB.actualizarListas}" /> 
