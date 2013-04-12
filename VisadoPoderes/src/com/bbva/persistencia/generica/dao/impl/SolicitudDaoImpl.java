@@ -356,36 +356,36 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			{
 				logger.info("Buscando solicitudes por solicitud:" +  solicitud.getCodSoli());
 				
-				if (sWhere.compareTo("")!=0)
+				/*if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and so.cod_soli = '" + solicitud.getCodSoli() + "'";
 				}
 				else
-				{
-					sWhere = "where so.cod_soli = '" + solicitud.getCodSoli() + "'";
-				}
+				{*/
+					sWhere += " and so.cod_soli = '" + solicitud.getCodSoli() + "'";
+				//}
  			}
 			
 			if (cadTipoServ.trim().compareTo("")!=0)
 			{
 				logger.info("Buscando solicitudes por tipo de servicio: " + cadTipoServ);
 				
-				if (sWhere.compareTo("")!=0)
+				/*if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and ts.cod_tip_solic in ('" + cadTipoServ + "')";
 				}
 				else
-				{
-					sWhere = "where ts.cod_tip_solic in ('" + cadTipoServ + "')";
-				}
+				{*/
+					sWhere += " and ts.cod_tip_solic in ('" + cadTipoServ + "')";
+				//}
 			}		
 			
 			if (rangoImpG.trim().compareTo("")!=0)
 			{
 				logger.info("Buscando solicitudes por importe global: " + rangoImpG);
 				
-				if (sWhere.compareTo("")!=0)
-				{
+				//if (sWhere.compareTo("")!=0)
+				//{
 					if (rangoImpG.equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
 					{
 						logger.info("Filtro por importe: " + rangoImpG);
@@ -413,8 +413,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 						
 						sWhere += " and so.importe >250";
 					}
-				}
-				else
+				//}
+				/*else
 				{
 					if (rangoImpG.equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
 					{
@@ -434,16 +434,16 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					{
 						logger.debug("Filtro por importe: " + rangoImpG);
 						
-						sWhere = "where so.importe >=120 and so.importe<=250";
+						sWhere = " where so.importe >=120 and so.importe<=250";
 					}
 
 					if (rangoImpG.equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA)) 
 					{
 						logger.debug("Filtro por importe: " + rangoImpG);
 						
-						sWhere = "where so.importe >250";
+						sWhere = " and so.importe >250";
 					}
-				}
+				}*/
 			}
 			
 			if (importeIni!=0 && importeFin != 0)
@@ -451,28 +451,28 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				logger.info("Buscando solicitudes por rango importe inicio: " + importeIni);
 				logger.info("Buscando solicitudes por rango importe fin: " + importeFin);
 				
-				if (sWhere.compareTo("")!=0)
+				/*if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and ob.importe between " + importeIni + " and " + importeFin;
 				}
 				else
-				{
-					sWhere = " where ob.importe between " + importeIni + " and " + importeFin;
-				}
+				{*/
+					sWhere += " and ob.importe between " + importeIni + " and " + importeFin;
+				//}
 			}
 			
 			if (cadEstudio.trim().compareTo("")!=0)
 			{
 				logger.info("Buscando por estudio: " + cadEstudio);
 				
-				if (sWhere.compareTo("")!=0)
+				/*if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and so.cod_estudio in ('" + cadEstudio + "')";
 				}
 				else
-				{
-					sWhere = " where so.cod_estudio in ('" + cadEstudio + "')";
-				}
+				{*/
+					sWhere += " and so.cod_estudio in ('" + cadEstudio + "')";
+				//}
 			}
 			
 			if (dFechaInicio!=null && dFechaFin!=null)
@@ -487,32 +487,32 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				
 				//sCadFecha = " and so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
 				
-				if (sWhere.compareTo("")!=0)
+				/*if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and TO_CHAR(so.fecha,'DD-MON-YYYY') between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
 				}
 				else
-				{
-					sWhere = "where TO_CHAR(so.fecha,'DD-MON-YYYY') between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
-				}
+				{*/
+					sWhere += " and TO_CHAR(so.fecha,'DD-MON-YYYY') between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+				//}
 			}
 			
 			if (solicitud.getMoneda().trim().compareTo("")!=0)
 			{
 				logger.info("Buscando por moneda: " + solicitud.getMoneda());
 				
-				if (sWhere.compareTo("")!=0)
+				/*if (sWhere.compareTo("")!=0)
 				{
 					sWhere += " and so.moneda = '" + solicitud.getMoneda() + "'";
 				}
 				else
-				{
-					sWhere = " where so.moneda = '" + solicitud.getMoneda() + "'";
-				}
+				{*/
+					sWhere += " and so.moneda = '" + solicitud.getMoneda() + "'";
+				//}
 			}
 			
 			//Filtros de estados a buscar por RN048 del Doc Funcional
-			if (sWhere.compareTo("")!=0)
+			/*if (sWhere.compareTo("")!=0)
 			{
 				sWhere += " and so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
 											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02 + "'," +
@@ -523,14 +523,14 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 						
 			}
 			else
-			{
-				sWhere = " where so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
+			{*/
+				sWhere += " and so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02 + "')" ;
-			}
+		//	}
 			
 			if (idOpeBan.trim().compareTo("")!=0)
 			{
@@ -552,9 +552,30 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					  "select * from (select s.cod_soli from tiivs_solicitud s " +
 					  "left join tiivs_solicitud_operban o on s.cod_soli=o.cod_soli " +
 					  "where o.cod_oper_ban='" + idOpeBan  + "') " +
-					  ") order by cod_soli";
+					  ") " + sWhere  + " order by cod_soli";
 			}
 			else
+			{
+				sql = "select so.cod_soli,NVL(es.des_estudio,' ') Estudio, " +
+						  //"ts.des_tip_servicio tipo_servicio,op.cod_oper_ban, op.des_oper_ban tipo_operacion," +
+						  "ts.des_tip_servicio tipo_servicio,op.des_oper_ban tipo_operacion," +
+						  "case  when mul.valor2 = 'PEN' then 'Soles' " +
+						  "      when  mul.valor2 = 'USD' then 'Dolares' " +
+						  "      when mul.valor2 = 'EUR' then 'Euros' " +
+						  "end Moneda,	NVL(ob.importe,0) Importe, NVL(ob.tipo_cambio,0.0) Tipo_cambio, " +
+						  "NVL((ob.tipo_cambio * ob.importe),0) Importe_Soles " +
+						  "from tiivs_solicitud_operban ob " +
+						  "left join tiivs_solicitud so on ob.cod_soli = so.cod_soli " +
+						  "left join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
+						  "left join tiivs_tipo_solicitud ts on so.cod_tipo_solic=ts.cod_tip_solic " +
+						  "join tiivs_multitabla mul on so.moneda = mul.cod_elem and mul.cod_mult='T08' " +
+						  "left join tiivs_operacion_bancaria op on ob.cod_oper_ban = op.cod_oper_ban " +
+						  "where ob.cod_soli in ( " +
+						  "select * from (select s.cod_soli from tiivs_solicitud s " +
+						  "left join tiivs_solicitud_operban o on s.cod_soli=o.cod_soli " +
+						  ") " + ") " + sWhere  + " order by cod_soli";
+			}
+			/*else
 			{
 				//Aplicando filtros
 				sql = "select so.cod_soli,NVL(es.des_estudio,' ') Estudio, " +
@@ -571,7 +592,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					  "left join tiivs_multitabla mul on so.moneda = mul.cod_elem and mul.cod_mult='T08' " +
 					  "join tiivs_operacion_bancaria op on ob.cod_oper_ban = op.cod_oper_ban " + sWhere + 
 					  " order by so.cod_soli";
-			}
+			}*/
 			
 			
 			logger.info("SQL : "+sql);
