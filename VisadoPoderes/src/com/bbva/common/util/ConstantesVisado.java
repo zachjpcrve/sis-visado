@@ -524,7 +524,7 @@ public class ConstantesVisado {
 		
 		/*clarosa*/
 		public static final java.lang.String CODIGO_MULTITABLA_DIAS = "T14"; //0001
-		public static final java.lang.String CODIGO_MULTITABLA_DIAS_UTILES = "0001"; //0002
+		//public static final java.lang.String CODIGO_MULTITABLA_DIAS_UTILES = "0001"; //0002
 		public static final java.lang.String CODIGO_MULTITABLA_DIAS_VENCIDOS = "0002"; //0002
 		public static final String COD_DIAS_FOR_EJECUCION = "0003";
 	}
