@@ -210,7 +210,7 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_FILTRO_BUS_APODERADO="Apoderado";
 	public static final String ETIQUETA_FILTRO_BUS_DELEGADO="Delegado";
 	public static final String ETIQUETA_FILTRO_BUS_IMPORTE="Importe";
-	public static final String ETIQUETA_FILTRO_BUS_FECHA_FIN="Fecha de Fin";
+	public static final String ETIQUETA_FILTRO_BUS_FECHA_FIN="Fecha Fin";
 	public static final String ETIQUETA_FILTRO_BUS_COMB_COD_OFICINA="Código de Oficina";
 	public static final String ETIQUETA_FILTRO_BUS_DOI_PODERDANTE="DOI Poderdante";
 	public static final String ETIQUETA_FILTRO_BUS_REVOCATORIA="Revocatoria";
