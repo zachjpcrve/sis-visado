@@ -16,9 +16,14 @@ public class QuartzJob_SolicitudesVencidas  implements Job{
 	public static Logger logger = Logger.getLogger(QuartzJob_SolicitudesVencidas.class);
 	
 	public  void execute(JobExecutionContext arg0) throws JobExecutionException {
-		this.ejecutar();
+		this.ejecutarSolicitudesVencidas();
 	}
-	public void ejecutar(){
+	public void ejecutarSolicitudesVencidas(){
+		logger.info("Iniciando Metodo ejecutar del  QuartzJob_SolicitudesVencidas");
+		JobsMB job = new JobsMB();
+		job.validarSolicitudesVencidas();
+	}
+/*	public void ejecutar(){
 		logger.info("Iniciando Metodo ejecutar del  QuartzJob_SolicitudesVencidas");
 		if(SpringInit.getApplicationContext()!=null){
 			logger.info("Spring Init diferente de nulll");
@@ -53,6 +58,6 @@ public class QuartzJob_SolicitudesVencidas  implements Job{
 		th.start();
 		}
 		
-	}
+	}*/
 }
  
