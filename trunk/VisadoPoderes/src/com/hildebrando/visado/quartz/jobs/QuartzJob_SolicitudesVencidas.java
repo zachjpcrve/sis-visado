@@ -5,17 +5,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.hildebrando.visado.mb.JobsMB;
 
-public class QuartzJob_SolicitudesVencidas  {
+public class QuartzJob_SolicitudesVencidas  implements Job{
 	public static Logger logger = Logger.getLogger(QuartzJob_SolicitudesVencidas.class);
 	
-	public static void main(String []args){
-		QuartzJob_SolicitudesVencidas job = new QuartzJob_SolicitudesVencidas(); 
-		System.out.println("main");
-		job.ejecutar();
+	public  void execute(JobExecutionContext arg0) throws JobExecutionException {
+		this.ejecutar();
 	}
 	public void ejecutar(){
 		logger.info("Iniciando Metodo ejecutar del  QuartzJob_SolicitudesVencidas");
