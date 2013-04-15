@@ -15,42 +15,87 @@
 		 
 			<p:tab title="Configuración Quartz" id="idTabMantenimientoTrigger">
 				
-					<p:fieldset legend="Job Detail" toggleable="true" toggleSpeed="500"  style="margin-left:10px;margin-right:10px;" > 
+					<p:fieldset legend="Job Detail" toggleable="true" toggleSpeed="500"  style="margin-left:0px;margin-right:100px;" > 
 					
-					<h:panelGrid columns="2"  style="margin-left:5px;"> 
-					
+					<h:panelGrid columns="4" > 
 					<p:graphicImage value="/resources/images/logo-quartz-scheduler.png" 
-					                style="margin-bottom:10px;"/>
-					                
-					<p:spacer width="50" height="50" />
-					                
-                     <h:panelGrid columns="1" style="margin-bottom:0px;margin-left:30px; height:264px;"  >
-	                     <h:outputLabel value="JOB DETAIL" style="margin-left:20px;" id="lblJobDetail"/>
+					                style="margin-bottom:300px;"/>
+					
+                     <h:panelGrid columns="1"   >
+	                     <h:outputLabel value="JOB DETAIL" style="margin-left:0px;" id="lblJobDetail"/>
 	                     <p:separator id="separ"/>
 	        
 	          	         <h:panelGrid columns="2"  >
+	          	            
 							<h:outputLabel value="Nombre : " />
 							<p:inputText  value="#{quartzMB.objParamQrtz.qrtzJobDetails.id.jobName}"/>
+						
+							
 							<h:outputLabel value="Grupo : "  />
 							<p:inputText value="#{quartzMB.objParamQrtz.qrtzJobDetails.id.jobGroup}"  />
 							<h:outputLabel value="Job Class : " />
-							<p:inputText value="#{quartzMB.objParamQrtz.qrtzJobDetails.jobClassName}" />
+							<p:inputText size="50" value="#{quartzMB.objParamQrtz.qrtzJobDetails.jobClassName}"    />
 							<h:outputLabel value="Descripción : " />
 							<p:inputTextarea value="#{quartzMB.objParamQrtz.qrtzJobDetails.description}"/>
 							
+							
+	                       
+							<p:commandButton id="btnAgregar" value="Guardar"  update="@form" icon="ui-icon-search" action="#{quartzMB.crearTrigger}"/>	
+								<h:panelGrid columns="4"  >
 							<h:outputLabel value="Is Durable ? : " />
 	                        <p:selectBooleanCheckbox id="idDurable" value="#{quartzMB.bDurable}"/>
 	                        
 	                        <h:outputLabel value="Is Volatile ? : " />
 	                        <p:selectBooleanCheckbox id="idVolatile" value="#{quartzMB.bVolatile}"/>
-	                       
-							<p:commandButton id="btnAgregar" value="Guardar"  update="@form" icon="ui-icon-search" action="#{quartzMB.crearTrigger}"/>	
+							</h:panelGrid>
+							<p:commandButton value="On/Off Scheduler" actionListener="#{quartzMB.obtenerBooleanoShedule}"
+							  onclick="confirmationShedule.show()"></p:commandButton>
+							
 							<p:commandButton id="btnCargarTerr" value="Cargar Territorios"  update="@form" icon="ui-icon-search" action="#{admJobs.cargarTerritorios}" rendered="false"/>
 							<p:commandButton id="btnCargarFeriados" value="Cargar Feriados"  update="@form" icon="ui-icon-search" action="#{admJobs.cargarFeriados}" rendered="false"/>	
 							<p:commandButton id="btnCargarOfic" value="Cargar Oficinas"  update="@form" icon="ui-icon-search" action="#{admJobs.cargarOficinas}" rendered="false"/>
 							<p:commandButton id="btnCargarUbig" value="Cargar Ubigeos"  update="@form" icon="ui-icon-search" action="#{admJobs.cargarUbigeos}" rendered="false"/>
 						</h:panelGrid>
+						
+						
+						<p:fieldset  id="fSimpleDet" toggleable="true" toggleSpeed="500" rendered="#{quartzMB.bqsimple}" >
+      						<h:panelGrid columns="2">
+        						<h:outputLabel value="Nombre : " />
+								<p:inputText  value="#{quartzMB.qrtzSimpleTriggers.id.triggerName}"  />
+								<h:outputLabel value="Grupo : " />
+								<p:inputText value="#{quartzMB.qrtzSimpleTriggers.id.triggerGroup}"   />
+					    		<h:outputLabel value="RepeatCount : " />
+								<p:inputText  value="#{quartzMB.qrtzSimpleTriggers.repeatCount}"/>
+								<h:outputLabel value="RepeatInterval : " />
+								<p:inputText  value="#{quartzMB.qrtzSimpleTriggers.repeatInterval}"/>
+								<p:commandButton id="btnActuSimpleTrigger" value="Actualizar"  update="@form" icon="ui-icon-search" 
+									action="#{quartzMB.actualizarTrigger}" onclick="carDialog.hide()"/>	
+							</h:panelGrid>
+						</p:fieldset>
+				 		
+						
+						 <p:fieldset  toggleable="true" toggleSpeed="500"  id="fCronDet" rendered="#{quartzMB.bqcron}" >
+						  <h:panelGrid columns="2" >
+						 		<h:outputLabel value="Nombre : "  />
+								<p:inputText  value="#{quartzMB.qrtzCronTriggers.id.triggerName}"  />
+								<h:outputLabel value="Grupo : "  />  
+								<p:inputText value="#{quartzMB.qrtzCronTriggers.id.triggerGroup}"   />
+						 		<h:outputLabel value="CronExpression : " />
+						        <p:inputText  value="#{quartzMB.qrtzCronTriggers.cronExpression}"/>
+						       <p:commandButton id="btnActuCronTrigger" value="Actualizar"  update=":frmQuartzGen" icon="ui-icon-search" 
+									action="#{quartzMB.actualizarTrigger}" />	
+						   </h:panelGrid>
+						</p:fieldset>
+						
 					</h:panelGrid>
+					      
+					      
+					     <h:panelGrid columns="1" style="margin-left:30px; ">
+             
+                      	
+						
+				  </h:panelGrid>		
+					      
 					      
 					<h:panelGrid columns="1" style="margin-left:30px; ">
 						<p:fieldset  toggleable="true" toggleSpeed="500" style="margin-left:30px;height:262px; " id="idfieldCrear">  
@@ -99,8 +144,8 @@
          </h:panelGrid>
     </p:fieldset>     				
       			<p:separator/>
-				<p:dataTable var="car" id="lstTrigger" paginator="true" rows="5"
-						effectSpeed="fast" style="width:100%"  scrollable="true"
+				<p:dataTable var="car" id="lstTrigger" paginator="true" rows="10" styleClass="centered"
+						   scrollable="true" rowKey="#{car.item}"
 						paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink} {RowsPerPageDropdown}"
 						rowsPerPageTemplate="5,10,15"  value="#{quartzMB.lstQrtzTriggers}" 
 						emptyMessage="No se encuentran resultados" type="none">  
@@ -114,8 +159,8 @@
 						    <h:outputText value="Item"  />
 					      </f:facet> 
 					  
-					   	   <p:commandLink id="linkDet" value="#{car.item}" style="color:#CD6810;"  oncomplete="carDialog.show()"
-					                                  action="#{quartzMB.mostrarDetalleTrigger}"  update="@form"> 
+					   	   <p:commandLink id="linkDet" value="#{car.item}" style="color:#CD6810;" styleClass="btnOpenDialog" 
+					                                  action="#{quartzMB.mostrarDetalleTrigger}"  update=":frmQuartzGen"> 
 								<f:setPropertyActionListener value="#{car}" target="#{quartzMB.qrtzTriggers}" />
 						  </p:commandLink>
 				       </p:column>
@@ -125,8 +170,7 @@
 					      </f:facet>
 							<h:outputText value="#{car.id.triggerName}" />
 						</p:column>
-						<!-- 
-						<p:column>						
+						<p:column>
 						<f:facet name="header"> 
 						    <h:outputText value="TriggerGroup"  />
 					      </f:facet>
@@ -144,21 +188,18 @@
 					      </f:facet>
 							<h:outputText value="#{car.qrtzJobDetails.id.jobGroup}" />
 						</p:column>
-						 -->
 						<p:column >
 						<f:facet name="header"> 
 						    <h:outputText value="Estado"  />
 					      </f:facet>
 							<h:outputText value="#{car.triggerState}" />
 						</p:column>
-						<!--
-						<p:column >						 
+						<p:column >
 						<f:facet name="header"> 
 						    <h:outputText value="Tipo"  />
 					      </f:facet>
 							<h:outputText value="#{car.triggerType}" />
 						</p:column>
-						 -->
 						<p:column >
 						<f:facet name="header"> 
 						    <h:outputText value="NextFireTime"  />
@@ -187,9 +228,10 @@
 							<f:facet name="header"> 
 							    <h:outputText value="Accion"  />
 						    </f:facet>
-					    	<p:commandLink id="btnRes" value="Resumir"  style="color:#CD6810;"  action="#{quartzMB.resumirTrigger}" > 
-								<f:setPropertyActionListener value="#{car.qrtzJobDetails.id}" target="#{quartzMB.qrtzJobDetailsId}"  />
+						    <p:commandLink id="btnRes" value="Resumir"  style="color:#CD6810;"  action="#{quartzMB.resumirTrigger}" update="@this" ajax="false" > 
+								<f:setPropertyActionListener value="#{car.id}" target="#{quartzMB.qrtzTriggersId}"  />
 							</p:commandLink>|
+					    
 							<p:commandLink id="btnExec" value="Ejecutar"  style="color:#CD6810;" update="@this" action="#{quartzMB.executarTrigger}" ajax="false"> 
 								<f:setPropertyActionListener value="#{car.id}"  target="#{quartzMB.qrtzTriggersId}"  />
 							</p:commandLink>|
@@ -202,39 +244,7 @@
 						</p:column>
 					</p:dataTable>
 				
-					 <p:dialog header="Detalle de Trigger" widgetVar="carDialog"  id="dlg" modal="true"
-					            width="370" showEffect="explode" hideEffect="explode">  
-             
-                      	<p:fieldset  id="fSimpleDet" toggleable="true" toggleSpeed="500" rendered="#{quartzMB.bqsimple}" >
-      						<h:panelGrid columns="2">
-        						<h:outputLabel value="Nombre : " />
-								<p:inputText  value="#{quartzMB.qrtzSimpleTriggers.id.triggerName}"  />
-								<h:outputLabel value="Grupo : " />
-								<p:inputText value="#{quartzMB.qrtzSimpleTriggers.id.triggerGroup}"   />
-					    		<h:outputLabel value="RepeatCount : " />
-								<p:inputText  value="#{quartzMB.qrtzSimpleTriggers.repeatCount}"/>
-								<h:outputLabel value="RepeatInterval : " />
-								<p:inputText  value="#{quartzMB.qrtzSimpleTriggers.repeatInterval}"/>
-								<p:commandButton id="btnActuSimpleTrigger" value="Actualizar"  update="@form" icon="ui-icon-search" 
-									action="#{quartzMB.actualizarTrigger}" onclick="carDialog.hide()"/>	
-							</h:panelGrid>
-						</p:fieldset>
-				 		
-						
-						 <p:fieldset  toggleable="true" toggleSpeed="500"  id="fCronDet" rendered="#{quartzMB.bqcron}" >
-						  <h:panelGrid columns="2" >
-						 		<h:outputLabel value="Nombre : "  />
-								<p:inputText  value="#{quartzMB.qrtzCronTriggers.id.triggerName}"  />
-								<h:outputLabel value="Grupo : "  />  
-								<p:inputText value="#{quartzMB.qrtzCronTriggers.id.triggerGroup}"   />
-						 		<h:outputLabel value="CronExpression : " />
-						        <p:inputText  value="#{quartzMB.qrtzCronTriggers.cronExpression}"/>
-						       <p:commandButton id="btnActuCronTrigger" value="Actualizar"  update="@form" icon="ui-icon-search" 
-									action="#{quartzMB.actualizarTrigger}" onclick="carDialog.hide()"/>	
-						   </h:panelGrid>
-						</p:fieldset>
-						
-				   </p:dialog>			
+					 
 			</p:tab>
 
 			<p:tab title="Consulta Quartz" id="idTabConsultarJobDetail" >
@@ -322,7 +332,7 @@
 		</h:form>	
 	      
    <p:confirmDialog message="#{quartzMB.sMessajeSchedule}" width="300"
-					showEffect="explode" hideEffect="explode"
+					showEffect="explode" hideEffect="explode" 
 					header="Mensaje de Confirmación" severity="alert"
 					visible="#{quartzMB.bVisibleDialogShed}" id="cfdAlertShedule"
 					widgetVar="confirmationShedule" modal="true">
