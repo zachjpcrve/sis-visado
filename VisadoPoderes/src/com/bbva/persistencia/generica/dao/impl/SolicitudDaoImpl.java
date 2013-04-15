@@ -1309,7 +1309,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			sql= "SELECT des_estudio,costo,dia_atencion, filtro, COUNT(filtro) contador " + 
 					"FROM (select es.des_estudio, to_char(hst.fecha,'dd') dia_atencion, es.costo, " +
-					"case when to_char(hst.fecha,'dd')<to_char(so.fecha_respuesta,'dd') then 'A' else 'B' END AS FILTRO " +
+					"case when trunc(hst.fecha)<=trunc(so.fecha_respuesta) then 'A' else 'B' END AS FILTRO " +
 					"from tiivs_solicitud so " +
 					"join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
 					"left join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
@@ -1317,7 +1317,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					"where hst.estado in ('0003','0009','0004') and hst.reg_abogado is not null " + sWhere +
 					"order by so.cod_estudio) A "  +
 					"group by DES_ESTUDIO,dia_atencion,filtro,costo " +
-					"order by des_estudio,filtro,dia_atencion";
+					"order by des_estudio,filtro,dia_atencion ";
 			
 			logger.info("SQL : "+sql);
 			 
