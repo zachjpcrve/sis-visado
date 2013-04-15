@@ -787,7 +787,7 @@ public class Utilitarios {
 	public static void mensajeInfo(String titutlo, String mensaje) {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(
-				FacesMessage.SEVERITY_INFO, mensaje, mensaje));
+				FacesMessage.SEVERITY_INFO, titutlo, mensaje));
 	}
 
 	public static void mensajeError(String titutlo, String mensaje) {
