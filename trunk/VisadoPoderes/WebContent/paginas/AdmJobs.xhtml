@@ -41,14 +41,8 @@
 							
 	                       
 							<p:commandButton id="btnAgregar" value="Guardar"  update="@form" icon="ui-icon-search" action="#{quartzMB.crearTrigger}"/>	
-								<h:panelGrid columns="4"  >
-							<h:outputLabel value="Is Durable ? : " />
-	                        <p:selectBooleanCheckbox id="idDurable" value="#{quartzMB.bDurable}"/>
-	                        
-	                        <h:outputLabel value="Is Volatile ? : " />
-	                        <p:selectBooleanCheckbox id="idVolatile" value="#{quartzMB.bVolatile}"/>
-							</h:panelGrid>
-							<p:commandButton value="On/Off Scheduler" actionListener="#{quartzMB.obtenerBooleanoShedule}"
+							
+							<p:commandButton value="On/Off Scheduler" actionListener="#{quartzMB.obtenerBooleanoShedule}" update=":frmQuartzGen"
 							  onclick="confirmationShedule.show()"></p:commandButton>
 							
 							<p:commandButton id="btnCargarTerr" value="Cargar Territorios"  update="@form" icon="ui-icon-search" action="#{admJobs.cargarTerritorios}" rendered="false"/>
@@ -337,7 +331,7 @@
 					visible="#{quartzMB.bVisibleDialogShed}" id="cfdAlertShedule"
 					widgetVar="confirmationShedule" modal="true">
 					<h:form id="frmDialogShe">
-						<p:commandButton value="Si" update="@form"
+						<p:commandButton value="Si" update=":frmQuartzGen" 
 							actionListener="#{quartzMB.pararSchedule}"
 							oncomplete="confirmationShedule.hide()" />
 						<p:commandButton value="No" onclick="confirmationShedule.hide()"
