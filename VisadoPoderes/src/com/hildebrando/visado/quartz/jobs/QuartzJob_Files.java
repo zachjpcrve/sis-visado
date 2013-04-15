@@ -41,7 +41,7 @@ public class QuartzJob_Files implements Job  {
 		
 		logger.info("path:" + path);
 		
-		path = path.substring(1,path.lastIndexOf("WEB-INF")+"WEB-INF".length()) + File.separator + ConstantesVisado.FILES + File.separator;
+		path = path.substring(1,path.lastIndexOf("WEB-INF")) + File.separator + ConstantesVisado.FILES + File.separator;
 		path = path.replace("/", File.separator);
 		
 		logger.info("new path:" + path);
@@ -50,29 +50,35 @@ public class QuartzJob_Files implements Job  {
 		
 		logger.info("directory exists?:" + directory.exists());
 		
-		List<File> files = null;
-		String ext[] = { "pdf", "PDF" };
-		files = (List<File>) FileUtils.listFiles(directory, ext, true);
-		
-		logger.debug("Numero de archivos PDF en el directorio:"
-				+ FileUtils.listFiles(directory, ext, false).size());
+		if(directory.exists()){
+			
+			List<File> files = null;
+			String ext[] = { "pdf", "PDF" };
+			files = (List<File>) FileUtils.listFiles(directory, ext, true);
+			
+			logger.debug("Numero de archivos PDF en el directorio:"
+					+ FileUtils.listFiles(directory, ext, false).size());
 
-		int num1 = 0, num2 = 0;
-		for (File f : files) {
+			int num1 = 0, num2 = 0;
+			for (File f : files) {
 
-			if (FileUtils.isFileOlder(f, fechaAyer)) {
-				logger.info("Eliminar: " + f.getName());
-				f.delete();
-				num1++;
-			} else {
-				logger.info("Mantener: " + f.getName());
-				num2++;
+				if (FileUtils.isFileOlder(f, fechaAyer)) {
+					logger.info("Eliminar: " + f.getName());
+					f.delete();
+					num1++;
+				} else {
+					logger.info("Mantener: " + f.getName());
+					num2++;
+				}
 			}
+
+			logger.debug("Número de archivos eliminados: " + num1);
+			logger.debug("Número de archivos mantenidos: " + num2);
+			
+		} else {
+			logger.info("Ubicación de carpeta no existe:" );
 		}
 
-		logger.debug("Número de archivos eliminados: " + num1);
-		logger.debug("Número de archivos mantenidos: " + num2);
-		
 	}
 	
 	
