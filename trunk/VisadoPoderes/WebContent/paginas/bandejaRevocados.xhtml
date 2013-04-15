@@ -75,7 +75,7 @@
 								<h:outputLabel for="calFecIni" value="Fecha de Inicio: " />
 								<p:calendar id="calFecIni" pattern="dd/MM/yyyy"
 									value="#{revocadosMB.fechaInicio}" label="Fecha de Inicio:"
-									showOn="button" maxlength="10" size="15">
+									showOn="button" maxlength="10" size="15" locale="es">
 									<p:ajax event="dateSelect" update="calFecFin" />
 								</p:calendar>
 
@@ -83,7 +83,7 @@
 								<p:calendar id="calFecFin" pattern="dd/MM/yyyy"
 									mindate="#{revocadosMB.fechaInicio}"
 									value="#{revocadosMB.fechaFin}" label="Fecha de Fin:"
-									showOn="button" maxlength="10" size="15">
+									showOn="button" maxlength="10" size="15" locale="es">
 								</p:calendar>
 							</h:panelGrid>
 
