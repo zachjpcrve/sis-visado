@@ -83,7 +83,7 @@
 								<td >
 									<p:calendar  id="calFecIni" disabled="#{seguimientoMB.noMostrarFechas}"
 										pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaInicio}" 
-										showOn="button" maxlength="10" size="23"/>
+										showOn="button" maxlength="10" size="23" locale="es" />
 								</td>
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecIni" /></td>
 								<p:tooltip for="tooltxtFecIni" value="Fecha de Inicio" showEffect="fade" hideEffect="fade" />  
@@ -92,7 +92,7 @@
 								<td >
 									<p:calendar  id="calFecFin" disabled="#{seguimientoMB.noMostrarFechas}"
 										pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaFin}"
-										showOn="button" maxlength="10" size="21"/>
+										showOn="button" maxlength="10" size="21" locale="es"/>
 								</td>
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecFin" /></td>
 								<p:tooltip for="tooltxtFecFin" value="Fecha de Fin" showEffect="fade" hideEffect="fade" />  
