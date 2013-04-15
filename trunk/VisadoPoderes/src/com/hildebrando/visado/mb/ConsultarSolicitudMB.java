@@ -628,49 +628,13 @@ public class ConsultarSolicitudMB {
 			solicitudRegistrarT.setLstDocumentos(lstdocumentos); //Para reportes
 			solicitudRegistrarTCopia=new TiivsSolicitud();
 			solicitudRegistrarTCopia=this.solicitudRegistrarT;
-			// PODERDANTES Y APODERADOS
-//			List<TiivsPersona> lstPoderdantes = null;
-//			List<TiivsPersona> lstApoderdantes = null;
-//		   AgrupacionSimpleDto agrupacionSimpleDto  =null; ;
-//		   List<TiivsPersona>lstPersonas=null;
+		
+			
 		   listaSolicitudAgrupacionesCopia=new ArrayList<TiivsSolicitudAgrupacion>();
 		   listaSolicitudAgrupacionesCopia.addAll(this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) ;
 		   
 		   armaAgrupacionSimple();
 		   
-//		   for (TiivsSolicitudAgrupacion x : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) 
-//		   {
-//			   lstPoderdantes = new ArrayList<TiivsPersona>();
-//			   lstApoderdantes = new ArrayList<TiivsPersona>();
-//			   lstPersonas=new ArrayList<TiivsPersona>();
-//			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) 
-//			   {    
-//				    d.getTiivsPersona().setTipPartic(d.getTipPartic());
-//				    d.getTiivsPersona().setClasifPer(d.getClasifPer());
-//				    d.getTiivsPersona().setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
-//				    d.getTiivsPersona().setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getClasifPer().trim()));
-//				    d.getTiivsPersona().setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
-//				    lstPersonas.add(d.getTiivsPersona());
-//				   
-//					if(d.getTipPartic().trim().equals(ConstantesVisado.PODERDANTE))
-//					{
-//						lstPoderdantes.add(d.getTiivsPersona());
-//					}
-//					else  if(d.getTipPartic().trim().equals(ConstantesVisado.APODERADO))
-//					{
-//						lstApoderdantes.add(d.getTiivsPersona());
-//					}
-//			   }
-//			    agrupacionSimpleDto = new AgrupacionSimpleDto();
-//				agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), x.getId().getNumGrupo()));
-//				agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
-//				agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
-//				agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionEstado(x.getEstado().trim()));
-//				agrupacionSimpleDto.setLstPersonas(lstPersonas);
-//			   lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
-//			   
-//			   
-//		   }
 		   		   		   
 		   solicitudRegistrarT.setLstAgrupacionSimpleDto(lstAgrupacionSimpleDto); //reporte
 		   
