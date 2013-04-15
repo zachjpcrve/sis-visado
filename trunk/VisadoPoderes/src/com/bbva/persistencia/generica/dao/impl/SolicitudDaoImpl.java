@@ -346,7 +346,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	{	
 		logger.info("***************En el obtenerSolicitudesxTipoServicio*************************");
 		String sql ="";
-		String sCadFecha="";
+		//String sCadFecha="";
 		String sWhere="";
 		List<SolicitudesTipoServicio> tmpLista = new ArrayList<SolicitudesTipoServicio>();
 		
