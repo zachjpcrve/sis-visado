@@ -136,7 +136,7 @@ public class QuartzMB  implements Serializable
     	}
     	this.listarTriggers();
     	this.limpiar();
-    	Utilitarios.mensajeInfo("Mensajito", "Se registro correctamente un : " + objParamQrtz.getTriggerType()+"TRIGGER");
+    	
     } catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			Utilitarios.mensajeInfo("Mensajito", "Error : " + e.getMessage());
@@ -176,7 +176,7 @@ public class QuartzMB  implements Serializable
     	JobDetail jobDetail = null;
     	scheduler = SpringInit.getApplicationContext().getBean(Scheduler.class);
     	if(scheduler!=null){  
-    		log.debug("En el if schedule != null");
+    		log.info("En el if schedule != null");
     		if(((Scheduler) scheduler).getJobDetail(objParamQrtz.getQrtzJobDetails().getId().getJobName(),
 	                                                objParamQrtz.getQrtzJobDetails().getId().getJobGroup())!=null){
               jobDetail = ((Scheduler) scheduler).getJobDetail(objParamQrtz.getQrtzJobDetails().getId().getJobName(),
@@ -198,7 +198,6 @@ public class QuartzMB  implements Serializable
    		      Set<String> lst = scheduler.getJobListenerNames();
    		      
    		      for (String jobListener : lst) {
-   			    System.out.println(jobListener);
 		      }*/
    		    
    		     
@@ -220,7 +219,7 @@ public class QuartzMB  implements Serializable
 	    	
 	    	JobDetail jobDetail =crearJobDetail();
 	    	scheduler.scheduleJob(jobDetail, simpleTrigger);
-	 
+	    	Utilitarios.mensajeInfo("Mensajito", "Se registro correctamente un : " + simpleTrigger.getFullJobName());
     }
     
     public void crearCronTrigger() throws ClassNotFoundException, SchedulerException, ParseException{
@@ -237,16 +236,15 @@ public class QuartzMB  implements Serializable
 			/* 
 			 
 			scheduler.scheduleJob(jobDetail, cronTrigger);*/
-			/* System.out.println("objParamQrtz.getId().getTriggerName() " +objParamQrtz.getId().getTriggerName());
+			/* 
 			Trigger tri = scheduler.getTrigger(objParamQrtz.getId().getTriggerName(), objParamQrtz.getId().getTriggerGroup());
-			System.out.println("cronTrigger " +cronTrigger.getName());
+			
 		    	if(tri!=null){
-		    		System.out.println("Hereee" +jobDetail.getName());
+		    		
 		    		scheduler.rescheduleJob(tri.getName(), tri.getGroup(), cronTrigger);
 		    	}
 			*/
 			
-			log.debug("En el crear cron *********** crearCronTrigger");
     	    boolean msValidacion =false;
     	    if(objParamQrtz.getQrtzJobDetails().getId().getJobName().equals("")||objParamQrtz.getQrtzJobDetails().getId().getJobName()==null){
     	    	Utilitarios.mensajeInfo(""," *Ingrese un Nombre para el JobDetail");
@@ -281,12 +279,11 @@ public class QuartzMB  implements Serializable
 				JobDetail jobDetail =crearJobDetail();
 				 
 				scheduler.scheduleJob(jobDetail, cronTrigger);
-				Utilitarios.mensajeInfo( "Se registro correctamente un : " + objParamQrtz.getTriggerType()+"TRIGGER", "");
+				Utilitarios.mensajeInfo("Mensajito", "Se registro correctamente un : " + cronTrigger.getFullJobName());
 				try {
 					this.listarTriggers();
 				} catch (Exception e) {
-					//e.printStackTrace();
-					Utilitarios.mensajeInfo("",e.getMessage());
+					Utilitarios.mensajeInfo("ERROR : ",e.getMessage());
 				}
 		    	this.limpiar(); 
 			}
@@ -317,19 +314,22 @@ public class QuartzMB  implements Serializable
 			qrtzCronTriggerTMP.setCronExpression(cronExpression);
 			try {
 				entidadDAO.modificar(qrtzCronTriggerTMP);
+				Utilitarios.mensajeInfo("Info", "Se actualizo correctamente el CronTriggers");
+				bqsimple=false;
+	        	bqcron=false;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		else
 		{
-			log.debug("Error!!, no se encontro expression para actualizar");
+			log.info("Error!!, no se encontro expression para actualizar");
 		}
     }
 	
     public void eliminarTrigger(){
     	try { 
-    	log.debug("En el eliminarTrigger " +qrtzJobDetailsId.getJobName() + " xx " +qrtzJobDetailsId.getJobGroup()); 
+    	log.info("En el eliminarTrigger " +qrtzJobDetailsId.getJobName() + " xx " +qrtzJobDetailsId.getJobGroup()); 
     	scheduler = (Scheduler) SpringInit.getApplicationContext().getBean("quartzScheduler");
     	boolean valor =false;
     	//JobKey jobKey = new JobKey(name, group)
@@ -338,20 +338,25 @@ public class QuartzMB  implements Serializable
         	valor =scheduler.deleteJob(qrtzJobDetailsId.getJobName(), qrtzJobDetailsId.getJobGroup());
         	
         }
-         Utilitarios.mensajeInfo("Info : ", "El trigger fue Eliminado ?" +valor);
+        if(valor){
+         Utilitarios.mensajeInfo("Info : ", "El trigger fue Eliminado Correctamente");
+        }else{
+         Utilitarios.mensajeInfo("Info : ", "No se pudo eliminar el Trigger.");	
+        }
+        
          this.listarTriggers();
     	
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			Utilitarios.mensajeInfo("Info : ", "No se pudo eliminar el Trigger: "+e.getMessage());	
 		}catch (Exception e) {
-			e.printStackTrace();
+			Utilitarios.mensajeInfo("Info : ", "No se pudo eliminar el Trigger: "+e.getMessage());
+			//e.printStackTrace();
 		}
     }
     public void pararSchedule(){
     	scheduler = (Scheduler) SpringInit.getApplicationContext().getBean("quartzScheduler");
-    	log.debug("bPararSchedulxxxxx " +bPararSchedul);
+    	log.info("bPararSchedulxxxxx " +bPararSchedul);
     	try {
-			
 			if(bPararSchedul==true){
 				scheduler.shutdown();
 				//VERIFICAR ESTO
@@ -363,7 +368,7 @@ public class QuartzMB  implements Serializable
 					   bPararSchedul=true;
 					   sLabelShedule="Parar Schedule ? ";
 				   }
-				log.debug("Se paro el schedule");
+				log.info("Se paro el schedule");
 				Utilitarios.mensajeInfo("Info : ", "Se paro el Schedule " );
 			}
 			if(bPararSchedul==false){
@@ -376,7 +381,7 @@ public class QuartzMB  implements Serializable
 					   bPararSchedul=true;
 					   sLabelShedule="Parar Schedule ? ";
 				   }
-				log.debug("Se inicio el Schedule");
+				log.info("Se inicio el Schedule");
 				Utilitarios.mensajeInfo("Info : ", "Se inicio el Schedule " );
 			}
 
@@ -386,7 +391,7 @@ public class QuartzMB  implements Serializable
 		}
     }
     public void obtenerBooleanoShedule(){
-    	log.debug("bPararSchedul " +bPararSchedul);
+    	log.info("bPararSchedul " +bPararSchedul);
     	if(bPararSchedul==true){
     	sMessajeSchedule="¿Está usted seguro que desea PARAR el Shedule?";
     	}if(bPararSchedul==false){
@@ -399,7 +404,7 @@ public class QuartzMB  implements Serializable
 	   scheduler = (Scheduler) SpringInit.getApplicationContext().getBean("quartzScheduler");
 	
 	   try {
-		   log.debug("EL SCHEDULE ESTA : " +scheduler.isStarted());
+		   log.info("EL SCHEDULE ESTA : " +scheduler.isStarted());
 		if(scheduler.isShutdown()){
 			   bPararSchedul=true;
 			   sLabelShedule="Iniciar Schedule ? ";
@@ -427,18 +432,26 @@ public class QuartzMB  implements Serializable
     		Trigger tri = scheduler.getTrigger(qrtzTriggersId.getTriggerName(),qrtzTriggersId.getTriggerGroup());
     		if(tri!=null){
     		    scheduler.triggerJob(tri.getJobName(),tri.getJobGroup());
-    			Utilitarios.mensajeInfo(""," *Info : El trigger fue Executado");	
+    			Utilitarios.mensajeInfo(""," *Info : El trigger fue Executado");
+    			//MANUAL_TRIGGER Triger Test
     			this.listarTriggers();
+						for (QrtzTriggers x : lstQrtzTriggers) {
+							if(x.getId().getTriggerGroup().equals("MANUAL_TRIGGER")&&x.getQrtzJobDetails().getId().getJobName().equals(tri.getJobName())){
+								
+							}
+							// scheduler.resumeTrigger(x.getId().getTriggerName(),x.getId().getTriggerGroup());
+				         }
+			   this.listarTriggers();
     		}else{
     			Utilitarios.mensajeInfo(""," *Info : No Trigger no pudo ser ejecutado");	
     		}
 			
 		} catch (SchedulerException e) {
-			Utilitarios.mensajeInfo(""," *Info : "+ e.getMessage());
-			e.printStackTrace();
+			Utilitarios.mensajeInfo("ERROR"," *Info : "+ e.getMessage());
+			//e.printStackTrace();
 		}catch (Exception e) {
-			Utilitarios.mensajeInfo(""," *Info : "+ e.getMessage());
-			e.printStackTrace();
+			Utilitarios.mensajeInfo("ERROR"," *Info : "+ e.getMessage());
+			//e.printStackTrace();
 		}
     }
     
@@ -446,7 +459,7 @@ public class QuartzMB  implements Serializable
     	try {
     		scheduler = (Scheduler) SpringInit.getApplicationContext().getBean("quartzScheduler");
             scheduler.resumeTrigger(qrtzTriggersId.getTriggerName(),qrtzTriggersId.getTriggerGroup());
-        	Utilitarios.mensajeInfo("Info : ", "Se restauro el Trigger con Key : "+qrtzTriggersId.getTriggerName()+ " " +qrtzTriggersId.getTriggerGroup() );
+        	Utilitarios.mensajeInfo("Info : ", "Se restauro el Trigger con Key : "+qrtzTriggersId.getTriggerName()+ " : " +qrtzTriggersId.getTriggerGroup() );
 			
         	this.listarTriggers();
     		} catch (SchedulerException e) {
@@ -477,7 +490,7 @@ public class QuartzMB  implements Serializable
 			scheduler.pauseTrigger(qrtzTriggersId.getTriggerName(),
             		               qrtzTriggersId.getTriggerGroup());
 		
-			log.debug("En e pausar bean " );
+			log.info("En e pausar bean " );
 			Utilitarios.mensajeInfo("Info : ", "Se pauso el Trigger con Key : "+qrtzTriggersId.getTriggerName()+ " " +qrtzTriggersId.getTriggerGroup() );
 			this.listarTriggers();
 	
@@ -491,7 +504,7 @@ public class QuartzMB  implements Serializable
  			scheduler = (Scheduler) SpringInit.getApplicationContext().getBean("quartzScheduler");
  			scheduler.pauseJob(qrtzJobDetailsId.getJobName(),
  					           qrtzJobDetailsId.getJobGroup());
- 			log.debug("En e pausar bean " );
+ 			log.info("En e pausar bean " );
  			Utilitarios.mensajeInfo("Info : ", "Se pauso el Job con Key : "+qrtzJobDetailsId.getJobName()+ " " +qrtzJobDetailsId.getJobGroup() );
  			this.listarJobDetail();
  	
@@ -502,7 +515,7 @@ public class QuartzMB  implements Serializable
      }
     @SuppressWarnings("unchecked")
 	public void mostrarDetalleTrigger(){
-    	log.debug("El Id del Trigger " + qrtzTriggers.getTriggerType());
+    	log.info("El Id del Trigger " + qrtzTriggers.getTriggerType());
     	scheduler = (Scheduler) SpringInit.getApplicationContext().getBean("quartzScheduler");
     	
     	 
@@ -533,7 +546,8 @@ public class QuartzMB  implements Serializable
     		bqsimple=false;
         	bqcron=true;
     	}
-    	
+    	/*qrtzTriggers=new QrtzTriggers();
+    	qrtzTriggers.setId(new QrtzTriggersId());*/
     }
     
 	
@@ -604,13 +618,13 @@ public class QuartzMB  implements Serializable
 	}
 
 	public QrtzTriggers getQrtzTriggers() {
-		log.debug("EN EL getQrtzTriggers");
+		log.info("EN EL getQrtzTriggers");
 
 		return qrtzTriggers;
 	}
 
 	public void setQrtzTriggers(QrtzTriggers qrtzTriggers) {
-		log.debug("EN EL setQrtzTriggers");
+		log.info("EN EL setQrtzTriggers");
 		this.qrtzTriggers = qrtzTriggers;
 	}
 
