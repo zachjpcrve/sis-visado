@@ -222,13 +222,15 @@ public class SeguimientoMB
 		}
 		
 		//Seteo del campo Estudio en caso de que el grupo sea de Servicios Juridicos
-		String grupoSSJJ = (String) Utilitarios.getObjectInSession("GRUPO_JRD");
+		String PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
-		if (grupoSSJJ!=null)
+		if (PERFIL_USUARIO!=null)
 		{
-			if (grupoSSJJ.compareTo("")!=0)
-			{
+			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 				setOcultarControl(true);
+			}
+			else{
+				setOcultarControl(false);
 			}
 		}
 	}	

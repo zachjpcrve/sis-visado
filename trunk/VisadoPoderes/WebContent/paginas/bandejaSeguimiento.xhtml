@@ -256,7 +256,7 @@
 							<td>
 								<p:commandButton value="Buscar" icon="ui-icon-search" 
 									actionListener="#{seguimientoMB.busquedaSolicitudes}" 
-									update="panelRes" ajax="false"/>
+									update=":frm:pnlBndSol:idMsmBndSolicitud" ajax="false"/>
 							</td>
 							<td>
 								<p:commandButton id="exportar" value="Exportar" onclick="PrimeFaces.monitorDownload(start, stop)" ajax="false"  
