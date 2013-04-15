@@ -101,7 +101,7 @@ public class SeguimientoMB
 	private Boolean bRevision=false;
 	private Boolean bDelegados=false;
 	private Boolean bRevocatoria=false;
-	private Boolean ocultarControl;
+	private Boolean mostrarEstudio;
 	private Date fechaInicio;
 	private Date fechaFin;
 	private TiivsOficina1 oficina;
@@ -227,10 +227,10 @@ public class SeguimientoMB
 		if (PERFIL_USUARIO!=null)
 		{
 			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
-				setOcultarControl(true);
+				setMostrarEstudio(true);
 			}
 			else{
-				setOcultarControl(false);
+				setMostrarEstudio(false);
 			}
 		}
 	}	
@@ -3049,12 +3049,12 @@ public class SeguimientoMB
 		this.lstSolicitudesSelected = lstSolicitudesSelected;
 	}
 
-	public Boolean getOcultarControl() {
-		return ocultarControl;
+	public Boolean getMostrarEstudio() {
+		return mostrarEstudio;
 	}
 
-	public void setOcultarControl(Boolean ocultarControl) {
-		this.ocultarControl = ocultarControl;
+	public void setMostrarEstudio(Boolean mostrarEstudio) {
+		this.mostrarEstudio = mostrarEstudio;
 	}
 
 	public List<String> getLstSolicitudesxOpeBan() {
