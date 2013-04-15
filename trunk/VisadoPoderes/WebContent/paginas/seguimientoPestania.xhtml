@@ -48,7 +48,9 @@
 	        
 	        <p:commandButton id="comentar" value="Comentar" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" actionListener="#{consultarSolicitudMB.habilitarComentario}"/>
 											
-			<p:editor id="editor" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="380" height="400" disabled="#{consultarSolicitudMB.bMostrarComentario}"/>
+			<p:editor id="editor" onchange="actualizarEditor();" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="380" height="400" disabled="#{consultarSolicitudMB.bMostrarComentario}"/>
+			
+			<p:remoteCommand name="actualizarEditor" update=":formSolicitudSeguimiento:editor" />
 
 			<h:panelGrid columns="2" style="margin-top:10px">
 				<!-- <p:commandButton id="submitButton" value="Guardar" update="display" actionListener="{consultarSolicitudMB.seterComentario}"
