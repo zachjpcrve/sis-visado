@@ -695,10 +695,16 @@ public class ReportesMB {
 		String cadEstudio = "";
 		if (lstEstudioSelected.size() > 0) 
 		{
-			int j = 0;
-			int cont = 1;
+			/*int j = 0;
+			int cont = 1;*/
+			
+			for (String estudio : lstEstudioSelected) 
+			{
+				cadEstudio += "" + estudio + ",";
+			}
+			cadEstudio = cadEstudio.substring(0, cadEstudio.lastIndexOf(","));
 
-			for (; j <= lstEstudioSelected.size() - 1; j++) 
+			/*for (; j <= lstEstudioSelected.size() - 1; j++) 
 			{
 				if (lstEstudioSelected.size() > 1) 
 				{
@@ -716,7 +722,7 @@ public class ReportesMB {
 				{
 					cadEstudio = lstEstudioSelected.get(j).toString();
 				}
-			}
+			}*/
 		}
 
 		if (getIdMoneda() != null) {
