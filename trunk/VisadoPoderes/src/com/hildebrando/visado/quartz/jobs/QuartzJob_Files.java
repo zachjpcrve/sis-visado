@@ -41,13 +41,20 @@ public class QuartzJob_Files implements Job  {
 		
 		logger.info("path:" + path);
 		
-		path = path.substring(1,path.lastIndexOf("WEB-INF")) + File.separator + ConstantesVisado.FILES + File.separator;
+		path = path.substring(0,path.lastIndexOf("WEB-INF")) + ConstantesVisado.FILES + File.separator;
 		path = path.replace("/", File.separator);
 		
-		logger.info("new path:" + path);
+		logger.info("path with FS:" + path);
+				
+		File directory = null;
 		
-		File directory = new File(path);
+		if(new File(path).exists()==false){
+			path = path.substring(1,path.length());	//Windows path
+			logger.info("modify path:" + path);
+		} 
 		
+		directory = new File(path);
+				
 		logger.info("directory exists?:" + directory.exists());
 		
 		if(directory.exists()){
