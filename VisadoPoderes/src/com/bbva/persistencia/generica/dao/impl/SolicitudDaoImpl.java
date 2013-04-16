@@ -477,7 +477,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (dFechaInicio!=null && dFechaFin!=null)
 			{
-				DateFormat formato = new SimpleDateFormat("dd/MM/yy");
+				DateFormat formato = new SimpleDateFormat("MM/dd/yy");
 				
 				String tmpFecIni = formato.format(dFechaInicio);
 				String tmpFecFin = formato.format(dFechaFin);
@@ -493,7 +493,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				}
 				else
 				{*/
-					sWhere += " and TO_CHAR(so.fecha,'DD-MON-YYYY') between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+					sWhere += " and trunc(so.fecha) between to_date('" + tmpFecIni + "','MM-DD-YY')" + " and to_date('" + tmpFecFin + "','MM-DD-YY')" +  " ";
 				//}
 			}
 			
@@ -546,7 +546,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					  "left join tiivs_solicitud so on ob.cod_soli = so.cod_soli " +
 					  "left join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
 					  "left join tiivs_tipo_solicitud ts on so.cod_tipo_solic=ts.cod_tip_solic " +
-					  "join tiivs_multitabla mul on so.moneda = mul.cod_elem and mul.cod_mult='T08' " +
+					  "join tiivs_multitabla mul on ob.moneda = mul.cod_elem and mul.cod_mult='T08' " +
 					  "left join tiivs_operacion_bancaria op on ob.cod_oper_ban = op.cod_oper_ban " +
 					  "where ob.cod_soli in ( " +
 					  "select * from (select s.cod_soli from tiivs_solicitud s " +
@@ -568,7 +568,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 						  "left join tiivs_solicitud so on ob.cod_soli = so.cod_soli " +
 						  "left join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
 						  "left join tiivs_tipo_solicitud ts on so.cod_tipo_solic=ts.cod_tip_solic " +
-						  "join tiivs_multitabla mul on so.moneda = mul.cod_elem and mul.cod_mult='T08' " +
+						  "join tiivs_multitabla mul on ob.moneda = mul.cod_elem and mul.cod_mult='T08' " +
 						  "left join tiivs_operacion_bancaria op on ob.cod_oper_ban = op.cod_oper_ban " +
 						  "where ob.cod_soli in ( " +
 						  "select * from (select s.cod_soli from tiivs_solicitud s " +
@@ -1314,7 +1314,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					"join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
 					"left join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"join tiivs_miembro m on hst.reg_usuario = m.cod_miembro " +
-					"where hst.estado in ('0003','0009','0004') and hst.reg_abogado is not null " + sWhere +
+					"where hst.estado in ('0003','0009','0004') " + sWhere +
 					"order by so.cod_estudio) A "  +
 					"group by DES_ESTUDIO,dia_atencion,filtro,costo " +
 					"order by des_estudio,filtro,dia_atencion ";
@@ -1707,11 +1707,12 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				
 				if (sWhere.compareTo("")!=0)
 				{
-					sWhere += " and TO_CHAR(so.fecha,'DD-MON-YYYY') between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+					sWhere += " and trunc(so.fecha) between to_date('" + tmpFecIni + "','MM-DD-YY')" + " and to_date('" + tmpFecFin + "','MM-DD-YY')" +  " ";
 				}
 				else
 				{
-					sWhere = " where TO_CHAR(so.fecha,'DD-MON-YYYY') between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+					//sWhere += " and trunc(so.fecha) between to_date('" + tmpFecIni + "','MM-DD-YY')" + " and to_date('" + tmpFecFin + "','MM-DD-YY')" +  " ";
+					sWhere = " where trunc(so.fecha) between to_date('" + tmpFecIni + "','MM-DD-YY')" + " and to_date('" + tmpFecFin + "','MM-DD-YY')" +  " ";
 				}				
 			}
 			
@@ -1975,7 +1976,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				logger.info("Buscando por fecha de inicio: " + tmpFecIni);
 				logger.info("Buscando por fecha de fin: " + tmpFecFin);
 				
-				sCadFecha = " and TO_CHAR(a.fecha,'DD-MON-YYYY') between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
+				//trunc(so.fecha) between to_date('" + tmpFecIni + "','MM-DD-YY')" + " and to_date('" + tmpFecFin + "','MM-DD-YY')" +  " ";
+				sCadFecha = " and trunc(a.fecha) between to_date('" + tmpFecIni + "','MM-DD-YY')" + " and to_date('" + tmpFecFin + "','MM-DD-YY')" +  " ";
 				
 				sWhere += sCadFecha;
 			}

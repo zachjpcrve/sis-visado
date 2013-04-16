@@ -195,7 +195,6 @@ public class ReportesMB {
 		{
 			setTextoAnioMes(Utilitarios.buscarMesxCodigo(getMes()) + ConstantesVisado.ESPACIO_BLANCO + Utilitarios.buscarAnioxCodigo(getAnio()));
 		}
-
 	}
 
 	public void inicializarCampos() {
@@ -407,8 +406,7 @@ public class ReportesMB {
 
 		int iNuevoTotal = lstRecaudacionTipoServ.size() - 1;
 
-		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS
-				+ iNuevoTotal + ConstantesVisado.MSG_REGISTROS, iNuevoTotal);
+		setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS	+ iNuevoTotal + ConstantesVisado.MSG_REGISTROS, iNuevoTotal);
 		if (lstRecaudacionTipoServ.size() > 1) {
 			setNoHabilitarExportar(false);
 		} else {
@@ -695,21 +693,27 @@ public class ReportesMB {
 
 		// Busqueda por estudio
 		String cadEstudio = "";
-		if (lstEstudioSelected.size() > 0) {
+		if (lstEstudioSelected.size() > 0) 
+		{
 			int j = 0;
 			int cont = 1;
 
-			for (; j <= lstEstudioSelected.size() - 1; j++) {
-				if (lstEstudioSelected.size() > 1) {
-					if (cont == lstEstudioSelected.size()) {
-						cadEstudio = cadEstudio.concat(lstEstudioSelected
-								.get(j).toString());
-					} else {
-						cadEstudio = cadEstudio.concat(lstEstudioSelected
-								.get(j).toString().concat(","));
+			for (; j <= lstEstudioSelected.size() - 1; j++) 
+			{
+				if (lstEstudioSelected.size() > 1) 
+				{
+					if (cont == lstEstudioSelected.size()) 
+					{
+						cadEstudio = cadEstudio.concat(lstEstudioSelected.get(j).toString());
+					} 
+					else 
+					{
+						cadEstudio = cadEstudio.concat(lstEstudioSelected.get(j).toString().concat(","));
 						cont++;
 					}
-				} else {
+				} 
+				else 
+				{
 					cadEstudio = lstEstudioSelected.get(j).toString();
 				}
 			}

@@ -212,7 +212,7 @@
 
 				<p:panel header="Resultados" id="panelRes" style="width: 1090px">
 					<p:dataTable value="#{reportesMB.lstSolicitudesTipoServicio}"
-						var="tbl" rows="3" id="datosSol" paginatorPosition="bottom"
+						var="tbl" rows="5" id="datosSol" paginatorPosition="bottom"
 						scrollable="true" scrollHeight="200" paginator="true"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
 						currentPageReportTemplate="Mostrando {startRecord} de {totalRecords}" 
@@ -225,14 +225,14 @@
 							<h:outputText value="#{tbl.codSolicitud}" style="font-size: 9px" />
 						</p:column>
 
-						<p:column width="35">
+						<p:column width="120">
 							<f:facet name="header">
 								<h:outputText value="Estudio" style="font-size: 9px" />
 							</f:facet>
 							<h:outputText value="#{tbl.estudio}" style="font-size: 9px" />
 						</p:column>
 
-						<p:column width="67">
+						<p:column width="120">
 							<f:facet name="header">
 								<h:outputText value="Tipo de Servicio" style="font-size: 9px" />
 							</f:facet>
