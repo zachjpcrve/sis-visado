@@ -98,7 +98,8 @@ public class PDFViewerMB {
 	public void cargarParametrosBD()
 	{
 		try {
-		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
+		IILDPeUsuario usuario = new IILDPeUsuario(); 
+		usuario=(IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		
 		if (usuario.getUID()!=null)
 		{
