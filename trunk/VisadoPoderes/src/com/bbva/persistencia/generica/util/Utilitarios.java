@@ -784,10 +784,10 @@ public class Utilitarios {
 		ct.addMessage(null, new FacesMessage(titulo, mensaje));
 	}
 
-	public static void mensajeInfo(String titutlo, String mensaje) {
+	public static void mensajeInfo(String titulo, String mensaje) {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(
-				FacesMessage.SEVERITY_INFO, titutlo, mensaje));
+				FacesMessage.SEVERITY_INFO, mensaje, mensaje));
 	}
 
 	public static void mensajeError(String titutlo, String mensaje) {
