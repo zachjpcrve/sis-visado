@@ -27,8 +27,8 @@
 	  	
 	  	<c:forEach items="${usuario.opciones}" var="opcion2" varStatus="count2">
 	  	<c:if test="${opcion.value.opcionId == opcion2.value.opcionPadreId and opcion2.value.opcionId==2}">
-	  	<p:menuitem value="${opcion2.value.nombre}"  onclick="document.getElementById('frmMenu:btnNuevo').click();" icon="ui-icon-pencil"
-      			ajax="false" update=":formSolicitudRegistro">
+	  	<p:menuitem value="${opcion2.value.nombre}"  onclick="document.getElementById('frmMenu:btnNuevo').click()" icon="ui-icon-pencil"
+      			>
 	  	</p:menuitem>
 	  	</c:if>
 	  	<c:if test="${opcion.value.opcionId == opcion2.value.opcionPadreId and opcion2.value.opcionId!=2 and opcion2.value.opcionId!=5}">
@@ -85,8 +85,9 @@
   		</p:submenu>    	 -->    
   </p:tieredMenu>
   
-  <p:commandButton id="btnNuevo" style="width:0;height:0" ajax="false" value="" action="#{solicitudRegMB.instanciarSolicitudRegistro}" />
-  
+  <div style="visibility: hidden; " >
+  	<p:commandButton id="btnNuevo" style="width:0;height:0" ajax="false" value="" action="#{solicitudRegMB.instanciarSolicitudRegistro}" />
+  </div>
     <p:remoteCommand name="actualizarListas"
   action="#{consultarSolicitudMB.actualizarListas}" /> 
 
