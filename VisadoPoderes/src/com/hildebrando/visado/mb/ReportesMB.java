@@ -653,7 +653,7 @@ public class ReportesMB {
 		// Busqueda de solicitudes por tipo de servicio
 		String cadTipoServ = "";
 		if (lstTipoSolicitudSelected.size() > 0) {
-			int j = 0;
+			/*int j = 0;
 			int cont = 1;
 
 			for (; j <= lstTipoSolicitudSelected.size() - 1; j++) {
@@ -667,7 +667,12 @@ public class ReportesMB {
 				} else {
 					cadTipoServ = lstTipoSolicitudSelected.get(j).toString();
 				}
+			}*/
+			
+			for (String tipoServ : lstTipoSolicitudSelected) {
+				cadTipoServ += "'" + tipoServ + "',";
 			}
+			cadTipoServ = cadTipoServ.substring(0, cadTipoServ.lastIndexOf(","));
 		}
 
 		// Busqueda por rangos de importe (Rango Global)
