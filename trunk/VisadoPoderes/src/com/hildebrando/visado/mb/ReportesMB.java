@@ -707,7 +707,7 @@ public class ReportesMB {
 			
 			for (String estudio : lstEstudioSelected) 
 			{
-				cadEstudio += "" + estudio + ",";
+				cadEstudio += "'" + estudio + "',";
 			}
 			cadEstudio = cadEstudio.substring(0, cadEstudio.lastIndexOf(","));
 
