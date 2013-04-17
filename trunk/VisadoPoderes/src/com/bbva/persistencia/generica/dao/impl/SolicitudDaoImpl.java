@@ -525,10 +525,9 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			else
 			{*/
 				sWhere += " and so.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
-						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02 + "'," +
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02 + "'," +
-						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02 + "')" ;
 		//	}
 			
@@ -1985,104 +1984,92 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			sql="select distinct c.des_ter,a.cod_ofi,b.des_ofi,NVL(regis.total,0) Registrado, " + 
 					"NVL(env.total,0) Enviado, NVL(res.total,0) Reservado, NVL(acep.total,0) Aceptado," + 
 					"NVL(verA.total,0) Verificacion_A, NVL(rechaz.total,0) Rechazado, " + 
-					"NVL(rev.total,0) En_Revision,NVL(preEj.total,0) Pre_Ejecutado," + 
+					"NVL(rev.total,0) En_Revision," + 
 					"NVL(ej.total,0) Ejecutado,NVL(proc.total,0) Procedente," + 
 					"NVL(verB.total,0) Verificacion_B,NVL(improc.total,0) Improcedente," + 
-					"NVL(ven.total,0) Vencido, NVL(revo.total,0) Revocado, " + 
+					"NVL(ven.total,0) Vencido, " + 
 					"(NVL(regis.total,0)+NVL(env.total,0)+ NVL(res.total,0) + NVL(acep.total,0)+" + 
 					"NVL(verA.total,0)+ NVL(rechaz.total,0) +" + 
-					"NVL(rev.total,0)+ NVL(preEj.total,0) +" + 
+					"NVL(rev.total,0)+ " + 
 					"NVL(ej.total,0) + NVL(proc.total,0)+" + 
 					"NVL(verB.total,0) + NVL(improc.total,0)+" + 
-					"NVL(ven.total,0)+ NVL(revo.total,0)) totalFila " + 
+					"NVL(ven.total,0)) totalFila " + 
 					"from tiivs_solicitud a " + 
 					"join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"join tiivs_territorio c on b.cod_terr= c.cod_ter " + 
 					"join tiivs_multitabla d on a.estado = d.cod_elem " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
+					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Registrado
 					"     from tiivs_solicitud a " + 
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0001' " + sCadFecha +
 					"      group by a.cod_ofi) regis on a.cod_ofi = regis.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
+					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Enviado
 					"      from tiivs_solicitud a " + 
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0007' " + sCadFecha +
 					"      group by a.cod_ofi) env on a.cod_ofi = env.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
+					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Reservado
 					"      from tiivs_solicitud a " + 
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0002' " + sCadFecha +
 					"      group by a.cod_ofi) res on a.cod_ofi = res.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
+					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Aceptado
 					"      from tiivs_solicitud a " + 
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0003' " + sCadFecha +
 					"      group by a.cod_ofi) acep on a.cod_ofi = acep.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
+					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Verificacion A
 					"      from tiivs_solicitud a " + 
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0009' " + sCadFecha +
 					"      group by a.cod_ofi) verA on a.cod_ofi = verA.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
+					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Rechazado
 					"      from tiivs_solicitud a " + 
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0004' " + sCadFecha +
 					"      group by a.cod_ofi) rechaz on a.cod_ofi = rechaz.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
+					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado En Revision
 					"      from tiivs_solicitud a " + 
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0017' " + sCadFecha +
 					"      group by a.cod_ofi) rev on a.cod_ofi = rev.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
-					"      where d.cod_mult='T02' and a.estado='0014' " + sCadFecha +
-					"      group by a.cod_ofi) preEj on a.cod_ofi = preEj.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
+					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Ejecutado
 					"      from tiivs_solicitud a " + 
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0015' " + sCadFecha +
 					"      group by a.cod_ofi) ej on a.cod_ofi = ej.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
+					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Procedente
 					"      from tiivs_solicitud a " + 
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0012' " + sCadFecha +
 					"      group by a.cod_ofi) proc on a.cod_ofi = proc.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
+					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Verificacion B
 					"      from tiivs_solicitud a " + 
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0010' " + sCadFecha +
 					"      group by a.cod_ofi) verB on a.cod_ofi = verB.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
+					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Improcedente
 					"      from tiivs_solicitud a " + 
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0013' " + sCadFecha +
 					"      group by a.cod_ofi) improc on a.cod_ofi = improc.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " +  
+					"left join (select a.cod_ofi, count(a.estado) as total " +  // Estado Vencido
 					"      from tiivs_solicitud a " + 
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0008' " + sCadFecha +
 					"      group by a.cod_ofi) ven on a.cod_ofi = ven.cod_ofi " + 
-					"left join (select a.cod_ofi, count(a.estado) as total " + 
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
-					"      where d.cod_mult='T02' and a.estado='0016' " + sCadFecha +
-					"      group by a.cod_ofi) revo on a.cod_ofi = revo.cod_ofi " + sWhere + 
 					"order by a.cod_ofi";
 			 
 			
@@ -2118,14 +2105,12 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				    nuevo.setTotalVerificacionA(Integer.valueOf(row[7].toString()));
 				    nuevo.setTotalRechazado(Integer.valueOf(row[8].toString()));
 				    nuevo.setTotalEnRevision(Integer.valueOf(row[9].toString()));
-				    nuevo.setTotalPreEjecutado(Integer.valueOf(row[10].toString()));
-				    nuevo.setTotalEjecutado(Integer.valueOf(row[11].toString()));
-				    nuevo.setTotalProcedente(Integer.valueOf(row[12].toString()));
-				    nuevo.setTotalVerificacionB(Integer.valueOf(row[13].toString()));
-				    nuevo.setTotalImprocedente(Integer.valueOf(row[14].toString()));
-				    nuevo.setTotalVencido(Integer.valueOf(row[15].toString()));
-				    nuevo.setTotalRevocado(Integer.valueOf(row[16].toString()));
-				    nuevo.setTotalFila(Integer.valueOf(row[17].toString()));
+				    nuevo.setTotalEjecutado(Integer.valueOf(row[10].toString()));
+				    nuevo.setTotalProcedente(Integer.valueOf(row[11].toString()));
+				    nuevo.setTotalVerificacionB(Integer.valueOf(row[12].toString()));
+				    nuevo.setTotalImprocedente(Integer.valueOf(row[13].toString()));
+				    nuevo.setTotalVencido(Integer.valueOf(row[14].toString()));
+				    nuevo.setTotalFila(Integer.valueOf(row[15].toString()));
 				    				
 					tmpLista.add(nuevo);
 				}

@@ -117,6 +117,7 @@ public class ReportesMB {
 	private int anio;
 	private int mes;
 	private double impuesto = 0.0;
+	private TiivsOficina1 oficina;
 
 	public static Logger logger = Logger.getLogger(ReportesMB.class);
 
@@ -129,6 +130,7 @@ public class ReportesMB {
 		lstRecaudacionTipoServ = new ArrayList<RecaudacionTipoServ>();
 		lstSolicitudesTipoServicio = new ArrayList<SolicitudesTipoServicio>();
 		lstLiquidacion = new ArrayList<AgrupacionPlazoDto>();
+		oficina = new TiivsOficina1();
 
 		combosMB = new CombosMB();
 		combosMB.cargarMultitabla();
@@ -600,8 +602,8 @@ public class ReportesMB {
 			tmpOficina.setCodOfi(getIdOfi());
 		}
 
-		if (getIdOfi1() != null && getIdOfi1().compareTo("") != 0) {
-			tmpOficina.setCodOfi(getIdOfi1());
+		if (getOficina()!=null) {
+			tmpOficina=getOficina();
 		}
 
 		tmpOficina.setTiivsTerritorio(tmpTerr);
@@ -5182,9 +5184,11 @@ public class ReportesMB {
 		this.nombreLiquidacion = nombreLiquidacion;
 	}
 
-	// lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
-	// lstSolicitudesOficina = new ArrayList<SolicitudesOficina>();
-	// lstRecaudacionTipoServ = new ArrayList<RecaudacionTipoServ>();
-	// lstSolicitudesTipoServicio = new ArrayList<SolicitudesTipoServicio>();
-	// lstLiquidacion = new ArrayList<AgrupacionPlazoDto>();
+	public TiivsOficina1 getOficina() {
+		return oficina;
+	}
+
+	public void setOficina(TiivsOficina1 oficina) {
+		this.oficina = oficina;
+	}
 }
