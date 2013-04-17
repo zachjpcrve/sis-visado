@@ -376,7 +376,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				}
 				else
 				{*/
-					sWhere += " and ts.cod_tip_solic in ('" + cadTipoServ + "')";
+					sWhere += " and ts.cod_tip_solic in (" + cadTipoServ + ")";
 				//}
 			}		
 			
@@ -471,7 +471,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				}
 				else
 				{*/
-					sWhere += " and so.cod_estudio in ('" + cadEstudio + "')";
+					sWhere += " and so.cod_estudio in (" + cadEstudio + ")";
 				//}
 			}
 			
@@ -698,7 +698,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			if (cadEstudio.compareTo("")!=0)
 			{
 				logger.info("Buscando por estudio: " + cadEstudio );
-				sWhere += " and so.cod_estudio in ('" + cadEstudio + "') ";
+				sWhere += " and so.cod_estudio in (" + cadEstudio + ") ";
 			}
 			
 			if (anio!=0)
