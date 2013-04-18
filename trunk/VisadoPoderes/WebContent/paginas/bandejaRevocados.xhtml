@@ -113,17 +113,17 @@
 
 			</h:panelGrid>
 
-                                                <p:outputPanel id="pnlTablaRevocados">
+            <p:outputPanel id="pnlTablaRevocados">
 			<p:dataTable style="width: 800px;" id="tbl" var="revocado"
 				value="#{revocadosMB.revocados}" paginator="true" rows="5"
 				paginatorPosition="bottom">
 				<p:column headerText="Nro.">
 					<h:outputText value="#{revocado.correlativo}" />
 				</p:column>
-				<p:column headerText="Poderdante" style="width: 50px;">
+				<p:column headerText="Representante" style="width: 50px;">
 					<h:outputText value="#{revocado.nombreCompletoPoderdantes}" />
 				</p:column>
-				<p:column headerText="Apoderado" style="width: 50px;">
+				<p:column headerText="Representado" style="width: 50px;">
 					<h:outputText value="#{revocado.nombreCompletoApoderados}" />
 				</p:column>
 				<p:column headerText="F. Revocación">
@@ -238,7 +238,7 @@
 
 		<!-- Pendiente/Editar -->
 		<p:dialog widgetVar="dlgApoPodPendEdit" modal="true" id="idDlgApoPod"
-			header="Apoderado/Poderdante"
+			header="Representante / Representado"
 			width="#{revocadosMB.ancho_Popup_Revoc_Poder}"
 			height="#{revocadosMB.alto_Popup_Revoc_Poder}">
 
@@ -271,7 +271,7 @@
 						
 						<p:commandButton id="btnBuscar"
 							update=":frmCliente:pnlfrmCliente, :frmPendEdit:pnlRegistrarPendEdit"
-							icon="ui-icon-seek-next" action="#{revocadosMB.buscarPersona}"
+							value="Buscar" action="#{revocadosMB.buscarPersona}"
 							ajax="true" />
 					
 					</h:panelGrid>
@@ -324,7 +324,7 @@
 	
 					<h:panelGrid columns="2" id="gridApodPod3">
 	
-						<h:outputLabel value="Tipo de Registro: " />
+						<h:outputLabel value="Tipo: " />
 						<p:selectOneMenu id="cboTipoRegistro"
 							value="#{revocadosMB.objTiivsPersonaAgregar.tipPartic}"
 							style="width: 120px">
