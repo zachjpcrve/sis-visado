@@ -14,16 +14,6 @@
 					<p:messages id="idMsmDocumento"></p:messages>
 					<table>
 						<tr>
-							<td><h:outputText value="Documento:  " /></td>
-							<td><p:selectOneMenu disabled="#{documentoMB.bEditar}" style="width:300px;"
-									value="#{documentoMB.tipoSolicDocumento.id.codDoc}">
-									    <f:selectItem itemLabel="Seleccione un Documento" itemValue="-1" />  
-									<f:selectItems value="#{documentoMB.listaDocumentos}"
-										itemLabel="#{d.descripcion}" itemValue="#{d.codDocumento}"
-										var="d"></f:selectItems>
-								</p:selectOneMenu></td>
-						</tr>
-						<tr>
 							<td><h:outputText value="Tipo de Solicitud:  " /></td>
 							<td><p:selectOneMenu disabled="#{documentoMB.bEditar}" style="width:300px;"
 									value="#{documentoMB.tipoSolicDocumento.id.codTipoSolic}">
@@ -33,6 +23,16 @@
 										var="t"></f:selectItems>
 								</p:selectOneMenu></td>
 						</tr>
+						<tr>
+							<td><h:outputText value="Documento:  " /></td>
+							<td><p:selectOneMenu disabled="#{documentoMB.bEditar}" style="width:300px;"
+									value="#{documentoMB.tipoSolicDocumento.id.codDoc}">
+									    <f:selectItem itemLabel="Seleccione un Documento" itemValue="-1" />  
+									<f:selectItems value="#{documentoMB.listaDocumentos}"
+										itemLabel="#{d.descripcion}" itemValue="#{d.codDocumento}"
+										var="d"></f:selectItems>
+								</p:selectOneMenu></td>
+						</tr>						
 						<tr>
 							<td><h:outputText value="Estado" /></td>
 							<td><p:selectOneMenu value="#{documentoMB.tipoSolicDocumento.desActivo}">
