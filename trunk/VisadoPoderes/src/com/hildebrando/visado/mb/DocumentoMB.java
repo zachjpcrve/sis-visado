@@ -62,7 +62,7 @@ public class DocumentoMB {
 			tipoSolicitud = documentoService.cargarComboTipoDocumento();
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("DocumentoMB :" + e.getLocalizedMessage());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"tipoSolicitud:" + e.getLocalizedMessage());
 		}
 
 	}
