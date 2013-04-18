@@ -1371,6 +1371,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			if(selectedTipoDocumento!=null){
 				sCodDocumento = selectedTipoDocumento.getId().getCodDoc();
 			} else {
+				logger.debug("selectedTipoDocumento es null");
 				sCodDocumento = null;
 			}
 			//Se valida que el doc no sea vacio o nulo.
