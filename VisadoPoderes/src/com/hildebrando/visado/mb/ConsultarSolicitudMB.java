@@ -1359,7 +1359,7 @@ public class ConsultarSolicitudMB {
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
 				this.bMostrarSolicitudVisado = true;
-				this.bMostrarCartaAtencion = true;
+				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = false;
 				this.bMostrarCartaRevision = false;
 				this.bMostrarCartaImprocedente = false;
