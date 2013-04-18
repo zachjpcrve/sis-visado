@@ -12,7 +12,7 @@
 <h:body>
 	
 		<p:dataGrid var="doc" value="#{consultarSolicitudMB.lstdocumentos}"
-			columns="2" rows="4">
+			columns="2" rows="4" paginator="true" paginatorPosition="top">
 			<p:column>
 				<p:panel >					
 					<h:outputLink onclick="window.open('../../files/#{doc.aliasTemporal}', 'WindowNameDoc', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
