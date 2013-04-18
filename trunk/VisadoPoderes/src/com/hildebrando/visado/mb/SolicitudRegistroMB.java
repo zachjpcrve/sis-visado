@@ -1275,6 +1275,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
 		iTipoSolicitud = "";
 		lstTiivsPersona = new ArrayList<TiivsPersona>();
+		oficina = new TiivsOficina1();
 
 		// }
 
@@ -2153,12 +2154,15 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			
 			if (flagMostrarACOficina)
 			{
-				logger.info("tiivsOficina1.codOfi ::::::: "+ oficina.getCodOfi());
-				for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
-					if (tiivsOficina1.getCodOfi().equals(oficina.getCodOfi())) {
-						this.solicitudRegistrarT.setTiivsOficina1(oficina);
-						break;
-					} 
+				if (oficina!=null)
+				{
+					logger.info("tiivsOficina1.codOfi ::::::: "+ oficina.getCodOfi());
+					for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
+						if (tiivsOficina1.getCodOfi().equals(oficina.getCodOfi())) {
+							this.solicitudRegistrarT.setTiivsOficina1(oficina);
+							break;
+						} 
+					}
 				}
 			}
 			else
