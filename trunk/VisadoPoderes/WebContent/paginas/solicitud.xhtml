@@ -809,7 +809,7 @@
 					<p:panel header="Búsqueda">
 						<h:panelGrid columns="12" id="gridApodPodEd">
 						
-								<h:outputText id="outTipoDoi" value="T. DOI/C Central * :  " />
+								<h:outputText id="outTipoDoi" value="T. DOI/C Central * :  " style="color:red" />
 								<p:selectOneMenu id="cboTipoDoi"
 									value="#{solicitudRegMB.objTiivsPersonaBusqueda.tipDoi}"
 									style="width:150px;">
@@ -843,7 +843,7 @@
 					<p:panel header="Nuevo Registro">
 				
 						<h:panelGrid columns="8" id="gridApodPodEd2">
-							<h:outputText id="outTipoDoi2" value="T. DOI/C *:" />
+							<h:outputText id="outTipoDoi2" value="T. DOI/C *:" style="color:red"/>
 							<p:selectOneMenu id="cboTipoDoi2"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.tipDoi}"
 								style="width:150px;">
@@ -910,7 +910,7 @@
 						<h:panelGrid id="tableRegistrar" columns="15">
 
 							<h:panelGrid columns="4">
-								<h:outputText id="outTipoReg" value="Tipo de Registro * :" />
+								<h:outputText id="outTipoReg" value="Tipo de Registro * :" style="color:red"/>
 								<p:selectOneMenu id="cboTipoReg"
 									value="#{solicitudRegMB.objTiivsPersonaResultado.tipPartic}">
 									<f:selectItem itemLabel="-Seleccione-" itemValue="" />
@@ -924,7 +924,7 @@
 									showEffect="slide" />
 							</h:panelGrid>
 
-							<h:outputText id="outClasificacion" value="Clasificación*:" />
+							<h:outputText id="outClasificacion" value="Clasificación*:" style="color:red"/>
 							<p:selectOneMenu id="cboClasificacion"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.clasifPer}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
