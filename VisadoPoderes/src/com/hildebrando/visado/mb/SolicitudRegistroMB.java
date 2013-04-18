@@ -294,20 +294,18 @@ public class SolicitudRegistroMB {
 			sUbicacionTemporal = Utilitarios.getProjectPath()  + File.separator + ConstantesVisado.FILES + File.separator;			
 			this.setUbicacionTemporal(sUbicacionTemporal);
 			
-			logger.debug("ubicacion temporal "+ sUbicacionTemporal);
+			logger.debug("  Ubicacion Temporal:"+ sUbicacionTemporal);
 			
 			File fDirectory = new File(sUbicacionTemporal);
 			fDirectory.mkdirs();	
 			
-			String extension = file.getFileName().substring(
-					getFile().getFileName().lastIndexOf("."));
+			String extension = file.getFileName().substring(getFile().getFileName().lastIndexOf("."));
 			
-			fichTemp = File.createTempFile("temp", extension, new File(
-					sUbicacionTemporal));
+			fichTemp = File.createTempFile("temp", extension, new File(sUbicacionTemporal));
 			
 			sNombreTemporal = fichTemp.getName();
 									
-			logger.debug("Nombre temporal de archivo:  " + sNombreTemporal);
+			logger.debug("  NombreArchivoTEMP: " + sNombreTemporal);
 			
 			canalSalida = new FileOutputStream(fichTemp);
 			canalSalida.write(fileBytes);
@@ -316,14 +314,13 @@ public class SolicitudRegistroMB {
 			return sNombreTemporal;
 
 		} catch (IOException e) {
-			logger.debug("error anexo " + e.toString());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IO Exception:"+e);
 			String sMensaje = "Se produjo un error al adjuntar fichero";
 			Utilitarios.mensajeInfo("", sMensaje);
 			return "";
 		} finally {
 			if(fichTemp!=null){
-				fichTemp.deleteOnExit(); // Delete the file when the
-				// JVM terminates
+				fichTemp.deleteOnExit(); // Delete the file when the JVM terminates
 			}
 			if (canalSalida != null) {
 				try {
@@ -1286,32 +1283,37 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 	public void actualizarListaDocumentosXTipo(TiivsAnexoSolicitud objAnexo) {
 		logger.info("****************************** actualizarListaDocumentosXTipo *********************************");
-		if (objAnexo.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS)) {
-			String sAlias = objAnexo.getAliasArchivo();
-			String sAliasTemporal = objAnexo.getAliasTemporal();
-			DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO(
-					objAnexo.getId().getCodDoc(),
-					ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS, false + "",
-					sAlias, sAliasTemporal, "", "");
-			lstdocumentos.add(doc);
-			return;
-		}
-
-		for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
-
-			if (s.getId().getCodDoc().equals(objAnexo.getId().getCodDoc())) {
-				this.lstTipoSolicitudDocumentos.remove(s);
-				break;
+		try{
+			if (objAnexo.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS)) {
+				String sAlias = objAnexo.getAliasArchivo();
+				String sAliasTemporal = objAnexo.getAliasTemporal();
+				DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO(
+						objAnexo.getId().getCodDoc(),
+						ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS, false + "",
+						sAlias, sAliasTemporal, "", "");
+				lstdocumentos.add(doc);
+				return;
 			}
-		}
 
-		for (DocumentoTipoSolicitudDTO doc : lstdocumentos) {
-			if (doc.getItem().equals(objAnexo.getId().getCodDoc())) {
-				doc.setAlias(objAnexo.getAliasArchivo());
-				doc.setAliasTemporal(objAnexo.getAliasTemporal());
-				break;
+			for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
+
+				if (s.getId().getCodDoc().equals(objAnexo.getId().getCodDoc())) {
+					this.lstTipoSolicitudDocumentos.remove(s);
+					break;
+				}
 			}
+
+			for (DocumentoTipoSolicitudDTO doc : lstdocumentos) {
+				if (doc.getItem().equals(objAnexo.getId().getCodDoc())) {
+					doc.setAlias(objAnexo.getAliasArchivo());
+					doc.setAliasTemporal(objAnexo.getAliasTemporal());
+					break;
+				}
+			}
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al actualizarListaDocumentosXTipo"+e);
 		}
+		
 	}
 
 	public boolean validarTotalDocumentos() {
@@ -1330,7 +1332,12 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}
 		return result;
 	}
-
+	
+	/**
+	 * Metodo que se encarga de validar que los documentos no sean 
+	 * duplicados, es decir si ya existe un documento en la lista.
+	 * @return result Flag booleano
+	 * **/
 	public boolean ValidarDocumentosDuplicados() {
 		boolean result = true;
 		String sMensaje = "";
@@ -1345,69 +1352,89 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		return result;
 	}
 
+	/**
+	 * Metodo que se encarga de adjuntar y asociar el archivo 
+	 * seleccionado a la lista de documentos requeridos por 
+	 * tipo de solicitud en la aplicacion
+	 * **/
 	public void agregarDocumentosXTipoSolicitud() {
 	/*	boleanoMensajeInfoGeneral=false;
 		 boleanoMensajeApoderdantePoderdante=false;
 		 boleanoMensajeOperacionesBancarias=false;
 		 boleanoMensajeDocumentos=true;*/
-		logger.info(" ************************** agrearDocumentosXTipoSolicitud  ****************************** ");
-		logger.info("iTipoSolicitud  : " + iTipoSolicitud);
-		String aliasCortoDocumento="";
-		if(selectedTipoDocumento!=null){
-			sCodDocumento = selectedTipoDocumento.getId().getCodDoc();
-		} else {
-			sCodDocumento = null;
-		}
-		logger.info("codDocumento :  " + sCodDocumento);
-		logger.info("lstAnexoSolicitud.size() :  " + lstAnexoSolicitud.size());
-
-		if(sCodDocumento == null || sCodDocumento.isEmpty()){
-			Utilitarios.mensajeInfo("", "Debe seleccionar un documento");
-			 return;
-		}
-
-		if (this.ValidarDocumentosDuplicados()) {
-												
-			if (sCodDocumento.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
-				sCodDocumento = ConstantesVisado.PREFIJO_OTROS+String.format("%06d", lstdocumentos.size() + 1);
-				aliasCortoDocumento = sCodDocumento;
+		try{
+			logger.info("=== agregarDocumentosXTipoSolicitud() ===");
+			logger.info("[Adjuntar]-TipoSolicitud: " + iTipoSolicitud);
+			String aliasCortoDocumento="";
+			if(selectedTipoDocumento!=null){
+				sCodDocumento = selectedTipoDocumento.getId().getCodDoc();
 			} else {
-				aliasCortoDocumento = selectedTipoDocumento.getTiivsDocumento().getNombre();
+				sCodDocumento = null;
 			}
-						
-			String sAliasTemporal = cargarUnicoPDF();
-									
-			if(sAliasTemporal == null || sAliasTemporal.trim() ==""){				
-				return;
+			//Se valida que el doc no sea vacio o nulo.
+			if(sCodDocumento == null || sCodDocumento.isEmpty()){
+				Utilitarios.mensajeInfo("", "Debe seleccionar un documento");
+				 return;
 			}
+			logger.info("[Adjuntar]-codDocumento: " + sCodDocumento);
+			logger.info("lstAnexoSolicitud.size() :  " + lstAnexoSolicitud.size());
 			
-			String sExtension = sAliasTemporal.substring(sAliasTemporal.lastIndexOf("."));
-			aliasCortoDocumento += sExtension;
-			
-			logger.info("aliasArchivo *** " + aliasCortoDocumento);
-			logger.info("aliasArchivoTemporal *** " + sAliasTemporal);
-			
-			TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
-			objAnexo.setId(new TiivsAnexoSolicitudId(null, sCodDocumento));
-			objAnexo.setAliasArchivo(aliasCortoDocumento.toUpperCase());
-			objAnexo.setAliasTemporal(sAliasTemporal);
-			lstAnexoSolicitud.add(objAnexo);
-			this.actualizarListaDocumentosXTipo(objAnexo);
+			//Se valida la duplicidad de documentos
+			if (this.ValidarDocumentosDuplicados()) {
+													
+				if (sCodDocumento.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
+					sCodDocumento = ConstantesVisado.PREFIJO_OTROS+String.format("%06d", lstdocumentos.size() + 1);
+					aliasCortoDocumento = sCodDocumento;
+				} else {
+					aliasCortoDocumento = selectedTipoDocumento.getTiivsDocumento().getNombre();
+				}
+							
+				String sAliasTemporal = cargarUnicoPDF();
+										
+				if(sAliasTemporal == null || sAliasTemporal.trim() ==""){	
+					logger.debug("El sAliasTemporal es nulo o vacio.");
+					return;
+				}
+				
+				String sExtension = sAliasTemporal.substring(sAliasTemporal.lastIndexOf("."));
+				aliasCortoDocumento += sExtension;
+				
+				logger.info("[Adjuntar]-aliasArchivo: " + aliasCortoDocumento);
+				logger.info("[Adjuntar]-aliasArchivoTemporal: " + sAliasTemporal);
+				
+				TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
+				objAnexo.setId(new TiivsAnexoSolicitudId(null, sCodDocumento));
+				objAnexo.setAliasArchivo(aliasCortoDocumento.toUpperCase());
+				objAnexo.setAliasTemporal(sAliasTemporal);
+				
+				lstAnexoSolicitud.add(objAnexo);
+				
+				this.actualizarListaDocumentosXTipo(objAnexo);
 
-			establecerTipoSolicitud();
+				establecerTipoSolicitud();
+				
+			}
 			
-		}
-	
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al agregarDocumentosXTipoSolicitud():"+e);
+		}	
 	}
-	
+	/**
+	 * Metodo que se encarga de establecer/setear el 
+	 * tipo de solicitud según el valor iTipoSolicitud.
+	 * **/
 	private void establecerTipoSolicitud(){
-		for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
-			if (tipoSoli.getCodTipSolic().equals(iTipoSolicitud)) {
-				solicitudRegistrarT.setTiivsTipoSolicitud(tipoSoli);
-				break;
-			} else {
-				solicitudRegistrarT.setTiivsTipoSolicitud(null);
+		try{
+			for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
+				if (tipoSoli.getCodTipSolic().equals(iTipoSolicitud)) {
+					solicitudRegistrarT.setTiivsTipoSolicitud(tipoSoli);
+					break;
+				} else {
+					solicitudRegistrarT.setTiivsTipoSolicitud(null);
+				}
 			}
+		}catch(Exception e){
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al establecerTipoSolicitud(): "+e);
 		}
 	}
 
