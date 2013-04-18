@@ -77,9 +77,12 @@ public class VisadoDocumentosMB {
 			lstParametros = paramDAO.buscarDinamico(filtroParam);
 
 		} catch (Exception e) {
-			logger.debug("Error al cargar el listado de parametros", e);
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de parametros: " + e);
 		}
-		logger.debug("Lista de parametros encontrados: " + lstParametros.size());
+		
+		if(lstParametros!=null){
+			logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"de parametros es:[" + lstParametros.size()+"]");	
+		}
 		
 		if(lstParametros!=null && lstParametros.size()>0){
 			TiivsParametros param = lstParametros.get(0);
@@ -89,14 +92,14 @@ public class VisadoDocumentosMB {
 			pass = param.getPassServer();
 			directory = param.getCarpetaRemota();
 			
-			logger.info("pathCliente:" + pathCliente);
-			logger.info("host:" + host);
-			logger.info("user:" + user);
-			logger.info("pass:" + pass);
-			logger.info("directory:" + directory);
+			logger.info("[PARAMETROS_BD]-pathCliente:" + pathCliente);
+			logger.info("[PARAMETROS_BD]-host:" + host);
+			logger.info("[PARAMETROS_BD]-user:" + user);
+			logger.info("[PARAMETROS_BD]-pass:" + pass);
+			logger.info("[PARAMETROS_BD]-directory:" + directory);
 			
 		}		
-		this.urlCarga = armaUrlCarga();		
+		this.urlCarga = armaUrlCarga();
 	}
 	
 	private String armaUrlCarga() {
@@ -116,7 +119,7 @@ public class VisadoDocumentosMB {
 		}catch(Exception e){
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR + " al obtener la ruta de carga de archivos",e);
 		}
-				
+		logger.debug("urlCarga: "+url);
 		return url;
 	}
 
