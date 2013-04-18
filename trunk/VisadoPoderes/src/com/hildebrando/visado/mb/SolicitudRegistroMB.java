@@ -1282,8 +1282,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}
 
 	public void actualizarListaDocumentosXTipo(TiivsAnexoSolicitud objAnexo) {
-		logger.info("****************************** actualizarListaDocumentosXTipo *********************************");
+		
 		try{
+			logger.info("=== actualizarListaDocumentosXTipo() ===");
 			if (objAnexo.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS)) {
 				String sAlias = objAnexo.getAliasArchivo();
 				String sAliasTemporal = objAnexo.getAliasTemporal();
@@ -1439,47 +1440,49 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}
 
 	public void quitarDocumentosXTipoSolicitud() {
-		logger.info(" ************************** quitarDocumentosXTipoSolicitud()  ****************************** ");
-		logger.info("iTipoSolicitud  : " + iTipoSolicitud);
-		logger.info("lstAnexoSolicitud.size() :  " + lstAnexoSolicitud.size());
-		logger.info("SelectedTipoDocumento : " + this.selectedDocumentoDTO.getItem());
-		
-		if (this.selectedDocumentoDTO.getAlias().isEmpty()) {
-			return;
-		}
-		
-		for (TiivsAnexoSolicitud anexo : lstAnexoSolicitud) {
-			if (anexo.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {
-				lstAnexoSolicitud.remove(anexo);
-				this.aliasFilesToDelete.add(anexo.getAliasTemporal());
-				break;
+		try{
+			logger.info("== quitarDocumentosXTipoSolicitud() ==");						
+			if (this.selectedDocumentoDTO.getAlias().isEmpty()) {
+				return;
 			}
-		}
-
-		// Para el llenado del listado (listBox)
-		int i = 0;
-		for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
-			if (s.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {				
-				this.lstTipoSolicitudDocumentos.add(s);				
-				//this.lstTipoSolicitudDocumentos.add(i,s);											
-				break;
-			}
-			i++;
-		}
-
-		// listado documentos
-		for (DocumentoTipoSolicitudDTO doc : lstdocumentos) {			
-			if (doc.getItem().equals(selectedDocumentoDTO.getItem())) {
-				doc.setAlias("");
-				doc.setAliasTemporal("");
-				if(doc.getItem().contains(ConstantesVisado.PREFIJO_OTROS)){
-					logger.info("Este documento es de tipo otros");
-					lstdocumentos.remove(doc);
+			logger.info("[QUITAR_DOC]-iTipoSolicitud: " + iTipoSolicitud);
+			logger.info("[QUITAR_DOC]-lstAnexoSolicitud: " + lstAnexoSolicitud.size());
+			logger.info("[QUITAR_DOC]-SelectedTipoDocumento: " + this.selectedDocumentoDTO.getItem());
+			
+			for (TiivsAnexoSolicitud anexo : lstAnexoSolicitud) {
+				if (anexo.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {
+					lstAnexoSolicitud.remove(anexo);
+					this.aliasFilesToDelete.add(anexo.getAliasTemporal());
+					break;
 				}
-				break;
-			}			
+			}
+
+			// Para el llenado del listado (listBox)
+			int i = 0;
+			for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
+				if (s.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {				
+					this.lstTipoSolicitudDocumentos.add(s);				
+					//this.lstTipoSolicitudDocumentos.add(i,s);											
+					break;
+				}
+				i++;
+			}
+
+			// listado documentos
+			for (DocumentoTipoSolicitudDTO doc : lstdocumentos) {			
+				if (doc.getItem().equals(selectedDocumentoDTO.getItem())) {
+					doc.setAlias("");
+					doc.setAliasTemporal("");
+					if(doc.getItem().contains(ConstantesVisado.PREFIJO_OTROS)){
+						logger.info("Este documento es de tipo otros");
+						lstdocumentos.remove(doc);
+					}
+					break;
+				}			
+			}
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al quitar documentos: "+e);
 		}
-		
 	}
 	
 	/*
@@ -1544,7 +1547,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		logger.info("(Combo) lstTipoSolicitudDocumentos tamaño:" + lstdocumentos.size());
 	}
 	
-
+	/**
+	 * Metodo que valida la operacion bancaria, incluye validaciones
+	 * de los diferentes campos en el formulario (No vacios, no nulos, etc)
+	 * @return resul Tipo booelan
+	 * **/
 	public boolean validarOperacionBancaria() {
 		boolean result = true;
 		String sMensaje = "";
