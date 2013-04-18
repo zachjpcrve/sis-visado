@@ -487,10 +487,11 @@ public class ConstantesVisado {
 		public static final String OCURRE_ERROR = "Ha ocurrido un error ";		
 		public static final String REGISTRO_OK = "Se ha registrado correctamente ";		
 		public static final String NO_RESULTADOS = "No se han encontrado resultados ";
-		public static final String TAMANHIO_LISTA = "El tamaño de la lista ";
+		public static final String TAMANHIO_LISTA = "El tamanhio de la lista ";
 		public static final String OCURRE_ERROR_CARGA_LISTA = "Ha ocurrido un error al cargar la lista";
 		public static final String ACTUALIZA_OK = "Se ha actualizado correctamente ";
 		public static final String FECHAFIN_MENOR = "La Fecha Incio no puede ser mayor a la Fecha Fin ";
+		public static final String OCURRE_ERROR_BUSQ = OCURRE_ERROR+"al consultar";	
 	}
 	static public class SEGURIDAD{
 		public static final String USER_ACCESO_OK = "El usuario ha accedido correctamente al sistema.";
