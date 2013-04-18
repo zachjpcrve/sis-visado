@@ -119,16 +119,16 @@
 						<tbody>
 							<tr bordercolor="white">
 								<td >
-									<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI Apoderado:" />
+									<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI Representante:" />
 								</td>
 								<td >
 									<h:inputText styleClass="inputText" id="text18" maxlength="18" value="#{seguimientoMB.nroDOIApoderado}" disabled="false" size="11"/>
 								</td>
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolDOIApoderado" /></td>
-								<p:tooltip for="toolDOIApoderado" value="Numero de Documento del Apoderado" showEffect="fade" hideEffect="fade" />
+								<p:tooltip for="toolDOIApoderado" value="Numero de Documento del Representante" showEffect="fade" hideEffect="fade" />
 								
 								<td >
-									<h:outputText styleClass="outputText" id="txtApod" value="Apoderado:" />
+									<h:outputText styleClass="outputText" id="txtApod" value="Representante:" />
 								</td>
 								<td >
 									<p:autoComplete completeMethod="#{seguimientoMB.completePersona}"
@@ -139,19 +139,19 @@
 									</p:autoComplete>
 								</td>
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolApoderado" /></td>
-								<p:tooltip for="toolApoderado" value="Apoderado" showEffect="fade" hideEffect="fade" />
+								<p:tooltip for="toolApoderado" value="Representante" showEffect="fade" hideEffect="fade" />
 								
 								<td >
-									<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI Poderdante:" />
+									<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI Representado:" />
 								</td>
 								<td >
 									<h:inputText styleClass="inputText" id="text17" maxlength="18" size="18" value="#{seguimientoMB.nroDOIPoderdante}" disabled="false" />
 								</td>	
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolDOIPoderdante" /></td>	
-								<p:tooltip for="toolDOIPoderdante" value="Numero de Documento del Poderdante" showEffect="fade" hideEffect="fade" />
+								<p:tooltip for="toolDOIPoderdante" value="Numero de Documento del Representado" showEffect="fade" hideEffect="fade" />
 								
 								<td >
-									<h:outputText styleClass="outputText" id="txtPoder" value="Poderdante:" />
+									<h:outputText styleClass="outputText" id="txtPoder" value="Representado:" />
 								</td>
 								<td >
 									<p:autoComplete completeMethod="#{seguimientoMB.completePersona}"
@@ -162,7 +162,7 @@
 									</p:autoComplete>
 								</td>	
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolPoderdante" /></td>	
-								<p:tooltip for="toolPoderdante" value="Poderdante" showEffect="fade" hideEffect="fade" />			
+								<p:tooltip for="toolPoderdante" value="Representado" showEffect="fade" hideEffect="fade" />			
 							</tr>
 							
 							<tr bordercolor="white">
@@ -316,14 +316,14 @@
 											
 											<p:column width="100">
 												<f:facet name="header">  
-											         <h:outputText value="Poderdante" style="font-size: 9px"/>  
+											         <h:outputText value="Representante" style="font-size: 9px"/>  
 											    </f:facet> 
 												<h:outputText value="#{tbl.txtPoderdante}" style="font-size: 9px"/>		
 											</p:column>
 											
 											<p:column width="100">
 												<f:facet name="header">  
-											         <h:outputText value="Apoderado" style="font-size: 9px"/>  
+											         <h:outputText value="Representado" style="font-size: 9px"/>  
 											    </f:facet> 
 												<h:outputText value="#{tbl.txtApoderado}" style="font-size: 9px"/>		
 											</p:column>

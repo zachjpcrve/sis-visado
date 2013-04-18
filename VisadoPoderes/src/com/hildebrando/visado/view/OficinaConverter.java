@@ -12,21 +12,25 @@ import com.bbva.persistencia.generica.dao.GenericDao;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 
 @FacesConverter(value="oficinaConverter")
-public class OficinaConverter implements Converter {
+public class OficinaConverter implements Converter
+{
 	@Override
-	public Object getAsObject(FacesContext arg0, UIComponent arg1, String value) {
-		
-
-		if (value.trim().equals("")) {  
+	public Object getAsObject(FacesContext arg0, UIComponent arg1, String value) 
+	{
+		if (value.trim().equals("")) 
+		{  
             return null;  
-        } else {  
-            try {  
+        } 
+		else 
+		{  
+            try 
+            {
                 String number = value;  
                 
         		@SuppressWarnings("unchecked")
-				GenericDao<TiivsOficina1, Object> oficinaDAO = (GenericDao<TiivsOficina1, Object>) SpringInit
-        				.getApplicationContext().getBean("genericoDao");
-        		try {
+				GenericDao<TiivsOficina1, Object> oficinaDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+        		try 
+        		{
         			TiivsOficina1 tiivsOficina1 = oficinaDAO.buscarById(TiivsOficina1.class, number);
         			
         			if (tiivsOficina1!=null)
@@ -34,7 +38,8 @@ public class OficinaConverter implements Converter {
 	        			if(tiivsOficina1.getCodOfi()!= ""
 	    						&&  tiivsOficina1.getDesOfi() != ""
 	    						  && tiivsOficina1.getTiivsTerritorio().getCodTer() != ""
-	    						    && tiivsOficina1.getTiivsTerritorio().getDesTer()  != ""){
+	    						    && tiivsOficina1.getTiivsTerritorio().getDesTer()  != "")
+	        			{
 	    					
 	    					String texto = tiivsOficina1.getCodOfi() + "-"
 	    							+ tiivsOficina1.getDesOfi().toUpperCase() + "("
@@ -42,7 +47,7 @@ public class OficinaConverter implements Converter {
 	    							+ tiivsOficina1.getTiivsTerritorio().getDesTer() + ")";
 	
 	    						tiivsOficina1.setNombreDetallado(texto);
-	    				}
+	        			}
         			}
         			return tiivsOficina1;
         		} catch (Exception e) {
@@ -52,9 +57,9 @@ public class OficinaConverter implements Converter {
             } catch(NumberFormatException exception) {  
                 throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "No es una oficina valida"));  
             }  
-        }  
+        }
+		
 		return null;  
-
 	}
 
 	@Override

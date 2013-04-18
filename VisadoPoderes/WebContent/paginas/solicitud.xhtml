@@ -116,15 +116,15 @@
 																	<p:autoComplete id="acNomOFina" value="#{solicitudRegMB.oficina}"
 																		completeMethod="#{solicitudRegMB.completeNomOficina}" var="ofi"
 																		converter="oficinaConverter" size="24" 
-																		itemLabel="#{ofi.descripcionMostrar}" itemValue="#{ofi}" rendered="#{consultarSolicitudMB.flagMostrarACOficina}"
-																		/>
+																		itemLabel="#{ofi.descripcionMostrar}" itemValue="#{ofi}" 
+																		rendered="#{consultarSolicitudMB.flagMostrarACOficina}"/>
+																		
 																	<h:inputText styleClass="inputText" rendered="#{solicitudRegMB.flagMostrarSOMOficina}"
 																		id="cboOficina" style="width:100px;"
 																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.descripcionMostrar}"
-																		
 																		disabled="false" readonly="true" />			
-																<!--  itemLabel="#{ofi.codOfi}-#{ofi.desOfi}(#{ofi.tiivsTerritorio.codTer}-#{ofi.tiivsTerritorio.desTer})" itemValue="#{ofi}" rendered="#{solicitudRegMB.flagMostrarACOficina}"
-																   value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.desOfi}(#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.codTer}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.desTer}"
+																	<!--  itemLabel="#{ofi.codOfi}-#{ofi.desOfi}(#{ofi.tiivsTerritorio.codTer}-#{ofi.tiivsTerritorio.desTer})" itemValue="#{ofi}" rendered="#{solicitudRegMB.flagMostrarACOficina}"
+																    value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.desOfi}(#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.codTer}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.desTer}"
 																	<p:selectOneMenu
 																		id="cboOficina"
 																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}"
@@ -205,8 +205,8 @@
 													<table>
 														<tr>
 															<td style="width: 380px;"><h:outputText
-																	title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
-																	value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" /></td>
+																	title="Representante(Solicitante)/Representado(Usuario/Cliente)"
+																	value="Representante(Solicitante)/Representado(Usuario/Cliente)" /></td>
 															<td></td>
 															<td></td>
 															<td></td>
@@ -229,12 +229,12 @@
 																			<tr>
 																				<th class="ui-state-default">
 																					<div class="ui-dt-c">
-																						<SPAN>Poderdante</SPAN>
+																						<SPAN>Representado</SPAN>
 																					</div>
 																				</th>
 																				<th class="ui-state-default">
 																					<div class="ui-dt-c">
-																						<SPAN>Apoderado</SPAN>
+																						<SPAN>Representante</SPAN>
 																					</div>
 																				</th>
 																				<th class="ui-state-default">
@@ -688,13 +688,13 @@
 
 				<p:dialog id="modalVerPersona" header="Ver Persona"
 					widgetVar="dlgVerPersona" modal="true" height="250">
-					<table border="0" width="50px;">
+					<table border="0" >
 
 						<tbody>
 							<tr>
-								<td style="width: 25%;"><h:outputText
-										title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
-										value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" /></td>
+								<td><h:outputText
+										title="Representante(Solicitante) / Representado(Usuario/Cliente)"
+										value="Representante(Solicitante) / Representado(Usuario/Cliente)" /></td>
 							</tr>
 						</tbody>
 					</table>
@@ -705,7 +705,7 @@
 							<tr>
 								<td align="center"><h:outputText value="Estado :"></h:outputText>
 								</td>
-								<td align="center"><h:outputText
+								<td><h:outputText
 										value="#{solicitudRegMB.objAgrupacionSimpleDtoCapturado.sEstado}"></h:outputText>
 								</td>
 							</tr>
@@ -750,7 +750,7 @@
 
 		<h:form id="formBusqueda">
 			<p:outputPanel id="pnlBusqueda">
-				<p:dialog id="modalBusqueda" header="Busqueda Cliente/No Cliente"
+				<p:dialog id="modalBusqueda" header="Búsqueda Cliente/No Cliente"
 					visible="#{solicitudRegMB.bBooleanPopup}"
 					widgetVar="dlgModalBusqueda" modal="true" height="300">
 
@@ -791,25 +791,24 @@
 		</h:form>
 
 		<p:dialog id="modalRegistrarPersona"
-			header="Busqueda Cliente/No Cliente" widgetVar="dlgRegistrarPersona"
+			header="Búsqueda Cliente/No Cliente" widgetVar="dlgRegistrarPersona"
 			modal="true" height="520" width="#{solicitudRegMB.ancho_Popup_Poder}">
 			<h:form id="formRegistrar">
 				<p:outputPanel id="pnlRegistrar">
 					<p:messages id="idMsmModalPerona"></p:messages>
-					<table border="0" width="30px">
+					<table border="0">
 						<tbody>
 							<tr>
-								<td style="width: 120%"><h:outputText
-										title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
-										value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" /></td>
+								<td><h:outputText
+										title="Representante(Solicitante) / Representado(Usuario/Cliente)"
+										value="Representante(Solicitante) / Representado(Usuario/Cliente)" /></td>
 							</tr>
 						</tbody>
 					</table>
 					<p:separator styleClass="fielset" />
-					<h:panelGrid>
-						<h:panelGrid columns="15">
-
-							<h:panelGrid columns="4">
+					<p:panel header="Búsqueda">
+						<h:panelGrid columns="12" id="gridApodPodEd">
+						
 								<h:outputText id="outTipoDoi" value="T. DOI/C Central * :  " />
 								<p:selectOneMenu id="cboTipoDoi"
 									value="#{solicitudRegMB.objTiivsPersonaBusqueda.tipDoi}"
@@ -823,10 +822,6 @@
 									id="toolcboTipoDoi" />
 								<p:tooltip for="toolcboTipoDoi" value="Tipo DOI/Código Central"
 									showEffect="slide" />
-							</h:panelGrid>
-
-							<h:panelGrid columns="5">
-
 								<h:outputText id="outDoi" value="DOI:" />
 								<h:inputText id="inpDoitxt" styleClass="inputTextPopup"
 									size="12"
@@ -838,13 +833,16 @@
 									id="toolcboDoi" />
 								<p:tooltip for="toolcboDoi"
 									value="Documento Obligatorio de Identidad" showEffect="slide" />
-
+						
 								<p:commandButton value="Buscar" id="btnBuscar"
 									action="#{solicitudRegMB.buscarPersona}"
 									update=":formRegistrar:pnlRegistrar,:formBusqueda:pnlBusqueda" />
-							</h:panelGrid>
-
-
+						</h:panelGrid>
+					</p:panel>
+					
+					<p:panel header="Nuevo Registro">
+				
+						<h:panelGrid columns="8" id="gridApodPodEd2">
 							<h:outputText id="outTipoDoi2" value="T. DOI/C *:" />
 							<p:selectOneMenu id="cboTipoDoi2"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.tipDoi}"
@@ -857,7 +855,7 @@
 								id="toolcboTipoDoi2" />
 							<p:tooltip for="toolcboTipoDoi2" value="Tipo DOI/Código Central"
 								showEffect="slide" />
-
+						
 							<h:outputText id="outNumDoiBusqueda" value="Num. DOI:" />
 							<h:inputText styleClass="inputText" id="txtNumDoiBusqueda"
 								size="12" maxlength="11"
@@ -868,15 +866,9 @@
 								id="tooltxtNumDoiBusqueda" />
 							<p:tooltip for="tooltxtNumDoiBusqueda"
 								value="Número de Identidad" showEffect="slide" />
-
-
-
 						</h:panelGrid>
-					</h:panelGrid>
 
-					<h:panelGrid>
 						<h:panelGrid columns="20">
-							<h:panelGrid columns="3">
 								<h:outputText id="outCodCentral" value="Código Central:" />
 								<h:inputText styleClass="inputTextPopup" id="txtCodCentral"
 									size="9" maxlength="8"
@@ -887,8 +879,7 @@
 									id="tooltxtCodCentral" />
 								<p:tooltip for="tooltxtCodCentral" value="Código Central"
 									showEffect="slide" />
-							</h:panelGrid>
-							<h:panelGrid columns="4">
+								
 								<h:outputText id="outApPaterno" value="Ap.Paterno:" />
 								<h:inputText styleClass="inputTextPopup" id="txtApellidoPaterno"
 									size="30" maxlength="25"
@@ -897,33 +888,28 @@
 									id="tooltxtApellidoPaterno" />
 								<p:tooltip for="tooltxtApellidoPaterno" value="Ap.Paterno:"
 									showEffect="slide" />
-							</h:panelGrid>
-
-							<h:outputText id="outApMaterno" value="Ap.Materno:" />
-							<h:inputText styleClass="inputTextPopup" id="txtApellidoMaterno"
-								size="30" maxlength="25"
-								value="#{solicitudRegMB.objTiivsPersonaResultado.apeMat}" />
-							<p:graphicImage value="/resources/images/pregunta.jpg"
-								id="tooltxtApellidoMaterno" />
-							<p:tooltip for="tooltxtApellidoMaterno" value="Ap.Materno:"
-								showEffect="slide" />
-							<h:outputText id="outNombres" value="Nombres:" />
-							<h:inputText styleClass="inputTextPopup" id="txtNombres"
-								size="17" maxlength="25"
-								value="#{solicitudRegMB.objTiivsPersonaResultado.nombre}" />
-							<p:graphicImage value="/resources/images/pregunta.jpg"
-								id="tooltxtNombres" />
-							<p:tooltip for="tooltxtNombres" value="Nombres"
-								showEffect="slide" />
+							
+								<h:outputText id="outApMaterno" value="Ap.Materno:" />
+								<h:inputText styleClass="inputTextPopup" id="txtApellidoMaterno"
+									size="30" maxlength="25"
+									value="#{solicitudRegMB.objTiivsPersonaResultado.apeMat}" />
+								<p:graphicImage value="/resources/images/pregunta.jpg"
+									id="tooltxtApellidoMaterno" />
+								<p:tooltip for="tooltxtApellidoMaterno" value="Ap.Materno:"
+									showEffect="slide" />
+								<h:outputText id="outNombres" value="Nombres:" />
+								<h:inputText styleClass="inputTextPopup" id="txtNombres"
+									size="17" maxlength="25"
+									value="#{solicitudRegMB.objTiivsPersonaResultado.nombre}" />
+								<p:graphicImage value="/resources/images/pregunta.jpg"
+									id="tooltxtNombres" />
+								<p:tooltip for="tooltxtNombres" value="Nombres"
+									showEffect="slide" />
 						</h:panelGrid>
 
-					</h:panelGrid>
-
-					<h:panelGrid>
 						<h:panelGrid id="tableRegistrar" columns="15">
 
 							<h:panelGrid columns="4">
-
 								<h:outputText id="outTipoReg" value="Tipo de Registro * :" />
 								<p:selectOneMenu id="cboTipoReg"
 									value="#{solicitudRegMB.objTiivsPersonaResultado.tipPartic}">
@@ -936,7 +922,6 @@
 									id="toolcboTipoReg" />
 								<p:tooltip for="toolcboTipoReg" value="Tipo de Registro"
 									showEffect="slide" />
-
 							</h:panelGrid>
 
 							<h:outputText id="outClasificacion" value="Clasificación*:" />
@@ -953,7 +938,7 @@
 								showEffect="slide" />
 							<h:inputText styleClass="inputTextPopup" id="txtClasiSelect"
 								size="15" value="#{solicitudRegMB.objTiivsPersonaResultado.clasifPerOtro}" />
-							<h:outputText id="outEmail" value="Email :" />
+							<h:outputText id="outEmail" value="Email:" />
 							<h:inputText styleClass="inputTextPopup" id="txtEmail"
 								style="width:100px;"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.email}" />
@@ -970,10 +955,9 @@
 								id="tooltxtCelular" />
 							<p:tooltip for="tooltxtCelular" value="Celular"
 								showEffect="slide" />
-
-
-
+						
 						</h:panelGrid>
+						
 						<h:panelGrid columns="8">
 							<h:outputText style="color:white; "
 								value="                                                               " />
@@ -990,7 +974,7 @@
 								action="#{solicitudRegMB.limpiarCriteriosBusqueda}"
 								update=":formRegistrar:pnlRegistrar" />
 						</h:panelGrid>
-					</h:panelGrid>
+					</p:panel>
 
 					<h:panelGrid columns="1">
 
@@ -1000,57 +984,58 @@
 							onclick="dlgRegistrarPersona.hide()"
 							update=":formRegistrar:pnlRegistrar,:formSolicitudRegistro:pnlSolicitudRegistro">
 						</p:commandButton>
+						
 						<div align="center" style="width: 100%;">
-							<p:dataTable id="tlbPersonasPopup" var="s" rows="20"
-								value="#{solicitudRegMB.lstTiivsPersona}"
-								emptyMessage="No hay resultados en la bandeja"
-								style="width:#{solicitudRegMB.ancho_Revoc_Poder}"
-								paginatorPosition="bottom" paginator="true"
-								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-								rowsPerPageTemplate="5,10,15" editable="true">
-
-								<p:column headerText="DOI">
-									<h:outputText value="#{s.sDesctipDoi} : #{s.numDoi}" />
-								</p:column>
-								<p:column headerText="Cliente / No Cliente">
-									<h:outputText
-										value="#{s.codCen} #{s.nombre} #{s.apePat} #{s.apeMat}" />
-								</p:column>
-								<p:column headerText="Tipo de Registro">
-									<h:outputText value="#{s.sDesctipPartic}" />
-								</p:column>
-								<p:column headerText="Clasificación">
-									<h:outputText value="#{s.sDescclasifPer}" />
-								</p:column>
-								<p:column headerText="Nro Celular">
-									<h:outputText value="#{s.numCel}" />
-								</p:column>
-								<p:column headerText="E-Mail">
-									<h:outputText value="#{s.email}" />
-								</p:column>
-								<p:column headerText="Editar">
-									<p:commandButton icon="ui-icon-pencil" id="ed"
-										action="#{solicitudRegMB.editarPersona}"
-										update=":formRegistrar:pnlRegistrar">
-										<f:setPropertyActionListener
-											target="#{solicitudRegMB.objTiivsPersonaCapturado}"
-											value="#{s}" for="ed">
-										</f:setPropertyActionListener>
-									</p:commandButton>
-								</p:column>
-								<p:column headerText="Eliminar">
-									<p:commandButton icon="ui-icon-trash" id="del"
-										action="#{solicitudRegMB.eliminarPersona}"
-										update=":formRegistrar:pnlRegistrar">
-										<f:setPropertyActionListener
-											target="#{solicitudRegMB.objTiivsPersonaCapturado}"
-											value="#{s}" for="del">
-										</f:setPropertyActionListener>
-									</p:commandButton>
-								</p:column>
-							</p:dataTable>
-
-						</div>
+								<p:dataTable id="tlbPersonasPopup" var="s" rows="20"
+									value="#{solicitudRegMB.lstTiivsPersona}"
+									emptyMessage="No hay resultados en la bandeja"
+									style="width:#{solicitudRegMB.ancho_Revoc_Poder}"
+									paginatorPosition="bottom" paginator="true"
+									paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+									rowsPerPageTemplate="5,10,15" editable="true">
+	
+									<p:column headerText="DOI">
+										<h:outputText value="#{s.sDesctipDoi} : #{s.numDoi}" />
+									</p:column>
+									<p:column headerText="Cliente / No Cliente">
+										<h:outputText
+											value="#{s.codCen} #{s.nombre} #{s.apePat} #{s.apeMat}" />
+									</p:column>
+									<p:column headerText="Tipo de Registro">
+										<h:outputText value="#{s.sDesctipPartic}" />
+									</p:column>
+									<p:column headerText="Clasificación">
+										<h:outputText value="#{s.sDescclasifPer}" />
+									</p:column>
+									<p:column headerText="Nro Celular">
+										<h:outputText value="#{s.numCel}" />
+									</p:column>
+									<p:column headerText="E-Mail">
+										<h:outputText value="#{s.email}" />
+									</p:column>
+									<p:column headerText="Editar">
+										<p:commandButton icon="ui-icon-pencil" id="ed"
+											action="#{solicitudRegMB.editarPersona}"
+											update=":formRegistrar:pnlRegistrar">
+											<f:setPropertyActionListener
+												target="#{solicitudRegMB.objTiivsPersonaCapturado}"
+												value="#{s}" for="ed">
+											</f:setPropertyActionListener>
+										</p:commandButton>
+									</p:column>
+									<p:column headerText="Eliminar">
+										<p:commandButton icon="ui-icon-trash" id="del"
+											action="#{solicitudRegMB.eliminarPersona}"
+											update=":formRegistrar:pnlRegistrar">
+											<f:setPropertyActionListener
+												target="#{solicitudRegMB.objTiivsPersonaCapturado}"
+												value="#{s}" for="del">
+											</f:setPropertyActionListener>
+										</p:commandButton>
+									</p:column>
+								</p:dataTable>
+							</div>
+						
 					</h:panelGrid>
 				</p:outputPanel>
 			</h:form>
