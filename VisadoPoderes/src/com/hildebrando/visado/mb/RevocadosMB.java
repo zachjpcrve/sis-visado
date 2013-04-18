@@ -1482,79 +1482,48 @@ public class RevocadosMB {
 				
 				e.printStackTrace();
 			}
-			
-			
-//			List<TiivsPersona> apoderados= new ArrayList<TiivsPersona>();
-//			List<TiivsPersona> poderdantes= new ArrayList<TiivsPersona>();
-			
+					
 			List<TiivsRevocado> apoderados= new ArrayList<TiivsRevocado>();
 			List<TiivsRevocado> poderdantes= new ArrayList<TiivsRevocado>();
 			
-			TiivsPersona apoderado;
-			TiivsPersona poderdante;
 			List<Revocado> revocadosAux= new ArrayList<Revocado>();
 				
-				for(TiivsRevocado tiivsRevocado:tiivsrevocados){
+			for(TiivsRevocado tiivsRevocado:tiivsrevocados)
+			{
+				if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
 					
-						if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
-							
-//							apoderado= new TiivsPersona();
-//							apoderado = tiivsRevocado.getTiivsPersona();
-							
-							String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
-							String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
-							
-							
-//							apoderado.setsDesctipDoi( descDoiApod);
-//							apoderado.setsDesctipPartic(descTipPart);
-							
-							tiivsRevocado.setsDesctipDoi( descDoiApod);
-							tiivsRevocado.setsDesctipPartic(descTipPart);
-							
-//							apoderados.add(apoderado);
-							apoderados.add(tiivsRevocado);
-						}
-							
-						if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
-							
-//							poderdante = new TiivsPersona();
-//							poderdante = tiivsRevocado.getTiivsPersona();
-							
-							String descDoiPod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
-							String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
-							
-							
-							
-//							poderdante.setsDesctipDoi( descDoiPod);
-//							poderdante.setsDesctipPartic(descTipPart);
-							
-							tiivsRevocado.setsDesctipDoi( descDoiPod);
-							tiivsRevocado.setsDesctipPartic(descTipPart);
-							
-//							poderdantes.add(poderdante);
-							poderdantes.add(tiivsRevocado);
-							
-						}
-				
-				
-				
+					String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
+					String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
+					
+					tiivsRevocado.setsDesctipDoi( descDoiApod);
+					tiivsRevocado.setsDesctipPartic(descTipPart);
+					
+					apoderados.add(tiivsRevocado);
+				}
+					
+				if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+					
+					String descDoiPod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
+					String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
+					
+					tiivsRevocado.setsDesctipDoi( descDoiPod);
+					tiivsRevocado.setsDesctipPartic(descTipPart);
+					
+					poderdantes.add(tiivsRevocado);
+				}
 			}
 			
-				Revocado revocado = new Revocado();
-				revocado.setCodAgrupacion(personaClientesPendEdit.get(0).getCodAgrupacion());
-				revocado.setApoderados(apoderados);
-				revocado.setPoderdantes(poderdantes);
-			
-				revocadosAux.add(revocado);
-			
-				personaClientesPendEdit = revocadosAux;
-				objTiivsPersonaSeleccionado = new TiivsPersona();
-
-			
+			Revocado revocado = new Revocado();
+			revocado.setCodAgrupacion(personaClientesPendEdit.get(0).getCodAgrupacion());
+			revocado.setApoderados(apoderados);
+			revocado.setPoderdantes(poderdantes);
+		
+			revocadosAux.add(revocado);
+		
+			personaClientesPendEdit = revocadosAux;
+			objTiivsPersonaSeleccionado = new TiivsPersona();
+							
 		}else{
-			
-//			TiivsPersona apoderado;
-//			TiivsPersona poderdante;
 			
 			TiivsRevocado apoderado;
 			TiivsRevocado poderdante;
@@ -1562,18 +1531,10 @@ public class RevocadosMB {
 			int maximoCodAgrupacion = getMaximoCodAgrupacion();
 			List<Revocado> revocadosAux= new ArrayList<Revocado>();
 			
-			if(objTiivsPersonaAgregar.getTipPartic().equals(ConstantesVisado.APODERADO)){
-				
-
-				
-//				apoderado= new TiivsPersona();
-//				apoderado = objTiivsPersonaAgregar;
-				
+			if(objTiivsPersonaAgregar.getTipPartic().equals(ConstantesVisado.APODERADO))
+			{
 				String descDoiApod =  getValor1(objTiivsPersonaAgregar.getTipDoi(),listDocumentos);
 				String descTipPart =  getValor1(objTiivsPersonaAgregar.getTipPartic(), listTipoRegistro);
-				
-//				apoderado.setsDesctipDoi( descDoiApod);
-//				apoderado.setsDesctipPartic(descTipPart);
 				
 				apoderado = new TiivsRevocado();				
 				apoderado.setTiivsPersona(objTiivsPersonaAgregar);
@@ -1584,11 +1545,8 @@ public class RevocadosMB {
 				apoderadosNuevo.add(apoderado);
 			}
 							
-			if(objTiivsPersonaAgregar.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
-				
-//				poderdante = new TiivsPersona();
-//				poderdante = objTiivsPersonaAgregar;
-				
+			if(objTiivsPersonaAgregar.getTipPartic().equals(ConstantesVisado.PODERDANTE))
+			{
 				String descDoiPod =  getValor1(objTiivsPersonaAgregar.getTipDoi(),listDocumentos);
 				String descTipPart =  getValor1(objTiivsPersonaAgregar.getTipPartic(), listTipoRegistro);
 				
@@ -1597,14 +1555,6 @@ public class RevocadosMB {
 				poderdante.setTipPartic(objTiivsPersonaAgregar.getTipPartic());
 				poderdante.setsDesctipDoi( descDoiPod);
 				poderdante.setsDesctipPartic(descTipPart);
-				
-
-				
-//				poderdante.setsDesctipDoi( descDoiPod);
-//				poderdante.setsDesctipPartic(descTipPart);
-				
-
-				
 				poderdantesNuevo.add(poderdante);
 			}
 			
@@ -1622,8 +1572,7 @@ public class RevocadosMB {
 			bBooleanPopup=true;
 		}
 		
-		
-
+		cargarCombinacionesRevocadas();
 	}
 	
 	public void guardarApodPod(ActionEvent  actionEvent){
