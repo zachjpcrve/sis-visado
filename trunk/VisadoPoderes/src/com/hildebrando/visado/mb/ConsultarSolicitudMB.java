@@ -549,7 +549,7 @@ public class ConsultarSolicitudMB {
 			listaTemporalSolicitudAgrupacionesBorradores=new ArrayList<TiivsSolicitudAgrupacion>();
 			//String codigoSolicitud = Utilitarios.capturarParametro("prm_codSoli");
 			TiivsSolicitud solicitud;
-			logger.info("codigoSolicitud : " + codigoSolicitud);
+			logger.info("DetalleSolicitud-[codigoSolicitud]: " + codigoSolicitud);
 			 solicitud = new TiivsSolicitud();
 			solicitud.setCodSoli(codigoSolicitud);
 			
@@ -564,7 +564,10 @@ public class ConsultarSolicitudMB {
 			solicitudRegistrarT.setLstSolicBancarias(lstSolicBancarias);
 			lstSolicBancariasCopia = new ArrayList<TiivsSolicitudOperban>();
 			lstSolicBancariasCopia.addAll(lstSolicBancarias);
-			 logger.info("Tamanio Lista original que se trajo de base : "+lstSolicBancariasCopia.size());
+			if(lstSolicBancariasCopia!=null){
+				logger.info(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstSolicBancariasCopia es: ["+lstSolicBancariasCopia.size()+"].");	
+			}
+			
 			//FIN  BY SAMIRA 
 			int y = 0;
 			
@@ -605,8 +608,9 @@ public class ConsultarSolicitudMB {
 			
 			//this.lstAnexosSolicitudes = solicitudService.obtenerListarAnexosSolicitud(solicitud);			
 			this.lstAnexoSolicitud = solicitudService.obtenerListarAnexosSolicitud(solicitud);
-			
-			logger.info("Cantidad de documentos(anexos):" + this.lstAnexoSolicitud.size());
+			if(lstAnexoSolicitud!=null){
+				logger.info(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"documentos(Anexos) es:[" + this.lstAnexoSolicitud.size()+"]");
+			}
 			
 			this.iTipoSolicitud =solicitudRegistrarT.getTiivsTipoSolicitud().getCodTipSolic(); 
 			
@@ -623,7 +627,9 @@ public class ConsultarSolicitudMB {
 			}
 			llenarListaDocumentosSolicitud(isEditar);
 			
-			logger.info("despues llenar this.lstAnexoSolicitud.size()" + this.lstAnexoSolicitud.size());
+			if(lstAnexoSolicitud!=null){
+				logger.info(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"documentos(Anexos) - NUEVOS es:[" + this.lstAnexoSolicitud.size()+"]");
+			}
 			
 			solicitudRegistrarT.setLstDocumentos(lstdocumentos); //Para reportes
 			solicitudRegistrarTCopia=new TiivsSolicitud();
@@ -638,35 +644,39 @@ public class ConsultarSolicitudMB {
 		   		   		   
 		   solicitudRegistrarT.setLstAgrupacionSimpleDto(lstAgrupacionSimpleDto); //reporte
 		   
-//		   logger.info("Lista Poderdantes: " + lstPoderdantes.size());
-//		   logger.info("Lista Apoderados: " + lstApoderdantes.size());
-		   logger.info("Obtener solicitud agrupaciones: " + solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
-		   logger.info("Size lstAgrupacionSimpleDto: " + lstAgrupacionSimpleDto.size());
+		   if(solicitudRegistrarT.getTiivsSolicitudAgrupacions()!=null){
+			   logger.info("Obtener solicitud agrupaciones: " + solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
+		   }
+		   if(lstAgrupacionSimpleDto!=null){
+			   logger.info("Size lstAgrupacionSimpleDto: " + lstAgrupacionSimpleDto.size());
+		   }
 		  
 			this.actualizarEstadoReservadoSolicitud();
 			this.obtenerHistorialSolicitud();
 			
+			//Estudio Abogado
 			if (solicitudRegistrarT.getTiivsEstudio() == null) {
 				solicitudRegistrarT.setTiivsEstudio(new TiivsEstudio());
-				}else{
-					if(this.solicitudRegistrarT.getTiivsEstudio()!=null){
+			}else{
+				if(this.solicitudRegistrarT.getTiivsEstudio()!=null){
 					List<TiivsMiembro> lstAbogadosMiembro = combosMB.getLstAbogados();
 					lstAbogados = new ArrayList<TiivsMiembro>();
+					
 					for (TiivsMiembro x : lstAbogadosMiembro) {
 						if(x.getEstudio()!=null){
-						if (x.getEstudio().trim().equals(this.solicitudRegistrarT.getTiivsEstudio().getCodEstudio())) {
-							lstAbogados.add(x);
-						}
+							if (x.getEstudio().trim().equals(this.solicitudRegistrarT.getTiivsEstudio().getCodEstudio())) {
+								lstAbogados.add(x);
+							}
 						}else{
 							//logger.info("LA SOLICITUD NO TIENE UN ESTUDIO ASIGNADO");
 						}
-				}
 					}
+				}			
 			}
 			// Listar ComboDictamen
 			listarComboDictamen();
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION,e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION +"al recuperar el Detalle Solicitud:",e);
 		}
 	}
 	
@@ -1749,8 +1759,8 @@ public class ConsultarSolicitudMB {
 	}
 
 	public void obtenerHistorialSolicitud() {
-		logger.info("Obteniendo Historial ");
-		logger.info("Codigo de solicitud : " + solicitudRegistrarT.getCodSoli());
+		logger.debug("=== obtenerHistorialSolicitud() ===");
+		logger.info("[Historial]-CodigoSolicitud:" + solicitudRegistrarT.getCodSoli());
 
 		String sCodSolicitud = solicitudRegistrarT.getCodSoli();
 		try {
@@ -1762,9 +1772,8 @@ public class ConsultarSolicitudMB {
 			List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
 			lstHist = histDAO.buscarDinamico(filtroHist);
 
-			logger.info("Numero de registros encontrados:" + lstHist.size());
-
 			if (lstHist != null && lstHist.size() > 0) {
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"historial-solicitud es:"+lstHist.size());
 				lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
 
 				for (TiivsHistSolicitud h : lstHist) {
@@ -1807,7 +1816,7 @@ public class ConsultarSolicitudMB {
 				}
 			}
 		} catch (Exception exp) {
-			logger.debug("No se pudo encontrar el historial de la solicitud");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"el Historial-Solicitud:" +exp);
 		}
 
 	}
@@ -1918,9 +1927,8 @@ public class ConsultarSolicitudMB {
 			lstTiivsDocumentos = documentoDAO.buscarDinamico(filtroDocumento);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug("Error al cargar el listado de territorios");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al cargarDocumentos():"+e);
 		}
-
 	}
 
 	private String obtenerDescripcionDocumento(String codDoc) 
