@@ -148,7 +148,7 @@ public class CombosMB {
 	// @Version: 1.0
 	// @param: -
 	public void cargarCombosMultitabla(String codigo) {
-		logger.debug("Buscando valores en multitabla con codigo: " + codigo);
+		//logger.debug("Buscando valores en multitabla con codigo: " + codigo);
 		lstRangosImporte.clear();
 		lstEstado.clear();
 		lstEstadoNivel.clear();
@@ -290,7 +290,7 @@ public class CombosMB {
 		filtroMiembro.add(Restrictions.eq("tiivsGrupo.codGrupo", ConstantesVisado.CODIGO_GRUPO_ABOGADOS));
 		lstAbogados=serviceMiembro.buscarDinamico(filtroMiembro);
 		}catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de abogados - miembro: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de abogados - miembro: "+e);
 		}
 		
 		// Carga combo de Operacion Bancaria
@@ -298,9 +298,11 @@ public class CombosMB {
 		Busqueda filtroOpenBan = Busqueda.forClass(TiivsOperacionBancaria.class);
         try {
 			lstOpeBancaria = openBanDAO.buscarDinamico(filtroOpenBan);
-			logger.debug("lstOpeBancaria size " + lstOpeBancaria.size());
+			if(lstOpeBancaria!=null){
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstOpeBancaria es:["+lstOpeBancaria.size()+"].");
+			}			
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de operaciones bancarias: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de operaciones bancarias: "+e);
 		}
        
         for (TiivsOperacionBancaria tmpLista: lstOpeBancaria)
@@ -322,10 +324,12 @@ public class CombosMB {
 
 		try {
 			lstTipoSolicitud = genTipoSolcDAO.buscarDinamico(filtroTipoSolc);
-			logger.debug(" lstTipoSolicitud.size() " +lstTipoSolicitud.size());
+			if(lstTipoSolicitud!=null){
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstTipoSolicitud es:["+lstTipoSolicitud.size()+"].");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de solicitud: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de solicitud: "+e);
 		}
 		
 		int x = 0;
@@ -368,7 +372,9 @@ public class CombosMB {
 		try {
 			lstOficina = oficDAO.buscarDinamico(filtroOfi);
 			lstOficina1 = oficDAO.buscarDinamico(filtroOfi);
-			logger.info("TAMANIOO DE LA LSTOFICIN EN EL COMBOMB " +lstOficina.size());
+			if(lstOficina!=null){
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"Oficinas es: [" +lstOficina.size()+"].");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de oficinas: "+e);
@@ -394,7 +400,7 @@ public class CombosMB {
 		
 		try {
 			lstSolOperBan = operBanDAO.buscarDinamico(filtroOperBan);
-			logger.debug("TAMANIOO DE LAS OPERACIONES BANCARIAS POR SOLICITUD EN EL COMBOMB " +lstSolOperBan.size());
+			//logger.debug("TAMANIOO DE LAS OPERACIONES BANCARIAS POR SOLICITUD EN EL COMBOMB " +lstSolOperBan.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de persona: "+e);
