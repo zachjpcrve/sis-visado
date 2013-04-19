@@ -14,34 +14,25 @@
 		
 		<h:panelGrid columns="2">
 			<p:tabMenu activeIndex="0" style="width:350px;">
-				<p:menuitem value="Calculadora" url="/faces/paginas/calculadoraComision.xhtml"
-					icon="ui-icon-star" />			
+				<p:menuitem value="Calculadora" url="/faces/paginas/calculadoraComision.xhtml" icon="ui-icon-star" />			
 			</p:tabMenu>
-	
+	    
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">				
-					<p:commandButton value="Imprimir" id="btnImprimir3"
-						onclick="window.print();return false;"
-						icon="ui-icon-document">
-						
-					</p:commandButton>
-					<p:commandButton value="Salir" id="btnSalir3"
-						    onclick="window.location.href='./bienvenido.xhtml'"
-							icon="ui-icon-document" />
+					<p:commandButton value="Imprimir" id="btnImprimir3" onclick="window.print();return false;" icon="ui-icon-document"/>
+					<p:commandButton value="Salir" id="btnSalir3" onclick="window.location.href='./bienvenido.xhtml'" icon="ui-icon-document"/>
 				</p:toolbarGroup>
 			</p:toolbar>
-			
-			
 		</h:panelGrid>
-
 
 		<h:form id="formPrincipal">
 
 			<h:panelGrid id = "panelPrincipal" columns="1">
+			
 			<center><h3>CALCULADORA DE COMISIÓN</h3></center>
 			
-
 			<h:panelGrid columns="5">
+			
 				<p:spacer width="50" height="10" />
 
 				<h:outputText>Si</h:outputText>
@@ -52,108 +43,77 @@
 				
 				<p:spacer width="50" height="10" />
 
+				<h:outputText value="1. Por lo menos un Representado es de tipo Fallecido" />
 
-
-				<h:outputText
-					value="1. Por lo menos un poderdante es de tipo Fallecido" />
-
-				<p:selectBooleanCheckbox id="checkItem11"
-					value="#{calculadoraMB.item11}">
+				<p:selectBooleanCheckbox id="checkItem11" value="#{calculadoraMB.item1}">
 					<p:ajax
 						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
 						listener="#{calculadoraMB.calcularComision}" />
 				</p:selectBooleanCheckbox>
 
-				<p:selectBooleanCheckbox id="checkItem12"
-					value="#{calculadoraMB.noItem11}">
+				<p:selectBooleanCheckbox id="checkItem12" value="#{calculadoraMB.noItem1}">
 					<p:ajax
 						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
 						listener="#{calculadoraMB.calcularComision}" />
 				</p:selectBooleanCheckbox>
 
-				<p:graphicImage value="/resources/images/pregunta.jpg"
-					id="questionItem1" />
+				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem1" />
 					
 				<p:tooltip for="questionItem1" value="Por lo menos un poderdante es de tipo Fallecido" showEffect="slide" />
 
+				<h:outputText value="2. Monto global de las operaciones es mayor a #{calculadoraMB.importeLimite}" />
 
-
-
-
-				<h:outputText
-					value="2. Monto global de las operaciones es mayor a #{calculadoraMB.importeLimite}" />
-
-				<p:selectBooleanCheckbox id="checkItem21"
-					value="#{calculadoraMB.item21}" disabled="#{!calculadoraMB.item11}">
+				<p:selectBooleanCheckbox id="checkItem21" value="#{calculadoraMB.item21}" disabled="#{calculadoraMB.noItem2}">
 					<p:ajax
 						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
 						listener="#{calculadoraMB.calcularComision}" />
 				</p:selectBooleanCheckbox>
 
-				<p:selectBooleanCheckbox id="checkItem22"
-					value="#{calculadoraMB.noItem21}"
-					disabled="#{!calculadoraMB.item11}">
+				<p:selectBooleanCheckbox id="checkItem22" value="#{calculadoraMB.noItem21}" disabled="#{calculadoraMB.noItem2}">
 					<p:ajax
 						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
 						listener="#{calculadoraMB.calcularComision}" />
 				</p:selectBooleanCheckbox>
 
-				<p:graphicImage value="/resources/images/pregunta.jpg"
-					id="questionItem2" />
+				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem2" />
 				
 				<p:tooltip for="questionItem2" value="Monto global de las operaciones es mayor a #{calculadoraMB.importeLimite}" showEffect="slide" />
 
+				<h:outputText value="3. El Representado es persona natural" />
 
-
-
-				<h:outputText value="3. El poderdante es persona natural" />
-
-				<p:selectBooleanCheckbox id="checkItem31"
-					value="#{calculadoraMB.item31}" disabled="#{calculadoraMB.item11}">
+				<p:selectBooleanCheckbox id="checkItem31" value="#{calculadoraMB.item31}" disabled="#{calculadoraMB.noItem3}">
 					<p:ajax
 						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
 						listener="#{calculadoraMB.calcularComision}" />
 				</p:selectBooleanCheckbox>
 
-				<p:selectBooleanCheckbox id="checkItem32"
-					value="#{calculadoraMB.noItem31}"
-					disabled="#{calculadoraMB.item11}">
+				<p:selectBooleanCheckbox id="checkItem32" value="#{calculadoraMB.noItem31}" disabled="#{calculadoraMB.noItem3}">
 					<p:ajax
 						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
 						listener="#{calculadoraMB.calcularComision}" />
 				</p:selectBooleanCheckbox>
 
-				<p:graphicImage value="/resources/images/pregunta.jpg"
-					id="questionItem3" />
+				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem3" />
 				
 				<p:tooltip for="questionItem3" value="El poderdante es persona natural" showEffect="slide" />
 
+				<h:outputText value="4. El Representado es persona jurídica" />
 
-
-
-				<h:outputText value="4. El poderdante es persona jurídica" />
-
-				<p:selectBooleanCheckbox id="checkItem41"
-					value="#{calculadoraMB.item41}"
-					disabled="#{calculadoraMB.item11||calculadoraMB.item31}">
+				<p:selectBooleanCheckbox id="checkItem41" value="#{calculadoraMB.item41}" disabled="#{calculadoraMB.item1||calculadoraMB.item31}">
 					<p:ajax
 						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
 						listener="#{calculadoraMB.calcularComision}" />
 				</p:selectBooleanCheckbox>
 
-				<p:selectBooleanCheckbox id="checkItem42"
-					value="#{calculadoraMB.noItem41}"
-					disabled="#{calculadoraMB.item11||calculadoraMB.item31}">
+				<p:selectBooleanCheckbox id="checkItem42" value="#{calculadoraMB.noItem41}" disabled="#{calculadoraMB.item1||calculadoraMB.item31}">
 					<p:ajax
 						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
 						listener="#{calculadoraMB.calcularComision}" />
 				</p:selectBooleanCheckbox>
 
-				<p:graphicImage value="/resources/images/pregunta.jpg"
-					id="questionItem4" />
+				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem4" />
 				
 				<p:tooltip for="questionItem4" value="El poderdante es persona juridica" showEffect="slide" />
-
 
 			</h:panelGrid>
 
@@ -165,11 +125,9 @@
 
 				<p:spacer width="100" height="10" />
 				
-				<h:inputText id="textResultado" styleClass="inputText"
-					maxlength="10" value="PEN S/. #{calculadoraMB.resultado}" disabled="true" />
+				<h:inputText id="textResultado" styleClass="inputText" maxlength="10" value="PEN S/. #{calculadoraMB.resultado}" disabled="true" />
 
-				<p:graphicImage value="/resources/images/pregunta.jpg"
-					id="questionResultado" />
+				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionResultado" />
 				
 				<p:tooltip for="questionResultado" value="Comisión a pagar" showEffect="slide" />
 
