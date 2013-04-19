@@ -17,50 +17,68 @@ import com.bbva.common.util.ConstantesVisado;
 public class CaculadoraComisionMB {
 	
 	public static Logger logger = Logger.getLogger(CaculadoraComisionMB.class);
-	private Boolean item11;
+	private Boolean item1;
+	private Boolean noItem1;
 	private Boolean item12;
 	private Boolean item21;
+	private Boolean noItem21;
 	private Boolean item22;
 	private Boolean item31;
+	private Boolean noItem31;
 	private Boolean item32;
 	private Boolean item41;
+	private Boolean noItem41;
 	private Boolean item42;	
+	private Boolean noItem2;
+	private Boolean noItem3;
 	private Double resultado;
 	private Double importeLimite;
-	
-	
 	private String [] importes;
-	
-	
-
-	
-	public CaculadoraComisionMB(){
-		item11 = new Boolean(false);
+		
+	public CaculadoraComisionMB()
+	{
+		item1 = new Boolean(false);
+		noItem1 = new Boolean(false);
 		item12 = new Boolean(false);
 		item21 = new Boolean(false);
+		noItem21 = new Boolean(false);
 		item22 = new Boolean(false);
 		item31 = new Boolean(false);
+		noItem31 = new Boolean(false);
 		item32 = new Boolean(false);
 		item41 = new Boolean(false);
+		noItem41 = new Boolean(false);
 		item42 = new Boolean(false);
 		resultado = new Double(0);		
 		obtenerParametros();
 	}
 
-	public void calcularComision(){
+	public void calcularComision()
+	{
 		int criterio=0;
 		resultado = new Double(200);
-		if(this.item11){
-			if(this.item21){
+		
+		if(this.item1)
+		{
+			if(this.item21)
+			{
 				criterio = 1;
-			} else {
+			} 
+			else 
+			{
 				criterio = 2;
 			}
-		} else {
-			if(this.item31){
+		} 
+		else 
+		{
+			if(this.item31)
+			{
 				criterio = 3;				
-			} else {
-				if(this.item41){
+			} 
+			else 
+			{
+				if(this.item41)
+				{
 					criterio = 4;
 				} 
 			}
@@ -71,12 +89,34 @@ public class CaculadoraComisionMB {
 		} catch (Exception e) {
 			resultado = new Double(0);
 		}
-
+		
+		if (item1)
+		{
+			setItem31(false);
+			setNoItem3(true);
+		}
+		else
+		{
+			setNoItem3(false);
+		}
+		
+		if (item31)
+		{
+			setItem21(false);
+			setNoItem21(false);
+			setNoItem2(true);
+		}
+		else
+		{
+			setNoItem2(false);
+		}
 	}
 
-	private void obtenerParametros() {
+	private void obtenerParametros() 
+	{
 		String sMontoLimite;	
-		importes = new String [5];		
+		importes = new String [5];
+		
 		//Obtenemos los parametros de comisión
 		try{
 			sMontoLimite = RegistroUtilesMB.getRowFromMultitabla(
@@ -104,12 +144,12 @@ public class CaculadoraComisionMB {
 	}	
 
 	
-	public Boolean getItem11() {
-		return item11;
+	public Boolean getItem1() {
+		return item1;
 	}
 	
-	public void setItem11(Boolean item11) {
-		this.item11 = item11;		
+	public void setItem1(Boolean item1) {
+		this.item1 = item1;		
 	}
 	
 	public Boolean getItem12() {
@@ -184,36 +224,51 @@ public class CaculadoraComisionMB {
 		this.importeLimite = importeLimite;
 	}
 
-	public void setNoItem11(Boolean item11){
-		this.item11 = !item11;
+	public Boolean getNoItem1() {
+		return noItem1;
 	}
-	
-	public Boolean getNoItem11(){
-		return !this.item11;
+
+	public void setNoItem1(Boolean noItem1) {
+		this.noItem1 = noItem1;
 	}
-	
-	public void setNoItem21(Boolean item21){
-		this.item21 = !item21;
+
+	public Boolean getNoItem21() {
+		return noItem21;
 	}
-	
-	public Boolean getNoItem21(){
-		return !this.item21;
+
+	public void setNoItem21(Boolean noItem21) {
+		this.noItem21 = noItem21;
 	}
-	
-	public void setNoItem31(Boolean item31){
-		this.item31 = !item31;
+
+	public Boolean getNoItem31() {
+		return noItem31;
 	}
-	
-	public Boolean getNoItem31(){
-		return !this.item31;
+
+	public void setNoItem31(Boolean noItem31) {
+		this.noItem31 = noItem31;
 	}
-	
-	public void setNoItem41(Boolean item41){
-		this.item41 = !item41;
+
+	public Boolean getNoItem41() {
+		return noItem41;
 	}
-	
-	public Boolean getNoItem41(){
-		return !this.item41;
+
+	public void setNoItem41(Boolean noItem41) {
+		this.noItem41 = noItem41;
 	}
-	
+
+	public Boolean getNoItem2() {
+		return noItem2;
+	}
+
+	public void setNoItem2(Boolean noItem2) {
+		this.noItem2 = noItem2;
+	}
+
+	public Boolean getNoItem3() {
+		return noItem3;
+	}
+
+	public void setNoItem3(Boolean noItem3) {
+		this.noItem3 = noItem3;
+	}
 }
