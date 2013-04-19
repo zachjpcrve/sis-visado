@@ -207,7 +207,7 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_FILTRO_BUS_ESTADO="Estado";
 	public static final String ETIQUETA_FILTRO_BUS_FECHA_INICIO ="Fecha de Inicio";
 	public static final String ETIQUETA_FILTRO_BUS_OFICINA="Oficina";
-	public static final String ETIQUETA_FILTRO_BUS_APODERADO="Apoderado";
+	public static final String ETIQUETA_FILTRO_BUS_APODERADO="Representante";
 	public static final String ETIQUETA_FILTRO_BUS_DELEGADO="Delegado";
 	public static final String ETIQUETA_FILTRO_BUS_IMPORTE="Importe";
 	public static final String ETIQUETA_FILTRO_BUS_FECHA_FIN="Fecha de Fin";
@@ -217,7 +217,7 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_FILTRO_BUS_TIPO_SOL="Tipo de solicitud";
 	public static final String ETIQUETA_FILTRO_BUS_TIPO_OPE="Tipo de operación";
 	public static final String ETIQUETA_FILTRO_BUS_COMB_OFICINA="Oficina";
-	public static final String ETIQUETA_FILTRO_BUS_PODERDANTE="Poderdante";
+	public static final String ETIQUETA_FILTRO_BUS_PODERDANTE="Representado";
 	public static final String ETIQUETA_FILTRO_BUS_ESTUDIO="Estudio";
 	public static final String ETIQUETA_FILTRO_BUS_GENERADOR="Generador";
 	public static final String ETIQUETA_FILTRO_BUS_FECHA_HORA = "Fecha y Hora";
@@ -228,8 +228,8 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_COLUMNA_TERRITORIO = "Territorio";
 	public static final String ETIQUETA_COLUMNA_ESTADO = "Estado";
 	public static final String ETIQUETA_COLUMNA_IMPORTE = "Importe";
-	public static final String ETIQUETA_COLUMNA_PODERDANTE = "Poderdante";
-	public static final String ETIQUETA_COLUMNA_APODERADO = "Apoderado";
+	public static final String ETIQUETA_COLUMNA_PODERDANTE = "Representado";
+	public static final String ETIQUETA_COLUMNA_APODERADO = "Representante";
 	public static final String ETIQUETA_COLUMNA_TIPO_SOL = "Tipo de Solicitud";
 	public static final String ETIQUETA_COLUMNA_TIPO_OPE = "Tipo de Operación";
 	public static final String ETIQUETA_COLUMNA_ESTUDIO = "Estudio";
