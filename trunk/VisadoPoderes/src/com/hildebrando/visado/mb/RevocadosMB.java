@@ -1572,7 +1572,7 @@ public class RevocadosMB {
 			bBooleanPopup=true;
 		}
 		
-		cargarCombinacionesRevocadas();
+		
 	}
 	
 	public void guardarApodPod(ActionEvent  actionEvent){
@@ -1608,6 +1608,7 @@ public class RevocadosMB {
 					service.save(tiivsRevocado);
 					flag=1;
 				} catch (Exception e) {
+					//e.printStackTrace();
 					logger.error("error al guardar revocado");
 				}
 			}
@@ -1653,6 +1654,8 @@ public class RevocadosMB {
 		}
 		
 		bBooleanPopup=false;
+		
+		cargarCombinacionesRevocadas();
 	}
 	
 	public int getMaximoCodAgrupacion(){
