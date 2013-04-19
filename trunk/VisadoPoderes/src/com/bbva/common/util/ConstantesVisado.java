@@ -114,8 +114,8 @@ public class ConstantesVisado {
 	public static final String CAMPO_COD_TERR_NO_ALIAS="codTerr";
 	public static final String CAMPO_OPE_BANCARIAS="operacionesBancarias";
 	public static final String CAMPO_IMPORTE="importe";
-	public static final String CAMPO_PODERDANTE="poderante";
-	public static final String CAMPO_APODERADO="apoderado";
+	public static final String CAMPO_PODERDANTE="Representado";
+	public static final String CAMPO_APODERADO="Representante";
 	public static final String CAMPO_NUMDOC_PODERDANTE="numDocPoder";
 	public static final String CAMPO_NUMDOC_APODERADO="numDocApoder";
 	public static final String CAMPO_ESTUDIO="cod_estudio";
@@ -200,7 +200,7 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_FILTRO_BUS_NRO_SOL="Nro. Solicitud";
 	public static final String ETIQUETA_FILTRO_BUS_TIPO_FECHA="Tipo de Fecha";
 	public static final String ETIQUETA_FILTRO_BUS_COD_OFICINA="Código de Oficina";
-	public static final String ETIQUETA_FILTRO_BUS_DOI_APODERADO="DOI Apoderado";
+	public static final String ETIQUETA_FILTRO_BUS_DOI_APODERADO="DOI Representante";
 	public static final String ETIQUETA_FILTRO_BUS_REVISION="En Revisión";
 	public static final String ETIQUETA_FILTRO_BUS_NIVEL="Nivel";
 	public static final String ETIQUETA_FILTRO_BUS_ESTADO_NIVEL="Estados de Nivel";
