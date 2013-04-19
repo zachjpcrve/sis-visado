@@ -718,7 +718,7 @@
 										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 										rowsPerPageTemplate="5,10,15" editable="true">
 
-										<p:column headerText="Codigo Central">
+										<p:column headerText="Código Central">
 											<h:outputText value="#{x.sDesctipDoi} : #{x.numDoi}" />
 										</p:column>
 										<p:column headerText="Cliente / No Cliente">
@@ -763,7 +763,7 @@
 						selection="#{solicitudRegMB.objTiivsPersonaSeleccionado}"
 						selectionMode="single">
 
-						<p:column headerText="Codigo Central">
+						<p:column headerText="Código Central">
 							<h:outputText value="#{s.codCen}" />
 						</p:column>
 						<p:column headerText="Tipo de DOI">
@@ -910,7 +910,7 @@
 						<h:panelGrid id="tableRegistrar" columns="15">
 
 							<h:panelGrid columns="4">
-								<h:outputText id="outTipoReg" value="Tipo de Registro * :" style="color:red"/>
+								<h:outputText id="outTipoReg" value="Tipo * :" style="color:red"/>
 								<p:selectOneMenu id="cboTipoReg"
 									value="#{solicitudRegMB.objTiivsPersonaResultado.tipPartic}">
 									<f:selectItem itemLabel="-Seleccione-" itemValue="" />
@@ -994,14 +994,14 @@
 									paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 									rowsPerPageTemplate="5,10,15" editable="true">
 	
-									<p:column headerText="DOI">
+									<p:column headerText="DOI" width="50">
 										<h:outputText value="#{s.sDesctipDoi} : #{s.numDoi}" />
 									</p:column>
 									<p:column headerText="Cliente / No Cliente">
 										<h:outputText
 											value="#{s.codCen} #{s.nombre} #{s.apePat} #{s.apeMat}" />
 									</p:column>
-									<p:column headerText="Tipo de Registro">
+									<p:column headerText="Tipo">
 										<h:outputText value="#{s.sDesctipPartic}" />
 									</p:column>
 									<p:column headerText="Clasificación">
