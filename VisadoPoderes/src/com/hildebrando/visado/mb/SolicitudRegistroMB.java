@@ -845,8 +845,8 @@ public class SolicitudRegistroMB {
 			Utilitarios.mensajeInfo("INFO", sMensaje);
 		} else if (!flagUpdatePersona) {
 			for (TiivsPersona x : lstTiivsPersona) {
-				System.out.println("x.getCodPer() " +x.getCodPer());
-				System.out.println("objTiivsPersonaResultado.getCodPer() " +objTiivsPersonaResultado.getCodPer());
+				logger.debug("x.getCodPer() " +x.getCodPer());
+				logger.debug("objTiivsPersonaResultado.getCodPer() " +objTiivsPersonaResultado.getCodPer());
 				
 				
 				if(x.getTipDoi().equals(objTiivsPersonaResultado.getTipDoi())
@@ -1095,7 +1095,7 @@ public class SolicitudRegistroMB {
 			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
 
-			System.out.println("lstTiivsPersona " +lstTiivsPersona.size());
+			logger.debug("lstTiivsPersona " +lstTiivsPersona.size());
 
 			for (TiivsPersona n : lstTiivsPersona) {
 				if (n.getTipPartic().equals(ConstantesVisado.PODERDANTE)) {
@@ -1558,7 +1558,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		boolean result = true;
 		String sMensaje = "";
 		if (objSolicBancaria.getId().getCodOperBan().equals("")) {
-			sMensaje = "Ingrese un tipo de Operacion";
+			sMensaje = "Ingrese un tipo de Operación";
 			Utilitarios.mensajeInfo("", sMensaje);
 			result = false;
 		}
@@ -1593,16 +1593,15 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			for (TiivsSolicitudOperban x : lstSolicBancarias) {
 				index++;
 				if (x.getId().getCodOperBan().equals(objSolicBancaria.getId().getCodOperBan())){
-					System.out.println("x.getMoneda().trim() " +x.getId().getMoneda().trim());
-					System.out.println("objSolicBancaria.getMoneda().trim()) " +objSolicBancaria.getId().getMoneda().trim());
+					//System.out.println("x.getMoneda().trim() " +x.getId().getMoneda().trim());
+					//System.out.println("objSolicBancaria.getMoneda().trim()) " +objSolicBancaria.getId().getMoneda().trim());
 					
 					if(x.getId().getMoneda().trim().equals(objSolicBancaria.getId().getMoneda().trim())) {
 						conunt++;
-						logger.info("conunt "+conunt);
-						System.out.println("x.getMoneda() " +x.getId().getMoneda());
-						System.out.println("objSolicBancaria.getMoneda() " + objSolicBancaria.getId().getMoneda());
+						//logger.info("conunt "+conunt);
+						//System.out.println("x.getMoneda() " +x.getId().getMoneda());
+						//System.out.println("objSolicBancaria.getMoneda() " + objSolicBancaria.getId().getMoneda());
 						
-							System.out.println("lo deja ");
 							break;
 						
 				}/*else if(!x.getMoneda().trim().equals(objSolicBancaria.getMoneda().trim())) {
