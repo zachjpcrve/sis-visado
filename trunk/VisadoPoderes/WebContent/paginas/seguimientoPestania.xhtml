@@ -38,25 +38,20 @@
 		
 		  <p:growl id="growlSolicitudSeguimiento" sticky="true" />		  		  
 		
-	      <p:spacer></p:spacer>
+	      <!-- <p:spacer></p:spacer>  -->
 	      <h:panelGrid id="pnlGridformSolicitudSeguimiento">
-		      <h:panelGrid rendered="#{consultarSolicitudMB.bSeccionComentario}" columns="2">
-			  	
-				<h:panelGrid>
+		      <h:panelGrid rendered="#{consultarSolicitudMB.bSeccionComentario}" columns="1">
+			  	<p:separator styleClass="fielset" />
+			  	<h:panelGrid columns="2">
 					<p:commandButton id="comentar" value="Comentar" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" actionListener="#{consultarSolicitudMB.habilitarComentario}"/>
-			  	
-					<p:commandButton id="clearButton" type="button" value="Limpiar" onclick="editor.clear()" icon="ui-icon-close" />
+			  		<p:commandButton id="clearButton" type="button" value="Limpiar" onclick="editor.clear()" icon="ui-icon-close" />
 				</h:panelGrid>
-				
 				<h:panelGrid>	
-					<p:editor id="editor" onchange="actualizarEditor();" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="800" height="200" disabled="#{consultarSolicitudMB.bMostrarComentario}"/>
-				
+					<p:editor id="editor" onchange="actualizarEditor();" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="800" height="320" disabled="#{consultarSolicitudMB.bMostrarComentario}"/>
 					<p:remoteCommand name="actualizarEditor" update=":formSolicitudSeguimiento:editor" />
-					
 				</h:panelGrid>
-				
-				<p:dialog header="Content" widgetVar="dlg" showEffect="fade"
-			  		hideEffect="fade" modal="true">
+				<p:separator styleClass="fielset" />
+				<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade" modal="true">
 			  		<h:outputText id="display" value="#{editorMB.value}"
 			  			escape="false" />
 			  	</p:dialog>	
@@ -68,12 +63,12 @@
 					
 					<!-- <p:messages id="idGrowlSolicitudSeguimiento"></p:messages>  -->
 					
+					<!-- Seccion: SEGUIMIENTO -->
 					<tr>
-					<td width="100%">
-					
-					<h:outputText title="Seguimiento" value="Seguimiento" styleClass="outputText" />
-					<p:separator styleClass="fielset" />			
-		            <p:dataTable value="#{consultarSolicitudMB.lstSeguimientoDTO}" var="seg" rows="5" id="datosSeguimiento"
+						<td width="100%">
+						<h:outputText title="Seguimiento" value="Seguimiento" styleClass="outputText" />
+						<p:separator styleClass="fielset" />			
+		            		<p:dataTable value="#{consultarSolicitudMB.lstSeguimientoDTO}" var="seg" rows="5" id="datosSeguimiento"
 								paginatorPosition="bottom" scrollable="true" scrollHeight="120"
 								paginator="true"
 								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
@@ -98,18 +93,19 @@
 								
 								<p:column headerText="Obs" width="55" exportable="false" style="font-size: 9px">													
 									<p:commandButton id="downloadLink2" icon="ui-icon-search" 
-										onclick="window.location.href='#{root}main/download/pdfReportObsHistorial.htm?id=#{seg.codSoli};#{seg.movimiento}'" 
-										/>
+										onclick="window.location.href='#{root}main/download/pdfReportObsHistorial.htm?id=#{seg.codSoli};#{seg.movimiento}'" />
 								</p:column>		
 																								
-						</p:dataTable>
+							</p:dataTable>
 					
 						</td>
-						</tr>
+					</tr>
+					
+					<!-- Seccion: ACCION -->
 					<tr>
 						<td width="100%">
 							<p:panel rendered="#{consultarSolicitudMB.bMostrarGenerarRevision}" >
-								<h:outputText title="Accion" value="Accion" styleClass="outputText" />
+								<h:outputText title="Acción" value="Acción" styleClass="outputText" />
 								<p:separator styleClass="fielset" />
 								<p:commandButton id="btnRevision" value="Generar Revisión" rendered="#{consultarSolicitudMB.bMostrarGenerarRevision}"
 									oncomplete="confirmation3.show()"/>
@@ -117,43 +113,40 @@
 							</p:panel>
 						</td>
 					</tr>
-					<tr>
-					<td width="100%">
-					<p:panel rendered="#{consultarSolicitudMB.bSeccionReasignacion}" >
-					<h:outputText title="Reasignar" value="Reasignar" styleClass="outputText" />
-					<p:separator styleClass="fielset" />
-					<h:panelGrid columns="2">
-					<h:panelGrid columns="2">
-					<h:outputText  value="Estudio" styleClass="outputText"/>
-					<p:selectOneMenu id="cboEstudio" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio}" valueChangeListener="#{consultarSolicitudMB.abogadosXEstudios}"> 
-							 <p:ajax update=":formSolicitudSeguimiento:cboAbogado" event="change"> </p:ajax> 
-							<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-							 <f:selectItems  value="#{consultarSolicitudMB.combosMB.lstEstudio}" var="lOf" itemValue="#{lOf.codEstudio}" itemLabel="#{lOf.desEstudio}" />
-							
-							 
-					</p:selectOneMenu>
-					</h:panelGrid>
-								
-					<p:commandButton id="btnAceptar" value="Aceptar" action="#{consultarSolicitudMB.reasignacionManual}" update=":formSolicitudSeguimiento:growlSolicitudSeguimiento"/>
-					<h:panelGrid columns="2">
-					<h:outputText  value="Abogado" styleClass="outputText"/>
-					<p:selectOneMenu id="cboAbogado" value="#{consultarSolicitudMB.solicitudRegistrarT.regAbogado}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
-							<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-							 <f:selectItems  value="#{consultarSolicitudMB.lstAbogados}" var="lOf" itemValue="#{lOf.codMiembro}" itemLabel="#{lOf.codMiembro} - #{lOf.descripcion}" /> 
-					</p:selectOneMenu>
 					
-					</h:panelGrid>
-					</h:panelGrid>
+					<!-- Seccion: REASIGNAR -->
+					<tr>
+						<td width="100%">
+						<p:panel rendered="#{consultarSolicitudMB.bSeccionReasignacion}" >
+							<h:outputText title="Reasignar" value="Reasignar" styleClass="outputText" />
+							<p:separator styleClass="fielset" />
+							<h:panelGrid columns="2">
+								<h:panelGrid columns="2">
+									<h:outputText  value="Estudio" styleClass="outputText"/>
+									<p:selectOneMenu id="cboEstudio" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio}" valueChangeListener="#{consultarSolicitudMB.abogadosXEstudios}"> 
+										 <p:ajax update=":formSolicitudSeguimiento:cboAbogado" event="change"> </p:ajax> 
+										<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+										 <f:selectItems  value="#{consultarSolicitudMB.combosMB.lstEstudio}" var="lOf" itemValue="#{lOf.codEstudio}" itemLabel="#{lOf.desEstudio}" />
+									</p:selectOneMenu>
+								</h:panelGrid>
+								<p:commandButton id="btnAceptar" value="Aceptar" action="#{consultarSolicitudMB.reasignacionManual}" update=":formSolicitudSeguimiento:growlSolicitudSeguimiento"/>
+								<h:panelGrid columns="2">
+									<h:outputText  value="Abogado" styleClass="outputText"/>
+									<p:selectOneMenu id="cboAbogado" value="#{consultarSolicitudMB.solicitudRegistrarT.regAbogado}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
+										<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+										<f:selectItems  value="#{consultarSolicitudMB.lstAbogados}" var="lOf" itemValue="#{lOf.codMiembro}" itemLabel="#{lOf.codMiembro} - #{lOf.descripcion}" /> 
+									</p:selectOneMenu>
+								</h:panelGrid>
+							</h:panelGrid>
 						</p:panel>
 					</td>
-						</tr>				
-						<tr>
-					<td width="100%">
-							
+					</tr>
+					
+					<!-- Seccion: EVALUAR NIVELES -->
+					<tr>
+						<td width="100%">
 							<h:panelGrid width="100%" columns="1" rendered="#{consultarSolicitudMB.bSeccionEvaluarNivel}">
-							
 							 	 <!-- <p:messages id="idGrowlSolicitudAccion"></p:messages>  -->
-							
 								<h:outputText title="Acción" value="Acción" styleClass="outputText" />
 								<p:separator styleClass="fielset" />						
 								<!-- Panel Evaluar x Nivel -->
@@ -174,34 +167,33 @@
 									<p:spacer />
 									<p:spacer />
 									<p:commandButton value="Aceptar" onclick="varCboNivel.getSelectedValue()=='0001' ? 1 : confirmationNivel.show()"/>
-									
 								</h:panelGrid>
 							</h:panelGrid>
 						</td>
-						</tr>													
-						
-						<tr>
-					<td width="100%">
-					<p:panel rendered="#{consultarSolicitudMB.bSeccionDictaminar}" menuTitle="Accion">
-					<h:outputText title="Dictaminar" value="Dictaminar" styleClass="outputText" />
-					<p:separator styleClass="fielset" />
+					</tr>
 					
-					<h:panelGrid columns="3">
+					<!-- Seccion: DICTAMINAR -->
+					<tr>
+						<td width="100%">
+						<p:panel rendered="#{consultarSolicitudMB.bSeccionDictaminar}" menuTitle="Accion">
+							<h:outputText title="Dictaminar" value="Dictaminar" styleClass="outputText" />
+							<p:separator styleClass="fielset" />
+							<h:panelGrid columns="3">
+								<h:outputText  value="Dictamen : " styleClass="outputText"/>
+								<p:selectOneMenu id="cboDictamen" value="#{consultarSolicitudMB.valorDictamen}"
+									widgetVar="varCboDictamen"
+									valueChangeListener="#{consultarSolicitudMB.obtenerDictamen}" > 
+									<p:ajax event="change" update=":formSolicitudSeguimiento:confirmDialogDictamen"></p:ajax>
+									<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+							 		<f:selectItems  value="#{consultarSolicitudMB.lstComboDictamen}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" /> 
+								</p:selectOneMenu>
+								<p:commandButton id="btnAceptarDictamen" value="Aceptar" onclick="varCboDictamen.getSelectedValue()=='' ? 1 : confirmation.show()" />				
+							</h:panelGrid>
+						</p:panel>
+						</td>
+					</tr>
 					
-					<h:outputText  value="Dictamen : " styleClass="outputText"/>
-					<p:selectOneMenu id="cboDictamen" value="#{consultarSolicitudMB.valorDictamen}"
-						widgetVar="varCboDictamen"
-					valueChangeListener="#{consultarSolicitudMB.obtenerDictamen}" > 
-					<p:ajax event="change" update=":formSolicitudSeguimiento:confirmDialogDictamen"></p:ajax>
-							<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-							 <f:selectItems  value="#{consultarSolicitudMB.lstComboDictamen}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" /> 
-					</p:selectOneMenu>
-						<p:commandButton id="btnAceptarDictamen" value="Aceptar" onclick="varCboDictamen.getSelectedValue()=='' ? 1 : confirmation.show()" />				
-					</h:panelGrid>
 					
-					</p:panel>
-					</td>
-						</tr>
 					<tr>
 						<td width="100%">
 							<h:panelGrid id="pgDocumentos" width="100%" columns="1" rendered="#{consultarSolicitudMB.bSeccionDocumentos}">					
@@ -268,7 +260,7 @@
 	    </p:confirmDialog> 
 	    
 	    <p:confirmDialog id="confirmDialog" message="#{consultarSolicitudMB.textoMensajeCartaAtencion}"  
-	              header="Carta de Atencion" severity="alert" widgetVar="confirmation2" visible="true">  
+	              header="Carta de Atención" severity="alert" widgetVar="confirmation2" visible="true">  
 	                
 	            <center>
 		       	<p:commandButton id="confirm" value="Si" 
@@ -283,7 +275,7 @@
 	    </p:confirmDialog>
 	    
 	    <p:confirmDialog id="confirmDialogRevision" message="¿Está seguro de generar una  revisión?"  
-	              header="Revision" severity="alert" widgetVar="confirmation3" visible="true">  
+	              header="Revisión" severity="alert" widgetVar="confirmation3" visible="true">  
 	            
 	            <center>    
 		        <p:commandButton id="confirmRev" value="Si"  oncomplete="confirmation3.hide()" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento,:formSolicitudSeguimiento:growlSolicitudSeguimiento" 
