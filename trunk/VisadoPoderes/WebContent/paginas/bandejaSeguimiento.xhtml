@@ -265,6 +265,11 @@
 						   			<p:fileDownload value="#{seguimientoMB.file}" />  
 								</p:commandButton>  
 							</td>
+							<td>
+								<p:commandButton value="Limpiar" icon="ui-icon-trash" 
+									actionListener="#{seguimientoMB.limpiar}" 
+									update=":frm:pnlBndSol" ajax="false"/>
+							</td>
 						</tr>	
 					</table>	
 					
@@ -279,9 +284,7 @@
 								<p:panel header="Resultados" id="panelRes" style="width: 1090px" >
 									<p:dataTable value="#{seguimientoMB.solicitudes}" var="tbl" rows="5" id="datosSol"
 											paginatorPosition="bottom" scrollable="true" scrollHeight="200"
-											paginator="true"									
-											rowsPerPageTemplate="5,10,15"
-											emptyMessage="">
+											paginator="true" rowsPerPageTemplate="5,10,15" emptyMessage="">
 						
 											<p:column width="40">
 												   <f:facet name="header">  
