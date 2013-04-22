@@ -302,7 +302,53 @@ public class ReportesMB {
 	public void exportarExcelSolicitudTipoServ() {
 		rptSolicitudTipoServ();
 	}
-
+	
+	public void limpiarFilLiq()
+	{
+		setAnio(0);
+		setMes(0);
+		setLstEstudioSelected(null);
+	}
+	
+	public void limpiarFilOf()
+	{
+		setIdTerr("");
+		setIdOfi("");
+		setOficina(null);
+		setFechaInicio(null);
+		setFechaFin(null);
+	}
+	
+	public void limpiarFilRecau()
+	{
+		setIdTerr(null);
+		setIdOfi("");
+		setIdOfi1("");
+		setFechaInicio(null);
+		setFechaFin(null);
+	}
+	
+	public void limpiarFilExt()
+	{
+		setFechaInicio(null);
+		setFechaFin(null);
+		setLstEstadoSelected(null);
+	}
+	
+	public void limpiarFilTipoServ()
+	{
+		setCodSolicitud("");
+		setLstTipoSolicitudSelected(null);
+		setIdOpeBan("");
+		setIdImporte("");
+		setImporteIni(null);
+		setImporteFin(null);
+		setLstEstudioSelected(null);
+		setFechaInicio(null);
+		setFechaFin(null);
+		setIdMoneda("");
+	}
+	
 	public void buscarLiquidacion() 
 	{
 		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");

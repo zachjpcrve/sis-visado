@@ -2137,7 +2137,7 @@ public class RevocadosMB {
 
 		return lstTiivsPersonaResultado;
 	}
-
+	
 	public void buscarRevocado() {
 		logger.info("############  buscarRevocado ###############");
 		revocados = new ArrayList<Revocado>();
@@ -2435,21 +2435,29 @@ public class RevocadosMB {
 	public void limpiar() {
 		revocados = null;
 	}
+	
+	public void limpiarFiltros()
+	{
+		setObjTiivsPersonaBusqueda(null);
+		setObjTiivsPersonaBusquedaNombre(null);
+		setEstadoRevocado("");
+		setFechaInicio(null);
+		setFechaFin(null);
+	}
 
 	public String reset() {
 		return "/faces/paginas/registrarRevocado.xhtml";
 	}
 
 	public String editar() {
-		System.out.print("editar");
+		//System.out.print("editar");
 		return "/faces/paginas/registrarRevocado.xhtml";
 	}
 
 	public String guardar() {
-		System.out.print("guardar");
+		//System.out.print("guardar");
 		return "/faces/paginas/bandejaRevocados.xhtml";
-	}
-	
+	}	
 
 	public String getNroRegistros() {
 		Integer nReg;
