@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="542" pageHeight="795" columnWidth="502" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.1269722013523664"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="259"/>
+	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<field name="numeroSolicitud" class="java.lang.String"/>
@@ -12,7 +12,7 @@
 		<band/>
 	</background>
 	<title>
-		<band height="102">
+		<band height="334">
 			<textField>
 				<reportElement x="367" y="9" width="118" height="20"/>
 				<textElement/>
@@ -34,57 +34,52 @@
 				<textElement/>
 				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-		</band>
-	</title>
-	<pageHeader>
-		<band height="46">
 			<textField>
-				<reportElement x="22" y="21" width="453" height="20"/>
+				<reportElement x="22" y="114" width="453" height="20"/>
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA["Atencion: Solicitud de revisión de poderes N° " + $F{numeroSolicitud}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="22" y="0" width="453" height="20"/>
+				<reportElement x="22" y="93" width="453" height="20"/>
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA["Señor: " + $F{poderdantes}]]></textFieldExpression>
 			</textField>
-		</band>
-	</pageHeader>
-	<columnHeader>
-		<band height="396">
 			<line>
-				<reportElement x="22" y="0" width="453" height="1" forecolor="#666666"/>
+				<reportElement x="22" y="139" width="453" height="1" forecolor="#666666"/>
 			</line>
 			<staticText>
-				<reportElement x="22" y="219" width="443" height="120"/>
-				<textElement/>
-				<text><![CDATA[En caso deseara una nueva revisión, las observaciones antes indicadas deberán haber sido superadas. Esta nueva revisión deberá ser presentada como una nueva solicitud, adjuntando los requisitos establecidos por el Banco para tal efecto.
-
-Atentamente,]]></text>
-			</staticText>
-			<rectangle>
-				<reportElement x="22" y="64" width="453" height="136"/>
-			</rectangle>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="37" y="75" width="428" height="115"/>
-				<textElement markup="html">
-					<font size="11"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones}!=null?$F{instrucciones}:" "]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="22" y="6" width="453" height="49"/>
+				<reportElement x="22" y="145" width="453" height="37"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[De nuestra consideracion:
 Mediante la presente le informamos que su solicitud es IMPROCEDENTE, por las siguientes razones:]]></text>
 			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="23" y="241" width="443" height="84"/>
+				<textElement/>
+				<text><![CDATA[En caso deseara una nueva revisión, las observaciones antes indicadas deberán haber sido superadas. Esta nueva revisión deberá ser presentada como una nueva solicitud, adjuntando los requisitos establecidos por el Banco para tal efecto.
+
+Atentamente,]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement stretchType="RelativeToTallestObject" x="23" y="191" width="453" height="40"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="38" y="195" width="428" height="24"/>
+				<textElement markup="html">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones}!=null?$F{instrucciones}:" "]]></textFieldExpression>
+			</textField>
 		</band>
-	</columnHeader>
-	<detail>
+	</title>
+	<pageHeader>
 		<band/>
-	</detail>
+	</pageHeader>
+	<columnHeader>
+		<band/>
+	</columnHeader>
 	<columnFooter>
 		<band/>
 	</columnFooter>
@@ -100,6 +95,6 @@ Mediante la presente le informamos que su solicitud es IMPROCEDENTE, por las sig
 		</band>
 	</pageFooter>
 	<summary>
-		<band/>
+		<band height="1"/>
 	</summary>
 </jasperReport>
