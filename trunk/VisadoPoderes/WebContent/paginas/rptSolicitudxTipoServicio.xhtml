@@ -214,6 +214,7 @@
 					<p:dataTable value="#{reportesMB.lstSolicitudesTipoServicio}"
 						var="tbl" rows="5" id="datosSol" paginatorPosition="bottom"
 						scrollable="true" scrollHeight="200" paginator="true"
+						emptyMessage="No se encontraron registros."
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
 						currentPageReportTemplate="Mostrando {startRecord} de {totalRecords}" 
 						rowsPerPageTemplate="5,10,15">
