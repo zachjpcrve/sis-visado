@@ -1071,9 +1071,9 @@ public class ConsultarSolicitudMB {
             	this.bMostrarCartaImprocedente = false;
             	this.bSeccionDocumentos = true;
             	this.bSeccionDictaminar = false;
-            	this.bSeccionComentario = true;
+            	this.bSeccionComentario = false;
             	this.bSeccionReasignacion = false;
-            	this.bSeccionEvaluarNivel = true;
+            	this.bSeccionEvaluarNivel = false;
             	this.bMostrarGenerarRevision = false;
             	
         	} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
@@ -1125,9 +1125,9 @@ public class ConsultarSolicitudMB {
             	this.bMostrarCartaImprocedente = false;
             	this.bSeccionDocumentos = true;
             	this.bSeccionDictaminar = false;
-            	this.bSeccionComentario = true;
+            	this.bSeccionComentario = false;
             	this.bSeccionReasignacion = false;
-            	this.bSeccionEvaluarNivel = true;
+            	this.bSeccionEvaluarNivel = false;
             	this.bMostrarGenerarRevision = false;
             	
         	} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
