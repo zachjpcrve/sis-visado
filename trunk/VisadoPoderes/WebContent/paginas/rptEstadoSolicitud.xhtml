@@ -19,77 +19,87 @@
 		
 			<p:outputPanel id="oplFrm">
 				<p:spacer height="5" />
-
-				<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
-					<tbody>
-						<tr bordercolor="white">
-							<td><h:outputText styleClass="outputText" id="txtTerritorio"
-									value="Territorio:" /></td>
-							<td><p:selectOneMenu value="#{reportesMB.idTerr}"
-									id="somTerr" style="width:155px;">
-									<f:selectItem itemLabel="--Todos--" itemValue="" />
-									<f:selectItems value="#{reportesMB.combosMB.lstTerritorio}"
-										var="ter" itemValue="#{ter.codTer}" itemLabel="#{ter.desTer}" />
-									
-								</p:selectOneMenu></td>
-						</tr>
-
-						<tr bordercolor="white">
-							<td><h:outputText styleClass="outputText" id="txtCodOficina"
-									value="Código de Oficina:" /></td>
-							<td><p:selectOneMenu value="#{reportesMB.idOfi}" id="somOfi"
-									style="width:155px;">
-									<f:selectItem itemLabel="--Todos--" itemValue="" />
-									<f:selectItems value="#{reportesMB.combosMB.lstOficina}"
-										var="of" itemValue="#{of.codOfi}" itemLabel="#{of.codOfi}" />
-								</p:selectOneMenu>
-							</td>
-							<td><h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
-							<td><p:autoComplete id="acNomOFina" value="#{reportesMB.oficina}"
-									completeMethod="#{seguimientoMB.completeNomOficina}" 
-									var="ofi" converter="oficinaConverter" size="24" 
-									itemLabel="#{ofi.desOfi}" itemValue="#{ofi}"/>
-							</td>
-						</tr>
-
-						<tr bordercolor="white">
-							<td><h:outputText styleClass="outputText"
-									id="txtFechaInicio" value="Fecha de Inicio:" /></td>
-							<td><p:calendar id="calFecIni" pattern="dd/MM/yyyy"
-									value="#{reportesMB.fechaInicio}" showOn="button"
-									maxlength="10" size="20" locale="es"/></td>
-
-							<td><h:outputText styleClass="outputText" id="txtFechaFin"
-									value="Fecha de Fin:" /></td>
-							<td><p:calendar id="calFecFin" pattern="dd/MM/yyyy"
-									value="#{reportesMB.fechaFin}" showOn="button" maxlength="10"
-									size="20" locale="es"/></td>
-						</tr>
-
-						<tr bordercolor="white">
-							<td></td>
-						</tr>
-
-						<tr bordercolor="white">
-							<td><p:commandButton value="Buscar"
-									actionListener="#{reportesMB.buscarSolicitudesxOficina}"
-									update=":frm:oplFrm,:frm:idMsgReporte" /></td>
-							<td><p:commandButton value="Exportar"
-									disabled="#{reportesMB.noHabilitarExportar}"
-									actionListener="#{reportesMB.descargarArchivoEstadoSolicitud}"
-									ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)">
-									<p:fileDownload value="#{reportesMB.file}" />
-								</p:commandButton> <h:commandLink value="Exportar2"
-									disabled="#{reportesMB.noHabilitarExportar}"  rendered="false"
-									actionListener="#{reportesMB.descargarArchivoEstadoSolicitud}"
-									target="_blank" ajax="true">
-									<p:fileDownload value="#{reportesMB.file}" />
-								</h:commandLink></td>
-						</tr>
-
-					</tbody>
-				</table>
-
+				
+				<p:panel>
+					<table id="tablaBusSol" border="0" bordercolor="#00BFFF">
+						<tbody>
+							<tr bordercolor="white">
+								<td><h:outputText styleClass="outputText" id="txtTerritorio"
+										value="Territorio:" /></td>
+								<td><p:selectOneMenu value="#{reportesMB.idTerr}"
+										id="somTerr" style="width:155px;">
+										<f:selectItem itemLabel="--Todos--" itemValue="" />
+										<f:selectItems value="#{reportesMB.combosMB.lstTerritorio}"
+											var="ter" itemValue="#{ter.codTer}" itemLabel="#{ter.desTer}" />
+										
+									</p:selectOneMenu></td>
+							</tr>
+	
+							<tr bordercolor="white">
+								<td><h:outputText styleClass="outputText" id="txtCodOficina"
+										value="Código de Oficina:" /></td>
+								<td><p:selectOneMenu value="#{reportesMB.idOfi}" id="somOfi"
+										style="width:155px;">
+										<f:selectItem itemLabel="--Todos--" itemValue="" />
+										<f:selectItems value="#{reportesMB.combosMB.lstOficina}"
+											var="of" itemValue="#{of.codOfi}" itemLabel="#{of.codOfi}" />
+									</p:selectOneMenu>
+								</td>
+								<td><h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
+								<td><p:autoComplete id="acNomOFina" value="#{reportesMB.oficina}"
+										completeMethod="#{seguimientoMB.completeNomOficina}" 
+										var="ofi" converter="oficinaConverter" size="24" 
+										itemLabel="#{ofi.desOfi}" itemValue="#{ofi}"/>
+								</td>
+							</tr>
+	
+							<tr bordercolor="white">
+								<td><h:outputText styleClass="outputText"
+										id="txtFechaInicio" value="Fecha de Inicio:" /></td>
+								<td><p:calendar id="calFecIni" pattern="dd/MM/yyyy"
+										value="#{reportesMB.fechaInicio}" showOn="button"
+										maxlength="10" size="20" locale="es"/></td>
+	
+								<td><h:outputText styleClass="outputText" id="txtFechaFin"
+										value="Fecha de Fin:" /></td>
+								<td><p:calendar id="calFecFin" pattern="dd/MM/yyyy"
+										value="#{reportesMB.fechaFin}" showOn="button" maxlength="10"
+										size="20" locale="es"/></td>
+							</tr>
+	
+							<tr bordercolor="white">
+								<td></td>
+							</tr>
+	
+							<tr bordercolor="white">
+								<td>
+									<p:commandButton value="Buscar"
+										actionListener="#{reportesMB.buscarSolicitudesxOficina}"
+										update=":frm:oplFrm,:frm:idMsgReporte" />
+								</td>
+								<td>
+									<p:commandButton value="Exportar"
+										disabled="#{reportesMB.noHabilitarExportar}"
+										actionListener="#{reportesMB.descargarArchivoEstadoSolicitud}"
+										ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)">
+										<p:fileDownload value="#{reportesMB.file}" />
+									</p:commandButton>
+									<h:commandLink value="Exportar2"
+										disabled="#{reportesMB.noHabilitarExportar}" rendered="false"
+										actionListener="#{reportesMB.descargarArchivoEstadoSolicitud}"
+										target="_blank" ajax="true">
+										<p:fileDownload value="#{reportesMB.file}" />
+									</h:commandLink>
+								</td>
+								<td>
+									<p:commandButton value="Limpiar" actionListener="#{reportesMB.limpiarFilOf}" update=":frm:oplFrm" />
+								</td>
+							</tr>
+	
+						</tbody>
+					</table>
+				</p:panel>
+				
 				<p:spacer height="20" />
 
 				<h:outputLabel value="#{reportesMB.textoTotalResultados}" />
