@@ -22,76 +22,84 @@
 					id="growl" />
 
 				<p:spacer height="5" />
-
-				<table id="tablaBusSol" border="1" bordercolor="#00BFFF">
-					<tbody>
-						<tr bordercolor="white">
-							<td><h:outputText styleClass="outputText" id="txtAnio"
-									value="Año:" /></td>
-							<td><p:selectOneMenu id="somAnio" value="#{reportesMB.anio}"
-									required="true" requiredMessage="Ingrese Año valido">
-									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
-									<f:selectItem itemLabel="2013" itemValue="1" />
-									<f:selectItem itemLabel="2014" itemValue="2" />
-									<f:selectItem itemLabel="2015" itemValue="3" />
-									<f:selectItem itemLabel="2016" itemValue="4" />
-									<f:selectItem itemLabel="2017" itemValue="5" />
-									<f:selectItem itemLabel="2018" itemValue="6" />
-								</p:selectOneMenu></td>
-
-							<td><h:outputText styleClass="outputText" id="txtEstudio"
-									value="Estudio:" /></td>
-							<td><p:selectCheckboxMenu id="scmEstudio" label="--Todos--"
-									value="#{reportesMB.lstEstudioSelected}"
-									panelStyle="width:150px;" style="width:150px;">
-									<f:selectItems value="#{reportesMB.combosMB.estudios}" />
-								</p:selectCheckboxMenu></td>
-						</tr>
-
-						<tr bordercolor="white">
-							<td><h:outputText styleClass="outputText" id="txtMes"
-									value="Mes:" /></td>
-							<td><p:selectOneMenu id="somMes" value="#{reportesMB.mes}"
-									required="true" requiredMessage="Ingrese mes valido">
-									<f:selectItem itemLabel="--Seleccione--" itemValue="" />
-									<f:selectItem itemLabel="Enero" itemValue="1" />
-									<f:selectItem itemLabel="Febrero" itemValue="2" />
-									<f:selectItem itemLabel="Marzo" itemValue="3" />
-									<f:selectItem itemLabel="Abril" itemValue="4" />
-									<f:selectItem itemLabel="Mayo" itemValue="5" />
-									<f:selectItem itemLabel="Junio" itemValue="6" />
-									<f:selectItem itemLabel="Julio" itemValue="7" />
-									<f:selectItem itemLabel="Agosto" itemValue="8" />
-									<f:selectItem itemLabel="Septiembre" itemValue="9" />
-									<f:selectItem itemLabel="Octubre" itemValue="10" />
-									<f:selectItem itemLabel="Noviembre" itemValue="11" />
-									<f:selectItem itemLabel="Diciembre" itemValue="12" />
-
-									<p:ajax event="change" update=":frm:lblTextoAnioMes"
-										process="@this"
-										listener="#{reportesMB.actualizarTextoAnioMes}" />
-								</p:selectOneMenu></td>
-						</tr>
-
-						<tr bordercolor="white">
-							<td><p:commandButton value="Buscar"
-									actionListener="#{reportesMB.buscarLiquidacion}"
-									update=":frm:oplFrm,:frm:growl" /></td>
-							<td><p:commandButton value="Exportar"
-									disabled="#{reportesMB.noHabilitarExportar}"
-									actionListener="#{reportesMB.descargarArchivoLiquidacion}"
-									ajax="true" onclick="PrimeFaces.monitorDownload(start, stop)">
-									<p:fileDownload value="#{reportesMB.file}" />
-								</p:commandButton> <h:commandLink value="Exportar2"
-									disabled="#{reportesMB.noHabilitarExportar}" rendered="false"
-									actionListener="#{reportesMB.descargarArchivoLiquidacion}"
-									target="_blank" ajax="true">
-									<p:fileDownload value="#{reportesMB.file}" />
-								</h:commandLink></td>
-						</tr>
-					</tbody>
-				</table>
-
+				
+				<p:panel>
+					<table id="tablaBusSol" border="0" bordercolor="#00BFFF">
+						<tbody>
+							<tr bordercolor="white">
+								<td><h:outputText styleClass="outputText" id="txtAnio"
+										value="Año:" /></td>
+								<td><p:selectOneMenu id="somAnio" value="#{reportesMB.anio}"
+										required="true" requiredMessage="Ingrese Año valido">
+										<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+										<f:selectItem itemLabel="2013" itemValue="1" />
+										<f:selectItem itemLabel="2014" itemValue="2" />
+										<f:selectItem itemLabel="2015" itemValue="3" />
+										<f:selectItem itemLabel="2016" itemValue="4" />
+										<f:selectItem itemLabel="2017" itemValue="5" />
+										<f:selectItem itemLabel="2018" itemValue="6" />
+									</p:selectOneMenu></td>
+	
+								<td><h:outputText styleClass="outputText" id="txtEstudio"
+										value="Estudio:" /></td>
+								<td><p:selectCheckboxMenu id="scmEstudio" label="--Todos--"
+										value="#{reportesMB.lstEstudioSelected}"
+										panelStyle="width:150px;" style="width:150px;">
+										<f:selectItems value="#{reportesMB.combosMB.estudios}" />
+									</p:selectCheckboxMenu></td>
+							</tr>
+	
+							<tr bordercolor="white">
+								<td><h:outputText styleClass="outputText" id="txtMes"
+										value="Mes:" /></td>
+								<td><p:selectOneMenu id="somMes" value="#{reportesMB.mes}"
+										required="true" requiredMessage="Ingrese mes valido">
+										<f:selectItem itemLabel="--Seleccione--" itemValue="" />
+										<f:selectItem itemLabel="Enero" itemValue="1" />
+										<f:selectItem itemLabel="Febrero" itemValue="2" />
+										<f:selectItem itemLabel="Marzo" itemValue="3" />
+										<f:selectItem itemLabel="Abril" itemValue="4" />
+										<f:selectItem itemLabel="Mayo" itemValue="5" />
+										<f:selectItem itemLabel="Junio" itemValue="6" />
+										<f:selectItem itemLabel="Julio" itemValue="7" />
+										<f:selectItem itemLabel="Agosto" itemValue="8" />
+										<f:selectItem itemLabel="Septiembre" itemValue="9" />
+										<f:selectItem itemLabel="Octubre" itemValue="10" />
+										<f:selectItem itemLabel="Noviembre" itemValue="11" />
+										<f:selectItem itemLabel="Diciembre" itemValue="12" />
+	
+										<p:ajax event="change" update=":frm:lblTextoAnioMes"
+											process="@this"
+											listener="#{reportesMB.actualizarTextoAnioMes}" />
+									</p:selectOneMenu></td>
+							</tr>
+	
+							<tr bordercolor="white">
+								<td><p:commandButton value="Buscar"
+										actionListener="#{reportesMB.buscarLiquidacion}"
+										update=":frm:oplFrm,:frm:growl" /></td>
+								<td><p:commandButton value="Exportar"
+										disabled="#{reportesMB.noHabilitarExportar}"
+										actionListener="#{reportesMB.descargarArchivoLiquidacion}"
+										ajax="true" onclick="PrimeFaces.monitorDownload(start, stop)">
+										<p:fileDownload value="#{reportesMB.file}" />
+									</p:commandButton> 
+									<h:commandLink value="Exportar2"
+										disabled="#{reportesMB.noHabilitarExportar}" rendered="false"
+										actionListener="#{reportesMB.descargarArchivoLiquidacion}"
+										target="_blank" ajax="true">
+										<p:fileDownload value="#{reportesMB.file}" />
+									</h:commandLink>
+								</td>
+								<td><p:commandButton value="Limpiar"
+										actionListener="#{reportesMB.limpiarFilLiq}"
+										update=":frm:oplFrm" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</p:panel>
+				
 				<p:spacer height="20" />
 
 				<h:outputLabel id="lblTextoAnioMes"
