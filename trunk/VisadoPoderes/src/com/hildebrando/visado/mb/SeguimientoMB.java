@@ -2751,6 +2751,7 @@ public class SeguimientoMB
 		GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
 		filtroHist.add(Restrictions.eq("id.codSoli",sCodSolicitud));
+		filtroHist.addOrder(Order.desc("fecha"));
 		
 		List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
 

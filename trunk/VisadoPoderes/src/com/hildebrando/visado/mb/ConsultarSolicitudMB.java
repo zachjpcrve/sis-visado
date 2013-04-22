@@ -471,6 +471,14 @@ public class ConsultarSolicitudMB {
 						ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02,
 						ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02));
 			} else if (this.solicitudRegistrarT
+					.getEstado()
+					.trim()
+					.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
+				logger.info("xxxx  ESTADO_COD_PROCEDENTE_T02");
+				lstComboDictamen.add(new ComboDto(
+						ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02,
+						ConstantesVisado.ESTADOS.ESTADO_IMPROCEDENTE_T02));
+			} else if (this.solicitudRegistrarT
 				.getEstado()
 				.trim()
 				.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
@@ -481,7 +489,15 @@ public class ConsultarSolicitudMB {
 				/*lstComboDictamen.add(new ComboDto(
 						ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02,
 						ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02));*/
-		}
+			} else if (this.solicitudRegistrarT
+					.getEstado()
+					.trim()
+					.equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
+					logger.info("xxxx  ESTADO_COD_ACEPTADO_T02");
+					lstComboDictamen.add(new ComboDto(
+							ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02,
+							ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02));
+			}
 		}
 	}
 
@@ -1011,11 +1027,12 @@ public class ConsultarSolicitudMB {
 				this.bMostrarCartaRevision = false;
 				this.bMostrarCartaImprocedente = false;
 				this.bSeccionDocumentos = true;
-				this.bSeccionDictaminar = false;
-				this.bSeccionComentario = false;
+				this.bSeccionDictaminar = true;
+				this.bSeccionComentario = true;
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
 				this.bMostrarGenerarRevision = false;
+				this.listarComboDictamen();
 
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 
@@ -1259,11 +1276,12 @@ public class ConsultarSolicitudMB {
 				this.bMostrarCartaRevision = true;
 				this.bMostrarCartaImprocedente = false;
 				this.bSeccionDocumentos = true;
-				this.bSeccionDictaminar = false;
-				this.bSeccionComentario = false;
+				this.bSeccionDictaminar = true;
+				this.bSeccionComentario = true;
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
 				this.bMostrarGenerarRevision = false;
+				this.listarComboDictamen();
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
