@@ -4540,6 +4540,18 @@ public class ConsultarSolicitudMB {
 
 	/* Termino metodos del registro */
 	
+	
+	public void guardarComentario(){
+		logger.info("**************************** Guardar Comentario ****************************");
+		GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit
+		.getApplicationContext().getBean("genericoDao");
+		try {
+			TiivsSolicitud objResultado = service.modificar(this.solicitudRegistrarT);
+			setbMostrarComentario(true);				
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION,e);
+		}
+	}
 
 	public void limpiarComentario() {
 		logger.info("**************************** limpiar Comentario ****************************");
