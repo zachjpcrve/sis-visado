@@ -166,21 +166,21 @@
 							</tr>
 							
 							<tr bordercolor="white">
-								<td >
+								<td>
 									<h:outputText styleClass="outputText" id="txtOficina" value="Oficina:"/>
 								</td>
-								<td >
-									 <p:autoComplete id="acNomOFina" value="#{seguimientoMB.oficina}"
+								<td>
+									<p:autoComplete id="acNomOFina" value="#{seguimientoMB.oficina}"
 										completeMethod="#{seguimientoMB.completeNomOficina}" var="ofi"
 										converter="oficinaConverter" size="24" disabled="#{seguimientoMB.bloquearOficina}"
 										itemLabel="#{ofi.codOfi}-#{ofi.desOfi}" itemValue="#{ofi}"/>		
 								</td>
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtNomOfic" /></td>
 								<p:tooltip for="tooltxtNomOfic" value="Oficina" showEffect="fade" hideEffect="fade" /> 
-								<td >
+								<td>
 									<h:outputText styleClass="outputText" id="txtNivel" value="Nivel:" />
 								</td>
-								<td >
+								<td>
 									<p:selectCheckboxMenu id="scmNivel" label="--TODOS--" value="#{seguimientoMB.lstNivelSelected}" panelStyle="width:100px;"  
 										style="width:150px;" scrollHeight="200">  
 								        <f:selectItems value="#{seguimientoMB.combosMB.niveles}" />  
@@ -188,10 +188,10 @@
 								</td>
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolNivel" /></td>	
 								<p:tooltip for="toolNivel" value="Nivel" showEffect="fade" hideEffect="fade" />	
-								<td >
+								<td>
 									<h:outputText styleClass="outputText" id="txtEstNivel" value="Estado del Nivel:" />
 								</td>
-								<td >
+								<td>
 									<p:selectCheckboxMenu id="scmEstadoNivel" label="--TODOS--" value="#{seguimientoMB.lstEstadoNivelSelected}" 
 											panelStyle="width:120px;" style="width:125px;">  
 								        <f:selectItems value="#{seguimientoMB.combosMB.estadosNivel}"/>  
@@ -199,16 +199,16 @@
 								</td>
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstNivel"  /></td>	
 								<p:tooltip for="toolEstNivel" value="Estados del Nivel" showEffect="fade" hideEffect="fade" />	
-								<td >
+								<td>
 									<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio:" />
 								</td>
-								<td >
+								<td>
 									<p:selectCheckboxMenu id="scmEstudio" label="--TODOS--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:120px;" 
 										style="width:160px;" scrollHeight="100">  
 								        <f:selectItems value="#{consultarSolicitudMB.combosMB.estudios}" />  
 								    </p:selectCheckboxMenu>  
 								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstudio"/></td>	
+								<td><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstudio"/></td>	
 								<p:tooltip for="toolEstudio" value="Estudio" showEffect="fade" hideEffect="fade"/>	
 								 		
 							</tr>
