@@ -42,14 +42,18 @@
 	      <h:panelGrid id="pnlGridformSolicitudSeguimiento">
 		      <h:panelGrid rendered="#{consultarSolicitudMB.bSeccionComentario}" columns="1">
 			  	<p:separator styleClass="fielset" />
-			  	<h:panelGrid columns="2">
+			  	<h:panelGrid columns="3">
 					<p:commandButton id="comentar" value="Comentar" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" actionListener="#{consultarSolicitudMB.habilitarComentario}"/>
-			  		<p:commandButton id="clearButton" type="button" value="Limpiar" onclick="editor.clear()" icon="ui-icon-close" />
+					<p:commandButton id="guardarComentario" value="Guardar" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" action="#{consultarSolicitudMB.guardarComentario}" disabled="#{consultarSolicitudMB.bMostrarComentario}" />
+			  		<p:commandButton id="clearButton" type="button" value="Limpiar" 			  			  
+			  			disabled="#{consultarSolicitudMB.bMostrarComentario}" 
+			  			icon="ui-icon-close"  onclick="editor.clear()" />
 				</h:panelGrid>
 				<h:panelGrid>	
 					<p:editor id="editor" onchange="actualizarEditor();" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="800" height="320" disabled="#{consultarSolicitudMB.bMostrarComentario}"/>
-					<p:remoteCommand name="actualizarEditor" update=":formSolicitudSeguimiento:editor" />
+					<p:remoteCommand name="actualizarEditor" update=":formSolicitudSeguimiento:editor" />					
 				</h:panelGrid>
+				
 				<p:separator styleClass="fielset" />
 				<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade" modal="true">
 			  		<h:outputText id="display" value="#{editorMB.value}"
