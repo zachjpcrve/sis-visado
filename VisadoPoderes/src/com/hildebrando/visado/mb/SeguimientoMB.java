@@ -1436,6 +1436,31 @@ public class SeguimientoMB
 		
 		return res;
 	}
+	
+	public void limpiar()
+	{
+		setCodSolicitud("");
+		setLstEstadoSelected(null);
+		setIdImporte("");
+		setLstTipoSolicitudSelected(null);
+		setIdTiposFecha("");
+		setFechaInicio(null);
+		setFechaFin(null);
+		setIdOpeBan("");
+		setNroDOIApoderado("");
+		setObjTiivsPersonaBusquedaNomApod(null);
+		setNroDOIPoderdante("");
+		setObjTiivsPersonaBusquedaNomPoder(null);
+		setOficina(null);
+		setLstNivelSelected(null);
+		setLstEstadoNivelSelected(null);
+		setLstEstudioSelected(null);
+		setbRevision(false);
+		setbDelegados(false);
+		setbRevocatoria(false);
+		
+		
+	}
 		
 	// Descripcion: Metodo que se encarga de buscar las solicitudes de acuerdo a
 	// los filtros seleccionados.
