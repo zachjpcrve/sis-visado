@@ -173,7 +173,7 @@
 									 <p:autoComplete id="acNomOFina" value="#{seguimientoMB.oficina}"
 										completeMethod="#{seguimientoMB.completeNomOficina}" var="ofi"
 										converter="oficinaConverter" size="24" disabled="#{seguimientoMB.bloquearOficina}"
-										itemLabel="#{ofi.desOfi}" itemValue="#{ofi}"/>		
+										itemLabel="#{ofi.codOfi}-#{ofi.desOfi}" itemValue="#{ofi}"/>		
 								</td>
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtNomOfic" /></td>
 								<p:tooltip for="tooltxtNomOfic" value="Oficina" showEffect="fade" hideEffect="fade" /> 
