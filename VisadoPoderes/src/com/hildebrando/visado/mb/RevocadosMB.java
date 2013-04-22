@@ -172,6 +172,7 @@ public class RevocadosMB {
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
 		List<TiivsRevocado> lstRevocadosPre = new ArrayList<TiivsRevocado>();
+		revocados = new ArrayList<Revocado>();
 		
 		try {
 			lstRevocadosPre = service.buscarDinamico(filtro.addOrder(Order.desc("codAgrup")).addOrder(Order.desc("fechaRevocatoria")));
@@ -1575,19 +1576,17 @@ public class RevocadosMB {
 		
 	}
 	
-	public void guardarApodPod(ActionEvent  actionEvent){
-		
-//		TiivsRevocado tiivsRevocadoAux;
-		
-		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+	public void guardarApodPod(ActionEvent actionEvent)
+	{	
+		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		int flag=0;
 		logger.info("personaClientesPendEdit.size :::: " +personaClientesPendEdit.size());
-		for(Revocado revocado: personaClientesPendEdit){
-			
+		
+		for(Revocado revocado: personaClientesPendEdit)
+		{	
 //			for(TiivsPersona tiivsPersona:revocado.getApoderados()){
-			for(TiivsRevocado tiivsRevocado:revocado.getApoderados()){
-				
+			for(TiivsRevocado tiivsRevocado:revocado.getApoderados())
+			{			
 //				tiivsRevocadoAux= new TiivsRevocado();
 //				tiivsRevocadoAux.setCodRevocado(0);
 //				tiivsRevocadoAux.setTiivsPersona(tiivsPersona);
@@ -1595,7 +1594,6 @@ public class RevocadosMB {
 //				tiivsRevocadoAux.setFechaRevocatoria(new Date());
 //				tiivsRevocadoAux.setEstado(ConstantesVisado.ESTADOS.ESTADO_PENDIENTE_REVOCADO);
 //				tiivsRevocadoAux.setCodAgrup(Integer.parseInt(revocado.getCodAgrupacion()));
-				
 //				tiivsRevocadoAux= new TiivsRevocado();
 				tiivsRevocado.setCodRevocado(0);
 //				tiivsRevocado.setTipPartic(tiivsRevocado.getTipPartic());
@@ -1614,16 +1612,15 @@ public class RevocadosMB {
 			}
 			
 //			for(TiivsPersona tiivsPersona:revocado.getPoderdantes()){
-			for(TiivsRevocado tiivsRevocado:revocado.getPoderdantes()){
-				
+			for(TiivsRevocado tiivsRevocado:revocado.getPoderdantes())
+			{			
 //				tiivsRevocadoAux= new TiivsRevocado();
 //				tiivsRevocadoAux.setCodRevocado(0);
 //				tiivsRevocadoAux.setTiivsPersona(tiivsPersona);
 //				tiivsRevocadoAux.setTipPartic(tiivsPersona.getTipPartic());
 //				tiivsRevocadoAux.setFechaRevocatoria(new Date());
 //				tiivsRevocadoAux.setEstado(ConstantesVisado.ESTADOS.ESTADO_PENDIENTE_REVOCADO);
-//				tiivsRevocadoAux.setCodAgrup(Integer.parseInt(revocado.getCodAgrupacion()));
-				
+//				tiivsRevocadoAux.setCodAgrup(Integer.parseInt(revocado.getCodAgrupacion()));				
 //				tiivsRevocadoAux= new TiivsRevocado();
 				tiivsRevocado.setCodRevocado(0);
 //				tiivsRevocado.setTiivsPersona(tiivsPersona);
@@ -1637,20 +1634,17 @@ public class RevocadosMB {
 					service.save(tiivsRevocado);
 					flag=1;
 				} catch (Exception e) {
+					//e.printStackTrace();
 					logger.error("error al guardar revocado");
 				}
-			}
-			
+			}		
 		}
 		
-		if(flag==1){
-			
-			FacesMessage msg = new FacesMessage(
-					FacesMessage.SEVERITY_INFO, "Guardado!",
-					"Registros agregados correctamente!");
+		if(flag==1)
+		{
+			//Utilitarios.mensajeInfo("Guardado!", "Registros agregados correctamente!");
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Guardado!","Registros agregados correctamente!");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
-
-			
 		}
 		
 		bBooleanPopup=false;
