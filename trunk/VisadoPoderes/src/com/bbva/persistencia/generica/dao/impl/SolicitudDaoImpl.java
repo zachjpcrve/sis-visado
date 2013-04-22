@@ -1347,7 +1347,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				    	objAgrp = new AgrupacionPlazoDto();
 				    	tmpLista.add(objAgrp);
 				    	 
-				    	if(row[3].toString().equals("B"))
+				    	if(!row[3].toString().equals("B"))
 				    	{				    		
 				    		objAgrp.setPlazo("A tiempo");
 				    		
