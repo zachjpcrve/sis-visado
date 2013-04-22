@@ -225,7 +225,7 @@ public class ConsultarSolicitudMB {
 
 		for (TiivsOficina1 oficina : combosMB.getLstOficina1()) 
 		{
-			if (oficina.getCodOfi() != null) 
+			if (oficina.getCodOfi() != null)
 			{
 				String texto = oficina.getDesOfi();
 
