@@ -392,7 +392,8 @@ public class ConsultarSolicitudMB {
 				.getObjectInSession("PERFIL_USUARIO");
 
 		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)
-				|| PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
+				|| PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)
+				|| PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 			setbMostrarComentario(false);
 		}		
 	}
