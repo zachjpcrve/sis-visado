@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="542" pageHeight="795" columnWidth="502" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="165"/>
+	<property name="ireport.y" value="406"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -49,32 +49,22 @@
 			<staticText>
 				<reportElement mode="Transparent" x="16" y="0" width="474" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left">
-					<font size="14" isBold="true"/>
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Estimado Gestor,]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="402">
+		<band height="148">
 			<line>
 				<reportElement x="16" y="0" width="474" height="1" forecolor="#666666"/>
 			</line>
 			<rectangle>
-				<reportElement x="16" y="6" width="474" height="197"/>
+				<reportElement stretchType="RelativeToTallestObject" x="16" y="6" width="474" height="132"/>
 			</rectangle>
-			<textField>
-				<reportElement x="20" y="235" width="458" height="58"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA["Este documento permite hacer efectiva la operación del Visado de Poderes, señalado en ORGA.2008.035 - BASTANTEO Y VISADO DE PODERES. Para ello, se debe tener en cuenta que luego de generar este documento, Usted tiene " + $F{numeroDiasForEjecucion} + " días para solicitar la ejecución de la operación en la oficina : " + $F{oficina}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="21" y="304" width="459" height="14"/>
-				<textElement/>
-				<text><![CDATA[Pasada la fecha, la validez del documento habrá caducado.]]></text>
-			</staticText>
 			<subreport>
-				<reportElement x="20" y="9" width="470" height="187"/>
+				<reportElement x="20" y="9" width="470" height="110" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="PARAM_INSTRUCCION">
 					<subreportParameterExpression><![CDATA[$F{instrucciones}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -108,6 +98,17 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band/>
+		<band height="116">
+			<textField>
+				<reportElement x="20" y="13" width="458" height="58"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Este documento permite hacer efectiva la operación del Visado de Poderes, señalado en ORGA.2008.035 - BASTANTEO Y VISADO DE PODERES. Para ello, se debe tener en cuenta que luego de generar este documento, Usted tiene " + $F{numeroDiasForEjecucion} + " días para solicitar la ejecución de la operación en la oficina : " + $F{oficina}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="21" y="82" width="459" height="14"/>
+				<textElement/>
+				<text><![CDATA[Pasada la fecha, la validez del documento habrá caducado.]]></text>
+			</staticText>
+		</band>
 	</summary>
 </jasperReport>
