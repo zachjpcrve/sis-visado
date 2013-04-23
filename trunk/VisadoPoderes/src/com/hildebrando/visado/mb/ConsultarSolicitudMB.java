@@ -1951,7 +1951,8 @@ public class ConsultarSolicitudMB {
 					String extension = fileName.substring(fileName
 							.lastIndexOf("."));
 					String sNombreTemporal = "";
-					fichTemp = File.createTempFile("temp", extension, new File(
+					String sNombrePrefijo = a.getAliasArchivo().substring(0, a.getAliasArchivo().lastIndexOf(".")) + "_";
+					fichTemp = File.createTempFile(sNombrePrefijo, extension, new File(
 							sUbicacionTemporal));
 					sNombreTemporal = fichTemp.getName().substring(
 							1 + fichTemp.getName().lastIndexOf(File.separator));
@@ -3062,7 +3063,7 @@ public class ConsultarSolicitudMB {
 				aliasCortoDocumento = selectedTipoDocumento.getTiivsDocumento().getNombre();
 			}
 
-			String sAliasTemporal = cargarUnicoPDF();
+			String sAliasTemporal = cargarUnicoPDF(aliasCortoDocumento);
 
 			if (sAliasTemporal == null || sAliasTemporal.trim() == "") {
 				return;
@@ -3102,7 +3103,7 @@ public class ConsultarSolicitudMB {
 	}
 	
 
-	public String cargarUnicoPDF() {
+	public String cargarUnicoPDF(String aliasArchivo) {
 
 		if (file == null) {
 			Utilitarios.mensajeInfo("", "No se ha seleccionado ningún archivo");
@@ -3133,7 +3134,13 @@ public class ConsultarSolicitudMB {
 			String extension = file.getFileName().substring(
 					getFile().getFileName().lastIndexOf("."));
 
-			fichTemp = File.createTempFile("temp", extension, new File(
+			if(aliasArchivo.equals("")){
+				aliasArchivo = "temp";
+			} else {
+				aliasArchivo = aliasArchivo + "_";
+			}
+			
+			fichTemp = File.createTempFile(aliasArchivo, extension, new File(
 					sUbicacionTemporal));
 
 			sNombreTemporal = fichTemp.getName();
