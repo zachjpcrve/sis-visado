@@ -17,38 +17,21 @@ import com.bbva.common.util.ConstantesVisado;
 public class CaculadoraComisionMB {
 	
 	public static Logger logger = Logger.getLogger(CaculadoraComisionMB.class);
-	private Boolean item1;
-	private Boolean noItem1;
-	private Boolean item12;
-	private Boolean item21;
-	private Boolean noItem21;
-	private Boolean item22;
-	private Boolean item31;
-	private Boolean noItem31;
-	private Boolean item32;
-	private Boolean item41;
-	private Boolean noItem41;
-	private Boolean item42;	
-	private Boolean noItem2;
-	private Boolean noItem3;
+
+	private Integer item1;
+	private Integer item2;
+	private Integer item3;
+	private Integer item4;
+	private boolean verItem1 = false;
+	private boolean verItem2 = false;
+	private boolean verItem3 = false;
+	private boolean verItem4 = false;
 	private Double resultado;
 	private Double importeLimite;
 	private String [] importes;
 		
 	public CaculadoraComisionMB()
 	{
-		item1 = new Boolean(false);
-		noItem1 = new Boolean(false);
-		item12 = new Boolean(false);
-		item21 = new Boolean(false);
-		noItem21 = new Boolean(false);
-		item22 = new Boolean(false);
-		item31 = new Boolean(false);
-		noItem31 = new Boolean(false);
-		item32 = new Boolean(false);
-		item41 = new Boolean(false);
-		noItem41 = new Boolean(false);
-		item42 = new Boolean(false);
 		resultado = new Double(0);		
 		obtenerParametros();
 	}
@@ -58,27 +41,17 @@ public class CaculadoraComisionMB {
 		int criterio=0;
 		resultado = new Double(200);
 		
-		if(this.item1)
-		{
-			if(this.item21)
-			{
+		if(item1!=null && item1 == 1)	{
+			if(item2!=null && item2 == 1){
 				criterio = 1;
-			} 
-			else 
-			{
+			} else {
 				criterio = 2;
 			}
-		} 
-		else 
-		{
-			if(this.item31)
-			{
+		} else {
+			if(item3!=null && item3 ==1 ) {
 				criterio = 3;				
-			} 
-			else 
-			{
-				if(this.item41)
-				{
+			} else {
+				if(item4!=null && item4==1) {
 					criterio = 4;
 				} 
 			}
@@ -90,26 +63,22 @@ public class CaculadoraComisionMB {
 			resultado = new Double(0);
 		}
 		
-		if (item1)
-		{
-			setItem31(false);
-			setNoItem3(true);
-		}
-		else
-		{
-			setNoItem3(false);
+		if(item1!=null && item1 == 1){
+			verItem3 = true;
+			verItem4 = true;
+		} else if(item1!=null && item1 == 0) {
+			verItem3 = false;
+			verItem4 = false;
 		}
 		
-		if (item31)
-		{
-			setItem21(false);
-			setNoItem21(false);
-			setNoItem2(true);
+		if(item3!=null && item3 == 1){
+			verItem2 = true;
+			verItem4 = true;
+		} else if(item3!=null && item3 == 0) {
+			verItem2 = false;
+			verItem4 = false;
 		}
-		else
-		{
-			setNoItem2(false);
-		}
+		
 	}
 
 	private void obtenerParametros() 
@@ -142,70 +111,21 @@ public class CaculadoraComisionMB {
 			importeLimite = new Double(0);
 		}
 	}	
-
 	
-	public Boolean getItem1() {
-		return item1;
-	}
-	
-	public void setItem1(Boolean item1) {
-		this.item1 = item1;		
-	}
-	
-	public Boolean getItem12() {
-		return item12;
-	}	
-	
-	public void setItem12(Boolean item12) {
-		this.item12 = item12;
-	}
-	
-	public Boolean getItem21() {
-		return item21;
-	}
-	
-	public void setItem21(Boolean item21) {
-		this.item21 = item21;
-	}
-	
-	public Boolean getItem22() {
-		return item22;
-	}
-	
-	public void setItem22(Boolean item22) {
-		this.item22 = item22;
-	}
-	
-	public Boolean getItem31() {
-		return item31;
-	}
-	
-	public void setItem31(Boolean item31) {
-		this.item31 = item31;
-	}
-	
-	public Boolean getItem32() {
-		return item32;
-	}
-	
-	public void setItem32(Boolean item32) {
-		this.item32 = item32;
-	}
-	
-	public Boolean getItem41() {
-		return item41;
-	}
-	
-	public void setItem41(Boolean item41) {
-		this.item41 = item41;
-	}
-	
-	public Boolean getItem42() {
-		return item42;
-	}
-	
-	public void setItem42(Boolean item42) {
-		this.item42 = item42;
+	public void mirar(){
+		logger.info("item1:" + item1);
+		logger.info("item2:" + item2);
+		logger.info("item3:" + item3);
+		logger.info("item4:" + item4);
+		//this.calcularComision();
+		item1 = null;
+		item2 = null;
+		item3 = null;
+		item4 = null;
+		verItem1 = false;
+		verItem2 = false;
+		verItem3 = false;
+		verItem4 = false;
 	}
 	
 	public Double getResultado() {
@@ -224,51 +144,68 @@ public class CaculadoraComisionMB {
 		this.importeLimite = importeLimite;
 	}
 
-	public Boolean getNoItem1() {
-		return noItem1;
+	public Integer getItem1() {
+		return item1;
 	}
 
-	public void setNoItem1(Boolean noItem1) {
-		this.noItem1 = noItem1;
+	public void setItem1(Integer item1) {
+		this.item1 = item1;
 	}
 
-	public Boolean getNoItem21() {
-		return noItem21;
+	public Integer getItem2() {
+		return item2;
 	}
 
-	public void setNoItem21(Boolean noItem21) {
-		this.noItem21 = noItem21;
+	public void setItem2(Integer item2) {
+		this.item2 = item2;
 	}
 
-	public Boolean getNoItem31() {
-		return noItem31;
+	public Integer getItem3() {
+		return item3;
 	}
 
-	public void setNoItem31(Boolean noItem31) {
-		this.noItem31 = noItem31;
+	public void setItem3(Integer item3) {
+		this.item3 = item3;
 	}
 
-	public Boolean getNoItem41() {
-		return noItem41;
+	public Integer getItem4() {
+		return item4;
 	}
 
-	public void setNoItem41(Boolean noItem41) {
-		this.noItem41 = noItem41;
+	public void setItem4(Integer item4) {
+		this.item4 = item4;
 	}
 
-	public Boolean getNoItem2() {
-		return noItem2;
+	public boolean isVerItem1() {
+		return verItem1;
 	}
 
-	public void setNoItem2(Boolean noItem2) {
-		this.noItem2 = noItem2;
+	public void setVerItem1(boolean verItem1) {
+		this.verItem1 = verItem1;
 	}
 
-	public Boolean getNoItem3() {
-		return noItem3;
+	public boolean isVerItem2() {
+		return verItem2;
 	}
 
-	public void setNoItem3(Boolean noItem3) {
-		this.noItem3 = noItem3;
+	public void setVerItem2(boolean verItem2) {
+		this.verItem2 = verItem2;
 	}
+
+	public boolean isVerItem3() {
+		return verItem3;
+	}
+
+	public void setVerItem3(boolean verItem3) {
+		this.verItem3 = verItem3;
+	}
+
+	public boolean isVerItem4() {
+		return verItem4;
+	}
+
+	public void setVerItem4(boolean verItem4) {
+		this.verItem4 = verItem4;
+	}
+	
 }
