@@ -7,7 +7,7 @@
 	</welcome-file-list>
 	<context-param>
 	<param-name>webAppRootKey</param-name>
-	<param-value>visadoPoderes.root</param-value>
+	<param-value>visadoPoderes.root.two</param-value>
 	</context-param>
 	<context-param>
 		<param-name>log4jConfigLocation</param-name>
