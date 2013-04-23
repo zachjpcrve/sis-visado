@@ -33,32 +33,13 @@
 											process="@this"
 											listener="#{reportesMB.buscarOficinaPorTerritorio}" />-->
 									</p:selectOneMenu></td>
-							</tr>
-	
-							<tr bordercolor="white">
-								<td><h:outputText styleClass="outputText" id="txtCodOficina"
-										value="Código de Oficina:" /></td>
-								<td><p:selectOneMenu value="#{reportesMB.idOfi}" id="somOfi"
-										style="width:155px;">
-										<f:selectItem itemLabel="--Todos--" itemValue="" />
-										<f:selectItems value="#{reportesMB.combosMB.lstOficina}"
-											var="of" itemValue="#{of.codOfi}" itemLabel="#{of.codOfi}" />
-										<!-- <p:ajax event="change" update=":frm:somNOfi, :frm:somTerr"
-											process="@this"
-											listener="#{reportesMB.buscarOficinaPorCodigo}" />-->
-									</p:selectOneMenu></td>
-	
-								<td><h:outputText styleClass="outputText" id="txtOficina"
-										value="Oficina:" /></td>
-								<td><p:selectOneMenu value="#{reportesMB.idOfi1}"
-										id="somNOfi" style="width:155px;">
-										<f:selectItem itemLabel="--Todos--" itemValue="" />
-										<f:selectItems value="#{reportesMB.combosMB.lstOficina1}"
-											var="of" itemValue="#{of.codOfi}" itemLabel="#{of.desOfi}" />
-										<!--  <p:ajax event="change" update=":frm:somOfi, :frm:somTerr"
-											process="@this"
-											listener="#{reportesMB.buscarOficinaPorNombre}" />-->
-									</p:selectOneMenu></td>
+								
+								<td><h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
+								<td><p:autoComplete id="acNomOFina" value="#{reportesMB.oficinaRPT}"
+										completeMethod="#{seguimientoMB.completeNomOficina}" 
+										var="ofi" converter="oficinaConverter" size="24" 
+										itemLabel="#{ofi.codOfi}-#{ofi.desOfi}" itemValue="#{ofi}"/>
+								</td>
 							</tr>
 	
 							<tr bordercolor="white">
