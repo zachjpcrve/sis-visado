@@ -118,6 +118,7 @@ public class ReportesMB {
 	private int mes;
 	private double impuesto = 0.0;
 	private TiivsOficina1 oficina;
+	private TiivsOficina1 oficinaRPT;
 
 	public static Logger logger = Logger.getLogger(ReportesMB.class);
 
@@ -428,26 +429,30 @@ public class ReportesMB {
 		}
 
 		TiivsSolicitud tmpSolicitud = new TiivsSolicitud();
-		TiivsTerritorio tmpTerr = new TiivsTerritorio();
-		TiivsOficina1 tmpOficina = new TiivsOficina1();
+		String tmpTerr = "";
+		//TiivsOficina1 tmpOficina = new TiivsOficina1();
 
-		if (getIdTerr() != null && getIdTerr().compareTo("") != 0) {
-			tmpTerr.setCodTer(getIdTerr());
+		if (getIdTerr() != null) {
+			tmpTerr = getIdTerr();
 		}
 
-		if (getIdOfi() != null && getIdOfi().compareTo("") != 0) {
+		/*if (getIdOfi() != null && getIdOfi().compareTo("") != 0) {
 			tmpOficina.setCodOfi(getIdOfi());
 		}
 
 		if (getIdOfi1() != null && getIdOfi1().compareTo("") != 0) {
 			tmpOficina.setCodOfi(getIdOfi1());
+		}*/
+		
+		//tmpOficina.setTiivsTerritorio(tmpTerr);
+		
+		if (getOficinaRPT()!=null)
+		{
+			tmpSolicitud.setTiivsOficina1(getOficinaRPT());
 		}
 
-		tmpOficina.setTiivsTerritorio(tmpTerr);
-		tmpSolicitud.setTiivsOficina1(tmpOficina);
-
 		try {
-			this.lstRecaudacionTipoServ = solicitudService.obtenerListarRecaudacionxTipoServicio(tmpSolicitud,fechaIni, fechaFin);
+			this.lstRecaudacionTipoServ = solicitudService.obtenerListarRecaudacionxTipoServicio(tmpSolicitud,tmpTerr,fechaIni, fechaFin);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -5236,5 +5241,13 @@ public class ReportesMB {
 
 	public void setOficina(TiivsOficina1 oficina) {
 		this.oficina = oficina;
+	}
+
+	public TiivsOficina1 getOficinaRPT() {
+		return oficinaRPT;
+	}
+
+	public void setOficinaRPT(TiivsOficina1 oficinaRPT) {
+		this.oficinaRPT = oficinaRPT;
 	}
 }
