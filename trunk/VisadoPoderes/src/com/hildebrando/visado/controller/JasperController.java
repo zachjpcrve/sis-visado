@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -83,7 +84,7 @@ public class JasperController {
 			FormatosDTO uno = new FormatosDTO();
 			uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
 			uno.setNumeroDiasForEjecucion(diasUtilesForEjecucion);
-			uno.setInstrucciones(SOLICITUD_TEMP.getObs());
+			uno.setInstrucciones(obtenerInstrucciones(SOLICITUD_TEMP, ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02));
 			uno.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getCodOfi()+ " - " + SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
 
 			// Add lista datasource
@@ -117,6 +118,7 @@ public class JasperController {
 		}
 		return ("pdfReportCartaAtencion");
 	}
+	
 	@RequestMapping(value="/download/pdfReportCartaSolicitudRevision.htm", method=RequestMethod.GET)
 	public String generarReporteCartaSolicitudRevision(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
 		try{
@@ -124,8 +126,9 @@ public class JasperController {
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
 		FormatosDTO uno = new FormatosDTO();
-		uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
-		uno.setInstrucciones(SOLICITUD_TEMP.getObs());
+		uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());	
+		uno.setInstrucciones(obtenerInstrucciones(SOLICITUD_TEMP, ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02));
+		
 	    cabecera.add(uno);
         response.setHeader("Content-type", "application/pdf");
         response.setHeader("Content-Disposition","attachment; filename=\"Solicitud_Revision.pdf\"");
@@ -147,6 +150,7 @@ public class JasperController {
 		}
         return("pdfReportCartaSolicitudRevision");
 	}
+	
 	@RequestMapping(value="/download/pdfReportCartaRechazo.htm", method=RequestMethod.GET)
 	public String generarReporteCartaRechazo(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request)
 	{   try{
@@ -157,14 +161,7 @@ public class JasperController {
 		FormatosDTO uno = new FormatosDTO();
 		uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
 		
-		if (SOLICITUD_TEMP.getObs()!=null)
-		{	
-			uno.setInstrucciones(SOLICITUD_TEMP.getObs());
-		}
-		else
-		{
-			uno.setInstrucciones("");
-		}
+		uno.setInstrucciones(obtenerInstrucciones(SOLICITUD_TEMP, ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02));		
 		
 		String cadenaPoderdantes = obtenerPoderdantesxSolicitud(SOLICITUD_TEMP);
 		
@@ -203,15 +200,9 @@ public class JasperController {
 		FormatosDTO uno = new FormatosDTO();
 		uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
 		
-		if (SOLICITUD_TEMP.getObs()!=null)
-		{	
-			uno.setInstrucciones(SOLICITUD_TEMP.getObs());
-		}
-		else
-		{
-			uno.setInstrucciones("");
-		}
 		
+		uno.setInstrucciones(obtenerInstrucciones(SOLICITUD_TEMP, ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02));
+				
 		String cadenaPoderdantes = obtenerPoderdantesxSolicitud(SOLICITUD_TEMP);
 		
 		logger.info("lista poderdantes:" + cadenaPoderdantes);
@@ -237,73 +228,6 @@ public class JasperController {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
 		}
         return("pdfReportCartaImprocedente");
-	}
-	
-	public String obtenerPoderdantesxSolicitud(TiivsSolicitud SOLICITUD_TEMP)
-	{
-		String resultado="";
-		
-		try {
-			
-			if (SOLICITUD_TEMP!=null)
-			{
-				String solicitud = SOLICITUD_TEMP.getCodSoli();
-				logger.info("Buscando poderdantes en la solicitud: " + solicitud);
-				
-				List<TiivsAgrupacionPersona> lstTMP = new ArrayList<TiivsAgrupacionPersona>();
-				
-				GenericDao<TiivsAgrupacionPersona, Object> solicDAO = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-				Busqueda filtroAgrp = Busqueda.forClass(TiivsAgrupacionPersona.class);
-				filtroAgrp.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, solicitud));
-				filtroAgrp.add(Restrictions.eq(ConstantesVisado.CAMPO_TIPO_PARTIC, ConstantesVisado.PODERDANTE));
-				
-				try {
-					lstTMP = solicDAO.buscarDinamico(filtroAgrp);
-					
-				} catch (Exception ex) {
-					logger.info("Error al buscar las agrupaciones de personas",ex);
-				}
-				
-				for (TiivsAgrupacionPersona tmp: lstTMP)
-				{
-					if (tmp.getTiivsPersona().getNombre()!=null)
-					{
-						if (resultado.length()>0)
-						{
-							
-							
-							resultado = resultado.concat(",").concat(tmp.getTiivsPersona().getNombre().
-									concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApePat()).
-									concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApeMat())); 
-							
-							resultado = resultado.concat(",").concat(tmp.getTiivsPersona().getNombre());						
-							if(tmp.getTiivsPersona().getApePat()!=null){
-								resultado = resultado.concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApePat());
-							}						
-							if(tmp.getTiivsPersona().getApeMat()!=null){
-								resultado = resultado.concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApeMat());
-							}						
-						}
-						else
-						{
-							resultado = tmp.getTiivsPersona().getNombre();						
-							if(tmp.getTiivsPersona().getApePat()!=null){
-								resultado = resultado.concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApePat());
-							}						
-							if(tmp.getTiivsPersona().getApeMat()!=null){
-								resultado = resultado.concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApeMat());
-							}																		
-						}
-					}
-				}
-			}
-			
-			
-		}catch(Exception e){
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION + " al obtener Poderdantes", e);
-		}
-		
-		return resultado;
 	}
 	
     @SuppressWarnings("unused")
@@ -394,8 +318,7 @@ public class JasperController {
        
         return("pdfReport");
     }
-    
-    
+        
     @SuppressWarnings("unused")
 	@RequestMapping(value="/download/pdfReportObsHistorial.htm", method=RequestMethod.GET)
 	public String generarReporteObsHistorial(@RequestParam("id") String id, ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
@@ -452,6 +375,99 @@ public class JasperController {
 		return ("pdfReportObsHistorial");
 	}
 
+    
+    private String obtenerInstrucciones(TiivsSolicitud solicitud, String codigoEstado) {
+		
+		String sInstrucciones="";
+		
+		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+			
+		GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
+		filtroHist.add(Restrictions.eq("id.codSoli", solicitud.getCodSoli()));
+		filtroHist.add(Restrictions.eq("estado", codigoEstado));
+		filtroHist.addOrder(Order.desc("id.movimiento"));
+		
+		List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
+		try {
+			lstHist = histDAO.buscarDinamico(filtroHist);
+			if(lstHist.size()>0){
+				sInstrucciones = lstHist.get(0).getObs();
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT + "al obtener Historial",e);
+		}
+		
+		return sInstrucciones;
+	}
+
+	private String obtenerPoderdantesxSolicitud(TiivsSolicitud SOLICITUD_TEMP)
+	{
+		String resultado="";
+		
+		try {
+			
+			if (SOLICITUD_TEMP!=null)
+			{
+				String solicitud = SOLICITUD_TEMP.getCodSoli();
+				logger.info("Buscando poderdantes en la solicitud: " + solicitud);
+				
+				List<TiivsAgrupacionPersona> lstTMP = new ArrayList<TiivsAgrupacionPersona>();
+				
+				GenericDao<TiivsAgrupacionPersona, Object> solicDAO = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+				Busqueda filtroAgrp = Busqueda.forClass(TiivsAgrupacionPersona.class);
+				filtroAgrp.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, solicitud));
+				filtroAgrp.add(Restrictions.eq(ConstantesVisado.CAMPO_TIPO_PARTIC, ConstantesVisado.PODERDANTE));
+				
+				try {
+					lstTMP = solicDAO.buscarDinamico(filtroAgrp);
+					
+				} catch (Exception ex) {
+					logger.info("Error al buscar las agrupaciones de personas",ex);
+				}
+				
+				for (TiivsAgrupacionPersona tmp: lstTMP)
+				{
+					if (tmp.getTiivsPersona().getNombre()!=null)
+					{
+						if (resultado.length()>0)
+						{
+							
+							
+							resultado = resultado.concat(",").concat(tmp.getTiivsPersona().getNombre().
+									concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApePat()).
+									concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApeMat())); 
+							
+							resultado = resultado.concat(",").concat(tmp.getTiivsPersona().getNombre());						
+							if(tmp.getTiivsPersona().getApePat()!=null){
+								resultado = resultado.concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApePat());
+							}						
+							if(tmp.getTiivsPersona().getApeMat()!=null){
+								resultado = resultado.concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApeMat());
+							}						
+						}
+						else
+						{
+							resultado = tmp.getTiivsPersona().getNombre();						
+							if(tmp.getTiivsPersona().getApePat()!=null){
+								resultado = resultado.concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApePat());
+							}						
+							if(tmp.getTiivsPersona().getApeMat()!=null){
+								resultado = resultado.concat(ConstantesVisado.ESPACIO_BLANCO).concat(tmp.getTiivsPersona().getApeMat());
+							}																		
+						}
+					}
+				}
+			}
+			
+			
+		}catch(Exception e){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION + " al obtener Poderdantes", e);
+		}
+		
+		return resultado;
+	}
 
     
 }
