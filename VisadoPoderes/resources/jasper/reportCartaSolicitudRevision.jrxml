@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="795" pageHeight="842" columnWidth="755" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="93"/>
-	<property name="ireport.y" value="0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="612" pageHeight="842" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="0.9743585500000007"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="49"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<field name="oficina" class="java.lang.String"/>
 	<field name="numeroSolicitud" class="java.lang.String"/>
@@ -14,16 +14,16 @@
 	<title>
 		<band height="102">
 			<frame>
-				<reportElement mode="Transparent" x="0" y="11" width="755" height="91" backcolor="#99FF99"/>
+				<reportElement mode="Transparent" x="0" y="11" width="567" height="91" backcolor="#99FF99"/>
 				<textField>
-					<reportElement x="128" y="51" width="587" height="30" forecolor="#330099"/>
+					<reportElement x="122" y="51" width="421" height="30" forecolor="#330099"/>
 					<textElement>
-						<font size="16" isBold="true" isUnderline="true"/>
+						<font size="12" isBold="true" isUnderline="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA["SOLICITUD DE REVISIÓN DE VISADO DE PODERES - " + $F{numeroSolicitud}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy hh:mm:ss a" isBlankWhenNull="false">
-					<reportElement x="608" y="0" width="147" height="13"/>
+					<reportElement x="419" y="0" width="147" height="13"/>
 					<textElement/>
 					<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
@@ -35,61 +35,33 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="40">
+		<band height="107">
 			<staticText>
-				<reportElement x="39" y="20" width="716" height="20"/>
+				<reportElement x="17" y="20" width="550" height="35"/>
 				<textElement/>
 				<text><![CDATA[Se procedió a generar la atención de su solicitud de revisión de acuerdo a los siguientes motivos puedan que Usted manifiesta :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="39" y="0" width="491" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="17" y="0" width="491" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left">
-					<font size="14" isBold="true"/>
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Estimado Cliente,]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="332">
-			<line>
-				<reportElement x="39" y="0" width="641" height="1" forecolor="#666666"/>
-			</line>
-			<staticText>
-				<reportElement x="39" y="220" width="641" height="27"/>
-				<textElement/>
-				<text><![CDATA[Luego de la revisión que efectuará el banco, Usted podrá acercarse nuevamente a la misma oficina para conocer el estado de la Solicitud de Revisión que ha solicitado.]]></text>
-			</staticText>
+		<band>
 			<rectangle>
-				<reportElement x="39" y="6" width="641" height="161"/>
+				<reportElement stretchType="RelativeToTallestObject" x="17" y="-52" width="527" height="42"/>
 			</rectangle>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="55" y="8" width="607" height="154"/>
+				<reportElement x="33" y="-47" width="510" height="29"/>
 				<textElement markup="html">
-					<font size="11"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[($F{instrucciones}!=null?$F{instrucciones}:"") + " "]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="79" y="299" width="204" height="1"/>
-			</line>
-			<line>
-				<reportElement x="419" y="298" width="220" height="1"/>
-			</line>
-			<staticText>
-				<reportElement x="134" y="300" width="100" height="20" forecolor="#000099"/>
-				<textElement>
-					<font size="12" isBold="true" isItalic="false"/>
-				</textElement>
-				<text><![CDATA[Solicitante(s)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="480" y="300" width="100" height="20" forecolor="#000099"/>
-				<textElement>
-					<font size="13" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Solicitante(s)]]></text>
-			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -101,7 +73,7 @@
 	<pageFooter>
 		<band height="26">
 			<staticText>
-				<reportElement x="0" y="2" width="755" height="20" forecolor="#003399"/>
+				<reportElement x="0" y="2" width="566" height="20" forecolor="#003399"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
@@ -110,6 +82,32 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band/>
+		<band height="138">
+			<staticText>
+				<reportElement x="13" y="3" width="553" height="37"/>
+				<textElement/>
+				<text><![CDATA[Luego de la revisión que efectuará el banco, Usted podrá acercarse nuevamente a la misma oficina para conocer el estado de la Solicitud de Revisión que ha solicitado.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="34" y="79" width="204" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="380" y="80" width="100" height="20" forecolor="#000099"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Solicitante(s)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="89" y="80" width="100" height="20" forecolor="#000099"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Solicitante(s)]]></text>
+			</staticText>
+			<line>
+				<reportElement x="319" y="78" width="220" height="1"/>
+			</line>
+		</band>
 	</summary>
 </jasperReport>
