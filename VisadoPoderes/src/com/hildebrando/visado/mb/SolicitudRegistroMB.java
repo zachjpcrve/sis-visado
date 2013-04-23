@@ -274,7 +274,7 @@ public class SolicitudRegistroMB {
 	}*/
 
 
-	public String cargarUnicoPDF() {
+	public String cargarUnicoPDF(String aliasArchivo) {
 		
 		if(file == null){
 			Utilitarios.mensajeInfo("", "No se ha seleccionado ningún archivo");
@@ -300,8 +300,14 @@ public class SolicitudRegistroMB {
 			fDirectory.mkdirs();	
 			
 			String extension = file.getFileName().substring(getFile().getFileName().lastIndexOf("."));
+						
+			if(aliasArchivo.equals("")){
+				aliasArchivo = "temp";
+			} else {
+				aliasArchivo = aliasArchivo + "_";
+			}
 			
-			fichTemp = File.createTempFile("temp", extension, new File(sUbicacionTemporal));
+			fichTemp = File.createTempFile(aliasArchivo, extension, new File(sUbicacionTemporal));
 			
 			sNombreTemporal = fichTemp.getName();
 									
@@ -1392,7 +1398,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					aliasCortoDocumento = selectedTipoDocumento.getTiivsDocumento().getNombre();
 				}
 							
-				String sAliasTemporal = cargarUnicoPDF();
+				String sAliasTemporal = cargarUnicoPDF(aliasCortoDocumento);
 										
 				if(sAliasTemporal == null || sAliasTemporal.trim() ==""){	
 					logger.debug("El sAliasTemporal es nulo o vacio.");
