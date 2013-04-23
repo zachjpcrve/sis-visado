@@ -5,21 +5,22 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
+<title>Detalle de documentos Visado</title>
 <h:head>
 	<h:outputStylesheet library="css" name="visado.css" />
 </h:head>
 <h:body>
 	
 		<p:dataGrid var="doc" value="#{consultarSolicitudMB.lstdocumentos}"
-			columns="2" rows="4" paginator="true" paginatorPosition="top">
+			columns="2" rows="10" paginator="true" paginatorPosition="top">
 			<p:column>
 				<p:panel >					
+					<h:graphicImage library="images" name="pdf_icon_2.png" ></h:graphicImage>
 					<h:outputLink onclick="window.open('../../files/#{doc.aliasTemporal}', 'WindowNameDoc', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
-						<h:outputText title="#{doc.documento}" value="#{doc.documento}:" styleClass="outputText"/>
+						<h:outputText title="#{doc.documento}" value="#{doc.documento}" styleClass="outputText"/>
 					</h:outputLink>
 					<h:panelGrid columns="1">
-						<iframe width="250" height="150"
+						<iframe width="10" height="10" style="display:none;"
 							src="../../files/#{doc.aliasTemporal}" />
 					</h:panelGrid>
 				</p:panel>
