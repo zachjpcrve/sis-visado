@@ -31,49 +31,35 @@
 			
 			<center><h3>CALCULADORA DE COMISIÓN</h3></center>
 			
-			<h:panelGrid columns="5">
-			
-				<p:spacer width="50" height="10" />
-
-				<h:outputText>Si</h:outputText>
-
-				<h:outputText>No</h:outputText>
-
-				<p:spacer width="50" height="10" />
+			<h:panelGrid id="pnlCalculadora" columns="4" >
 				
-				<p:spacer width="50" height="10" />
+				<p:spacer width="1" height="1" />
+							
+				<h:outputText>Si No</h:outputText>				
+				
+				<p:spacer width="1" height="1" />
 
+				<p:spacer width="1" height="1" />
+								
 				<h:outputText value="1. Por lo menos un Representado es de tipo Fallecido" />
-
-				<p:selectBooleanCheckbox id="checkItem11" value="#{calculadoraMB.item1}">
-					<p:ajax
-						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
-						listener="#{calculadoraMB.calcularComision}" />
-				</p:selectBooleanCheckbox>
-
-				<p:selectBooleanCheckbox id="checkItem12" value="#{calculadoraMB.noItem1}">
-					<p:ajax
-						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
-						listener="#{calculadoraMB.calcularComision}" />
-				</p:selectBooleanCheckbox>
-
+				
+				<h:selectOneRadio id="radioButton1" value="#{calculadoraMB.item1}" disabled="#{calculadoraMB.verItem1}">  
+			        <f:selectItem itemLabel="" itemValue="1" />  
+			        <f:selectItem itemLabel="" itemValue="0" />   
+			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora" />
+				</h:selectOneRadio>
+								
 				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem1" />
 					
 				<p:tooltip for="questionItem1" value="Por lo menos un poderdante es de tipo Fallecido" showEffect="slide" />
 
 				<h:outputText value="2. Monto global de las operaciones es mayor a #{calculadoraMB.importeLimite}" />
 
-				<p:selectBooleanCheckbox id="checkItem21" value="#{calculadoraMB.item21}" disabled="#{calculadoraMB.noItem2}">
-					<p:ajax
-						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
-						listener="#{calculadoraMB.calcularComision}" />
-				</p:selectBooleanCheckbox>
-
-				<p:selectBooleanCheckbox id="checkItem22" value="#{calculadoraMB.noItem21}" disabled="#{calculadoraMB.noItem2}">
-					<p:ajax
-						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
-						listener="#{calculadoraMB.calcularComision}" />
-				</p:selectBooleanCheckbox>
+				<h:selectOneRadio id="radioButton2" value="#{calculadoraMB.item2}" disabled="#{calculadoraMB.verItem2}">  
+			        <f:selectItem itemLabel="" itemValue="1" />  
+			        <f:selectItem itemLabel="" itemValue="0" />   
+			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora" />
+				</h:selectOneRadio>				
 
 				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem2" />
 				
@@ -81,17 +67,11 @@
 
 				<h:outputText value="3. El Representado es persona natural" />
 
-				<p:selectBooleanCheckbox id="checkItem31" value="#{calculadoraMB.item31}" disabled="#{calculadoraMB.noItem3}">
-					<p:ajax
-						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
-						listener="#{calculadoraMB.calcularComision}" />
-				</p:selectBooleanCheckbox>
-
-				<p:selectBooleanCheckbox id="checkItem32" value="#{calculadoraMB.noItem31}" disabled="#{calculadoraMB.noItem3}">
-					<p:ajax
-						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
-						listener="#{calculadoraMB.calcularComision}" />
-				</p:selectBooleanCheckbox>
+				<h:selectOneRadio id="radioButton3" value="#{calculadoraMB.item3}" disabled="#{calculadoraMB.verItem3}">  
+			        <f:selectItem itemLabel="" itemValue="1" />  
+			        <f:selectItem itemLabel="" itemValue="0" />   
+			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora" />
+				</h:selectOneRadio>
 
 				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem3" />
 				
@@ -99,17 +79,11 @@
 
 				<h:outputText value="4. El Representado es persona jurídica" />
 
-				<p:selectBooleanCheckbox id="checkItem41" value="#{calculadoraMB.item41}" disabled="#{calculadoraMB.item1||calculadoraMB.item31}">
-					<p:ajax
-						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
-						listener="#{calculadoraMB.calcularComision}" />
-				</p:selectBooleanCheckbox>
-
-				<p:selectBooleanCheckbox id="checkItem42" value="#{calculadoraMB.noItem41}" disabled="#{calculadoraMB.item1||calculadoraMB.item31}">
-					<p:ajax
-						update="textResultado,checkItem11,checkItem12,checkItem21,checkItem22,checkItem31,checkItem32,checkItem41,checkItem42"
-						listener="#{calculadoraMB.calcularComision}" />
-				</p:selectBooleanCheckbox>
+				<h:selectOneRadio id="radioButton4" value="#{calculadoraMB.item4}" disabled="#{calculadoraMB.verItem4}" >  
+			        <f:selectItem itemLabel="" itemValue="1" />  
+			        <f:selectItem itemLabel="" itemValue="0" />   
+			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora" />
+				</h:selectOneRadio>				
 
 				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem4" />
 				
@@ -136,6 +110,8 @@
 			<p:spacer width="10" height="30" />
 
 			</h:panelGrid>
+			
+			<p:commandButton value="Limpiar" update="textResultado,pnlCalculadora" action="#{calculadoraMB.mirar}"></p:commandButton>
 
 		</h:form>
 
