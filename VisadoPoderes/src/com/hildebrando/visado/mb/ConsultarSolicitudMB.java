@@ -979,12 +979,15 @@ public class ConsultarSolicitudMB {
 								
 				IILDPeUsuario usuarioRPTA = obtenerOrigenEstadoReservado(solicitudRegistrarT);
 				
-				if (usuarioRPTA.getUID().compareTo(usuario.getUID())!=0)
+				if (usuarioRPTA.getUID().compareTo(usuario.getUID())==0)
 				{
 					this.bMostrarMSGEstado_Reservado=false;
+					logger.debug("Usuarios con Ids iguales no se mostrará mensaje de estado reservado");
 				}
 				else
 				{
+					logger.debug("Usuarios con Ids diferentes se mostrará mensaje de estado reservado");
+					
 					this.bMostrarMSGEstado_Reservado=true;
 					
 					if (usuarioRPTA!=null)
