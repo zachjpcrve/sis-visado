@@ -2209,15 +2209,16 @@ public class RevocadosMB {
 		GenericDao<TiivsRevocado, Object> serviceRev = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroRev = Busqueda.forClass(TiivsRevocado.class);
 		filtroRev.add(Restrictions.in("codAgrup", tmpAgrup));
+		filtroRev.addOrder(Order.desc("codAgrup"));
+		filtroRev.addOrder(Order.desc("fechaRevocatoria"));
 		
 		try {
-			tiivsrevocados = serviceRev.buscarDinamico(filtroRev.addOrder(Order.desc("codAgrup")).addOrder(Order.desc("fechaRevocatoria")));
+			tiivsrevocados = serviceRev.buscarDinamico(filtroRev);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.debug("error al obtener la lista final de revocados "+  e.toString());
 		}
-		
-		
+				
 		if (tiivsrevocados.size()>0)
 		{
 			setDeshabilitarExportar(false);
