@@ -963,8 +963,8 @@ public class ConsultarSolicitudMB {
 				
 			}
 		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)) {
-			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
-				
+			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) 
+			{	
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = false;
@@ -986,6 +986,7 @@ public class ConsultarSolicitudMB {
 				else
 				{
 					this.bMostrarMSGEstado_Reservado=true;
+					
 					if (usuarioRPTA!=null)
 					{	
 						if (usuarioRPTA.getUID()!=null)
@@ -1471,6 +1472,8 @@ public class ConsultarSolicitudMB {
 	
 	public IILDPeUsuario obtenerOrigenEstadoReservado(TiivsSolicitud soli)
 	{
+		logger.debug("---------En el obtenerOrigenEstadoReservado---------");
+		
 		IILDPeUsuario usuarioRPTA = new IILDPeUsuario();
 		
 		if (soli!=null)
@@ -1489,7 +1492,7 @@ public class ConsultarSolicitudMB {
 				e.printStackTrace();
 			}
 			
-			logger.debug("Tamano lista resultante: " + lstHstSolic.size());
+			logger.debug("Tamanio lista historial: " + lstHstSolic.size());
 			
 			if (lstHstSolic.size()>=1)
 			{
