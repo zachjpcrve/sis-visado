@@ -1333,38 +1333,50 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					return sq.list();
 				}
 			});
+			
+			logger.debug("---------Estudios encontrados---------");
+			
+			Object[] rowTMP = null;
+			
+			for(int i=0;i<=ResultList.size()-1;i++)
+			{
+				rowTMP =  (Object[]) ResultList.get(i);
+				logger.debug("Estudio: " + rowTMP[0].toString()); 
+			}
 
 			if(ResultList.size()>0)
 			{
 				String plazo="";
 				Object[] row = null;
 				objAgrp=null;
+				
 				for(int i=0;i<=ResultList.size()-1;i++)
 				{
-					row =  (Object[]) ResultList.get(i);
-
-					if (!row[0].toString().equals(estudio) || !row[3].toString().equals(plazo))
-				    {
-						objAgrp = new AgrupacionPlazoDto();
-					    tmpLista.add(objAgrp);
-					    	
-				    	objAgrp.setEstudio(row[0].toString());
+					 row =  (Object[]) ResultList.get(i);
+					
+				     if (!row[3].toString().equals(plazo))
+				     {
+				    	objAgrp = new AgrupacionPlazoDto();
+				    	tmpLista.add(objAgrp);
+				    	 
+				    	if(!row[3].toString().equals("B"))
+				    	{				    		
+				    		objAgrp.setPlazo("A tiempo");
+				    	} 
+				    	else 
+				    	{
+				    		objAgrp.setPlazo("Retrazo");
+				    	}
 				    	
-				    	estudio=row[0].toString();				    	
 				    	plazo=row[3].toString();
-				    	
-				    }
-					 								    	 				    					    	 
-			    	if(!row[3].toString().equals("B"))
-			    	{				    		
-			    		objAgrp.setPlazo("A tiempo");
-			    		
-			    	} 
-			    	else 
-			    	{
-			    		objAgrp.setPlazo("Retrazo");
-			    	}				    	
-
+				     }
+				     
+				     if (!row[0].toString().equals(estudio))
+				     {
+				    	objAgrp.setEstudio(row[0].toString());
+				    	estudio=row[0].toString();
+				     }
+				    
 				     String dia = row[2].toString();
 				    
 				     if (dia.equals("01"))
@@ -1649,7 +1661,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<RecaudacionTipoServ> obtenerListarRecaudacionxTipoServicio(TiivsSolicitud solicitud, Date dFechaInicio, Date dFechaFin) throws Exception
+	public List<RecaudacionTipoServ> obtenerListarRecaudacionxTipoServicio(TiivsSolicitud solicitud, String territorio, Date dFechaInicio, Date dFechaFin) throws Exception
 	{	
 		logger.info("***************En el obtenerListarRecaudacionxTipoServicio*************************");
 		String sql ="";
@@ -1660,22 +1672,23 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		{
 			//Aplicando filtros
 			String sWhere = "";
+			String sWhere2 = "";
 			
-			if (solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer()!=null)
+			if (territorio!="")
 			{
-				logger.info("Filtro de territorio: " + solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer());
+				logger.info("Filtro de territorio: " + territorio);
 				
 				if (sWhere.compareTo("")!=0)
 				{
-					sWhere += " and ofi.cod_terr = '" + solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer() + "' ";
+					sWhere += " and ofi.cod_terr = '" + territorio + "' ";
 				}
 				else
 				{
-					sWhere = " where ofi.cod_terr = '" + solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer() + "' ";
+					sWhere = " where ofi.cod_terr = '" + territorio + "' ";
 				}
 			}
 			
-			if (solicitud.getTiivsOficina1().getCodOfi()!=null)
+			if (solicitud.getTiivsOficina1()!=null)
 			{
 				logger.info("Filtro de oficina: " + solicitud.getTiivsOficina1().getCodOfi());
 				
@@ -1710,7 +1723,10 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				{
 					//sWhere += " and trunc(so.fecha) between to_date('" + tmpFecIni + "','MM-DD-YY')" + " and to_date('" + tmpFecFin + "','MM-DD-YY')" +  " ";
 					sWhere = " where trunc(so.fecha) between to_date('" + tmpFecIni + "','MM-DD-YY')" + " and to_date('" + tmpFecFin + "','MM-DD-YY')" +  " ";
-				}				
+				}
+				
+				sWhere2 = " where trunc(so.fecha) between to_date('" + tmpFecIni + "','MM-DD-YY')" + " and to_date('" + tmpFecFin + "','MM-DD-YY')" +  " ";
+				
 			}
 			
 			//Filtros de estados a buscar por RN054 del Doc Funcional
@@ -1727,7 +1743,19 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "') and hst.reg_abogado is not null " ;
 			}
 			
-			//and hst.reg_abogado is not null
+			
+			if (sWhere2.compareTo("")!=0)
+			{
+				sWhere2 += " and hst.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
+											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
+											" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "') and hst.reg_abogado is not null " ;
+			}
+			else
+			{
+				sWhere2 = " where hst.estado in ('" + ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02 + "'," +
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02 + "') and hst.reg_abogado is not null " ;
+			}
 			
 			sql = "select distinct terr.des_ter, so.cod_ofi, ofi.des_ofi, NVL(PN.cont,0) Persona_Natural, " +
 					"NVL((PN.cont*PN.valor2),0) Recaudacion, NVL(PJ.cont,0) Persona_Juridica,NVL((PJ.cont*PJ.valor2),0) Recaudacion1, " +
@@ -1743,25 +1771,25 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					"          from tiivs_solicitud so " +
 					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"          join tiivs_multitabla multPN on multPN.cod_elem = so.tipo_comision and multPN.cod_mult = 'T11' and " +
-					"          multPN.cod_elem='0001' " + sWhere +
+					"          multPN.cod_elem='0001' " + sWhere2 +
 					"          group by cod_ofi,multPN.valor2) PN on so.cod_ofi = PN.cod_ofi " +
 					"left join (select cod_ofi,multPJ.valor2, count(so.tipo_comision) cont " +    
 					"          from tiivs_solicitud so " +
 					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"          join tiivs_multitabla multPJ on multPJ.cod_elem = so.tipo_comision and multPJ.cod_mult = 'T11' and " +          
-					"          multPJ.cod_elem='0002' " + sWhere +
+					"          multPJ.cod_elem='0002' " + sWhere2 +
 					"          group by cod_ofi,multPJ.valor2) PJ on so.cod_ofi = PJ.cod_ofi " + 
 					"left join (select cod_ofi,multPF.valor2, count(so.tipo_comision) cont " +
 					"          from tiivs_solicitud so " +
 					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"          join tiivs_multitabla multPF on multPF.cod_elem = so.tipo_comision and multPF.cod_mult = 'T11' and " +          
-					"          multPF.cod_elem='0003' " + sWhere +
+					"          multPF.cod_elem='0003' " + sWhere2 +
 					"          group by cod_ofi,multPF.valor2) PF on so.cod_ofi = PF.cod_ofi " +
 					"left join (select cod_ofi,multPFX.valor2, count(so.tipo_comision) cont " +          
 					"          from tiivs_solicitud so " +
 					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"          join tiivs_multitabla multPFX on multPFX.cod_elem = so.tipo_comision and multPFX.cod_mult = 'T11' and " +
-					"          multPFX.cod_elem='0004' " + sWhere +
+					"          multPFX.cod_elem='0004' " + sWhere2 +
 					"          group by cod_ofi,multPFX.valor2) PFX on so.cod_ofi = PFX.cod_ofi " +
 					sWhere +
 					"order by so.cod_ofi " ;
