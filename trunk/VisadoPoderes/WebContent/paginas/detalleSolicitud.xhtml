@@ -41,9 +41,34 @@
 	<h:outputScript library="js" name="visado.js" target="head" />			
   
 	<h:form id="formSolicitudConsulta" >
-			<p:growl id="idMsmSolicitudRegistro"></p:growl>
-
-
+		<p:growl id="idMsmSolicitudRegistro"></p:growl>
+		
+		<p:outputPanel rendered="#{consultarSolicitudMB.bMostrarMSGEstado_Reservado}">
+		
+			<table border="0" width="880">
+				<tbody>
+					<tr>
+						<td class="styleLegend2" width="783">
+							<table border="0" >
+								<tbody>
+									<tr>
+										<td class="styleLegend2" bgcolor="yellow">
+											<fieldset class="fielset">
+												<h:outputText value="#{consultarSolicitudMB.sTextoEstadoReservado}" styleClass="outputText"/>
+											</fieldset>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		
+		</p:outputPanel>
+		
+		<p:spacer height="5"/>
+		
 		<table border="0" width="880">
 			<tbody>
 				<tr>

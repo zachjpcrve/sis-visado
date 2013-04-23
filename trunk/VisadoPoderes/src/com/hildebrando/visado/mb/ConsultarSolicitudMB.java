@@ -126,6 +126,7 @@ public class ConsultarSolicitudMB {
 	private boolean bMostrarCartaImprocedente = false;
 	private boolean bMostrarCartaRespuesta = false;
 	private boolean bMostrarSolicitudVisado = false;
+	private boolean bMostrarMSGEstado_Reservado = false;
 	boolean bBooleanPopupTipoCambio = true;
 	boolean bBooleanPopup = false;
 	private String PERFIL_USUARIO;
@@ -135,6 +136,7 @@ public class ConsultarSolicitudMB {
 	private String sCodDocumento;
 	private String ubicacionTemporal  = "";
 	private String sEstadoSolicitud = "";
+	private String sTextoEstadoReservado="";
 	String cadenaEscanerFinal = "";
 //	private boolean verPnlEvaluarNivel = false;
 	private EvaluacionNivelesMB evaluacionNivelesMB;
@@ -974,6 +976,24 @@ public class ConsultarSolicitudMB {
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
 				this.bMostrarGenerarRevision = false;
+								
+				IILDPeUsuario usuarioRPTA = obtenerOrigenEstadoReservado(solicitudRegistrarT);
+				
+				if (usuarioRPTA.getUID().compareTo(usuario.getUID())!=0)
+				{
+					this.bMostrarMSGEstado_Reservado=false;
+				}
+				else
+				{
+					this.bMostrarMSGEstado_Reservado=true;
+					if (usuarioRPTA!=null)
+					{	
+						if (usuarioRPTA.getUID()!=null)
+						{
+							setsTextoEstadoReservado("La solicitud está reservada por el usuario: " + usuarioRPTA.getUID() + " - " + usuarioRPTA.getNombre());
+						}
+					}
+				}				
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 				
@@ -988,6 +1008,17 @@ public class ConsultarSolicitudMB {
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
 				this.bMostrarGenerarRevision = false;
+				this.bMostrarMSGEstado_Reservado=false;
+				
+				/*IILDPeUsuario usuarioRPTA = obtenerOrigenEstadoReservado(solicitudRegistrarT);
+				
+				if (usuarioRPTA!=null)
+				{	
+					if (usuarioRPTA.getUID()!=null)
+					{
+						setsTextoEstadoReservado("La solicitud está reservada por el usuario: " + usuarioRPTA.getUID() + " - " + usuarioRPTA.getNombre());
+					}
+				}*/
 
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
@@ -1436,6 +1467,42 @@ public class ConsultarSolicitudMB {
 				this.bMostrarGenerarRevision = false;				
 			} 
 		}
+	}
+	
+	public IILDPeUsuario obtenerOrigenEstadoReservado(TiivsSolicitud soli)
+	{
+		IILDPeUsuario usuarioRPTA = new IILDPeUsuario();
+		
+		if (soli!=null)
+		{
+			GenericDao<TiivsHistSolicitud, Object> service = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
+			//filtro.createAlias("id", "hst");
+			filtro.add(Restrictions.eq("id.codSoli", soli.getCodSoli()));
+			filtro.add(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02));
+			
+			List<TiivsHistSolicitud> lstHstSolic = new ArrayList<TiivsHistSolicitud>();
+			
+			try {
+				lstHstSolic = service.buscarDinamico(filtro);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			logger.debug("Tamano lista resultante: " + lstHstSolic.size());
+			
+			if (lstHstSolic.size()>=1)
+			{
+				if (lstHstSolic.get(0).getRegUsuario()!=null)
+				{
+					usuarioRPTA.setUID(lstHstSolic.get(0).getRegUsuario());
+					usuarioRPTA.setNombre(lstHstSolic.get(0).getNomUsuario());
+				}
+			}
+			
+		}
+		
+		return usuarioRPTA;
 	}
 
 	public void obtenerDictamen(ValueChangeEvent e) 
@@ -5151,5 +5218,20 @@ public class ConsultarSolicitudMB {
 	public void setOficina(TiivsOficina1 oficina) {
 		this.oficina = oficina;
 	}
-	
+
+	public boolean isbMostrarMSGEstado_Reservado() {
+		return bMostrarMSGEstado_Reservado;
+	}
+
+	public void setbMostrarMSGEstado_Reservado(boolean bMostrarMSGEstado_Reservado) {
+		this.bMostrarMSGEstado_Reservado = bMostrarMSGEstado_Reservado;
+	}
+
+	public String getsTextoEstadoReservado() {
+		return sTextoEstadoReservado;
+	}
+
+	public void setsTextoEstadoReservado(String sTextoEstadoReservado) {
+		this.sTextoEstadoReservado = sTextoEstadoReservado;
+	}	
 }
