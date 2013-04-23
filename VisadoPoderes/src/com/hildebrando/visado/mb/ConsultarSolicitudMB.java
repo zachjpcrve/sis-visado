@@ -899,8 +899,11 @@ public class ConsultarSolicitudMB {
 
 	public void actualizarEstadoReservadoSolicitud() throws Exception 
 	{
+		logger.debug("En el actualizarEstadoReservadoSolicitud");
 		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		
+		logger.debug("Usuario logueado: " + usuario.getUID());
 		
 		//adecuar
 		//Para Incidencia 34
@@ -979,6 +982,8 @@ public class ConsultarSolicitudMB {
 								
 				IILDPeUsuario usuarioRPTA = obtenerOrigenEstadoReservado(solicitudRegistrarT);
 				
+				logger.debug("Usuario quien reservo: " + usuarioRPTA.getUID());
+				
 				if (usuarioRPTA.getUID().compareTo(usuario.getUID())==0)
 				{
 					this.bMostrarMSGEstado_Reservado=false;
@@ -994,7 +999,7 @@ public class ConsultarSolicitudMB {
 					{	
 						if (usuarioRPTA.getUID()!=null)
 						{
-							setsTextoEstadoReservado("La solicitud está reservada por el usuario: " + usuarioRPTA.getUID() + " - " + usuarioRPTA.getNombre());
+							setsTextoEstadoReservado(ConstantesVisado.TEXTO_MSG_ESTADO_RESERVADO + usuarioRPTA.getUID() + " - " + usuarioRPTA.getNombre());
 						}
 					}
 				}				

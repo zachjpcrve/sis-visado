@@ -62,7 +62,8 @@ public class ConstantesVisado {
 	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_DELEGADO="D";
 	public static final java.lang.String PREFIJO_NOMBRE_SOLICITUD_VISADO="SolVisado";
 	
-	
+	//Campo para mostrar quien reservó la solicitud
+	public static final java.lang.String TEXTO_MSG_ESTADO_RESERVADO = "La solicitud está reservada por el usuario: ";
 	
 	/*SAMIRA*/
 	public static final java.lang.String CODIGO_MULTITABLA_CLASIFICACION_PERSONA = "T13";
