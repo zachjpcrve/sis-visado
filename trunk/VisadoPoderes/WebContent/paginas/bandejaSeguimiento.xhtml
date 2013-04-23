@@ -363,7 +363,9 @@
 												<f:facet name="header">  
 											         <h:outputText value="Fecha Rpta" style="font-size: 9px"/>  
 											    </f:facet>
-												<h:outputText value="#{tbl.fechaRespuesta}" style="font-size: 9px"/>	
+												<h:outputText value="#{tbl.fechaRespuesta}" style="font-size: 9px">	
+													<f:convertDateTime pattern="yyyy-MM-dd" />
+												</h:outputText>
 											</p:column>
 											
 											<p:column width="60">
