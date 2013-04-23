@@ -1314,6 +1314,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					"left join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"join tiivs_miembro m on hst.reg_usuario = m.cod_miembro " +
 					"where hst.estado in ('0003','0009','0004') and hst.reg_abogado is not null " + sWhere +
+					//"where hst.estado in ('0003','0009','0004') " + sWhere +
 					"order by so.cod_estudio) A "  +
 					"group by DES_ESTUDIO,dia_atencion,filtro,costo " +
 					"order by des_estudio,filtro,dia_atencion ";
@@ -1341,32 +1342,29 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				for(int i=0;i<=ResultList.size()-1;i++)
 				{
 					row =  (Object[]) ResultList.get(i);
-					
-				     if (!row[3].toString().equals(plazo))
-				     {
-				    	objAgrp = new AgrupacionPlazoDto();
-				    	tmpLista.add(objAgrp);
-				    	 
-				    	if(!row[3].toString().equals("B"))
-				    	{				    		
-				    		objAgrp.setPlazo("A tiempo");
-				    		
-				    	} 
-				    	else 
-				    	{
-				    		objAgrp.setPlazo("Retrazo");
-				    	}				    	
-				    	plazo=row[3].toString();
 
-				     }
-				     
-				     if (!row[0].toString().equals(estudio))
-				     {
+					if (!row[0].toString().equals(estudio) || !row[3].toString().equals(plazo))
+				    {
+						objAgrp = new AgrupacionPlazoDto();
+					    tmpLista.add(objAgrp);
+					    	
 				    	objAgrp.setEstudio(row[0].toString());
-				    	estudio=row[0].toString();
 				    	
-				     }
-				    
+				    	estudio=row[0].toString();				    	
+				    	plazo=row[3].toString();
+				    	
+				    }
+					 								    	 				    					    	 
+			    	if(!row[3].toString().equals("B"))
+			    	{				    		
+			    		objAgrp.setPlazo("A tiempo");
+			    		
+			    	} 
+			    	else 
+			    	{
+			    		objAgrp.setPlazo("Retrazo");
+			    	}				    	
+
 				     String dia = row[2].toString();
 				    
 				     if (dia.equals("01"))
