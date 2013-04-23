@@ -25,7 +25,7 @@ public interface SolicitudDao<K, T> extends GenericDao<K, T>{
 	public List<SolicitudesOficina> obtenerListarTotalSolicitudesxEstado(TiivsSolicitud solicitud,Date dFechaInicio, Date dFechaFin) throws Exception;
 	public List<SolicitudesTipoServicio> obtenerSolicitudesxTipoServicio(TiivsSolicitud solicitud,String idOpeBan, String cadTipoServ,String cadEstudio,
 			String rangoImpG,Double importeIni,Double importeFin,Date dFechaInicio, Date dFechaFin) throws Exception;
-	public List<RecaudacionTipoServ> obtenerListarRecaudacionxTipoServicio(TiivsSolicitud solicitud, Date dFechaInicio, Date dFechaFin) throws Exception;
+	public List<RecaudacionTipoServ> obtenerListarRecaudacionxTipoServicio(TiivsSolicitud solicitud, String territorio,Date dFechaInicio, Date dFechaFin) throws Exception;
 	public List<AgrupacionPlazoDto> obtenerLiquidacion (String cadEstudio, int anio, int mes, double impuesto) throws Exception;
 	public List<AgrupacionPlazoDto> obtenerLiquidacion_2 (String cadEstudio, int anio, int mes, double impuesto) throws Exception;
 	
