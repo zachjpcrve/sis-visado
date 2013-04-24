@@ -44,33 +44,42 @@ public class ClasificacionService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<TiivsMultitabla> listarClasificaciones() {
+	public List<TiivsMultitabla> listarClasificaciones() 
+	{
 		logger.info("ClasificacionService : listarClasificaciones");
 		List<TiivsMultitabla> clasificaciones = new ArrayList<TiivsMultitabla>();
 
-		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
-		try {
-			clasificaciones = service
-					.buscarDinamico(filtro.add(Restrictions.eq("id.codMult",
-							ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION)));
-			for (int i = 0; i < clasificaciones.size(); i++) {
-				
-				if (clasificaciones.get(i).getValor2()
-						.equals(ConstantesVisado.VALOR2_ESTADO_ACTIVO)) {
-					clasificaciones.get(i).setValor2(
-							ConstantesVisado.VALOR2_ESTADO_ACTIVO_LISTA);
-				} else {
-					clasificaciones.get(i).setValor2(
-							ConstantesVisado.VALOR2_ESTADO_INACTIVO_LISTA);
+		
+		try 
+		{
+			clasificaciones = service.buscarDinamico(filtro.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION)));
+		
+			for (int i = 0; i < clasificaciones.size(); i++) 
+			{					
+				if (clasificaciones.get(i).getValor2().equals(ConstantesVisado.VALOR2_ESTADO_ACTIVO)) 
+				{
+					clasificaciones.get(i).setValor2(ConstantesVisado.VALOR2_ESTADO_ACTIVO_LISTA);
+				} 
+				else 
+				{
+					clasificaciones.get(i).setValor2(ConstantesVisado.VALOR2_ESTADO_INACTIVO_LISTA);
 				}
-
+				
+				if (clasificaciones.get(i).getValor3().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_REPRESENTANTE))
+				{
+					clasificaciones.get(i).setValor3(ConstantesVisado.TIPO_PARTICIPACION.REPRESENTANTE);
+				}
+				else
+				{
+					clasificaciones.get(i).setValor3(ConstantesVisado.TIPO_PARTICIPACION.REPRESENTADO);
+				}
 			}
+			
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("ClasificacionService : listarClasificaciones: "
-					+ ex.getLocalizedMessage());
+			//ex.printStackTrace();
+			logger.error("ClasificacionService : listarClasificaciones: " + ex.getLocalizedMessage());
 		}
 		return clasificaciones;
 	}
@@ -78,14 +87,12 @@ public class ClasificacionService {
 	@SuppressWarnings("unchecked")
 	public void registrar(TiivsMultitabla clasificacion) {
 		logger.info("ClasificacionService : registrar");
-		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		try {
 			service.insertarMerge(clasificacion);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			logger.error("ClasificacionService : registrar: "
-					+ ex.getLocalizedMessage());
+			logger.error("ClasificacionService : registrar: " + ex.getLocalizedMessage());
 		}
 
 	}
