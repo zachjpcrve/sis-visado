@@ -112,14 +112,12 @@ public class SeguimientoMB
 	private IILDPeUsuario usuario;
 	private String PERFIL_USUARIO ;
 	private boolean bloquearOficina=false;
+	private boolean mostrarFechaEstado=false;
 	private NivelService nivelService;
 	private TiivsPersona objTiivsPersonaBusquedaNomApod;
 	private TiivsPersona objTiivsPersonaBusquedaNomPoder;
-	
-//	private List<TiivsHistSolicitud> lstHistorial;
 	private List<SeguimientoDTO> lstSeguimientoDTO;
-	private TiivsSolicitud selectedSolicitud;
-	
+	private TiivsSolicitud selectedSolicitud;	
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
 	public static Logger logger = Logger.getLogger(SeguimientoMB.class);
@@ -228,9 +226,11 @@ public class SeguimientoMB
 		{
 			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 				setMostrarEstudio(true);
+				setMostrarFechaEstado(true);
 			}
 			else{
 				setMostrarEstudio(false);
+				setMostrarFechaEstado(false);
 			}
 		}
 	}	
@@ -3249,5 +3249,13 @@ public class SeguimientoMB
 	public void setObjTiivsPersonaBusquedaNomPoder(
 			TiivsPersona objTiivsPersonaBusquedaNomPoder) {
 		this.objTiivsPersonaBusquedaNomPoder = objTiivsPersonaBusquedaNomPoder;
+	}
+
+	public boolean isMostrarFechaEstado() {
+		return mostrarFechaEstado;
+	}
+
+	public void setMostrarFechaEstado(boolean mostrarFechaEstado) {
+		this.mostrarFechaEstado = mostrarFechaEstado;
 	}
 }
