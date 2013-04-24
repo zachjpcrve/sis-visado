@@ -31,7 +31,13 @@
       			>
 	  	</p:menuitem>
 	  	</c:if>
-	  	<c:if test="${opcion.value.opcionId == opcion2.value.opcionPadreId and opcion2.value.opcionId!=2 and opcion2.value.opcionId!=5}">
+	  	<!-- Registro / Calculadora  -->
+	  	<c:if test="${opcion.value.opcionId == opcion2.value.opcionPadreId and opcion2.value.opcionId==3}">
+	  	<p:menuitem value="${opcion2.value.nombre}" onclick="limpiarCalculadora();"  url="${opcion2.value.url}" icon="ui-icon-pencil"
+      			>
+	  	</p:menuitem>
+	  	</c:if>
+	  	<c:if test="${opcion.value.opcionId == opcion2.value.opcionPadreId and opcion2.value.opcionId!=2 and opcion2.value.opcionId!=3 and opcion2.value.opcionId!=5}">
 	  	<p:menuitem value="${opcion2.value.nombre}" url="${opcion2.value.url}"  icon="ui-icon-pencil">
 	  	</p:menuitem>
 	  	</c:if>
@@ -90,6 +96,9 @@
   </div>
     <p:remoteCommand name="actualizarListas"
   action="#{consultarSolicitudMB.actualizarListas}" /> 
+  
+  <p:remoteCommand name="limpiarCalculadora"
+  action="#{calculadoraMB.limpiar}" /> 
 
   
  </h:form>
