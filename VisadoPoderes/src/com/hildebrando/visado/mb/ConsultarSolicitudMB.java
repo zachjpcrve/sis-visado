@@ -930,6 +930,7 @@ public class ConsultarSolicitudMB {
 				this.bMostrarGenerarRevision = false;
 				
 				this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02);
+				this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 				this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_RESERVADO_T02);
 				GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 				service.modificar(solicitudRegistrarT);
@@ -1556,6 +1557,7 @@ public class ConsultarSolicitudMB {
 					  if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)
 							  && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 	                    	 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+	                    	 solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 	                    	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 	                    	 this.registrarHistorial(solicitudRegistrarT);
 	                    	 actualizarBandeja=true;
@@ -1577,6 +1579,7 @@ public class ConsultarSolicitudMB {
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
 
 					this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
+					this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 					solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
 					actualizarBandeja=true;
@@ -1587,7 +1590,8 @@ public class ConsultarSolicitudMB {
 					
                     if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)
                     		          && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
-                    	 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
+                    	 this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
+                    	 this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
                     	 
                     	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
                     	 this.registrarHistorial(solicitudRegistrarT);
@@ -1610,6 +1614,7 @@ public class ConsultarSolicitudMB {
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
 
 					this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
+					this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 					
 					System.out.println("this.solicitudRegistrarT.getTiivsEstudio() "+this.solicitudRegistrarT.getTiivsEstudio().toString());
 					try {
@@ -1721,8 +1726,10 @@ public class ConsultarSolicitudMB {
 			logger.info(" ******  LA SOLICITUD SUPERO ALGUN NIVEL, ENTONCES PASA A ESTADO EN  VERIFICACION A, SI NO A ACEPTADO");
 			if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
 				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
+				solicitud.setFechaEstado(new Timestamp(new Date().getTime()));
 			} else if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
 				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02);
+				solicitud.setFechaEstado(new Timestamp(new Date().getTime()));
 			}
 			GenericDao<TiivsSolicitudNivel, Object> serviceSolicitud = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit
 					                                                    .getApplicationContext().getBean("genericoDao");
@@ -1801,6 +1808,7 @@ public class ConsultarSolicitudMB {
 			logger.info("*********************** actualizarEstadoEjecutadoSolicitud **************************");
 
 			this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02);
+			this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 			this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_EJECUTADO_T02);
 
 			GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -1818,6 +1826,7 @@ public class ConsultarSolicitudMB {
 		logger.info("*********************** actualizarEstadoEnRevisionSolicitud **************************");
 
 		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02);
+		this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 		this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_EN_REVISION_T02);
 
 		GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit
@@ -1837,6 +1846,7 @@ public class ConsultarSolicitudMB {
 		logger.info("*********************** actualizarEstadoVencidoSolicitud **************************");
 
 		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02);
+		this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 		this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_VENCIDO_T02);
 
 		GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -2315,8 +2325,10 @@ public class ConsultarSolicitudMB {
 		}
 		
 		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02);
+		this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 		this.solicitudRegistrarT.setFechaRespuesta(time);
 		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date().getTime()));
+				
 	}
 
 	public boolean cargarArchivosFTP() {
@@ -2380,8 +2392,8 @@ public class ConsultarSolicitudMB {
 				.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
-		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+//		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
+//				.getApplicationContext().getBean("genericoDao");
 		TiivsPersona objPersonaRetorno = new TiivsPersona();
 		TiivsAgrupacionPersona objAgruPer = new TiivsAgrupacionPersona();
 		
@@ -2389,6 +2401,7 @@ public class ConsultarSolicitudMB {
 			logger.info("this.solicitudRegistrarT.importe : " + this.solicitudRegistrarT.getMoneda());
 			this.solicitudRegistrarT.setFecha(new Date());
 			this.solicitudRegistrarT.setEstado(this.solicitudRegistrarT.getEstado().trim());
+			this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 
 			logger.info("usuario.getUID() " + usuario.getUID());
 			this.solicitudRegistrarT.setRegUsuario(usuario.getUID());
@@ -2451,8 +2464,15 @@ public class ConsultarSolicitudMB {
 				Set<TiivsSolicitudAgrupacion> listaTMP = this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
 				logger.info("listaTMP listaTMP "+listaTMP.size());
 																						
-
-				TiivsSolicitud objResultado = service.guardarModificar(this.solicitudRegistrarT);
+				//Guardar datos de solicitud
+				TiivsSolicitud objResultado = service.guardarModificar(this.solicitudRegistrarT);	
+				
+				//Registrar Historial de Solicitud
+				if (!this.sEstadoSolicitud.equals("BORRADOR"))  //Si se envia solicitud
+				{
+					this.registrarHistorial(solicitudRegistrarT);
+				}
+				
 								  
 				// Carga ficheros al FTP
 				boolean bRet = cargarArchivosFTP();
