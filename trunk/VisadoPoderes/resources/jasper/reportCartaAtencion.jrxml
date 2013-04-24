@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="542" pageHeight="795" columnWidth="502" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.366026910730141"/>
+	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="96"/>
+	<property name="ireport.y" value="576"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -17,7 +17,7 @@
 		<band/>
 	</background>
 	<title>
-		<band height="147">
+		<band height="143">
 			<frame>
 				<reportElement mode="Transparent" x="0" y="11" width="502" height="91" backcolor="#99FF99"/>
 				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy hh:mm:ss a">
@@ -49,13 +49,10 @@
 				</textElement>
 				<text><![CDATA[Estimado Gestor,]]></text>
 			</staticText>
-			<line>
-				<reportElement x="17" y="144" width="474" height="1"/>
-			</line>
 		</band>
 	</title>
 	<detail>
-		<band height="61">
+		<band height="53">
 			<subreport>
 				<reportElement isPrintRepeatedValues="false" x="21" y="5" width="470" height="43" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="PARAM_INSTRUCCION">
@@ -65,7 +62,7 @@
 				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "reportCartaAtencion_subreportOperaciones.jasper"]]></subreportExpression>
 			</subreport>
 			<rectangle>
-				<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="17" y="2" width="474" height="56" isPrintWhenDetailOverflows="true"/>
+				<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="17" y="2" width="474" height="50" isPrintWhenDetailOverflows="true"/>
 			</rectangle>
 		</band>
 		<band height="30">
