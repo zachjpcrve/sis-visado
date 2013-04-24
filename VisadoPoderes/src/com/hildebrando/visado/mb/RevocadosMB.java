@@ -632,14 +632,17 @@ public class RevocadosMB {
 	{
 		String res="";
 		
-		for (TiivsParametros tmp: pdfViewerMB.getLstParametros())
-		{
-			if (usuario.getUID().equals(tmp.getCodUsuario()))
-			{
-				res=tmp.getRutaArchivoExcel();
-				break;
-			}
-		}
+		TiivsParametros tmp = pdfViewerMB.getParametros();
+		res = tmp.getRutaArchivoExcel();
+		
+//		for (TiivsParametros tmp: pdfViewerMB.getLstParametros())
+//		{
+//			if (usuario.getUID().equals(tmp.getCodUsuario()))
+//			{
+//				res=tmp.getRutaArchivoExcel();
+//				break;
+//			}
+//		}
 		
 		if (res.compareTo("")==0)
 		{
