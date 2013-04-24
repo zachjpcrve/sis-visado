@@ -867,6 +867,7 @@ public class RevocadosMB {
 		listaTiivsSolicitudRechazdas=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroSolicitudRechazado);
 		for (TiivsSolicitud xx : listaTiivsSolicitudRechazdas) {
 			xx.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
+			xx.setFechaEstado(new Timestamp(new Date().getTime()));
 			xx.setObs(parametroGlosa.getValor1());
 			xx=serviceSolicitudAgrupacionPersona.modificar(xx);
 			registraSolicitudHistorial(xx);
@@ -879,6 +880,7 @@ public class RevocadosMB {
 		listaTiivsSolicitudImprocedentes=serviceSolicitudAgrupacionPersona.buscarDinamico(filtroSolicitudImprocedente);
 		for (TiivsSolicitud xx : listaTiivsSolicitudImprocedentes) {
 			xx.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
+			xx.setFechaEstado(new Timestamp(new Date().getTime()));
 			xx.setObs(parametroGlosa.getValor1());
 			xx=serviceSolicitudAgrupacionPersona.modificar(xx);
 			registraSolicitudHistorial(xx);
