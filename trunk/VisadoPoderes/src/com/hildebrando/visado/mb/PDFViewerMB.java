@@ -33,7 +33,8 @@ import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
 @SessionScoped
 public class PDFViewerMB {
 	
-	private List<TiivsParametros> lstParametros;
+//	private List<TiivsParametros> lstParametros;
+	private TiivsParametros parametros;
 	private List<Escaneado> lstPDFEscaneados;
 	private Escaneado selectEscaneado;
 	private String urlPDF ;
@@ -51,7 +52,7 @@ public class PDFViewerMB {
 	public PDFViewerMB() 
 	{
 		lstPDFEscaneados=new ArrayList<Escaneado>();
-		lstParametros=new ArrayList<TiivsParametros>();
+//		lstParametros=new ArrayList<TiivsParametros>();
 		
 		this.urlPDF = "";
 		setValCodSolicitud("S01");
@@ -71,26 +72,25 @@ public class PDFViewerMB {
 	
 	public String obtenerURLRemota()
 	{
-		
-		for (TiivsParametros tmp: lstParametros)
-		{
-			urlPDF=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+"//"+
-						  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
-						  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
-						  "/"+tmp.getCarpetaRemota();
-		}
+		if(parametros!=null){
+			urlPDF = ConstantesVisado.PROTOCOLO_FTP
+					+ ConstantesVisado.DOS_PUNTOS.trim() + "//"
+					+ parametros.getLoginServer()
+					+ ConstantesVisado.DOS_PUNTOS.trim()
+					+ parametros.getPassServer() + ConstantesVisado.ARROBA
+					+ parametros.getServer() + "/" + parametros.getCarpetaRemota();
+		}		
 		return urlPDF;
 	}
 	
 	public String prepararURLEscaneo(String usuario)
 	{
 		String cadFinal="";	
-		for (TiivsParametros tmp: lstParametros)
-		{
-			cadFinal = tmp.getUrlAPP() + "?" + "idEmpresa="
-					+ tmp.getIdEmpresa() + "&amp;" + "idSistema="
-					+ tmp.getIdSistema() + "&amp;" + "txLogin=" +usuario;
-		}		
+		if(parametros!=null){
+			cadFinal = parametros.getUrlAPP() + "?" + "idEmpresa="
+					+ parametros.getIdEmpresa() + "&amp;" + "idSistema="
+					+ parametros.getIdSistema() + "&amp;" + "txLogin=" +usuario;
+		}	
 		logger.debug("URL: " + cadFinal);		
 		return cadFinal;
 	}
@@ -108,17 +108,21 @@ public class PDFViewerMB {
 		
 		GenericDao<TiivsParametros, Object> paramDAO = (GenericDao<TiivsParametros, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroParam = Busqueda.forClass(TiivsParametros.class);
-		filtroParam.add(Restrictions.eq("codUsuario", getCodUsuario()));
+//		filtroParam.add(Restrictions.eq("codUsuario", getCodUsuario()));
+				
+		List<TiivsParametros> lstParametros = paramDAO.buscarDinamico(filtroParam);
+		logger.debug("Lista de parametros encontrados: " + lstParametros.size());
 		
-		
-			lstParametros = paramDAO.buscarDinamico(filtroParam);
+		if(lstParametros.size()>0){
+			parametros = lstParametros.get(0);
+		}
 
 		} catch (Exception e) {
 			
 			logger.debug("Error al cargar el listado de parametros",e);
 		}
 		
-		logger.debug("Lista de parametros encontrados: " + lstParametros.size());
+		
 	}
 	
 	public boolean validarObligatorioPDF()
@@ -127,9 +131,8 @@ public class PDFViewerMB {
 		File Listfile =null;
 		File[] lista =null;
 		
-		for (TiivsParametros tmpLst: lstParametros)
-		{
-			Listfile = new File(tmpLst.getRutaLocal());
+		if(parametros!=null){
+			Listfile = new File(parametros.getRutaLocal());
 			FilenameFilter filterPDF = new FilenameFilter() 
 			{
 		      public boolean accept(File dir, String name) 
@@ -160,14 +163,8 @@ public class PDFViewerMB {
 	
 	public void cargaPDFLocal()
 	{
-		/*lstPDFEscaneados.clear();
-		Utilitario util = new Utilitario();
-		String dirServer="\\\\10.172.0.172\\\\compartido";
-		String dirLocal="C:\\\\hildebrando";
-		util.downloadFile("compartido", dirServer, dirLocal);*/
 		lstPDFEscaneados.clear();
 		String dirPDF = "C:\\\\hildebrando\\\\compartido";
-		//String dirPDF = "ftp://hilde:$i$tema$2012@10.172.0.4/VISADO/PDF/";
 		setUrlPDF(dirPDF+"\\\\prueba.pdf");
 		
 		//obtengo la lista de los archivos a descargar de la carpeta correspondiente al directorio local
@@ -214,26 +211,24 @@ public class PDFViewerMB {
 		String rutaResultante="";
 		
 	
-		if (lstParametros!=null) 
-		{
-			logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
-			
-			for (TiivsParametros tmp: lstParametros)
-			{
-				urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
-							  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
-							  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
-							  File.separator+tmp.getCarpetaRemota();
-					
-				dirLocal=ruta;
-				server=tmp.getServer();
-				loginServer=tmp.getLoginServer();
-				passServer=tmp.getPassServer();	
-				carpetaRemota=tmp.getCarpetaRemota();
-			}
-		}		
-		
-				
+		if (parametros != null) {
+
+			urlServer = ConstantesVisado.PROTOCOLO_FTP
+					+ ConstantesVisado.DOS_PUNTOS.trim() + File.separator
+					+ File.separator + parametros.getLoginServer()
+					+ ConstantesVisado.DOS_PUNTOS.trim()
+					+ parametros.getPassServer() + ConstantesVisado.ARROBA
+					+ parametros.getServer() + File.separator
+					+ parametros.getCarpetaRemota();
+
+			dirLocal = ruta;
+			server = parametros.getServer();
+			loginServer = parametros.getLoginServer();
+			passServer = parametros.getPassServer();
+			carpetaRemota = parametros.getCarpetaRemota();
+
+		}
+	
 		logger.debug("Parametros leidos de BD");
 		logger.debug("Dir Server: " + urlServer);
 		logger.debug("Dir Local: " + dirLocal);
@@ -241,8 +236,7 @@ public class PDFViewerMB {
 		logger.debug("Login Server:_" + loginServer);
 		logger.debug("Pass Server: " + passServer);
 		logger.debug("Carpeta Remota: " + carpetaRemota);
-		
-				
+						
 		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
 		try {
 			cliente.setDirectorio(carpetaRemota);
@@ -255,9 +249,7 @@ public class PDFViewerMB {
 			
 			File Listfile = new File(dirLocal);
 
-
 			cliente.upLoadOneFiles(Listfile.getName(),dirLocal);
-//			cliente.renombrarArchivo(nombreArchivo, Listfile.getName()); 
 			
 			rutaResultante=urlServer+Listfile.getName();
 			
@@ -276,28 +268,24 @@ public class PDFViewerMB {
 		String carpetaRemota="";
 		String dirLocal="";
 		String rutaResultante="";
-		
-		
-		if (lstParametros!=null) 
-		{
-			logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
-			
-			for (TiivsParametros tmp: lstParametros)
-			{
-				urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
-						  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
-						  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
-						  File.separator+tmp.getCarpetaRemota();
-					
-				dirLocal=ruta;
-				server=tmp.getServer();
-				loginServer=tmp.getLoginServer();
-				passServer=tmp.getPassServer();	
-				carpetaRemota=tmp.getCarpetaRemota();
-			}
-		}		
-		
 				
+		if (parametros != null) {
+			urlServer = ConstantesVisado.PROTOCOLO_FTP
+					+ ConstantesVisado.DOS_PUNTOS.trim() + File.separator
+					+ File.separator + parametros.getLoginServer()
+					+ ConstantesVisado.DOS_PUNTOS.trim()
+					+ parametros.getPassServer() + ConstantesVisado.ARROBA
+					+ parametros.getServer() + File.separator
+					+ parametros.getCarpetaRemota();
+
+			dirLocal = ruta;
+			server = parametros.getServer();
+			loginServer = parametros.getLoginServer();
+			passServer = parametros.getPassServer();
+			carpetaRemota = parametros.getCarpetaRemota();
+
+		}
+		
 		logger.debug("Parametros leidos de BD");
 		logger.debug("Dir Server: " + urlServer);
 		logger.debug("Dir Local: " + dirLocal);
@@ -337,54 +325,43 @@ public class PDFViewerMB {
 		String carpetaRemota="";
 		String rutaArchivoLocal="C:" + File.separator+"instaladores"+File.separator;
 		
-		//String codUsuario="P014773";
-		
-		//String dirPDF = "ftp://hilde:$i$tema$2012@10.172.0.4/VISADO/PDF/";
-		
+				
 		if (sTipoArchivo.equalsIgnoreCase("o"))
 		{
-			if (lstParametros!=null) 
-			{
-				logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
-				
-				for (TiivsParametros tmp: lstParametros)
-				{
-					urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
-								  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
-								  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
-								  File.separator+tmp.getCarpetaRemota();
-						
-					server=tmp.getServer();
-					loginServer=tmp.getLoginServer();
-					passServer=tmp.getPassServer();	
-					carpetaRemota=tmp.getCarpetaRemota();
-				}
-				
-				//util.downloadFile("compartido", dirLocal,dirServer);
+			if (parametros != null) {
+
+				urlServer = ConstantesVisado.PROTOCOLO_FTP
+						+ ConstantesVisado.DOS_PUNTOS.trim() + File.separator
+						+ File.separator + parametros.getLoginServer()
+						+ ConstantesVisado.DOS_PUNTOS.trim()
+						+ parametros.getPassServer() + ConstantesVisado.ARROBA
+						+ parametros.getServer() + File.separator
+						+ parametros.getCarpetaRemota();
+
+				server = parametros.getServer();
+				loginServer = parametros.getLoginServer();
+				passServer = parametros.getPassServer();
+				carpetaRemota = parametros.getCarpetaRemota();
+				// util.downloadFile("compartido", dirLocal,dirServer);
 			}
-			dirLocal=rutaArchivoLocal;
+			dirLocal = rutaArchivoLocal;
 		}
 		else
 		{
-			if (lstParametros!=null) 
-			{
-				logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
-				
-				for (TiivsParametros tmp: lstParametros)
-				{
-					urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
-								  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
-								  tmp.getPassServer()+ConstantesVisado.ARROBA+
-								  File.separator+tmp.getCarpetaRemota();
-						
-					dirLocal=tmp.getRutaLocal();
-					server=tmp.getServer();
-					loginServer=tmp.getLoginServer();
-					passServer=tmp.getPassServer();	
-					carpetaRemota=tmp.getCarpetaRemota();
-				}
-				
-				//util.downloadFile("compartido", dirLocal,dirServer);
+			if (parametros != null) {
+				urlServer = ConstantesVisado.PROTOCOLO_FTP
+						+ ConstantesVisado.DOS_PUNTOS.trim() + File.separator
+						+ File.separator + parametros.getLoginServer()
+						+ ConstantesVisado.DOS_PUNTOS.trim()
+						+ parametros.getPassServer() + ConstantesVisado.ARROBA
+						+ File.separator + parametros.getCarpetaRemota();
+
+				dirLocal = parametros.getRutaLocal();
+				server = parametros.getServer();
+				loginServer = parametros.getLoginServer();
+				passServer = parametros.getPassServer();
+				carpetaRemota = parametros.getCarpetaRemota();
+				// util.downloadFile("compartido", dirLocal,dirServer);
 			}
 		}
 		
@@ -465,37 +442,7 @@ public class PDFViewerMB {
 		}
 		return cargaExitosa;
 	}
-	
-	/*public String buscarTipoDocByNombre(String archivo)
-	{
-		String sinExtesion = archivo.substring(0, archivo.indexOf("."));
-		String resultado="";
 		
-		System.out.println("Documento a evaluar: " + sinExtesion);
-		
-		GenericDao<TiivsTipoSolicDocumento, Object> tipoDocDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroTipoDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);
-		filtroTipoDoc.add(Restrictions.eq("desDoc", sinExtesion));
-		
-		List<TiivsTipoSolicDocumento> lstTmp= new ArrayList<TiivsTipoSolicDocumento>();
-		
-		try {
-			lstTmp = tipoDocDAO.buscarDinamico(filtroTipoDoc);
-		} catch (Exception e1) {
-			logger.debug("Error al cargar el listado de tipos de documento");
-		}
-		
-		if (lstTmp!=null)
-		{
-			if (lstTmp.size()==1)
-			{
-				resultado=lstTmp.get(0).getCodDoc();
-			}
-		}
-		
-		return resultado;
-	}*/
-	
 	public void showPDF()
 	{
 		String archivoPDF=getSelectEscaneado().getNomArchivo();
@@ -507,14 +454,179 @@ public class PDFViewerMB {
         file = new DefaultStreamedContent(stream, "application/pdf", getSelectEscaneado().getDocumento());
  	}
 
-	public List<TiivsParametros> getLstParametros() {
-		return lstParametros;
+	
+
+	public void eliminarArchivos(List<String> aliasArchivos) {
+		
+		
+		String urlServer="";
+		String server="";
+		String loginServer="";
+		String passServer="";
+		String carpetaRemota="";
+		String dirLocal="";
+		String rutaResultante="";
+		
+		//String codUsuario="P014773";
+		
+		//String dirPDF = "ftp://hilde:$i$tema$2012@10.172.0.4/VISADO/PDF/";
+		
+		if (parametros != null) {
+
+			urlServer = ConstantesVisado.PROTOCOLO_FTP
+					+ ConstantesVisado.DOS_PUNTOS.trim() + File.separator
+					+ File.separator + parametros.getLoginServer()
+					+ ConstantesVisado.DOS_PUNTOS.trim()
+					+ parametros.getPassServer() + ConstantesVisado.ARROBA
+					+ parametros.getServer() + File.separator
+					+ parametros.getCarpetaRemota();
+
+			// dirLocal=ruta;
+			server = parametros.getServer();
+			loginServer = parametros.getLoginServer();
+			passServer = parametros.getPassServer();
+			carpetaRemota = parametros.getCarpetaRemota();
+
+		}
+				
+		logger.debug("Parametros leidos de BD");
+		logger.debug("Dir Server: " + urlServer);
+		logger.debug("Dir Local: " + dirLocal);
+		logger.debug("Server: " + server);
+		logger.debug("Login Server:_" + loginServer);
+		logger.debug("Pass Server: " + passServer);
+		logger.debug("Carpeta Remota: " + carpetaRemota);
+		
+		
+		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
+		try {
+			cliente.setDirectorio(carpetaRemota);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		if (cliente!=null)
+		{			
+			cliente.deleteFiles(aliasArchivos);			
+		}
+		
 	}
 
-	public void setLstParametros(List<TiivsParametros> lstParametros) {
-		this.lstParametros = lstParametros;
+	public void renombrarFiles(List<String> fromFicheros, List<String> toFicheros) {
+		String urlServer="";
+		String server="";
+		String loginServer="";
+		String passServer="";
+		String carpetaRemota="";
+		String dirLocal="";
+		String rutaResultante="";
+		
+				
+		if (parametros != null) {
+
+			urlServer = ConstantesVisado.PROTOCOLO_FTP
+					+ ConstantesVisado.DOS_PUNTOS.trim() + File.separator
+					+ File.separator + parametros.getLoginServer()
+					+ ConstantesVisado.DOS_PUNTOS.trim()
+					+ parametros.getPassServer() + ConstantesVisado.ARROBA
+					+ parametros.getServer() + File.separator
+					+ parametros.getCarpetaRemota();
+
+			// dirLocal=ruta;
+			server = parametros.getServer();
+			loginServer = parametros.getLoginServer();
+			passServer = parametros.getPassServer();
+			carpetaRemota = parametros.getCarpetaRemota();
+
+		}
+		
+				
+		logger.debug("Parametros leidos de BD");
+		logger.debug("Dir Server: " + urlServer);
+		logger.debug("Dir Local: " + dirLocal);
+		logger.debug("Server: " + server);
+		logger.debug("Login Server:_" + loginServer);
+		logger.debug("Pass Server: " + passServer);
+		logger.debug("Carpeta Remota: " + carpetaRemota);
+		
+		
+		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
+		try {
+			cliente.setDirectorio(carpetaRemota);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		if (cliente!=null)
+		{			
+			cliente.renombrarArchivos(fromFicheros, toFicheros); 
+		}
+		
 	}
 
+	public boolean descargarArchivo(String ubicacionLocal, String aliasArchivo) {
+		
+		String urlServer="";
+		String server="";
+		String loginServer="";
+		String passServer="";
+		String carpetaRemota="";
+		String dirLocal="";
+		String rutaResultante="";
+		boolean iRet = true; 
+		
+		
+		int iResultCargaParametros = 0;
+		if (parametros != null) {
+
+			urlServer = ConstantesVisado.PROTOCOLO_FTP
+					+ ConstantesVisado.DOS_PUNTOS.trim() + File.separator
+					+ File.separator + parametros.getLoginServer()
+					+ ConstantesVisado.DOS_PUNTOS.trim()
+					+ parametros.getPassServer() + ConstantesVisado.ARROBA
+					+ parametros.getServer() + File.separator
+					+ parametros.getCarpetaRemota();
+
+			server = parametros.getServer();
+			loginServer = parametros.getLoginServer();
+			passServer = parametros.getPassServer();
+			carpetaRemota = parametros.getCarpetaRemota();
+			iResultCargaParametros = 1;
+
+		}
+		
+		logger.debug("Parametros leidos de BD");
+		logger.debug("Dir Server: " + urlServer);
+		logger.debug("Dir Local: " + dirLocal);
+		logger.debug("Server: " + server);
+		logger.debug("Login Server:_" + loginServer);
+		logger.debug("Pass Server: " + passServer);
+		logger.debug("Carpeta Remota: " + carpetaRemota);
+		
+		
+		if(iResultCargaParametros == 0){
+			logger.debug("No se ha logrado cargar los parámetros de conexión al FTP");
+			iRet = false;
+		} else {			
+			ClienteFTP cliente = null;
+			try {
+				cliente = new ClienteFTP(server, loginServer, passServer);
+				cliente.setDirectorio(carpetaRemota);
+			} catch (IOException e1) {
+				logger.error("Error al instanciar clienteFTP ",e1);			
+			}
+			
+			if (cliente!=null)
+			{			
+				iRet = cliente.downloadFile(ubicacionLocal,aliasArchivo);						
+			}
+			
+		}
+
+		return iRet;
+		
+	}
+	
 	public List<Escaneado> getLstPDFEscaneados() {
 		return lstPDFEscaneados;
 	}
@@ -587,203 +699,13 @@ public class PDFViewerMB {
 		this.aliasArchivo = aliasArchivo;
 	}
 
-	public void eliminarArchivos(List<String> aliasArchivos) {
-		
-		
-		String urlServer="";
-		String server="";
-		String loginServer="";
-		String passServer="";
-		String carpetaRemota="";
-		String dirLocal="";
-		String rutaResultante="";
-		
-		//String codUsuario="P014773";
-		
-		//String dirPDF = "ftp://hilde:$i$tema$2012@10.172.0.4/VISADO/PDF/";
-		
-		if (lstParametros!=null) 
-		{
-			logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
-			
-			for (TiivsParametros tmp: lstParametros)
-			{
-				urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
-							  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
-							  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
-							  File.separator+tmp.getCarpetaRemota();
-					
-//				dirLocal=ruta;
-				server=tmp.getServer();
-				loginServer=tmp.getLoginServer();
-				passServer=tmp.getPassServer();	
-				carpetaRemota=tmp.getCarpetaRemota();
-			}
-		}		
-		
-				
-		logger.debug("Parametros leidos de BD");
-		logger.debug("Dir Server: " + urlServer);
-		logger.debug("Dir Local: " + dirLocal);
-		logger.debug("Server: " + server);
-		logger.debug("Login Server:_" + loginServer);
-		logger.debug("Pass Server: " + passServer);
-		logger.debug("Carpeta Remota: " + carpetaRemota);
-		
-		
-		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
-		try {
-			cliente.setDirectorio(carpetaRemota);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
-		if (cliente!=null)
-		{
-			
-//			File Listfile = new File(dirLocal);
-
-
-			cliente.deleteFiles(aliasArchivos);
-//			cliente.upLoadOneFiles(Listfile.getName(),dirLocal);
-//			cliente.renombrarArchivo(nombreArchivo, Listfile.getName()); 
-			
-//			rutaResultante=urlServer+Listfile.getName();
-			
-		}
-		
+	public TiivsParametros getParametros() {
+		return parametros;
 	}
 
-	public void renombrarFiles(List<String> fromFicheros, List<String> toFicheros) {
-		String urlServer="";
-		String server="";
-		String loginServer="";
-		String passServer="";
-		String carpetaRemota="";
-		String dirLocal="";
-		String rutaResultante="";
-		
-		//String codUsuario="P014773";
-		
-		//String dirPDF = "ftp://hilde:$i$tema$2012@10.172.0.4/VISADO/PDF/";
-		
-		if (lstParametros!=null) 
-		{
-			logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
-			
-			for (TiivsParametros tmp: lstParametros)
-			{
-				urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
-							  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
-							  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
-							  File.separator+tmp.getCarpetaRemota();
-					
-//				dirLocal=ruta;
-				server=tmp.getServer();
-				loginServer=tmp.getLoginServer();
-				passServer=tmp.getPassServer();	
-				carpetaRemota=tmp.getCarpetaRemota();
-			}
-		}		
-		
-				
-		logger.debug("Parametros leidos de BD");
-		logger.debug("Dir Server: " + urlServer);
-		logger.debug("Dir Local: " + dirLocal);
-		logger.debug("Server: " + server);
-		logger.debug("Login Server:_" + loginServer);
-		logger.debug("Pass Server: " + passServer);
-		logger.debug("Carpeta Remota: " + carpetaRemota);
-		
-		
-		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
-		try {
-			cliente.setDirectorio(carpetaRemota);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
-		if (cliente!=null)
-		{
-			
-//			File Listfile = new File(dirLocal);
-
-
-//			cliente.deleteFiles(aliasArchivos);
-//			cliente.upLoadOneFiles(Listfile.getName(),dirLocal);
-			cliente.renombrarArchivos(fromFicheros, toFicheros); 
-			
-//			rutaResultante=urlServer+Listfile.getName();
-			
-		}
-		
+	public void setParametros(TiivsParametros parametros) {
+		this.parametros = parametros;
 	}
-
-	public boolean descargarArchivo(String ubicacionLocal, String aliasArchivo) {
-		
-		String urlServer="";
-		String server="";
-		String loginServer="";
-		String passServer="";
-		String carpetaRemota="";
-		String dirLocal="";
-		String rutaResultante="";
-		boolean iRet = true; 
-		
-		
-		int iResultCargaParametros = 0;
-		if (lstParametros!=null) 
-		{
-			logger.debug("Tamanio lista parametros: " + lstParametros.size()); 
-			
-			for (TiivsParametros tmp: lstParametros)
-			{
-				urlServer=ConstantesVisado.PROTOCOLO_FTP+ConstantesVisado.DOS_PUNTOS.trim()+File.separator+File.separator+
-							  tmp.getLoginServer()+ConstantesVisado.DOS_PUNTOS.trim()+
-							  tmp.getPassServer()+ConstantesVisado.ARROBA+tmp.getServer()+
-							  File.separator+tmp.getCarpetaRemota();
-					
-				server=tmp.getServer();
-				loginServer=tmp.getLoginServer();
-				passServer=tmp.getPassServer();	
-				carpetaRemota=tmp.getCarpetaRemota();
-				iResultCargaParametros = 1;
-			}
-		}		
-		
-				
-		logger.debug("Parametros leidos de BD");
-		logger.debug("Dir Server: " + urlServer);
-		logger.debug("Dir Local: " + dirLocal);
-		logger.debug("Server: " + server);
-		logger.debug("Login Server:_" + loginServer);
-		logger.debug("Pass Server: " + passServer);
-		logger.debug("Carpeta Remota: " + carpetaRemota);
-		
-		
-		if(iResultCargaParametros == 0){
-			logger.debug("No se ha logrado cargar los parámetros de conexión al FTP");
-			iRet = false;
-		} else {			
-			ClienteFTP cliente = null;
-			try {
-				cliente = new ClienteFTP(server, loginServer, passServer);
-				cliente.setDirectorio(carpetaRemota);
-			} catch (IOException e1) {
-				logger.error("Error al instanciar clienteFTP ",e1);			
-			}
-			
-			if (cliente!=null)
-			{			
-				iRet = cliente.downloadFile(ubicacionLocal,aliasArchivo);						
-			}
-			
-		}
-
-		return iRet;
-		
-	}
-	
 	
 	
 }

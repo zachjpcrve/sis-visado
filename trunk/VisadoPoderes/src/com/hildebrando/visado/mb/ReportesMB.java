@@ -4585,12 +4585,15 @@ public class ReportesMB {
 	public String obtenerRutaExcel() {
 		String res = "";
 
-		for (TiivsParametros tmp : pdfViewerMB.getLstParametros()) {
-			if (usuario.getUID().equals(tmp.getCodUsuario())) {
-				res = tmp.getRutaArchivoExcel();
-				break;
-			}
-		}
+		TiivsParametros tmp = pdfViewerMB.getParametros();
+		res = tmp.getRutaArchivoExcel();
+		
+//		for (TiivsParametros tmp : pdfViewerMB.getLstParametros()) {
+//			if (usuario.getUID().equals(tmp.getCodUsuario())) {
+//				res = tmp.getRutaArchivoExcel();
+//				break;
+//			}
+//		}
 
 		if (res.compareTo("") == 0) {
 			logger.debug("No se encontro el parametro de ruta para exportar excel para el usuario: "
