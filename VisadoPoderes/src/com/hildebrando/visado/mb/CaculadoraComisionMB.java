@@ -64,20 +64,28 @@ public class CaculadoraComisionMB {
 		}
 		
 		if(item1!=null && item1 == 1){
+			verItem2 = false;
 			verItem3 = true;
 			verItem4 = true;
 		} else if(item1!=null && item1 == 0) {
+			verItem2 = true;
 			verItem3 = false;
 			verItem4 = false;
+			
+			if(item3!=null && item3 == 1){
+				verItem4 = true;
+			} else if(item3!=null && item3 == 0) {
+				verItem4 = false;
+			}
+			
+			if(item4!=null && item4 == 1){
+				verItem3 = true;
+			} else if(item4!=null && item4 == 0) {
+				verItem3 = false;
+			}
 		}
 		
-		if(item3!=null && item3 == 1){
-			verItem2 = true;
-			verItem4 = true;
-		} else if(item3!=null && item3 == 0) {
-			verItem2 = false;
-			verItem4 = false;
-		}
+		
 		
 	}
 
@@ -112,16 +120,12 @@ public class CaculadoraComisionMB {
 		}
 	}	
 	
-	public void mirar(){
-		logger.info("item1:" + item1);
-		logger.info("item2:" + item2);
-		logger.info("item3:" + item3);
-		logger.info("item4:" + item4);
-		//this.calcularComision();
+	public void limpiar(){
 		item1 = null;
 		item2 = null;
 		item3 = null;
 		item4 = null;
+		resultado = new Double(0);
 		verItem1 = false;
 		verItem2 = false;
 		verItem3 = false;
