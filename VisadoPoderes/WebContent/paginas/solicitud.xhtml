@@ -549,11 +549,9 @@
 																	value="#{solicitudRegMB.objSolicBancaria.id.moneda}"
 																	immediate="true" disabled="false"
 																	valueChangeListener="#{solicitudRegMB.validarTipoCambioDisabled}">
-																	<p:ajax
-																		update=":formSolicitudRegistro:intImporte,
-															                :formSolicitudRegistro:intTipoCambio,
-															                :formSolicitudRegistro:txtImporteSoles"
-																		event="change"></p:ajax>
+																	<p:ajax update=":formSolicitudRegistro:intImporte,
+															                	   	:formSolicitudRegistro:intTipoCambio,
+															                		:formSolicitudRegistro:txtImporteSoles" event="change"></p:ajax>
 																	<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 																	<f:selectItems value="#{combosMB.lstMoneda}" var="varo"
 																		itemValue="#{varo.codMoneda}"
@@ -583,7 +581,7 @@
 																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
 																</h:inputText></td>
 																<p:remoteCommand id="valorImporteSoles" name="valorImporteSoles" actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}"
-																 update=":formSolicitudRegistro:txtImporteSoles">
+																 update=":formSolicitudRegistro:txtImporteSoles, :formSolicitudRegistro:intTipoCambio">
 																
 																</p:remoteCommand>
 
