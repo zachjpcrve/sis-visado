@@ -31,7 +31,6 @@ import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
-import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
 import com.hildebrando.visado.modelo.TiivsTiempo;
@@ -46,10 +45,9 @@ import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
 
 @ManagedBean(name = "combosMB")
 @SessionScoped
-public class CombosMB {
+public class CombosMB 
+{
  	public static Logger logger = Logger.getLogger(CombosMB.class);
-	
-	
 	private List<TiivsMultitabla> lstMultitabla;
 	private List<RangosImporte> lstRangosImporte;
 	private List<Estado> lstEstado;
@@ -75,19 +73,15 @@ public class CombosMB {
 	private List<TiivsMiembro> lstAbogados;
 	private List<TiivsTipoSolicitud> lstTipoSolicitud;
 	private List<TiivsTiempo> lstTiempo;
-	
-	
 	private TipoDocumento tmpTipoDoc;
 	private List<TipoDocumento> lstTipoDocumentosExtra;
 	private List<TipoDocumento> lstTipoDocumentosExtra2;
+	
 	public CombosMB() {
 		tmpTipoDoc = new TipoDocumento();
 		lstTipoDocumentosExtra = new ArrayList<TipoDocumento>();
 		lstTipoDocumentosExtra2 =  new ArrayList<TipoDocumento>();
-		
-		
-		
-		lstMultitabla = new ArrayList<TiivsMultitabla>();
+    	lstMultitabla = new ArrayList<TiivsMultitabla>();
 		lstRangosImporte = new ArrayList<RangosImporte>();
 		lstTipoDocumentos=new ArrayList<TipoDocumento>();
 		lstEstado = new ArrayList<Estado>();
