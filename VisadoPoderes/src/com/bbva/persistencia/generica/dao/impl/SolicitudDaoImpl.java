@@ -1352,30 +1352,29 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				
 				for(int i=0;i<=ResultList.size()-1;i++)
 				{
-					 row =  (Object[]) ResultList.get(i);
+					row =  (Object[]) ResultList.get(i);
 					
-				     if (!row[3].toString().equals(plazo))
-				     {
-				    	objAgrp = new AgrupacionPlazoDto();
-				    	tmpLista.add(objAgrp);
-				    	 
-				    	if(!row[3].toString().equals("B"))
-				    	{				    		
-				    		objAgrp.setPlazo("A tiempo");
-				    	} 
-				    	else 
-				    	{
-				    		objAgrp.setPlazo("Retrazo");
-				    	}
-				    	
-				    	plazo=row[3].toString();
-				     }
-				     
-				     if (!row[0].toString().equals(estudio))
-				     {
-				    	objAgrp.setEstudio(row[0].toString());
-				    	estudio=row[0].toString();
-				     }
+					if (!row[0].toString().equals(estudio) || !row[3].toString().equals(plazo)) 
+					{
+						objAgrp = new AgrupacionPlazoDto();
+						tmpLista.add(objAgrp);
+
+						objAgrp.setEstudio(row[0].toString());
+
+						estudio = row[0].toString();
+						plazo = row[3].toString();
+
+					}
+					 
+					if(!row[3].toString().equals("B"))
+			    	{				    		
+			    		objAgrp.setPlazo("A tiempo");
+			    		
+			    	} 
+			    	else 
+			    	{
+			    		objAgrp.setPlazo("Retrazo");
+			    	}					     				    
 				    
 				     String dia = row[2].toString();
 				    
