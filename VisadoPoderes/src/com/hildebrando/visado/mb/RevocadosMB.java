@@ -2138,7 +2138,7 @@ public class RevocadosMB {
 	}
 	
 	public void buscarRevocado() {
-		logger.info("############  buscarRevocado ###############");
+		logger.info("==== buscarRevocado() =====");
 		revocados = new ArrayList<Revocado>();
 		List<TiivsRevocado> tiivsrevocados = new ArrayList<TiivsRevocado>();
 		List<TiivsRevocado> lstRevocadosPre = new ArrayList<TiivsRevocado>();
@@ -2195,9 +2195,11 @@ public class RevocadosMB {
 		
 		try {
 			lstRevocadosPre = service.buscarDinamico(filtro.addOrder(Order.desc("codAgrup")).addOrder(Order.desc("fechaRevocatoria")));
+			if(lstRevocadosPre!=null){
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"revocados es:["+lstRevocadosPre.size()+"].");
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug("error al obtener la lista de revocados "+  e.toString());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"Revocados:"+ e);
 		}
 		
 		List<Integer> tmpAgrup = new ArrayList<Integer>();
