@@ -1403,6 +1403,7 @@ public class SeguimientoMB
 	{
 		exportarExcelPOI();
 		InputStream stream=null;
+		
 		try {
 			stream = new FileInputStream(rutaArchivoExcel);
 		} catch (FileNotFoundException e) {
