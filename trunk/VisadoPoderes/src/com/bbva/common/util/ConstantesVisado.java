@@ -5,6 +5,7 @@ public class ConstantesVisado {
 	public static final String CODIGO_MULTITABLA_CRITERIO = "T03";
 	public static final int NUMERO_DE_MONEDAS_POR_NIVEL = 3;
 	public static final String CODIGO_MULTITABLA_CLASIFICACION = "T13";
+	public static final String CODIGO_MULTITABLA_TIPO_REGISTRO = "T12";
 	
 	
 	public static final String CODIGO_MULTITABLA_DOCUMENTO = "T04";
@@ -492,7 +493,8 @@ public class ConstantesVisado {
 		public static final String OCURRE_ERROR_CARGA_LISTA = "Ha ocurrido un error al cargar la lista";
 		public static final String ACTUALIZA_OK = "Se ha actualizado correctamente ";
 		public static final String FECHAFIN_MENOR = "La Fecha Incio no puede ser mayor a la Fecha Fin ";
-		public static final String OCURRE_ERROR_CONSULT = OCURRE_ERROR+"al consultar";	
+		public static final String OCURRE_ERROR_CONSULT = OCURRE_ERROR+"al consultar";
+		public static final String SI_RESULTADOS = "Se han encontrado resultados";
 	}
 	static public class SEGURIDAD{
 		public static final String USER_ACCESO_OK = "El usuario ha accedido correctamente al sistema.";
