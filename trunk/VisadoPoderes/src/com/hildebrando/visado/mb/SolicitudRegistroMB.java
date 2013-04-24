@@ -25,7 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.common.util.EstilosNavegador;
+import com.bbva.consulta.reniec.ObtenerPersonaReniecService;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
+import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecServiceImpl;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Persona;
 import com.bbva.persistencia.generica.dao.Busqueda;
@@ -400,20 +402,22 @@ public class SolicitudRegistroMB {
 	}
 
 	public void buscarPersona() {
-		logger.info("******************** buscarPersona **********************");
-		logger.info("***objTiivsPersonaBusqueda.getTipDoi() "+ objTiivsPersonaBusqueda.getTipDoi());
-		logger.info("***objTiivsPersonaBusqueda.getNumDoi() "	+ objTiivsPersonaBusqueda.getNumDoi());
+		logger.info("=== buscarPersona() ===");
+		logger.info("[BUSQ_PERS]-TipoDoi:"+ objTiivsPersonaBusqueda.getTipDoi());
+		logger.info("[BUSQ_PERS]-NroDoi:"+ objTiivsPersonaBusqueda.getNumDoi());
 		try {
 			List<TiivsPersona> lstTiivsPersonaLocal = new ArrayList<TiivsPersona>();
+			//Se realiza la busqueda en BD Local
 			lstTiivsPersonaLocal = this.buscarPersonaLocal();
-			logger.info("lstTiivsPersonaLocal  "+ lstTiivsPersonaLocal.size());
+			
 			List<TiivsPersona> lstTiivsPersonaReniec = new ArrayList<TiivsPersona>();
 			if (lstTiivsPersonaLocal.size() == 0) {
+				//Se realiza la busqueda mediente servicio de RENIEC
 				lstTiivsPersonaReniec = this.buscarPersonaReniec();
 				if (lstTiivsPersonaReniec.size() == 0) {
 					objTiivsPersonaResultado = new TiivsPersona();
 					this.bBooleanPopup = false;
-					 Utilitarios.mensajeInfo("INFO","No se encontro resultados para la busqueda.");
+					 Utilitarios.mensajeInfo("INFO",ConstantesVisado.MENSAJE.NO_RESULTADOS+"para la busqueda.");
 				} else if (lstTiivsPersonaReniec.size() == 1) {
 					objTiivsPersonaResultado = lstTiivsPersonaReniec.get(0);
 					this.bBooleanPopup = false;
@@ -422,6 +426,7 @@ public class SolicitudRegistroMB {
 					lstTiivsPersonaResultado = lstTiivsPersonaReniec;
 				}
 			} else if (lstTiivsPersonaLocal.size() == 1) {
+				logger.info(ConstantesVisado.MENSAJE.SI_RESULTADOS+"lstTiivsPersonaLocal:  "+ lstTiivsPersonaLocal.size());
 				this.bBooleanPopup = false;
 				objTiivsPersonaResultado = lstTiivsPersonaLocal.get(0);
 			} else if (lstTiivsPersonaLocal.size() > 1) {
@@ -436,7 +441,7 @@ public class SolicitudRegistroMB {
 		
 		} catch (Exception e) {
 			Utilitarios.mensajeError("ERROR", e.getMessage());
-			e.printStackTrace();
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la persona (Local/Reniec)");
 		}
 	}
 
@@ -460,40 +465,45 @@ public class SolicitudRegistroMB {
 	public List<TiivsPersona> buscarPersonaReniec() throws Exception {
 		logger.debug("==== inicia buscarPersonaReniec() ==== ");
 		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
-		BResult resultado = null;
-		TiivsPersona objPersona = null;
-		Persona persona = null;
-		if (objTiivsPersonaBusqueda.getNumDoi() != null) {
-			logger.info("[RENIEC]-Dni:"+ objTiivsPersonaBusqueda.getNumDoi());
+		try{
+			BResult resultado = null;
+			TiivsPersona objPersona = null;
+			Persona persona = null;
+			if (objTiivsPersonaBusqueda.getNumDoi() != null) {
+				logger.info("[RENIEC]-DNI:"+ objTiivsPersonaBusqueda.getNumDoi());
 
-			//ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
-			//logger.debug("reniecService="+reniecService);
-			ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
-			resultado = reniecService.devolverPersonaReniecDNI("P013371", "0553",objTiivsPersonaBusqueda.getNumDoi());
-			logger.debug("[RENIEC]-resultado: "+resultado);
-			
-			if (resultado.getCode() == 0) {
+				ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
+				//ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
 				
-				persona = (Persona) resultado.getObject();
-				logger.info("PERSONA : " + persona.getNombreCompleto()
-						+ "\nDNI: " + persona.getNumerodocIdentidad());
-				objPersona = new TiivsPersona();
-				objPersona.setNumDoi(persona.getNumerodocIdentidad());
-				objPersona.setNombre(persona.getNombre());
-				objPersona.setApePat(persona.getApellidoPaterno());
-				objPersona.setApeMat(persona.getApellidoMaterno());
-				objPersona.setTipDoi(objTiivsPersonaBusqueda.getTipDoi());
-				objPersona.setCodCen(objTiivsPersonaBusqueda.getCodCen());
-				lstTiivsPersona.add(objPersona);
+				resultado = reniecService.devolverPersonaReniecDNI("P013371", "0553",objTiivsPersonaBusqueda.getNumDoi());
+				logger.debug("[RENIEC]-resultado: "+resultado.getCode());
+				
+				if (resultado.getCode() == 0) {
+					
+					persona = (Persona) resultado.getObject();
+					logger.info("PERSONA : " + persona.getNombreCompleto()
+							+ "\nDNI: " + persona.getNumerodocIdentidad());
+					objPersona = new TiivsPersona();
+					objPersona.setNumDoi(persona.getNumerodocIdentidad());
+					objPersona.setNombre(persona.getNombre());
+					objPersona.setApePat(persona.getApellidoPaterno());
+					objPersona.setApeMat(persona.getApellidoMaterno());
+					objPersona.setTipDoi(objTiivsPersonaBusqueda.getTipDoi());
+					objPersona.setCodCen(objTiivsPersonaBusqueda.getCodCen());
+					
+					lstTiivsPersona.add(objPersona);
+				}
 			}
+			logger.debug("==== saliendo de buscarPersonaReniec() ==== ");
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"");
 		}
-		
-		logger.debug("==== saliendo de buscarPersonaReniec() ==== ");
 		return lstTiivsPersona;
+		
 	}
 
 	public List<TiivsPersona> buscarPersonaLocal() throws Exception {
-		logger.info("Buscando en Persona Local");
+		logger.info("=== buscarPersonaLocal() ===");
 		boolean busco = false;
 		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
 		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
