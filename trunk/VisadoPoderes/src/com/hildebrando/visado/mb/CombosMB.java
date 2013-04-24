@@ -321,14 +321,14 @@ public class CombosMB {
         // Carga combo de Tipo de Solicitud
 		GenericDao<TiivsTipoSolicitud, Object> genTipoSolcDAO = (GenericDao<TiivsTipoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroTipoSolc = Busqueda.forClass(TiivsTipoSolicitud.class);
-
+		filtroTipoSolc.add(Restrictions.eq("activo", '1'));
+		
 		try {
 			lstTipoSolicitud = genTipoSolcDAO.buscarDinamico(filtroTipoSolc);
 			if(lstTipoSolicitud!=null){
 				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstTipoSolicitud es:["+lstTipoSolicitud.size()+"].");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de solicitud: "+e);
 		}
 		
