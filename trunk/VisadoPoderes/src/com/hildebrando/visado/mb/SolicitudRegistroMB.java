@@ -1684,10 +1684,12 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			this.objSolicBancaria.setTipoCambio(0.0);
 			bBooleanPopupTipoCambio=true;
 		}else{
+			this.objSolicBancaria.setTipoCambio(0.0);
 			bBooleanPopupTipoCambio=false;
 		
 		}
 		}
+		this.objSolicBancaria.setTipoCambio(0.0);
 	}
 
 	public void agregarOperacionBancaria() {
@@ -2095,12 +2097,18 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
 			objSolicBancaria.setImporteSoles(objSolicBancaria.getImporte());
+			objSolicBancaria.setTipoCambio(0.0);
 		}
 		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) {
+			
 			objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+			objSolicBancaria.setTipoCambio(0.0);
 		}
 		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) {
+			
 			objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+			objSolicBancaria.setTipoCambio(0.0);
+			
 		}
 		
 
