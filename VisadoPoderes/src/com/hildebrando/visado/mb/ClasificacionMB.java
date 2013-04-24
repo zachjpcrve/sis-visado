@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
@@ -25,6 +26,8 @@ public class ClasificacionMB {
 	private List<TiivsMultitabla> clasificacionEditar;
 	private boolean bMsgActualizar;
 	private boolean bValidacion;
+	@ManagedProperty(value = "#{combosMB}")
+	private CombosMB combosMB;
 
 	public ClasificacionMB() {
 		clasificacion = new TiivsMultitabla();
@@ -35,34 +38,50 @@ public class ClasificacionMB {
 		bValidacion = false;
 		listarClasificaciones();
 		obtenerMaximo();
+		combosMB= new CombosMB();
+		combosMB.cargarMultitabla();
+		// Carga lista de tipos de persona
+		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
 	}
 
-	public void obtenerMaximo() {
+	public void obtenerMaximo() 
+	{
 		logger.info("ClasificacionMB : obtenerMaximo");
 		String secuencial = null;
 		int parseSecuencial = 0;
+		
 		try {
 
 			secuencial = clasificacionService.obtenerMaximo();
 			parseSecuencial = Integer.parseInt(secuencial) + 1;
 			secuencial = String.valueOf(parseSecuencial);
 
-			if (secuencial.length() == 1) {
+			if (secuencial.length() == 1) 
+			{
 				secuencial = "000" + secuencial;
-			} else {
-				if (secuencial.length() == 2) {
+			} 
+			else 
+			{
+				if (secuencial.length() == 2) 
+				{
 					secuencial = "00" + secuencial;
-				} else {
-					if (secuencial.length() == 3) {
+				} 
+				else 
+				{
+					if (secuencial.length() == 3) 
+					{
 						secuencial = "0" + secuencial;
-					} else {
+					} 
+					else 
+					{
 						secuencial = secuencial;
 					}
 				}
-
 			}
+			
 			logger.info("ClasificacionMB : secuencial" + " " + secuencial);
 			clasificacion.getId().setCodElem(secuencial);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("ClasificacionMB :" + e.getLocalizedMessage());
@@ -80,25 +99,36 @@ public class ClasificacionMB {
 
 	}
 
-	public void registrar() {
+	public void registrar() 
+	{
 		logger.info("ClasificacionMB : Registrar");
-		clasificacion.getId().setCodMult(
-				ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION);
-		if (clasificacion.getValor1().isEmpty()) {
+		
+		clasificacion.getId().setCodMult(ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION);
+		
+		if (clasificacion.getValor1().isEmpty()) 
+		{
 			bValidacion = false;
-		} else {
+		} 
+		else 
+		{
 			bValidacion = true;
 		}
-		if (isbValidacion() == true) {
-			try {
+		
+		if (isbValidacion() == true) 
+		{
+			try 
+			{
 				clasificacionService.registrar(clasificacion);
-				if (isbMsgActualizar() == true) {
-					Utilitarios.mensajeInfo("NIVEL",
-							"Se actualizo correctamente");
-				} else {
-					Utilitarios.mensajeInfo("NIVEL",
-							"Se registro correctamente");
+				
+				if (isbMsgActualizar() == true) 
+				{
+					Utilitarios.mensajeInfo("NIVEL","Se actualizo correctamente");
+				} 
+				else 
+				{
+					Utilitarios.mensajeInfo("NIVEL","Se registro correctamente");
 				}
+				
 				clasificacion = new TiivsMultitabla();
 				TiivsMultitablaId clasificacionId = new TiivsMultitablaId();
 				clasificacion.setId(clasificacionId);
@@ -106,39 +136,44 @@ public class ClasificacionMB {
 				bMsgActualizar = false;
 				bValidacion = false;
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				logger.error("ClasificacionMB :" + e.getLocalizedMessage());
-				Utilitarios.mensajeError("Error",
-						"Error al registrar el Tipo de Clasificacion");
+				Utilitarios.mensajeError("Error","Error al registrar el Tipo de Clasificacion");
 			}
-		} else {
-			Utilitarios.mensajeError("Error",
-					"El campo descripcion es requerido");
+		} 
+		else 
+		{
+			Utilitarios.mensajeError("Error","El campo descripcion es requerido");
 		}
 
 	}
 
-	public void editarClasificacion() {
+	public void editarClasificacion() 
+	{
 		logger.info("ClasificacionMB : listarClasificacion");
-		Map<String, String> params = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap();
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String codMultitabla;
 		String codElemento;
 		codMultitabla = params.get("codMultitabla");
 		codElemento = params.get("codElemento");
-		try {
-			clasificacionEditar = clasificacionService.editarClasificacion(
-					codMultitabla, codElemento);
-			for (int i = 0; i < clasificacionEditar.size(); i++) {
+		
+		try 
+		{
+			clasificacionEditar = clasificacionService.editarClasificacion(codMultitabla, codElemento);
+			
+			for (int i = 0; i < clasificacionEditar.size(); i++) 
+			{
 				clasificacion.setId(clasificacionEditar.get(i).getId());
 				clasificacion.setValor1(clasificacionEditar.get(i).getValor1());
 				clasificacion.setValor2(clasificacionEditar.get(i).getValor2());
+				clasificacion.setValor3(clasificacionEditar.get(i).getValor3());
 			}
+			
 			bMsgActualizar = true;
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			logger.error("DocumentoMB : listarDocumentos: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoMB : listarDocumentos: " + ex.getLocalizedMessage());
 		}
 	}
 
@@ -189,5 +224,13 @@ public class ClasificacionMB {
 
 	public void setbValidacion(boolean bValidacion) {
 		this.bValidacion = bValidacion;
+	}
+
+	public CombosMB getCombosMB() {
+		return combosMB;
+	}
+
+	public void setCombosMB(CombosMB combosMB) {
+		this.combosMB = combosMB;
 	}
 }
