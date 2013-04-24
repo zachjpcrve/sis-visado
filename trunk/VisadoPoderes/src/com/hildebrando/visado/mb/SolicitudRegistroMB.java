@@ -26,7 +26,6 @@ import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.common.util.EstilosNavegador;
 import com.bbva.consulta.reniec.ObtenerPersonaReniecService;
-import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecServiceImpl;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Persona;
@@ -277,7 +276,42 @@ public class SolicitudRegistroMB {
         this.flagUpdatePersona=false;
 	}*/
 
-
+	public void actualizarClasificacion()
+	{
+		if (objTiivsPersonaResultado!=null)
+		{
+			if (objTiivsPersonaResultado.getTipPartic()!=null)
+			{
+				lstClasificacionPersona= new ArrayList<ComboDto>();
+				
+				GenericDao<TiivsMultitabla, Object> serviceClas = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+				Busqueda filtroTipoClas = Busqueda.forClass(TiivsMultitabla.class);
+				filtroTipoClas.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA));
+				filtroTipoClas.add(Restrictions.eq("valor3", objTiivsPersonaResultado.getTipPartic()));
+				filtroTipoClas.add(Restrictions.eq("valor2", "1"));
+				List<TiivsMultitabla> lstTmpMult = new ArrayList<TiivsMultitabla>();
+				
+				try
+				{
+					lstTmpMult=serviceClas.buscarDinamico(filtroTipoClas);
+				}
+				catch (Exception e) 
+				{
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de datos de Clasificacion de personas: "+e);
+				}
+				
+				for (TiivsMultitabla mult: lstTmpMult)
+				{
+					ComboDto t = new ComboDto();
+					t.setKey(mult.getId().getCodElem());
+					t.setDescripcion(mult.getValor1());
+					lstClasificacionPersona.add(t);
+				}
+				
+			}
+		}
+	}
+	
 	public String cargarUnicoPDF(String aliasArchivo) {
 		
 		if(file == null){
