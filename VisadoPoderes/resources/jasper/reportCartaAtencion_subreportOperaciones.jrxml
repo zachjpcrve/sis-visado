@@ -118,13 +118,4 @@
 	<pageFooter>
 		<band splitType="Stretch"/>
 	</pageFooter>
-	<summary>
-		<band height="43" splitType="Stretch">
-			<textField isStretchWithOverflow="true">
-				<reportElement x="5" y="10" width="469" height="21"/>
-				<textElement markup="html"/>
-				<textFieldExpression class="java.lang.String"><![CDATA[($P{PARAM_INSTRUCCION}!=null?$P{PARAM_INSTRUCCION}:" ") + "  "]]></textFieldExpression>
-			</textField>
-		</band>
-	</summary>
 </jasperReport>
