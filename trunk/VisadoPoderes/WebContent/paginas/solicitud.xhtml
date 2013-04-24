@@ -917,6 +917,7 @@
 									<f:selectItems value="#{combosMB.lstTipoRegistroPersona}"
 										var="lOf" itemValue="#{lOf.key}"
 										itemLabel="#{lOf.descripcion}" />
+									<p:ajax event="change" update=":formRegistrar:pnlRegistrar" listener="#{solicitudRegMB.actualizarClasificacion}"/>
 								</p:selectOneMenu>
 								<p:graphicImage value="/resources/images/pregunta.jpg"
 									id="toolcboTipoReg" />
