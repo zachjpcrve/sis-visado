@@ -84,7 +84,12 @@ public class JasperController {
 			FormatosDTO uno = new FormatosDTO();
 			uno.setNumeroSolicitud(SOLICITUD_TEMP.getCodSoli());
 			uno.setNumeroDiasForEjecucion(diasUtilesForEjecucion);
-			uno.setInstrucciones(obtenerInstrucciones(SOLICITUD_TEMP, ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02));
+			
+			String sInstr = obtenerInstrucciones(SOLICITUD_TEMP, ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+			if(sInstr.equals("")){
+				sInstr = obtenerInstrucciones(SOLICITUD_TEMP, ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
+			}			
+			uno.setInstrucciones(sInstr);
 			uno.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getCodOfi()+ " - " + SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
 
 			// Add lista datasource
