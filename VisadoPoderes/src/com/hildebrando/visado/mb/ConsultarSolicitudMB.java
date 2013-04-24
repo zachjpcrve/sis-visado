@@ -551,8 +551,7 @@ public class ConsultarSolicitudMB {
 		logger.info("" + solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
 		logger.info("" + solicitudRegistrarT.getRegAbogado());
 		try {
-			GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit
-					.getApplicationContext().getBean("genericoDao");
+			GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			solicitudRegistrarT = service.modificar(solicitudRegistrarT);
 			Utilitarios.mensajeInfo("INFO",
 					"Se realizó la reasignación manual Correctamente");
