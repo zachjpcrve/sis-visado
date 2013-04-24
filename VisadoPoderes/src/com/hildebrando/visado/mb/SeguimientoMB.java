@@ -336,6 +336,7 @@ public class SeguimientoMB
 					  SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 					  solicitud= solicitudService.obtenerTiivsSolicitud(solicitud);
 					  solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02);
+					  solicitud.setFechaEstado(new Timestamp(new Date().getTime()));
 					  solicitud.setDescEstado(Utilitarios.obternerDescripcionEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02));
 					  					  
 					  solicitudService.modificar(solicitud);
