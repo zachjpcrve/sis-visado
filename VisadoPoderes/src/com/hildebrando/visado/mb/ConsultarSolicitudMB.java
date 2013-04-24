@@ -1488,9 +1488,10 @@ public class ConsultarSolicitudMB {
 		{
 			GenericDao<TiivsHistSolicitud, Object> service = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
-			//filtro.createAlias("id", "hst");
+			
 			filtro.add(Restrictions.eq("id.codSoli", soli.getCodSoli()));
 			filtro.add(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02));
+			filtro.addOrder(Order.desc("fecha"));
 			
 			List<TiivsHistSolicitud> lstHstSolic = new ArrayList<TiivsHistSolicitud>();
 			
