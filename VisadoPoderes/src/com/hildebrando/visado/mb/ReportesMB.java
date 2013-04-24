@@ -132,6 +132,7 @@ public class ReportesMB {
 		lstSolicitudesTipoServicio = new ArrayList<SolicitudesTipoServicio>();
 		lstLiquidacion = new ArrayList<AgrupacionPlazoDto>();
 		oficina = new TiivsOficina1();
+		pdfViewerMB = new PDFViewerMB();
 
 		combosMB = new CombosMB();
 		combosMB.cargarMultitabla();
