@@ -30,16 +30,16 @@
 			<h:panelGrid id = "panelPrincipal" columns="1">
 			
 			<center><h3>CALCULADORA DE COMISIÓN</h3></center>
+		
+			<h:panelGrid id="pnlCabecera" columns="4" >
+				<p:spacer  width="270" height="10" />
+				<h:outputText>Si</h:outputText>
+				<p:spacer  width="10" height="10" />
+				<h:outputText>No</h:outputText>		
+			</h:panelGrid>		
 			
 			<h:panelGrid id="pnlCalculadora" columns="4" >
-				
-				<p:spacer width="1" height="1" />
-							
-				<h:outputText>Si No</h:outputText>				
-				
-				<p:spacer width="1" height="1" />
-
-				<p:spacer width="1" height="1" />
+								
 								
 				<h:outputText value="1. Por lo menos un Representado es de tipo Fallecido" />
 				
@@ -109,9 +109,7 @@
 
 			<p:spacer width="10" height="30" />
 
-			</h:panelGrid>
-			
-			<p:commandButton value="Limpiar" update="textResultado,pnlCalculadora" action="#{calculadoraMB.mirar}"></p:commandButton>
+			</h:panelGrid>						
 
 		</h:form>
 
