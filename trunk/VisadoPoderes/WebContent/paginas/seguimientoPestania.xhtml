@@ -127,20 +127,15 @@
 							<h:panelGrid columns="2">
 								<h:panelGrid columns="2">
 									<h:outputText  value="Estudio" styleClass="outputText"/>
-									<p:selectOneMenu id="cboEstudio" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio}" valueChangeListener="#{consultarSolicitudMB.abogadosXEstudios}"> 
-										 <p:ajax update=":formSolicitudSeguimiento:cboAbogado" event="change"> </p:ajax> 
+									<!--  <p:selectOneMenu id="cboEstudio" value="{consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio}" valueChangeListener="{consultarSolicitudMB.abogadosXEstudios}">
+									<p:ajax update=":formSolicitudSeguimiento:cboAbogado" event="change"> </p:ajax>  -->
+									<p:selectOneMenu id="cboEstudio" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsEstudio.codEstudio}">	
 										<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 										 <f:selectItems  value="#{consultarSolicitudMB.combosMB.lstEstudio}" var="lOf" itemValue="#{lOf.codEstudio}" itemLabel="#{lOf.desEstudio}" />
 									</p:selectOneMenu>
 								</h:panelGrid>
 								<p:commandButton id="btnAceptar" value="Aceptar" action="#{consultarSolicitudMB.reasignacionManual}" update=":formSolicitudSeguimiento:growlSolicitudSeguimiento"/>
-								<h:panelGrid columns="2">
-									<h:outputText  value="Abogado" styleClass="outputText"/>
-									<p:selectOneMenu id="cboAbogado" value="#{consultarSolicitudMB.solicitudRegistrarT.regAbogado}" required="false" requiredMessage="Seleccione al menos una Oficina" style="font-size:0.98em"> 
-										<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-										<f:selectItems  value="#{consultarSolicitudMB.lstAbogados}" var="lOf" itemValue="#{lOf.codMiembro}" itemLabel="#{lOf.codMiembro} - #{lOf.descripcion}" /> 
-									</p:selectOneMenu>
-								</h:panelGrid>
+								
 							</h:panelGrid>
 						</p:panel>
 					</td>
