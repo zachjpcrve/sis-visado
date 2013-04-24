@@ -2435,8 +2435,8 @@ public class RevocadosMB {
 	
 	public void limpiarFiltros()
 	{
-		setObjTiivsPersonaBusqueda(null);
-		setObjTiivsPersonaBusquedaNombre(null);
+		setObjTiivsPersonaBusqueda(new TiivsPersona());
+		setObjTiivsPersonaBusquedaNombre(new TiivsPersona());
 		setEstadoRevocado("");
 		setFechaInicio(null);
 		setFechaFin(null);
