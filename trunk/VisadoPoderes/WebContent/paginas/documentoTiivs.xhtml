@@ -142,25 +142,25 @@
 						<tr>
 							<td><h:outputText value="Descripción:  " /></td>
 							<td><p:inputText id="txtDescripcion" onkeypress="return validaLetraTilde(event,'0',this,'0');"
-									onblur="validaLetraTilde(event,'0',this,'1');"
-									value="#{documentoTiivsMB.documento.descripcion}" maxlength="35" /></td>
+									onblur="validaLetraTilde(event,'0',this,'1');" size="35"
+									value="#{documentoTiivsMB.documento.descripcion}" maxlength="200" /></td>
 						</tr>
 						<tr>
 							<td><h:outputText value="Nombre:  " /></td>
 							<td><p:inputText id="txtNombre" onkeypress="return validaLetraTilde(event,'0',this,'0');"
-									onblur="validaLetraTilde(event,'0',this,'1');"
+									onblur="validaLetraTilde(event,'0',this,'1');" size="35"
 									value="#{documentoTiivsMB.documento.nombre}" maxlength="7" /></td>
 						</tr>
 						<tr>
 							<td><h:outputText value="Formato  " /></td>
 							<td><p:inputText id="txtFormato" onkeypress="return validaLetraNumero(event,'0',this,'0');"
-									onblur="validaLetraTilde(event,'0',this,'1');"
+									onblur="validaLetraTilde(event,'0',this,'1');" size="35"
 									value="#{documentoTiivsMB.documento.formato}" maxlength="20" /></td>
 						</tr>
 						<tr>
 							<td><h:outputText value="Código de Barras  " /></td>
 							<td><p:inputText id="txtCodigoBarras" onkeypress="return validaLetraNumero(event,'0',this,'0');"
-									onblur="validaLetraNumero(event,'0',this,'1');"
+									onblur="validaLetraNumero(event,'0',this,'1');" size="35"
 									value="#{documentoTiivsMB.documento.codBarra}" maxlength="20" /></td>
 						</tr>
 						<tr>
