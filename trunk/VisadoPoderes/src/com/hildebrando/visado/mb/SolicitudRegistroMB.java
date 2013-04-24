@@ -208,13 +208,15 @@ public class SolicitudRegistroMB {
 		logger.info("Ancho Fieldset Datos Generales: " + ancho_FieldSet);
 		logger.info("Ancho Fieldset Datos Poderdantes: " + ancho_FieldSet_Poder);
 		
-		String sPerfilUsu=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		/*String sPerfilUsu=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
 		if (sPerfilUsu.equals(ConstantesVisado.SSJJ))
 		{
 			setFlagMostrarSOMOficina(false);
 			setFlagMostrarACOficina(true);
 		}
+		logger.info("desdefe feedfcdf " +this.solicitudRegistrarT.getTiivsOficina1().getDescripcionMostrar());
+		*/
 
 	}	
 	
@@ -888,6 +890,7 @@ public class SolicitudRegistroMB {
 
 	}
 	
+	
 	public boolean 	validarTipoDocumentos() {
 		logger.info("***************** validarTipoDocumentos ********************* ");
 		boolean bResult = true;
@@ -1264,7 +1267,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					this.solicitudRegistrarT.setTiivsOficina1(o);
 					break;
 				} else {
+					if(this.solicitudRegistrarT.getTiivsOficina1()==null){
 					this.solicitudRegistrarT.setTiivsOficina1(new TiivsOficina1());
+					}
 				}
 			}
 		
@@ -2324,10 +2329,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		List<TiivsSolicitud> lstSolicitud =new ArrayList<TiivsSolicitud>();
 		lstSolicitud=serviceNroVoucher.buscarDinamico(filtroNroVoucher);
 		if(lstSolicitud!=null){
+			logger.info("Tamanio de la lista de Solicitudes " +lstSolicitud.size());
 		for (TiivsSolicitud a : lstSolicitud) {
 			if(a!=null||!a.equals("")){
-			if(a.getNroVoucher()!=(null)){
-			if(a.getNroVoucher().equals(this.solicitudRegistrarT.getNroVoucher())){
+			if(a.getNroVoucher()!=null){
+			if(a.getNroVoucher().trim().equals(this.solicitudRegistrarT.getNroVoucher())){
 				booleano=false;
 				Utilitarios.mensajeInfo("INFO", mensaje);
 				break;
@@ -2469,7 +2475,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		//Validacion de numero de voucher
 		if (solicitudRegistrarT.getNroVoucher() == null ) {
 			mensaje = "Ingrese el Nro Voucher";
-			retorno =this.validarNroVoucher();;
+			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 			
 		}else if (solicitudRegistrarT.getNroVoucher().equals("")){
@@ -2481,6 +2487,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if(this.validarNroVoucher()==false){
+			retorno = false;
 		}
 				 
 		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
