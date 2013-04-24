@@ -261,6 +261,9 @@ public class SeguimientoMB
 		
 		try {
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
+			if(solicitudes!=null){
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"de solicitudes es:"+solicitudes.size());
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.debug("Error al buscar las solicitudes");
@@ -2677,7 +2680,7 @@ public class SeguimientoMB
 	public String buscarDesTerritorio(String codigoTerritorio) 
 	{
 		String resultado = "";
-		logger.debug("Buscando Territorio por codigo: " + codigoTerritorio);
+		//logger.debug("Buscando Territorio por codigo: " + codigoTerritorio);
 		// System.out.println("Buscando Territorio por codigo: " +
 		// codigoTerritorio);
 
