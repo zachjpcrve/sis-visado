@@ -275,6 +275,7 @@ public class JobsMB {
 		logger.info("*********************** actualizarEstadoVencidoSolicitud **************************");
 
 		solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02);
+		solicitud.setFechaEstado(new Timestamp(new Date().getTime()));
 		solicitud.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_VENCIDO_T02);
 		GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		service.modificar(solicitud);
