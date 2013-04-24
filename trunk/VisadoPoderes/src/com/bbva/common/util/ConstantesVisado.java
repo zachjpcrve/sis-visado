@@ -532,4 +532,12 @@ public class ConstantesVisado {
 		public static final java.lang.String CODIGO_MULTITABLA_DIAS_VENCIDOS = "0002"; //0002
 		public static final String COD_DIAS_FOR_EJECUCION = "0003";
 	}
+	
+	static public class TIPO_PARTICIPACION{
+		public static final java.lang.String CODIGO_REPRESENTANTE = "0002"; //0002
+		public static final java.lang.String CODIGO_REPRESENTADO  = "0001"; //0002
+		
+		public static final java.lang.String REPRESENTANTE="Representante";
+		public static final java.lang.String REPRESENTADO="Representado";
+	}
 }
