@@ -2210,6 +2210,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			
 			this.solicitudRegistrarT.setFecha(new Date());
 			this.solicitudRegistrarT.setEstado(this.solicitudRegistrarT.getEstado().trim());
+			this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 
 			logger.info("usuario.getUID() " + usuario.getUID());
 			this.solicitudRegistrarT.setRegUsuario(usuario.getUID());
@@ -2358,6 +2359,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			}
 		}
 		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02);
+		this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 		this.solicitudRegistrarT.setFechaRespuesta(time);
 		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date().getTime()));
 	}
