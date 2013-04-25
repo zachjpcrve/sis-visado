@@ -22,7 +22,7 @@
 			<p:outputPanel id="pnlBndSol">
 					<p:growl id="idMsmBndSolicitud" sticky="true" />
 					
-					<p:spacer height="5"/>
+					<p:spacer height="1"/>
 					
 					<table id="tablaBusSol" border="0" bordercolor="#00BFFF" >
 						<tbody>
@@ -113,7 +113,7 @@
 						</tbody>
 					</table>
 					
-					<p:spacer height="10"/>
+					<p:spacer height="1"/>
 					
 					<table border="0" bordercolor="#00BFFF">
 						<tbody>
@@ -249,7 +249,7 @@
 						</tbody>			
 					</table>
 					
-					<p:spacer height="20"/>
+					<p:spacer height="2"/>
 					
 					<table border="0">
 						<tr>
@@ -273,7 +273,7 @@
 						</tr>	
 					</table>	
 					
-					<p:spacer height="20"/>
+					<p:spacer height="15"/>
 					
 					<h:outputLabel value="#{seguimientoMB.textoTotalResultados}"/>
 					
@@ -295,9 +295,9 @@
 			                                       </p:commandLink>
 			                                </p:column>
 											
-											<p:column width="26" rendered="#{seguimientoMB.mostrarColumna}">
+											<p:column width="22" rendered="#{seguimientoMB.mostrarColumna}">
 												 <f:facet name="header">  
-											         <h:outputText value="Of." style="font-size: 9px"/>  
+											         <h:outputText value="Ofic." style="font-size: 9px"/>  
 											       </f:facet>  
 												<h:outputText value="#{tbl.tiivsOficina1.codOfi}" style="font-size: 9px"/>	
 												
@@ -345,7 +345,7 @@
 												<h:outputText value="#{tbl.tiivsEstudio.desEstudio}" style="font-size: 9px"/>	
 											</p:column>
 											
-											<p:column width="50">
+											<p:column width="45">
 												<f:facet name="header">  
 											         <h:outputText value="Nivel" style="font-size: 9px"/>  
 											    </f:facet>
@@ -359,7 +359,7 @@
 												<h:outputText value="#{tbl.fechaEnvio}" style="font-size: 9px"/>	
 											</p:column>
 											
-											<p:column width="60">
+											<p:column width="45">
 												<f:facet name="header">  
 											         <h:outputText value="Fecha Rpta" style="font-size: 9px"/>  
 											    </f:facet>
@@ -375,7 +375,7 @@
 												<h:outputText value="#{tbl.fechaEstado}" style="font-size: 9px"/>
 											</p:column>
 											
-											<p:column headerText="Seguimiento" width="55" exportable="false" style="font-size: 9px">
+											<p:column headerText="Seguimiento" width="50" exportable="false" style="font-size: 9px">
 		
 												<p:commandButton icon="ui-icon-document"
 													update=":frm:modalSeguimiento,:frm:datosSeguimiento"		
