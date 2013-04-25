@@ -1676,20 +1676,20 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	int icontSoles = 0, icontDolares = 0, icontEuros = 0;
 	double valorFinal = 0;
 	int item = 0;
-	
+	String AntiguoValorDelTipoCambio =null;
 	public void validarTipoCambioDisabled(ValueChangeEvent e){
 		if(e.getNewValue()!=null){
 		logger.info(" validarTipoCambioDisabled " +e.getNewValue());
+		AntiguoValorDelTipoCambio=(String) e.getOldValue();
 		if (e.getNewValue().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
 			this.objSolicBancaria.setTipoCambio(0.0);
 			bBooleanPopupTipoCambio=true;
 		}else{
-			this.objSolicBancaria.setTipoCambio(0.0);
+			//this.objSolicBancaria.setTipoCambio(0.0);
 			bBooleanPopupTipoCambio=false;
 		
 		}
 		}
-		this.objSolicBancaria.setTipoCambio(0.0);
 	}
 
 	public void agregarOperacionBancaria() {
@@ -2099,19 +2099,25 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			objSolicBancaria.setImporteSoles(objSolicBancaria.getImporte());
 			objSolicBancaria.setTipoCambio(0.0);
 		}
+		
 		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) {
 			
 			objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
-			objSolicBancaria.setTipoCambio(0.0);
+			
 		}
 		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) {
 			
 			objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
-			objSolicBancaria.setTipoCambio(0.0);
 			
 		}
-		
-
+		/** SAMIRA*/
+		if(!objSolicBancaria.getId().getMoneda().equals(AntiguoValorDelTipoCambio)&&!objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)&&AntiguoValorDelTipoCambio!=null){
+			logger.info("*** objSolicBancaria.getId().getMoneda() ***"+objSolicBancaria.getId().getMoneda());
+			logger.info("nuevoValorDelTipoCambio ********* " + AntiguoValorDelTipoCambio);
+			objSolicBancaria.setTipoCambio(0.0);
+			objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+			AntiguoValorDelTipoCambio=null;
+		}
 	}
 	public void editarOperacionBancaria() {
 		logger.info("**************************** editarOperacionBancaria ****************************");
