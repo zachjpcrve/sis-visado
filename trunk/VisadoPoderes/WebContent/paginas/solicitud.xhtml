@@ -929,14 +929,14 @@
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 								<f:selectItems value="#{solicitudRegMB.lstClasificacionPersona}"
 									var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" />
-								<f:selectItem itemLabel="Otro" itemValue="99" />
+								
 							</p:selectOneMenu>
 							<p:graphicImage value="/resources/images/pregunta.jpg"
 								id="toolcboClasificacion" />
 							<p:tooltip for="toolcboClasificacion" value="Clasificación"
 								showEffect="slide" />
-							<h:inputText styleClass="inputTextPopup" id="txtClasiSelect"
-								size="15" value="#{solicitudRegMB.objTiivsPersonaResultado.clasifPerOtro}" />
+							<!--  <h:inputText styleClass="inputTextPopup" id="txtClasiSelect"
+								size="15" value="#{solicitudRegMB.objTiivsPersonaResultado.clasifPerOtro}" />-->
 							<h:outputText id="outEmail" value="Email:" />
 							<h:inputText styleClass="inputTextPopup" id="txtEmail"
 								style="width:100px;"
