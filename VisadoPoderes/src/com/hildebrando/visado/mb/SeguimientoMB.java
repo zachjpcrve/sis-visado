@@ -188,51 +188,53 @@ public class SeguimientoMB
 	public void setearCamposxPerfil()
 	{
 		//Seteo de campo Oficina en caso de que el grupo del usuario logueado sea de Perfil Oficina
-		String grupoOfi = (String) Utilitarios.getObjectInSession("GRUPO_OFI");
+		//String grupoOfi = (String) Utilitarios.getObjectInSession("GRUPO_OFI");
 		String codOfi="";
 		String desOfi="";
 		String textoOficina="";
-				
-		if (grupoOfi!=null)
-		{
-			if (grupoOfi.compareTo("")!=0)
-			{
-				codOfi=usuario.getBancoOficina().getCodigo().trim();
-				desOfi=usuario.getBancoOficina().getDescripcion();
-				
-				TiivsTerritorio terr=buscarTerritorioPorOficina(codOfi);
-						
-				textoOficina =codOfi + " "  + desOfi+ " (" + terr.getCodTer() + "-" + terr.getDesTer() + ")";
-			}
-		}
-		
-		if (textoOficina.compareTo("")!=0)
-		{
-			logger.info("Texto Oficina a setear: " + textoOficina);
-			setTxtNomOficina(textoOficina);
-			
-			TiivsOficina1 tmpOfi = new TiivsOficina1();
-			tmpOfi.setCodOfi(usuario.getBancoOficina().getCodigo().trim());
-			tmpOfi.setDesOfi(textoOficina);
-			
-			setOficina(tmpOfi);
-			setBloquearOficina(true);
-		}
-		
-		//Seteo del campo Estudio en caso de que el grupo sea de Servicios Juridicos
-		String PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
 		if (PERFIL_USUARIO!=null)
 		{
-			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+			if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
+			{
+				codOfi=usuario.getBancoOficina().getCodigo().trim();
+				desOfi=usuario.getBancoOficina().getDescripcion();
+					
+				TiivsTerritorio terr=buscarTerritorioPorOficina(codOfi);
+							
+				textoOficina =codOfi + " "  + desOfi+ " (" + terr.getCodTer() + "-" + terr.getDesTer() + ")";
+			}
+			
+			if (textoOficina.compareTo("")!=0)
+			{
+				logger.info("Texto Oficina a setear: " + textoOficina);
+				setTxtNomOficina(textoOficina);
+				
+				TiivsOficina1 tmpOfi = new TiivsOficina1();
+				tmpOfi.setCodOfi(usuario.getBancoOficina().getCodigo().trim());
+				tmpOfi.setDesOfi(textoOficina);
+				
+				String nomDetallado = usuario.getBancoOficina().getCodigo().trim() + "-" + usuario.getBancoOficina().getDescripcion().trim();
+				
+				logger.debug("Nombre Detallado de Oficina: " + nomDetallado);
+				
+				tmpOfi.setNombreDetallado(nomDetallado);
+							
+				setOficina(tmpOfi);
+				setBloquearOficina(true);
+			}
+			
+			if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ))
+			{
 				setMostrarEstudio(true);
 				setMostrarFechaEstado(true);
 			}
-			else{
+			else
+			{
 				setMostrarEstudio(false);
 				setMostrarFechaEstado(false);
 			}
-		}
+		}		
 	}	
 	
 	// Descripcion: Metodo que se encarga de cargar las solicitudes en la grilla
@@ -244,18 +246,23 @@ public class SeguimientoMB
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
 		filtroSol.setMaxResults(1000);
+				
+		if (PERFIL_USUARIO!=null)
+		{
+			if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) )
+			{
+				filtroSol.createAlias(ConstantesVisado.NOM_TBL_ESTUDIO,	ConstantesVisado.ALIAS_TBL_ESTUDIO);
+				filtroSol.add(Restrictions.eq(ConstantesVisado.ALIAS_COD_ESTUDIO, buscarEstudioxAbogado()));
+			}
+			else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
+			{
+				filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
+				setBloquearOficina(true);
+				setMostrarColumna(false);
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, usuario.getBancoOficina().getCodigo().trim()));
+			}
+		}
 		
-		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) )
-		{
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_ESTUDIO,	ConstantesVisado.ALIAS_TBL_ESTUDIO);
-			filtroSol.add(Restrictions.eq(ConstantesVisado.ALIAS_COD_ESTUDIO, buscarEstudioxAbogado()));
-		}
-		else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
-		{
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
-			setBloquearOficina(true);
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, usuario.getBancoOficina().getCodigo().trim()));
-		}
 		
 		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 		
@@ -272,16 +279,16 @@ public class SeguimientoMB
 		logger.info("Numero de solicitudes encontradas: " + solicitudes.size());
 
 		actualizarDatosGrilla();
-		
+		/*
 		String grupoOfi = (String) Utilitarios.getObjectInSession("GRUPO_OFI");
 		
 		if (grupoOfi!=null)
 		{
 			if (grupoOfi.compareTo("")!=0)
 			{
-				setMostrarColumna(false);
+				
 			}
-		}
+		}*/
 	}
 	
 	public String buscarEstudioxAbogado()
@@ -2596,9 +2603,11 @@ public class SeguimientoMB
 			if (oficina.getCodOfi() != null) 
 			{
 				String texto = oficina.getDesOfi();
-
+				
 				if (texto.contains(query.toUpperCase())) 
 				{
+					oficina.setNombreDetallado(oficina.getCodOfi()+"-"+oficina.getDesOfi());
+					
 					results.add(oficina);
 				}
 			}
