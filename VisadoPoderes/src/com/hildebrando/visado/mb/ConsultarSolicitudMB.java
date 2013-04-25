@@ -1572,8 +1572,7 @@ public class ConsultarSolicitudMB {
 	                    	 actualizarBandeja=true;
 	                    	 Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 						}else{
-							if(this.agregarNiveles(solicitudRegistrarT)){
-								this.bSeccionDictaminar = false;
+							if(this.agregarNiveles(solicitudRegistrarT)){								
 								this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 								this.registrarHistorial(solicitudRegistrarT);
 								actualizarBandeja=true;
@@ -1608,8 +1607,7 @@ public class ConsultarSolicitudMB {
                     	 Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
                     	 
 					}else{
-						if(this.agregarNiveles(solicitudRegistrarT)){
-							this.bSeccionDictaminar = false;
+						if(this.agregarNiveles(solicitudRegistrarT)){							
 							this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 							this.registrarHistorial(solicitudRegistrarT);
 							actualizarBandeja=true;
@@ -1771,8 +1769,10 @@ public class ConsultarSolicitudMB {
 		} else if (lstCodNivel.size() == 0) {
 			if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
 				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+				solicitud.setFechaEstado(new Timestamp(new Date().getTime()));
 			} else if (this.valorDictamen.trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
 				solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
+				solicitud.setFechaEstado(new Timestamp(new Date().getTime()));
 			}
 			retorno=true;
 		}
