@@ -32,21 +32,19 @@ public class TipoSolicitudDocumentoConverter
 
   public TipoSolicitudDocumentoConverter()
   {
-	if(documentosDB==null || documentosDB.isEmpty()){
-	    ListasIniciales lst = (ListasIniciales)SpringInit.getApplicationContext().getBean("metodoInicial");
-	    try
-	    {
-	      GenericDao genTipoSolcDocumDAO = (GenericDao)SpringInit.getApplicationContext().getBean("genericoDao");
-	      Busqueda filtroTipoSolcDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);
-	      filtroTipoSolcDoc.add(Restrictions.isNotNull("id"));
-	
-	      documentosDB = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
-	      //logger.info("****** " + documentosDB.size());
-	
-	    } catch (Exception e) {
-	      e.printStackTrace();
-	    }
-	}
+		try {
+			GenericDao genTipoSolcDocumDAO = (GenericDao) SpringInit
+					.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroTipoSolcDoc = Busqueda
+					.forClass(TiivsTipoSolicDocumento.class);
+			filtroTipoSolcDoc.add(Restrictions.isNotNull("id"));
+			documentosDB = genTipoSolcDocumDAO
+					.buscarDinamico(filtroTipoSolcDoc);
+
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION
+					+ " al obtener lista de documentos", e);
+		}
   }
 
   public Object getAsObject(FacesContext arg0, UIComponent arg1, String submittedValue)
