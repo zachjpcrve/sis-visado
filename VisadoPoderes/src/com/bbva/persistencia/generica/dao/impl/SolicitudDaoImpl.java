@@ -1610,7 +1610,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					totalMes += tmp.getSubTotalMes();
 					costo += tmp.getCosto();
 					honorarios += tmp.getHonorarios() ;
-					imp += tmp.getImpuesto() ;
+					imp +=tmp.getImpuesto() ;
 					total += tmp.getgTotal();
 				}
 				
@@ -1648,7 +1648,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				subTotales.setSubTotalMes(totalMes);
 				subTotales.setCosto(costo);
 				subTotales.setHonorarios(honorarios);
-				subTotales.setImpuesto(imp);
+				subTotales.setImpuesto(Utilitarios.redondear(imp));
 				subTotales.setgTotal(total);				
 				
 				tmpLista.add(subTotales);
