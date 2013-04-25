@@ -101,7 +101,7 @@ public class PDFViewerMB {
 		IILDPeUsuario usuario = new IILDPeUsuario(); 
 		usuario=(IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		
-		if (usuario.getUID()!=null)
+		if (usuario!=null)
 		{
 			setCodUsuario(usuario.getUID());
 		}
