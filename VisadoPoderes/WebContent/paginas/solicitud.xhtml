@@ -110,8 +110,7 @@
 																<td><p:tooltip for="tooltxtEstado"
 																		value="Estado solicitud" showEffect="slide" /></td>
 
-																<td><h:outputText styleClass="outputText"
-																		id="txtOficina" value="Oficina:" /></td>
+																<td><h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
 																<td style="font-size: 0.9em">
 																	<p:autoComplete id="acNomOFina" value="#{solicitudRegMB.oficina}"
 																		completeMethod="#{solicitudRegMB.completeNomOficina}" var="ofi"
@@ -122,7 +121,7 @@
 																	<h:inputText styleClass="inputText" rendered="#{solicitudRegMB.flagMostrarSOMOficina}"
 																		id="cboOficina" style="width:100px;"
 																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.descripcionMostrar}"
-																		disabled="false" readonly="true" />			
+																		disabled="true" readonly="true" />			
 																	<!--  itemLabel="#{ofi.codOfi}-#{ofi.desOfi}(#{ofi.tiivsTerritorio.codTer}-#{ofi.tiivsTerritorio.desTer})" itemValue="#{ofi}" rendered="#{solicitudRegMB.flagMostrarACOficina}"
 																    value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.desOfi}(#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.codTer}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.desTer}"
 																	<p:selectOneMenu

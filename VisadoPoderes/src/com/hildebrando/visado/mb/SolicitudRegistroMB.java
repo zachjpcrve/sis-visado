@@ -207,16 +207,14 @@ public class SolicitudRegistroMB {
 		logger.info("Ancho Fieldset Datos Generales: " + ancho_FieldSet);
 		logger.info("Ancho Fieldset Datos Poderdantes: " + ancho_FieldSet_Poder);
 		
-		/*String sPerfilUsu=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		String sPerfilUsu=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
 		if (sPerfilUsu.equals(ConstantesVisado.SSJJ))
 		{
 			setFlagMostrarSOMOficina(false);
 			setFlagMostrarACOficina(true);
 		}
-		logger.info("desdefe feedfcdf " +this.solicitudRegistrarT.getTiivsOficina1().getDescripcionMostrar());
-		*/
-
+		//logger.info("desdefe feedfcdf " +this.solicitudRegistrarT.getTiivsOficina1().getDescripcionMostrar());
 	}	
 	
 	public List<TiivsOficina1> completeNomOficina(String query) 
