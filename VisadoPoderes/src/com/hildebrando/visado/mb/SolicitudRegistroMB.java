@@ -628,7 +628,7 @@ public class SolicitudRegistroMB {
 					if (objTiivsPersonaResultado.getTipPartic().equals(p.getKey())) {objTiivsPersonaResultado.setsDesctipPartic(p.getDescripcion());}}
 				for (ComboDto p : combosMB.getLstClasificacionPersona()) {
 					if (objTiivsPersonaResultado.getClasifPer().equals(p.getKey())) {objTiivsPersonaResultado.setsDescclasifPer(p.getDescripcion());}
-					if (objTiivsPersonaResultado.getClasifPer().equals("99")) {objTiivsPersonaResultado.setsDescclasifPer(objTiivsPersonaResultado.getClasifPerOtro());}
+					//if (objTiivsPersonaResultado.getClasifPer().equals("99")) {objTiivsPersonaResultado.setsDescclasifPer(objTiivsPersonaResultado.getClasifPerOtro());}
 				}
 				
 				/** Se agrega a la lista de personas en la grilla*/				
