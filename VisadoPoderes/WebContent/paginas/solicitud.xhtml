@@ -460,8 +460,9 @@
 																		update=":formSolicitudRegistro:idMsmSolicitudRegistro,
 																		:formSolicitudRegistro:listDocumentosXTipoSoli,
 																		:formSolicitudRegistro:idfileUpload,
-																		:formSolicitudRegistro:cboTipoSolicitud"
-																		ajax="false"
+																		:formSolicitudRegistro:cboTipoSolicitud,
+																		:formSolicitudRegistro:tblDocumentos"
+																		ajax="false" 
 																		action="#{solicitudRegMB.agregarDocumentosXTipoSolicitud}" />
 																</td>
 
@@ -498,11 +499,10 @@
 																				update=":formSolicitudRegistro:listDocumentosXTipoSoli,
 																 				:formSolicitudRegistro:tblDocumentos,
 																 				:formSolicitudRegistro:idCodigoDocumentoSelected"
-																				ajax="true" id="iconOnly"
+																				ajax="true" async="true" id="iconOnly"
 																				icon="ui-icon-circle-close"
 																				disabled="#{s.alias.isEmpty()?true:false}"
 																				oncomplete="return appletEliminarDocumento();">
-																				<!-- disabled="{s.alias.isEmpty()?true:false}" -->
 																				<f:setPropertyActionListener
 																					target="#{solicitudRegMB.selectedDocumentoDTO}"
 																					value="#{s}" for="del">
