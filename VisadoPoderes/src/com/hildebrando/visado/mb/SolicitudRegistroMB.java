@@ -1283,10 +1283,14 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				+ "  ******* grupoOfi ******** " + grupoOfi);
 		// if (grupoAdm == null && grupoOfi!= null) {
 		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
-		logger.debug("usuario en session? --> " + usuario.getNombre());
-		logger.debug("CodOfi: " + usuario.getBancoOficina().getCodigo().trim());
-		logger.debug("DesOfi: "+ usuario.getBancoOficina().getDescripcion().trim());
-
+		
+		if (usuario!=null)
+		{
+			logger.debug("usuario en session? --> " + usuario.getNombre());
+			logger.debug("CodOfi: " + usuario.getBancoOficina().getCodigo().trim());
+			logger.debug("DesOfi: "+ usuario.getBancoOficina().getDescripcion().trim());
+		}
+		
 		TiivsOficina1 oficina = new TiivsOficina1();
 		oficina.setCodOfi(usuario.getBancoOficina().getCodigo());
 
