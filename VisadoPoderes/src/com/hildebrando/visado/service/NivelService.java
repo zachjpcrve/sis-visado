@@ -200,9 +200,10 @@ public class NivelService {
 		List<TiivsNivel> lista = new ArrayList<TiivsNivel>();
 		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
+		filtro.add(Restrictions.eq("codNiv", codigo));
 		
 		try{
-			lista = service.buscarDinamico(filtro.add(Restrictions.eq("codNiv", codigo)));
+			lista = service.buscarDinamico(filtro);
 		}catch(Exception ex){
 			ex.printStackTrace();
 			logger.error("NivelService : buscarNivelxCodigo: "+ ex.getLocalizedMessage());

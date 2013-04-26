@@ -246,7 +246,7 @@ public class SeguimientoMB
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
 		filtroSol.setMaxResults(1000);
-				
+						
 		if (PERFIL_USUARIO!=null)
 		{
 			if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) )
@@ -262,8 +262,7 @@ public class SeguimientoMB
 				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, usuario.getBancoOficina().getCodigo().trim()));
 			}
 		}
-		
-		
+				
 		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 		
 		try {
@@ -567,10 +566,22 @@ public class SeguimientoMB
 			}
 			
 			tmpSol.setTxtOpeBan(cadena);
-			String cadNiveles = "";			
+			String cadNiveles = "";
+			/*int codNivelTMP = 0;
 			
-			for (Iterator iterator = tmpSol.getTiivsSolicitudNivels().iterator(); iterator.hasNext();) {
+			//Ordenar niveles
+			for (Iterator iterator = tmpSol.getTiivsSolicitudNivels().iterator(); iterator.hasNext();) 
+			{
 				TiivsSolicitudNivel tmp = (TiivsSolicitudNivel) iterator.next();
+				
+				
+			}*/
+			
+			
+			for (Iterator iterator = tmpSol.getTiivsSolicitudNivels().iterator(); iterator.hasNext();) 
+			{
+				TiivsSolicitudNivel tmp = (TiivsSolicitudNivel) iterator.next();
+							
 				String nivel = nivelService.buscarNivelxCodigo(tmp.getCodNiv());
 				
 				if (cadNiveles.length()>0)
@@ -587,7 +598,6 @@ public class SeguimientoMB
 			{
 				cadNiveles = cadNiveles.substring(0,cadNiveles.length()-1);
 			}
-						
 			
 			//logger.info("Niveles encontrados:" + cadNiveles);
 			
