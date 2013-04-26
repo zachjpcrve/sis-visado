@@ -837,7 +837,7 @@
 						</h:panelGrid>
 					</p:panel>
 					
-					<p:panel header="Nuevo Registro">
+					<p:panel id="pnlNuevo" header="Nuevo Registro">
 				
 						<h:panelGrid columns="8" id="gridApodPodEd2">
 							<h:outputText id="outTipoDoi2" value="T. DOI/C *:" style="color:red"/>
@@ -914,7 +914,7 @@
 									<f:selectItems value="#{combosMB.lstTipoRegistroPersona}"
 										var="lOf" itemValue="#{lOf.key}"
 										itemLabel="#{lOf.descripcion}" />
-									<p:ajax event="change" update=":formRegistrar:pnlRegistrar" listener="#{solicitudRegMB.actualizarClasificacion}"/>
+									<p:ajax event="change" update=":formRegistrar:cboClasificacion" listener="#{solicitudRegMB.actualizarClasificacion}"/>
 								</p:selectOneMenu>
 								<p:graphicImage value="/resources/images/pregunta.jpg"
 									id="toolcboTipoReg" />
