@@ -20,7 +20,7 @@ public class TiivsHistSolicitud implements java.io.Serializable {
 	private String nivel;
 	private String nivelEstado;
 	private String nivelRol;
-	private char flagRevocado;
+	private String flagRevocado;
 	
 	public TiivsHistSolicitud() {
 	}
@@ -126,11 +126,11 @@ public class TiivsHistSolicitud implements java.io.Serializable {
 		this.nivelRol = nivelRol;
 	}
 
-	public char getFlagRevocado() {
+	public String getFlagRevocado() {
 		return this.flagRevocado;
 	}
 
-	public void setFlagRevocado(char flagRevocado) {
+	public void setFlagRevocado(String flagRevocado) {
 		this.flagRevocado = flagRevocado;
 	}
 	
