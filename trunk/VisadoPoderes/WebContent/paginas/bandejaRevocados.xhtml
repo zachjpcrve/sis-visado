@@ -693,7 +693,7 @@
 				
 				<p:commandButton value="Sí" process=":frmPendEdit:dtClientes"
 					actionListener="#{revocadosMB.guardarApodPod}" ajax="true"
-					update=":frmPendEdit:dtClientes, :frmCliente:idDlgCliente" oncomplete="cfdGuardar.hide();dlgApoPodPendEdit.hide();">
+					update=":frmPendEdit:dtClientes, :frmConsRev:pnlTablaRevocados :frmCliente:idDlgCliente" oncomplete="cfdGuardar.hide();dlgApoPodPendEdit.hide();">
 				</p:commandButton>
 
 				<p:commandButton value="No" onclick="cfdGuardar.hide();">
