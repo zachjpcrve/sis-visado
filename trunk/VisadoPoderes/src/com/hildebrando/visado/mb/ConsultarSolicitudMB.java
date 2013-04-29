@@ -1059,7 +1059,7 @@ public class ConsultarSolicitudMB {
 
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
-				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
 				this.bMostrarCartaRevision = false;
 				this.bMostrarCartaImprocedente = false;
 				this.bSeccionDocumentos = true;
@@ -1073,9 +1073,9 @@ public class ConsultarSolicitudMB {
 				
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = true;
-				this.bMostrarCartaRechazo = false;
-				this.bMostrarCartaRevision = false;
-				this.bMostrarCartaImprocedente = false;
+				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
+				this.bMostrarCartaRevision = this.validarSiDictaminadoEnRevision();
+				this.bMostrarCartaImprocedente = this.validarSiDictaminadoEnImprocedente();
 				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = true;
 				this.bSeccionComentario = true;
@@ -1088,9 +1088,9 @@ public class ConsultarSolicitudMB {
 
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = true;
-				this.bMostrarCartaRechazo = false;
-				this.bMostrarCartaRevision = false;
-				this.bMostrarCartaImprocedente = false;
+				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
+				this.bMostrarCartaRevision = this.validarSiDictaminadoEnRevision();
+				this.bMostrarCartaImprocedente = this.validarSiDictaminadoEnImprocedente();
 				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = false;
 				this.bSeccionComentario = false;
@@ -1308,7 +1308,7 @@ public class ConsultarSolicitudMB {
 				
 				this.bMostrarSolicitudVisado = false;
 				this.bMostrarCartaAtencion = false;
-				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
 				this.bMostrarCartaRevision = false;
 				this.bMostrarCartaImprocedente = false;
 				this.bSeccionDocumentos = false;
@@ -1324,7 +1324,7 @@ public class ConsultarSolicitudMB {
 				this.bMostrarCartaAtencion = true;
 				this.bMostrarCartaRechazo = true;
 				this.bMostrarCartaRevision = true;
-				this.bMostrarCartaImprocedente = false;
+				this.bMostrarCartaImprocedente = this.validarSiDictaminadoEnImprocedente();
 				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = true;
 				this.bSeccionComentario = true;
@@ -1339,7 +1339,7 @@ public class ConsultarSolicitudMB {
 				this.bMostrarCartaAtencion = true;
 				this.bMostrarCartaRechazo = true;
 				this.bMostrarCartaRevision = true;
-				this.bMostrarCartaImprocedente = false;
+				this.bMostrarCartaImprocedente = this.validarSiDictaminadoEnImprocedente();
 				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = false;
 				this.bSeccionComentario = false;
@@ -1400,7 +1400,7 @@ public class ConsultarSolicitudMB {
 				
 				this.bMostrarSolicitudVisado = false;
 				this.bMostrarCartaAtencion = false;
-				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
 				this.bMostrarCartaRevision = false;
 				this.bMostrarCartaImprocedente = false;
 				this.bSeccionDocumentos = false;
@@ -1414,29 +1414,30 @@ public class ConsultarSolicitudMB {
 				
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = true;
-				this.bMostrarCartaRechazo = false;
+				/* MEJORA */
+				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
 				this.bMostrarCartaRevision = false;
-				this.bMostrarCartaImprocedente = false;
+				this.bMostrarCartaImprocedente = this.validarSiDictaminadoEnImprocedente();
 				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = false;
 				this.bSeccionComentario = false;
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
-				this.bMostrarGenerarRevision = false;
+				this.bMostrarGenerarRevision = this.validarSiDictaminadoEnRevision();
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
-				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
 				this.bMostrarCartaRevision = false;
-				this.bMostrarCartaImprocedente = false;
+				this.bMostrarCartaImprocedente = this.validarSiDictaminadoEnImprocedente();
 				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = false;
 				this.bSeccionComentario = false;
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
-				this.bMostrarGenerarRevision = false;
+				this.bMostrarGenerarRevision = this.validarSiDictaminadoEnRevision();
 				
 			} 
 			
@@ -1446,7 +1447,7 @@ public class ConsultarSolicitudMB {
 				
 				this.bMostrarSolicitudVisado = false;
 				this.bMostrarCartaAtencion = false;
-				this.bMostrarCartaRechazo = false;
+				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
 				this.bMostrarCartaRevision = false;
 				this.bMostrarCartaImprocedente = false;
 				this.bSeccionDocumentos = false;
@@ -1460,9 +1461,9 @@ public class ConsultarSolicitudMB {
 				
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = true;
-				this.bMostrarCartaRechazo = false;
-				this.bMostrarCartaRevision = false;
-				this.bMostrarCartaImprocedente = false;
+				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
+				this.bMostrarCartaRevision = this.validarSiDictaminadoEnRevision();
+				this.bMostrarCartaImprocedente = this.validarSiDictaminadoEnImprocedente();
 				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = false;
 				this.bSeccionComentario = false;
@@ -1474,9 +1475,9 @@ public class ConsultarSolicitudMB {
 				
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = true;
-				this.bMostrarCartaRechazo = false;
-				this.bMostrarCartaRevision = false;
-				this.bMostrarCartaImprocedente = false;
+				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
+				this.bMostrarCartaRevision = this.validarSiDictaminadoEnRevision();
+				this.bMostrarCartaImprocedente = this.validarSiDictaminadoEnImprocedente();
 				this.bSeccionDocumentos = true;
 				this.bSeccionDictaminar = false;
 				this.bSeccionComentario = false;
@@ -1485,6 +1486,64 @@ public class ConsultarSolicitudMB {
 				this.bMostrarGenerarRevision = false;				
 			} 
 		}
+	}
+	/* Validar si la solicitud fue dictaminado rechazado*/
+	public boolean validarSiDictaminadoRechazado() throws Exception{
+		    boolean retorno=false;
+		    String sCodSolicitud = solicitudRegistrarT.getCodSoli();
+			GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
+			filtroHist.add(Restrictions.eq("id.codSoli", sCodSolicitud));
+			filtroHist.add(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02));
+			/** RECHAZADO PERO X DICTAMINACION , NO VIA MANUAL**/
+			filtroHist.add(Restrictions.eq("flagRevocado", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
+			List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
+			lstHist = histDAO.buscarDinamico(filtroHist);
+			if(lstHist!=null){
+				if(lstHist.size()>0){
+					/** Existe en el historico un rechazado*/
+					 retorno=true;
+				}
+			}
+			return retorno;
+	}
+	/* Validar si la solicitud fue dictaminado en Revision*/
+	public boolean validarSiDictaminadoEnRevision() throws Exception{
+		    boolean retorno=false;
+		    String sCodSolicitud = solicitudRegistrarT.getCodSoli();
+			GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
+			filtroHist.add(Restrictions.eq("id.codSoli", sCodSolicitud));
+			filtroHist.add(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02));
+
+			List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
+			lstHist = histDAO.buscarDinamico(filtroHist);
+			if(lstHist!=null){
+				if(lstHist.size()>0){
+					/** Existe en el historico un rechazado*/
+					 retorno=true;
+				}
+			}
+			return retorno;
+	}
+	/* Validar si la solicitud fue dictaminado en Improcedente*/
+	public boolean validarSiDictaminadoEnImprocedente() throws Exception{
+		    boolean retorno=false;
+		    String sCodSolicitud = solicitudRegistrarT.getCodSoli();
+			GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
+			filtroHist.add(Restrictions.eq("id.codSoli", sCodSolicitud));
+			filtroHist.add(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02));
+
+			List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
+			lstHist = histDAO.buscarDinamico(filtroHist);
+			if(lstHist!=null){
+				if(lstHist.size()>0){
+					/** Existe en el historico un rechazado*/
+					 retorno=true;
+				}
+			}
+			return retorno;
 	}
 	
 	public IILDPeUsuario obtenerOrigenEstadoReservado(TiivsSolicitud soli)
