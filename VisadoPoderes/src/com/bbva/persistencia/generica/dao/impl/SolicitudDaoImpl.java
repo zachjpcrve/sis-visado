@@ -1957,7 +1957,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<SolicitudesOficina> obtenerListarTotalSolicitudesxEstado(TiivsSolicitud solicitud, Date dFechaInicio, Date dFechaFin) throws Exception
+	public List<SolicitudesOficina> obtenerListarTotalSolicitudesxEstado(TiivsSolicitud solicitud,String territorio, Date dFechaInicio, Date dFechaFin) throws Exception
 	{	
 		logger.info("***************En el obtenerListarTotalSolicitudesxEstado*************************");
 		String sql ="";
@@ -1969,13 +1969,27 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			//Aplicando filtros
 			String sWhere = "where d.cod_mult='T02'";
 			
-			if (solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer()!=null)
+			/*if (solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer()!=null)
 			{
 				logger.info("Buscando por territorio: " + solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer());
 				
 				sWhere += " and c.cod_ter = '" + solicitud.getTiivsOficina1().getTiivsTerritorio().getCodTer() + "' ";
-			}
+			}*/
 			
+			if (territorio!="")
+			{
+				logger.info("Filtro de territorio: " + territorio);
+				
+				/*if (sWhere.compareTo("")!=0)
+				{
+					sWhere += " and ofi.cod_ter = '" + territorio + "' ";
+				}
+				else
+				{*/
+					sWhere += " and c.cod_ter = '" + territorio + "' ";
+				//}
+			}
+						
 			if (solicitud.getTiivsOficina1().getCodOfi()!=null)
 			{
 				if (solicitud.getTiivsOficina1().getCodOfi()!=null && solicitud.getTiivsOficina1().getCodOfi().compareTo("")!=0)
@@ -2090,7 +2104,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
 					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0008' " + sCadFecha +
-					"      group by a.cod_ofi) ven on a.cod_ofi = ven.cod_ofi " + 
+					"      group by a.cod_ofi) ven on a.cod_ofi = ven.cod_ofi " + sWhere + 
 					"order by a.cod_ofi";
 			 
 			

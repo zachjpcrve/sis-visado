@@ -202,7 +202,6 @@ public class SeguimientoMB
 				desOfi=usuario.getBancoOficina().getDescripcion();
 					
 				TiivsTerritorio terr=buscarTerritorioPorOficina(codOfi);
-							
 				textoOficina =codOfi + " "  + desOfi+ " (" + terr.getCodTer() + "-" + terr.getDesTer() + ")";
 			}
 			
@@ -428,7 +427,14 @@ public class SeguimientoMB
 		{
 			if (tmpSol.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
 			{
-				tmpSol.setbLiberado(true);
+				if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) || PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
+				{
+					tmpSol.setbLiberado(false);
+				}
+				else
+				{
+					tmpSol.setbLiberado(true);
+				}
 			}
 			else
 			{

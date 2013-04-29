@@ -631,38 +631,41 @@ public class ReportesMB {
 		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		Date fechaIni = null;
 		Date fechaFin = null;
+		String territorio="";
 
-		if (getFechaInicio() != null && getFechaFin() != null) {
+		if (getFechaInicio() != null && getFechaFin() != null) 
+		{
 			fechaIni = getFechaInicio();
 			fechaFin = getFechaFin();
 			
-			if(fechaFin.compareTo(fechaIni)<0){ //Si Fecha fin es menor a fecha inicio
+			if(fechaFin.compareTo(fechaIni)<0)//Si Fecha fin es menor a fecha inicio
+			{ 
 				Utilitarios.mensaje(ConstantesVisado.MENSAJE.FECHAFIN_MENOR,"");
 				return;
 			}
 		}		
 
 		TiivsSolicitud tmpSolicitud = new TiivsSolicitud();
-		TiivsTerritorio tmpTerr = new TiivsTerritorio();
+		//TiivsTerritorio tmpTerr = new TiivsTerritorio();
 		TiivsOficina1 tmpOficina = new TiivsOficina1();
 
 		if (getIdTerr() != null && getIdTerr().compareTo("") != 0) {
-			tmpTerr.setCodTer(getIdTerr());
+			territorio=getIdTerr();
 		}
 
-		if (getIdOfi() != null && getIdOfi().compareTo("") != 0) {
+		/*if (getIdOfi() != null && getIdOfi().compareTo("") != 0) {
 			tmpOficina.setCodOfi(getIdOfi());
-		}
+		}*/
 
 		if (getOficina()!=null) {
 			tmpOficina=getOficina();
 		}
 
-		tmpOficina.setTiivsTerritorio(tmpTerr);
+		//tmpOficina.setTiivsTerritorio(tmpTerr);
 		tmpSolicitud.setTiivsOficina1(tmpOficina);
 
 		try {
-			this.lstSolicitudesOficina = solicitudService.obtenerListarTotalSolicitudesxEstado(tmpSolicitud,fechaIni, fechaFin);
+			this.lstSolicitudesOficina = solicitudService.obtenerListarTotalSolicitudesxEstado(tmpSolicitud,territorio,fechaIni, fechaFin);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
