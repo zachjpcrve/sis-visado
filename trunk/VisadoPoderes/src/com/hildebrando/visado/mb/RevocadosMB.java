@@ -918,6 +918,8 @@ public class RevocadosMB {
 		  objHistorial.setObs(solicitudModificado.getObs());
 		  objHistorial.setFecha(new Timestamp(new Date().getTime()));
 		  objHistorial.setRegUsuario(usuario.getUID());
+		  /**SAMIRA MEJORA 29/04/2013 */
+		  objHistorial.setFlagRevocado(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO);
 		  serviceHistorialSolicitud.insertar(objHistorial);
 	}
 	//@Samira 09/03/2012
@@ -1581,6 +1583,7 @@ public class RevocadosMB {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void guardarApodPod(ActionEvent actionEvent)
 	{	
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
