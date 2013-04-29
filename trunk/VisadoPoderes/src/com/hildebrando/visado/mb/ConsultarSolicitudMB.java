@@ -1495,8 +1495,9 @@ public class ConsultarSolicitudMB {
 			Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
 			filtroHist.add(Restrictions.eq("id.codSoli", sCodSolicitud));
 			filtroHist.add(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02));
-			/** RECHAZADO PERO X DICTAMINACION , NO VIA MANUAL**/
-			filtroHist.add(Restrictions.eq("flagRevocado", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
+			/** RECHAZADO PERO X DICTAMINACION , NO VIA revocacion**/
+			filtroHist.add(Restrictions.isEmpty("flagRevocado"));
+					//eq("flagRevocado", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
 			List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
 			lstHist = histDAO.buscarDinamico(filtroHist);
 			if(lstHist!=null){
