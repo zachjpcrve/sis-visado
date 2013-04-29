@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -566,31 +567,60 @@ public class SeguimientoMB
 			}
 			
 			tmpSol.setTxtOpeBan(cadena);
+			
+			//Ordenar niveles
 			String cadNiveles = "";
 			/*int codNivelTMP = 0;
+			String codNiv ="";
+			List<TiivsSolicitudNivel> tmpListaOrdenada = new ArrayList<TiivsSolicitudNivel>();
 			
 			//Ordenar niveles
 			for (Iterator iterator = tmpSol.getTiivsSolicitudNivels().iterator(); iterator.hasNext();) 
 			{
 				TiivsSolicitudNivel tmp = (TiivsSolicitudNivel) iterator.next();
 				
-				
+				if (codNivelTMP < tmp.getId());
+				{
+					codNivelTMP = tmp.getId();
+					codNiv=tmp.getCodNiv();
+					
+					TiivsSolicitudNivel tmpSolN = new TiivsSolicitudNivel();
+					tmpSolN.setId(tmp.getId());
+					tmpSolN.setCodNiv(codNiv);
+										
+					tmpListaOrdenada.add(tmpSolN);
+				}
 			}*/
 			
+			//Generar lista de niveles string
+			List<String> tmpLista = new ArrayList<String>();
 			
 			for (Iterator iterator = tmpSol.getTiivsSolicitudNivels().iterator(); iterator.hasNext();) 
 			{
 				TiivsSolicitudNivel tmp = (TiivsSolicitudNivel) iterator.next();
-							
+				
 				String nivel = nivelService.buscarNivelxCodigo(tmp.getCodNiv());
 				
+				tmpLista.add(nivel);
+			}
+			
+			Collection<String> unsorted = tmpLista;
+			List<String> sorted = Utilitarios.ordenarLista(unsorted);
+			
+			
+			for (Iterator iterator = sorted.iterator(); iterator.hasNext();) 
+			{
+				//TiivsSolicitudNivel tmp = (TiivsSolicitudNivel) iterator.next();
+				
+				///String nivel = nivelService.buscarNivelxCodigo(tmp.getCodNiv());
+								
 				if (cadNiveles.length()>0)
 				{
-					cadNiveles = cadNiveles.concat(",").concat(nivel);
+					cadNiveles = cadNiveles.concat(",").concat(iterator.next().toString());
 				}
 				else
 				{
-					cadNiveles = cadNiveles.concat(nivel);
+					cadNiveles = cadNiveles.concat(iterator.next().toString());
 				}
 			}
 			

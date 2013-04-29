@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import com.bbva.common.util.ConstantesVisado;
+import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 
 public class Utilitarios {
 	
@@ -101,6 +103,8 @@ public class Utilitarios {
 		
 		return mes;
 	}
+	
+	
 	
 	public static double redondear(double numero){
 	   /* BigDecimal bd = new BigDecimal(Double.toString(d));
@@ -938,5 +942,10 @@ public class Utilitarios {
 		}
 		return nombre;
 	}
-	
+
+	public static<T extends Comparable<? super T>> List<T> ordenarLista(Collection<T> c) {
+		  List<T> list = new ArrayList<T>(c);
+		  java.util.Collections.sort(list);
+		  return list;
+		}
 }
