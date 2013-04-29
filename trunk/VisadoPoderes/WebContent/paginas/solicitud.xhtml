@@ -932,16 +932,13 @@
 							</p:selectOneMenu>
 							<p:graphicImage value="/resources/images/pregunta.jpg"
 								id="toolcboClasificacion" />
-							<p:tooltip for="toolcboClasificacion" value="Clasificación"
-								showEffect="slide" />
+							<p:tooltip for="toolcboClasificacion" value="Clasificación" showEffect="slide" />
 							<!--  <h:inputText styleClass="inputTextPopup" id="txtClasiSelect"
 								size="15" value="#{solicitudRegMB.objTiivsPersonaResultado.clasifPerOtro}" />-->
 							<h:outputText id="outEmail" value="Email:" />
 							<h:inputText styleClass="inputTextPopup" id="txtEmail"
-								style="width:100px;"
-								value="#{solicitudRegMB.objTiivsPersonaResultado.email}" />
-							<p:graphicImage value="/resources/images/pregunta.jpg"
-								id="tooltxtEmail" />
+								style="width:100px;" value="#{solicitudRegMB.objTiivsPersonaResultado.email}" onkeypress=""/>
+							<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtEmail" />
 							<p:tooltip for="tooltxtEmail" value="Email" showEffect="slide" />
 							<h:outputText id="outCelular" value="Celular:" />
 							<h:inputText styleClass="inputTextPopup" id="txtCelular"
@@ -983,7 +980,7 @@
 							update=":formRegistrar:pnlRegistrar,:formSolicitudRegistro:pnlSolicitudRegistro">
 						</p:commandButton>
 						
-						<div align="center" style="width: 100%;">
+						<div align="center" >
 								<p:dataTable id="tlbPersonasPopup" var="s" rows="20"
 									value="#{solicitudRegMB.lstTiivsPersona}"
 									emptyMessage="No hay resultados en la bandeja"
@@ -992,7 +989,7 @@
 									paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 									rowsPerPageTemplate="5,10,15" editable="true">
 	
-									<p:column headerText="DOI" width="50">
+									<p:column headerText="DOI" width="75">
 										<h:outputText value="#{s.sDesctipDoi} : #{s.numDoi}" />
 									</p:column>
 									<p:column headerText="Cliente / No Cliente">

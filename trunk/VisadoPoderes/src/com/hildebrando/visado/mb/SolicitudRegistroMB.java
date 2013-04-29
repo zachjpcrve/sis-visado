@@ -616,15 +616,22 @@ public class SolicitudRegistroMB {
 		return lstSolicitudArupacion;
 	}
 
-	public void agregarPersona() {
+	public void agregarPersona() 
+	{
 		logger.info("****************** agregarPersona ********************");
 		if (validarPersona()) {
-			if (validarRegistroDuplicado()) {
-				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
-					if (objTiivsPersonaResultado.getTipDoi().equals(p.getCodTipoDoc())) {objTiivsPersonaResultado.setsDesctipDoi(p.getDescripcion());}}
-				for (ComboDto p : combosMB.getLstTipoRegistroPersona()) {
-					if (objTiivsPersonaResultado.getTipPartic().equals(p.getKey())) {objTiivsPersonaResultado.setsDesctipPartic(p.getDescripcion());}}
-				for (ComboDto p : combosMB.getLstClasificacionPersona()) {
+			if (validarRegistroDuplicado()) 
+			{
+				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) 
+				{
+					if (objTiivsPersonaResultado.getTipDoi().equals(p.getCodTipoDoc())) {objTiivsPersonaResultado.setsDesctipDoi(p.getDescripcion());}
+				}
+				for (ComboDto p : combosMB.getLstTipoRegistroPersona()) 
+				{
+					if (objTiivsPersonaResultado.getTipPartic().equals(p.getKey())) {objTiivsPersonaResultado.setsDesctipPartic(p.getDescripcion());}
+				}
+				for (ComboDto p : combosMB.getLstClasificacionPersona()) 
+				{
 					if (objTiivsPersonaResultado.getClasifPer().equals(p.getKey())) {objTiivsPersonaResultado.setsDescclasifPer(p.getDescripcion());}
 					//if (objTiivsPersonaResultado.getClasifPer().equals("99")) {objTiivsPersonaResultado.setsDescclasifPer(objTiivsPersonaResultado.getClasifPerOtro());}
 				}
