@@ -26,6 +26,7 @@ import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
+import com.hildebrando.visado.dto.ComisionDTO;
 import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
 import com.hildebrando.visado.dto.FormatosDTO;
 import com.hildebrando.visado.dto.OperacionesPDF;
@@ -378,6 +379,93 @@ public class JasperController {
 					+ "al generar el archivo: " + e);
 		}
 		return ("pdfReportObsHistorial");
+	}
+
+    
+    
+    @SuppressWarnings("unused")
+	@RequestMapping(value="/download/calculoComision.htm", method=RequestMethod.GET)
+	public String generarReporteComision(@RequestParam("param") String param, ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
+		logger.info("==== generarReporteComision ==== ");
+		try {
+
+			
+//			String 
+//			
+//			String codSoli = "";
+//			String movimiento = "";
+//			codSoli = id.split(";")[0];
+//			movimiento  = id.split(";")[1];
+//			
+//			logger.info("codSoli   :" + codSoli);
+//			logger.info("movimiento:" + movimiento);
+			
+//			GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+//			Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
+//			filtroHist.add(Restrictions.eq("id.codSoli", codSoli));
+//			filtroHist.add(Restrictions.eq("id.movimiento", movimiento));
+//		
+//			List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
+//			lstHist = histDAO.buscarDinamico(filtroHist);
+//			
+//			String obs = "";
+//			String nombrePDF =  "Observacion_" + codSoli +"_" + movimiento + ".pdf";
+//			if(lstHist.size()>0){
+//				obs = lstHist.get(0).getObs();
+//				
+//			}
+			
+			
+			String []parametros = param.split(";");
+			
+			
+			
+			
+			List<ComisionDTO> cabecera = new ArrayList<ComisionDTO>();
+			
+			ComisionDTO uno = new ComisionDTO();
+			
+			
+			try {
+				logger.info(parametros[0]);
+				logger.info(parametros[1]);
+				logger.info(parametros[2]);
+				logger.info(parametros[3]);
+				logger.info(parametros[4]);
+				logger.info(parametros[5]);
+				
+				uno.setItem1(parametros[0]);
+				uno.setItem2(parametros[1]);
+				uno.setItem3(parametros[2]);
+				uno.setItem4(parametros[3]);
+				Double importe = Double.valueOf(parametros[5]);
+				Double importeLimite = Double.valueOf(parametros[4]);
+				uno.setImporte(importe);
+				uno.setImporteLimite(importeLimite);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+			cabecera.add(uno);
+			response.setHeader("Content-type", "application/pdf");
+			response.setHeader("Content-Disposition",
+					"attachment; filename=\"" + "comision" + "\"");
+
+			JRBeanCollectionDataSource objCab = new JRBeanCollectionDataSource(cabecera, false);
+			modelMap.put("dataKey", objCab);
+
+			OutputStream os = response.getOutputStream();
+			os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
+					+ "al generar el archivo: " + e);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
+					+ "al generar el archivo: " + e);
+		}
+		return ("pdfReportComision");
 	}
 
     
