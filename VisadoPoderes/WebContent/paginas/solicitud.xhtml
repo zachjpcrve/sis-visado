@@ -33,13 +33,19 @@
 
 						<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3"
 							update=":formSolicitudRegistro:idMsmSolicitudRegistro,
-									:formSolicitudRegistro:idCodigoSolicitud"
+									:formSolicitudRegistro:idCodigoSolicitud,
+									:formRegistroToolBar:idResultRegistro"
 							icon="ui-icon-document"
 							action="#{solicitudRegMB.registrarSolicitud}"
 							actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"
-							ajax="false">
+							oncomplete="appletDeleteFilesAndRedirect();"
+							ajax="true">
 						</p:commandButton>
 
+						<h:inputHidden id="idResultRegistro" value="#{solicitudRegMB.redirect}" />	
+						
+													
+					
 						<p:commandButton value="Enviar" id="btnEnviar3"
 							icon="ui-icon-document"
 							update=":formSolicitudRegistro:idMsmSolicitudRegistro"
@@ -62,7 +68,18 @@
 
 		<h:outputScript library="js" name="visado.js" target="head" />
 
+		
+
 		<h:form id="formSolicitudRegistro" enctype="multipart/form-data">
+
+			<div style="visibility: hidden;">
+				<p:commandButton style="width:0;height:0" value=""
+					id="btnRedirecionar" icon="ui-icon-document"
+					update=":formSolicitudRegistro:idMsmSolicitudRegistro"
+					action="#{solicitudRegMB.redireccionar}" ajax="false">
+				</p:commandButton>
+			</div>
+
 			<p:outputPanel id="pnlSolicitudRegistro">
 				<p:growl id="idMsmSolicitudRegistro" sticky="true" />
 
@@ -393,6 +410,21 @@
 																				applet
 																						.eliminarDocumentoConPermisos(codigoDocumento);
 																				return false;
+																			}
+																			
+																			function appletDeleteFilesAndRedirect(){																																								 
+																				redirect = this.document.getElementById('formRegistroToolBar:idResultRegistro').value;																				
+																				//alert(redirect);																				
+																				//Si redirect no esta vacio entonces se realizó el registro de forma correcta
+																				if(redirect.length>0){
+																					//alert('Se eliminara archivos');
+																					//window.location.href='../../'+redirect;
+																					applet = this.document.getElementById('appletVisor');
+																					applet.eliminarDocumentosConPermisos();
+																					document.getElementById('formSolicitudRegistro:btnRedirecionar').click()
+																				} else {
+																					//alert('No se elimina archivos');
+																				}
 																			}
 																		</script>
 
@@ -1044,9 +1076,10 @@
 			<h:form id="formRegistroConfirmDialog">
 				<p:commandButton id="confirm" value="Si"
 					update=":formSolicitudRegistro:idMsmSolicitudRegistro,
-	        					:formSolicitudRegistro:idCodigoSolicitud"
-					oncomplete="confirmation.hide();"
-					action="#{solicitudRegMB.registrarSolicitud}" ajax="false"
+	        					:formSolicitudRegistro:idCodigoSolicitud,
+	        					:formRegistroToolBar:idResultRegistro"
+					oncomplete="confirmation.hide(); appletDeleteFilesAndRedirect();"
+					action="#{solicitudRegMB.registrarSolicitud}" ajax="true"
 					actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />
 				<p:commandButton id="decline" value="No"
 					onclick="confirmation.hide()" type="button" />
