@@ -2659,10 +2659,11 @@ public class ConsultarSolicitudMB {
 					{
 						mensaje = "Se envio a SSJJ correctamente la Solicitud con codigo : " + objResultado.getCodSoli();
 						Utilitarios.mensajeInfo("INFO", mensaje);
-						actualizarBandeja=true;
-						redirect = this.redirectDetalleSolicitud(objResultado.getCodSoli());
-						logger.info("redirect:" + redirect);
+						actualizarBandeja=true;						
 					}
+					
+					redirect = this.redirectDetalleSolicitud(objResultado.getCodSoli());
+					logger.info("redirect:" + redirect);
 
 				} 
 				else 
