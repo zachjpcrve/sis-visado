@@ -559,149 +559,153 @@
 													</h:outputText>
 													<p:separator styleClass="fielset" />
 													<!-- <p:messages id="idMsmOperacionBancaria" />  -->
-													<table border="0">
-														<tr>
-															<td><h:outputText styleClass="outputText"
-																	id="outTipoOperacion" value="Tipo de Operación:"
-																	title="Tipo de Operación"></h:outputText></td>
-															<td><p:selectOneMenu id="cboTipoOperacion"
-																	value="#{solicitudRegMB.objSolicBancaria.id.codOperBan}"
-																	immediate="true" disabled="false" style="width:160px;">
-																	<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
-																	<f:selectItems value="#{combosMB.lstOpeBancaria}"
-																		var="opeBan" itemValue="#{opeBan.codOperBan}"
-																		itemLabel="#{opeBan.desOperBan}" />
-																</p:selectOneMenu></td>
-															<td><h:outputText styleClass="outputText"
-																	id="outTipoMoneda" value="Moneda" title="Moneda"></h:outputText>
-															</td>
-															<td><p:selectOneMenu style="width:160px;"
-																	id="cboMoneda" onchange="valorImporteSoles();"
-																	value="#{solicitudRegMB.objSolicBancaria.id.moneda}"
-																	immediate="true" disabled="false"
-																	valueChangeListener="#{solicitudRegMB.validarTipoCambioDisabled}">
-																	<p:ajax update=":formSolicitudRegistro:intImporte,
-															                	   	:formSolicitudRegistro:intTipoCambio,
-															                		:formSolicitudRegistro:txtImporteSoles" event="change"></p:ajax>
-																	<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
-																	<f:selectItems value="#{combosMB.lstMoneda}" var="varo"
-																		itemValue="#{varo.codMoneda}"
-																		itemLabel="#{varo.desMoneda}" />
-
-																</p:selectOneMenu></td>
-															<td><h:outputText styleClass="outputText"
-																	id="outImporte" value="Importe:" title="Importe"></h:outputText>
-															</td>
-															<td><h:inputText
-																	value="#{solicitudRegMB.objSolicBancaria.importe}" 
-																	onkeypress="return validaNumero(event,'0',this,'0');"
-																	onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();"
-																	id="intImporte" maxlength="16" >
-																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
-																</h:inputText></td>
-														</tr>
-														<tr>
-															<td><h:outputText styleClass="outputText"
-																	id="outImporteTipoCambio" value="Tipo Cambio"
-																	title="Tipo Cambio"></h:outputText></td>
-															<td><h:inputText id="intTipoCambio" maxlength="8" 
-																	onkeypress="return validaNumero(event,'0',this,'0');"
-																	disabled="#{solicitudRegMB.bBooleanPopupTipoCambio}" 
-																	onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();"
-																	value="#{solicitudRegMB.objSolicBancaria.tipoCambio}">
-																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
-																</h:inputText></td>
-																<p:remoteCommand id="valorImporteSoles" name="valorImporteSoles" actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}"
-																 update=":formSolicitudRegistro:txtImporteSoles, :formSolicitudRegistro:intTipoCambio">
-																
-																</p:remoteCommand>
-
-
-															<td><h:outputText styleClass="outputText"
-																	id="outImporteSoles" value="Importe en Soles"
-																	title="Importe en Soles"></h:outputText></td>
-															<td><h:inputText 
-																	value="#{solicitudRegMB.objSolicBancaria.importeSoles}"
-																	readonly="true" id="txtImporteSoles">
-																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
-																</h:inputText></td>
-															<td><p:commandButton value="Agregar"
-																	id="btnAgregarOpeBancaria"
-																	action="#{solicitudRegMB.agregarOperacionBancaria}"
-																	actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}"
-																	update=":formSolicitudRegistro:idMsmSolicitudRegistro,:formSolicitudRegistro:tlbOperacionesBanca,
-													 				        :formSolicitudRegistro:txtImporteSoles,:formSolicitudRegistro:intImporte,
-													 				        :formSolicitudRegistro:intTipoCambio,:formSolicitudRegistro:cboMoneda,:formSolicitudRegistro:txtComision,
-													 				        :formSolicitudRegistro:cboTipoOperacion, :formSolicitudRegistro:txtImpTotal" /></td>
-															<td><p:commandButton value="Limpiar"
-																	id="btnLimpiarOpeBancaria"
-																	action="#{solicitudRegMB.limpiarListaSolicitudesBancarias}"
-																	update=":formSolicitudRegistro:pnlSolicitudRegistro" /></td>
-														</tr>
-														<tr>
-															<td align="center" width="95%" colspan="11"><p:dataTable
-																	var="o" rows="20" id="tlbOperacionesBanca"
-																	value="#{solicitudRegMB.lstSolicBancarias}"
-																	emptyMessage="No hay resultados en la bandeja"
-																	paginatorPosition="bottom" paginator="true"
-																	paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-																	rowsPerPageTemplate="5,10,15" editable="true">
-
-																	<p:column headerText="Item">
-																		<h:outputText value="#{o.sItem}"></h:outputText>
-																	</p:column>
-																	<p:column headerText="Operación Bancaria"
-																		style="width:400px;">
-																		<h:outputText
-																			value="#{o.tiivsOperacionBancaria.desOperBan}"></h:outputText>
-																	</p:column>
-																	<p:column headerText="Moneda">
-																		<h:outputText value="#{o.id.sDescMoneda}" />
-																	</p:column>
-																	<p:column headerText="Importe"
-																		style="text-align: right ;">
-																		<h:outputText value="#{o.importe}">
-																			<f:convertNumber pattern="#,###,##0.00" locale="en" />
-																		</h:outputText>
-																	</p:column>
-																	<p:column headerText="Tipo de Cambio"
-																		style="text-align: right ;">
-																		<h:outputText value="#{o.tipoCambio}">
-																			<f:convertNumber pattern="#,###,##0.00" locale="en" />
-																		</h:outputText>
-																	</p:column>
-																	<p:column headerText="Importe en Soles"
-																		style="text-align: right ;">
-																		<h:outputText value="#{o.importeSoles}">
-																			<f:convertNumber pattern="#,###,##0.00" locale="en" />
-																		</h:outputText>
-																	</p:column>
-																	<p:column headerText="Editar">
-																		<p:commandButton icon="ui-icon-pencil" id="ed"
-																			action="#{solicitudRegMB.editarOperacionBancaria}"
-																			update=":formSolicitudRegistro:pnlSolicitudRegistro">
-																			<f:setPropertyActionListener
-																				target="#{solicitudRegMB.objSolicitudOperacionCapturado}"
-																				value="#{o}" for="ed">
-																			</f:setPropertyActionListener>
-																		</p:commandButton>
-																	</p:column>
-																	<p:column headerText="Eliminar">
-																		<p:commandButton icon="ui-icon-trash" id="del"
-																			action="#{solicitudRegMB.eliminarOperacionBancaria}"
-																			update=":formSolicitudRegistro:pnlSolicitudRegistro">
-																			<f:setPropertyActionListener
-																				target="#{solicitudRegMB.objSolicitudOperacionCapturado}"
-																				value="#{o}" for="del">
-																			</f:setPropertyActionListener>
-																		</p:commandButton>
-																	</p:column>
-																</p:dataTable></td>
-														</tr>
-
-
-
-													</table>
+													
+														<table border="0">
+															<tr>
+																<td><h:outputText styleClass="outputText"
+																		id="outTipoOperacion" value="Tipo de Operación:"
+																		title="Tipo de Operación"></h:outputText></td>
+																<td><p:selectOneMenu id="cboTipoOperacion"
+																		value="#{solicitudRegMB.objSolicBancaria.id.codOperBan}"
+																		immediate="true" disabled="false" style="width:160px;">
+																		<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
+																		<f:selectItems value="#{combosMB.lstOpeBancaria}"
+																			var="opeBan" itemValue="#{opeBan.codOperBan}"
+																			itemLabel="#{opeBan.desOperBan}" />
+																	</p:selectOneMenu></td>
+																<td><h:outputText styleClass="outputText"
+																		id="outTipoMoneda" value="Moneda" title="Moneda"></h:outputText>
+																</td>
+																<td><p:selectOneMenu style="width:160px;"
+																		id="cboMoneda" onchange="valorImporteSoles();"
+																		value="#{solicitudRegMB.objSolicBancaria.id.moneda}"
+																		immediate="true" disabled="false"
+																		valueChangeListener="#{solicitudRegMB.validarTipoCambioDisabled}">
+																		<p:ajax update=":formSolicitudRegistro:intImporte,
+																                	   	:formSolicitudRegistro:intTipoCambio,
+																                		:formSolicitudRegistro:txtImporteSoles" event="change"></p:ajax>
+																		<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
+																		<f:selectItems value="#{combosMB.lstMoneda}" var="varo"
+																			itemValue="#{varo.codMoneda}"
+																			itemLabel="#{varo.desMoneda}" />
+	
+																	</p:selectOneMenu></td>
+																<td><h:outputText styleClass="outputText"
+																		id="outImporte" value="Importe:" title="Importe"></h:outputText>
+																</td>
+																<td><h:inputText
+																		value="#{solicitudRegMB.objSolicBancaria.importe}" 
+																		onkeypress="return validaNumero(event,'0',this,'0');"
+																		onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();"
+																		id="intImporte" maxlength="16" >
+																		<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																	</h:inputText></td>
+															</tr>
+															<tr>
+																<td><h:outputText styleClass="outputText"
+																		id="outImporteTipoCambio" value="Tipo Cambio"
+																		title="Tipo Cambio"></h:outputText></td>
+																<td><h:inputText id="intTipoCambio" maxlength="8" 
+																		onkeypress="return validaNumero(event,'0',this,'0');"
+																		disabled="#{solicitudRegMB.bBooleanPopupTipoCambio}" 
+																		onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();"
+																		value="#{solicitudRegMB.objSolicBancaria.tipoCambio}">
+																		<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																	</h:inputText></td>
+																	<p:remoteCommand id="valorImporteSoles" name="valorImporteSoles" actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}"
+																	 update=":formSolicitudRegistro:txtImporteSoles, :formSolicitudRegistro:intTipoCambio">
+																	
+																	</p:remoteCommand>
+	
+	
+																<td><h:outputText styleClass="outputText"
+																		id="outImporteSoles" value="Importe en Soles"
+																		title="Importe en Soles"></h:outputText></td>
+																<td><h:inputText 
+																		value="#{solicitudRegMB.objSolicBancaria.importeSoles}"
+																		readonly="true" id="txtImporteSoles">
+																		<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																	</h:inputText>
+																</td>
+																<td><p:commandButton value="Agregar"
+																		id="btnAgregarOpeBancaria"
+																		action="#{solicitudRegMB.agregarOperacionBancaria}"
+																		actionListener="#{solicitudRegMB.obtenerAccionAgregarOperacionBancaria}"
+																		update=":formSolicitudRegistro:idMsmSolicitudRegistro,
+																				:formSolicitudRegistro:tlbOperacionesBanca,
+														 				        :formSolicitudRegistro:txtImporteSoles,:formSolicitudRegistro:intImporte,
+														 				        :formSolicitudRegistro:intTipoCambio,:formSolicitudRegistro:cboMoneda,
+														 				        :formSolicitudRegistro:txtComision,
+														 				        :formSolicitudRegistro:cboTipoOperacion, :formSolicitudRegistro:txtImpTotal" />
+														 		</td>
+																<td><p:commandButton value="Limpiar"
+																		id="btnLimpiarOpeBancaria"
+																		action="#{solicitudRegMB.limpiarListaSolicitudesBancarias}"
+																		update=":formSolicitudRegistro:pnlSolicitudRegistro" />
+																</td>
+															</tr>
+															<tr>
+																<td align="center" width="95%" colspan="11"><p:dataTable
+																		var="o" rows="20" id="tlbOperacionesBanca"
+																		value="#{solicitudRegMB.lstSolicBancarias}"
+																		emptyMessage="No hay resultados en la bandeja"
+																		paginatorPosition="bottom" paginator="true"
+																		paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+																		rowsPerPageTemplate="5,10,15" editable="true">
+	
+																		<p:column headerText="Item">
+																			<h:outputText value="#{o.sItem}"></h:outputText>
+																		</p:column>
+																		<p:column headerText="Operación Bancaria"
+																			style="width:400px;">
+																			<h:outputText
+																				value="#{o.tiivsOperacionBancaria.desOperBan}"></h:outputText>
+																		</p:column>
+																		<p:column headerText="Moneda">
+																			<h:outputText value="#{o.id.sDescMoneda}" />
+																		</p:column>
+																		<p:column headerText="Importe"
+																			style="text-align: right ;">
+																			<h:outputText value="#{o.importe}">
+																				<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																			</h:outputText>
+																		</p:column>
+																		<p:column headerText="Tipo de Cambio"
+																			style="text-align: right ;">
+																			<h:outputText value="#{o.tipoCambio}">
+																				<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																			</h:outputText>
+																		</p:column>
+																		<p:column headerText="Importe en Soles"
+																			style="text-align: right ;">
+																			<h:outputText value="#{o.importeSoles}">
+																				<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																			</h:outputText>
+																		</p:column>
+																		<p:column headerText="Editar">
+																			<p:commandButton icon="ui-icon-pencil" id="ed"
+																				action="#{solicitudRegMB.editarOperacionBancaria}"
+																				update=":formSolicitudRegistro:pnlSolicitudRegistro">
+																				<f:setPropertyActionListener
+																					target="#{solicitudRegMB.objSolicitudOperacionCapturado}"
+																					value="#{o}" for="ed">
+																				</f:setPropertyActionListener>
+																			</p:commandButton>
+																		</p:column>
+																		<p:column headerText="Eliminar">
+																			<p:commandButton icon="ui-icon-trash" id="del"
+																				action="#{solicitudRegMB.eliminarOperacionBancaria}"
+																				update=":formSolicitudRegistro:pnlSolicitudRegistro">
+																				<f:setPropertyActionListener
+																					target="#{solicitudRegMB.objSolicitudOperacionCapturado}"
+																					value="#{o}" for="del">
+																				</f:setPropertyActionListener>
+																			</p:commandButton>
+																		</p:column>
+																	</p:dataTable></td>
+															</tr>
+														</table>
+													
 												</fieldset>
 											</td>
 										</tr>
