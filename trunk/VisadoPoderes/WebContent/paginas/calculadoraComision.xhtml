@@ -12,17 +12,23 @@
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
 		
-		<h:panelGrid columns="2">
+		<h:panelGrid id="pnlToolBar" columns="2">
 			<p:tabMenu activeIndex="0" style="width:350px;">
 				<p:menuitem value="Calculadora" url="/faces/paginas/calculadoraComision.xhtml" icon="ui-icon-star" />			
 			</p:tabMenu>
 	    
+	    
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">				
-					<p:commandButton value="Imprimir" id="btnImprimir3" onclick="window.print();return false;" icon="ui-icon-document"/>
+					<!-- <p:commandButton value="Imprimir" id="btnImprimir3" onclick="window.print();return false;" icon="ui-icon-document"/> -->
+					
+					<p:commandButton value="Imprimir" id="btnImprimir3" onclick="window.location.href='../../main/download/calculoComision.htm?param=#{calculadoraMB.item1};#{calculadoraMB.item2};#{calculadoraMB.item3};#{calculadoraMB.item4};5000;#{calculadoraMB.resultado}'" icon="ui-icon-document"/>
+					
 					<p:commandButton value="Salir" id="btnSalir3" onclick="window.location.href='./bienvenido.xhtml'" icon="ui-icon-document"/>
+					
 				</p:toolbarGroup>
 			</p:toolbar>
+			
 		</h:panelGrid>
 
 		<h:form id="formPrincipal">
@@ -46,7 +52,7 @@
 				<h:selectOneRadio id="radioButton1" value="#{calculadoraMB.item1}" disabled="#{calculadoraMB.verItem1}">  
 			        <f:selectItem itemLabel="" itemValue="1" />  
 			        <f:selectItem itemLabel="" itemValue="0" />   
-			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora" />
+			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora,:pnlToolBar" />
 				</h:selectOneRadio>
 								
 				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem1" />
@@ -58,7 +64,7 @@
 				<h:selectOneRadio id="radioButton2" value="#{calculadoraMB.item2}" disabled="#{calculadoraMB.verItem2}">  
 			        <f:selectItem itemLabel="" itemValue="1" />  
 			        <f:selectItem itemLabel="" itemValue="0" />   
-			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora" />
+			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora,:pnlToolBar" />
 				</h:selectOneRadio>				
 
 				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem2" />
@@ -70,7 +76,7 @@
 				<h:selectOneRadio id="radioButton3" value="#{calculadoraMB.item3}" disabled="#{calculadoraMB.verItem3}">  
 			        <f:selectItem itemLabel="" itemValue="1" />  
 			        <f:selectItem itemLabel="" itemValue="0" />   
-			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora" />
+			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora,:pnlToolBar" />
 				</h:selectOneRadio>
 
 				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem3" />
@@ -82,7 +88,7 @@
 				<h:selectOneRadio id="radioButton4" value="#{calculadoraMB.item4}" disabled="#{calculadoraMB.verItem4}" >  
 			        <f:selectItem itemLabel="" itemValue="1" />  
 			        <f:selectItem itemLabel="" itemValue="0" />   
-			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora" />
+			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora,:pnlToolBar" />
 				</h:selectOneRadio>				
 
 				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem4" />
