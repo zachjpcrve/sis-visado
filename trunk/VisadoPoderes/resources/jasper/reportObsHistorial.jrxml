@@ -15,6 +15,11 @@
 				<reportElement x="3" y="9" width="249" height="41"/>
 				<imageExpression class="java.lang.String"><![CDATA["./resources/images/bbva2.gif"]]></imageExpression>
 			</image>
+			<textField pattern="dd/MM/yyyy hh:mm:ss a">
+				<reportElement x="344" y="9" width="128" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<columnHeader>
