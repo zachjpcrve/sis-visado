@@ -970,6 +970,15 @@ public class SolicitudRegistroMB {
 			bResult = false;
 			Utilitarios.mensajeInfo("INFO", sMensaje);
 		} else if (!flagUpdatePersona) {
+			/** VALIDAR QUE EL NUMERO DE DOCUMENTO  NO SE ENCUENTRE REGISTRADO TAMPOCO EN BD */
+			 if(objTiivsPersonaResultado.getCodPer()==0&&validarbuscarPersonaLocal()){
+				sMensaje = "Persona ya registrada, Ingrese una nueva, o busque a la persona ";
+				bResult = false;
+				Utilitarios.mensajeInfo("", sMensaje);
+			
+				/** FIN DE LA VALIDACION **/
+			}else{
+				
 			for (TiivsPersona x : lstTiivsPersona) {
 				logger.debug("x.getCodPer() " +x.getCodPer());
 				logger.debug("objTiivsPersonaResultado.getCodPer() " +objTiivsPersonaResultado.getCodPer());
@@ -990,13 +999,6 @@ public class SolicitudRegistroMB {
 					}
 					}	
 				}
-			/** VALIDAR QUE EL NUMERO DE DOCUMENTO  NO SE ENCUENTRE REGISTRADO TAMPOCO EN BD */
-			 if(validarbuscarPersonaLocal()){
-				sMensaje = "Persona ya registrada, Ingrese una nueva, o busque a la persona ";
-				bResult = false;
-				Utilitarios.mensajeInfo("", sMensaje);
-				
-				/** FIN DE LA VALIDACION **/
 			}
 			
 		}
