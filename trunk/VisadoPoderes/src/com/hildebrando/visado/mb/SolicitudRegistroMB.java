@@ -590,6 +590,73 @@ public class SolicitudRegistroMB {
 
 		return lstTiivsPersona;
 	}
+	public boolean validarbuscarPersonaLocal() {
+		logger.info("=== validarbuscarPersonaLocal() ===");
+		boolean busco = false;
+		boolean retorno = false;
+		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
+		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
+
+		if ((objTiivsPersonaBusqueda.getTipDoi() == null 
+		  || objTiivsPersonaBusqueda.getTipDoi().equals(""))
+		 && (objTiivsPersonaBusqueda.getNumDoi() == null
+		  || objTiivsPersonaBusqueda.getNumDoi().equals(""))) {
+			//Utilitarios.mensajeInfo("INFO","Ingrese al menos un criterio de busqueda");
+		} else if (objTiivsPersonaBusqueda.getNumDoi() == null
+				|| objTiivsPersonaBusqueda.getNumDoi().equals("")) {
+		//	Utilitarios.mensajeInfo("INFO", "Ingrese el Número de Doi");
+		} else if (objTiivsPersonaBusqueda.getTipDoi() == null
+				|| objTiivsPersonaBusqueda.getTipDoi().equals("")) {
+			//Utilitarios.mensajeInfo("INFO", "Ingrese el Tipo de Doi");
+		} else {
+			if (objTiivsPersonaBusqueda.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CODIGO_CENTRAL)) {
+				filtro.add(Restrictions.eq("codCen",objTiivsPersonaBusqueda.getNumDoi()));
+				busco = true;
+				
+				try {
+					lstTiivsPersona = service.buscarDinamico(filtro);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+							retorno =true;
+						}
+					}
+				}
+			}else{
+				filtro.add(Restrictions.eq("tipDoi",objTiivsPersonaBusqueda.getTipDoi().trim()));
+				filtro.add(Restrictions.eq("numDoi",objTiivsPersonaBusqueda.getNumDoi().trim()));
+				busco = true;
+				
+               try {
+				lstTiivsPersona = service.buscarDinamico(filtro);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+				/*for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+							tiivsPersona.setsDesctipDoi(p.getDescripcion());
+						}
+					}
+				} */
+               retorno=true;
+			}
+			
+			if (lstTiivsPersona.size() == 0 && busco) {
+				retorno=false;
+				//Utilitarios.mensajeInfo("INFO","No se han encontrado resultados para los criterios de busqueda seleccionados");
+			}else{
+				retorno=true;
+			}
+		}
+
+		return retorno;
+	}
 
 
 
@@ -850,6 +917,7 @@ public class SolicitudRegistroMB {
 		boolean bResult = true;
 		String sMensaje = "";
 		logger.info("objTiivsPersonaResultado.getClasifPer() "+ objTiivsPersonaResultado.getClasifPer());
+		
 		if (objTiivsPersonaResultado.getTipDoi().equals("")) {
 			sMensaje = "Seleccione el Tipo de Documento";
 			bResult = false;
@@ -920,10 +988,19 @@ public class SolicitudRegistroMB {
 						bResult = false;
 						break;
 					}
-					}
-					
-			}
+					}	
+				}
+			/** VALIDAR QUE EL NUMERO DE DOCUMENTO  NO SE ENCUENTRE REGISTRADO TAMPOCO EN BD */
+			
+			
+		}else if(validarbuscarPersonaLocal()){
+			sMensaje = "Persona ya registrada, Ingrese una nueva, o busque a la persona ";
+			bResult = false;
+			Utilitarios.mensajeInfo("", sMensaje);
+			
+			/** FIN DE LA VALIDACION **/
 		}
+		
 		logger.info("bResult " +bResult);
 
 		return bResult;
