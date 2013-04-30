@@ -2280,14 +2280,15 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 	@SuppressWarnings({ "unused", "unchecked" })
 	@Transactional
-	public String registrarSolicitud() 
+	public void registrarSolicitud() 
 	{
 	/*	boleanoMensajeInfoGeneral=true;
 		 boleanoMensajeApoderdantePoderdante=true;
 		 boleanoMensajeOperacionesBancarias=true;
 		 boleanoMensajeDocumentos=false;*/
 		String mensaje = "";
-		String redirect = "";
+//		String redirect = "";
+		this.redirect = "";
 		boolean actualizarBandeja=false;
 		
 		establecerTipoSolicitud();
@@ -2411,7 +2412,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						actualizarBandeja=true;
 					}
 					//redirect = "/faces/paginas/bandejaSeguimiento.xhtml";					
-					redirect = consultarSolicitudMB.redirectDetalleSolicitud(objResultado.getCodSoli());					
+					this.redirect = consultarSolicitudMB.redirectDetalleSolicitud(objResultado.getCodSoli());					
 				} else {
 					mensaje = "Error al generar la Solicitud ";
 					Utilitarios.mensajeInfo("INFO", mensaje);
@@ -2428,17 +2429,31 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				
 			}
 		} catch (Exception e) {
-			redirect="";
+			this.redirect="";
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage(),e);
 			Utilitarios.mensajeError("ERROR", "Ocurrio un Error al grabar la Solicitud");
 
 		}
-		logger.info("Redirec:" + redirect);
-		return redirect;
+		logger.info("Redirec:" + this.redirect);
+//		return this.redirect;
 
 	}
-
+		
+	private String redirect = "";
 	
+	public String getRedirect() {
+		return redirect;
+	}
+
+	public void setRedirect(String redirect) {
+		this.redirect = redirect;
+	}
+	
+	public String redireccionar(){
+		return redirect;
+	}
+		
+
 /**Enviar la solicitud a SSJJ*/
 	public void enviarSolicitudSSJJ() {
 		Timestamp time = new Timestamp(objRegistroUtilesMB.obtenerFechaRespuesta().getTime());
