@@ -1668,7 +1668,15 @@ public class ConsultarSolicitudMB {
 	                    	 this.registrarHistorial(solicitudRegistrarT);
 	                    	 actualizarBandeja=true;
 	                    	 Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
-						}else{
+						} else if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)
+								  && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+							 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+	                    	 solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
+	                    	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
+	                    	 this.registrarHistorial(solicitudRegistrarT);
+	                    	 actualizarBandeja=true;
+	                    	 Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
+						} else{
 							if(this.agregarNiveles(solicitudRegistrarT)){								
 								this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 								this.registrarHistorial(solicitudRegistrarT);
@@ -1700,14 +1708,21 @@ public class ConsultarSolicitudMB {
                     if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)
                     		          && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
                     	 this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
-                    	 this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
-                    	 
+                    	 this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));                    	 
                     	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
                     	 this.registrarHistorial(solicitudRegistrarT);
                     	 actualizarBandeja=true;
                     	 Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
                     	 
-					}else{
+					} else if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)
+          		          && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+						 this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
+                    	 this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));                    	
+                    	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
+                    	 this.registrarHistorial(solicitudRegistrarT);
+                    	 actualizarBandeja=true;
+                    	 Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
+					} else {
 						if(this.agregarNiveles(solicitudRegistrarT)){							
 							this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 							this.registrarHistorial(solicitudRegistrarT);
@@ -1739,17 +1754,18 @@ public class ConsultarSolicitudMB {
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 
 				}
-				if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
-					bSeccionCartaAtencion = true;
-					bSeccionComentario = false;
-				} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
-					if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
-						this.bMostrarCartaRechazo = true;
-						this.bMostrarCartaRevision = true;
-						this.bMostrarCartaAtencion = true;
-						this.bSeccionComentario = false;
-					}
-				}
+				
+//				if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
+//					bSeccionCartaAtencion = true;
+//					bSeccionComentario = false;
+//				} else if (this.solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
+//					if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
+//						this.bMostrarCartaRechazo = true;
+//						this.bMostrarCartaRevision = true;
+//						this.bMostrarCartaAtencion = true;
+//						this.bSeccionComentario = false;
+//					}
+//				}
 				
 				//actualizar secciones según estado/rol
 				this.actualizarEstadoReservadoSolicitud();						
