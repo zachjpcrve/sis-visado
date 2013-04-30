@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CalculadoraComision" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="75"/>
+	<property name="ireport.y" value="114"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<style name="table">
 		<box>
@@ -118,42 +118,42 @@
 			</textField>
 			<textField>
 				<reportElement x="362" y="38" width="22" height="20"/>
-				<textElement/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{item1}.equals( "1" )?"X":""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="384" y="38" width="22" height="20"/>
-				<textElement/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{item1}.equals( "0" )?"X":""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="362" y="58" width="22" height="20"/>
-				<textElement/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{item2}.equals( "1" )?"X":""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="384" y="58" width="22" height="20"/>
-				<textElement/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{item2}.equals( "0" )?"X":""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="362" y="78" width="22" height="20"/>
-				<textElement/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{item3}.equals( "1" )?"X":""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="384" y="78" width="22" height="20"/>
-				<textElement/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{item3}.equals( "0" )?"X":""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="362" y="98" width="22" height="20"/>
-				<textElement/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{item4}.equals( "1" )?"X":""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="384" y="98" width="22" height="20"/>
-				<textElement/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{item4}.equals( "0" )?"X":""]]></textFieldExpression>
 			</textField>
 			<textField>
