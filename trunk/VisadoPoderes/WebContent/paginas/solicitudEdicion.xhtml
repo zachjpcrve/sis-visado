@@ -70,600 +70,601 @@
 
 <!-- <a href="#{root}main/download/reportPDF.htm"  style="color:#0073EA;font-weight:bold; ">Download PDF</a> -->
 
-
-		<table border="0" width="680">
-			<tbody>
-				<tr>
-					<td class="styleLegend2" width="783">
-
-						<table border="0">
-							<tbody>
-								<tr>
-									<td class="styleLegend2" width="203">
-										<fieldset style="width: 105%;" class="fielset">
-											<h:outputText title="Información General"
-												value="Información General" styleClass="outputText" />
-											<p:separator />
-											
-											<table border="0">
-												<tbody>
-													<tr>
-														<td><h:outputText styleClass="outputText"
-																id="txtCodNumSol" value="Nro Solicitud:" /></td>
-														<td><h:inputText styleClass="inputText" id="text1"
-																style="width:100px;"
-																value="#{consultarSolicitudMB.solicitudRegistrarT.codSoli}"
-																disabled="false" readonly="true" /></td>
-														<td><p:graphicImage
-																value="/resources/images/pregunta.jpg"
-																id="tooltxtCodNumSol" /></td>
-														<td><p:tooltip for="tooltxtCodNumSol"
-																value="Nro Solicitud" showEffect="slide" /></td>
-
-														<td><h:outputText styleClass="outputText" id="text3"
-																value="Estado:" /></td>
-														<td><h:inputText styleClass="inputText"
-																id="txtEstado" style="width:100px;"
-																value="#{consultarSolicitudMB.solicitudRegistrarT.descEstado}"
-																disabled="false" readonly="true" /></td>
-														<td><p:graphicImage
-																value="/resources/images/pregunta.jpg"
-																id="tooltxtEstado" /></td>
-														<td><p:tooltip for="tooltxtEstado"
-																value="Estado solicitud" showEffect="slide" /></td>
-
-														<td><h:outputText styleClass="outputText"
-																id="txtOficina" value="Oficina:" /></td>
-														<td style="font-size:0.9em">
-															<p:autoComplete id="acNomOFina" value="#{consultarSolicitudMB.oficina}"
-																		completeMethod="#{consultarSolicitudMB.completeNomOficina}" var="ofi"
-																		converter="oficinaConverter" size="24" 
-																		itemLabel="#{ofi.descripcionMostrar}" itemValue="#{ofi}" rendered="#{consultarSolicitudMB.flagMostrarACOficina}"/>
-																		
-															<h:inputText styleClass="inputText" rendered="#{consultarSolicitudMB.flagMostrarSOMOficina}"
-																		id="cboOficina" style="width:100px;"
-																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.descripcionMostrar}"
-																		disabled="false" readonly="true" />			
-																<!-- 
-																	<p:selectOneMenu
-																		id="cboOficina"
-																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}"
-																		required="false" rendered="#{solicitudRegMB.flagMostrarSOMOficina}"
-																		requiredMessage="Seleccione al menos una Oficina"
-																		style="font-size:0.98em;width:120px;">
-																		<p:ajax update=":formSolicitudRegistro:cboOficina"
-																			event="change" />
-																		<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-																		<f:selectItems
-																			value="#{solicitudRegMB.combosMB.lstOficina}"
-																			var="lOf" itemValue="#{lOf.codOfi}"
-																			itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.tiivsTerritorio.codTer}-#{lOf.tiivsTerritorio.desTer})" />
-																	</p:selectOneMenu> -->
-																	</td>
-														<td><p:message for="cboOficina" />
-														<p:graphicImage
-																value="/resources/images/pregunta.jpg"
-																id="toolcboOficina" /></td>
-														<td><p:tooltip for="toolcboOficina" value="Oficina"
-																showEffect="slide" /></td>
-
-													</tr>
-													<tr>
-														<td><h:outputText styleClass="outputText"
-																id="outNroVaucher" value="Nro Voucher *" /></td>
-														<td><h:inputText styleClass="inputText" immediate="false"  required="false" 
-																requiredMessage="Ingrese el Nro Voucher"
-																id="txtNroVaucher" style="width:100px;" maxlength="11"
-																value="#{consultarSolicitudMB.solicitudRegistrarT.nroVoucher}"
-																onkeypress="return validaNumero(event,'0',this,'0');"
-															                onblur="validaNumero(event,'0',this,'1');"
-																 >
-																  <f:ajax event="keyup" />
-																 </h:inputText></td>
-														<td><p:message for="txtNroVaucher"></p:message><p:graphicImage
-																value="/resources/images/pregunta.jpg"
-																id="tooltxtNroVaucher" /></td>
-														<td><p:tooltip for="tooltxtNroVaucher"
-																value="Nro Vaucher" showEffect="slide" /></td>
-
-														<td><h:outputText styleClass="outputText"
-																id="outComision" value="Comision" /></td>
-														<td><h:inputText styleClass="inputText"
-																id="txtComision" style="width:100px;"
-																value="#{consultarSolicitudMB.solicitudRegistrarT.comision}"
-																readonly="true" >
-																<f:convertNumber pattern="#,###,##0.00" locale="en" />
-																</h:inputText>
-																</td>
-														<td><p:graphicImage
-																value="/resources/images/pregunta.jpg"
-																id="tooltxtComision" /></td>
-														<td><p:tooltip for="tooltxtComision" value="Comision"
-																showEffect="slide" /></td>
-
-														<td><h:outputText styleClass="outputText"
-																id="outImpTotal" value="Importe Total" /></td>
-														<td ><h:inputText styleClass="inputText" 
-																id="txtImpTotal" style="width:100px;"
-																value="#{consultarSolicitudMB.solicitudRegistrarT.sImporteMoneda}"
-																disabled="false" readonly="true" >
-																<f:convertNumber pattern="#,###,##0.00" locale="en" />
-																</h:inputText>
-																</td>
-														<td><p:graphicImage
-																value="/resources/images/pregunta.jpg"
-																id="tooltxtImpTotal" /></td>
-														<td><p:tooltip for="tooltxtImpTotal"
-																value="Importe Total" showEffect="slide" /></td>
-													</tr>
-
-												</tbody>
-											</table>
-										</fieldset>
-									</td>
-								</tr>
-								<tr>
-									<td class="styleLegend2" width="783">
-										<fieldset style="width: 105%;" class="fielset">
-											<table>
-												<tr>
-													<td style="width: 380px;"><h:outputText
-															title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
-															value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" /></td>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td style="width: 50px;"></td>
-													<td><p:commandButton value="+" actionListener="#{consultarSolicitudMB.agregarActionListenerAgrupacion}"
-														update=":formRegistrar:tlbPersonasPopup,:formRegistrar:cboTipoDoi,
-														:formRegistrar:cboTipoDoi2,:formRegistrar:cboClasificacion"  
-								 						oncomplete="dlgRegistrarPersona.show();"/></td>
-												</tr>
-											</table>
-											<p:separator styleClass="fielset" />
-											<table border="0" width="95%">
-												<tbody>
-
-													<tr>
-													<td>
-													<div class="ui-datatable ui-widget">
-													<table> 
+		<p:outputPanel id="pnlSolicitudEdicion">
+			<table border="0" width="680">
+				<tbody>
+					<tr>
+						<td class="styleLegend2" width="783">
+	
+							<table border="0">
+								<tbody>
+									<tr>
+										<td class="styleLegend2" width="203">
+											<fieldset style="width: 105%;" class="fielset">
+												<h:outputText title="Información General"
+													value="Información General" styleClass="outputText" />
+												<p:separator />
+												
+												<table border="0">
+													<tbody>
 														<tr>
-														<th class="ui-state-default">
-														<div class="ui-dt-c">
-														<SPAN>Poderdante</SPAN>
-														</div>
-														</th>
-														<th class="ui-state-default">
-														<div class="ui-dt-c">
-														<SPAN>Apoderado</SPAN>
-														</div>
-														</th>
-														<th class="ui-state-default">
-														<div class="ui-dt-c">
-														<SPAN>Estado</SPAN>
-														</div>
-														</th>
-														<th class="ui-state-default">
-														<div class="ui-dt-c">
-														<SPAN>Ver</SPAN>
-														</div>
-														</th>
-														<th class="ui-state-default">
-														<div class="ui-dt-c">
-														<SPAN>Editar</SPAN>
-														</div>
-														</th>
-														<th class="ui-state-default">
-														<div class="ui-dt-c">
-														<SPAN>Eliminar</SPAN>
-														</div>
-														</th>
+															<td><h:outputText styleClass="outputText"
+																	id="txtCodNumSol" value="Nro Solicitud:" /></td>
+															<td><h:inputText styleClass="inputText" id="text1"
+																	style="width:100px;"
+																	value="#{consultarSolicitudMB.solicitudRegistrarT.codSoli}"
+																	disabled="false" readonly="true" /></td>
+															<td><p:graphicImage
+																	value="/resources/images/pregunta.jpg"
+																	id="tooltxtCodNumSol" /></td>
+															<td><p:tooltip for="tooltxtCodNumSol"
+																	value="Nro Solicitud" showEffect="slide" /></td>
+	
+															<td><h:outputText styleClass="outputText" id="text3"
+																	value="Estado:" /></td>
+															<td><h:inputText styleClass="inputText"
+																	id="txtEstado" style="width:100px;"
+																	value="#{consultarSolicitudMB.solicitudRegistrarT.descEstado}"
+																	disabled="false" readonly="true" /></td>
+															<td><p:graphicImage
+																	value="/resources/images/pregunta.jpg"
+																	id="tooltxtEstado" /></td>
+															<td><p:tooltip for="tooltxtEstado"
+																	value="Estado solicitud" showEffect="slide" /></td>
+	
+															<td><h:outputText styleClass="outputText"
+																	id="txtOficina" value="Oficina:" /></td>
+															<td style="font-size:0.9em">
+																<p:autoComplete id="acNomOFina" value="#{consultarSolicitudMB.oficina}"
+																			completeMethod="#{consultarSolicitudMB.completeNomOficina}" var="ofi"
+																			converter="oficinaConverter" size="24" 
+																			itemLabel="#{ofi.descripcionMostrar}" itemValue="#{ofi}" rendered="#{consultarSolicitudMB.flagMostrarACOficina}"/>
+																			
+																<h:inputText styleClass="inputText" rendered="#{consultarSolicitudMB.flagMostrarSOMOficina}"
+																			id="cboOficina" style="width:100px;"
+																			value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.descripcionMostrar}"
+																			disabled="false" readonly="true" />			
+																	<!-- 
+																		<p:selectOneMenu
+																			id="cboOficina"
+																			value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}"
+																			required="false" rendered="#{solicitudRegMB.flagMostrarSOMOficina}"
+																			requiredMessage="Seleccione al menos una Oficina"
+																			style="font-size:0.98em;width:120px;">
+																			<p:ajax update=":formSolicitudRegistro:cboOficina"
+																				event="change" />
+																			<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+																			<f:selectItems
+																				value="#{solicitudRegMB.combosMB.lstOficina}"
+																				var="lOf" itemValue="#{lOf.codOfi}"
+																				itemLabel="#{lOf.codOfi}-#{lOf.desOfi}(#{lOf.tiivsTerritorio.codTer}-#{lOf.tiivsTerritorio.desTer})" />
+																		</p:selectOneMenu> -->
+																		</td>
+															<td><p:message for="cboOficina" />
+															<p:graphicImage
+																	value="/resources/images/pregunta.jpg"
+																	id="toolcboOficina" /></td>
+															<td><p:tooltip for="toolcboOficina" value="Oficina"
+																	showEffect="slide" /></td>
+	
 														</tr>
-                                                        
-											                                                        <c:forEach items="#{consultarSolicitudMB.lstAgrupacionSimpleDto}" var="s">
-											                                                        <tr class="ui-widget-content ui-datatable-even">
-															<td><c:forEach items="#{s.lstPoderdantes}" var="n">
-															   <div class="ui-dt-c">
-															     <SPAN>#{n.sDesctipDoi}:#{n.numDoi}/#{n.nombre} #{n.apePat} #{n.apeMat}</SPAN>
-														         </div>
-															     </c:forEach>
-															     
-															</td>
-															<td><c:forEach items="#{s.lstApoderdantes}" var="n">
-															   <div class="ui-dt-c">
-															     <SPAN>#{n.sDesctipDoi}:#{n.numDoi}/#{n.nombre} #{n.apePat} #{n.apeMat}</SPAN>
-														         </div>
-															     </c:forEach>
-															    
-															</td>
-															<td><h:outputText value="#{s.sEstado}"/></td>
-															
-															<td>
-															<p:commandButton icon="ui-icon-search" 
-																			 update=":formSolicitudRegistro:modalVerPersona,:formSolicitudRegistro:idMsmSolicitudEdicion" action="#{consultarSolicitudMB.verAgrupacion}"
-																			 oncomplete ="dlgVerPersona.show()"  >
-																<f:setPropertyActionListener target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}"
-																							  value="#{s}">
-																</f:setPropertyActionListener>
-															</p:commandButton>
-															
-															</td>
-															<td>
-																<p:commandButton 
-																	icon="ui-icon-pencil"  
-																	oncomplete ="dlgRegistrarPersona.show()" 
-																	update=":formRegistrar:tlbPersonasPopup,:formRegistrar:cboTipoDoi,
-																			:formRegistrar:cboTipoDoi2,:formRegistrar:cboClasificacion"  
-																	action="#{consultarSolicitudMB.verEditarAgrupacion}">
-																	<f:setPropertyActionListener 
-																		target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}" value="#{s}">
+														<tr>
+															<td><h:outputText styleClass="outputText"
+																	id="outNroVaucher" value="Nro Voucher *" /></td>
+															<td><h:inputText styleClass="inputText" immediate="false"  required="false" 
+																	requiredMessage="Ingrese el Nro Voucher"
+																	id="txtNroVaucher" style="width:100px;" maxlength="11"
+																	value="#{consultarSolicitudMB.solicitudRegistrarT.nroVoucher}"
+																	onkeypress="return validaNumero(event,'0',this,'0');"
+																                onblur="validaNumero(event,'0',this,'1');">
+																	  <f:ajax event="keyup" />
+																	 </h:inputText></td>
+															<td><p:message for="txtNroVaucher"></p:message><p:graphicImage
+																	value="/resources/images/pregunta.jpg"
+																	id="tooltxtNroVaucher" /></td>
+															<td><p:tooltip for="tooltxtNroVaucher"
+																	value="Nro Vaucher" showEffect="slide" /></td>
+	
+															<td><h:outputText styleClass="outputText"
+																	id="outComision" value="Comision" /></td>
+															<td><h:inputText styleClass="inputText"
+																	id="txtComision" style="width:100px;"
+																	value="#{consultarSolicitudMB.solicitudRegistrarT.comision}"
+																	readonly="true" >
+																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																	</h:inputText>
+																	</td>
+															<td><p:graphicImage
+																	value="/resources/images/pregunta.jpg"
+																	id="tooltxtComision" /></td>
+															<td><p:tooltip for="tooltxtComision" value="Comision"
+																	showEffect="slide" /></td>
+	
+															<td><h:outputText styleClass="outputText"
+																	id="outImpTotal" value="Importe Total" /></td>
+															<td ><h:inputText styleClass="inputText" 
+																	id="txtImpTotal" style="width:100px;"
+																	value="#{consultarSolicitudMB.solicitudRegistrarT.sImporteMoneda}"
+																	disabled="false" readonly="true" >
+																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																	</h:inputText>
+																	</td>
+															<td><p:graphicImage
+																	value="/resources/images/pregunta.jpg"
+																	id="tooltxtImpTotal" /></td>
+															<td><p:tooltip for="tooltxtImpTotal"
+																	value="Importe Total" showEffect="slide" /></td>
+														</tr>
+	
+													</tbody>
+												</table>
+											</fieldset>
+										</td>
+									</tr>
+									<tr>
+										<td class="styleLegend2" width="783">
+											<fieldset style="width: 105%;" class="fielset">
+												<table>
+													<tr>
+														<td style="width: 380px;"><h:outputText
+																title="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)"
+																value="Apoderado(Solicitante)/Poderdante(Usuario/Cliente)" /></td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td style="width: 50px;"></td>
+														<td><p:commandButton value="+" actionListener="#{consultarSolicitudMB.agregarActionListenerAgrupacion}"
+															update=":formRegistrar:tlbPersonasPopup,:formRegistrar:cboTipoDoi,
+															:formRegistrar:cboTipoDoi2,:formRegistrar:cboClasificacion"  
+									 						oncomplete="dlgRegistrarPersona.show();"/></td>
+													</tr>
+												</table>
+												<p:separator styleClass="fielset" />
+												<table border="0" width="95%">
+													<tbody>
+	
+														<tr>
+														<td>
+														<div class="ui-datatable ui-widget">
+														<table> 
+															<tr>
+															<th class="ui-state-default">
+															<div class="ui-dt-c">
+															<SPAN>Poderdante</SPAN>
+															</div>
+															</th>
+															<th class="ui-state-default">
+															<div class="ui-dt-c">
+															<SPAN>Apoderado</SPAN>
+															</div>
+															</th>
+															<th class="ui-state-default">
+															<div class="ui-dt-c">
+															<SPAN>Estado</SPAN>
+															</div>
+															</th>
+															<th class="ui-state-default">
+															<div class="ui-dt-c">
+															<SPAN>Ver</SPAN>
+															</div>
+															</th>
+															<th class="ui-state-default">
+															<div class="ui-dt-c">
+															<SPAN>Editar</SPAN>
+															</div>
+															</th>
+															<th class="ui-state-default">
+															<div class="ui-dt-c">
+															<SPAN>Eliminar</SPAN>
+															</div>
+															</th>
+															</tr>
+	                                                        
+												                                                        <c:forEach items="#{consultarSolicitudMB.lstAgrupacionSimpleDto}" var="s">
+												                                                        <tr class="ui-widget-content ui-datatable-even">
+																<td><c:forEach items="#{s.lstPoderdantes}" var="n">
+																   <div class="ui-dt-c">
+																     <SPAN>#{n.sDesctipDoi}:#{n.numDoi}/#{n.nombre} #{n.apePat} #{n.apeMat}</SPAN>
+															         </div>
+																     </c:forEach>
+																     
+																</td>
+																<td><c:forEach items="#{s.lstApoderdantes}" var="n">
+																   <div class="ui-dt-c">
+																     <SPAN>#{n.sDesctipDoi}:#{n.numDoi}/#{n.nombre} #{n.apePat} #{n.apeMat}</SPAN>
+															         </div>
+																     </c:forEach>
+																    
+																</td>
+																<td><h:outputText value="#{s.sEstado}"/></td>
+																
+																<td>
+																<p:commandButton icon="ui-icon-search" 
+																				 update=":formSolicitudRegistro:modalVerPersona,:formSolicitudRegistro:idMsmSolicitudEdicion" action="#{consultarSolicitudMB.verAgrupacion}"
+																				 oncomplete ="dlgVerPersona.show()"  >
+																	<f:setPropertyActionListener target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}"
+																								  value="#{s}">
 																	</f:setPropertyActionListener>
 																</p:commandButton>
-															</td>
-															<td>
-															<p:commandButton icon="ui-icon-trash"
-																action="#{consultarSolicitudMB.eliminarArupacion}"
-																ajax="false"
-																update=":formSolicitudRegistro">
-																<f:setPropertyActionListener
-																	target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}"
-																	value="#{s}">
-																</f:setPropertyActionListener>
-																					</p:commandButton>
-																				</td>
+																
+																</td>
+																<td>
+																	<p:commandButton 
+																		icon="ui-icon-pencil"  
+																		oncomplete ="dlgRegistrarPersona.show()" 
+																		update=":formRegistrar:tlbPersonasPopup,:formRegistrar:cboTipoDoi,
+																				:formRegistrar:cboTipoDoi2,:formRegistrar:cboClasificacion"  
+																		action="#{consultarSolicitudMB.verEditarAgrupacion}">
+																		<f:setPropertyActionListener 
+																			target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}" value="#{s}">
+																		</f:setPropertyActionListener>
+																	</p:commandButton>
+																</td>
+																<td>
+																<p:commandButton icon="ui-icon-trash"
+																	action="#{consultarSolicitudMB.eliminarArupacion}"
+																	ajax="false"
+																	update=":formSolicitudRegistro">
+																	<f:setPropertyActionListener
+																		target="#{consultarSolicitudMB.objAgrupacionSimpleDtoCapturado}"
+																		value="#{s}">
+																	</f:setPropertyActionListener>
+																						</p:commandButton>
+																					</td>
+															</tr>
+															</c:forEach>
+															
+															
+															</table>
+														</div>
+														
+														 </td>
 														</tr>
-														</c:forEach>
 														
 														
-														</table>
-													</div>
-													
-													 </td>
-													</tr>
-													
-													
-												</tbody>
-											</table>
-										</fieldset>
-									</td>
-								</tr>
-								<tr>
-									<td class="styleLegend2" width="683">
-										<fieldset style="width: 105%" class="fielset">
-											<h:outputText title="Documentos por Tipo de Solicitud"
-												value="Documentos por Tipo de Solicitud" />
-											<p:separator styleClass="fielset" />
-											<!-- <p:messages id="idMsmSolicitudDocumentos"></p:messages> -->
-											<table border="0">
-												<tbody>
+													</tbody>
+												</table>
+											</fieldset>
+										</td>
+									</tr>
+									<tr>
+										<td class="styleLegend2" width="683">
+											<fieldset style="width: 105%" class="fielset">
+												<h:outputText title="Documentos por Tipo de Solicitud"
+													value="Documentos por Tipo de Solicitud" />
+												<p:separator styleClass="fielset" />
+												<!-- <p:messages id="idMsmSolicitudDocumentos"></p:messages> -->
+												<table border="0">
+													<tbody>
+														<tr>
+															<td><h:outputText styleClass="outputText" id="text20"
+																	value="Tipo de Solicitud:" title="Tipo de solicitud"></h:outputText>
+															</td>
+															<td><p:selectOneMenu styleClass="selectOneMenu"
+																	id="cboTipoSolicitud"
+																	value="#{consultarSolicitudMB.iTipoSolicitud}"
+																	immediate="true" 
+																	valueChangeListener="#{consultarSolicitudMB.listarDocumentosXSolicitud}"
+																	disabled="false">
+																	<p:ajax update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos,:formSolicitudRegistro:idVisorApplet" 
+																	event="change"></p:ajax>
+																	<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
+																	<f:selectItems value="#{combosMB.lstTipoSolicitud}" var="lOf" itemValue="#{lOf.codTipSolic}" itemLabel="#{lOf.desTipServicio}" />
+											
+																</p:selectOneMenu></td>
+															<td>
+															    
+															     
+															     
+															     <p:commandButton id="btnEscanear" 
+																   		value="Escanear" 
+																   		onclick="return invocarEscaner('#{consultarSolicitudMB.cadenaEscanerFinal}');">
+																  </p:commandButton>
+																  
+																  <p:commandButton 
+																        		value="Actualizar"
+																        		onclick="return appletActualizar ();" />
+																        		
+																  <h:panelGroup id="idVisorApplet">
+																		   
+																            <script type="text/javascript" language="javascript">															            
+																	            function actualizarDocumentos (documentosLeidos,documentosCargados) {															                	
+																                    this.document.getElementById('formSolicitudRegistro:idDocumentosLeidos').value = documentosLeidos;
+																                    this.document.getElementById('formSolicitudRegistro:idDocumentosCargados').value = documentosCargados;
+																                    actDocumentos();															                    
+																                }  
+																            
+																	            function appletActualizar(){	
+																                	applet = this.document.getElementById('appletVisor');
+																                	//applet.actualizar();
+																                	applet.actualizarConPermisos();
+																                	return false;
+																                }
+																	            
+																	            function appletEliminarDocumento(){
+																                	codigoDocumento = this.document.getElementById('formSolicitudRegistro:idCodigoDocumentoSelected').value;
+																                	applet = this.document.getElementById('appletVisor');
+																                	//applet.eliminarDocumento(codigoDocumento);
+																                	applet.eliminarDocumentoConPermisos(codigoDocumento);
+																                	return false;
+																                }
+																	            
+																	            function appletDeleteFilesAndRedirect(){																																								 
+																					redirect = this.document.getElementById('formRegistroToolBar:idResultRegistro').value;																				
+																					alert(redirect);																				
+																					//Si redirect no esta vacio entonces se realizó el registro de forma correcta
+																					if(redirect.length>0){
+																						alert('Se eliminara archivos');
+																						//window.location.href='../../'+redirect;
+																						applet = this.document.getElementById('appletVisor');
+																						applet.eliminarDocumentosConPermisos();
+																						document.getElementById('formSolicitudRegistro:btnRedirecionar').click()
+																					} else {
+																						alert('No se elimina archivos');
+																					}
+																				}
+																	            
+																            </script>           
+																            
+																            
+																            <!-- Applet Size: width='93px';height='24px  -->        
+																            <applet name="appletVisor" id="appletVisor"
+																                    code="com.hildebrando.visado.applet.AgregarDocumentos.class"
+																                    archive="../../uploadFilesApplet.jar" 
+																                    width='1px'
+																                    height='1px'
+																                    mayscript="mayscript">
+																                <param name="path_cliente"
+																                       value="#{visadoDocumentosMB.pathCliente}" />												                       
+																                <param name="documentos_leer"
+																                       value="#{visadoDocumentosMB.documentosLeer}"/>															                   
+																                <param name="directory"
+																                       value="#{visadoDocumentosMB.directory}" />  
+																                 <param name="carpeta_cliente_log"
+																                       value="#{visadoDocumentosMB.carpetaClienteLog}" />    
+																                 <param name="url_server"
+																                       value="#{visadoDocumentosMB.urlCarga}" />         
+																            </applet>            
+																        </h:panelGroup>
+																    
+																    <h:inputHidden id="idDocumentosLeidos" value="#{visadoDocumentosMB.documentosLeidos}" />
+																    <h:inputHidden id="idDocumentosCargados" value="#{visadoDocumentosMB.documentosCargados}" />															    
+														        	<h:inputHidden id="idCodigoSolicitud" value="{consultarSolicitudMB.solicitudRegistrarT.codSoli}" /> 
+														        	<h:inputHidden id="idCodigoDocumentoSelected" value="#{consultarSolicitudMB.selectedDocumentoDTO.nombreCorto}" />													        	                                                     													        	 
+															        <p:remoteCommand name="actDocumentos" update="@form" process="@form" 
+																		actionListener="#{consultarSolicitudMB.actualizarDocumentosXTipoSolicitud}" />
+															     
+															     
+															</td>
+															
+														</tr>
+														<tr>
+															<td><h:outputText styleClass="outputText" id="text19"
+																	value="Documentos:"></h:outputText></td>
+															<td><p:selectOneMenu   styleClass="selectOneMenu"  
+																	id="listDocumentosXTipoSoli" 
+																	value="#{consultarSolicitudMB.selectedTipoDocumento}"
+																	var="p" converter="tipoSolicitudDocumentoConverter" >
+																	<f:selectItem itemLabel="-Seleccione-" itemValue="" />																
+																	<f:selectItems value="#{consultarSolicitudMB.lstTipoSolicitudDocumentos}" var="lOf" itemValue="#{lOf}" itemLabel="#{lOf.id.codDoc}" />
+																	<p:column>  
+														                <p:graphicImage value="/resources/images/#{p.obligatorio == '1' ? 'oblig.png' : 'nooblig.png'}" width="20" height="20"/>  
+														            </p:column>  													  
+														            <p:column>  
+														               #{p.tiivsDocumento.descripcion}
+														            </p:column>													            
+														            <f:selectItem itemLabel="Otros" itemValue="Otros" />															
+												               </p:selectOneMenu></td>
+																   <td> 															   
+	                                                               <p:fileUpload value="#{consultarSolicitudMB.file}"  id="idfileUpload"
+	                                                                mode="simple" 
+	                                                                update="idfileUpload"  
+	                                                                 auto="false"  
+	                                                                 sizeLimit="100000"   
+	                                                                 allowTypes="/(\.|\/)(pdf)$/"/>  
+	  
+											                    </td>
+	
+															<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro:idMsmSolicitudEdicion,
+															:formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:idfileUpload,
+															:formSolicitudRegistro:cboTipoSolicitud" ajax="false"
+															action="#{consultarSolicitudMB.agregarDocumentosXTipoSolicitud}"/>
+																													
+															</td>
+															
+														</tr>
+														<tr>
+															<td width="95%" colspan="11">
+															<p:dataTable var="s" id="tblDocumentos"
+																	rows="20" value="#{consultarSolicitudMB.lstdocumentos}"
+																	emptyMessage="No hay resultados en la bandeja"
+																	paginatorPosition="bottom" paginator="true"
+																	paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+																	rowsPerPageTemplate="5,10,15" editable="true">
+	
+																	<p:column headerText="Item">
+																		<h:outputText value="#{s.item}" />
+																	</p:column>
+																	<p:column headerText="Documento" style="width:400px;">
+																		<h:outputText value="#{s.documento}" />
+																	</p:column>
+																	<p:column headerText="Obligatorio">
+																		<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>																	
+																	</p:column>
+																	<p:column headerText="Archivo" >																																																			
+																		<h:outputLink onclick="window.open('../../files/#{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
+																			<h:outputText value="#{s.alias}" /> 
+																		</h:outputLink>																																																																																																																																									
+																	</p:column>
+																	<p:column headerText="Eliminar">
+																	 	<p:commandButton 
+																	 		action="#{consultarSolicitudMB.quitarDocumentosXTipoSolicitud}" 
+																	 		update=":formSolicitudRegistro:listDocumentosXTipoSoli,
+																	 				:formSolicitudRegistro:tblDocumentos,
+																	 				:formSolicitudRegistro:idCodigoDocumentoSelected"																 				
+																	 		ajax="true" async="true"
+																	 		id="iconOnly" icon="ui-icon-circle-close"
+																	 		disabled="#{s.alias.isEmpty()?true:false}"
+																	 		oncomplete="return appletEliminarDocumento();">
+																	 		<f:setPropertyActionListener
+																				target="#{consultarSolicitudMB.selectedDocumentoDTO}" value="#{s}"
+																				for="iconOnly">
+																			</f:setPropertyActionListener>	
+																	 	</p:commandButton> 																																	
+																																		
+																	</p:column>
+																</p:dataTable></td>
+														</tr>
+													</tbody>
+												</table>
+	
+											</fieldset>
+										</td>
+									</tr>
+	
+									<tr>
+										<td class="styleLegend2" width="683">
+											<fieldset style="width: 105%;" class="fielset" id="fieldsetOperacionesBancarias">
+												<h:outputText title="Operaciones Bancarias"
+													value="Operaciones Bancarias">
+												</h:outputText>
+												<p:separator styleClass="fielset" />
+												<!-- <p:messages id="idMsmOperacionBancaria"></p:messages> -->
+												<table border="0">
 													<tr>
-														<td><h:outputText styleClass="outputText" id="text20"
-																value="Tipo de Solicitud:" title="Tipo de solicitud"></h:outputText>
+														<td><h:outputText styleClass="outputText"
+																id="outTipoOperacion" value="Tipo de Operación:"
+																title="Tipo de Operación"></h:outputText></td>
+														<td><p:selectOneMenu styleClass="selectOneMenu"
+																id="cboTipoOperacion"
+																value="#{consultarSolicitudMB.objSolicBancaria.id.codOperBan}"
+																immediate="true" 
+																disabled="false" >
+																<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
+																<f:selectItems value="#{combosMB.lstOpeBancaria}" var="opeBan"
+																			itemValue="#{opeBan.codOperBan}" itemLabel="#{opeBan.desOperBan}" /> 
+															</p:selectOneMenu></td>
+														<td><h:outputText styleClass="outputText"
+																id="outTipoMoneda" value="Moneda" title="Moneda"></h:outputText>
 														</td>
 														<td><p:selectOneMenu styleClass="selectOneMenu"
-																id="cboTipoSolicitud"
-																value="#{consultarSolicitudMB.iTipoSolicitud}"
+																id="cboMoneda" onchange="valorImporteSoles();"
+																value="#{consultarSolicitudMB.objSolicBancaria.id.moneda}"
 																immediate="true" 
-																valueChangeListener="#{consultarSolicitudMB.listarDocumentosXSolicitud}"
-																disabled="false">
-																<p:ajax update=":formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:tblDocumentos,:formSolicitudRegistro:idVisorApplet" 
-																event="change"></p:ajax>
+																disabled="false" valueChangeListener="#{consultarSolicitudMB.validarTipoCambioDisabled}">
+																<p:ajax update=":formSolicitudRegistro:intImporte,
+																                :formSolicitudRegistro:intTipoCambio,
+																                :formSolicitudRegistro:txtImporteSoles" event="change"></p:ajax>
 																<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
-																<f:selectItems value="#{combosMB.lstTipoSolicitud}" var="lOf" itemValue="#{lOf.codTipSolic}" itemLabel="#{lOf.desTipServicio}" />
-										
-															</p:selectOneMenu></td>
-														<td>
-														    
-														     
-														     
-														     <p:commandButton id="btnEscanear" 
-															   		value="Escanear" 
-															   		onclick="return invocarEscaner('#{consultarSolicitudMB.cadenaEscanerFinal}');">
-															  </p:commandButton>
-															  
-															  <p:commandButton 
-															        		value="Actualizar"
-															        		onclick="return appletActualizar ();" />
-															        		
-															  <h:panelGroup id="idVisorApplet">
-																	   
-															            <script type="text/javascript" language="javascript">															            
-																            function actualizarDocumentos (documentosLeidos,documentosCargados) {															                	
-															                    this.document.getElementById('formSolicitudRegistro:idDocumentosLeidos').value = documentosLeidos;
-															                    this.document.getElementById('formSolicitudRegistro:idDocumentosCargados').value = documentosCargados;
-															                    actDocumentos();															                    
-															                }  
-															            
-																            function appletActualizar(){	
-															                	applet = this.document.getElementById('appletVisor');
-															                	//applet.actualizar();
-															                	applet.actualizarConPermisos();
-															                	return false;
-															                }
-																            
-																            function appletEliminarDocumento(){
-															                	codigoDocumento = this.document.getElementById('formSolicitudRegistro:idCodigoDocumentoSelected').value;
-															                	applet = this.document.getElementById('appletVisor');
-															                	//applet.eliminarDocumento(codigoDocumento);
-															                	applet.eliminarDocumentoConPermisos(codigoDocumento);
-															                	return false;
-															                }
-																            
-																            function appletDeleteFilesAndRedirect(){																																								 
-																				redirect = this.document.getElementById('formRegistroToolBar:idResultRegistro').value;																				
-																				alert(redirect);																				
-																				//Si redirect no esta vacio entonces se realizó el registro de forma correcta
-																				if(redirect.length>0){
-																					alert('Se eliminara archivos');
-																					//window.location.href='../../'+redirect;
-																					applet = this.document.getElementById('appletVisor');
-																					applet.eliminarDocumentosConPermisos();
-																					document.getElementById('formSolicitudRegistro:btnRedirecionar').click()
-																				} else {
-																					alert('No se elimina archivos');
-																				}
-																			}
-																            
-															            </script>           
-															            
-															            
-															            <!-- Applet Size: width='93px';height='24px  -->        
-															            <applet name="appletVisor" id="appletVisor"
-															                    code="com.hildebrando.visado.applet.AgregarDocumentos.class"
-															                    archive="../../uploadFilesApplet.jar" 
-															                    width='1px'
-															                    height='1px'
-															                    mayscript="mayscript">
-															                <param name="path_cliente"
-															                       value="#{visadoDocumentosMB.pathCliente}" />												                       
-															                <param name="documentos_leer"
-															                       value="#{visadoDocumentosMB.documentosLeer}"/>															                   
-															                <param name="directory"
-															                       value="#{visadoDocumentosMB.directory}" />  
-															                 <param name="carpeta_cliente_log"
-															                       value="#{visadoDocumentosMB.carpetaClienteLog}" />    
-															                 <param name="url_server"
-															                       value="#{visadoDocumentosMB.urlCarga}" />         
-															            </applet>            
-															        </h:panelGroup>
-															    
-															    <h:inputHidden id="idDocumentosLeidos" value="#{visadoDocumentosMB.documentosLeidos}" />
-															    <h:inputHidden id="idDocumentosCargados" value="#{visadoDocumentosMB.documentosCargados}" />															    
-													        	<h:inputHidden id="idCodigoSolicitud" value="{consultarSolicitudMB.solicitudRegistrarT.codSoli}" /> 
-													        	<h:inputHidden id="idCodigoDocumentoSelected" value="#{consultarSolicitudMB.selectedDocumentoDTO.nombreCorto}" />													        	                                                     													        	 
-														        <p:remoteCommand name="actDocumentos" update="@form" process="@form" 
-																	actionListener="#{consultarSolicitudMB.actualizarDocumentosXTipoSolicitud}" />
-														     
-														     
+																<f:selectItems value="#{combosMB.lstMoneda}" var="varo" itemValue="#{varo.codMoneda}" 
+																	itemLabel="#{varo.desMoneda}" /> 
+																
+																</p:selectOneMenu></td>
+														<td><h:outputText styleClass="outputText" id="outImporte" value="Importe:" title="Importe"></h:outputText>
 														</td>
-														
+														<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importe}" onkeypress="return validaNumero(event,'0',this,'0');"
+																 onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();"  id="intImporte" maxlength="16" >
+																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																</h:inputText>	
+															</td>
 													</tr>
 													<tr>
-														<td><h:outputText styleClass="outputText" id="text19"
-																value="Documentos:"></h:outputText></td>
-														<td><p:selectOneMenu   styleClass="selectOneMenu"  
-																id="listDocumentosXTipoSoli" 
-																value="#{consultarSolicitudMB.selectedTipoDocumento}"
-																var="p" converter="tipoSolicitudDocumentoConverter" >
-																<f:selectItem itemLabel="-Seleccione-" itemValue="" />																
-																<f:selectItems value="#{consultarSolicitudMB.lstTipoSolicitudDocumentos}" var="lOf" itemValue="#{lOf}" itemLabel="#{lOf.id.codDoc}" />
-																<p:column>  
-													                <p:graphicImage value="/resources/images/#{p.obligatorio == '1' ? 'oblig.png' : 'nooblig.png'}" width="20" height="20"/>  
-													            </p:column>  													  
-													            <p:column>  
-													               #{p.tiivsDocumento.descripcion}
-													            </p:column>													            
-													            <f:selectItem itemLabel="Otros" itemValue="Otros" />															
-											               </p:selectOneMenu></td>
-															   <td> 															   
-                                                               <p:fileUpload value="#{consultarSolicitudMB.file}"  id="idfileUpload"
-                                                                mode="simple" 
-                                                                update="idfileUpload"  
-                                                                 auto="false"  
-                                                                 sizeLimit="100000"   
-                                                                 allowTypes="/(\.|\/)(pdf)$/"/>  
-  
-										                    </td>
-
-														<td><p:commandButton id="btnAceptar" value="Aceptar"  update=":formSolicitudRegistro:idMsmSolicitudEdicion,
-														:formSolicitudRegistro:listDocumentosXTipoSoli,:formSolicitudRegistro:idfileUpload,
-														:formSolicitudRegistro:cboTipoSolicitud" ajax="false"
-														action="#{consultarSolicitudMB.agregarDocumentosXTipoSolicitud}"/>
-																												
+														<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
+														<td ><h:inputText id="intTipoCambio" maxlength="8"  onkeypress="return validaNumero(event,'0',this,'0');"
+															disabled="#{consultarSolicitudMB.bBooleanPopupTipoCambio}"  onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();" 
+															value="#{consultarSolicitudMB.objSolicBancaria.tipoCambio}" >
+														<f:convertNumber pattern="#,###,##0.00" locale="en" />
+														    </h:inputText>
 														</td>
+														<p:remoteCommand id="valorImporteSoles" name="valorImporteSoles" actionListener="#{consultarSolicitudMB.obtenerAccionAgregarOperacionBancaria}"
+																	 update=":formSolicitudRegistro:txtImporteSoles">
+																	 </p:remoteCommand>
+														<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
 														
+														<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importeSoles}" readonly="true" id="txtImporteSoles">
+														<f:convertNumber pattern="#,###,##0.00" locale="en" />
+														</h:inputText>
+														</td>
+														<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{consultarSolicitudMB.agregarOperacionBancaria}" actionListener="#{consultarSolicitudMB.obtenerAccionAgregarOperacionBancaria}"
+															 update=":formSolicitudRegistro:idMsmSolicitudEdicion,:formSolicitudRegistro:tlbOperacionesBanca,
+															 :formSolicitudRegistro:txtImporteSoles,:formSolicitudRegistro:intImporte,
+															 :formSolicitudRegistro:intTipoCambio,:formSolicitudRegistro:cboMoneda,,:formSolicitudRegistro:txtComision,
+															 :formSolicitudRegistro:cboTipoOperacion, :formSolicitudRegistro:txtImpTotal" />
+														</td>
+														<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria"  action="#{consultarSolicitudMB.limpiarListaSolicitudesBancarias}" update=":formSolicitudRegistro:pnlSolicitudEdicion" /></td>
 													</tr>
 													<tr>
-														<td width="95%" colspan="11">
-														<p:dataTable var="s" id="tblDocumentos"
-																rows="20" value="#{consultarSolicitudMB.lstdocumentos}"
+														<td align="center" width="95%" colspan="11"><p:dataTable
+																var="o" rows="20" id="tlbOperacionesBanca"
+																value="#{consultarSolicitudMB.lstSolicBancarias}"
 																emptyMessage="No hay resultados en la bandeja"
 																paginatorPosition="bottom" paginator="true"
 																paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 																rowsPerPageTemplate="5,10,15" editable="true">
-
+	
 																<p:column headerText="Item">
-																	<h:outputText value="#{s.item}" />
+																	<h:outputText value="#{o.sItem}"></h:outputText>
 																</p:column>
-																<p:column headerText="Documento" style="width:400px;">
-																	<h:outputText value="#{s.documento}" />
+																<p:column headerText="Operación Bancaria"
+																	style="width:400px;">
+																	<h:outputText value="#{o.tiivsOperacionBancaria.desOperBan}"></h:outputText>
 																</p:column>
-																<p:column headerText="Obligatorio">
-																	<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>																	
+																<p:column headerText="Moneda">
+																	<h:outputText value="#{o.id.sDescMoneda}" />
 																</p:column>
-																<p:column headerText="Archivo" >																																																			
-																	<h:outputLink onclick="window.open('../../files/#{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
-																		<h:outputText value="#{s.alias}" /> 
-																	</h:outputLink>																																																																																																																																									
+																<p:column headerText="Importe" style="text-align: right ;">
+																	<h:outputText value="#{o.importe}" >
+																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																	</h:outputText>
+																</p:column>
+																<p:column headerText="Tipo de Cambio" style="text-align: right ;">
+																	<h:outputText value="#{o.tipoCambio}" >
+																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																	</h:outputText>
+																</p:column>
+																<p:column headerText="Importe en Soles" style="text-align: right ;">
+																	<h:outputText value="#{o.importeSoles}">
+																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
+																	</h:outputText>
+																</p:column>
+																<p:column headerText="Editar">
+																<p:commandButton icon="ui-icon-pencil" id="ed"
+																				 action="#{consultarSolicitudMB.editarOperacionBancaria}" 
+																				 update=":formSolicitudRegistro:pnlSolicitudEdicion" >
+																	<f:setPropertyActionListener target="#{consultarSolicitudMB.objSolicitudOperacionCapturado}"
+																								  value="#{o}" for="ed">
+																	</f:setPropertyActionListener>
+																</p:commandButton>
 																</p:column>
 																<p:column headerText="Eliminar">
-																 	<p:commandButton 
-																 		action="#{consultarSolicitudMB.quitarDocumentosXTipoSolicitud}" 
-																 		update=":formSolicitudRegistro:listDocumentosXTipoSoli,
-																 				:formSolicitudRegistro:tblDocumentos,
-																 				:formSolicitudRegistro:idCodigoDocumentoSelected"																 				
-																 		ajax="true" async="true"
-																 		id="iconOnly" icon="ui-icon-circle-close"
-																 		disabled="#{s.alias.isEmpty()?true:false}"
-																 		oncomplete="return appletEliminarDocumento();">
-																 		<f:setPropertyActionListener
-																			target="#{consultarSolicitudMB.selectedDocumentoDTO}" value="#{s}"
-																			for="iconOnly">
-																		</f:setPropertyActionListener>	
-																 	</p:commandButton> 																																	
-																																	
+																<p:commandButton icon="ui-icon-trash" id="del"
+																	 action="#{consultarSolicitudMB.eliminarOperacionBancaria}" 
+																	update=":formSolicitudRegistro:pnlSolicitudEdicion" >
+																	<f:setPropertyActionListener target="#{consultarSolicitudMB.objSolicitudOperacionCapturado}"
+																		 value="#{o}" for="del"/>
+																</p:commandButton>
 																</p:column>
 															</p:dataTable></td>
 													</tr>
-												</tbody>
-											</table>
-
-										</fieldset>
-									</td>
-								</tr>
-
-								<tr>
-									<td class="styleLegend2" width="683">
-										<fieldset style="width: 105%;" class="fielset" id="fieldsetOperacionesBancarias">
-											<h:outputText title="Operaciones Bancarias"
-												value="Operaciones Bancarias">
-											</h:outputText>
-											<p:separator styleClass="fielset" />
-											<!-- <p:messages id="idMsmOperacionBancaria"></p:messages> -->
-											<table border="0">
-												<tr>
-													<td><h:outputText styleClass="outputText"
-															id="outTipoOperacion" value="Tipo de Operación:"
-															title="Tipo de Operación"></h:outputText></td>
-													<td><p:selectOneMenu styleClass="selectOneMenu"
-															id="cboTipoOperacion"
-															value="#{consultarSolicitudMB.objSolicBancaria.id.codOperBan}"
-															immediate="true" 
-															disabled="false" >
-															<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
-															<f:selectItems value="#{combosMB.lstOpeBancaria}" var="opeBan"
-																		itemValue="#{opeBan.codOperBan}" itemLabel="#{opeBan.desOperBan}" /> 
-														</p:selectOneMenu></td>
-													<td><h:outputText styleClass="outputText"
-															id="outTipoMoneda" value="Moneda" title="Moneda"></h:outputText>
-													</td>
-													<td><p:selectOneMenu styleClass="selectOneMenu"
-															id="cboMoneda" onchange="valorImporteSoles();"
-															value="#{consultarSolicitudMB.objSolicBancaria.id.moneda}"
-															immediate="true" 
-															disabled="false" valueChangeListener="#{consultarSolicitudMB.validarTipoCambioDisabled}">
-															<p:ajax update=":formSolicitudRegistro:intImporte,
-															                :formSolicitudRegistro:intTipoCambio,
-															                :formSolicitudRegistro:txtImporteSoles" event="change"></p:ajax>
-															<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
-															<f:selectItems value="#{combosMB.lstMoneda}" var="varo" itemValue="#{varo.codMoneda}" 
-																itemLabel="#{varo.desMoneda}" /> 
-															
-															</p:selectOneMenu></td>
-													<td><h:outputText styleClass="outputText" id="outImporte" value="Importe:" title="Importe"></h:outputText>
-													</td>
-													<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importe}" onkeypress="return validaNumero(event,'0',this,'0');"
-															 onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();"  id="intImporte" maxlength="16" >
-																<f:convertNumber pattern="#,###,##0.00" locale="en" />
-															</h:inputText>	
-														</td>
-												</tr>
-												<tr>
-													<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
-													<td ><h:inputText id="intTipoCambio" maxlength="8"  onkeypress="return validaNumero(event,'0',this,'0');"
-														disabled="#{consultarSolicitudMB.bBooleanPopupTipoCambio}"  onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();" 
-														value="#{consultarSolicitudMB.objSolicBancaria.tipoCambio}" >
-													<f:convertNumber pattern="#,###,##0.00" locale="en" />
-													    </h:inputText>
-													</td>
-													<p:remoteCommand id="valorImporteSoles" name="valorImporteSoles" actionListener="#{consultarSolicitudMB.obtenerAccionAgregarOperacionBancaria}"
-																 update=":formSolicitudRegistro:txtImporteSoles">
-																 </p:remoteCommand>
-													<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
-													
-													<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importeSoles}" readonly="true" id="txtImporteSoles">
-													<f:convertNumber pattern="#,###,##0.00" locale="en" />
-													</h:inputText>
-													</td>
-													<td><p:commandButton value="Agregar" id="btnAgregarOpeBancaria" action="#{consultarSolicitudMB.agregarOperacionBancaria}" actionListener="#{consultarSolicitudMB.obtenerAccionAgregarOperacionBancaria}"
-													 update=":formSolicitudRegistro:idMsmSolicitudEdicion,:formSolicitudRegistro:tlbOperacionesBanca,
-													 :formSolicitudRegistro:txtImporteSoles,:formSolicitudRegistro:intImporte,
-													 :formSolicitudRegistro:intTipoCambio,:formSolicitudRegistro:cboMoneda,,:formSolicitudRegistro:txtComision,
-													 :formSolicitudRegistro:cboTipoOperacion, :formSolicitudRegistro:txtImpTotal" /></td>
-													<td><p:commandButton value="Limpiar" id="btnLimpiarOpeBancaria"  action="#{consultarSolicitudMB.limpiarListaSolicitudesBancarias}" update=":formSolicitudRegistro" /></td>
-												</tr>
-												<tr>
-													<td align="center" width="95%" colspan="11"><p:dataTable
-															var="o" rows="20" id="tlbOperacionesBanca"
-															value="#{consultarSolicitudMB.lstSolicBancarias}"
-															emptyMessage="No hay resultados en la bandeja"
-															paginatorPosition="bottom" paginator="true"
-															paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-															rowsPerPageTemplate="5,10,15" editable="true">
-
-															<p:column headerText="Item">
-																<h:outputText value="#{o.sItem}"></h:outputText>
-															</p:column>
-															<p:column headerText="Operación Bancaria"
-																style="width:400px;">
-																<h:outputText value="#{o.tiivsOperacionBancaria.desOperBan}"></h:outputText>
-															</p:column>
-															<p:column headerText="Moneda">
-																<h:outputText value="#{o.id.sDescMoneda}" />
-															</p:column>
-															<p:column headerText="Importe" style="text-align: right ;">
-																<h:outputText value="#{o.importe}" >
-																<f:convertNumber pattern="#,###,##0.00" locale="en" />
-																</h:outputText>
-															</p:column>
-															<p:column headerText="Tipo de Cambio" style="text-align: right ;">
-																<h:outputText value="#{o.tipoCambio}" >
-																<f:convertNumber pattern="#,###,##0.00" locale="en" />
-																</h:outputText>
-															</p:column>
-															<p:column headerText="Importe en Soles" style="text-align: right ;">
-																<h:outputText value="#{o.importeSoles}">
-																<f:convertNumber pattern="#,###,##0.00" locale="en" />
-																</h:outputText>
-															</p:column>
-															<p:column headerText="Editar">
-															<p:commandButton icon="ui-icon-pencil" id="ed"
-																			 action="#{consultarSolicitudMB.editarOperacionBancaria}" 
-																			 update=":formSolicitudRegistro" >
-																<f:setPropertyActionListener target="#{consultarSolicitudMB.objSolicitudOperacionCapturado}"
-																							  value="#{o}" for="ed">
-																</f:setPropertyActionListener>
-															</p:commandButton>
-															</p:column>
-															<p:column headerText="Eliminar">
-															<p:commandButton icon="ui-icon-trash" id="del"
-																 action="#{consultarSolicitudMB.eliminarOperacionBancaria}" 
-																update=":formSolicitudRegistro" >
-																<f:setPropertyActionListener target="#{consultarSolicitudMB.objSolicitudOperacionCapturado}"
-																	 value="#{o}" for="del"/>
-															</p:commandButton>
-															</p:column>
-														</p:dataTable></td>
-												</tr>
-
-
-
-											</table>
-										</fieldset>
-									</td>
-								</tr>
-
-
-
-							</tbody>
-						</table>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+	
+	
+	
+												</table>
+											</fieldset>
+										</td>
+									</tr>
+	
+	
+	
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</p:outputPanel>
 		
-		    	<p:dialog id="modalVerPersona"
+		<p:dialog id="modalVerPersona"
 			header="Ver Persona" widgetVar="dlgVerPersona"
 			modal="true" height="250" >
 			<table border="0" width="50px;">
@@ -856,7 +857,8 @@
 		<h:outputText  id="outTipoReg"	value="Tipo de Registro * :" />
 		<p:selectOneMenu id="cboTipoReg" value="#{consultarSolicitudMB.objTiivsPersonaResultado.tipPartic}">
 			<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-			<f:selectItems value="#{combosMB.lstTipoRegistroPersona}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" /> 
+			<f:selectItems value="#{combosMB.lstTipoRegistroPersona}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" />
+			<p:ajax event="change" update=":formRegistrar:cboClasificacion" listener="#{consultarSolicitudMB.actualizarClasificacion}"/> 
 		</p:selectOneMenu>
 		<p:graphicImage value="/resources/images/pregunta.jpg" id="toolcboTipoReg" />
 		<p:tooltip for="toolcboTipoReg" value="Tipo de Registro" showEffect="slide" />
@@ -899,7 +901,7 @@
 				
 		<p:commandButton  id="btnAgregarPersonaAgrupacion" action="#{consultarSolicitudMB.agregarAgrupacion}"
 			 value="Agregar Agrupacion" icon="ui-icon-search" onclick="dlgRegistrarPersona.hide()" 
-			 update=":formRegistrar,:formSolicitudRegistro">
+			 update=":formRegistrar,:formSolicitudRegistro:pnlSolicitudEdicion">
 		</p:commandButton>
 		<div align="center" style="width:100%; " >
 	 		<p:dataTable id="tlbPersonasPopup" var="s" rows="20" value="#{consultarSolicitudMB.lstTiivsPersona}"
