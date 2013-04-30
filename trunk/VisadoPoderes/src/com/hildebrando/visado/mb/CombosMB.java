@@ -31,6 +31,7 @@ import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
+import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
 import com.hildebrando.visado.modelo.TiivsTiempo;
@@ -186,19 +187,24 @@ public class CombosMB
 			}
 
 			// Carga combo estados
-			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS)) {
-				Estado tmpEstado = new Estado();
-				tmpEstado.setCodEstado(res.getId().getCodElem());
-				tmpEstado.setDescripcion(res.getValor1().toUpperCase());
-				lstEstado.add(tmpEstado);
-
-				int j = 0;
-
-				for (; j <= lstEstado.size() - 1; j++) {
-					estados.put(lstEstado.get(j).getDescripcion().toUpperCase(), lstEstado.get(j).getCodEstado());
-				}
-
+			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS)) 
+			{
+				String estadosSolicitudes = traerEstadoSolicitud();
 				
+				if (estadosSolicitudes.indexOf(res.getId().getCodElem().trim())!=-1)
+				{
+					Estado tmpEstado = new Estado();
+					tmpEstado.setCodEstado(res.getId().getCodElem());
+					
+					tmpEstado.setDescripcion(res.getValor1().toUpperCase());
+					lstEstado.add(tmpEstado);
+
+					int j = 0;
+
+					for (; j <= lstEstado.size() - 1; j++) {
+						estados.put(lstEstado.get(j).getDescripcion().toUpperCase(), lstEstado.get(j).getCodEstado());
+					}
+				}
 			}
 
 			// Carga combo estados Nivel
@@ -275,7 +281,33 @@ public class CombosMB
 
 	}
 	
-	
+	public String traerEstadoSolicitud()
+	{
+		List<TiivsSolicitud> tmpLista = new ArrayList<TiivsSolicitud>();
+		String cadena="";
+		
+		try 
+		{
+			GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsSolicitud.class);
+			filtro.addOrder(Order.asc("estado"));
+
+			tmpLista=service.buscarDinamico(filtro);
+			
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de solicitudes: "+e);
+		}
+		
+		for (TiivsSolicitud tmp: tmpLista)
+		{
+			cadena += tmp.getEstado()+",";
+		}
+		
+		String nuevaCadena = cadena.substring(0, cadena.length()-1);
+		
+		return nuevaCadena;
+	}
+		
 	@SuppressWarnings("unchecked")
 	public void cargarCombosNoMultitabla(){
 		try {
