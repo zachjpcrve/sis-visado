@@ -2445,10 +2445,11 @@ public class ConsultarSolicitudMB {
 
 	@SuppressWarnings({ "unused", "unchecked" })
 	@Transactional (rollbackFor=Exception.class)
-	public String registrarSolicitud() 
+	public void registrarSolicitud() 
 	{
 		String mensaje = "";
-		String redirect = "";
+//		String redirect = "";
+		redirect = "";
 		boolean actualizarBandeja=false;
 		
 		logger.info("*********************** registrarSolicitud ************************");
@@ -2632,6 +2633,20 @@ public class ConsultarSolicitudMB {
 			logger.error("Throwable ::: "+ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+t.getMessage());
 		}
 		
+		//return redirect;
+	}
+		
+	private String redirect = "";
+	
+	public String getRedirect() {
+		return redirect;
+	}
+
+	public void setRedirect(String redirect) {
+		this.redirect = redirect;
+	}
+	
+	public String redireccionar(){
 		return redirect;
 	}
 	
