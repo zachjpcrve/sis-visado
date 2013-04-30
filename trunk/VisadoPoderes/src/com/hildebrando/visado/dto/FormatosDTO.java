@@ -1,5 +1,6 @@
 package com.hildebrando.visado.dto;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class FormatosDTO {
 	private List<OperacionesPDF> lstOperaciones=new ArrayList<OperacionesPDF>();
 	private JRDataSource lstOperacionesDS;
 	private String poderdantes;
+	private Timestamp fechaHistorial;
 	
 	private String observaciones;
 
@@ -78,7 +80,17 @@ public class FormatosDTO {
 
 	public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
+	}
+
+	public Timestamp getFechaHistorial() {
+		return fechaHistorial;
+	}
+
+	public void setFechaHistorial(Timestamp fechaHistorial) {
+		this.fechaHistorial = fechaHistorial;
 	}	
+	
+	
 
 	
 }
