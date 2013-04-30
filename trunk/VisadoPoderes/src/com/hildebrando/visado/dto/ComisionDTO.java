@@ -15,8 +15,8 @@ public class ComisionDTO {
 	private String item2;
 	private String item3;
 	private String item4;
-	private Double importeLimite;
 	private Double importe;
+	private Double importeLimite;
 	public String getItem1() {
 		return item1;
 	}
@@ -41,19 +41,19 @@ public class ComisionDTO {
 	public void setItem4(String item4) {
 		this.item4 = item4;
 	}
-	public Double getImporteLimite() {
-		return importeLimite;
-	}
-	public void setImporteLimite(Double importeLimite) {
-		this.importeLimite = importeLimite;
-	}
 	public Double getImporte() {
 		return importe;
 	}
 	public void setImporte(Double importe) {
 		this.importe = importe;
 	}
+	public Double getImporteLimite() {
+		return importeLimite;
+	}
+	public void setImporteLimite(Double importeLimite) {
+		this.importeLimite = importeLimite;
+	}
+	
+	
 
-	
-	
 }
