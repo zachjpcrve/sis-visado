@@ -163,7 +163,7 @@ public class RespNivelAprobacionMB {
 		try{
 			this.setLimpiar(true);
 			ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
-            ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
+            ec.redirect("../../faces/paginas/newEditRespNivel.xhtml?faces-redirect=true");
 			logger.debug("=== bEditar ==== ::: "+bEditar);
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel.xhtml: "+e);
