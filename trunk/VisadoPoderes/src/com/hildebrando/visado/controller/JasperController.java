@@ -2,6 +2,7 @@ package com.hildebrando.visado.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -348,16 +349,19 @@ public class JasperController {
 			lstHist = histDAO.buscarDinamico(filtroHist);
 			
 			String obs = "";
+			Timestamp fechaComentario = null;
+			
 			String nombrePDF =  "Observacion_" +codSoli+"_" + movimiento + ".pdf";
 			if(lstHist.size()>0){
 				obs = lstHist.get(0).getObs();
-				
+				fechaComentario = lstHist.get(0).getFecha();
 			}
 			
 			List<FormatosDTO> cabecera = new ArrayList<FormatosDTO>();
 			FormatosDTO uno = new FormatosDTO();
 			
-			uno.setObservaciones(obs);			
+			uno.setObservaciones(obs);	
+			uno.setFechaHistorial(fechaComentario);
 
 			cabecera.add(uno);
 			response.setHeader("Content-type", "application/pdf");
@@ -389,61 +393,21 @@ public class JasperController {
 		logger.info("==== generarReporteComision ==== ");
 		try {
 
-			
-//			String 
-//			
-//			String codSoli = "";
-//			String movimiento = "";
-//			codSoli = id.split(";")[0];
-//			movimiento  = id.split(";")[1];
-//			
-//			logger.info("codSoli   :" + codSoli);
-//			logger.info("movimiento:" + movimiento);
-			
-//			GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-//			Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
-//			filtroHist.add(Restrictions.eq("id.codSoli", codSoli));
-//			filtroHist.add(Restrictions.eq("id.movimiento", movimiento));
-//		
-//			List<TiivsHistSolicitud> lstHist = new ArrayList<TiivsHistSolicitud>();
-//			lstHist = histDAO.buscarDinamico(filtroHist);
-//			
-//			String obs = "";
-//			String nombrePDF =  "Observacion_" + codSoli +"_" + movimiento + ".pdf";
-//			if(lstHist.size()>0){
-//				obs = lstHist.get(0).getObs();
-//				
-//			}
-			
-			
 			String []parametros = param.split(";");
-			
-			
-			
-			
-			List<ComisionDTO> cabecera = new ArrayList<ComisionDTO>();
-			
-			ComisionDTO uno = new ComisionDTO();
-			
-			
-			try {
-				logger.info(parametros[0]);
-				logger.info(parametros[1]);
-				logger.info(parametros[2]);
-				logger.info(parametros[3]);
-				logger.info(parametros[4]);
-				logger.info(parametros[5]);
-				
+			List<ComisionDTO> cabecera = new ArrayList<ComisionDTO>();			
+			ComisionDTO uno = new ComisionDTO();						
+			try {			
 				uno.setItem1(parametros[0]);
 				uno.setItem2(parametros[1]);
 				uno.setItem3(parametros[2]);
 				uno.setItem4(parametros[3]);
-				Double importe = Double.valueOf(parametros[5]);
 				Double importeLimite = Double.valueOf(parametros[4]);
+				Double importe = Double.valueOf(parametros[5]);
+				
 				uno.setImporte(importe);
 				uno.setImporteLimite(importeLimite);
 			} catch (Exception e) {
-				// TODO: handle exception
+				
 			}
 			
 			cabecera.add(uno);
