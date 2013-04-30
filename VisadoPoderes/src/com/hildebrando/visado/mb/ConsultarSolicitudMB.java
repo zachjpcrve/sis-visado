@@ -52,6 +52,7 @@ import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMiembro;
+import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
@@ -239,6 +240,42 @@ public class ConsultarSolicitudMB {
 		}
 
 		return results;
+	}
+	
+	public void actualizarClasificacion()
+	{
+		if (objTiivsPersonaResultado!=null)
+		{
+			if (objTiivsPersonaResultado.getTipPartic()!=null)
+			{
+				lstClasificacionPersona= new ArrayList<ComboDto>();
+				
+				GenericDao<TiivsMultitabla, Object> serviceClas = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+				Busqueda filtroTipoClas = Busqueda.forClass(TiivsMultitabla.class);
+				filtroTipoClas.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA));
+				filtroTipoClas.add(Restrictions.eq("valor3", objTiivsPersonaResultado.getTipPartic()));
+				filtroTipoClas.add(Restrictions.eq("valor2", "1"));
+				List<TiivsMultitabla> lstTmpMult = new ArrayList<TiivsMultitabla>();
+				
+				try
+				{
+					lstTmpMult=serviceClas.buscarDinamico(filtroTipoClas);
+				}
+				catch (Exception e) 
+				{
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de datos de Clasificacion de personas: "+e);
+				}
+				
+				for (TiivsMultitabla mult: lstTmpMult)
+				{
+					ComboDto t = new ComboDto();
+					t.setKey(mult.getId().getCodElem());
+					t.setDescripcion(mult.getValor1());
+					lstClasificacionPersona.add(t);
+				}
+				
+			}
+		}
 	}
 
 	/*
