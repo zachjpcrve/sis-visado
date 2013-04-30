@@ -1692,7 +1692,11 @@ public class ConsultarSolicitudMB {
 					Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)) {
-					
+					if(solicitudRegistrarT.getTiivsEstudio()!=null){
+						if(solicitudRegistrarT.getTiivsEstudio().getCodEstudio()==null){
+							solicitudRegistrarT.setTiivsEstudio(null);
+						}
+					}
                     if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)
                     		          && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
                     	 this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
