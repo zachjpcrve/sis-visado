@@ -869,8 +869,8 @@ public class Utilitarios {
 	
 	  public static boolean validateEmail(String email) {
 			 
-	        Pattern p = Pattern.compile("[a-zA-Z0-9]+[.[a-zA-Z0-9_-]+]*@[a-z0-9][\\w\\.-]*[a-z0-9]\\.[a-z][a-z\\.]*[a-z]$");//me gusta esta
-	 
+	        Pattern p = Pattern.compile("[a-zA-Z0-9]+[.[a-zA-Z0-9_-]+]*@[a-z0-9][\\w\\.-]*[a-z0-9]\\.[a-z][a-z\\.]*[a-z]$",Pattern.CASE_INSENSITIVE);//me gusta esta
+	        
 	        Matcher m = p.matcher(email);
 	        return m.matches();
 	  }
