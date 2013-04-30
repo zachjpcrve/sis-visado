@@ -6,6 +6,7 @@
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<field name="observaciones" class="java.lang.String"/>
+	<field name="fechaHistorial" class="java.sql.Timestamp"/>
 	<background>
 		<band/>
 	</background>
@@ -15,10 +16,10 @@
 				<reportElement x="3" y="9" width="249" height="41"/>
 				<imageExpression class="java.lang.String"><![CDATA["./resources/images/bbva2.gif"]]></imageExpression>
 			</image>
-			<textField pattern="dd/MM/yyyy hh:mm:ss a">
+			<textField pattern="dd/MM/yyyy hh:mm aaa" isBlankWhenNull="true">
 				<reportElement x="344" y="9" width="128" height="20"/>
 				<textElement/>
-				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{fechaHistorial}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
