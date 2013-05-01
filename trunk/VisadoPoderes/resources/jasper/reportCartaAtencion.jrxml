@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="542" pageHeight="795" columnWidth="502" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.5394743546921197"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="216"/>
+	<property name="ireport.y" value="241"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -65,9 +65,12 @@
 				<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="17" y="2" width="474" height="50" isPrintWhenDetailOverflows="true"/>
 			</rectangle>
 		</band>
-		<band height="30">
+		<band height="39">
+			<rectangle>
+				<reportElement stretchType="RelativeToBandHeight" x="17" y="1" width="474" height="34" isPrintWhenDetailOverflows="true"/>
+			</rectangle>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" isPrintRepeatedValues="false" x="26" y="4" width="459" height="23" isPrintWhenDetailOverflows="true"/>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="26" y="4" width="459" height="26" isPrintWhenDetailOverflows="true"/>
 				<textElement markup="html"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones}!=null?$F{instrucciones}:" "]]></textFieldExpression>
 			</textField>
