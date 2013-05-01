@@ -763,6 +763,7 @@
 			header="Busqueda Cliente/No Cliente" widgetVar="dlgRegistrarPersona"
 			modal="true" height="520" width="#{solicitudRegMB.ancho_Popup_Poder}">
 	                    <h:form id="formRegistrar">
+	                    <h:panelGrid id="pnlRegistrar">
 		    <p:messages id="idMsmModalPerona"></p:messages>
 		     <table border="0" width="30px">
 		      <tbody>
@@ -929,7 +930,7 @@
 			<h:outputText value="#{s.email}" />
 			</p:column>
 			<p:column headerText="Editar">
-			<p:commandButton icon="ui-icon-pencil" id="ed" action="#{consultarSolicitudMB.editarPersona}"  update=":formRegistrar" >
+			<p:commandButton icon="ui-icon-pencil" id="ed" action="#{consultarSolicitudMB.editarPersona}"  update=":formRegistrar:pnlRegistrar" >
 				<f:setPropertyActionListener target="#{consultarSolicitudMB.objTiivsPersonaCapturado}"
 						  value="#{s}" for="ed">
 				</f:setPropertyActionListener>
@@ -945,6 +946,7 @@
 			</p:dataTable>
 			
 			</div>
+		    </h:panelGrid>
 		    </h:panelGrid>
 		</h:form>
 		</p:dialog>
