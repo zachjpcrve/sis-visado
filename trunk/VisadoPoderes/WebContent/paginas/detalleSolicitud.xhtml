@@ -79,51 +79,38 @@
 								<tr>
 									<td class="styleLegend2" width="203">
 										<fieldset style="width: 105%;" class="fielset">
-											<h:outputText title="Información General"
-												value="Información General" styleClass="outputText" />
+											<h:outputText title="Información General" value="Información General" styleClass="outputText" />
 											<p:separator />
 											<table border="0">
 												<tbody>
 													<tr>
-														<td><h:outputText styleClass="outputText"
-																id="txtCodNumSol" value="Nro Solicitud:" /></td>
-														<td><h:outputText  id="text1"
-																style="width:100px;"
-																value="#{consultarSolicitudMB.solicitudRegistrarT.codSoli}" /></td>
-														
-
-														<td><h:outputText styleClass="outputText" id="text3"
-																value="Estado:" /></td>
-														<td><h:outputText 	id="txtEstado" style="width:100px;"
-																value="#{consultarSolicitudMB.solicitudRegistrarT.descEstado}" /></td>
-													
-
+														<td><h:outputText styleClass="outputText" id="txtCodNumSol" value="Nro Solicitud:" /></td>
+														<td><h:outputText id="text1" style="width:100px;" value="#{consultarSolicitudMB.solicitudRegistrarT.codSoli}"/></td>
+														<td></td><td></td><td></td><td></td>
+														<td><h:outputText styleClass="outputText" id="text3" value="Estado:" /></td>
+														<td><h:outputText 	id="txtEstado" style="width:100px;" value="#{consultarSolicitudMB.solicitudRegistrarT.descEstado}" /></td>
+														<td></td><td></td><td></td><td></td>
 														<td><h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
-														<td >
+														<td>
 														<h:outputText id="cboOficina" value="#{consultarSolicitudMB.solicitudRegistrarT.tiivsOficina1.codOfi}-#{consultarSolicitudMB.solicitudRegistrarT.tiivsOficina1.desOfi}(#{consultarSolicitudMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.codTer}-#{consultarSolicitudMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.desTer})" style="font-size:0.98em"> 
 														</h:outputText></td>
-											
-
-													</tr>
+											    	</tr>
 													<tr>
+														<td><h:outputText styleClass="outputText" id="outNroVaucher" value="Nro Voucher:" /></td>
+														<td><h:outputText id="txtNroVaucher" 
+															style="width:100px;" value="#{consultarSolicitudMB.solicitudRegistrarT.nroVoucher}" /></td>
+														<td></td><td></td><td></td><td></td>
 														<td><h:outputText styleClass="outputText"
-																id="outNroVaucher" value="Nro Voucher " /></td>
-														<td><h:outputText  
-																id="txtNroVaucher" style="width:100px;" value="#{consultarSolicitudMB.solicitudRegistrarT.nroVoucher}" /></td>
-													
-
-														<td><h:outputText styleClass="outputText"
-																id="outComision" value="Comisión" /></td>
+																id="outComision" value="Comisión:" /></td>
 														<td><h:outputText
 																id="txtComision" style="width:100px;"
 																value="#{consultarSolicitudMB.solicitudRegistrarT.comision}" >
 																<f:convertNumber pattern="#,###,##0.00" locale="en" />
 																</h:outputText>
 																</td>
-													
-
+														<td></td><td></td><td></td><td></td>
 														<td><h:outputText styleClass="outputText"
-																id="outImpTotal" value="Importe Total" /></td>
+																id="outImpTotal" value="Importe Total:" /></td>
 														<td><h:outputText 
 																id="txtImpTotal" style="width:100px;"
 																value="#{consultarSolicitudMB.solicitudRegistrarT.sImporteMoneda}">
