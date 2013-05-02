@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.hildebrando.visado.dto.AgrupacionDelegadosDto;
 import com.hildebrando.visado.dto.AgrupacionPlazoDto;
-import com.hildebrando.visado.modelo.Liquidacion;
+import com.hildebrando.visado.dto.Estado;
 import com.hildebrando.visado.modelo.RecaudacionTipoServ;
 import com.hildebrando.visado.modelo.SolicitudesOficina;
 import com.hildebrando.visado.modelo.SolicitudesTipoServicio;
@@ -34,4 +34,5 @@ public interface SolicitudDao<K, T> extends GenericDao<K, T>{
 	public List<TiivsNivel> listarNivelesDistinct() throws Exception;
 	public List<String> obtenerCodigosSolicitudesARevocarRechazar() throws Exception ;
 	public boolean validarExisteGrupoDelegados(List<TiivsMiembroNivel> listaDelegados);
+	public List<Estado> traerEstadosFlujoSolicitud() throws Exception;
 }

@@ -23,6 +23,7 @@ import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.dto.AgrupacionDelegadosDto;
 import com.hildebrando.visado.dto.AgrupacionPlazoDto;
+import com.hildebrando.visado.dto.Estado;
 import com.hildebrando.visado.modelo.Liquidacion;
 import com.hildebrando.visado.modelo.RecaudacionTipoServ;
 import com.hildebrando.visado.modelo.SolicitudesOficina;
@@ -129,6 +130,43 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		}
 		return listaCodgiosSolicitud;
 
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<Estado> traerEstadosFlujoSolicitud() throws Exception
+	{
+		List<Estado> lstEstado = new ArrayList<Estado>();
+		
+		final String sql = "select cast(codigo as varchar(4)) codigo, descripcion from( " +
+				" select distinct tiivs_solicitud.estado as codigo,tiivs_multitabla.valor1 as  descripcion from tiivs_solicitud " +
+				" join tiivs_multitabla  on tiivs_solicitud.estado = tiivs_multitabla.cod_elem and tiivs_multitabla.cod_mult='T02' " +
+				" order by tiivs_multitabla.valor1 asc)";
+		
+		logger.info("SQL : "+sql);
+		
+		List ResultList = (List) getHibernateTemplate().execute(
+				new HibernateCallback() {
+					public List doInHibernate(Session session)
+							throws HibernateException {
+						SQLQuery sq = session.createSQLQuery(sql);
+						return sq.list();
+					}
+				});
+		 
+		if(ResultList.size()>0)
+		{
+			 for(int i=0;i<=ResultList.size()-1;i++)
+			 {
+				 Object[] row =  (Object[]) ResultList.get(i);
+			    
+			    Estado tmpEstado = new Estado();
+				tmpEstado.setCodEstado(row[0].toString());
+				tmpEstado.setDescripcion(row[1].toString());
+				lstEstado.add(tmpEstado);
+			 }
+		}
+		
+		return lstEstado;
 	}
 	
 	@SuppressWarnings("unchecked")

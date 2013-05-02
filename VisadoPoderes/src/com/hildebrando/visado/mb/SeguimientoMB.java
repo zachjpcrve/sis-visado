@@ -183,6 +183,9 @@ public class SeguimientoMB
 		
 		setearCamposxPerfil();		
 		generarNombreArchivo();
+		
+		//Carga estado del flujo
+		//combosMB.traerEstadosFlujoSolicitud();
 		//setNoMostrarFechas(true);
 	}
 	
