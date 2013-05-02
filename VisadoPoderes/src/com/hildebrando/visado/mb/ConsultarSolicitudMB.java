@@ -609,28 +609,30 @@ public class ConsultarSolicitudMB {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void obtenerSolicitud(String codigoSolicitud){
+	public void obtenerSolicitud(String codigoSolicitud)
+	{
 		try {
 			lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 			listaTemporalSolicitudAgrupacionesBorradores=new ArrayList<TiivsSolicitudAgrupacion>();
-			//String codigoSolicitud = Utilitarios.capturarParametro("prm_codSoli");
+			
 			TiivsSolicitud solicitud;
 			logger.info("DetalleSolicitud-[codigoSolicitud]: " + codigoSolicitud);
-			 solicitud = new TiivsSolicitud();
+			solicitud = new TiivsSolicitud();
 			solicitud.setCodSoli(codigoSolicitud);
 			
 			SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 			solicitudRegistrarT = solicitudService.obtenerTiivsSolicitud(solicitud);
 			
 			solicitudRegistrarT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudRegistrarT.getEstado()));
-			
-			
+						
 			lstSolicBancarias = solicitudService.obtenerListarOperacionesBancarias(solicitud);
 			// BY SAMIRA 
 			solicitudRegistrarT.setLstSolicBancarias(lstSolicBancarias);
 			lstSolicBancariasCopia = new ArrayList<TiivsSolicitudOperban>();
 			lstSolicBancariasCopia.addAll(lstSolicBancarias);
-			if(lstSolicBancariasCopia!=null){
+			
+			if(lstSolicBancariasCopia!=null)
+			{
 				logger.info(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstSolicBancariasCopia es: ["+lstSolicBancariasCopia.size()+"].");	
 			}
 			
