@@ -4114,6 +4114,7 @@ public class ConsultarSolicitudMB {
 						agruPersona.setCodSoli(tiivsSolicitudAgrupacionCapturado.getId().getCodSoli());
 						agruPersona.setNumGrupo(tiivsSolicitudAgrupacionCapturado.getId().getNumGrupo());
 						agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);
+						agruPersona.setIdAgrupacion(tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size()+1);
 					}
 										
 					this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().add(agruPersona);
