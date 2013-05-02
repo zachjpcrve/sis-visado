@@ -970,7 +970,7 @@
 								id="toolcboClasificacion" />
 							<p:tooltip for="toolcboClasificacion" value="Clasificación" showEffect="slide" />
 							<!--  <h:inputText styleClass="inputTextPopup" id="txtClasiSelect"
-								size="15" value="#{solicitudRegMB.objTiivsPersonaResultado.clasifPerOtro}" />-->
+								size="15" value="{solicitudRegMB.objTiivsPersonaResultado.clasifPerOtro}" />-->
 							<h:outputText id="outEmail" value="Email:" />
 							<h:inputText styleClass="inputTextPopup" id="txtEmail"
 								style="width:100px;" value="#{solicitudRegMB.objTiivsPersonaResultado.email}" onkeypress=""/>
@@ -989,13 +989,8 @@
 						
 						</h:panelGrid>
 						
-						<h:panelGrid columns="8">
-							<h:outputText style="color:white; "
-								value="                                                               " />
-							<h:outputText style="color:white; "
-								value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
-
-
+						<h:panelGrid columns="4">
+							<p:spacer width="350" height="10" />
 							<p:commandButton id="btnAgregar" value="Agregar"
 								style="padding-left:0em !important;"
 								action="#{solicitudRegMB.agregarPersona}"
@@ -1004,6 +999,7 @@
 								style="padding-left:0.1em !important;"
 								action="#{solicitudRegMB.limpiarCriteriosBusqueda}"
 								update=":formRegistrar:pnlRegistrar" />
+							<p:spacer width="350" height="10" />
 						</h:panelGrid>
 					</p:panel>
 
