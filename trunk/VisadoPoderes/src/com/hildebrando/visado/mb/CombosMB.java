@@ -1,7 +1,12 @@
 package com.hildebrando.visado.mb;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +21,7 @@ import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
+import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.Estado;
 import com.hildebrando.visado.dto.EstadosNivel;
@@ -46,8 +52,8 @@ import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
 
 @ManagedBean(name = "combosMB")
 @SessionScoped
-public class CombosMB 
-{
+public class CombosMB{ 
+
  	public static Logger logger = Logger.getLogger(CombosMB.class);
 	private List<TiivsMultitabla> lstMultitabla;
 	private List<RangosImporte> lstRangosImporte;
@@ -185,8 +191,8 @@ public class CombosMB
 
 				
 			}
-
-			// Carga combo estados
+			
+			/*// Carga combo estados
 			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS)) 
 			{
 				String estadosSolicitudes = traerEstadoSolicitud();
@@ -205,7 +211,7 @@ public class CombosMB
 						estados.put(lstEstado.get(j).getDescripcion().toUpperCase(), lstEstado.get(j).getCodEstado());
 					}
 				}
-			}
+			}*/
 
 			// Carga combo estados Nivel
 			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS_NIVEL)) {
@@ -270,42 +276,72 @@ public class CombosMB
 			lstTipoDocumentos.add(lstTipoDocumentosExtra2.get(i));
 		}
 		
-/*		logger.debug("Tamanio lista de Clasificacion de Personas: "+ lstClasificacionPersona.size());
-		logger.debug("Tamanio lista de Tipo de Registro de Personas: "+ lstTipoRegistroPersona.size());
-		logger.debug("Tamanio lista de importes: "+ lstRangosImporte.size());
-		logger.debug("Tamanio lista de estados: " + lstEstado.size());
-		logger.debug("Tamanio lista de estados nivel: "+ lstEstadoNivel.size());
-		logger.debug("Tamanio lista de estados: " + lstEstado.size());
-		logger.debug("Tamanio lista de tipos de fecha: "+ lstTiposFecha.size());
-		logger.debug("Tamanio lista de monedas: " + lstMoneda.size());*/
-
+		//Traer combo estados 
+		traerEstadosFlujoSolicitud();
 	}
 	
-	public String traerEstadoSolicitud()
+	@SuppressWarnings("unchecked")
+	public void traerEstadosFlujoSolicitud()
 	{
-		List<TiivsSolicitud> tmpLista = new ArrayList<TiivsSolicitud>();
-		String cadena="";
+		List<Estado> tmpLista = new ArrayList<Estado>();
+		SolicitudDao<Estado, Object> solicitudService = (SolicitudDao<Estado, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		
-		try 
+		try {
+			tmpLista = solicitudService.traerEstadosFlujoSolicitud();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		int j = 0;
+		int indice =-1;
+		
+		Map<String, String> tmpEstados = new HashMap<String, String>();
+		
+		for (; j <= tmpLista.size() - 1; j++) 
 		{
-			GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-			Busqueda filtro = Busqueda.forClass(TiivsSolicitud.class);
-			filtro.addOrder(Order.asc("estado"));
-
-			tmpLista=service.buscarDinamico(filtro);
+			tmpEstados.put(tmpLista.get(j).getDescripcion().toUpperCase(), tmpLista.get(j).getCodEstado());
 			
-		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de solicitudes: "+e);
-		}
+			if (tmpLista.get(j).getDescripcion().trim().equals(ConstantesVisado.ESTADOS.ESTADO_VENCIDO_T02.toUpperCase()))
+			{
+				indice=j;
+			}
+		}		
 		
-		for (TiivsSolicitud tmp: tmpLista)
+		if (indice==-1)
 		{
-			cadena += tmp.getEstado()+",";
+			tmpEstados.put(ConstantesVisado.ESTADOS.ESTADO_VENCIDO_T02.toUpperCase(), ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02);
 		}
 		
-		String nuevaCadena = cadena.substring(0, cadena.length()-1);
+		estados = sortByComparator(tmpEstados);
+						
+		logger.debug("Lista final de estados:" + estados.size());
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static Map sortByComparator(Map unsortMap) 
+	{	 
+		List list = new LinkedList(unsortMap.entrySet());
+ 
+		// sort list based on comparator
+		Collections.sort(list, new Comparator() 
+		{
+			public int compare(Object o1, Object o2) 
+			{
+				return ((Comparable) ((Map.Entry) (o1)).getKey()).compareTo(((Map.Entry) (o2)).getKey());
+			}
+		});
+ 
+		//Put sorted list into map again
+        //LinkedHashMap make sure order in which keys were inserted
 		
-		return nuevaCadena;
+		Map sortedMap = new LinkedHashMap();
+		for (Iterator it = list.iterator(); it.hasNext();) 
+		{
+			Map.Entry entry = (Map.Entry) it.next();
+			sortedMap.put(entry.getKey(), entry.getValue());
+		}
+		
+		return sortedMap;
 	}
 		
 	@SuppressWarnings("unchecked")
