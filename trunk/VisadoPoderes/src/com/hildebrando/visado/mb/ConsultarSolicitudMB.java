@@ -3157,6 +3157,7 @@ public class ConsultarSolicitudMB {
 				doc.setItem(s.getId().getCodDoc());
 				doc.setDocumento(s.getTiivsDocumento().getDescripcion());
 				doc.setObligacion(true + "");
+				doc.setBobligacion(true);
 				doc.setAlias("");
 				doc.setAliasTemporal("");
 				doc.setNombreCorto(s.getTiivsDocumento().getNombre());
@@ -3171,6 +3172,7 @@ public class ConsultarSolicitudMB {
 				doc.setItem(s.getId().getCodDoc());
 				doc.setDocumento(s.getTiivsDocumento().getDescripcion());
 				doc.setObligacion(false + "");
+				doc.setBobligacion(false);
 				doc.setAlias("");
 				doc.setAliasTemporal("");
 				doc.setNombreCorto(s.getTiivsDocumento().getNombre());
