@@ -727,6 +727,7 @@
 		 
 		
 <h:form id="formBusqueda">
+	<p:outputPanel id="pnlBusqueda">
 		<p:dialog id="modalBusqueda" header="Busqueda Cliente/No Cliente" visible="#{consultarSolicitudMB.bBooleanPopup}"
 			widgetVar="dlgModalBusqueda" modal="true" height="300" >
 
@@ -751,19 +752,20 @@
 				</p:column>
 				<f:facet name="footer">  
                   <p:commandButton id="btnAgregarBusqueda" value="Agregar" icon="ui-icon-search"  actionListener="#{consultarSolicitudMB.obtenerPersonaSeleccionada}"
-                     onclick="dlgModalBusqueda.hide()" update=":formRegistrar"/>  
+                     onclick="dlgModalBusqueda.hide()" update=":formRegistrar:pnlRegistrar"/>  
                 </f:facet> 
 
 			</p:dataTable>
 		
 		</p:dialog>
+	</p:outputPanel>
 </h:form>
  
-		         <p:dialog id="modalRegistrarPersona"
+	<p:dialog id="modalRegistrarPersona"
 			header="Busqueda Cliente/No Cliente" widgetVar="dlgRegistrarPersona"
 			modal="true" height="520" width="#{solicitudRegMB.ancho_Popup_Poder}">
-	                    <h:form id="formRegistrar">
-	                    <h:panelGrid id="pnlRegistrar">
+	  <h:form id="formRegistrar">
+	  	<h:panelGrid id="pnlRegistrar">
 		    <p:messages id="idMsmModalPerona"></p:messages>
 		     <table border="0" width="30px">
 		      <tbody>
@@ -797,7 +799,7 @@
 			<p:tooltip for="toolcboDoi" value="Documento Obligatorio de Identidad" showEffect="slide" />
 
 			<p:commandButton value="Buscar" id="btnBuscar" action="#{consultarSolicitudMB.buscarPersona}"
-					update=":formRegistrar,:formBusqueda" />
+					update=":formRegistrar:pnlRegistrar,:formBusqueda:pnlBusqueda" />
 			</h:panelGrid>		
                         			
                         						
@@ -893,8 +895,8 @@
 		<h:outputText style="color:white; " value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
 		
 		
-		<p:commandButton id="btnAgregar" value="Agregar" style="padding-left:0em !important;" action="#{consultarSolicitudMB.agregarPersona}"  update=":formRegistrar"/>
-		<p:commandButton id="btnLimpiar" value="Limpiar" style="padding-left:0.1em !important;"  actionListener="#{consultarSolicitudMB.limpiarCriteriosBusqueda}" update=":formRegistrar"/>
+		<p:commandButton id="btnAgregar" value="Agregar" style="padding-left:0em !important;" action="#{consultarSolicitudMB.agregarPersona}"  update=":formRegistrar:pnlRegistrar"/>
+		<p:commandButton id="btnLimpiar" value="Limpiar" style="padding-left:0.1em !important;"  actionListener="#{consultarSolicitudMB.limpiarCriteriosBusqueda}" update=":formRegistrar:pnlRegistrar"/>
 		</h:panelGrid>
 	 </h:panelGrid>
 			
@@ -902,7 +904,7 @@
 				
 		<p:commandButton  id="btnAgregarPersonaAgrupacion" action="#{consultarSolicitudMB.agregarAgrupacion}"
 			 value="Agregar Agrupacion" icon="ui-icon-search" onclick="dlgRegistrarPersona.hide()" 
-			 update=":formRegistrar,:formSolicitudRegistro:pnlSolicitudEdicion">
+			 update=":formRegistrar:pnlRegistrar,:formSolicitudRegistro:pnlSolicitudEdicion">
 		</p:commandButton>
 		<div align="center" style="width:100%; " >
 	 		<p:dataTable id="tlbPersonasPopup" var="s" rows="20" value="#{consultarSolicitudMB.lstTiivsPersona}"
@@ -937,7 +939,7 @@
 			</p:commandButton>
 			</p:column>
 			<p:column headerText="Eliminar">
-			<p:commandButton icon="ui-icon-trash" id="del" 	 action="#{consultarSolicitudMB.eliminarPersona}"  update=":formRegistrar" >
+			<p:commandButton icon="ui-icon-trash" id="del" 	 action="#{consultarSolicitudMB.eliminarPersona}"  update=":formRegistrar:pnlRegistrar" >
 			<f:setPropertyActionListener target="#{consultarSolicitudMB.objTiivsPersonaCapturado}"
 			 value="#{s}" for="del">
 			</f:setPropertyActionListener>
