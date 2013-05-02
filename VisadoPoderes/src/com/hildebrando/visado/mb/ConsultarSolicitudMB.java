@@ -3828,7 +3828,8 @@ public class ConsultarSolicitudMB {
 		for(TiivsAgrupacionPersona agruPersona: this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas()){
 			//Si Personacapturado es igual a algun elemento de  this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas
 			//if(agruPersona.getCodPer().equals(objTiivsPersonaCapturado.getCodPer()) && agruPersona.getTipPartic().equals(objTiivsPersonaCapturado.getTipPartic())){
-			if(agruPersona.getIdAgrupacion().equals(objTiivsPersonaCapturado.getIdAgrupacion())){
+			//if(agruPersona.getIdAgrupacion().equals(objTiivsPersonaCapturado.getIdAgrupacion())){
+			if(agruPersona.getTiivsPersona().equals(objTiivsPersonaCapturado)){
 				tiivsAgrupacionPersonaCapturado = agruPersona;
 				break;
 			}
@@ -4108,8 +4109,7 @@ public class ConsultarSolicitudMB {
 					if(tiivsSolicitudAgrupacionCapturado!=null){
 						agruPersona.setCodSoli(tiivsSolicitudAgrupacionCapturado.getId().getCodSoli());
 						agruPersona.setNumGrupo(tiivsSolicitudAgrupacionCapturado.getId().getNumGrupo());
-						agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);
-						agruPersona.setIdAgrupacion(tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size()+1);
+						agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);						
 					}
 										
 					this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().add(agruPersona);
