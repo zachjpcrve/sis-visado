@@ -51,6 +51,7 @@ import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMiembro;
+import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsParametros;
@@ -2354,7 +2355,7 @@ public class SeguimientoMB
 	
 	public String buscarCodigoEstado(String estado) 
 	{
-		int i = 0;
+		/*int i = 0;
 		String codigo = "";
 		for (; i < combosMB.getLstEstado().size(); i++) {
 			if (combosMB.getLstEstado().get(i).getDescripcion().equalsIgnoreCase(estado)) {
@@ -2362,12 +2363,32 @@ public class SeguimientoMB
 				break;
 			}
 		}
-		return codigo;
+		return codigo;*/
+		
+		String resultado="";
+		List<TiivsMultitabla> tmpLista = new ArrayList<TiivsMultitabla>();
+		GenericDao<TiivsMultitabla, Object> busDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
+		filtro.add(Restrictions.eq("id.valor1", estado));
+		
+		try {
+			tmpLista = busDAO.buscarDinamico(filtro);
+		} catch (Exception e) {
+			logger.debug("Error al buscar codigos de estados");
+		}
+		
+		if (tmpLista.size()>0)
+		{
+			resultado = tmpLista.get(0).getId().getCodElem();
+		}
+		
+		return resultado;
 	}
 	
 	public String buscarEstadoxCodigo(String codigo) 
 	{
-		int i = 0;
+		/*int i = 0;
 		String res = "";
 		for (; i < combosMB.getLstEstado().size(); i++) {
 			if (combosMB.getLstEstado().get(i).getCodEstado().equalsIgnoreCase(codigo)) {
@@ -2375,7 +2396,27 @@ public class SeguimientoMB
 				break;
 			}
 		}
-		return res;
+		return res;*/
+		
+		String resultado="";
+		List<TiivsMultitabla> tmpLista = new ArrayList<TiivsMultitabla>();
+		GenericDao<TiivsMultitabla, Object> busDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
+		filtro.add(Restrictions.eq("id.codElem", codigo));
+		
+		try {
+			tmpLista = busDAO.buscarDinamico(filtro);
+		} catch (Exception e) {
+			logger.debug("Error al buscar codigos de estados");
+		}
+		
+		if (tmpLista.size()>0)
+		{
+			resultado = tmpLista.get(0).getValor1().toUpperCase();
+		}
+		
+		return resultado;
 	}
 	
 	public String buscarNivelxCodigo(String codigo) 
