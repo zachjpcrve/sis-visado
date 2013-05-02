@@ -178,6 +178,8 @@ public class ConsultarSolicitudMB {
 	
 	private TiivsSolicitudAgrupacion tiivsSolicitudAgrupacionCapturado;
 	private TiivsAgrupacionPersona tiivsAgrupacionPersonaCapturado;
+	private String redirect = "";
+	private String mesajeConfirmacion = "";
 	
 	public ConsultarSolicitudMB() {		
 		inicializarContructor();
@@ -2651,14 +2653,12 @@ public class ConsultarSolicitudMB {
 				{
 					if (this.sEstadoSolicitud.equals("BORRADOR")) 
 					{
-						mensaje = "Se registro correctamente la Solicitud con codigo : " + objResultado.getCodSoli() + " en Borrador";
-						Utilitarios.mensajeInfo("INFO", mensaje);
+						mesajeConfirmacion = "Se registro correctamente la Solicitud con codigo : " + objResultado.getCodSoli() + " en Borrador";
 						actualizarBandeja=true;
 					} 
 					else //Enviar solicitud
 					{
-						mensaje = "Se envio a SSJJ correctamente la Solicitud con codigo : " + objResultado.getCodSoli();
-						Utilitarios.mensajeInfo("INFO", mensaje);
+						mesajeConfirmacion = "Se envio a SSJJ correctamente la Solicitud con codigo : " + objResultado.getCodSoli();
 						actualizarBandeja=true;						
 					}
 					
@@ -2694,17 +2694,8 @@ public class ConsultarSolicitudMB {
 		//return redirect;
 	}
 		
-	private String redirect = "";
-	
-	public String getRedirect() {
-		return redirect;
-	}
-
-	public void setRedirect(String redirect) {
-		this.redirect = redirect;
-	}
-	
 	public String redireccionar(){
+		Utilitarios.mensajeInfo("INFO", mesajeConfirmacion);
 		return redirect;
 	}
 	
@@ -5417,4 +5408,12 @@ public class ConsultarSolicitudMB {
 	public void setsTextoEstadoReservado(String sTextoEstadoReservado) {
 		this.sTextoEstadoReservado = sTextoEstadoReservado;
 	}	
+	
+	public String getRedirect() {		
+		return redirect;
+	}
+
+	public void setRedirect(String redirect) {
+		this.redirect = redirect;
+	}
 }

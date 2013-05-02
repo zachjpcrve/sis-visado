@@ -152,6 +152,8 @@ public class SolicitudRegistroMB {
 	List<TiivsPersona> listaTemporalPersonasBorradores;
 	List<TiivsPersona> lstTiivsPersonaCopia;
 	private TiivsOficina1 oficina;
+	private String redirect = "";
+	private String mesajeConfirmacion = "";
 	
 	/*private boolean boleanoMensajeInfoGeneral=true;
 	private boolean boleanoMensajeApoderdantePoderdante=true;
@@ -2405,12 +2407,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				  
 				if (objResultado.getCodSoli() != "" || objResultado != null) {
 					if (this.sEstadoSolicitud.equals("BORRADOR")) {
-						mensaje = "Se registro correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
-						Utilitarios.mensajeInfo("INFO", mensaje);
+						mesajeConfirmacion = "Se registro correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
 						actualizarBandeja=true;
 					} else {
-						mensaje = "Se envio a SSJJ correctamente la Solicitud con codigo : "+ objResultado.getCodSoli();
-						Utilitarios.mensajeInfo("INFO", mensaje);
+						mesajeConfirmacion = "Se envio a SSJJ correctamente la Solicitud con codigo : "+ objResultado.getCodSoli();
 						actualizarBandeja=true;
 					}
 					//redirect = "/faces/paginas/bandejaSeguimiento.xhtml";					
@@ -2441,22 +2441,12 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 	}
 		
-	private String redirect = "";
-	
-	public String getRedirect() {
-		return redirect;
-	}
-
-	public void setRedirect(String redirect) {
-		this.redirect = redirect;
-	}
-	
 	public String redireccionar(){
+		Utilitarios.mensajeInfo("INFO", mesajeConfirmacion);
 		return redirect;
-	}
-		
+	}		
 
-/**Enviar la solicitud a SSJJ*/
+	/**Enviar la solicitud a SSJJ*/
 	public void enviarSolicitudSSJJ() {
 		Timestamp time = new Timestamp(objRegistroUtilesMB.obtenerFechaRespuesta().getTime());
 		logger.info("time : " + time);
@@ -3226,5 +3216,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 	public void setOficina(TiivsOficina1 oficina) {
 		this.oficina = oficina;
+	}
+	
+	public String getRedirect() {
+		return redirect;
+	}
+
+	public void setRedirect(String redirect) {
+		this.redirect = redirect;
 	}
 }
