@@ -777,7 +777,7 @@
 			<p:separator styleClass="fielset"  />
 			
 			<p:panel header="Búsqueda">
-				<h:panelGrid columns="12" id="gridApodPodEd">
+				<h:panelGrid columns="12" id="gridApodPodEd" cellspacing="0" cellpadding="2">
 						<h:outputText id="outTipoDoi" value="T DOI/C Central * :  " style="color:red" />
 						<p:selectOneMenu id="cboTipoDoi"
 							value="#{consultarSolicitudMB.objTiivsPersonaBusqueda.tipDoi}"
@@ -809,8 +809,8 @@
 			</p:panel>
 			
 			<p:panel id="pnlNuevo" header="Nuevo Registro">
-				<h:panelGrid columns="8" id="gridApodPodEd2">				
-					<h:outputText  id="outTipoDoi2" value="T DOI/C *:" style="color:red" />
+				<h:panelGrid columns="8" id="gridApodPodEd2" cellspacing="0" cellpadding="2" >				
+					<h:outputText  id="outTipoDoi2" value="T DOI/C *:" style="color:red"  />					
 					<p:selectOneMenu id="cboTipoDoi2" value="#{consultarSolicitudMB.objTiivsPersonaResultado.tipDoi}" style="width:150px;">
 					       <f:selectItem itemLabel="-Seleccione-" itemValue="" />
 					       <f:selectItems value="#{combosMB.lstTipoDocumentos}" var="lOf" itemValue="#{lOf.codTipoDoc}" itemLabel="#{lOf.descripcion}" />
@@ -868,11 +868,11 @@
 
 				</h:panelGrid>
 
-				<h:panelGrid id="tableRegistrar" columns="15">
+				<h:panelGrid id="tableRegistrar" columns="15" cellspacing="0" cellpadding="2" >
 
-					<h:panelGrid columns="4">
+					<h:panelGrid columns="4" cellspacing="0" cellpadding="2">
 
-						<h:outputText id="outTipoReg" value="Tipo * :" style="color:red" />
+						<h:outputText id="outTipoReg" value="Tipo *:    " style="color:red" />
 						<p:selectOneMenu id="cboTipoReg"
 							value="#{consultarSolicitudMB.objTiivsPersonaResultado.tipPartic}">
 							<f:selectItem itemLabel="-Seleccione-" itemValue="" />
