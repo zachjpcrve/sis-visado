@@ -420,7 +420,12 @@
 																					//alert('Se eliminara archivos');
 																					//window.location.href='../../'+redirect;
 																					applet = this.document.getElementById('appletVisor');
-																					applet.eliminarDocumentosConPermisos();
+																					
+																					try{
+																						applet.eliminarDocumentosConPermisos();
+																					}
+																					catch(err){}
+																					
 																					document.getElementById('formSolicitudRegistro:btnRedirecionar').click()
 																				} else {
 																					//alert('No se elimina archivos');
