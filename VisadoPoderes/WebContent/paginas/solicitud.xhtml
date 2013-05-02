@@ -1067,20 +1067,18 @@
 		</p:dialog>
 
 
-		<p:confirmDialog id="confirmDialog"
-			message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"
+		<p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"
 			header="Confirmación" severity="alert" widgetVar="confirmation">
 
 			<h:form id="formRegistroConfirmDialog">
 				<p:commandButton id="confirm" value="Si"
-					update=":formSolicitudRegistro:idMsmSolicitudRegistro,
-	        					:formSolicitudRegistro:idCodigoSolicitud,
-	        					:formRegistroToolBar:idResultRegistro"
-					oncomplete="confirmation.hide(); appletDeleteFilesAndRedirect();"
-					action="#{solicitudRegMB.registrarSolicitud}" ajax="true"
-					actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />
-				<p:commandButton id="decline" value="No"
-					onclick="confirmation.hide()" type="button" />
+								update=":formSolicitudRegistro:idMsmSolicitudRegistro,
+				        					:formSolicitudRegistro:idCodigoSolicitud,
+				        					:formRegistroToolBar:idResultRegistro"
+								oncomplete="confirmation.hide(); appletDeleteFilesAndRedirect();"
+								action="#{solicitudRegMB.registrarSolicitud}" ajax="true"
+								actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />
+				<p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
 			</h:form>
 		</p:confirmDialog>
 
