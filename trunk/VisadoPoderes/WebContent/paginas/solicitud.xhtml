@@ -413,23 +413,16 @@
 																			}
 																			
 																			function appletDeleteFilesAndRedirect(){																																								 
-																				redirect = this.document.getElementById('formRegistroToolBar:idResultRegistro').value;																				
-																				//alert(redirect);																				
+																				redirect = this.document.getElementById('formRegistroToolBar:idResultRegistro').value;																																							
 																				//Si redirect no esta vacio entonces se realizó el registro de forma correcta
 																				if(redirect.length>0){
-																					//alert('Se eliminara archivos');
-																					//window.location.href='../../'+redirect;
-																					applet = this.document.getElementById('appletVisor');
-																					
+																					applet = this.document.getElementById('appletVisor');																					
 																					try{
 																						applet.eliminarDocumentosConPermisos();
 																					}
-																					catch(err){}
-																					
+																					catch(err){}																					
 																					document.getElementById('formSolicitudRegistro:btnRedirecionar').click()
-																				} else {
-																					//alert('No se elimina archivos');
-																				}
+																				} 
 																			}
 																		</script>
 
