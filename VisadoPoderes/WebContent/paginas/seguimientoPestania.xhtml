@@ -32,8 +32,44 @@
 		</h:panelGrid>
 		
 		<p:commandButton id="validar" value="Validar Vencimiento" update=":formSolicitudSeguimiento" 
-			rendered="false"  actionListener="#{consultarSolicitudMB.validarCambioEstadoVencido}"/>	
-		
+			rendered="false"  actionListener="#{consultarSolicitudMB.validarCambioEstadoVencido}"/>
+
+
+		<script type="text/javascript" language="javascript">
+						
+			var flagGuardado = false;
+			idleTime = 0;
+
+			$(document).ready(function() {
+				//Increment the idle time counter every minute.
+				var idleInterval = setInterval("timerIncrement()", 60*1000); // cada 10 segundos
+				//Zero the idle timer on mouse movement.
+				$(this).mousemove(function(e) {
+					idleTime = 0;
+				});
+				$(this).keypress(function(e) {
+					idleTime = 0;
+				});
+			});
+			function timerIncrement() {
+				idleTime = idleTime + 1;
+				if (idleTime > 1) { // 1 minuto
+					if (!flagGuardado) {						
+						document.getElementById('formSolicitudSeguimiento:guardarComentario').focus();
+						document.getElementById('formSolicitudSeguimiento:guardarComentario').click();
+						//guardarComentario();
+						flagGuardado = true;						
+						idleTime = 0;
+					}
+
+				}
+			}
+			function ActivarAutoGuardar() {
+				flagGuardado = false;
+			}
+			
+		</script>
+
 		<h:form id="formSolicitudSeguimiento">
 		
 		  <p:growl id="growlSolicitudSeguimiento" sticky="true" />		  		  
@@ -43,15 +79,15 @@
 		      <h:panelGrid rendered="#{consultarSolicitudMB.bSeccionComentario}" columns="1">
 			  	<p:separator styleClass="fielset" />
 			  	<h:panelGrid columns="3">
-					<p:commandButton id="comentar" value="Comentar" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" actionListener="#{consultarSolicitudMB.habilitarComentario}"/>
+					<p:commandButton id="comentar" value="Comentar" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" actionListener="#{consultarSolicitudMB.habilitarComentario}" onclick="ActivarAutoGuardar();"/>
 					<p:commandButton id="guardarComentario" value="Guardar" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" action="#{consultarSolicitudMB.guardarComentario}" disabled="#{consultarSolicitudMB.bMostrarComentario}" />
 			  		<p:commandButton id="clearButton" type="button" value="Limpiar" 			  			  
 			  			disabled="#{consultarSolicitudMB.bMostrarComentario}" 
 			  			icon="ui-icon-close"  onclick="editor.clear()" />
 				</h:panelGrid>
-				<h:panelGrid>	
+				<h:panelGrid id="pnlEditor">	
 					<p:editor id="editor" onchange="actualizarEditor();" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="800" height="320" disabled="#{consultarSolicitudMB.bMostrarComentario}"/>
-					<p:remoteCommand name="actualizarEditor" update=":formSolicitudSeguimiento:editor" />					
+					<p:remoteCommand name="actualizarEditor" update=":formSolicitudSeguimiento:editor" />									
 				</h:panelGrid>
 				
 				<p:separator styleClass="fielset" />
