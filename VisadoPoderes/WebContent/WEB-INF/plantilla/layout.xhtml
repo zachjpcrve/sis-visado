@@ -100,6 +100,40 @@
 			<ui:insert name="contenido"  >
 
 			</ui:insert>
+			
+			<h:inputHidden value="#{msjs.ambito}" id="idAmbito" />
+			
+			<script type="text/javascript">
+				$ = jQuery;
+				$(document).ready(function() {
+
+					//var ambito = $("#idAmbito").attr("value");
+
+					$(".btnOpenDialog").live("click", function()
+					{
+						var formulariosEnDialog = $(".ui-dialog-content form");
+						formulariosEnDialog.each(function(index) 
+						{
+							//var str = $(this).attr("action");
+							
+							//var url = location.href;
+							//url = url.substring(0, url.indexOf("VisadoPoderes"));
+							//url = url + ambito + str;
+							
+							var url = location.href;
+							var str = url.substring(url.indexOf("VisadoPoderes"), url.length);
+							url = url.substring(0, url.indexOf("VisadoPoderes"));
+							url = url+str;
+
+							$(this).attr("action", url);
+							
+						});
+						
+					});
+					
+				});
+				
+			</script>
 		</div>
 
 			<div id="footer">
