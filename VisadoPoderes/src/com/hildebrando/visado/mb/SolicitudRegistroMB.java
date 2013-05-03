@@ -1221,10 +1221,7 @@ public class SolicitudRegistroMB {
         List<Integer> listaTemporal=new ArrayList<Integer>();
         List<Integer> arraycar=new ArrayList<Integer>();
         arraycar=listaTemporal2;
-        /*for (ComboDto c : listaTemporal2) {
-		    	  arraycar.add(c.getNumGrupo());
-		   }*/
-	
+        
 	        for(int i=0;i<arraycar.size();i++){
 	            for(int j=0;j<arraycar.size()-1;j++){
 	                if(i!=j){
@@ -1341,7 +1338,7 @@ public class SolicitudRegistroMB {
 			}else{
 				estadoRevocado=null;
 			}
-			this.armaAgrupacionSimple(estadoRevocado);
+			this.armaAgrupacionSimple();
 
 		}
 		
@@ -1360,7 +1357,7 @@ public class SolicitudRegistroMB {
 		this.solicitudRegistrarT.getTiivsSolicitudAgrupacions().removeAll(lstSolAgruToRemove);		
 	}
 
-private void armaAgrupacionSimple(String estadoRevocado) {
+private void armaAgrupacionSimple() {
 		
 		
 		List<TiivsPersona> lstPoderdantes = null;
