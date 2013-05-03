@@ -629,8 +629,8 @@ public class ConsultarSolicitudMB {
 			// BY SAMIRA 
 			solicitudRegistrarT.setLstSolicBancarias(lstSolicBancarias);
 			lstSolicBancariasCopia = new ArrayList<TiivsSolicitudOperban>();
-			lstSolicBancariasCopia.addAll(lstSolicBancarias);
-			
+			lstSolicBancariasCopia.addAll(solicitudService.obtenerListarOperacionesBancarias(solicitud));
+						
 			if(lstSolicBancariasCopia!=null)
 			{
 				logger.info(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstSolicBancariasCopia es: ["+lstSolicBancariasCopia.size()+"].");	
@@ -701,7 +701,7 @@ public class ConsultarSolicitudMB {
 			
 			solicitudRegistrarT.setLstDocumentos(lstdocumentos); //Para reportes
 			solicitudRegistrarTCopia=new TiivsSolicitud();
-			solicitudRegistrarTCopia=this.solicitudRegistrarT;
+			//solicitudRegistrarTCopia=this.solicitudRegistrarT;
 		
 			
 		   listaSolicitudAgrupacionesCopia=new ArrayList<TiivsSolicitudAgrupacion>();
