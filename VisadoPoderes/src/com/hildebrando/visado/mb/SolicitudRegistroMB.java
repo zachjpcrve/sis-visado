@@ -593,6 +593,32 @@ public class SolicitudRegistroMB {
 
 		return lstTiivsPersona;
 	}
+	public boolean validarPersonaEnListaDeAgrupaciones(){
+		logger.info("=== validarPersonaEnListaDeAgrupaciones() ===");
+		boolean retorno = false;
+		logger.info("=== lstTiivsAgrupacionPersonas  ==="+lstTiivsAgrupacionPersonas.size());
+		for (TiivsAgrupacionPersona x : lstTiivsAgrupacionPersonas) {
+			logger.debug("x.getCodPer() " +x.getCodPer());
+			logger.debug("objTiivsPersonaResultado.getTipPartic() " +objTiivsPersonaResultado.getTipPartic());
+			
+			if(x.getTiivsPersona().getTipDoi().equals(objTiivsPersonaResultado.getTipDoi())
+					&& x.getTiivsPersona().getNumDoi().equals(objTiivsPersonaResultado.getNumDoi())
+					&& !(x.getTipPartic().equals(objTiivsPersonaResultado.getTipPartic()))){
+				String sMensaje = "No Se puede agregar una misma persona como representante y representado";
+				Utilitarios.mensajeInfo("", sMensaje);
+				retorno = true;
+				break;
+			}/*else if(objTiivsPersonaResultado.getCodPer()!=0){
+				if (x.getCodPer() == objTiivsPersonaResultado.getCodPer()) {
+					String sMensaje = "Persona ya registrada, Ingrese otros datos de persona. ";
+					Utilitarios.mensajeInfo("", sMensaje);
+					retorno = false;
+					break;
+				}
+				}*/
+			}
+		return retorno;
+	}
 	public boolean validarbuscarPersonaLocal() {
 		logger.info("=== validarbuscarPersonaLocal() ===");
 		boolean busco = false;
@@ -973,6 +999,7 @@ public class SolicitudRegistroMB {
 			bResult = false;
 			Utilitarios.mensajeInfo("INFO", sMensaje);
 		} else if (!flagUpdatePersona) {
+			
 			/** VALIDAR QUE EL NUMERO DE DOCUMENTO  NO SE ENCUENTRE REGISTRADO TAMPOCO EN BD */
 			 if(objTiivsPersonaResultado.getCodPer()==0&&validarbuscarPersonaLocal()){
 				sMensaje = "Persona ya registrada, Ingrese una nueva, o busque a la persona ";
@@ -980,7 +1007,11 @@ public class SolicitudRegistroMB {
 				Utilitarios.mensajeInfo("", sMensaje);
 			
 				/** FIN DE LA VALIDACION **/
-			}else{
+			}else if(validarPersonaEnListaDeAgrupaciones()){
+				bResult=false;
+			}
+			else{
+			
 				
 			for (TiivsPersona x : lstTiivsPersona) {
 				logger.debug("x.getCodPer() " +x.getCodPer());

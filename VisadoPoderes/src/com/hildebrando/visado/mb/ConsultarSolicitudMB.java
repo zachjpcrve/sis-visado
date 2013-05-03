@@ -4151,7 +4151,10 @@ public class ConsultarSolicitudMB {
 				Utilitarios.mensajeInfo("", sMensaje);
 			
 				/** FIN DE LA VALIDACION **/
-			}else{
+			}else if(validarPersonaEnListaDeAgrupaciones()){
+				bResult=false;
+			}
+			else{
 			for (TiivsPersona x : lstTiivsPersona) {
 				System.out.println("x.getCodPer() " +x.getCodPer());
 				System.out.println("objTiivsPersonaResultado.getCodPer() " +objTiivsPersonaResultado.getCodPer());
@@ -4181,7 +4184,34 @@ public class ConsultarSolicitudMB {
 
 
 	}
-	
+	public boolean validarPersonaEnListaDeAgrupaciones(){
+		logger.info("=== validarPersonaEnListaDeAgrupaciones() ===");
+		boolean retorno = false;
+		if(lstTiivsAgrupacionPersonas!=null){
+		logger.info("=== lstTiivsAgrupacionPersonas  ==="+lstTiivsAgrupacionPersonas.size());
+		for (TiivsAgrupacionPersona x : lstTiivsAgrupacionPersonas) {
+			logger.debug("x.getCodPer() " +x.getCodPer());
+			logger.debug("objTiivsPersonaResultado.getTipPartic() " +objTiivsPersonaResultado.getTipPartic());
+			
+			if(x.getTiivsPersona().getTipDoi().equals(objTiivsPersonaResultado.getTipDoi())
+					&& x.getTiivsPersona().getNumDoi().equals(objTiivsPersonaResultado.getNumDoi())
+					&& !(x.getTipPartic().equals(objTiivsPersonaResultado.getTipPartic()))){
+				String sMensaje = "No Se puede agregar una misma persona como representante y representado";
+				Utilitarios.mensajeInfo("", sMensaje);
+				retorno = true;
+				break;
+			}/*else if(objTiivsPersonaResultado.getCodPer()!=0){
+				if (x.getCodPer() == objTiivsPersonaResultado.getCodPer()) {
+					String sMensaje = "Persona ya registrada, Ingrese otros datos de persona. ";
+					Utilitarios.mensajeInfo("", sMensaje);
+					retorno = false;
+					break;
+				}
+				}*/
+			}
+		}
+		return retorno;
+	}
 	public boolean 	validarTipoDocumentos() {
 		logger.info("***************** validarTipoDocumentos ********************* ");
 		boolean bResult = true;
