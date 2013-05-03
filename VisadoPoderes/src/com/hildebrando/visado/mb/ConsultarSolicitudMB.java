@@ -1465,7 +1465,7 @@ public class ConsultarSolicitudMB {
 				this.bSeccionComentario = false;
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
-				this.bMostrarGenerarRevision = this.validarSiDictaminadoEnRevision();
+				this.bMostrarGenerarRevision = false;
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
@@ -1479,7 +1479,7 @@ public class ConsultarSolicitudMB {
 				this.bSeccionComentario = false;
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
-				this.bMostrarGenerarRevision = this.validarSiDictaminadoEnRevision();
+				this.bMostrarGenerarRevision = false;
 				
 			} 
 			
