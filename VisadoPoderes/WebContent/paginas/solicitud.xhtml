@@ -838,7 +838,7 @@
 					</table>
 					<p:separator styleClass="fielset" />
 					<p:panel header="Búsqueda">
-						<h:panelGrid columns="12" id="gridApodPodEd">
+						<h:panelGrid columns="12" id="gridApodPodEd" cellspacing="0" cellpadding="2">
 						
 								<h:outputText id="outTipoDoi" value="T. DOI/C Central * :  " style="color:red" />
 								<p:selectOneMenu id="cboTipoDoi"
@@ -873,7 +873,7 @@
 					
 					<p:panel id="pnlNuevo" header="Nuevo Registro">
 				
-						<h:panelGrid columns="8" id="gridApodPodEd2">
+						<h:panelGrid columns="8" id="gridApodPodEd2" cellspacing="0" cellpadding="2">
 							<h:outputText id="outTipoDoi2" value="T. DOI/C *:" style="color:red"/>
 							<p:selectOneMenu id="cboTipoDoi2"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.tipDoi}"
@@ -899,7 +899,7 @@
 								value="Número de Identidad" showEffect="slide" />
 						</h:panelGrid>
 
-						<h:panelGrid columns="20">
+						<h:panelGrid columns="20" cellspacing="0" cellpadding="2">
 								<h:outputText id="outCodCentral" value="Código Central:" />
 								<h:inputText styleClass="inputTextPopup" id="txtCodCentral"
 									size="9" maxlength="8"
@@ -938,9 +938,9 @@
 									showEffect="slide" />
 						</h:panelGrid>
 
-						<h:panelGrid id="tableRegistrar" columns="15">
+						<h:panelGrid id="tableRegistrar" columns="15" cellspacing="0" cellpadding="2">
 
-							<h:panelGrid columns="4">
+							<h:panelGrid columns="4" cellspacing="0" cellpadding="2">
 								<h:outputText id="outTipoReg" value="Tipo * :" style="color:red"/>
 								<p:selectOneMenu id="cboTipoReg"
 									value="#{solicitudRegMB.objTiivsPersonaResultado.tipPartic}">
@@ -987,7 +987,7 @@
 						
 						</h:panelGrid>
 						
-						<h:panelGrid columns="4">
+						<h:panelGrid columns="4" cellspacing="0" cellpadding="2">
 							<p:spacer width="350" height="10" />
 							<p:commandButton id="btnAgregar" value="Agregar"
 								style="padding-left:0em !important;"
