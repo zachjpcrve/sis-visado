@@ -2932,6 +2932,8 @@ public class SeguimientoMB
 				seg.setUsuario(h.getNomUsuario());
 				seg.setRegUsuario(h.getRegUsuario());
 				seg.setObs(h.getObs());
+				seg.setCodSoli(h.getId().getCodSoli());
+				seg.setMovimiento(h.getId().getMovimiento());
 				lstSeguimientoDTO.add(seg);				
 			}
 		}
