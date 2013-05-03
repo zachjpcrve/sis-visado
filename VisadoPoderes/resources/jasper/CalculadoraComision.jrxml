@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CalculadoraComision" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="114"/>
+	<property name="ireport.x" value="182"/>
+	<property name="ireport.y" value="169"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<style name="table">
 		<box>
@@ -111,10 +111,10 @@
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[No]]></text>
 			</staticText>
-			<textField>
+			<textField pattern="###0.00">
 				<reportElement x="362" y="144" width="88" height="20"/>
 				<textElement/>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{importe}]]></textFieldExpression>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[new BigDecimal($F{importe})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="362" y="38" width="22" height="20"/>
@@ -156,11 +156,16 @@
 				<textElement textAlignment="Center"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{item4}.equals( "0" )?"X":""]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="###0.00">
+				<reportElement x="298" y="58" width="64" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[new BigDecimal($F{importeLimite})]]></textFieldExpression>
+			</textField>
+			<staticText>
 				<reportElement x="96" y="58" width="266" height="20"/>
 				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA["2. Monto global de las operaciones es mayor " + $F{importeLimite}]]></textFieldExpression>
-			</textField>
+				<text><![CDATA[2. Monto global de las operaciones es mayor ]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
