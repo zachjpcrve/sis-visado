@@ -53,6 +53,7 @@ import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsPersona;
+import com.hildebrando.visado.modelo.TiivsRevocado;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
@@ -1216,8 +1217,89 @@ public class SolicitudRegistroMB {
 	  
  }*/
   
+	public List<Integer> existe(List<Integer> listaTemporal2){
+        List<Integer> listaTemporal=new ArrayList<Integer>();
+        List<Integer> arraycar=new ArrayList<Integer>();
+        arraycar=listaTemporal2;
+        /*for (ComboDto c : listaTemporal2) {
+		    	  arraycar.add(c.getNumGrupo());
+		   }*/
+	
+	        for(int i=0;i<arraycar.size();i++){
+	            for(int j=0;j<arraycar.size()-1;j++){
+	                if(i!=j){
+	                    if(arraycar.get(i)==arraycar.get(j)){
+	                        arraycar.set(j, 99);
+	                    }
+	                }
+	            }
+	        }   
+	        for (Integer integer : arraycar) {
+	        	if(integer!=99){
+	        		listaTemporal.add(integer);
+	        	}
+	        	}
+      return listaTemporal;
+}
+	public boolean validarSiAgrupacionEstaRevocada(){
+		boolean retorno =false;
+		logger.info("***************************** validarSiAgrupacionEstaRevocada ***************************************");
+		try {
+		List<TiivsRevocado> listaRevocadoDeDondeComparar=new ArrayList<TiivsRevocado>();
+		GenericDao<TiivsRevocado, Object> serviceSolicitud = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
+		filtro.add(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_ACTIVO_REVOCADO));
+		filtro.addOrder(Order.asc("codAgrup"));
+		listaRevocadoDeDondeComparar = serviceSolicitud.buscarDinamico(filtro);
+		logger.info("**** listaRevocadoDeDondeComparar **** "+listaRevocadoDeDondeComparar.size());
+		List<ComboDto> listaPersonasXAgrupacionXAgrupacion=null;
+		int i;
+		List<Integer> listaCodAgrupaciones = new ArrayList<Integer>();
+		for (TiivsRevocado e : listaRevocadoDeDondeComparar) {
+			listaCodAgrupaciones.add(e.getCodAgrup());
+		}
+		List<Integer> listaCodAgrupacionesAcomparar = new ArrayList<Integer>();
+		listaCodAgrupacionesAcomparar=existe(listaCodAgrupaciones);
+		
+		for (Integer a : listaCodAgrupacionesAcomparar) {
+			listaPersonasXAgrupacionXAgrupacion =new ArrayList<ComboDto>();
+		for (TiivsRevocado x : listaRevocadoDeDondeComparar) {
+			if(a.equals(x.getCodAgrup())){
+				logger.info("Codigo Agrupacion - 1 - ::::: " +a + " x.getCodPer()::: " +x.getTiivsPersona().getCodPer() +" x.getTipPartic() ::: " +x.getTipPartic() +" x.getNumGrupo():: " +x.getCodAgrup());
+				listaPersonasXAgrupacionXAgrupacion.add(new ComboDto(x.getTiivsPersona().getCodPer()+"",x.getTipPartic(),x.getCodAgrup()));
+			}
+		}
+		logger.info(" lstTiivsAgrupacionPersonas :: " +lstTiivsAgrupacionPersonas.size());
+		if(listaPersonasXAgrupacionXAgrupacion.size()==lstTiivsAgrupacionPersonas.size()){
+			i = 0;
+			for (TiivsAgrupacionPersona an : lstTiivsAgrupacionPersonas) {
+				for (ComboDto bn : listaPersonasXAgrupacionXAgrupacion) {
+					logger.info("an.getCodPer() :: " +an.getCodPer() + " ::: an.getTipPartic()  "+an.getTipPartic());
+					logger.info("bn.getKey() :: " +bn.getKey() + " ::: bn.getDescripcion()  "+bn.getDescripcion());
+					if(an.getCodPer()==Integer.parseInt(bn.getKey()) && an.getTipPartic().trim().equals(bn.getDescripcion().trim()) ){
+						//logger.info("Una combinacion es igual " + an.getNumGrupo());
+						i++;
+					}
+				}
+			}
+			if(i==listaPersonasXAgrupacionXAgrupacion.size()){
+				logger.info("Toda la combinación es igual a la de Revocado Num Grupo : " +a);
+				Utilitarios.mensajeInfo("INFO ", "La combinación fue Revocada" );
+				retorno =true;
+				break;
+				
+			}
+		}
+		
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return retorno;
+	}
 	public void agregarAgrupacion() {
 		if (validarAgregarAgrupacion()) {
+		
 			logger.info("***************************** agregarAgrupacion ***************************************");
 			
 						
@@ -1251,8 +1333,15 @@ public class SolicitudRegistroMB {
 			this.llamarComision();
 			
 			logger.info("lstTiivsAgrupacionPersonas: fin " + lstTiivsAgrupacionPersonas.size());
-			
-			this.armaAgrupacionSimple();
+			String estadoRevocado=null;
+			if(validarSiAgrupacionEstaRevocada()){
+				/** Se revocara la Combinacion**/
+				 estadoRevocado =ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_3;
+				 this.tiivsSolicitudAgrupacionCapturado.setEstado(estadoRevocado);
+			}else{
+				estadoRevocado=null;
+			}
+			this.armaAgrupacionSimple(estadoRevocado);
 
 		}
 		
@@ -1271,7 +1360,7 @@ public class SolicitudRegistroMB {
 		this.solicitudRegistrarT.getTiivsSolicitudAgrupacions().removeAll(lstSolAgruToRemove);		
 	}
 
-private void armaAgrupacionSimple() {
+private void armaAgrupacionSimple(String estadoRevocado) {
 		
 		
 		List<TiivsPersona> lstPoderdantes = null;
