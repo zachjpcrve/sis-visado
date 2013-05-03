@@ -4030,7 +4030,62 @@ public class ConsultarSolicitudMB {
 //		//objTiivsPersonaCapturado = new TiivsPersona();
 //		this.flagUpdatePersona = false;
 	}
+	public boolean validarbuscarPersonaLocal() {
+		logger.info("=== validarbuscarPersonaLocal() ===");
+		boolean busco = false;
+		boolean retorno = false;
+		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
+		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
 
+		if ((objTiivsPersonaResultado.getTipDoi() == null 
+		  || objTiivsPersonaResultado.getTipDoi().equals(""))
+		 && (objTiivsPersonaResultado.getNumDoi() == null
+		  || objTiivsPersonaResultado.getNumDoi().equals(""))) {
+		} else if (objTiivsPersonaResultado.getNumDoi() == null
+				|| objTiivsPersonaResultado.getNumDoi().equals("")) {
+		} else if (objTiivsPersonaResultado.getTipDoi() == null
+				|| objTiivsPersonaResultado.getTipDoi().equals("")) {
+		} else {
+			if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CODIGO_CENTRAL)) {
+				filtro.add(Restrictions.eq("codCen",objTiivsPersonaResultado.getNumDoi()));
+				busco = true;
+				
+				try {
+					lstTiivsPersona = service.buscarDinamico(filtro);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+							retorno =true;
+						}
+					}
+				}
+			}else{
+				filtro.add(Restrictions.eq("tipDoi",objTiivsPersonaResultado.getTipDoi().trim()));
+				filtro.add(Restrictions.eq("numDoi",objTiivsPersonaResultado.getNumDoi().trim()));
+				busco = true;
+				
+               try {
+				lstTiivsPersona = service.buscarDinamico(filtro);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+               retorno=true;
+			}
+			
+			if (lstTiivsPersona.size() == 0 && busco) {
+				retorno=false;
+				}else{
+				retorno=true;
+			}
+		}
+
+		return retorno;
+	}
 	public boolean validarPersona() {
 		logger.info("******************************* validarPersona ******************************* "
 				+ objTiivsPersonaResultado.getTipPartic());
@@ -4089,6 +4144,14 @@ public class ConsultarSolicitudMB {
 			bResult = false;
 			Utilitarios.mensajeInfo("INFO", sMensaje);
 		} else if (!flagUpdatePersona) {
+			/** VALIDAR QUE EL NUMERO DE DOCUMENTO  NO SE ENCUENTRE REGISTRADO TAMPOCO EN BD */
+			 if(objTiivsPersonaResultado.getCodPer()==0&&validarbuscarPersonaLocal()){
+				sMensaje = "Persona ya registrada, Ingrese una nueva, o busque a la persona ";
+				bResult = false;
+				Utilitarios.mensajeInfo("", sMensaje);
+			
+				/** FIN DE LA VALIDACION **/
+			}else{
 			for (TiivsPersona x : lstTiivsPersona) {
 				System.out.println("x.getCodPer() " +x.getCodPer());
 				System.out.println("objTiivsPersonaResultado.getCodPer() " +objTiivsPersonaResultado.getCodPer());
@@ -4109,6 +4172,7 @@ public class ConsultarSolicitudMB {
 					}
 					}
 					
+			}
 			}
 		}
 		logger.info("bResult " +bResult);
