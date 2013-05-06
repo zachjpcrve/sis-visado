@@ -701,7 +701,7 @@ public class ConsultarSolicitudMB {
 			}
 			
 			solicitudRegistrarT.setLstDocumentos(lstdocumentos); //Para reportes
-			solicitudRegistrarTCopia=new TiivsSolicitud();
+			//solicitudRegistrarTCopia=new TiivsSolicitud(); //06-05-2013 Se comenta por falta de uso Incidencia 259
 			//solicitudRegistrarTCopia=this.solicitudRegistrarT;
 		
 			
@@ -2063,16 +2063,11 @@ public class ConsultarSolicitudMB {
 	{
 		/*int i = 0;
 		String res = "";
-<<<<<<< .mine
-		for (; i < combosMB.getLstEstado().size(); i++) {
-			if (combosMB.getLstEstado().get(i).getCodEstado().equalsIgnoreCase(codigo)) {
-=======
 		
 		for (; i < combosMB.getLstEstado().size(); i++) 
 		{
 			if (combosMB.getLstEstado().get(i).getCodEstado().equalsIgnoreCase(codigo)) 
 			{
->>>>>>> .r1919
 				res = combosMB.getLstEstado().get(i).getDescripcion();
 				break;
 			}
@@ -2891,6 +2886,7 @@ public class ConsultarSolicitudMB {
 		
 		
 		combosMB=new CombosMB();
+		combosMB.obtenerClasificacionPersona();
 		lstClasificacionPersona=combosMB.getLstClasificacionPersona();
 		logger.info("tamanioo actual de la lista de Clasificacion **** " +lstClasificacionPersona.size());
 		
@@ -2921,7 +2917,7 @@ public class ConsultarSolicitudMB {
 		
 		setLstTiivsPersona(objAgrupacionSimpleDtoCapturado.getLstPersonas());
 		
-		for (AgrupacionSimpleDto dd: this.solicitudRegistrarTCopia.getLstAgrupacionSimpleDto()) {
+		for (AgrupacionSimpleDto dd: this.solicitudRegistrarT.getLstAgrupacionSimpleDto()) {
 			if(dd.equals(objAgrupacionSimpleDtoCapturado)){
 				lstTiivsPersonaCopia =new ArrayList<TiivsPersona>();
 				lstTiivsPersonaCopia.addAll(dd.getLstPersonas());				
