@@ -2063,11 +2063,16 @@ public class ConsultarSolicitudMB {
 	{
 		/*int i = 0;
 		String res = "";
+<<<<<<< .mine
+		for (; i < combosMB.getLstEstado().size(); i++) {
+			if (combosMB.getLstEstado().get(i).getCodEstado().equalsIgnoreCase(codigo)) {
+=======
 		
 		for (; i < combosMB.getLstEstado().size(); i++) 
 		{
 			if (combosMB.getLstEstado().get(i).getCodEstado().equalsIgnoreCase(codigo)) 
 			{
+>>>>>>> .r1919
 				res = combosMB.getLstEstado().get(i).getDescripcion();
 				break;
 			}
