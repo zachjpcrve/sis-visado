@@ -40,7 +40,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import com.bbva.common.util.ConstantesVisado;
-import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 
 public class Utilitarios {
 	

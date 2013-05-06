@@ -30,6 +30,7 @@ import com.hildebrando.visado.dto.RangosImporte;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.dto.TiposFecha;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
+import com.hildebrando.visado.modelo.TiivsDocumento;
 import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
@@ -37,7 +38,6 @@ import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
-import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
 import com.hildebrando.visado.modelo.TiivsTiempo;
@@ -165,13 +165,13 @@ public class CombosMB{
 		for (TiivsMultitabla res : lstMultitabla) { 
 			//@Autor Samira
 			// Carga combo Clasificacion Persona
-			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA)
+			/*if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA)
 					&&res.getValor2().trim().equals("1")) {
 				ComboDto tmpComboClasi = new ComboDto();
 				tmpComboClasi.setKey(res.getId().getCodElem());
 				tmpComboClasi.setDescripcion(res.getValor1().toUpperCase());
 				lstClasificacionPersona.add(tmpComboClasi);
-			}
+			}*/
 			
 			//@Autor Samira
 			// Carga combo Tipo Registro Persona
@@ -272,12 +272,75 @@ public class CombosMB{
 		}
 		if(lstTipoDocumentosExtra.size()!=0)
 			lstTipoDocumentos.add(lstTipoDocumentosExtra.get(0));
-		for (int i= 0 ; i< lstTipoDocumentosExtra2.size(); i++){
+		/*for (int i= 0 ; i< lstTipoDocumentosExtra2.size(); i++){
 			lstTipoDocumentos.add(lstTipoDocumentosExtra2.get(i));
-		}
+		}*/
+		
+		//Traer listado de clasificacion de persona
+		obtenerClasificacionPersona();
+		
+		//Traer los tipos de documento
+		obtenerTipoDocumentos();
 		
 		//Traer combo estados 
 		traerEstadosFlujoSolicitud();
+	}
+	
+	public void obtenerTipoDocumentos()
+	{
+		List<TiivsMultitabla> tmpLista = new ArrayList<TiivsMultitabla>();
+		//List<TipoDocumento> tmpDocs = new ArrayList<TipoDocumento>();
+				
+		try {
+			GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+			filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC));
+			filtro.add(Restrictions.eq("valor2", "1"));
+			filtro.addOrder(Order.asc("valor1"));
+			
+			tmpLista=service.buscarDinamico(filtro);
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de tipos de documento: "+e);
+		}
+		
+		logger.debug("Tamanio lista de tipo de documentos: " + tmpLista.size());
+				
+		for (TiivsMultitabla tmp: tmpLista)
+		{
+			TipoDocumento doc = new TipoDocumento();
+			doc.setCodTipoDoc(tmp.getId().getCodElem());
+			doc.setDescripcion(tmp.getValor1().toUpperCase());
+			
+			lstTipoDocumentos.add(doc);
+		}
+		
+	}
+	
+	public void obtenerClasificacionPersona()
+	{
+		List<TiivsMultitabla> tmpLista = new ArrayList<TiivsMultitabla>();
+		//List<ComboDto> tmpClas = new ArrayList<ComboDto>();
+				
+		try {
+			GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+			filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA));
+			filtro.add(Restrictions.eq("valor2", "1"));
+			filtro.addOrder(Order.asc("valor1"));
+			
+			tmpLista=service.buscarDinamico(filtro);
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de clasificacion de personas: "+e);
+		}
+		
+		for (TiivsMultitabla tmp: tmpLista)
+		{
+			ComboDto doc = new ComboDto();
+			doc.setKey(tmp.getId().getCodElem());
+			doc.setDescripcion(tmp.getValor1().toUpperCase());
+			
+			lstClasificacionPersona.add(doc);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -2059,17 +2059,41 @@ public class ConsultarSolicitudMB {
 
 	}
 
-	public String buscarEstadoxCodigo(String codigo) {
-		int i = 0;
+	public String buscarEstadoxCodigo(String codigo) 
+	{
+		/*int i = 0;
 		String res = "";
-		for (; i < combosMB.getLstEstado().size(); i++) {
-			if (combosMB.getLstEstado().get(i).getCodEstado()
-					.equalsIgnoreCase(codigo)) {
+		
+		for (; i < combosMB.getLstEstado().size(); i++) 
+		{
+			if (combosMB.getLstEstado().get(i).getCodEstado().equalsIgnoreCase(codigo)) 
+			{
 				res = combosMB.getLstEstado().get(i).getDescripcion();
 				break;
 			}
 		}
-		return res;
+		
+		return res;*/
+		
+		String resultado="";
+		List<TiivsMultitabla> tmpLista = new ArrayList<TiivsMultitabla>();
+		GenericDao<TiivsMultitabla, Object> busDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
+		filtro.add(Restrictions.eq("id.codElem", codigo));
+		
+		try {
+			tmpLista = busDAO.buscarDinamico(filtro);
+		} catch (Exception e) {
+			logger.debug("Error al buscar codigos de estados");
+		}
+		
+		if (tmpLista.size()>0)
+		{
+			resultado = tmpLista.get(0).getValor1().toUpperCase();
+		}
+		
+		return resultado;
 	}
 
 	public boolean descargarAnexosFileServer() 
