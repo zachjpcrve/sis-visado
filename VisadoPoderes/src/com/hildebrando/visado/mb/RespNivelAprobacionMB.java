@@ -152,7 +152,10 @@ public class RespNivelAprobacionMB {
 		//setLimpiar(false);
 	}
 	*/
-	public void nuevoRespxNivel(){
+	
+	public String nuevoRespxNivel()
+	{
+		String pagina="";
 		logger.debug("=== inicia nuevoRespxNivel() ====");
 		//TiivsMiembroNivel miembroNivel= new TiivsMiembroNivel();
 		
@@ -162,14 +165,21 @@ public class RespNivelAprobacionMB {
 		 
 		try{
 			this.setLimpiar(true);
-			ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
-            ec.redirect("../faces/paginas/newEditRespNivel.xhtml?faces-redirect=true");
+			//ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
+			
+			pagina= "../../faces/paginas/newEditRespNivel.xhtml";
+			
+           // ec.redirect("../faces/paginas/newEditRespNivel.xhtml?faces-redirect=true");
 			logger.debug("=== bEditar ==== ::: "+bEditar);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel.xhtml: "+e);
 		}
+		
 		logger.debug("=== saliendo nuevoRespxNivel() ====");
+		
+		return pagina;
 	}
+	
 	public String listarRespxNivelTodos(){
 		listarRespxNivel();
 		return "/paginas/respNivel.xhtml";
@@ -738,7 +748,7 @@ public class RespNivelAprobacionMB {
 					tmp.setEstadoMiembro(tmp.getEstado());
 					mNivelDAO.modificar(tmp);
 					logger.info("Se modifico correctamente el estado de miembro nivel");
-					/// LISTAR TODO DE NUEVO
+					// LISTAR DE NUEVO
 					miembroNivelDto.setRegistro(tmp.getTiivsMiembro().getCodMiembro());
 					List<MiembroNivelDTO> lstTemp=new ArrayList<MiembroNivelDTO>();
 					List<MiembroNivelDTO> lstTempFinal=new ArrayList<MiembroNivelDTO>();
