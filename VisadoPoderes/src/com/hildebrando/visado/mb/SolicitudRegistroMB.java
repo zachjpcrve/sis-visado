@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -290,6 +291,7 @@ public class SolicitudRegistroMB {
 				filtroTipoClas.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA));
 				filtroTipoClas.add(Restrictions.eq("valor3", objTiivsPersonaResultado.getTipPartic()));
 				filtroTipoClas.add(Restrictions.eq("valor2", "1"));
+				filtroTipoClas.addOrder(Order.asc("valor1"));
 				List<TiivsMultitabla> lstTmpMult = new ArrayList<TiivsMultitabla>();
 				
 				try
@@ -1948,6 +1950,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
 					//Double valorTemp = (double) (Math.round(valorFinal*100)/100);
+					
+					/*DecimalFormat formateador = new DecimalFormat("###,###.##");
+					Double monto=(double) Math.round(valorFinal*100)/100;
+					formateador.format(monto);
+					
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ monto);*/
+					
 					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+  ((double) Math.round(valorFinal*100)/100));
 	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 				}
@@ -1957,6 +1966,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						valorFinal=valorFinal+x.getImporte();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
+					
+					/*DecimalFormat formateador = new DecimalFormat("###,###.##");
+					Double monto=(double) Math.round(valorFinal*100)/100;
+					formateador.format(monto);
+					
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ monto);*/
+					
 					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+  ((double)Math.round(valorFinal*100)/100));
 	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
 				}
@@ -1966,17 +1982,32 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						valorFinal=valorFinal+x.getImporte();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
+					
+					/*DecimalFormat formateador = new DecimalFormat("###,###.##");
+					Double monto=(double) Math.round(valorFinal*100)/100;
+					formateador.format(monto);
+					
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ monto);*/
+					
 					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+ ( (double) Math.round(valorFinal*100)/100));
 	                this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_EUROS);
 				}
-				if (       icontDolares  > 0 && icontEuros > 0 && icontSoles == 0
+				if (icontDolares  > 0 && icontEuros > 0 && icontSoles == 0
 						|| icontDolares  > 0 && icontEuros == 0&& icontSoles > 0 
 						|| icontDolares == 0 && icontEuros > 0 && icontSoles > 0
-						|| icontDolares > 0  && icontEuros > 0 && icontSoles > 0) {
+						|| icontDolares > 0  && icontEuros > 0 && icontSoles > 0) 
+				{
 					for (TiivsSolicitudOperban x : lstSolicBancarias) {
 						valorFinal=valorFinal+x.getImporteSoles();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
+					
+					/*DecimalFormat formateador = new DecimalFormat("###,###.##");
+					Double monto=(double) Math.round(valorFinal*100)/100;
+					formateador.format(monto);
+					
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ monto);*/
+					
 					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+  ((double) Math.round(valorFinal*100)/100));
 	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 				}
