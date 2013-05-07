@@ -167,13 +167,15 @@ public class RespNivelAprobacionMB {
 			this.setLimpiar(true);
 			//ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
 			
-			pagina= "../../faces/paginas/newEditRespNivel.xhtml";
+			pagina= "/faces/paginas/newEditRespNivel.xhtml";
 			
            // ec.redirect("../faces/paginas/newEditRespNivel.xhtml?faces-redirect=true");
 			logger.debug("=== bEditar ==== ::: "+bEditar);
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel.xhtml: "+e);
 		}
+		
+		logger.debug("pagina a redireccionar: " + pagina);
 		
 		logger.debug("=== saliendo nuevoRespxNivel() ====");
 		
