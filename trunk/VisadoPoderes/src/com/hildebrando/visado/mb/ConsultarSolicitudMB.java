@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -258,6 +261,7 @@ public class ConsultarSolicitudMB {
 				filtroTipoClas.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA));
 				filtroTipoClas.add(Restrictions.eq("valor3", objTiivsPersonaResultado.getTipPartic()));
 				filtroTipoClas.add(Restrictions.eq("valor2", "1"));
+				filtroTipoClas.addOrder(Order.asc("valor1"));
 				List<TiivsMultitabla> lstTmpMult = new ArrayList<TiivsMultitabla>();
 				
 				try
@@ -4489,7 +4493,24 @@ public class ConsultarSolicitudMB {
 				valorFinal = valorFinal + x.getImporte();
 				this.solicitudRegistrarT.setImporte(valorFinal);
 			}
-			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ ((double) Math.round(valorFinal*100)/100));
+						
+			/*DecimalFormat formateador = new DecimalFormat("###,###.##");
+			DecimalFormatSymbols dfs = formateador.getDecimalFormatSymbols();
+			dfs.setDecimalSeparator('.');
+			dfs.setGroupingSeparator(',');
+			formateador.setDecimalFormatSymbols(dfs);
+			
+			NumberFormat NF = NumberFormat.getInstance();
+			NF.setMaximumFractionDigits(2);*/
+			
+			//Double monto=(double) Math.round(valorFinal*100)/100;
+					
+			//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ NF.format(valorFinal));
+			
+			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ Double.valueOf(valorFinal));
+			
+			//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ ((double) Math.round(valorFinal*100)/100));
+			//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ (Utilitarios.redondear(valorFinal)));
 			this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 		}
 		if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) 
@@ -4500,7 +4521,21 @@ public class ConsultarSolicitudMB {
 				valorFinal = valorFinal + x.getImporte();
 				this.solicitudRegistrarT.setImporte(valorFinal);
 			}
-			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR + ((double) Math.round(valorFinal*100)/100));
+			
+			/*DecimalFormat formateador = new DecimalFormat("###,###.##");
+			DecimalFormatSymbols dfs = formateador.getDecimalFormatSymbols();
+			dfs.setDecimalSeparator('.');
+			dfs.setGroupingSeparator(',');
+			formateador.setDecimalFormatSymbols(dfs);
+			
+			NumberFormat NF = NumberFormat.getInstance();
+			NF.setMaximumFractionDigits(2);*/
+			
+			//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ NF.format(valorFinal));
+			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ Double.valueOf(valorFinal));
+			
+			//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR + ((double) Math.round(valorFinal*100)/100));
+			//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR + (Utilitarios.redondear(valorFinal)));
 			this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
 		}
 		if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) 
@@ -4511,7 +4546,21 @@ public class ConsultarSolicitudMB {
 				valorFinal = valorFinal + x.getImporte();
 				this.solicitudRegistrarT.setImporte(valorFinal);
 			}
-			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO + ((double) Math.round(valorFinal*100)/100));
+			/*
+			DecimalFormat formateador = new DecimalFormat("###,###.##");
+			DecimalFormatSymbols dfs = formateador.getDecimalFormatSymbols();
+			dfs.setDecimalSeparator('.');
+			dfs.setGroupingSeparator(',');
+			formateador.setDecimalFormatSymbols(dfs);
+			
+			NumberFormat NF = NumberFormat.getInstance();
+			NF.setMaximumFractionDigits(2);*/
+			
+			//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ NF.format(valorFinal));
+			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ Double.valueOf(valorFinal));
+			
+			//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO + ((double) Math.round(valorFinal*100)/100));
+			//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO + (Utilitarios.redondear(valorFinal)));
 			this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_EUROS);
 		}
 		if (icontDolares > 0 && icontEuros > 0 && icontSoles == 0
@@ -4525,7 +4574,21 @@ public class ConsultarSolicitudMB {
 				valorFinal = valorFinal + x.getImporteSoles();
 				this.solicitudRegistrarT.setImporte(valorFinal);
 			}
-			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES + ((double) Math.round(valorFinal*100)/100));
+			
+			/*DecimalFormat formateador = new DecimalFormat("###,###.##");
+			DecimalFormatSymbols dfs = formateador.getDecimalFormatSymbols();
+			dfs.setDecimalSeparator('.');
+			dfs.setGroupingSeparator(',');
+			formateador.setDecimalFormatSymbols(dfs);*/
+			
+			/*NumberFormat NF = NumberFormat.getInstance();
+			NF.setMaximumFractionDigits(2);*/
+			
+			//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ Double.valueOf(valorFinal));
+			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ Double.valueOf(valorFinal));
+			
+			//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES + ((double) Math.round(valorFinal*100)/100));
+			//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES + (Utilitarios.redondear(valorFinal)));
 			this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 		}
 
