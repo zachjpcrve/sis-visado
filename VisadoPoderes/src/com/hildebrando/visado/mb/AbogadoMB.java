@@ -251,8 +251,10 @@ public class AbogadoMB {
 
 	}
 	
-	public void listarAbogadosCombo(){
+	public void listarAbogadosCombo()
+	{
 		logger.info("OficinaMB: listarOficinasCombo");
+		
 		try{
 			abogados= abogadoService.listarAbogadosCombo(grupoFiltro2, criterios, estudios, abogadoLista);
 		}catch(Exception e){
@@ -260,7 +262,9 @@ public class AbogadoMB {
 			logger.error("OficinaMB : listarOficinasCombo : " + e.getLocalizedMessage());
 		}
 	}
-	public void limpiarCampos(){
+	
+	public void limpiarCampos()
+	{
 		logger.info("OficinaMB: limpiarCampos");
 		abogado = new TiivsMiembro();
 		grupoFiltro = new TiivsGrupo();
@@ -270,7 +274,8 @@ public class AbogadoMB {
 		editarAbogado=false;
 	}
 	
-	public void eliminarAbogado(){
+	public void eliminarAbogado()
+	{
 		logger.info("OficinaMB: eliminarAbogado");
 		Map<String, String> params = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap();
