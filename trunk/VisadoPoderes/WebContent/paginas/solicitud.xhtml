@@ -165,7 +165,7 @@
 															</tr>
 															<tr>
 																<td><h:outputText styleClass="outputText"
-																		id="outNroVaucher" value="Nro. Voucher *" /></td>
+																		id="outNroVaucher" value="Nro. Voucher *:" /></td>
 																<td><h:inputText styleClass="inputText"
 																		immediate="false" required="false"
 																		requiredMessage="Ingrese el Nro Voucher"
@@ -182,7 +182,7 @@
 																		value="Nro Vaucher" showEffect="slide" /></td>
 
 																<td><h:outputText styleClass="outputText"
-																		id="outComision" value="Comisión" /></td>
+																		id="outComision" value="Comisión:" /></td>
 																<td><h:inputText styleClass="inputText"
 																		id="txtComision" style="width:100px;"
 																		value="#{solicitudRegMB.solicitudRegistrarT.comision}"
@@ -196,7 +196,7 @@
 																		value="Comision" showEffect="slide" /></td>
 
 																<td><h:outputText styleClass="outputText"
-																		id="outImpTotal" value="Importe Total" /></td>
+																		id="outImpTotal" value="Importe Total:" /></td>
 																<td><h:inputText styleClass="inputText"
 																		id="txtImpTotal" style="width:100px;"
 																		value="#{solicitudRegMB.solicitudRegistrarT.sImporteMoneda}"
@@ -571,8 +571,7 @@
 																			var="opeBan" itemValue="#{opeBan.codOperBan}"
 																			itemLabel="#{opeBan.desOperBan}" />
 																	</p:selectOneMenu></td>
-																<td><h:outputText styleClass="outputText"
-																		id="outTipoMoneda" value="Moneda" title="Moneda"></h:outputText>
+																<td><h:outputText styleClass="outputText" id="outTipoMoneda" value="Moneda:"></h:outputText>
 																</td>
 																<td><p:selectOneMenu style="width:160px;"
 																		id="cboMoneda" onchange="valorImporteSoles();"
@@ -588,8 +587,7 @@
 																			itemLabel="#{varo.desMoneda}" />
 	
 																	</p:selectOneMenu></td>
-																<td><h:outputText styleClass="outputText"
-																		id="outImporte" value="Importe:" title="Importe"></h:outputText>
+																<td><h:outputText styleClass="outputText" id="outImporte" value="Importe:" ></h:outputText>
 																</td>
 																<td><h:inputText
 																		value="#{solicitudRegMB.objSolicBancaria.importe}" 
@@ -601,8 +599,7 @@
 															</tr>
 															<tr>
 																<td><h:outputText styleClass="outputText"
-																		id="outImporteTipoCambio" value="Tipo Cambio"
-																		title="Tipo Cambio"></h:outputText></td>
+																		id="outImporteTipoCambio" value="Tipo Cambio:"></h:outputText></td>
 																<td><h:inputText id="intTipoCambio" maxlength="8" 
 																		onkeypress="return validaNumero(event,'0',this,'0');"
 																		disabled="#{solicitudRegMB.bBooleanPopupTipoCambio}" 
@@ -617,8 +614,7 @@
 	
 	
 																<td><h:outputText styleClass="outputText"
-																		id="outImporteSoles" value="Importe en Soles"
-																		title="Importe en Soles"></h:outputText></td>
+																		id="outImporteSoles" value="Importe en Soles:"></h:outputText></td>
 																<td><h:inputText 
 																		value="#{solicitudRegMB.objSolicBancaria.importeSoles}"
 																		readonly="true" id="txtImporteSoles">
