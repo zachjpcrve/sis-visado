@@ -89,7 +89,7 @@
 													<tbody>
 														<tr>
 															<td><h:outputText styleClass="outputText"
-																	id="txtCodNumSol" value="Nro Solicitud:" /></td>
+																	id="txtCodNumSol" value="Nro. Solicitud:" /></td>
 															<td><h:inputText styleClass="inputText" id="text1"
 																	style="width:100px;"
 																	value="#{consultarSolicitudMB.solicitudRegistrarT.codSoli}"
@@ -150,7 +150,7 @@
 														</tr>
 														<tr>
 															<td><h:outputText styleClass="outputText"
-																	id="outNroVaucher" value="Nro Voucher *" /></td>
+																	id="outNroVaucher" value="Nro. Voucher *:" /></td>
 															<td><h:inputText styleClass="inputText" immediate="false"  required="false" 
 																	requiredMessage="Ingrese el Nro Voucher"
 																	id="txtNroVaucher" style="width:100px;" maxlength="11"
@@ -166,7 +166,7 @@
 																	value="Nro Vaucher" showEffect="slide" /></td>
 	
 															<td><h:outputText styleClass="outputText"
-																	id="outComision" value="Comision" /></td>
+																	id="outComision" value="Comisión:" /></td>
 															<td><h:inputText styleClass="inputText"
 																	id="txtComision" style="width:100px;"
 																	value="#{consultarSolicitudMB.solicitudRegistrarT.comision}"
@@ -181,7 +181,7 @@
 																	showEffect="slide" /></td>
 	
 															<td><h:outputText styleClass="outputText"
-																	id="outImpTotal" value="Importe Total" /></td>
+																	id="outImpTotal" value="Importe Total:" /></td>
 															<td ><h:inputText styleClass="inputText" 
 																	id="txtImpTotal" style="width:100px;"
 																	value="#{consultarSolicitudMB.solicitudRegistrarT.sImporteMoneda}"
@@ -543,7 +543,7 @@
 																			itemValue="#{opeBan.codOperBan}" itemLabel="#{opeBan.desOperBan}" /> 
 															</p:selectOneMenu></td>
 														<td><h:outputText styleClass="outputText"
-																id="outTipoMoneda" value="Moneda" title="Moneda"></h:outputText>
+																id="outTipoMoneda" value="Moneda:" title="Moneda:"></h:outputText>
 														</td>
 														<td><p:selectOneMenu styleClass="selectOneMenu"
 																id="cboMoneda" onchange="valorImporteSoles();"
@@ -558,7 +558,7 @@
 																	itemLabel="#{varo.desMoneda}" /> 
 																
 																</p:selectOneMenu></td>
-														<td><h:outputText styleClass="outputText" id="outImporte" value="Importe:" title="Importe"></h:outputText>
+														<td><h:outputText styleClass="outputText" id="outImporte" value="Importe:" title="Importe:"></h:outputText>
 														</td>
 														<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importe}" onkeypress="return validaNumero(event,'0',this,'0');"
 																 onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();"  id="intImporte" maxlength="16" >
@@ -567,7 +567,7 @@
 															</td>
 													</tr>
 													<tr>
-														<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio" title="Tipo Cambio"></h:outputText></td>
+														<td><h:outputText styleClass="outputText" id="outImporteTipoCambio" value="Tipo Cambio:" title="Tipo Cambio:"></h:outputText></td>
 														<td ><h:inputText id="intTipoCambio" maxlength="8"  onkeypress="return validaNumero(event,'0',this,'0');"
 															disabled="#{consultarSolicitudMB.bBooleanPopupTipoCambio}"  onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();" 
 															value="#{consultarSolicitudMB.objSolicBancaria.tipoCambio}" >
@@ -577,7 +577,7 @@
 														<p:remoteCommand id="valorImporteSoles" name="valorImporteSoles" actionListener="#{consultarSolicitudMB.obtenerAccionAgregarOperacionBancaria}"
 																	 update=":formSolicitudRegistro:txtImporteSoles">
 																	 </p:remoteCommand>
-														<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles" title="Importe en Soles"></h:outputText></td>
+														<td><h:outputText styleClass="outputText" id="outImporteSoles" value="Importe en Soles:" title="Importe en Soles:"></h:outputText></td>
 														
 														<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importeSoles}" readonly="true" id="txtImporteSoles">
 														<f:convertNumber pattern="#,###,##0.00" locale="en" />
