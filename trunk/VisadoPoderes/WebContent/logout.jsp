@@ -10,7 +10,8 @@ session.invalidate();
 </style>
 <script language="javascript">
 	var pagina=document.URL;
-	pagina=pagina.substring(0, pagina.search("/VisadoPoderes/")+8);	
+	pagina = pagina.substring(0, pagina.indexOf("VisadoPoderes"));
+	//pagina=pagina.substring(0, pagina.search("/VisadoPoderes/")+8);
 	function redireccionar() 
 	{
 		location.href=pagina;
