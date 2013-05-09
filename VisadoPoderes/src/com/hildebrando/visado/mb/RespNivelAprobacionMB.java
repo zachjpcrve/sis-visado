@@ -266,7 +266,7 @@ public class RespNivelAprobacionMB {
 			//logger.info("Data a mostrar :: " +e.toString());
 			
 			respNiveles.add(new MiembroNivelDTO(e.getId(), e.getCodNiv(),desNivel,e.getTiivsMiembro().getCodMiembro(),e.getTiivsMiembro().getDescripcion(),e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(),
-					e.getTiivsMiembro().getTiivsGrupo().getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),(e.getEstado()==null?"":e.getEstado()),descEstado));
+					e.getTiivsMiembro().getTiivsGrupo().getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),(e.getEstado()==null?"":e.getEstado()),descEstado,e.getUsuarioAct(),e.getFechaAct().toString()));
 		}
 		if(respNiveles!=null && respNiveles.size()>0){
 			for(int i=0;i <=respNiveles.size(); i++ ){
@@ -461,8 +461,9 @@ public class RespNivelAprobacionMB {
 		try {
 	/*	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String idResp = params.get("idResp");
-		//listarNivelesPorResponsable(idResp);
-*/		ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
+		//listarNivelesPorResponsable(idResp);*/
+		listarRespxNivel();
+		ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
 			            ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel: "+e);
@@ -532,8 +533,10 @@ public class RespNivelAprobacionMB {
 	}
 	
 	//Metodos del OTRO MB
-	public void limpiarCampos() {
-		if (miembroNivelDto != null) {
+	public void limpiarCampos() 
+	{
+		if (miembroNivelDto != null) 
+		{
 			miembroNivelDto.setRegistro("");
 			miembroNivelDto.setDescripcion("");
 			miembroNivelDto.setDesGrupo("");
@@ -541,9 +544,12 @@ public class RespNivelAprobacionMB {
 			miembroNivelDto.setCodNivel("-1");
 			miembroNivelDto.setCodGrupo("-1");
 			validarCodRegistro = false;
-		} else {
+		}
+		else
+		{
 			miembroNivelDto = new MiembroNivelDTO();
 		}
+		
 		respNiveles= new ArrayList<MiembroNivelDTO>();
 		bEditar=true;
 	}
