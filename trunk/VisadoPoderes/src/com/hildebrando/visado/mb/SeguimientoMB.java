@@ -1515,7 +1515,15 @@ public class SeguimientoMB
 		setObjTiivsPersonaBusquedaNomApod(null);
 		setNroDOIPoderdante("");
 		setObjTiivsPersonaBusquedaNomPoder(null);
-		setOficina(null);
+		
+		if (PERFIL_USUARIO!=null)
+		{
+			if (!PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
+			{
+				setOficina(null);
+			}
+		}
+		
 		setLstNivelSelected(null);
 		setLstEstadoNivelSelected(null);
 		setLstEstudioSelected(null);

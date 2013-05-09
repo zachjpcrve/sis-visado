@@ -63,8 +63,9 @@ public class MiembroNivelDTO implements Serializable {
 		
 	}
 	public MiembroNivelDTO(int id,String codNivel, String desNivel, String registro,
-			String descripcion, String codGrupo, String desGrupo,
-			String fechaRegistroToString, String usuarioRegistro,String codEstado, String estado) {
+		   String descripcion, String codGrupo, String desGrupo,
+		   String fechaRegistroToString, String usuarioRegistro,String codEstado, String estado) 
+	{
 		this.id = id;
 		this.codNivel = codNivel;
 		this.desNivel = desNivel;
@@ -77,6 +78,27 @@ public class MiembroNivelDTO implements Serializable {
 		this.codEstado = codEstado;
 		this.estado = estado;
 	}
+	
+	public MiembroNivelDTO(int id,String codNivel, String desNivel, String registro,
+		   String descripcion, String codGrupo, String desGrupo,
+		   String fechaRegistroToString, String usuarioRegistro,String codEstado, String estado, 
+		   String usuarioAct, String fechaActToString) 
+	{
+		this.id = id;
+		this.codNivel = codNivel;
+		this.desNivel = desNivel;
+		this.registro = registro;
+		this.descripcion = descripcion;
+		this.codGrupo = codGrupo;
+		this.desGrupo = desGrupo;
+		this.fechaRegistroToString = fechaRegistroToString;
+		this.usuarioRegistro = usuarioRegistro;
+		this.codEstado = codEstado;
+		this.estado = estado;
+		this.usuarioActualizacion=usuarioAct;
+		this.fechaActualizacionToString=fechaActToString;
+	}
+	
 	public MiembroNivelDTO(int nuevo,String descripcion, String codNiv, String desNivel, String codMiembro,
 			String fechaRegistroToString, String usuarioRegistro, String codEstado, String descEstado,
 			int ris, int rfs, int rid, int rfd, int rie, int rfe, String labelAccion) {
@@ -165,7 +187,7 @@ public class MiembroNivelDTO implements Serializable {
 			String desNivel2, String codMiembro, String string, String uid,
 			String estado2, String descEstado, int ris, int rfs, int rid,
 			int rfd, int rie, int rfe) {
-		// TODO Apéndice de constructor generado automáticamente
+		
 	}
 	public String getRegistro() {
 		return registro;

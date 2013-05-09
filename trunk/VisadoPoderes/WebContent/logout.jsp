@@ -1,6 +1,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@page import="javax.faces.bean.SessionScoped"%>
+<%@page import="javax.faces.context.ExternalContext"%>
+<%@page import="javax.faces.context.FacesContext"%>
+<%@page import="javax.servlet.http.HttpServletRequest"%>
+<%@page import="javax.servlet.http.HttpServletResponse"%>
+<%@page import="javax.servlet.http.HttpSession"%>
 <%
-session.invalidate();
+
+FacesContext context = FacesContext.getCurrentInstance();
+HttpSession sesion = ((HttpServletRequest)request).getSession();
+sesion.invalidate();
+
 %>
 <html>
 <head>
@@ -10,8 +20,9 @@ session.invalidate();
 </style>
 <script language="javascript">
 	var pagina=document.URL;
-	pagina = pagina.substring(0, pagina.indexOf("VisadoPoderes"));
-	//pagina=pagina.substring(0, pagina.search("/VisadoPoderes/")+8);
+	//pagina = pagina.substring(0, pagina.indexOf("VisadoPoderes"));
+	pagina=pagina.substring(0, pagina.search("/VisadoPoderes/")+8);
+
 	function redireccionar() 
 	{
 		location.href=pagina;
