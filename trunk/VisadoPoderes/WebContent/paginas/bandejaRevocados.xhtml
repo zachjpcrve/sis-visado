@@ -238,7 +238,8 @@
 		</h:form>
 
 		<!-- Pendiente/Editar -->
-		<p:dialog widgetVar="dlgApoPodPendEdit" modal="true" id="idDlgApoPod"
+		<p:dialog widgetVar="dlgApoPodPendEdit" 
+			modal="true" id="idDlgApoPod"
 			header="Representante / Representado"
 			width="#{revocadosMB.ancho_Popup_Revoc_Poder}"
 			height="#{revocadosMB.alto_Popup_Revoc_Poder}">
@@ -684,7 +685,7 @@
 		</p:confirmDialog>
 
 		<p:confirmDialog widgetVar="cfdGuardar"
-			message="¿Está seguro de guardar los representantes/representados? "
+			message="¿Está seguro de guardar los representantes / representados? "
 			header="Mensaje de Información" appendToBody="true"
 			showEffect="explode" hideEffect="explode" severity="alert"
 			modal="true">
@@ -693,7 +694,8 @@
 				
 				<p:commandButton value="Sí" process=":frmPendEdit:dtClientes"
 					actionListener="#{revocadosMB.guardarApodPod}" ajax="true"
-					update=":frmPendEdit:dtClientes, :frmConsRev:pnlTablaRevocados :frmCliente:idDlgCliente" oncomplete="cfdGuardar.hide();dlgApoPodPendEdit.hide();">
+					update=":frmPendEdit:dtClientes, :frmConsRev:pnlTablaRevocados :frmCliente:idDlgCliente 
+							:frmConsRev:msmGrowlPopup" oncomplete="cfdGuardar.hide();dlgApoPodPendEdit.hide();">
 				</p:commandButton>
 
 				<p:commandButton value="No" onclick="cfdGuardar.hide();">
