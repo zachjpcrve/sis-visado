@@ -40,8 +40,7 @@ public class NivelMB {
 		obtenerMaximo();
 		listarMonedas();
 		listarNiveles();
-		usuario = (IILDPeUsuario) Utilitarios
-				.getObjectInSession("USUARIO_SESION");
+		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		bEditar = false;
 		descripcion = "";
 	}
