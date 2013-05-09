@@ -287,6 +287,11 @@ public class SolicitudRegistroMB {
 			{
 				lstClasificacionPersona= new ArrayList<ComboDto>();
 				
+				for (ComboDto tmp: lstClasificacionPersona)
+				{
+					lstClasificacionPersona.remove(tmp);
+				}		
+				
 				GenericDao<TiivsMultitabla, Object> serviceClas = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 				Busqueda filtroTipoClas = Busqueda.forClass(TiivsMultitabla.class);
 				filtroTipoClas.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA));
@@ -312,6 +317,42 @@ public class SolicitudRegistroMB {
 					lstClasificacionPersona.add(t);
 				}
 				
+				logger.debug("tamanio lista clasificacion: "+lstClasificacionPersona.size());
+			}
+			else
+			{
+				lstClasificacionPersona= new ArrayList<ComboDto>();
+				
+				for (ComboDto tmp: lstClasificacionPersona)
+				{
+					lstClasificacionPersona.remove(tmp);
+				}				
+				
+				GenericDao<TiivsMultitabla, Object> serviceClas = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+				Busqueda filtroTipoClas = Busqueda.forClass(TiivsMultitabla.class);
+				filtroTipoClas.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA));
+				filtroTipoClas.add(Restrictions.eq("valor2", "1"));
+				filtroTipoClas.addOrder(Order.asc("valor1"));
+				List<TiivsMultitabla> lstTmpMult = new ArrayList<TiivsMultitabla>();
+				
+				try
+				{
+					lstTmpMult=serviceClas.buscarDinamico(filtroTipoClas);
+				}
+				catch (Exception e) 
+				{
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de datos de Clasificacion de personas: "+e);
+				}
+				
+				for (TiivsMultitabla mult: lstTmpMult)
+				{
+					ComboDto t = new ComboDto();
+					t.setKey(mult.getId().getCodElem());
+					t.setDescripcion(mult.getValor1());
+					lstClasificacionPersona.add(t);
+				}
+				
+				logger.debug("tamanio lista clasificacion: "+lstClasificacionPersona.size());
 			}
 		}
 	}
