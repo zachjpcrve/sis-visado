@@ -39,7 +39,7 @@
         <property name="nivelRol" type="string">
             <column name="NIVEL_ROL" length="1" not-null="false" />
         </property>
-        <property name="flagRevocado" type="java.lang.Character">
+        <property name="flagRevocado" type="java.lang.String">
             <column name="FLAG_REVOCADO" length="1" />
         </property>
     </class>
