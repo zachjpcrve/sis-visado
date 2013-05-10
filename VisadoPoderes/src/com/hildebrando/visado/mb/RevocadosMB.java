@@ -788,7 +788,7 @@ public class RevocadosMB {
 			/** Por ultimo modificar el estado de las combinaciones iguales, pasarlas al estado Revocados */
 			this.actualizarEstadoA_Revocado_SolicitudAgrupacion(listaTiivsSolicitudAgrupacionId);
 			bBooleanPopup=false;
-			//Utilitarios.mensajeInfo("INFO", "La Revocación fue ejecutada, correctamente");
+			Utilitarios.mensajeInfo("INFO", "La Revocación fue ejecutada, correctamente");
 			buscarRevocado();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -913,18 +913,23 @@ public class RevocadosMB {
 		
 	}
 	
-	public void registraSolicitudHistorial (TiivsSolicitud solicitudModificado) throws Exception{
-		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
-		String numeroMovimiento = serviceMaxMovi.obtenerMaximoMovimiento(solicitudModificado.getCodSoli());
-
-		int num = 0;
-		if (!numeroMovimiento.equals("")) {
-			num = Integer.parseInt(numeroMovimiento) + 1;
-		} else {
-			num = 1;
-		}
-		numeroMovimiento = num + "";
+	public void registraSolicitudHistorial (TiivsSolicitud solicitudModificado) throws Exception
+	{
+		  GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		  SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+		  String numeroMovimiento = serviceMaxMovi.obtenerMaximoMovimiento(solicitudModificado.getCodSoli());
+	
+		  int num = 0;
+		  if (!numeroMovimiento.equals("")) 
+		  {
+			  num = Integer.parseInt(numeroMovimiento) + 1;
+		  } 
+		  else 
+		  {
+			  num = 1;
+		  }
+		  	
+		  numeroMovimiento = num + "";
 		  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 		  objHistorial.setId(new TiivsHistSolicitudId(solicitudModificado.getCodSoli(),numeroMovimiento));
 		  objHistorial.setEstado(solicitudModificado.getEstado());
@@ -932,10 +937,12 @@ public class RevocadosMB {
 		  objHistorial.setObs(solicitudModificado.getObs());
 		  objHistorial.setFecha(new Timestamp(new Date().getTime()));
 		  objHistorial.setRegUsuario(usuario.getUID());
+		  
 		  /**SAMIRA MEJORA 29/04/2013 */
 		  objHistorial.setFlagRevocado(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO);
 		  serviceHistorialSolicitud.insertar(objHistorial);
 	}
+	
 	//@Samira 09/03/2012
 	public List<String>listaCodSoli(List<TiivsSolicitudAgrupacion> listaTiivsSolicitudAgrupacion)throws Exception{
 		List<String>listaCodSoli =new ArrayList<String>();
