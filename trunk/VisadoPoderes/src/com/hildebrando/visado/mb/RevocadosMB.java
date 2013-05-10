@@ -799,7 +799,7 @@ public class RevocadosMB {
 			bBooleanPopup=false;
 			
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "No se puede revocar, debe completar los datos de representado y/o representante!","");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+			FacesContext.getCurrentInstance().addMessage("msmGrowlPopup", msg);
 			
 			logger.debug("No se grabó la combinacion de revocados");
 		}

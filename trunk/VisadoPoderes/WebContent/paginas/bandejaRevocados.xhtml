@@ -247,7 +247,7 @@
 			<h:form id="frmPendEdit">
 			<p:outputPanel id="pnlRegistrarPendEdit">
 
-				<h:panelGrid columns="1" id="gridMsj">
+				<h:panelGrid columns="1" id="gridMsj" rendered="false">
 					<p:messages globalOnly="true" showDetail="true" />
 				</h:panelGrid>
 				
@@ -675,7 +675,7 @@
 			<h:form>
 				<p:commandButton value="Sí" process=":frmPendEdit:dtClientes"
 					actionListener="#{revocadosMB.revocarApodPod}"
-					update=":frmPendEdit:gridMsj :frmConsRev:pnlTablaRevocados :frmConsRev:pnlBotones" ajax="false"
+					update=":frmPendEdit:gridMsj :frmConsRev:pnlTablaRevocados :frmConsRev:pnlBotones :frmConsRev:msmGrowlPopup" ajax="false"
 					oncomplete="cfdRevocar.hide();">
 				</p:commandButton>
 

@@ -3713,7 +3713,11 @@ public class ConsultarSolicitudMB {
 	    logger.info("Tamanio Lista original que se trajo de base : "+lstSolicBancariasCopia.size());
 	    lstSolicBancarias.remove(objSolicitudOperacionCapturado);
 	   for (TiivsSolicitudOperban x : lstSolicBancariasCopia) {
-		if(x.equals(objSolicitudOperacionCapturado)){
+		//if(x.equals(objSolicitudOperacionCapturado)){
+		if(x.getId().getCodOperBan().trim().equals(objSolicitudOperacionCapturado.getId().getCodOperBan().trim())
+		   && x.getId().getMoneda().trim().equals(objSolicitudOperacionCapturado.getId().getMoneda().trim())
+		   && x.getId().getCodSoli().trim().equals(objSolicitudOperacionCapturado.getId().getCodSoli().trim()))
+		{
 			// Ya existe en base de datos
 			logger.info(" Ya existe en base de datos");
 			/** Agregar la operacion bancaria a la lista de temporal a eliminar*/
