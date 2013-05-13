@@ -328,6 +328,7 @@ public class ReportesMB {
 		setIdOfi1("");
 		setFechaInicio(null);
 		setFechaFin(null);
+		oficinaRPT = new TiivsOficina1();
 	}
 	
 	public void limpiarFilExt()
