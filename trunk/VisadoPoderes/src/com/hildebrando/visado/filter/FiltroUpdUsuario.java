@@ -77,34 +77,34 @@ public class FiltroUpdUsuario implements Filter {
 				if(usuario != null){
 					
 					SeguridadDao<MiembroDto, Object> miembroService = (SeguridadDao<MiembroDto, Object>) SpringInit.getApplicationContext().getBean("miembroEspDao");
-					logger.info("**************** miembroService : "+miembroService);
-					if(miembroService==null){
+					//logger.info("**************** miembroService : "+miembroService);
+					/*if(miembroService==null){
 						logger.info("miembroService - Nullo");
 					}else{
 						logger.info("miembroService - No Nullo");
-					}
+					}*/
 					
 					 List<MiembroDto> ListaMiembros= miembroService.buscarMiembroSql(usuario);
 						
-					 logger.info(" ***************** ListaMiembros **************");
+					 //logger.info(" ***************** ListaMiembros **************");
 					 if(ListaMiembros!=null){
-						logger.debug("Hay ["+ListaMiembros.size()+"] miembro(s) en la BD.");
+						//logger.debug("Hay ["+ListaMiembros.size()+"] miembro(s) en la BD.");
 					 }
 		        	for (Iterator iterator = ListaMiembros.iterator(); iterator.hasNext();) {
 		        		MiembroDto object = (MiembroDto) iterator.next();
-						logger.info("Grupo: " + object.getCOD_GRUPO()+", criterio: "+ object.getCRITERIO()+", miembro: "+object.getCOD_MIEMBRO() );
+						//logger.info("Grupo: " + object.getCOD_GRUPO()+", criterio: "+ object.getCRITERIO()+", miembro: "+object.getCOD_MIEMBRO() );
 						if (ConstantesVisado.COD_GRUPO_ADM.equals(object.getCOD_GRUPO())){
-							logger.info("[GRUPO_ADMIN]:"+object.getDESCRIPCION());
+						//	logger.info("[GRUPO_ADMIN]:"+object.getDESCRIPCION());
 							grupoAdm=ConstantesVisado.COD_GRUPO_ADM;
 							//sesion.setAttribute("GRUPO_ADM", ConstantesVisado.COD_GRUPO_ADM);
 		                }else 
 						if (ConstantesVisado.COD_GRUPO_JRD.equals(object.getCOD_GRUPO())){
-							logger.info("[GRUPO_JRD]:"+object.getDESCRIPCION());
+						//	logger.info("[GRUPO_JRD]:"+object.getDESCRIPCION());
 							grupoJrd=ConstantesVisado.COD_GRUPO_JRD;
 							//sesion.setAttribute("GRUPO_JRD", ConstantesVisado.COD_GRUPO_JRD);	
 		                }else
 						if (ConstantesVisado.COD_GRUPO_OFI.equals(object.getCOD_GRUPO())){
-							logger.info("[GRUPO_OFI]:"+object.getDESCRIPCION());
+						//	logger.info("[GRUPO_OFI]:"+object.getDESCRIPCION());
 							grupoOfi=ConstantesVisado.COD_GRUPO_OFI;
 							//sesion.setAttribute("GRUPO_OFI", ConstantesVisado.COD_GRUPO_OFI);
 		                  }
@@ -128,7 +128,7 @@ public class FiltroUpdUsuario implements Filter {
 		        	}
 		        	
 		        	if(ListaMiembros.size()>0){
-		        		logger.debug(ConstantesVisado.SEGURIDAD.USER_ACCESO_OK);
+		        		//logger.debug(ConstantesVisado.SEGURIDAD.USER_ACCESO_OK);
 		        		
 		        		
 		        		//Valida explorador
@@ -147,7 +147,7 @@ public class FiltroUpdUsuario implements Filter {
 		        	}
 		        	
 		    	}
-		    	logger.info("IIVP --fin de autenticación---");
+		    	//logger.info("IIVP --fin de autenticación---");
 					
 			}
 					
