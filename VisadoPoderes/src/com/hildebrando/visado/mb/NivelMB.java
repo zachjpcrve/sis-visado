@@ -185,11 +185,13 @@ public class NivelMB {
 									nivelesMant.get(i).setFechaReg(new Date());
 									if(usuario.getUID()!=null){
 									nivelesMant.get(i).setUsuarioReg(usuario.getUID());
+									nivelesMant.get(i).setUsuarioAct(usuario.getUID());
 									}
 								}else{
 									nivelesMant.get(i).setFechaAct(new Date());
 									if(usuario.getUID()!=null){
 										nivelesMant.get(i).setUsuarioReg(usuario.getUID());
+										nivelesMant.get(i).setUsuarioAct(usuario.getUID());
 									}
 								}
 								nivelesMant.get(i).setDesNiv(nivelesMant.get(0).getDesNiv().toUpperCase());								
