@@ -128,11 +128,14 @@ public class ClienteFTP
 	
 	public void renombrarArchivo(String nuevoNombre, String antiguoNombre)
 	{
+		logger.debug("==== renombrarArchivo() ====");		
 		try {
+			logger.debug("nuevoNombre()==>"+nuevoNombre + "   antiguoNombre ==>"+antiguoNombre);
 			ftpCliente.rename(antiguoNombre, nuevoNombre);
 			ftpCliente.disconnect();
 		} catch (IOException e) {
             e.printStackTrace();
+            logger.debug(""+e);
         }
 	}
 
