@@ -30,7 +30,6 @@ import com.hildebrando.visado.dto.RangosImporte;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.dto.TiposFecha;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
-import com.hildebrando.visado.modelo.TiivsDocumento;
 import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
