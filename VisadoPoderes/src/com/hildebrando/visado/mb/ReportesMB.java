@@ -892,14 +892,15 @@ public class ReportesMB {
 
 	}
 
-	public void obtenerHistorialSolicitud(String codSoli) {
+	public void obtenerHistorialSolicitud(String codSoli) 
+	{
 		logger.info("Obteniendo Historial ");
 		logger.info("Codigo de solicitud : " + codSoli);
 
-		try {
+		try 
+		{
 			lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
-			GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
-					.getApplicationContext().getBean("genericoDao");
+			GenericDao<TiivsHistSolicitud, Object> histDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtroHist = Busqueda.forClass(TiivsHistSolicitud.class);
 			filtroHist.add(Restrictions.eq("id.codSoli", codSoli));
 			filtroHist.addOrder(Order.desc("fecha"));
@@ -909,13 +910,16 @@ public class ReportesMB {
 
 			logger.info("Numero de registros encontrados:" + lstHist.size());
 
-			if (lstHist != null && lstHist.size() > 0) {
-
-				for (TiivsHistSolicitud h : lstHist) {
+			if (lstHist != null && lstHist.size() > 0) 
+			{
+				for (TiivsHistSolicitud h : lstHist) 
+				{
 					SeguimientoDTO seg = new SeguimientoDTO();
 
 					String estado = h.getEstado();
-					if (estado != null) {
+					
+					if (estado != null) 
+					{
 						seg.setEstado(buscarEstadoxCodigo(estado.trim()));
 					}
 
@@ -924,35 +928,30 @@ public class ReportesMB {
 					Integer iCodNivel = 0;
 					String descripcionNivel = "";
 
-					if (h.getNivel() != null) {
-						if (h.getNivelRol() != null
-								&& h.getNivelRol()
-										.trim()
-										.equals(ConstantesVisado.CODIGO_CAMPO_TIPO_ROL_RESPONSABLE)) {
+					if (h.getNivel() != null) 
+					{
+						if (h.getNivelRol() != null && h.getNivelRol().trim().equals(ConstantesVisado.CODIGO_CAMPO_TIPO_ROL_RESPONSABLE)) 
+						{
 							desRolNivel = "Responsable";
 						}
-						if (h.getNivelRol() != null
-								&& h.getNivelRol()
-										.trim()
-										.equals(ConstantesVisado.CODIGO_CAMPO_TIPO_ROL_DELEGADO)) {
+						if (h.getNivelRol() != null && h.getNivelRol().trim().equals(ConstantesVisado.CODIGO_CAMPO_TIPO_ROL_DELEGADO)) 
+						{
 							desRolNivel = "Delegado";
 						}
-						if (h.getNivelEstado() != null
-								&& h.getNivelEstado()
-										.trim()
-										.equals(ConstantesVisado.ESTADOS.ESTADO_COD_Desaprobado_T09)) {
+						if (h.getNivelEstado() != null && h.getNivelEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_Desaprobado_T09)) 
+						{
 							desEstadoNivel = ConstantesVisado.ESTADOS.ESTADO_Desaprobado_T09;
 						}
-						if (h.getNivelEstado() != null
-								&& h.getNivelEstado()
-										.trim()
-										.equals(ConstantesVisado.ESTADOS.ESTADO_COD_Aprobado_T09)) {
+						if (h.getNivelEstado() != null && h.getNivelEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_Aprobado_T09)) 
+						{
 							desEstadoNivel = ConstantesVisado.ESTADOS.ESTADO_Aprobado_T09;
 						}
+						
 						iCodNivel = Integer.parseInt(h.getNivel());
-						descripcionNivel = "Nivel " + iCodNivel + " "
-								+ desRolNivel + ": " + desEstadoNivel;
+						descripcionNivel = "Nivel " + iCodNivel + " " + desRolNivel + ": " + desEstadoNivel;
 					}
+					
+					seg.setCodSoli(codSoli);
 					seg.setNivel(descripcionNivel);
 					seg.setFecha(h.getFecha());
 					seg.setUsuario(h.getNomUsuario());
@@ -3796,6 +3795,8 @@ public class ReportesMB {
 				int numReg = 8;
 				int contador = 0;
 				
+				List<TiivsSolicitud> lstCopiaSol = getSolicitudes();
+				
 				for (TiivsSolicitud tmp : solicitudes) 
 				{
 					contador++;
@@ -4070,47 +4071,46 @@ public class ReportesMB {
 
 				// Creo las celdas de mi fila, se puede poner un diseño a la
 				// celda
-				Utilitarios.crearCell(wb,rowT1, 0,
+				Utilitarios.crearCellRPT(wb,rowT1, 0,
 								      HSSFCellStyle.VERTICAL_CENTER,
 								      HSSFCellStyle.VERTICAL_CENTER,
 								      ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_NRO_SOLICITUD,
 								      true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT1, 1,
+				Utilitarios.crearCellRPT(wb, rowT1, 1,
 									HSSFCellStyle.VERTICAL_CENTER,
 									HSSFCellStyle.VERTICAL_CENTER,
 									ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_ESTADO_HOJA2,
 									true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT1, 2,
+				Utilitarios.crearCellRPT(wb, rowT1, 2,
 									HSSFCellStyle.VERTICAL_CENTER,
 									HSSFCellStyle.VERTICAL_CENTER,
 									ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_NIVEL, true,
 									true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT1, 3,
+				Utilitarios.crearCellRPT(wb, rowT1, 3,
 									HSSFCellStyle.VERTICAL_CENTER,
 									HSSFCellStyle.VERTICAL_CENTER,
 									ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_DELEGADO,
 									true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT1, 4,
+				Utilitarios.crearCellRPT(wb, rowT1, 4,
 									HSSFCellStyle.VERTICAL_CENTER,
 									HSSFCellStyle.VERTICAL_CENTER,
 									ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_FECHA, true,
 									true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT1, 5,
+				Utilitarios.crearCellRPT(wb, rowT1, 5,
 									HSSFCellStyle.VERTICAL_CENTER,
 									HSSFCellStyle.VERTICAL_CENTER,
 									ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_USUARIO,
 									true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCell(wb, rowT1, 6,
+				Utilitarios.crearCellRPT(wb, rowT1, 6,
 									HSSFCellStyle.VERTICAL_CENTER,
 									HSSFCellStyle.VERTICAL_CENTER,
 									ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_OBS, true,
 									true, false, HSSFColor.DARK_BLUE.index);
 
 				int numReg1 = 2;
-				for (TiivsSolicitud tmp2 : solicitudes) 
+				
+				for (TiivsSolicitud tmp2 : lstCopiaSol) 
 				{
-					Row row = sheet2.createRow((short) numReg1);
-
 					obtenerHistorialSolicitud(tmp2.getCodSoli());
 
 					for (SeguimientoDTO seg : lstSeguimientoDTO) 
@@ -4121,8 +4121,9 @@ public class ReportesMB {
 								HSSFCellStyle.VERTICAL_CENTER,
 								tmp2.getCodSoli(), true, false, true,
 								HSSFColor.DARK_BLUE.index);*/
+						Row row = sheet2.createRow((short) numReg1);
 						
-						Utilitarios.SetearEstiloCelda(wb, row, 0, tmp2.getCodSoli(),estilo);
+						Utilitarios.SetearEstiloCelda(wb, row, 0, seg.getCodSoli(),estilo);
 
 						// Columna Estado en Excel
 						/*Utilitarios.crearCell(wb, row, 1,
@@ -4185,9 +4186,11 @@ public class ReportesMB {
 						
 						Utilitarios.SetearEstiloCelda(wb, row, 6, seg.getObs(),estilo);
 						
+						numReg1++;
+						
 					}
 					
-					numReg1++;
+					
 				}
 
 				// Arregla ancho de columnas
