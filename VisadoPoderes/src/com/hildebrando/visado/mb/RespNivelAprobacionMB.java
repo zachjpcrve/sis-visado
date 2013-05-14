@@ -182,11 +182,14 @@ public class RespNivelAprobacionMB {
 		return pagina;
 	}
 	
-	public String listarRespxNivelTodos(){
+	public String listarRespxNivelTodos()
+	{
 		listarRespxNivel();
 		return "/paginas/respNivel.xhtml";
 	}
-	public void listarRespxNivel(){
+	
+	public void listarRespxNivel()
+	{
 		logger.debug("=== inicia listarRespxNivel() ====");
 		GenericDao<TiivsMiembroNivel, Object> serviceTiivsMiembroNivel = (GenericDao<TiivsMiembroNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsMiembro, Object> serviceTiivsMiembro = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -197,88 +200,125 @@ public class RespNivelAprobacionMB {
 		filtroTiivsMiembroNivel.createAlias("tiivsMiembro", "miemb");
 		
 		List<TiivsMiembroNivel> list= new ArrayList<TiivsMiembroNivel>();
-		if(miembroNivelDto!=null&&miembroNivelDto.getCodGrupo()!=null&&miembroNivelDto.getEstado()!=null){
-			
 		
-		if(!miembroNivelDto.getRegistro().equals("")){
-			logger.debug("[BUSQ]-REGISTRO: "+miembroNivelDto.getRegistro().toUpperCase());
-			filtroTiivsMiembroNivel.add(Restrictions.eq("miemb.codMiembro", miembroNivelDto.getRegistro().toUpperCase()));
-		}
-		
-		if(!miembroNivelDto.getDescripcion().equals("")){
-			logger.debug("[BUSQ]-DESCRIPCION: "+miembroNivelDto.getDescripcion());
-			filtroTiivsMiembroNivel.add(Restrictions.like("miemb.descripcion", "%"+miembroNivelDto.getDescripcion().toUpperCase()+"%"));
-			//filtroTiivsMiembroNivel.add(Restrictions. like("miemb.descripcion", miembroNivelDto.getDescripcion()));
-		}
-		
-		if((!miembroNivelDto.getEstado().equals("")) && miembroNivelDto.getEstado().compareTo("-1") != 0 ){
-			logger.debug("[BUSQ]-ESTADO: "+miembroNivelDto.getEstado());
-			filtroTiivsMiembroNivel.add(Restrictions.eq("estado", miembroNivelDto.getEstado()));
-		}
-		
-
-	    if(miembroNivelDto.getCodGrupo() != "" && miembroNivelDto.getCodGrupo().compareTo("-1") != 0 ){
-			logger.debug("[BUSQ]-CODGRUPO: "+miembroNivelDto.getCodGrupo());
-			Busqueda filtroTiivsMiembro= Busqueda.forClass(TiivsMiembro.class);
-			filtroTiivsMiembro.createAlias("tiivsGrupo", "grupo");
-			filtroTiivsMiembro.add(Restrictions.eq("grupo.codGrupo", miembroNivelDto.getCodGrupo()));
-			List<TiivsMiembro> miembros= new ArrayList<TiivsMiembro>();
-			try {
-				miembros = serviceTiivsMiembro.buscarDinamico(filtroTiivsMiembro);
-			} catch (Exception e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener miembros: "+e);
+		if(miembroNivelDto!=null&&miembroNivelDto.getCodGrupo()!=null&&miembroNivelDto.getEstado()!=null)
+		{
+			if(!miembroNivelDto.getRegistro().equals(""))
+			{
+				logger.debug("[BUSQ]-REGISTRO: "+miembroNivelDto.getRegistro().toUpperCase());
+				filtroTiivsMiembroNivel.add(Restrictions.eq("miemb.codMiembro", miembroNivelDto.getRegistro().toUpperCase()));
 			}
 			
-			List<String> codigos= new ArrayList<String>();
-			for(TiivsMiembro tiivsMiembro: miembros){
-				codigos.add(tiivsMiembro.getCodMiembro());
-			logger.info("codigos filtrar" + codigos);
+			if(!miembroNivelDto.getDescripcion().equals(""))
+			{
+				logger.debug("[BUSQ]-DESCRIPCION: "+miembroNivelDto.getDescripcion());
+				filtroTiivsMiembroNivel.add(Restrictions.like("miemb.descripcion", "%"+miembroNivelDto.getDescripcion().toUpperCase()+"%"));
+				//filtroTiivsMiembroNivel.add(Restrictions. like("miemb.descripcion", miembroNivelDto.getDescripcion()));
 			}
-			filtroTiivsMiembroNivel.add(Restrictions.in("miemb.codMiembro", codigos));
 			
+			if((!miembroNivelDto.getEstado().equals("")) && miembroNivelDto.getEstado().compareTo("-1") != 0 )
+			{
+				logger.debug("[BUSQ]-ESTADO: "+miembroNivelDto.getEstado());
+				filtroTiivsMiembroNivel.add(Restrictions.eq("estado", miembroNivelDto.getEstado()));
+			}
+			
+		    if(miembroNivelDto.getCodGrupo() != "" && miembroNivelDto.getCodGrupo().compareTo("-1") != 0 )
+		    {
+				logger.debug("[BUSQ]-CODGRUPO: "+miembroNivelDto.getCodGrupo());
+				Busqueda filtroTiivsMiembro= Busqueda.forClass(TiivsMiembro.class);
+				filtroTiivsMiembro.createAlias("tiivsGrupo", "grupo");
+				filtroTiivsMiembro.add(Restrictions.eq("grupo.codGrupo", miembroNivelDto.getCodGrupo()));
+				List<TiivsMiembro> miembros= new ArrayList<TiivsMiembro>();
+				
+				try {
+					miembros = serviceTiivsMiembro.buscarDinamico(filtroTiivsMiembro);
+				} catch (Exception e) {
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener miembros: "+e);
+				}
+				
+				List<String> codigos= new ArrayList<String>();
+				
+				for(TiivsMiembro tiivsMiembro: miembros)
+				{
+					codigos.add(tiivsMiembro.getCodMiembro());
+					logger.info("codigos filtrar" + codigos);
+				}
+				
+				filtroTiivsMiembroNivel.add(Restrictions.in("miemb.codMiembro", codigos));
+			}
+			
+			if(miembroNivelDto.getCodNivel() != "" && miembroNivelDto.getCodNivel().compareTo("-1") != 0 )
+			{
+				logger.debug("[BUSQ]-CODNIVEL: "+miembroNivelDto.getCodNivel());
+				filtroTiivsMiembroNivel.add(Restrictions.eq("codNiv", miembroNivelDto.getCodNivel()));
+			}
 		}
 		
-		if(miembroNivelDto.getCodNivel() != "" && miembroNivelDto.getCodNivel().compareTo("-1") != 0 ){
-			logger.debug("[BUSQ]-CODNIVEL: "+miembroNivelDto.getCodNivel());
-			filtroTiivsMiembroNivel.add(Restrictions.eq("codNiv", miembroNivelDto.getCodNivel()));
-		}
-		
-		}
-	
-		
-		try {
+		try 
+		{
 			list = serviceTiivsMiembroNivel.buscarDinamico(filtroTiivsMiembroNivel);
 		
+			respNiveles = new ArrayList<MiembroNivelDTO>();
 		
-		respNiveles = new ArrayList<MiembroNivelDTO>();
+			if(list!=null)
+			{
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"Responsables por Nivel es ["+list.size()+"]  ." );
+			}
 		
-		if(list!=null){
-			logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"Responsables por Nivel es ["+list.size()+"]  ." );
-		}
-		
-		for(TiivsMiembroNivel  e:list){
-			String descEstado="" ;
-			String desNivel="";
-			
-			descEstado = Utilitarios.obternerDescripcionEstado(e.getEstado());
-			desNivel = respNivelAprobacionService.obtenerDesNivel(e.getCodNiv());
-			
-			//logger.info("Data a mostrar :: " +e.toString());
-			
-			respNiveles.add(new MiembroNivelDTO(e.getId(), e.getCodNiv(),desNivel,e.getTiivsMiembro().getCodMiembro(),e.getTiivsMiembro().getDescripcion(),e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(),
-					e.getTiivsMiembro().getTiivsGrupo().getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),(e.getEstado()==null?"":e.getEstado()),descEstado,e.getUsuarioAct(),e.getFechaAct().toString()));
-		}
-		if(respNiveles!=null && respNiveles.size()>0){
-			for(int i=0;i <=respNiveles.size(); i++ ){
-				if(logger.isDebugEnabled()){
-					//logger.debug("==>  ID:"+respNiveles.get(i).getId()+"  Registro:"+respNiveles.get(i).getRegistro());
+			for(TiivsMiembroNivel e:list)
+			{
+				String descEstado="" ;
+				String desNivel="";
+				
+				descEstado = Utilitarios.obternerDescripcionEstado(e.getEstado());
+				desNivel = respNivelAprobacionService.obtenerDesNivel(e.getCodNiv());
+				
+				MiembroNivelDTO miem = new MiembroNivelDTO();
+				miem.setId(e.getId());
+				miem.setCodNivel(e.getCodNiv());
+				miem.setDesNivel(desNivel);
+				miem.setRegistro(e.getTiivsMiembro().getCodMiembro());
+				miem.setDescripcion(e.getTiivsMiembro().getDescripcion());
+				miem.setCodGrupo(e.getTiivsMiembro().getTiivsGrupo().getCodGrupo());
+				miem.setDesGrupo(e.getTiivsMiembro().getTiivsGrupo().getDesGrupo());
+				miem.setFechaRegistroToString(e.getFechaRegistro().toString());
+				miem.setUsuarioRegistro(e.getUsuarioRegistro());
+				
+				if (e.getEstado()!=null)
+				{
+					miem.setCodEstado(e.getEstado());
 				}
-			}	
-		}
+				else
+				{
+					miem.setCodEstado("");
+				}
+				
+				miem.setEstado(descEstado);
+				miem.setUsuarioActualizacion(e.getUsuarioAct());
+				miem.setFechaActualizacionToString(e.getFechaAct().toString());
+				
+//				respNiveles.add(new MiembroNivelDTO(e.getId(), e.getCodNiv(),desNivel,e.getTiivsMiembro().getCodMiembro(),e.getTiivsMiembro().getDescripcion(),e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(),
+//								e.getTiivsMiembro().getTiivsGrupo().getDesGrupo(),e.getFechaRegistro().toString(),e.getUsuarioRegistro(),(e.getEstado()==null?"":e.getEstado()),
+//								descEstado,e.getUsuarioAct(),e.getFechaAct().toString()));
+				
+				respNiveles.add(miem);
+			}
+			
+			if(respNiveles!=null && respNiveles.size()>0)
+			{
+				for(int i=0;i <=respNiveles.size(); i++)
+				{
+					if(logger.isDebugEnabled())
+					{
+						//logger.debug("==>  ID:"+respNiveles.get(i).getId()+"  Registro:"+respNiveles.get(i).getRegistro());
+					}
+				}	
+			}
 		
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar Responsables por Nivel: "+e);
 		}
+		
 		logger.debug("=== saliendo de listarRespxNivel() ===");
 	}
 	public List<TiivsNivel> listarNivelesXusuario(String codNiv){
@@ -337,12 +377,14 @@ public class RespNivelAprobacionMB {
 				}else if(e.getEstado().equals("0")){
 					e.setLabelAccion("Activar");
 				}
+				
 				respNiveles.add(new MiembroNivelDTO(0, e.getId(),
 						e.getCodNiv(), desNivel, e.getTiivsMiembro().getCodMiembro(),
 						e.getTiivsMiembro().getDescripcion(), e.getTiivsMiembro().getTiivsGrupo().getCodGrupo(), 
 						e.getTiivsMiembro().getTiivsGrupo().getDesGrupo(),
 						e.getFechaRegistro().toString(),
-						e.getUsuarioRegistro(), e.getEstado(), descEstado, ris,rfs, rid, rfd, rie, rfe,e.getLabelAccion()));
+						e.getUsuarioRegistro(), e.getEstado(), descEstado, ris,rfs, rid, rfd, rie, rfe,e.getLabelAccion(),
+						e.getUsuarioAct(),e.getFechaAct().toString()));				
 				
 			}
 			lstTempFinal.addAll(respNiveles);
@@ -462,9 +504,10 @@ public class RespNivelAprobacionMB {
 	/*	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String idResp = params.get("idResp");
 		//listarNivelesPorResponsable(idResp);*/
-		listarRespxNivel();
+		
 		ExternalContext ec=  FacesContext.getCurrentInstance().getExternalContext();
 			            ec.redirect("newEditRespNivel.xhtml?faces-redirect=true");
+	    //listarRespxNivel();
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al redireccionar newEditRespNivel: "+e);
 		}catch(Exception e){
@@ -579,9 +622,14 @@ public class RespNivelAprobacionMB {
 	private void editar(){
 		logger.info("Here here .... editar ");
 		bEditar=true;
-		miembroNivelDto.setRegistro(miembroCapturado.getRegistro());
-		this.obtenerDatosMiembro();
-		logger.info("bEditar :: :: "+bEditar);
+		
+		if (miembroCapturado!=null)
+		{
+			miembroNivelDto.setRegistro(miembroCapturado.getRegistro());
+			this.obtenerDatosMiembro();
+			logger.info("bEditar :: :: "+bEditar);
+		}
+		
 		/*
 		miembroNivelDto.setCodEstado(miembroCapturado.getCodEstado());
 		miembroNivelDto.setCodNivel(miembroCapturado.getCodNivel());
