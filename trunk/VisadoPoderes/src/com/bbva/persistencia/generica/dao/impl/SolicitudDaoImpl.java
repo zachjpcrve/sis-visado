@@ -576,7 +576,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					  "      when  mul.valor2 = 'USD' then 'Dolares' " +
 					  "      when mul.valor2 = 'EUR' then 'Euros' " +
 					  "end Moneda,	NVL(ob.importe,0) Importe, NVL(ob.tipo_cambio,0.0) Tipo_cambio, " +
-					  "NVL((ob.tipo_cambio * ob.importe),0) Importe_Soles " +
+					  "case when mul.valor2='PEN' then NVL(ob.importe,0) else NVL((ob.tipo_cambio * ob.importe),0) end Importe_Soles " +
 					  "from tiivs_solicitud_operban ob " +
 					  "left join tiivs_solicitud so on ob.cod_soli = so.cod_soli " +
 					  "left join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
@@ -598,7 +598,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 						  "      when  mul.valor2 = 'USD' then 'Dolares' " +
 						  "      when mul.valor2 = 'EUR' then 'Euros' " +
 						  "end Moneda,	NVL(ob.importe,0) Importe, NVL(ob.tipo_cambio,0.0) Tipo_cambio, " +
-						  "NVL((ob.tipo_cambio * ob.importe),0) Importe_Soles " +
+						  "case when mul.valor2='PEN' then NVL(ob.importe,0) else NVL((ob.tipo_cambio * ob.importe),0) end Importe_Soles " +
 						  "from tiivs_solicitud_operban ob " +
 						  "left join tiivs_solicitud so on ob.cod_soli = so.cod_soli " +
 						  "left join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
