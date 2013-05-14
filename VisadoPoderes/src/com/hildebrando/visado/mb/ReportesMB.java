@@ -4759,14 +4759,13 @@ public class ReportesMB {
 		return bEncontrado;
 	}
 
-	public Boolean validarSolicitudEnRevision(String codSoli) {
+	public Boolean validarSolicitudEnRevision(String codSoli) 
+	{
 		boolean bEncontrado = false;
 		String codigoSolicEnRevision = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_EN_REVISION);
-		GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
-		filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,
-				codigoSolicEnRevision));
+		filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicEnRevision));
 
 		try {
 			lstHistorial = busqHisDAO.buscarDinamico(filtro);
@@ -4792,14 +4791,13 @@ public class ReportesMB {
 		return bEncontrado;
 	}
 
-	public Boolean validarSolicitudRevocada(String codSoli) {
+	public Boolean validarSolicitudRevocada(String codSoli) 
+	{
 		boolean bEncontrado = false;
 		String codigoSolicRevocado = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_REVOCADO);
-		GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
-		filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,
-				codigoSolicRevocado));
+		filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicRevocado));
 
 		try {
 			lstHistorial = busqHisDAO.buscarDinamico(filtro);
@@ -4949,17 +4947,17 @@ public class ReportesMB {
 		return res;
 	}
 
-	public String buscarDesTerritorio(String codigoTerritorio) {
+	public String buscarDesTerritorio(String codigoTerritorio) 
+	{
 		String resultado = "";
 
-		if (codigoTerritorio.compareTo("") != 0) {
+		if (codigoTerritorio.compareTo("") != 0) 
+		{
 			logger.debug("Buscando Territorio por codigo: " + codigoTerritorio);
 
-			GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit
-					.getApplicationContext().getBean("genericoDao");
+			GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtroTerr = Busqueda.forClass(TiivsTerritorio.class);
-			filtroTerr.add(Restrictions.eq(
-					ConstantesVisado.CAMPO_COD_TERRITORIO, codigoTerritorio));
+			filtroTerr.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_TERRITORIO, codigoTerritorio));
 
 			List<TiivsTerritorio> lstTmp = new ArrayList<TiivsTerritorio>();
 

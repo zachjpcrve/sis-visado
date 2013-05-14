@@ -15,9 +15,7 @@ import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsGrupo;
 import com.hildebrando.visado.modelo.TiivsMiembro;
-import com.hildebrando.visado.modelo.TiivsMiembroNivel;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
-import com.hildebrando.visado.modelo.TiivsMultitablaId;
 import com.hildebrando.visado.service.AbogadoService;
 
 @ManagedBean(name = "abogadoMB")

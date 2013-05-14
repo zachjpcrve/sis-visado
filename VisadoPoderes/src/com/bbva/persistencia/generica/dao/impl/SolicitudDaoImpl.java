@@ -62,12 +62,12 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		
 		
 		  String sqlAux ="SELECT COUNT(*) FROM " +
-				" (SELECT COUNT(*) MIEMBROS, GRUPO FROM tiivs_miembro_nivel " +
+				" (SELECT COUNT(*) MIEMBROS, GRUPO FROM VISPOD.tiivs_miembro_nivel " +
 				" where tipo_rol = 'D' AND cod_niv='"+listaDelegados.get(0).getCodNiv()+"'" +sqlGrupo+
 				" GROUP BY GRUPO ) T " +
 				" WHERE T.MIEMBROS = "+listaDelegados.size();
 				for (TiivsMiembroNivel x : listaDelegados) {
-					sqlAux+=" and (SELECT COUNT(*) FROM tiivs_miembro_nivel  WHERE tipo_rol = 'D' " +
+					sqlAux+=" and (SELECT COUNT(*) FROM VISPOD.tiivs_miembro_nivel  WHERE tipo_rol = 'D' " +
 							" AND cod_niv='"+x.getCodNiv().trim()+"'" +
 							" AND GRUPO = T.GRUPO AND COD_MIEMBRO = '"+x.getTiivsMiembro().getCodMiembro().trim() +"')=1 " ;
 				}
@@ -104,13 +104,13 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	@SuppressWarnings("unchecked")
 	public List<String> obtenerCodigosSolicitudesARevocarRechazar() throws Exception {
 		List<String> listaCodgiosSolicitud=new ArrayList<String>();
-		final String sql = " select a.cod_soli from tiivs_solicitud_agrupacion a " +
-				           " inner join tiivs_solicitud s " +
+		final String sql = " select a.cod_soli from VISPOD.tiivs_solicitud_agrupacion a " +
+				           " inner join VISPOD.tiivs_solicitud s " +
 				           " on a.cod_soli = s.cod_soli" +
 				           " where a.estado = 3 and s.estado in ('0007','0002','0003','0009','0017','0012','0010') " +
 				           " group by a.cod_soli, s.estado " +
 				           " having count(a.num_grupo) = (select count(b.cod_soli) " +
-				           " from tiivs_solicitud_agrupacion b where b.cod_soli = a.cod_soli)";
+				           " from VISPOD.tiivs_solicitud_agrupacion b where b.cod_soli = a.cod_soli)";
 
 		//String codigoSol = "";
 		List ResultList = (List) getHibernateTemplate().execute(
@@ -138,9 +138,9 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		List<Estado> lstEstado = new ArrayList<Estado>();
 		
 		final String sql = "select cast(codigo as varchar(4)) codigo, descripcion from( " +
-				" select distinct tiivs_solicitud.estado as codigo,tiivs_multitabla.valor1 as  descripcion from tiivs_solicitud " +
-				" join tiivs_multitabla  on tiivs_solicitud.estado = tiivs_multitabla.cod_elem and tiivs_multitabla.cod_mult='T02' " +
-				" order by tiivs_multitabla.valor1 asc)";
+				" select distinct VISPOD.tiivs_solicitud.estado as codigo,VISPOD.tiivs_multitabla.valor1 as  descripcion from VISPOD.tiivs_solicitud " +
+				" join VISPOD.tiivs_multitabla  on VISPOD.tiivs_solicitud.estado = VISPOD.tiivs_multitabla.cod_elem and VISPOD.tiivs_multitabla.cod_mult='T02' " +
+				" order by VISPOD.tiivs_multitabla.valor1 asc)";
 		
 		logger.info("SQL : "+sql);
 		
@@ -172,7 +172,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	@SuppressWarnings("unchecked")
 	public String obtenerPKNuevaSolicitud() throws Exception {
 
-		final String sql = "select LPAD(nvl(MAX(COD_SOLI+1),1),7,'0')COD_SOLI from TIIVS_SOLICITUD";
+		final String sql = "select LPAD(nvl(MAX(COD_SOLI+1),1),7,'0')COD_SOLI from VISPOD.TIIVS_SOLICITUD";
 
 		String codigoSol = "";
 		List ResultList = (List) getHibernateTemplate().execute(
@@ -199,7 +199,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		public List<AgrupacionDelegadosDto>  obtenerPKDelegados() throws Exception {
 
 			final String sql = "select  distinct ni.des_niv, n.grupo, n.estado "+
-					 " from tiivs_miembro_nivel n, tiivs_miembro m, tiivs_nivel ni "+
+					 " from VISPOD.tiivs_miembro_nivel n, VISPOD.tiivs_miembro m, VISPOD.tiivs_nivel ni "+
 					" where  n.cod_miembro = m.cod_miembro "+
 					  " and  n.cod_niv = ni.cod_niv "+
 					 " and n.tipo_rol = 'D' "+
@@ -243,7 +243,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	public List<AgrupacionDelegadosDto>  obtenerDelegados() throws Exception {
 
 		final String sql = "select  ni.des_niv,n.grupo, n.cod_miembro, m.descripcion "
-				+ " from tiivs_miembro_nivel n, tiivs_miembro m, tiivs_nivel ni  "
+				+ " from VISPOD.tiivs_miembro_nivel n, VISPOD.tiivs_miembro m, VISPOD.tiivs_nivel ni  "
 				+ " where  "
 				+ "n.cod_miembro = m.cod_miembro  "
 				+ "  and  n.cod_niv = ni.cod_niv "
@@ -287,7 +287,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		List<TiivsNivel> listaNivel;
 		TiivsNivel nivel;
 		final String sql = "select distinct n.des_niv, n.cod_niv "
-				+ "from tiivs_nivel n " + "order by n.cod_niv asc";
+				+ "from VISPOD.tiivs_nivel n " + "order by n.cod_niv asc";
 
 		List ResultList = (ArrayList<TiivsNivel>) getHibernateTemplate()
 				.execute(new HibernateCallback() {
@@ -315,7 +315,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	@SuppressWarnings("unchecked")
 	public String obtenerMaximoMovimiento(String codSolicitud) throws Exception {
 
-		final String sql = "select max(cast(movimiento as number))movimiento from tiivs_hist_solicitud where cod_soli='"
+		final String sql = "select max(cast(movimiento as number))movimiento from VISPOD.tiivs_hist_solicitud where cod_soli='"
 				+ codSolicitud + "' group by cod_soli";
 
 		String movimiento = "";
@@ -365,12 +365,10 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		return lstOperacionesBancarias_2 ;
 	}
 
-	public List<TiivsAnexoSolicitud> obtenerListarAnexosSolicitud(
-			TiivsSolicitud solicitud) throws Exception 
+	public List<TiivsAnexoSolicitud> obtenerListarAnexosSolicitud(TiivsSolicitud solicitud) throws Exception 
 	{
 		List<TiivsAnexoSolicitud> lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
-		GenericDao<TiivsAnexoSolicitud, Object> service = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsAnexoSolicitud, Object> service = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsAnexoSolicitud.class);
 		filtro.add(Restrictions.eq("id.codSoli", solicitud.getCodSoli()));
 		return lstAnexoSolicitud = service.buscarDinamico(filtro);
@@ -577,15 +575,15 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					  "      when mul.valor2 = 'EUR' then 'Euros' " +
 					  "end Moneda,	NVL(ob.importe,0) Importe, NVL(ob.tipo_cambio,0.0) Tipo_cambio, " +
 					  "case when mul.valor2='PEN' then NVL(ob.importe,0) else NVL((ob.tipo_cambio * ob.importe),0) end Importe_Soles " +
-					  "from tiivs_solicitud_operban ob " +
-					  "left join tiivs_solicitud so on ob.cod_soli = so.cod_soli " +
-					  "left join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
-					  "left join tiivs_tipo_solicitud ts on so.cod_tipo_solic=ts.cod_tip_solic " +
-					  "join tiivs_multitabla mul on ob.moneda = mul.cod_elem and mul.cod_mult='T08' " +
-					  "left join tiivs_operacion_bancaria op on ob.cod_oper_ban = op.cod_oper_ban " +
+					  "from VISPOD.tiivs_solicitud_operban ob " +
+					  "left join VISPOD.tiivs_solicitud so on ob.cod_soli = so.cod_soli " +
+					  "left join VISPOD.tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
+					  "left join VISPOD.tiivs_tipo_solicitud ts on so.cod_tipo_solic=ts.cod_tip_solic " +
+					  "join VISPOD.tiivs_multitabla mul on ob.moneda = mul.cod_elem and mul.cod_mult='T08' " +
+					  "left join VISPOD.tiivs_operacion_bancaria op on ob.cod_oper_ban = op.cod_oper_ban " +
 					  "where ob.cod_soli in ( " +
-					  "select * from (select s.cod_soli from tiivs_solicitud s " +
-					  "left join tiivs_solicitud_operban o on s.cod_soli=o.cod_soli " +
+					  "select * from (select s.cod_soli from VISPOD.tiivs_solicitud s " +
+					  "left join VISPOD.tiivs_solicitud_operban o on s.cod_soli=o.cod_soli " +
 					  "where o.cod_oper_ban='" + idOpeBan  + "') " +
 					  ") " + sWhere  + " order by cod_soli";
 			}
@@ -599,15 +597,15 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 						  "      when mul.valor2 = 'EUR' then 'Euros' " +
 						  "end Moneda,	NVL(ob.importe,0) Importe, NVL(ob.tipo_cambio,0.0) Tipo_cambio, " +
 						  "case when mul.valor2='PEN' then NVL(ob.importe,0) else NVL((ob.tipo_cambio * ob.importe),0) end Importe_Soles " +
-						  "from tiivs_solicitud_operban ob " +
-						  "left join tiivs_solicitud so on ob.cod_soli = so.cod_soli " +
-						  "left join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
-						  "left join tiivs_tipo_solicitud ts on so.cod_tipo_solic=ts.cod_tip_solic " +
-						  "join tiivs_multitabla mul on ob.moneda = mul.cod_elem and mul.cod_mult='T08' " +
-						  "left join tiivs_operacion_bancaria op on ob.cod_oper_ban = op.cod_oper_ban " +
+						  "from VISPOD.tiivs_solicitud_operban ob " +
+						  "left join VISPOD.tiivs_solicitud so on ob.cod_soli = so.cod_soli " +
+						  "left join VISPOD.tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
+						  "left join VISPOD.tiivs_tipo_solicitud ts on so.cod_tipo_solic=ts.cod_tip_solic " +
+						  "join VISPOD.tiivs_multitabla mul on ob.moneda = mul.cod_elem and mul.cod_mult='T08' " +
+						  "left join VISPOD.tiivs_operacion_bancaria op on ob.cod_oper_ban = op.cod_oper_ban " +
 						  "where ob.cod_soli in ( " +
-						  "select * from (select s.cod_soli from tiivs_solicitud s " +
-						  "left join tiivs_solicitud_operban o on s.cod_soli=o.cod_soli " +
+						  "select * from (select s.cod_soli from VISPOD.tiivs_solicitud s " +
+						  "left join VISPOD.tiivs_solicitud_operban o on s.cod_soli=o.cod_soli " +
 						  ") " + ") " + sWhere  + " order by cod_soli";
 			}
 			/*else
@@ -763,10 +761,10 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			sql= "SELECT des_estudio,costo,dia_atencion, filtro, COUNT(filtro) contador " + 
 				"FROM (select es.des_estudio, to_char(hst.fecha,'dd') dia_atencion, es.costo, " +
 				"case when to_char(hst.fecha,'dd')<to_char(so.fecha_respuesta,'dd') then 'A' else 'B' END AS FILTRO " +
-				"from tiivs_solicitud so " +
-				"join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
-				"left join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
-				"join tiivs_miembro m on hst.reg_usuario = m.cod_miembro " +
+				"from VISPOD.tiivs_solicitud so " +
+				"join VISPOD.tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
+				"left join VISPOD.tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+				"join VISPOD.tiivs_miembro m on hst.reg_usuario = m.cod_miembro " +
 				"where so.estado in ('0003','0009','0004','0017','0012','0010','0013','0015','0008') and hst.estado in ('0003','0009','0004') " + sWhere +
 				"order by so.cod_estudio) A "  +
 				"group by DES_ESTUDIO,dia_atencion,filtro,costo";
@@ -1345,10 +1343,10 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			sql= "SELECT des_estudio,costo,dia_atencion, filtro, COUNT(filtro) contador " + 
 					"FROM (select es.des_estudio, to_char(hst.fecha,'dd') dia_atencion, es.costo, " +
 					"case when trunc(hst.fecha)<=trunc(so.fecha_respuesta) then 'A' else 'B' END AS FILTRO " +
-					"from tiivs_solicitud so " +
-					"join tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
-					"left join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
-					"join tiivs_miembro m on hst.reg_usuario = m.cod_miembro " +
+					"from VISPOD.tiivs_solicitud so " +
+					"join VISPOD.tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
+					"left join VISPOD.tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+					"join VISPOD.tiivs_miembro m on hst.reg_usuario = m.cod_miembro " +
 					"where hst.estado in ('0003','0009','0004') and hst.reg_abogado is not null " + sWhere +
 					//"where hst.estado in ('0003','0009','0004') " + sWhere +
 					"order by so.cod_estudio) A "  +
@@ -1797,33 +1795,33 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					"NVL(PF.cont,0) Persona_FallecidaX, NVL((PF.cont*PF.valor2),0) Recaudacion2, NVL(PFX.cont,0) Persona_FallecidaX1, " +
 					"NVL((PFX.cont*PFX.valor2),0) Recaudacion3, NVL((PN.cont*PN.valor2),0) + NVL((PJ.cont*PJ.valor2),0) + NVL((PF.cont*PF.valor2),0) " +
 					"+ NVL((PFX.cont*PFX.valor2),0) as Recaudacion_Total " +
-					"from tiivs_solicitud so " +
-					"join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
-					"left join tiivs_oficina1 ofi on so.cod_ofi = ofi.cod_ofi " +
-					"join tiivs_territorio terr on ofi.cod_terr = terr.cod_ter " +
+					"from VISPOD.tiivs_solicitud so " +
+					"join VISPOD.tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+					"left join VISPOD.tiivs_oficina1 ofi on so.cod_ofi = ofi.cod_ofi " +
+					"join VISPOD.tiivs_territorio terr on ofi.cod_terr = terr.cod_ter " +
 					"left join (select cod_ofi,multPN.valor2, " +
 					"          count(so.tipo_comision) cont " +       
-					"          from tiivs_solicitud so " +
-					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
-					"          join tiivs_multitabla multPN on multPN.cod_elem = so.tipo_comision and multPN.cod_mult = 'T11' and " +
+					"          from VISPOD.tiivs_solicitud so " +
+					"          join VISPOD.tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+					"          join VISPOD.tiivs_multitabla multPN on multPN.cod_elem = so.tipo_comision and multPN.cod_mult = 'T11' and " +
 					"          multPN.cod_elem='0001' " + sWhere2 +
 					"          group by cod_ofi,multPN.valor2) PN on so.cod_ofi = PN.cod_ofi " +
 					"left join (select cod_ofi,multPJ.valor2, count(so.tipo_comision) cont " +    
-					"          from tiivs_solicitud so " +
-					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
-					"          join tiivs_multitabla multPJ on multPJ.cod_elem = so.tipo_comision and multPJ.cod_mult = 'T11' and " +          
+					"          from VISPOD.tiivs_solicitud so " +
+					"          join VISPOD.tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+					"          join VISPOD.tiivs_multitabla multPJ on multPJ.cod_elem = so.tipo_comision and multPJ.cod_mult = 'T11' and " +          
 					"          multPJ.cod_elem='0002' " + sWhere2 +
 					"          group by cod_ofi,multPJ.valor2) PJ on so.cod_ofi = PJ.cod_ofi " + 
 					"left join (select cod_ofi,multPF.valor2, count(so.tipo_comision) cont " +
-					"          from tiivs_solicitud so " +
-					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
-					"          join tiivs_multitabla multPF on multPF.cod_elem = so.tipo_comision and multPF.cod_mult = 'T11' and " +          
+					"          from VISPOD.tiivs_solicitud so " +
+					"          join VISPOD.tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+					"          join VISPOD.tiivs_multitabla multPF on multPF.cod_elem = so.tipo_comision and multPF.cod_mult = 'T11' and " +          
 					"          multPF.cod_elem='0003' " + sWhere2 +
 					"          group by cod_ofi,multPF.valor2) PF on so.cod_ofi = PF.cod_ofi " +
 					"left join (select cod_ofi,multPFX.valor2, count(so.tipo_comision) cont " +          
-					"          from tiivs_solicitud so " +
-					"          join tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
-					"          join tiivs_multitabla multPFX on multPFX.cod_elem = so.tipo_comision and multPFX.cod_mult = 'T11' and " +
+					"          from VISPOD.tiivs_solicitud so " +
+					"          join VISPOD.tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
+					"          join VISPOD.tiivs_multitabla multPFX on multPFX.cod_elem = so.tipo_comision and multPFX.cod_mult = 'T11' and " +
 					"          multPFX.cod_elem='0004' " + sWhere2 +
 					"          group by cod_ofi,multPFX.valor2) PFX on so.cod_ofi = PFX.cod_ofi " +
 					sWhere +
@@ -2065,80 +2063,80 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					"NVL(ej.total,0) + NVL(proc.total,0)+" + 
 					"NVL(verB.total,0) + NVL(improc.total,0)+" + 
 					"NVL(ven.total,0)) totalFila " + 
-					"from tiivs_solicitud a " + 
-					"join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"join tiivs_territorio c on b.cod_terr= c.cod_ter " + 
-					"join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"from VISPOD.tiivs_solicitud a " + 
+					"join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"join VISPOD.tiivs_territorio c on b.cod_terr= c.cod_ter " + 
+					"join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Registrado
-					"     from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"      from VISPOD.tiivs_solicitud a " + 
+					"      join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"      join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0001' " + sCadFecha +
 					"      group by a.cod_ofi) regis on a.cod_ofi = regis.cod_ofi " + 
 					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Enviado
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"      from VISPOD.tiivs_solicitud a " + 
+					"      join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"      join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0007' " + sCadFecha +
 					"      group by a.cod_ofi) env on a.cod_ofi = env.cod_ofi " + 
 					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Reservado
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"      from VISPOD.tiivs_solicitud a " + 
+					"      join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"      join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0002' " + sCadFecha +
 					"      group by a.cod_ofi) res on a.cod_ofi = res.cod_ofi " + 
 					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Aceptado
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"      from VISPOD.tiivs_solicitud a " + 
+					"      join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"      join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0003' " + sCadFecha +
 					"      group by a.cod_ofi) acep on a.cod_ofi = acep.cod_ofi " + 
 					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Verificacion A
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"      from VISPOD.tiivs_solicitud a " + 
+					"      join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"      join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0009' " + sCadFecha +
 					"      group by a.cod_ofi) verA on a.cod_ofi = verA.cod_ofi " + 
 					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Rechazado
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"      from VISPOD.tiivs_solicitud a " + 
+					"      join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"      join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0004' " + sCadFecha +
 					"      group by a.cod_ofi) rechaz on a.cod_ofi = rechaz.cod_ofi " + 
 					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado En Revision
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"      from VISPOD.tiivs_solicitud a " + 
+					"      join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"      join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0017' " + sCadFecha +
 					"      group by a.cod_ofi) rev on a.cod_ofi = rev.cod_ofi " + 
 					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Ejecutado
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"      from VISPOD.tiivs_solicitud a " + 
+					"      join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"      join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0015' " + sCadFecha +
 					"      group by a.cod_ofi) ej on a.cod_ofi = ej.cod_ofi " + 
 					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Procedente
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"      from VISPOD.tiivs_solicitud a " + 
+					"      join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"      join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0012' " + sCadFecha +
 					"      group by a.cod_ofi) proc on a.cod_ofi = proc.cod_ofi " + 
 					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Verificacion B
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"      from VISPOD.tiivs_solicitud a " + 
+					"      join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"      join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0010' " + sCadFecha +
 					"      group by a.cod_ofi) verB on a.cod_ofi = verB.cod_ofi " + 
 					"left join (select a.cod_ofi, count(a.estado) as total " + // Estado Improcedente
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"      from VISPOD.tiivs_solicitud a " + 
+					"      join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"      join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0013' " + sCadFecha +
 					"      group by a.cod_ofi) improc on a.cod_ofi = improc.cod_ofi " + 
 					"left join (select a.cod_ofi, count(a.estado) as total " +  // Estado Vencido
-					"      from tiivs_solicitud a " + 
-					"      join tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
-					"      join tiivs_multitabla d on a.estado = d.cod_elem " + 
+					"      from VISPOD.tiivs_solicitud a " + 
+					"      join VISPOD.tiivs_oficina1 b on a.cod_ofi=b.cod_ofi " + 
+					"      join VISPOD.tiivs_multitabla d on a.estado = d.cod_elem " + 
 					"      where d.cod_mult='T02' and a.estado='0008' " + sCadFecha +
 					"      group by a.cod_ofi) ven on a.cod_ofi = ven.cod_ofi " + sWhere + 
 					"order by a.cod_ofi";

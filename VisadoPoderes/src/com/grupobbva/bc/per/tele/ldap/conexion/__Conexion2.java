@@ -111,7 +111,7 @@ public class __Conexion2 extends __Conexion{
     public IILDPePais recuperarPais(String codigo)
     {
         IILDPePais res = null;
-        String sql = "select * from ldapperu2 where codpais = '" + codigo + "' ORDER BY o.codusu DESC";
+        String sql = "select * from VISPOD.ldapperu2 where codpais = '" + codigo + "' ORDER BY o.codusu DESC";
         Vector consulta = resultadosConsulta(sql, 1);
         if(consulta != null)
             res = ((IILDPeUsuario)consulta.elementAt(0)).getPais();
@@ -121,7 +121,7 @@ public class __Conexion2 extends __Conexion{
     public IILDPeUnidadOrganizativa recuperarUnidadOrganizativa(String codigo)
     {
         IILDPeUnidadOrganizativa res = null;
-        String sql = "select * from Ldapperu2 where  coduniorg = '" + codigo + "' ORDER BY codusu DESC";
+        String sql = "select * from VISPOD.Ldapperu2 where  coduniorg = '" + codigo + "' ORDER BY codusu DESC";
         Vector consulta = resultadosConsulta(sql, 1);
         if(consulta != null)
             res = ((IILDPeUsuario)consulta.elementAt(0)).getUnidadOrganizativa();
@@ -131,7 +131,7 @@ public class __Conexion2 extends __Conexion{
     public IILDPeUsuario recuperarUsuarioMatricula(String matricula)
     {
         IILDPeUsuario res = null;
-        String sql = "select * from Ldapperu2 where nummat = '" + matricula + "' ORDER BY codusu DESC";
+        String sql = "select * from VISPOD.Ldapperu2 where nummat = '" + matricula + "' ORDER BY codusu DESC";
         Vector consulta = resultadosConsulta(sql, 1);
         if(consulta != null)
             res = (IILDPeUsuario)consulta.elementAt(0);
@@ -141,7 +141,7 @@ public class __Conexion2 extends __Conexion{
     public String getOfActual(String codusu)
     {
         String res = null;
-        String sql = "select * from Ldapperu2 where codusu = '" + codusu + "' ORDER BY codusu DESC";
+        String sql = "select * from VISPOD.Ldapperu2 where codusu = '" + codusu + "' ORDER BY codusu DESC";
         Vector consulta = resultadosConsulta(sql, 1);
         if(consulta != null)
             res = ((IILDPeUsuario)consulta.elementAt(0)).getBancoOficina().getCodigo();
@@ -152,7 +152,7 @@ public class __Conexion2 extends __Conexion{
     {
         String res = null;
         IILDPeUsuario query = null;
-        String sql = "select * from Ldapperu2 where codusu = '" + codusu + "' ORDER BY codusu DESC";
+        String sql = "select * from VISPOD.Ldapperu2 where codusu = '" + codusu + "' ORDER BY codusu DESC";
         Vector consulta = resultadosConsulta(sql, 1);
         if(consulta != null)
         {
@@ -182,7 +182,7 @@ public class __Conexion2 extends __Conexion{
     public IILDPeUsuario recuperarUsuario(String identificador)
     {
         IILDPeUsuario res = null;
-        String sql = "select * from Ldapperu2 where codusu = '" + identificador + "' ORDER BY codusu DESC";
+        String sql = "select * from VISPOD.Ldapperu2 where codusu = '" + identificador + "' ORDER BY codusu DESC";
         Vector consulta = resultadosConsulta(sql, 1);
         if(consulta != null)
             res = (IILDPeUsuario)consulta.elementAt(0);
@@ -192,7 +192,7 @@ public class __Conexion2 extends __Conexion{
     public boolean existe(String uid)
     {
         boolean res = false;
-        String sql = "select * from Ldapperu2 where codusu = '" + uid + "' ORDER BY codusu DESC";
+        String sql = "select * from VISPOD.Ldapperu2 where codusu = '" + uid + "' ORDER BY codusu DESC";
         Vector consulta = resultadosConsulta(sql, 1);
         res = consulta != null;
         return res;
@@ -207,7 +207,7 @@ public class __Conexion2 extends __Conexion{
             apellido1 = "";
         if(apellido2 == null)
             apellido2 = "";
-        String sql = "select * from Ldapperu2 where nombre like '%" + nombre + "%' and " + "apepat like '%" + apellido1 + "%' and " + "apemat like '%" + apellido2 + "%' " + "ORDER BY codusu ASC";
+        String sql = "select * from VISPOD.Ldapperu2 where nombre like '%" + nombre + "%' and " + "apepat like '%" + apellido1 + "%' and " + "apemat like '%" + apellido2 + "%' " + "ORDER BY codusu ASC";
         res = resultadosConsulta(sql, 0);
         return res;
     }
@@ -215,7 +215,7 @@ public class __Conexion2 extends __Conexion{
     public Vector buscarSubordinados(String uidJefe)
     {
         Vector res = null;
-        String sql = "select * from Ldapperu2 where codusujefe = '" + uidJefe + "' ORDER BY codusu ASC";
+        String sql = "select * from VISPOD.Ldapperu2 where codusujefe = '" + uidJefe + "' ORDER BY codusu ASC";
         res = resultadosConsulta(sql, 0);
         return res;
     }
@@ -257,7 +257,7 @@ public class __Conexion2 extends __Conexion{
         if(codigoEmpresa == null)
             codigoEmpresa = "";
         Vector res = null;
-        String sql = "select * from Ldapperu2 where registrop like '%" + registroP + "%' and " + "registrou like '%" + registroU + "%' and " + "nombre like '%" + nombre + "%' and " + "codusu like '%" + uid + "%' and " + "codusujefe like '%" + jefe + "%' and " + "apepat like '%" + apellido1 + "%' and " + "apemat like '%" + apellido2 + "%' and " + "telefono1 like '%" + telefono + "%' and " + "telefono2 like '%" + movil + "%' and " + "corelec like '%" + mail + "%' and " + "coduniorg like '%" + codigoUnidadOrg + "%' and " + "nummat like '%" + matricula + "%' and " + "desuniorg like '%" + descUnidadOrg + "%' and " + "codofi like '%" + codigoOficina + "%' and " + "desofi like '%" + descOficina + "%' and " + "codemp like '%" + codigoEmpresa + "%' " + "ORDER BY codusu ASC";
+        String sql = "select * from VISPOD.Ldapperu2 where registrop like '%" + registroP + "%' and " + "registrou like '%" + registroU + "%' and " + "nombre like '%" + nombre + "%' and " + "codusu like '%" + uid + "%' and " + "codusujefe like '%" + jefe + "%' and " + "apepat like '%" + apellido1 + "%' and " + "apemat like '%" + apellido2 + "%' and " + "telefono1 like '%" + telefono + "%' and " + "telefono2 like '%" + movil + "%' and " + "corelec like '%" + mail + "%' and " + "coduniorg like '%" + codigoUnidadOrg + "%' and " + "nummat like '%" + matricula + "%' and " + "desuniorg like '%" + descUnidadOrg + "%' and " + "codofi like '%" + codigoOficina + "%' and " + "desofi like '%" + descOficina + "%' and " + "codemp like '%" + codigoEmpresa + "%' " + "ORDER BY codusu ASC";
         res = resultadosConsulta(sql, 0);
         return res;
     }
@@ -265,7 +265,7 @@ public class __Conexion2 extends __Conexion{
     public IILDPeEmpresa recuperarEmpresa(String codigoEmpresa)
     {
         IILDPeEmpresa res = null;
-        String sql = "select * from ldapperu2 where codemp = '" + codigoEmpresa + "' ORDER BY o.codusu DESC";
+        String sql = "select * from VISPOD.ldapperu2 where codemp = '" + codigoEmpresa + "' ORDER BY o.codusu DESC";
         Vector consulta = resultadosConsulta(sql, 1);
         if(consulta != null)
             res = ((IILDPeUsuario)consulta.elementAt(0)).getEmpresa();
@@ -283,7 +283,7 @@ public class __Conexion2 extends __Conexion{
                 listaCargos.append(",");
         }
 
-        String sql = "select * from Ldapperu2 where codofi = '" + codofi + "' and " + "codcargo in (" + listaCargos + ") ORDER BY codofi, codusu ASC";
+        String sql = "select * from VISPOD.Ldapperu2 where codofi = '" + codofi + "' and " + "codcargo in (" + listaCargos + ") ORDER BY codofi, codusu ASC";
         res = resultadosConsulta(sql, 0);
         return res;
     }

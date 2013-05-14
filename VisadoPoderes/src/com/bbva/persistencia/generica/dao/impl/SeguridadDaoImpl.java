@@ -10,11 +10,8 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.persistencia.generica.dao.SeguridadDao;
-import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.MiembroDto;
-import com.hildebrando.visado.modelo.Ldapperu2;
 
 
 public abstract class SeguridadDaoImpl<K, T extends Serializable> 
@@ -30,8 +27,8 @@ public abstract class SeguridadDaoImpl<K, T extends Serializable>
 	public  List<MiembroDto> buscarMiembroSql(com.grupobbva.seguridad.client.domain.Usuario usuario) throws Exception{
 		logger.info(" *************** En el buscarMiembroSql **************************: ");
 		final String  sql ="select M.COD_MIEMBRO, M.DESCRIPCION, M.CRITERIO, M.COD_GRUPO, MT.VALOR1 AS DES_CRITERIO, M.ESTUDIO" +
- 		" from TIIVS_MIEMBRO M " +
- 		" left join TIIVS_MULTITABLA MT on M.CRITERIO = MT.COD_MULT || MT.COD_ELEM " +
+ 		" from VISPOD.TIIVS_MIEMBRO M " +
+ 		" left join VISPOD.TIIVS_MULTITABLA MT on M.CRITERIO = MT.COD_MULT || MT.COD_ELEM " +
  		" where (trim(m.cod_miembro) = '"+usuario.getUsuarioId().trim()+"' and trim(m.criterio) = 'T030001') " +
  		" OR (trim(m.cod_miembro)= '"+usuario.getPuestoId().trim()+"' and trim(m.criterio) = 'T030002') " +
  		" OR (trim(m.cod_miembro)= '"+usuario.getOficinaId().trim()+"' and trim(m.criterio) = 'T030003')"	+

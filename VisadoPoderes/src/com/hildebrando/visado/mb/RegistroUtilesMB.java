@@ -66,8 +66,8 @@ public class RegistroUtilesMB {
 		String sql = "SELECT "+
 				" EST.COD_ESTUDIO,"+
 				" COUNT(sol.cod_soli) NRO_SOLICITUDES"+
-				" FROM tiivs_estudio EST"+ 
-				" LEFT JOIN TIIVS_SOLICITUD SOL" +
+				" FROM VISPOD.tiivs_estudio EST"+ 
+				" LEFT JOIN VISPOD.TIIVS_SOLICITUD SOL" +
 				" ON EST.COD_ESTUDIO = SOL.COD_ESTUDIO " +
 				" AND TRIM(SOL.ESTADO) = '"+ codigoEstado +"'" + 
 				" AND SOL.FECHA < " + 
