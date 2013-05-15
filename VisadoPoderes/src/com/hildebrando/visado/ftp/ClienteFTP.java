@@ -176,7 +176,12 @@ public class ClienteFTP
 		boolean iRet = true;
 		try 
 		{
-			fos = new FileOutputStream(rutaLocal);						
+			fos = new FileOutputStream(rutaLocal);		
+						
+			ftpCliente.setFileType(FTP.BINARY_FILE_TYPE);
+			ftpCliente.setBufferSize(4096);
+			ftpCliente.setFileTransferMode(FTP.BINARY_FILE_TYPE);
+			
 			iRet = ftpCliente.retrieveFile(rutaRemota, fos);
 			
 		} catch (IOException e) {
