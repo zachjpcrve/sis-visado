@@ -189,7 +189,7 @@ public class EditRespNivelAprobacionMB_DELETE {
 								.getDesGrupo(),
 						e.getFechaRegistro().toString(),
 						e.getUsuarioRegistro(), e.getEstado(), descEstado, ris,
-						rfs, rid, rfd, rie, rfe, e.getLabelAccion()));
+						rfs, rid, rfd, rie, rfe, e.getLabelAccion(),e.getUsuarioAct(),e.getFechaAct().toString()));
 			}
 
 			setFlagVisible(true);
