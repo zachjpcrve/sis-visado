@@ -265,7 +265,8 @@ public class ConstantesVisado {
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_NRO_VOUCHER = "Nro. Voucher";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_TERRITORIO = "Territorio";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_COD_CENTRAL = "Código Central";
-	public static final String RPT_EXT_ETIQUETA_COLUMNA_NOMBRES = "Nombre Completo";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_NOMBRES = "Representado";
+	public static final String RPT_EXT_ETIQUETA_COLUMNA_REPRESENTANTE = "Representante";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_DOI = "Tipo de DOI";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_NRO_DOI = "Nro de DOI";
 	public static final String RPT_EXT_ETIQUETA_COLUMNA_TIPO_PARTICIPACION = "Tipo Participación";
