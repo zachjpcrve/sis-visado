@@ -23,10 +23,10 @@ sesion.invalidate();
 	//pagina = pagina.substring(0, pagina.indexOf("VisadoPoderes"));
 	pagina=pagina.substring(0, pagina.search("/VisadoPoderes/")+8);
 
-	function redireccionar() 
+	/*function redireccionar() 
 	{
 		location.href=pagina;
-	}
+	}*/
 
 	function cerrar() 
 	{
@@ -37,10 +37,20 @@ sesion.invalidate();
 	
 	setTimeout ("cerrar()", 1000);
 	
+	function redireccionar(){
+		//https://172.31.9.44/testB/
+	var url = location.href;
+	var str = url.substring(url.indexOf("VisadoPoderes"), url.length);
+	url = url.substring(0, url.indexOf("VisadoPoderes"));
+	//  url = url+str;
+	// alert('url samira ' +str);
+	  location.href=url;
+	   }
+	
 </script>
                   
 </head>
-<body>
+<body onload="redireccionar()">
 
 <table width="100%" height="100%">
   <tr>
