@@ -59,15 +59,16 @@
 								update=":frmMantenimientoRespNivelAprob,:frmDataTableRespNivel, :frmDataTableRespNivel:dtbRespNivel">
 							</p:commandButton>
 						</td>
-						<td><p:commandButton id="nwResp" value="Nuevo" ajax="false" update=":frmMantenimientoRespNivelAprob:txtRegistro,
-						                                                                    :frmMantenimientoRespNivelAprob:txtDescrip,
-						                                                                    :frmMantenimientoRespNivelAprob:cboEstado,
-						                                                                    :frmMantenimientoRespNivelAprob:cboGrupo,
-						                                                                    :frmMantenimientoRespNivelAprob:cboNivel"
+						<td><p:commandButton id="nwResp" value="Nuevo" ajax="false" update=":frmMantenimientoRespNivelAprob:idMsmRespNivelAprob"
 								action="#{respNivel.nuevoRespxNivel}">
 							</p:commandButton>
 						</td>
-					    <td><p:commandButton id="nwLimpiar" value="Limpiar" update=":frmDataTableRespNivel:dtbRespNivel"
+					    <td><p:commandButton id="nwLimpiar" value="Limpiar" update=":frmDataTableRespNivel:dtbRespNivel,
+					    				:frmMantenimientoRespNivelAprob:txtRegistro,
+					    				:frmMantenimientoRespNivelAprob:txtDescrip,
+					    				:frmMantenimientoRespNivelAprob:cboEstado,
+					    				:frmMantenimientoRespNivelAprob:cboGrupo,
+					    				:frmMantenimientoRespNivelAprob:cboNivel"
 								action="#{respNivel.limpiarCampos}">
 							</p:commandButton>
 						</td>		
