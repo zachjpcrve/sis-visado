@@ -621,6 +621,7 @@ public class RespNivelAprobacionMB {
 	
 	private void editar(){
 		logger.info("Here here .... editar ");
+		
 		bEditar=true;
 		
 		if (miembroCapturado!=null)
