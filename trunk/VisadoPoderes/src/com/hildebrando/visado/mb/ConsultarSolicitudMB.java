@@ -2728,8 +2728,8 @@ public class ConsultarSolicitudMB {
 				{
 					if (this.sEstadoSolicitud.equals("BORRADOR")) 
 					{
-						mesajeConfirmacion = "Se registro correctamente la Solicitud con codigo : " + objResultado.getCodSoli() + " en Borrador";
-						//nota limpiar la variable aliasFilesToDelete						
+						mesajeConfirmacion = "Se registro correctamente la Solicitud con codigo : " + objResultado.getCodSoli() + " en Borrador";		
+						aliasFilesToDelete = new ArrayList<String>();
 						actualizarBandeja=true;
 					} 
 					else //Enviar solicitud
