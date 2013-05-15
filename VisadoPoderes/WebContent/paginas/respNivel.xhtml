@@ -27,7 +27,7 @@
 					</tr>
 					<tr>
 						<td><h:outputText value="Estado:" /></td>
-						<td><p:selectOneMenu value="#{respNivel.miembroNivelDto.estado}">
+						<td><p:selectOneMenu value="#{respNivel.miembroNivelDto.estado}" id="cboEstado">
 						
 								<f:selectItem itemLabel="--TODOS--" itemValue="-1" />
 								<f:selectItem itemLabel="ACTIVO" itemValue="1" />
@@ -35,7 +35,7 @@
 							</p:selectOneMenu></td>
 
 						<td><h:outputText value="Perfil:" /></td>
-						<td><p:selectOneMenu value="#{respNivel.miembroNivelDto.codGrupo}">
+						<td><p:selectOneMenu value="#{respNivel.miembroNivelDto.codGrupo}" id="cboGrupo">
 						
 								<f:selectItem itemLabel="--TODOS--" itemValue="-1" />
 								<f:selectItems  var="c" value="#{respNivel.grupos}" itemLabel="#{c.des}"  itemValue="#{c.cod}"  >
@@ -43,7 +43,7 @@
 							</p:selectOneMenu></td>
 
 						<td><h:outputText value="Nivel: " /></td>
-						<td><p:selectOneMenu value="#{respNivel.miembroNivelDto.codNivel}">
+						<td><p:selectOneMenu value="#{respNivel.miembroNivelDto.codNivel}" id="cboNivel">
 						
 								<f:selectItem itemLabel="--TODOS--" itemValue="-1" />
 								<f:selectItems  var="n" value="#{respNivel.niveles}" itemLabel="#{n.des}"  itemValue="#{n.cod}"  >
@@ -59,7 +59,11 @@
 								update=":frmMantenimientoRespNivelAprob,:frmDataTableRespNivel, :frmDataTableRespNivel:dtbRespNivel">
 							</p:commandButton>
 						</td>
-						<td><p:commandButton id="nwResp" value="Nuevo" ajax="false" update=":frmMantenimientoRespNivelAprob:idMsmRespNivelAprob"
+						<td><p:commandButton id="nwResp" value="Nuevo" ajax="false" update=":frmMantenimientoRespNivelAprob:txtRegistro,
+						                                                                    :frmMantenimientoRespNivelAprob:txtDescrip,
+						                                                                    :frmMantenimientoRespNivelAprob:cboEstado,
+						                                                                    :frmMantenimientoRespNivelAprob:cboGrupo,
+						                                                                    :frmMantenimientoRespNivelAprob:cboNivel"
 								action="#{respNivel.nuevoRespxNivel}">
 							</p:commandButton>
 						</td>
