@@ -429,7 +429,11 @@
 																    <h:inputHidden id="idDocumentosCargados" value="#{visadoDocumentosMB.documentosCargados}" />															    
 														        	<h:inputHidden id="idCodigoSolicitud" value="{consultarSolicitudMB.solicitudRegistrarT.codSoli}" /> 
 														        	<h:inputHidden id="idCodigoDocumentoSelected" value="#{consultarSolicitudMB.selectedDocumentoDTO.nombreCorto}" />													        	                                                     													        	 
-															        <p:remoteCommand name="actDocumentos" update="@form" process="@form" 
+															        <p:remoteCommand name="actDocumentos" update=":formSolicitudRegistro:idMsmSolicitudEdicion,
+															        	:formSolicitudRegistro:listDocumentosXTipoSoli,
+															        	:formSolicitudRegistro:cboTipoSolicitud,
+															        	:formSolicitudRegistro:tblDocumentos" 
+															        	process="@form" 
 																		actionListener="#{consultarSolicitudMB.actualizarDocumentosXTipoSolicitud}" />
 															     
 															     
