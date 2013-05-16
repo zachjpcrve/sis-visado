@@ -27,6 +27,16 @@
 <![endif]-->
 
 <script type="text/javascript">
+function redireccionar(){
+	var url = location.href;
+	var str = url.substring(url.indexOf("VisadoPoderes"), url.length);
+	url = url.substring(0, url.indexOf("VisadoPoderes"));
+	var inicio = str.indexOf("/");
+	str= str.substring(0,inicio);
+	url = url+str;
+	// alert('var inicio ' +inicio+' url samira ' +url +' str '+str);
+	 location.href=url;
+	   }
 
 	PrimeFaces.locales['es'] = {
 		    closeText: 'Cerrar',
@@ -170,8 +180,9 @@
 		<h:outputText
 			value="La sesión ha caducado, por favor vuelva a intentarlo" />
 		<input id="confirmBackToLogin" type="button"
-			value="ir a iniciar sesión"
-			onclick="window.location.href='../../logout.jsp'" />
+			value="ir a iniciar sesión" onclick="redireccionar()"
+			 />
+			 <!-- onclick="window.location.href='../../logout.jsp'" -->
 	</p:dialog>
 
 
