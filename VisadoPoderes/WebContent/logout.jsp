@@ -38,13 +38,14 @@ sesion.invalidate();
 	setTimeout ("cerrar()", 1000);
 	
 	function redireccionar(){
-		//https://172.31.9.44/testB/
 	var url = location.href;
 	var str = url.substring(url.indexOf("VisadoPoderes"), url.length);
 	url = url.substring(0, url.indexOf("VisadoPoderes"));
-	//  url = url+str;
-	// alert('url samira ' +str);
-	  location.href=url;
+	var inicio = str.indexOf("/");
+	str= str.substring(0,inicio);
+	url = url+str;
+	// alert('var inicio ' +inicio+' url samira ' +url +' str '+str);
+	 location.href=url;
 	   }
 	
 </script>
