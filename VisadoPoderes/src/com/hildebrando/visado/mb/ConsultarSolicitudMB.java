@@ -3353,7 +3353,7 @@ public class ConsultarSolicitudMB {
 			logger.info("usuario.getUID() ******************** " +usuario.getUID());
 			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID());			
 		}catch(Exception e){
-			logger.error("Error al obtener parámetros de APPLET",e);
+			logger.error("Error al obtener parámetros de APPLET: "+e);
 		}
 		return sCadena;
 		
