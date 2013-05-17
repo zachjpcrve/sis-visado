@@ -2102,7 +2102,7 @@ public class SeguimientoMB
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			logger.debug("Error al buscar las solicitudes: " + ex.getStackTrace());
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"las solicitudes: " + ex);
 		}
 
 		if (solicitudes.size() == 0) 
@@ -2379,11 +2379,14 @@ public class SeguimientoMB
 		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
 		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
 		filtro.add(Restrictions.eq("id.valor1", estado));
-		
+		logger.debug("[buscarCodigoEstado]-estado:"+estado);
 		try {
 			tmpLista = busDAO.buscarDinamico(filtro);
+			if(tmpLista!=null){
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"estados es:["+tmpLista.size()+"].");
+			}
 		} catch (Exception e) {
-			logger.debug("Error al buscar codigos de estados");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"los codigos de estados:"+e);
 		}
 		
 		if (tmpLista.size()>0)
