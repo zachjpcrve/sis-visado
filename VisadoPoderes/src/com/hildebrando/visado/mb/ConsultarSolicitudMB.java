@@ -1048,7 +1048,9 @@ public class ConsultarSolicitudMB {
 				this.bSeccionReasignacion = true;
 				this.bSeccionEvaluarNivel = false;				
 				this.bMostrarGenerarRevision = false;
-
+				
+			
+				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
 				this.bMostrarSolicitudVisado = false;
