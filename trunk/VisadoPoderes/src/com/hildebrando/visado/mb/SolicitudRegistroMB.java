@@ -163,6 +163,8 @@ public class SolicitudRegistroMB {
 	private boolean boleanoMensajeOperacionesBancarias=true;
 	private boolean boleanoMensajeDocumentos=true;
 	*/
+	public boolean mostrarRazonSocial = false;
+	
     public UploadedFile getFile() {  
         return file;  
     }  
@@ -824,6 +826,7 @@ public class SolicitudRegistroMB {
 				objTiivsPersonaSeleccionado = new TiivsPersona();
 				lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
 				this.tiivsAgrupacionPersonaCapturado = null;
+				this.mostrarRazonSocial = false;//mostrar campo datos de cliente
 			}
 
 		}
@@ -982,6 +985,14 @@ public class SolicitudRegistroMB {
 		this.objTiivsPersonaResultado.setCodPer(this.objTiivsPersonaCapturado.getCodPer());
 		this.objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
 		this.flagUpdatePersona = true;
+		
+		if(objTiivsPersonaCapturado.getTipDoi()!=null){ 
+			if(objTiivsPersonaCapturado.getTipDoi().equals("0003")){ //CODIGO RAZON SOCIAL
+				this.mostrarRazonSocial = true;
+			} else {
+				this.mostrarRazonSocial = false;
+			}
+		} 		
 	}
 
 	public boolean validarPersona() {
@@ -1005,12 +1016,25 @@ public class SolicitudRegistroMB {
 				bResult=validarTipoDocumentos();
 				}
 		}
-		if (objTiivsPersonaResultado.getNombre() == null
-				|| objTiivsPersonaResultado.getNombre().equals("")) {
-			sMensaje = "Ingrese el Nombre";
-			bResult = false;
-			Utilitarios.mensajeInfo("INFO", sMensaje);
+		
+		if(objTiivsPersonaResultado.getTipDoi()!=null && !objTiivsPersonaResultado.getTipDoi().equals("0003")){ //CODIGO RAZONSOCIAL
+			if (objTiivsPersonaResultado.getNombre() == null
+					|| objTiivsPersonaResultado.getNombre().equals("")) {
+				sMensaje = "Ingrese el Nombre";
+				bResult = false;
+				Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
 		}
+		
+		if(objTiivsPersonaResultado.getTipDoi()!=null && objTiivsPersonaResultado.getTipDoi().equals("0003")){ //CODIGO RAZONSOCIAL
+			if (objTiivsPersonaResultado.getApePat() == null
+					|| objTiivsPersonaResultado.getApePat().equals("")) {
+				sMensaje = "Ingrese la Razón Social";
+				bResult = false;
+				Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}
+		
 		if(!objTiivsPersonaResultado.getCodCen().isEmpty()){
 		if(objTiivsPersonaResultado.getCodCen().length()!=8){
 			sMensaje = "El código central debe ser de 8 caracteres";
@@ -3063,6 +3087,22 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		fileToDelete = null;
 		aliasFilesToDelete = new ArrayList<String>();		
 	}		
+	
+	public void cambiarRazonSocial(ValueChangeEvent e){		
+		
+		String codTipoPerJuridica = "0003"; //CODIGO RAZONSOCIAL
+		String codTipoDocumento = (String) e.getNewValue();
+		if (codTipoDocumento!=null && codTipoDocumento.equals(codTipoPerJuridica)) {
+			this.mostrarRazonSocial = true;
+			objTiivsPersonaResultado.setTipDoi(codTipoPerJuridica);
+			objTiivsPersonaResultado.setApeMat("");
+			objTiivsPersonaResultado.setNombre("");
+		} else {
+			this.mostrarRazonSocial = false;
+			objTiivsPersonaResultado.setTipDoi("");
+		}	
+//		this.mostrarRazonSocial = !mostrarRazonSocial;
+	}
 
 	public List<TiivsMultitabla> getLstMultitabla() {
 		return lstMultitabla;
@@ -3532,4 +3572,15 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	public void setRedirect(String redirect) {
 		this.redirect = redirect;
 	}
+
+	public boolean isMostrarRazonSocial() {
+		return mostrarRazonSocial;
+	}
+
+	public void setMostrarRazonSocial(boolean mostrarRazonSocial) {
+		this.mostrarRazonSocial = mostrarRazonSocial;
+	}
+	
+	
+	
 }
