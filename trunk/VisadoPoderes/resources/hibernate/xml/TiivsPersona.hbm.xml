@@ -23,7 +23,7 @@
             <column name="NOMBRE" length="25" />
         </property>
         <property name="apePat" type="string">
-            <column name="APE_PAT" length="25" />
+            <column name="APE_PAT" length="500" />
         </property>
         <property name="apeMat" type="string">
             <column name="APE_MAT" length="25" />
