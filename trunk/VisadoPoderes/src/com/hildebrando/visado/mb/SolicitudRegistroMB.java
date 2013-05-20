@@ -163,7 +163,9 @@ public class SolicitudRegistroMB {
 	private boolean boleanoMensajeOperacionesBancarias=true;
 	private boolean boleanoMensajeDocumentos=true;
 	*/
-	public boolean mostrarRazonSocial = false;
+	private boolean mostrarRazonSocial = false;
+	private String codigoRazonSocial = "0000";
+	
 	
     public UploadedFile getFile() {  
         return file;  
@@ -987,7 +989,7 @@ public class SolicitudRegistroMB {
 		this.flagUpdatePersona = true;
 		
 		if(objTiivsPersonaCapturado.getTipDoi()!=null){ 
-			if(objTiivsPersonaCapturado.getTipDoi().equals("0003")){ //CODIGO RAZON SOCIAL
+			if(objTiivsPersonaCapturado.getTipDoi().equals(this.codigoRazonSocial)){ //CODIGO RAZON SOCIAL
 				this.mostrarRazonSocial = true;
 			} else {
 				this.mostrarRazonSocial = false;
@@ -1017,7 +1019,7 @@ public class SolicitudRegistroMB {
 				}
 		}
 		
-		if(objTiivsPersonaResultado.getTipDoi()!=null && !objTiivsPersonaResultado.getTipDoi().equals("0003")){ //CODIGO RAZONSOCIAL
+		if(objTiivsPersonaResultado.getTipDoi()!=null && !objTiivsPersonaResultado.getTipDoi().equals(this.codigoRazonSocial)){ //CODIGO RAZONSOCIAL
 			if (objTiivsPersonaResultado.getNombre() == null
 					|| objTiivsPersonaResultado.getNombre().equals("")) {
 				sMensaje = "Ingrese el Nombre";
@@ -1026,7 +1028,7 @@ public class SolicitudRegistroMB {
 			}
 		}
 		
-		if(objTiivsPersonaResultado.getTipDoi()!=null && objTiivsPersonaResultado.getTipDoi().equals("0003")){ //CODIGO RAZONSOCIAL
+		if(objTiivsPersonaResultado.getTipDoi()!=null && objTiivsPersonaResultado.getTipDoi().equals(this.codigoRazonSocial)){ //CODIGO RAZONSOCIAL
 			if (objTiivsPersonaResultado.getApePat() == null
 					|| objTiivsPersonaResultado.getApePat().equals("")) {
 				sMensaje = "Ingrese la Razón Social";
@@ -1607,11 +1609,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		iTipoSolicitud = "";
 		lstTiivsPersona = new ArrayList<TiivsPersona>();
 		oficina = new TiivsOficina1();
+		
+		codigoRazonSocial = obtenCodRazonSocial(); 
 
 		// }
 
 		return "/faces/paginas/solicitud.xhtml";
-	}
+	}	
 
 	public void actualizarListaDocumentosXTipo(TiivsAnexoSolicitud objAnexo) {
 		
@@ -3090,18 +3094,48 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	
 	public void cambiarRazonSocial(ValueChangeEvent e){		
 		
-		String codTipoPerJuridica = "0003"; //CODIGO RAZONSOCIAL
 		String codTipoDocumento = (String) e.getNewValue();
-		if (codTipoDocumento!=null && codTipoDocumento.equals(codTipoPerJuridica)) {
+		if (codTipoDocumento!=null && codTipoDocumento.equals(this.codigoRazonSocial)) {//CODIGO RAZONSOCIAL
 			this.mostrarRazonSocial = true;
-			objTiivsPersonaResultado.setTipDoi(codTipoPerJuridica);
+			objTiivsPersonaResultado.setTipDoi(this.codigoRazonSocial);
 			objTiivsPersonaResultado.setApeMat("");
 			objTiivsPersonaResultado.setNombre("");
 		} else {
 			this.mostrarRazonSocial = false;
 			objTiivsPersonaResultado.setTipDoi("");
 		}	
-//		this.mostrarRazonSocial = !mostrarRazonSocial;
+	}
+	
+	private String obtenCodRazonSocial() {
+
+		String sCodRazSocial = "";
+
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+
+		filtroMultitabla.add(Restrictions.eq("id.codMult",
+				ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC));
+
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA
+					+ "de multitablas: " + e);
+		}
+
+		for (TiivsMultitabla multi : listaMultiTabla) {
+			if (multi.getValor2() != null && multi.getValor2().equals("1")) {
+				if (multi.getValor6() != null && multi.getValor6().equals("1")) {
+					sCodRazSocial = multi.getId().getCodElem();
+					break;
+				}
+			}
+
+		}
+		return sCodRazSocial;
 	}
 
 	public List<TiivsMultitabla> getLstMultitabla() {
