@@ -44,21 +44,21 @@
 				<text><![CDATA[Moneda]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="253" y="0" width="42" height="20" forecolor="#003399"/>
+				<reportElement x="260" y="0" width="55" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="SansSerif" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Importe]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="321" y="0" width="87" height="20" forecolor="#003399"/>
+				<reportElement x="327" y="0" width="99" height="20" forecolor="#003399"/>
 				<textElement>
 					<font fontName="SansSerif" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Tipo de Cambio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="398" y="0" width="76" height="20" forecolor="#003399"/>
+				<reportElement x="426" y="0" width="76" height="20" forecolor="#003399"/>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
@@ -73,42 +73,42 @@
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{item} + " "]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{item} + " "]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="39" y="0" width="123" height="20"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{descripcion} + "  "]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{descripcion} + "  "]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="254" y="0" width="61" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{importe}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="321" y="0" width="77" height="20"/>
+				<reportElement x="327" y="0" width="99" height="20"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{tipoCambio}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tipoCambio}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="408" y="0" width="66" height="20"/>
+				<reportElement x="436" y="0" width="66" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{soles}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{soles}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="176" y="0" width="78" height="20"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda} + "  "]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{moneda} + "  "]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
