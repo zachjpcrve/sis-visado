@@ -122,11 +122,11 @@ public class ClasificacionMB {
 				
 				if (isbMsgActualizar() == true) 
 				{
-					Utilitarios.mensajeInfo("NIVEL","Se actualizo correctamente");
+					Utilitarios.mensajeInfo("NIVEL","Se actualizó correctamente");
 				} 
 				else 
 				{
-					Utilitarios.mensajeInfo("NIVEL","Se registro correctamente");
+					Utilitarios.mensajeInfo("NIVEL","Se registró correctamente");
 				}
 				
 				clasificacion = new TiivsMultitabla();
@@ -138,12 +138,12 @@ public class ClasificacionMB {
 			} catch (Exception e) {
 				//e.printStackTrace();
 				logger.error("ClasificacionMB :" + e.getLocalizedMessage());
-				Utilitarios.mensajeError("Error","Error al registrar el Tipo de Clasificacion");
+				Utilitarios.mensajeError("Error","Error al registrar el Tipo de Clasificación");
 			}
 		} 
 		else 
 		{
-			Utilitarios.mensajeError("Error","El campo descripcion es requerido");
+			Utilitarios.mensajeError("Error","El campo descripción es requerido");
 		}
 
 	}

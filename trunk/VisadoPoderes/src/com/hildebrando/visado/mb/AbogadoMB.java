@@ -82,22 +82,22 @@ public class AbogadoMB {
 					abogado.setCodMiembro(abogado.getCodMiembro().toUpperCase());
 					abogado.setDescripcion(abogado.getDescripcion().toUpperCase());
 					abogadoService.registrar(abogado);
-					Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
+					Utilitarios.mensajeInfo("NIVEL", "Se actualizó correctamente");
 				}else{
 					contador = abogadoService.validarCodigo(abogado);
 					if(contador.equals("0")){
 						abogado.setDescripcion(abogado.getDescripcion().toUpperCase());
 						abogadoService.registrar(abogado);
-						Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
+						Utilitarios.mensajeInfo("NIVEL", "Se registró correctamente");
 					}else{
-						Utilitarios.mensajeError("ERROR", "El codigo ya ha sido registrado");
+						Utilitarios.mensajeError("ERROR", "El código ya ha sido registrado");
 					}
 				}
 			}else{
-				Utilitarios.mensajeError("ERROR", "La descripcion es obligatoria");
+				Utilitarios.mensajeError("ERROR", "La descripción es obligatoria");
 			}
 		}else{
-			Utilitarios.mensajeError("ERROR", "El codigo es obligatorio");
+			Utilitarios.mensajeError("ERROR", "El código es obligatorio");
 		}
 		
 			
