@@ -203,6 +203,7 @@ public class ReportesMB {
 		{
 			setTextoAnioMes(Utilitarios.buscarMesxCodigo(getMes()) + ConstantesVisado.ESPACIO_BLANCO + Utilitarios.buscarAnioxCodigo(getAnio()));
 		}
+		
 	}
 
 	public void inicializarCampos() {
@@ -315,7 +316,22 @@ public class ReportesMB {
 		setMes(0);
 		setLstEstudioSelected(null);
 	}
-	
+	public boolean validarReporteLiquidacion(){
+		String mensaje="";
+		boolean retorno = true;
+		
+		if(getAnio()==0){
+			mensaje="Ingrese Año valido";
+			Utilitarios.mensaje(mensaje, "");
+			retorno=false;
+		}
+		if(getMes()==0){
+			mensaje="Ingrese mes valido";
+			Utilitarios.mensaje(mensaje, "");
+			retorno=false;
+		}
+		return retorno;
+	}
 	public void limpiarFilOf()
 	{
 		setIdTerr("");
@@ -358,6 +374,8 @@ public class ReportesMB {
 	
 	public void buscarLiquidacion() 
 	{
+		if(validarReporteLiquidacion()!=false){
+	
 		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 
 		// Busqueda por estudio
@@ -416,6 +434,7 @@ public class ReportesMB {
 		} else {
 			setNoHabilitarExportar(true);
 			Utilitarios.mensaje(ConstantesVisado.MENSAJE.NO_RESULTADOS, "");
+		}
 		}
 	}
 
