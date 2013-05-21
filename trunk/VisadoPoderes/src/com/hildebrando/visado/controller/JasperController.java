@@ -117,19 +117,18 @@ public class JasperController {
 			OutputStream os = response.getOutputStream();
 			os.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
-			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al generar el archivo: " + e);
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al generar el archivo: " + e, e);
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al generar el archivo: " + e);
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al generar el archivo: " + e, e);
 		}
 		return ("pdfReportCartaAtencion");
 	}
 	
 	@RequestMapping(value="/download/pdfReportCartaSolicitudRevision.htm", method=RequestMethod.GET)
 	public String generarReporteCartaSolicitudRevision(ModelMap modelMap, HttpServletResponse response, HttpServletRequest request){
+		logger.info("==== generarReporteCartaSolicitudRevision ====  ");
 		try{
-		logger.info("generarReporteCartaAtencion : ");
+		
 		TiivsSolicitud SOLICITUD_TEMP = (TiivsSolicitud) request.getSession(true).getAttribute("SOLICITUD_TEMP");
 		List<FormatosDTO> cabecera=new ArrayList<FormatosDTO>();
 		FormatosDTO uno = new FormatosDTO();
@@ -151,9 +150,9 @@ public class JasperController {
         	OutputStream os = response.getOutputStream();
         	os.flush();
     	} catch (IOException ioe) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe, ioe);
 		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e, e);
 		}
         return("pdfReportCartaSolicitudRevision");
 	}
@@ -189,9 +188,9 @@ public class JasperController {
         	OutputStream os = response.getOutputStream();
         	os.flush();
     	} catch (IOException ioe) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe, ioe);
 		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e, e);
 		}
         return("pdfReportCartaRechazo");
 	}
