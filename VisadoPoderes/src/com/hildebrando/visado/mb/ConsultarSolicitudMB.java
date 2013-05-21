@@ -529,6 +529,17 @@ public class ConsultarSolicitudMB {
 				|| PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
 			
 			if (this.solicitudRegistrarT.getEstado().trim()
+					.equals(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02)) {
+				if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
+					lstComboDictamen.add(new ComboDto(
+							ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02,
+							ConstantesVisado.ESTADOS.ESTADO_ACEPTADO_T02));
+					lstComboDictamen.add(new ComboDto(
+							ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02,
+							ConstantesVisado.ESTADOS.ESTADO_RECHAZADO_T02));
+				}
+			}
+			else if (this.solicitudRegistrarT.getEstado().trim()
 					.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)) {
 				logger.info("xxxx  ESTADO_COD_RESERVADO_T02");
 				lstComboDictamen.add(new ComboDto(
@@ -1043,7 +1054,7 @@ public class ConsultarSolicitudMB {
 				this.bMostrarCartaRevision = false;
 				this.bMostrarCartaImprocedente = false;
 				this.bSeccionDocumentos = true;
-				this.bSeccionDictaminar = false;
+				this.bSeccionDictaminar = true;
 				this.bSeccionComentario = true;
 				this.bSeccionReasignacion = true;
 				this.bSeccionEvaluarNivel = false;				
