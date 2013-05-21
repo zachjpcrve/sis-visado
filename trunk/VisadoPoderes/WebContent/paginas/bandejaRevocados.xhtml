@@ -245,10 +245,11 @@
 			height="#{revocadosMB.alto_Popup_Revoc_Poder}">
 
 			<h:form id="frmPendEdit">
+			<p:messages id="globalOnly" globalOnly="true" showDetail="true" />
 			<p:outputPanel id="pnlRegistrarPendEdit">
 
 				<h:panelGrid columns="1" id="gridMsj" rendered="false">
-					<p:messages globalOnly="true" showDetail="true" />
+					
 				</h:panelGrid>
 				
 				<p:panel header="Búsqueda">
@@ -293,14 +294,14 @@
 						</p:selectOneMenu>
 						
 						<h:outputLabel value="Nro de DOI*: " style="color:red"/>
-						<p:inputText styleClass="inputText"
+						<p:inputText styleClass="inputText" id="txtnroDoi"
 							value="#{revocadosMB.objTiivsPersonaAgregar.numDoi}"
 							onkeypress="return validaNumero(event,'0',this,'0');"
 							onblur="validaNumero(event,'0',this,'1');" size="25">
 						</p:inputText>
 	
 						<h:outputLabel value="C. Central: " />
-						<p:inputText styleClass="inputText"
+						<p:inputText styleClass="inputText" id="txtcentral"
 							value="#{revocadosMB.objTiivsPersonaAgregar.codCen}"
 							maxlength="13"
 							onkeypress="return validaNumero(event,'0',this,'0');"
@@ -342,8 +343,16 @@
 
 					<p:commandButton id="btnAgregar" value="Agregar"
 						icon="ui-icon-plus"
-						update="frmPendEdit:pnlRegistrarPendEdit"
-						actionListener="#{revocadosMB.agregarRevocado}" ajax="true" />
+						update="frmPendEdit:pnlRegistrarPendEdit,
+						        frmPendEdit:cboTipoDoi2, 
+						        frmPendEdit:txtnroDoi ,
+						        frmPendEdit:txtcentral, 
+						        frmPendEdit:txtApellidoPaterno, 
+						        frmPendEdit:txtApellidoMaterno ,
+						        frmPendEdit:txtNombres, 
+						        frmPendEdit:cboTipoRegistro
+						        frmPendEdit:globalOnly"
+						action="#{revocadosMB.agregarRevocado}" />
 					<!-- gridMsj gridApodPod gridApodPod2 gridApodPod3 dtClientes -->
 					<p:spacer width="10" height="20" />
 
