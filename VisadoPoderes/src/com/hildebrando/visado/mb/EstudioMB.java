@@ -57,13 +57,23 @@ public class EstudioMB {
 			if (estudio.getDesEstudio().isEmpty() == false) {
 				if(estudio.getCosto() >= 0.0){
 					//if(estudio.getCosto().intValue())
-					System.out.println(" estudio.getCosto().intValue() " + estudio.getCosto().intValue());
+					//System.out.println(" estudio.getCosto().intValue() " + estudio.getCosto().intValue());
 					if(isbEditar() == false){
-						estudioService.registrar(estudio);
-						Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
+						if(isNombreRegistrado(estudio) == false){
+							estudioService.registrar(estudio);
+							Utilitarios.mensajeInfo("NIVEL", "Se registró correctamente");
+						} else {
+							Utilitarios.mensajeError("NIVEL", "Descripción de estudio ya utilizado, no se actualizará");
+						}
+						
 					}else{
-						estudioService.registrar(estudio);
-						Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
+						if(isNombreRegistrado(estudio) == false){
+							estudioService.registrar(estudio);
+							Utilitarios.mensajeInfo("NIVEL", "Se actualizó correctamente");
+						} else {
+							Utilitarios.mensajeError("NIVEL", "Descripción de estudio ya utilizado, no se actualizará");
+						}
+						
 					}	
 					this.listarEstudios();
 				}else{
@@ -73,7 +83,7 @@ public class EstudioMB {
 				
 			} else {
 				Utilitarios.mensajeError("Error",
-						"El campo Descripcion es obligatorio");
+						"El campo Descripción es obligatorio");
 			}
 			
 			estudio = new TiivsEstudio();
@@ -82,8 +92,20 @@ public class EstudioMB {
 			e.printStackTrace();
 			logger.error("EstudioMB : registrar " + e.getLocalizedMessage());
 			Utilitarios.mensajeError("Error",
-					"Error al registrar el Tipo de Clasificacion");
+					"Error al registrar el Tipo de Clasificación");
 		}
+	}
+	
+	private boolean isNombreRegistrado(TiivsEstudio tiivsEstudio){
+		List<TiivsEstudio> lstEstudios = estudioService.listarEstudios();
+		for(TiivsEstudio est : lstEstudios){
+			if(!est.getCodEstudio().equals(tiivsEstudio.getCodEstudio())){
+				if(est.getDesEstudio().trim().equals(tiivsEstudio.getDesEstudio().trim())){
+					return true;
+				}
+			}			
+		}
+		return false;
 	}
 	
 	public void limpiarCampos(){

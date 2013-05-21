@@ -58,7 +58,7 @@ public class ComisionMB {
 					comisionService.Actualizar(comisiones.get(i));
 
 				}
-				Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
+				Utilitarios.mensajeInfo("NIVEL", "Se actualizó correctamente");
 			} else {
 				Utilitarios.mensajeError("Error", "El campo es Obligatorio");
 

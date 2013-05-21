@@ -98,7 +98,7 @@ public class OficinaMB {
 		try{
 			oficinaService.cambiarEstado(oficina);
 			listarOficinas();
-			Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
+			Utilitarios.mensajeInfo("NIVEL", "Se actualizó correctamente");
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.error("OficinaMB : cambiarEstado : " + e.getLocalizedMessage());
