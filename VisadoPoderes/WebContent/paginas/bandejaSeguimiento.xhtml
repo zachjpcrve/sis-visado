@@ -32,7 +32,7 @@
 									onkeypress="return validaNumero(event,'0',this,'0');" onblur="validaNumero(event,'0',this,'1');"/>
 								</td>
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtSolicitud" /></td>	
-								<p:tooltip for="tooltxtSolicitud" value="Numero de solicitud" showEffect="fade" hideEffect="fade" />  
+								<p:tooltip for="tooltxtSolicitud" value="Número de solicitud" showEffect="fade" hideEffect="fade" />  
 								<td ><h:outputText styleClass="outputText" id="txtEstado" value="Estado:" /></td>
 								<td >
 									<p:selectCheckboxMenu id="scmEstados" label="--TODOS--" value="#{seguimientoMB.lstEstadoSelected}" 
@@ -108,7 +108,7 @@
 									</p:selectOneMenu>
 								</td>
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTOperacion" /></td>
-								<p:tooltip for="tooltxtTOperacion" value="Tipo de Operacion" showEffect="fade" hideEffect="fade" />  
+								<p:tooltip for="tooltxtTOperacion" value="Tipo de Operación" showEffect="fade" hideEffect="fade" />  
 							</tr>
 						</tbody>
 					</table>
@@ -125,7 +125,7 @@
 									<h:inputText styleClass="inputText" id="text18" maxlength="18" value="#{seguimientoMB.nroDOIApoderado}" disabled="false" size="11"/>
 								</td>
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolDOIApoderado" /></td>
-								<p:tooltip for="toolDOIApoderado" value="Numero de Documento del Representante" showEffect="fade" hideEffect="fade" />
+								<p:tooltip for="toolDOIApoderado" value="Número de Documento del Representante" showEffect="fade" hideEffect="fade" />
 								
 								<td >
 									<h:outputText styleClass="outputText" id="txtApod" value="Representante:" />
@@ -148,7 +148,7 @@
 									<h:inputText styleClass="inputText" id="text17" maxlength="18" size="18" value="#{seguimientoMB.nroDOIPoderdante}" disabled="false" />
 								</td>	
 								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolDOIPoderdante" /></td>	
-								<p:tooltip for="toolDOIPoderdante" value="Numero de Documento del Representado" showEffect="fade" hideEffect="fade" />
+								<p:tooltip for="toolDOIPoderdante" value="Número de Documento del Representado" showEffect="fade" hideEffect="fade" />
 								
 								<td >
 									<h:outputText styleClass="outputText" id="txtPoder" value="Representado:" />
@@ -222,7 +222,7 @@
 								</td>
 								<td >
 									<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEnRev" />
-									<p:tooltip for="toolEnRev" value="Solicitudes en revision" showEffect="fade" hideEffect="fade" />	
+									<p:tooltip for="toolEnRev" value="Solicitudes en revisión" showEffect="fade" hideEffect="fade" />	
 								</td>			
 								<td>
 									<h:outputText styleClass="outputText" id="txtDel" value="Delegados:" rendered="#{sessionScope.GRUPO_OFI == null}"/>
@@ -232,7 +232,7 @@
 								</td>
 								<td >
 									<p:graphicImage value="/resources/images/pregunta.jpg" id="toolDele" rendered="#{sessionScope.GRUPO_OFI == null}"/>
-									<p:tooltip for="toolDele" value="Solicitudes con delegacion de niveles" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_OFI == null}"/>
+									<p:tooltip for="toolDele" value="Solicitudes con delegación de niveles" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_OFI == null}"/>
 								</td>
 													
 								<td>
@@ -243,7 +243,7 @@
 								</td>
 								<td >
 									<p:graphicImage value="/resources/images/pregunta.jpg" id="toolRevc" />
-									<p:tooltip for="txtRevc" value="Solicitudes con revocatoria" showEffect="fade" hideEffect="fade" />
+									<p:tooltip for="toolRevc" value="Solicitudes con revocatoria" showEffect="fade" hideEffect="fade" />
 								</td>	
 							</tr>
 						</tbody>			
