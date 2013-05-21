@@ -2037,13 +2037,13 @@ public class RevocadosMB {
 		if (objTiivsPersonaAgregar.getTipDoi() == null ||  objTiivsPersonaAgregar.getTipDoi().equals("")) {
 			sMensaje = "Seleccione el Tipo de Documento";
 			bResult = false;
-			Utilitarios.mensajeInfo("INFO", sMensaje);
+			Utilitarios.mensaje(sMensaje, "");
 		}
 		
 		if (objTiivsPersonaAgregar.getNumDoi() == null || objTiivsPersonaAgregar.getNumDoi().equals("")) {
 			sMensaje = "Ingrese el Número de Doi";
 			bResult = false;
-			Utilitarios.mensajeInfo("INFO", sMensaje);
+			Utilitarios.mensaje(sMensaje, "");
 		}
 		
 	/*	if (objTiivsPersonaAgregar.getCodCen() == null ||  objTiivsPersonaAgregar.getCodCen().equals("")) {
@@ -2061,13 +2061,13 @@ public class RevocadosMB {
 			if (objTiivsPersonaAgregar.getApePat() == null ||  objTiivsPersonaAgregar.getApePat().equals("")) {
 				sMensaje = "Ingrese el Apellido Paterno";
 				bResult = false;
-				Utilitarios.mensajeInfo("INFO", sMensaje);
+				Utilitarios.mensaje(sMensaje, "");
 			}
 			
 			if (objTiivsPersonaAgregar.getApeMat() == null  || objTiivsPersonaAgregar.getApeMat().equals("")) {
 				sMensaje = "Ingrese el Apellido Materno";
 				bResult = false;
-				Utilitarios.mensajeInfo("INFO", sMensaje);
+				Utilitarios.mensaje(sMensaje, "");
 			}	
 		}
 		
@@ -2075,13 +2075,13 @@ public class RevocadosMB {
 		if (objTiivsPersonaAgregar.getNombre() == null  ||  objTiivsPersonaAgregar.getNombre().equals("")) {
 			sMensaje = "Ingrese el Nombre";
 			bResult = false;
-			Utilitarios.mensajeInfo("INFO", sMensaje);
+			Utilitarios.mensaje(sMensaje, "");
 		}
 		
 		if ((objTiivsPersonaAgregar.getTipPartic() == null || objTiivsPersonaAgregar.getTipPartic().equals(""))) {
 			sMensaje = "Ingrese el Tipo de Participacion";
 			bResult = false;
-			Utilitarios.mensajeInfo("INFO", sMensaje);
+			Utilitarios.mensaje(sMensaje, "");
 		}
 
 		return bResult;
