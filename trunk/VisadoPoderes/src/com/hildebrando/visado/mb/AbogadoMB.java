@@ -66,52 +66,58 @@ public class AbogadoMB {
 
 	public void registrar(){
 		logger.info("AbogadoMB : registrar");
-		
-		String contador ="";
+
+		String contador = "";
 		abogado.setActivo("1");
-		if(abogado.getEstudio()== null || abogado.getEstudio().equals("-1")){		
+		if (abogado.getEstudio() == null || abogado.getEstudio().equals("-1")) {
 			abogado.setEstudio("");
 		}
-		try{
-		if(abogado.getCodMiembro().isEmpty()==false){
-			if(abogado.getDescripcion().isEmpty()==false){
-				if(isEditarAbogado()==true){;
-					if(	!abogado.getTiivsGrupo().getCodGrupo().equals(ConstantesVisado.COD_GRUPO_JRD)){
-						abogado.setEstudio(null);						
+		try {
+
+			if(!abogado.getTiivsGrupo().getCodGrupo().equals("")){
+				if(!abogado.getCriterio().equals("")){
+					if (abogado.getCodMiembro().isEmpty() == false) {
+						if (abogado.getDescripcion().isEmpty() == false) {
+							if (isEditarAbogado() == true) {
+								if (!abogado.getTiivsGrupo().getCodGrupo().equals(ConstantesVisado.COD_GRUPO_JRD)) {
+									abogado.setEstudio(null);
+								}
+								abogado.setCodMiembro(abogado.getCodMiembro().toUpperCase());
+								abogado.setDescripcion(abogado.getDescripcion().toUpperCase());
+								abogadoService.registrar(abogado);
+								Utilitarios.mensajeInfo("NIVEL","Se actualizó correctamente");
+							} else {
+								contador = abogadoService.validarCodigo(abogado);
+								if (contador.equals("0")) {
+									abogado.setDescripcion(abogado.getDescripcion().toUpperCase());
+									abogadoService.registrar(abogado);
+									Utilitarios.mensajeInfo("NIVEL","Se registró correctamente");
+								} else {
+									Utilitarios.mensajeError("ERROR","El código ya ha sido registrado");
+								}
+							}
+						} else {
+							Utilitarios.mensajeError("ERROR","La descripción es obligatoria");
+						}
+					} else {
+						Utilitarios.mensajeError("ERROR", "El código es obligatorio");
 					}
-					abogado.setCodMiembro(abogado.getCodMiembro().toUpperCase());
-					abogado.setDescripcion(abogado.getDescripcion().toUpperCase());
-					abogadoService.registrar(abogado);
-					Utilitarios.mensajeInfo("NIVEL", "Se actualizó correctamente");
-				}else{
-					contador = abogadoService.validarCodigo(abogado);
-					if(contador.equals("0")){
-						abogado.setDescripcion(abogado.getDescripcion().toUpperCase());
-						abogadoService.registrar(abogado);
-						Utilitarios.mensajeInfo("NIVEL", "Se registró correctamente");
-					}else{
-						Utilitarios.mensajeError("ERROR", "El código ya ha sido registrado");
-					}
+				} else {
+					Utilitarios.mensajeError("ERROR", "Debe seleccionar un criterio");
 				}
-			}else{
-				Utilitarios.mensajeError("ERROR", "La descripción es obligatoria");
+			} else {
+				Utilitarios.mensajeError("ERROR", "Debe seleccionar un Perfil");
 			}
-		}else{
-			Utilitarios.mensajeError("ERROR", "El código es obligatorio");
-		}
-		
-			
 			
 			abogado = new TiivsMiembro();
 			grupoFiltro = new TiivsGrupo();
 			abogado.setTiivsGrupo(grupoFiltro);
 			mostrarComboEstudioGuardar = false;
 			mostrarCodigoEditar = false;
-			editarAbogado=false;
-		}catch(Exception e){
-			e.printStackTrace();
-			logger.error("AbogadoMB : registrar : "
-					+ e.getLocalizedMessage());
+			editarAbogado = false;
+			
+		} catch (Exception e) {			
+			logger.error("AbogadoMB : registrar : " ,e);
 			Utilitarios.mensajeError("ERROR", "No se pudo Registrar");
 		}
 		
