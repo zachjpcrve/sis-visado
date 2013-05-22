@@ -164,6 +164,7 @@ public class RespNivelAprobacionMB {
 		
 		miembroNivel= new TiivsMiembroNivel();
 		bEditar=false;
+		botonAgregar = true;
 		/*ec.getSessionMap().put("miembroNivel", miembroNivel);*/
 		 
 		try{
@@ -621,7 +622,7 @@ public class RespNivelAprobacionMB {
 			this.editar();
 
 		}
-		
+		botonAgregar = true;
 		setFlagVisible(false);
 		return iniciar;
 	}
