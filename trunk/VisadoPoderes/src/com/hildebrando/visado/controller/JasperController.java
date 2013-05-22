@@ -117,9 +117,9 @@ public class JasperController {
 			OutputStream os = response.getOutputStream();
 			os.flush();
 		} catch (IOException e) {
-			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al generar el archivo: " + e, e);
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al generar el archivo: " , e);
 		} catch (Exception e) {
-			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al generar el archivo: " + e, e);
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al generar el archivo: " , e);
 		}
 		return ("pdfReportCartaAtencion");
 	}
@@ -150,9 +150,9 @@ public class JasperController {
         	OutputStream os = response.getOutputStream();
         	os.flush();
     	} catch (IOException ioe) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe, ioe);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: ", ioe);
 		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e, e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: ", e);
 		}
         return("pdfReportCartaSolicitudRevision");
 	}
@@ -188,9 +188,9 @@ public class JasperController {
         	OutputStream os = response.getOutputStream();
         	os.flush();
     	} catch (IOException ioe) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe, ioe);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: ", ioe);
 		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e, e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: ", e);
 		}
         return("pdfReportCartaRechazo");
 	}
@@ -229,9 +229,9 @@ public class JasperController {
         	OutputStream os = response.getOutputStream();
         	os.flush();
     	} catch (IOException ioe) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: ", ioe);
 		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: ", e);
 		}
         return("pdfReportCartaImprocedente");
 	}
@@ -312,9 +312,9 @@ public class JasperController {
             	OutputStream os = response.getOutputStream();
             	os.flush();
     		} catch (IOException ioe) {
-    			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+ioe);
+    			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: ", ioe);
     		}catch (Exception e) {
-    			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: "+e);
+    			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar el archivo: ", e);
 			}
     		
     	}else{
@@ -333,8 +333,12 @@ public class JasperController {
 
 			String codSoli = "";
 			String movimiento = "";
-			codSoli = id.split(";")[0];
-			movimiento  = id.split(";")[1];
+			
+			try {
+				codSoli = id.split(";")[0];
+				movimiento  = id.split(";")[1];
+			} catch (Exception e){}
+			
 			
 			logger.info("codSoli   :" + codSoli);
 			logger.info("movimiento:" + movimiento);
@@ -375,11 +379,11 @@ public class JasperController {
 		} catch (IOException e) {
 			e.printStackTrace();
 			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
-					+ "al generar el archivo: " + e);
+					+ "al generar el archivo: " , e);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
-					+ "al generar el archivo: " + e);
+					+ "al generar el archivo: " , e);
 		}
 		return ("pdfReportObsHistorial");
 	}
@@ -420,11 +424,9 @@ public class JasperController {
 			OutputStream os = response.getOutputStream();
 			os.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
 			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
 					+ "al generar el archivo: " + e);
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
 					+ "al generar el archivo: " + e);
 		}
