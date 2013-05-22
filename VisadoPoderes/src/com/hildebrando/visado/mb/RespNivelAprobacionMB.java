@@ -628,7 +628,7 @@ public class RespNivelAprobacionMB {
 	}
 	
 	private void editar(){
-		logger.info("Here here .... editar ");
+		logger.info(" .... editar ");
 		
 		bEditar=true;
 		
