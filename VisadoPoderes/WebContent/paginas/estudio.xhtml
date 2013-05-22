@@ -164,7 +164,7 @@
 						update=":frmDataTableEstudio:pnlDataTableEstudio,:frmMantenimientoEstudio:pnlMntEstudio">
 					</p:commandButton>
 					<p:commandButton id="limpiarEstudio" value="Limpiar" ajax="true"
-						action="#{estudioMB.limpiarCampos}"
+						actionListener="#{estudioMB.limpiarCampos}" process="@this"
 						update=":frmMantenimientoEstudio:pnlMntEstudio">
 					</p:commandButton>
 				</p:panel>
