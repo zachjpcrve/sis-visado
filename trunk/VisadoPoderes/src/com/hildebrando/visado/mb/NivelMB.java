@@ -221,9 +221,9 @@ public class NivelMB {
 						}
 						
 						if(bEditar == false){
-							Utilitarios.mensajeInfo("NIVEL","Se registro correctamente");
+							Utilitarios.mensajeInfo("NIVEL","Se registró correctamente");
 					     }else{
-							Utilitarios.mensajeInfo("NIVEL","Se actualizo correctamente");
+							Utilitarios.mensajeInfo("NIVEL","Se actualizó correctamente");
 					    }
 						this.limpiarNiveles();
 						this.listarNiveles();
@@ -244,7 +244,7 @@ public class NivelMB {
 					 */else {
 						Utilitarios
 								.mensajeError("Error",
-										"La descripcion del nivel ya se encuentra registrada");
+										"La descripción del nivel ya se encuentra registrada");
 					}
 
 				} else {
@@ -253,7 +253,7 @@ public class NivelMB {
 				}
 			} else {
 				Utilitarios.mensajeError("Error",
-						"El campo Descripcion es Obligatorio");
+						"El campo Descripción es Obligatorio");
 			}
 			
 			/*nivelesMant = new ArrayList<TiivsNivel>();

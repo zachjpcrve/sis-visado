@@ -146,9 +146,9 @@ public class DocumentoMB {
 						documentoService.registrar(tipoSolicDocumento);
 					
 						if (validacion == false) {
-							Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
+							Utilitarios.mensajeInfo("NIVEL", "Se actualizó correctamente");
 						} else {
-							Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
+							Utilitarios.mensajeInfo("NIVEL", "Se registró correctamente");
 						}
 						
 					

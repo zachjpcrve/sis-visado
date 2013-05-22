@@ -90,9 +90,9 @@ public class TiposDOIMB {
 				}*/
 				tiposDoiService.registrar(documento);
 				if (isbMsgActualizar() == true) {
-					Utilitarios.mensajeInfo("NIVEL", "Se actualizo correctamente");
+					Utilitarios.mensajeInfo("NIVEL", "Se actualizó correctamente");
 				} else {
-					Utilitarios.mensajeInfo("NIVEL", "Se registro correctamente");
+					Utilitarios.mensajeInfo("NIVEL", "Se registró correctamente");
 				}
 				documento = new TiivsMultitabla();
 				
@@ -109,7 +109,7 @@ public class TiposDOIMB {
 			}
 		}else{
 			Utilitarios
-			.mensajeError("Error", "El campo descripcion es requerido");
+			.mensajeError("Error", "El campo descripción es requerido");
 		}
 		
 	}
