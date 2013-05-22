@@ -85,6 +85,7 @@
 				<reportElement x="266" y="3" width="72" height="20"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
+					<paragraph rightIndent="10"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{importe}]]></textFieldExpression>
 			</textField>
@@ -92,6 +93,7 @@
 				<reportElement x="340" y="3" width="92" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font size="8"/>
+					<paragraph rightIndent="10"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{tipoCambio}]]></textFieldExpression>
 			</textField>
@@ -99,6 +101,7 @@
 				<reportElement x="436" y="3" width="66" height="20"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
+					<paragraph rightIndent="10"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{soles}]]></textFieldExpression>
 			</textField>
@@ -107,7 +110,7 @@
 				<textElement textAlignment="Center">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda} + "  "]]></textFieldExpression>
+				<textFieldExpression  class="java.lang.String"><![CDATA[$F{moneda} + "  "]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
