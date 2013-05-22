@@ -219,7 +219,7 @@ public class QuartzMB  implements Serializable
 	    	
 	    	JobDetail jobDetail =crearJobDetail();
 	    	scheduler.scheduleJob(jobDetail, simpleTrigger);
-	    	Utilitarios.mensajeInfo("Mensajito", "Se registro correctamente un : " + simpleTrigger.getFullJobName());
+	    	Utilitarios.mensajeInfo("Mensajito", "Se registró correctamente un : " + simpleTrigger.getFullJobName());
     }
     
     public void crearCronTrigger() throws ClassNotFoundException, SchedulerException, ParseException{
@@ -279,7 +279,7 @@ public class QuartzMB  implements Serializable
 				JobDetail jobDetail =crearJobDetail();
 				 
 				scheduler.scheduleJob(jobDetail, cronTrigger);
-				Utilitarios.mensajeInfo("Mensajito", "Se registro correctamente un : " + cronTrigger.getFullJobName());
+				Utilitarios.mensajeInfo("Mensajito", "Se registró correctamente un : " + cronTrigger.getFullJobName());
 				try {
 					this.listarTriggers();
 				} catch (Exception e) {
@@ -314,7 +314,7 @@ public class QuartzMB  implements Serializable
 			qrtzCronTriggerTMP.setCronExpression(cronExpression);
 			try {
 				entidadDAO.modificar(qrtzCronTriggerTMP);
-				Utilitarios.mensajeInfo("Info", "Se actualizo correctamente el CronTriggers");
+				Utilitarios.mensajeInfo("Info", "Se actualizó correctamente el CronTriggers");
 				bqsimple=false;
 	        	bqcron=false;
 			} catch (Exception e) {

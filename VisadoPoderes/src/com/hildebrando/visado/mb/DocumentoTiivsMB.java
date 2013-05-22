@@ -97,12 +97,12 @@ public class DocumentoTiivsMB {
 						if (isbMsgActualizar() == true) {
 							documentoTiivsService.registrar(documento);
 							Utilitarios.mensajeInfo("NIVEL",
-									"Se actualizo correctamente");
+									"Se actualizó correctamente");
 						}else{
 							if (validarNombre() == true) {
 								documentoTiivsService.registrar(documento);
 								Utilitarios.mensajeInfo("NIVEL",
-										"Se registro correctamente");
+										"Se registró correctamente");
 							}else{
 								Utilitarios.mensajeError("Error",
 										"El Nombre ya se encuentra registrado");
@@ -120,7 +120,7 @@ public class DocumentoTiivsMB {
 				}
 			} else {
 				Utilitarios.mensajeError("Error",
-						"El Campo Descripcion es Obligatorio");
+						"El Campo Descripción es Obligatorio");
 			}
 
 			documento = new TiivsDocumento();

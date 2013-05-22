@@ -1854,7 +1854,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						if(doc.getNombreCorto().equals(nombreDoc)){
 							doc.setAlias(documentoLeido);
 							doc.setAliasTemporal(Utilitarios.modificarExtension(documentoCargado));
-							logger.info("actualizo nombre documento:" + doc.getAlias());
+							logger.info("actualizó nombre documento:" + doc.getAlias());
 							
 							//agregar a lista de anexos de la solicitud
 							TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
@@ -2742,10 +2742,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				  
 				if (objResultado.getCodSoli() != "" || objResultado != null) {
 					if (this.sEstadoSolicitud.equals("BORRADOR")) {
-						mesajeConfirmacion = "Se registro correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
+						mesajeConfirmacion = "Se registró correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
 						actualizarBandeja=true;
 					} else {
-						mesajeConfirmacion = "Se envio a SSJJ correctamente la Solicitud con codigo : "+ objResultado.getCodSoli();
+						mesajeConfirmacion = "Se envió a SSJJ correctamente la Solicitud con codigo : "+ objResultado.getCodSoli();
 						actualizarBandeja=true;
 					}
 					//redirect = "/faces/paginas/bandejaSeguimiento.xhtml";					
@@ -2768,7 +2768,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		} catch (Exception e) {
 			this.redirect="";
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage(),e);
-			Utilitarios.mensajeError("ERROR", "Ocurrio un Error al grabar la Solicitud");
+			Utilitarios.mensajeError("ERROR", "Ocurrió un Error al grabar la Solicitud");
 
 		}
 		logger.info("Redirec:" + this.redirect);
