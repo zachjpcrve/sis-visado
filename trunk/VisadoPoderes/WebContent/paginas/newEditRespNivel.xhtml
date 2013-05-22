@@ -25,7 +25,8 @@
 											update=":frmMantenimientoNivReg:dtbRespNivel 
 											        :frmMantenimientoNivReg:txtPerfil 
 											        :frmMantenimientoNivReg:txtDescrip 
-											        :frmMantenimientoNivReg:idMsmNivReg"
+											        :frmMantenimientoNivReg:idMsmNivReg
+											        :frmMantenimientoNivReg:bsAgreg"
 											listener="#{respNivel.obtenerDatosMiembro}"></p:ajax>
 									</p:inputText>
 								</td>
@@ -67,9 +68,9 @@
 									
 									</p:selectOneMenu>
 								</td>
-								<td ><p:commandButton id="bsAgreg" value="Agregar" ajax="true" 
+								<td ><p:commandButton id="bsAgreg" value="Agregar" ajax="true" disabled="#{respNivel.botonAgregar}"
 										action="#{respNivel.agregarlistarRespxNivel}"
-										update=":frmMantenimientoNivReg:pnlMntNivReg :frmMantenimientoNivReg:idMsmNivReg">
+										update=":frmMantenimientoNivReg:pnlMntNivReg :frmMantenimientoNivReg:idMsmNivReg :frmMantenimientoNivReg:bsAgreg" >
 									</p:commandButton>
 								</td>
 							</tr>
