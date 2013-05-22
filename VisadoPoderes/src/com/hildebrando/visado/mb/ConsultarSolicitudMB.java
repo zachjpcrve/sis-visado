@@ -2595,13 +2595,10 @@ public class ConsultarSolicitudMB {
 	public void registrarSolicitud() 
 	{
 		String mensaje = "";
-//		String redirect = "";
 		redirect = "";
 		boolean actualizarBandeja=false;
 		
 		logger.info("*********************** registrarSolicitud ************************");
-//		GenericDao<TiivsAgrupacionPersona, Object> serviceAgru = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit
-//				.getApplicationContext().getBean("genericoDao");
 		
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
@@ -2609,8 +2606,6 @@ public class ConsultarSolicitudMB {
 				.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
-//		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
-//				.getApplicationContext().getBean("genericoDao");
 		TiivsPersona objPersonaRetorno = new TiivsPersona();
 		TiivsAgrupacionPersona objAgruPer = new TiivsAgrupacionPersona();
 		
@@ -2665,7 +2660,6 @@ public class ConsultarSolicitudMB {
 				esValido = this.validarRegistroSolicitud();
 			}
 			
-			//if (this.validarRegistroSolicitud()) 
 			if (esValido)
 			{
 				if (!this.sEstadoSolicitud.equals("BORRADOR"))  //ssjj
@@ -2780,7 +2774,6 @@ public class ConsultarSolicitudMB {
 			logger.error("Throwable ::: "+ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+t.getMessage());
 		}
 		
-		//return redirect;
 	}
 		
 	public String redireccionar(){
@@ -3278,6 +3271,7 @@ public class ConsultarSolicitudMB {
 	public void listarDocumentosXSolicitud(ValueChangeEvent e) {
 		// logger.info("ValuechanceEvent :  " + e.getNewValue());		
 		String sCodTipoSol = (String) e.getNewValue();		
+		addArchivosTemporalesToDelete(); //agregado 21-05-13
 		listarDocumentosXSolicitud(sCodTipoSol);	
 		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
 	}
@@ -3310,7 +3304,7 @@ public class ConsultarSolicitudMB {
 
 	public void actualizarListadoDocumentos() {
 
-		addArchivosTemporalesToDelete();
+		//addArchivosTemporalesToDelete();
 
 		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
 
