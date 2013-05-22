@@ -188,6 +188,7 @@ public class AbogadoMB {
 				abogado.setDescripcion(abogadoEditar.get(i).getDescripcion());
 				abogado.setTiivsGrupo(abogadoEditar.get(i).getTiivsGrupo());
 				abogado.setCriterio(abogadoEditar.get(i).getCriterio());
+				abogado.setCriterio(abogadoEditar.get(i).getCriterio().replace(ConstantesVisado.CODIGO_MULTITABLA_CRITERIO, ""));
 				abogado.setEstudio(abogadoEditar.get(i).getEstudio());
 				abogado.setTiivsMiembroNivels(abogadoEditar.get(i).getTiivsMiembroNivels());
 				abogado.setActivo(abogadoEditar.get(i).getActivo());
