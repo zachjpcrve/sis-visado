@@ -87,7 +87,8 @@
 							<div class="dostercios">
 								<div class="combo">
 									<p:selectOneMenu id="cboGrupo"
-										value="#{abogadoMB.abogado.tiivsGrupo.codGrupo}">
+										value="#{abogadoMB.abogado.tiivsGrupo.codGrupo}">										
+										<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 										<f:selectItems value="#{abogadoMB.grupos}"
 											itemLabel="#{cboGruG.desGrupo}"
 											itemValue="#{cboGruG.codGrupo}" var="cboGruG"></f:selectItems>
@@ -105,6 +106,7 @@
 								<div class="combo">
 									<p:selectOneMenu id="cboCriterio"
 										value="#{abogadoMB.abogado.criterio}">
+										<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 										<f:selectItems value="#{abogadoMB.criterios}"
 											itemLabel="#{cboCri.valor1}" itemValue="#{cboCri.id.codElem}"
 											var="cboCri"></f:selectItems>
