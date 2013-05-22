@@ -127,7 +127,7 @@
 		<h:form id="frmMantenimientoEstudio">
 			<p:outputPanel id="pnlMntEstudio">
 				<p:panel header="Estudio de Abogados" style="width: 85%">
-					<p:messages id="idMsmDocumento"></p:messages>
+					<p:growl id="idMsmDocumento"></p:growl>
 					<table>
 						<tr>
 							<td><h:outputText value="Código:  " /></td>
@@ -137,17 +137,17 @@
 						</tr>
 						<tr>
 							<td><h:outputText value="Descripción:  " /></td>
-							<td><p:inputText id="txtDescripcion" required="true" requiredMessage="Ingrese la descripción"
+							<td><p:inputText id="txtDescripcion"
 									value="#{estudioMB.estudio.desEstudio}" maxlength="50" /></td>
 						</tr>
 						<tr>
 							<td><h:outputText value="Costo:  " /></td>
-							<td><p:inputText id="txtCosto" 	validatorMessage="Especifique el costo entre 1 y 999,999.99"
+							<td><p:inputText id="txtCosto" 	
 							onkeypress="return soloRealesMiles(event, this);"
 									onblur="addCommas(this,'costo');"
 									value="#{estudioMB.estudio.costo}" maxlength="10">
 									<f:convertNumber pattern="#,###,##0.00" locale="en" />
-									<f:validateDoubleRange minimum="1.00" maximum="999999.99"></f:validateDoubleRange>
+									
 								</p:inputText></td>
 							<h:inputHidden id="costo"  value="#{estudioMB.estudio.costo}" />
 						</tr>
