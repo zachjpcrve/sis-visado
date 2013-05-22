@@ -55,7 +55,9 @@ public class RespNivelAprobacionMB {
 	private List<TiivsMiembroNivel> list;
 	private String codRegistro;
 	private List<TiivsMiembro> miembros;
-
+	
+	private boolean botonAgregar;
+	
 	private boolean validarCodRegistro;
 	private String iniciar;
 	private TiivsMiembroNivel miembroNivel;
@@ -84,6 +86,7 @@ public class RespNivelAprobacionMB {
 		grupos = new ArrayList<GrupoDto>();
 		niveles = new ArrayList<NivelDto>();
 		respNiveles = new ArrayList<MiembroNivelDTO>();
+		botonAgregar = true;
 		cargarCombos();
 		limpiar = false;	
 	}
@@ -496,6 +499,7 @@ public class RespNivelAprobacionMB {
 		}else{
 			Utilitarios.mensajeInfo("Info", "La Persona ya tiene rol de Delegado, no puede ser Responsable del mismo Nivel");
 		}
+		botonAgregar=true;
 	}
 	//@Autor Samira
 	public void editarRespNivelAprob(){
@@ -537,12 +541,14 @@ public class RespNivelAprobacionMB {
 					miembroNivelDto.setDescripcion(miembros.get(0).getDescripcion());
 					miembroNivelDto.setDesGrupo(miembros.get(0).getTiivsGrupo().getDesGrupo());
 					listarNivelesPorResponsable(miembroNivelDto.getRegistro().toUpperCase());
+					botonAgregar =true;
 					}else{
 						logger.info("En el else... No es Delegado");
 						miembroNivelDto.setDescripcion(miembros.get(0).getDescripcion());
 						miembroNivelDto.setDesGrupo(miembros.get(0).getTiivsGrupo().getDesGrupo());
 						validarCodRegistro = true;
 						listarNivelesPorResponsable(miembroNivelDto.getRegistro().toUpperCase());
+						botonAgregar = false;
 					}
 				}else {
 					Utilitarios.mensajeInfo("Info","No se encuentra Registrado el código del Responsable");
@@ -550,6 +556,7 @@ public class RespNivelAprobacionMB {
 					miembroNivelDto.setDesGrupo("");
 					respNiveles=new ArrayList<MiembroNivelDTO>();
 					validarCodRegistro = false;
+					botonAgregar =  true;
 				}
 				}else{
 					Utilitarios.mensajeInfo("Info", "Seleccione un Nivel");
@@ -1046,6 +1053,14 @@ public class RespNivelAprobacionMB {
 
 	public void setMiembroCapturado_Edit(MiembroNivelDTO miembroCapturado_Edit) {
 		this.miembroCapturado_Edit = miembroCapturado_Edit;
+	}
+
+	public boolean isBotonAgregar() {
+		return botonAgregar;
+	}
+
+	public void setBotonAgregar(boolean botonAgregar) {
+		this.botonAgregar = botonAgregar;
 	}
 
 	
