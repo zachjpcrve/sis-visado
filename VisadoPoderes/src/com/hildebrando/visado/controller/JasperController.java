@@ -451,6 +451,9 @@ public class JasperController {
 			if(lstHist.size()>0){
 				sInstrucciones = lstHist.get(0).getObs();
 			}
+			if(sInstrucciones==null){
+				sInstrucciones="";
+			}
 		} catch (Exception e) {
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT + "al obtener Historial",e);
 		}
