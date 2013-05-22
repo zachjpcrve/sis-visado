@@ -50,9 +50,24 @@ public class EstudioMB {
 					+ e.getLocalizedMessage());
 		}
 	}
-
+public boolean validarEstudio(){
+	boolean retorno =true;
+	String mensaje ="";
+	if(this.estudio.getCosto()==0||this.estudio.getCosto()>999999.99){
+		mensaje="Especifique el costo entre 1 y 999,999.99";
+		retorno =false;
+		Utilitarios.mensaje(mensaje, "");		
+	}
+	if(this.estudio.getDesEstudio()==null||this.estudio.getDesEstudio().equals("")){
+		mensaje="Ingrese la descripción";
+		retorno =false;
+		Utilitarios.mensaje(mensaje, "");	
+	}
+	return retorno;
+}
 	public void registrar() {
 		logger.info("EstudioMB : registrar");
+		if(this.validarEstudio()){
 		try {
 			if (estudio.getDesEstudio().isEmpty() == false) {
 				if(estudio.getCosto() >= 0.0){
@@ -93,6 +108,7 @@ public class EstudioMB {
 			logger.error("EstudioMB : registrar " + e.getLocalizedMessage());
 			Utilitarios.mensajeError("Error",
 					"Error al registrar el Tipo de Clasificación");
+		}
 		}
 	}
 	
