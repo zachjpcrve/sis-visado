@@ -217,15 +217,15 @@
 				<text><![CDATA[Estadoo]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement key="table 7" style="table 7" x="0" y="23" width="555" height="32" forecolor="#000000"/>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+				<reportElement key="table 7" x="0" y="23" width="555" height="32" forecolor="#000000"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
 					<datasetRun subDataset="Table Dataset 1">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{lstPersonas})]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="76">
+					<jr:column width="65">
 						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="75" height="30" forecolor="#003399"/>
+								<reportElement x="0" y="0" width="65" height="30" forecolor="#003399"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -241,7 +241,7 @@
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="75" height="20"/>
+								<reportElement x="0" y="0" width="65" height="20"/>
 								<textElement>
 									<font size="8"/>
 								</textElement>
@@ -249,10 +249,10 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="179">
+					<jr:column width="171">
 						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="179" height="30" forecolor="#003399"/>
+								<reportElement x="0" y="0" width="170" height="30" forecolor="#003399"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -268,14 +268,14 @@
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
 							<textField>
-								<reportElement x="0" y="0" width="42" height="20"/>
+								<reportElement x="0" y="0" width="31" height="20"/>
 								<textElement>
 									<font size="8"/>
 								</textElement>
 								<textFieldExpression class="java.lang.String"><![CDATA[($F{codCen}!=null?$F{codCen}:" ") + " "]]></textFieldExpression>
 							</textField>
 							<textField>
-								<reportElement x="42" y="0" width="137" height="20"/>
+								<reportElement x="31" y="0" width="139" height="20"/>
 								<textElement>
 									<font size="8"/>
 								</textElement>
@@ -283,10 +283,10 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="69">
+					<jr:column width="82" >
 						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="69" height="30" forecolor="#003399"/>
+								<reportElement x="0" y="0" width="82" height="30" forecolor="#003399"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -302,7 +302,7 @@
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="69" height="20"/>
+								<reportElement x="0" y="0" width="82" height="20"/>
 								<textElement>
 									<font size="8"/>
 								</textElement>
@@ -310,10 +310,10 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="64">
+					<jr:column width="77" >
 						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="63" height="30" forecolor="#003399"/>
+								<reportElement x="0" y="0" width="77" height="30" forecolor="#003399"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -329,18 +329,19 @@
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="63" height="20"/>
+								<reportElement x="0" y="0" width="77" height="20"/>
 								<textElement>
 									<font size="8"/>
+									<paragraph leftIndent="5"/>
 								</textElement>
 								<textFieldExpression class="java.lang.String"><![CDATA[$F{sDescclasifPer}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="57">
+					<jr:column width="64">
 						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="57" height="30" forecolor="#003399"/>
+								<reportElement x="0" y="0" width="64" height="30" forecolor="#003399"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -356,7 +357,7 @@
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="57" height="20"/>
+								<reportElement x="0" y="0" width="64" height="20"/>
 								<textElement>
 									<font size="8"/>
 								</textElement>
@@ -364,10 +365,10 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="72">
+					<jr:column width="75">
 						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="71" height="30" forecolor="#003399"/>
+								<reportElement x="0" y="0" width="75" height="30" forecolor="#003399"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -383,7 +384,7 @@
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="71" height="20"/>
+								<reportElement x="0" y="0" width="75" height="20"/>
 								<textElement>
 									<font size="8"/>
 								</textElement>
