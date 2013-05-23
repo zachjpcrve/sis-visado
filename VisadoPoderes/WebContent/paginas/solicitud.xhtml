@@ -833,6 +833,7 @@
 						</tbody>
 					</table>
 					<p:separator styleClass="fielset" />
+					<h:inputHidden id="inputHidden" value="#{solicitudRegMB.patter}"></h:inputHidden>
 					<p:panel header="Búsqueda">
 						<h:panelGrid columns="12" id="gridApodPodEd" cellspacing="0" cellpadding="2">
 								<h:outputText id="outTipoDoi" value="T. DOI/C Central*:  " style="color:red" />
@@ -840,7 +841,7 @@
 									value="#{solicitudRegMB.objTiivsPersonaBusqueda.tipDoi}"
 									valueChangeListener="#{solicitudRegMB.cambiarRazonSocial}"																	
 									style="width:150px;">										 
-									<p:ajax  update=":formRegistrar:pnlNuevo" event="change" />								
+									<p:ajax  update=":formRegistrar:pnlNuevo, :formRegistrar:inputHidden" event="change" />								
 									<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 									<f:selectItems
 										value="#{solicitudRegMB.combosMB.lstTipoDocumentos}" var="lOf"
@@ -856,8 +857,8 @@
 									size="12"
 									value="#{solicitudRegMB.objTiivsPersonaBusqueda.numDoi}"
 									maxlength="12"
-									onclick="return validaNumero(event,'0',this,'0');"
-									onblur="validaNumero(event,'0',this,'1');" />
+									onkeypress="return validaNumeroPorTipoDoi(event,'0',this,'0');"
+									onblur="validaNumeroPorTipoDoi(event,'0',this,'1');" />
 								<p:graphicImage value="/resources/images/pregunta.jpg"
 									id="toolcboDoi" />
 								<p:tooltip for="toolcboDoi"
@@ -873,13 +874,13 @@
 					<p:panel id="pnlNuevo" header="Nuevo Registro">
 				
 						<h:panelGrid columns="8" id="gridApodPodEd2" cellspacing="0" cellpadding="2">
-						<h:inputHidden id="inputHidden" value="#{solicitudRegMB.patter}"></h:inputHidden>
+						
 							<h:outputText id="outTipoDoi2" value="T. DOI/C *:" style="color:red"/>
 							<p:selectOneMenu id="cboTipoDoi2"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.tipDoi}"
 								valueChangeListener="#{solicitudRegMB.cambiarRazonSocial}"
 								style="width:150px;">
-								<p:ajax  update=":formRegistrar:pnlNuevo" event="change" />
+								<p:ajax  update=":formRegistrar:pnlNuevo,:formRegistrar:inputHidden" event="change" />
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 								<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="lOf"
 									itemValue="#{lOf.codTipoDoc}" itemLabel="#{lOf.descripcion}" />
