@@ -873,6 +873,7 @@
 					<p:panel id="pnlNuevo" header="Nuevo Registro">
 				
 						<h:panelGrid columns="8" id="gridApodPodEd2" cellspacing="0" cellpadding="2">
+						<h:inputHidden id="inputHidden" value="#{solicitudRegMB.patter}"></h:inputHidden>
 							<h:outputText id="outTipoDoi2" value="T. DOI/C *:" style="color:red"/>
 							<p:selectOneMenu id="cboTipoDoi2"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.tipDoi}"
