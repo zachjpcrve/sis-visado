@@ -785,7 +785,9 @@
 						<h:outputText id="outTipoDoi" value="T DOI/C Central * :  " style="color:red" />
 						<p:selectOneMenu id="cboTipoDoi"
 							value="#{consultarSolicitudMB.objTiivsPersonaBusqueda.tipDoi}"
+							valueChangeListener="#{consultarSolicitudMB.cambiarRazonSocial}"
 							style="width:150px;">
+							<p:ajax  update=":formRegistrar:pnlNuevo" event="change" />
 							<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 							<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="lOf"
 								itemValue="#{lOf.codTipoDoc}" itemLabel="#{lOf.descripcion}" />
@@ -815,9 +817,14 @@
 			<p:panel id="pnlNuevo" header="Nuevo Registro">
 				<h:panelGrid columns="8" id="gridApodPodEd2" cellspacing="0" cellpadding="2" >				
 					<h:outputText  id="outTipoDoi2" value="T DOI/C *:" style="color:red"  />					
-					<p:selectOneMenu id="cboTipoDoi2" value="#{consultarSolicitudMB.objTiivsPersonaResultado.tipDoi}" style="width:150px;">
-					       <f:selectItem itemLabel="-Seleccione-" itemValue="" />
-					       <f:selectItems value="#{combosMB.lstTipoDocumentos}" var="lOf" itemValue="#{lOf.codTipoDoc}" itemLabel="#{lOf.descripcion}" />
+					<p:selectOneMenu id="cboTipoDoi2" 
+						value="#{consultarSolicitudMB.objTiivsPersonaResultado.tipDoi}"
+						valueChangeListener="#{consultarSolicitudMB.cambiarRazonSocial}" 
+						style="width:150px;">
+						<p:ajax  update=":formRegistrar:pnlNuevo" event="change" />
+					    <f:selectItem itemLabel="-Seleccione-" itemValue="" />
+					    <f:selectItems value="#{combosMB.lstTipoDocumentos}" var="lOf" 
+					    	itemValue="#{lOf.codTipoDoc}" itemLabel="#{lOf.descripcion}" />
 					</p:selectOneMenu>
 					<p:graphicImage value="/resources/images/pregunta.jpg" id="toolcboTipoDoi2" />
 					<p:tooltip for="toolcboTipoDoi2" value="Tipo DOI/Código Central" showEffect="slide" />
@@ -830,7 +837,7 @@
 					<p:tooltip for="tooltxtNumDoiBusqueda" value="Número de Identidad" showEffect="slide" />				
 				</h:panelGrid>
 				
-				<h:panelGrid columns="20">
+				<h:panelGrid columns="8">
 
 					<h:outputText id="outCodCentral" value="Código Central:" />
 					<h:inputText styleClass="inputTextPopup" id="txtCodCentral"
@@ -842,33 +849,44 @@
 						id="tooltxtCodCentral" />
 					<p:tooltip for="tooltxtCodCentral" value="Código Central"
 						showEffect="slide" />
-
-					<h:outputText id="outApPaterno" value="Ap.Paterno:" />
-					<h:inputText styleClass="inputTextPopup" id="txtApellidoPaterno"
-						size="30"
-						value="#{consultarSolicitudMB.objTiivsPersonaResultado.apePat}" />
-					<p:graphicImage value="/resources/images/pregunta.jpg"
-						id="tooltxtApellidoPaterno" />
-					<p:tooltip for="tooltxtApellidoPaterno" value="Ap.Paterno"
-						showEffect="slide" />
-
-
-					<h:outputText id="outApMaterno" value="Ap.Materno:" />
-					<h:inputText styleClass="inputTextPopup" id="txtApellidoMaterno"
-						size="30"
-						value="#{consultarSolicitudMB.objTiivsPersonaResultado.apeMat}" />
-					<p:graphicImage value="/resources/images/pregunta.jpg"
-						id="tooltxtApellidoMaterno" />
-					<p:tooltip for="tooltxtApellidoMaterno" value="Ap.Materno"
-						showEffect="slide" />
-					<h:outputText id="outNombres" value="Nombres:" />
-					<h:inputText styleClass="inputTextPopup" id="txtNombres"
-						size="17"
-						value="#{consultarSolicitudMB.objTiivsPersonaResultado.nombre}" />
-					<p:graphicImage value="/resources/images/pregunta.jpg"
-						id="tooltxtNombres" />
-					<p:tooltip for="tooltxtNombres" value="Nombres"
-						showEffect="slide" />
+					
+					<p:outputPanel id="pnlNomPersona" rendered="#{!consultarSolicitudMB.mostrarRazonSocial}">
+						<h:outputText id="outApPaterno" value="Ap.Paterno:" />
+						<h:inputText styleClass="inputTextPopup" id="txtApellidoPaterno"
+							size="30"
+							value="#{consultarSolicitudMB.objTiivsPersonaResultado.apePat}" />
+						<p:graphicImage value="/resources/images/pregunta.jpg"
+							id="tooltxtApellidoPaterno" />
+						<p:tooltip for="tooltxtApellidoPaterno" value="Ap.Paterno"
+							showEffect="slide" />
+						<h:outputText id="outApMaterno" value="Ap.Materno:" />
+						<h:inputText styleClass="inputTextPopup" id="txtApellidoMaterno"
+							size="30"
+							value="#{consultarSolicitudMB.objTiivsPersonaResultado.apeMat}" />
+						<p:graphicImage value="/resources/images/pregunta.jpg"
+							id="tooltxtApellidoMaterno" />
+						<p:tooltip for="tooltxtApellidoMaterno" value="Ap.Materno"
+							showEffect="slide" />
+						<h:outputText id="outNombres" value="Nombres:" />
+						<h:inputText styleClass="inputTextPopup" id="txtNombres"
+							size="17"
+							value="#{consultarSolicitudMB.objTiivsPersonaResultado.nombre}" />
+						<p:graphicImage value="/resources/images/pregunta.jpg"
+							id="tooltxtNombres" />
+						<p:tooltip for="tooltxtNombres" value="Nombres"
+							showEffect="slide" />					
+					</p:outputPanel>
+					
+					<p:outputPanel id="pnlRazonSocial" rendered="#{consultarSolicitudMB.mostrarRazonSocial}">
+						<h:outputText id="outRazonSocial" value="Razón Social:" />
+						<h:inputText styleClass="inputTextPopup" id="txtRazonSocial"
+							size="70" maxlength="500"
+							value="#{consultarSolicitudMB.objTiivsPersonaResultado.apePat}" />
+						<p:graphicImage value="/resources/images/pregunta.jpg"
+							id="tooltxtRazonSocial" />
+						<p:tooltip for="tooltxtRazonSocial" value="Razón Social"
+							showEffect="slide" />
+					</p:outputPanel>
 
 				</h:panelGrid>
 
