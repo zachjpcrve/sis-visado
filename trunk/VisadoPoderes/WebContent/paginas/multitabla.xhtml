@@ -1,0 +1,180 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml"
+	contentType="text/html; charset=ISO-8859-1">
+	<ui:define name="contenido">
+		
+		<h:form id="frmDataTableMulti">
+			<p:outputPanel id="pnlDataTableMulti">
+				<!-- <p:messages id="idMsmRegistro"></p:messages> -->
+				<p:growl id="idMsmRegistro" sticky="true" />
+				<p:panel header="Multi-Tabla" style="width: 85%">
+					<table>
+						<tr>
+							<td><h:outputText id="lblCodTabla" value="Código Tabla: " /></td>
+							<td><p:selectOneMenu id="cboTabla"
+									value="#{multiMB.codigoMultiTabla}">
+									<f:selectItem itemLabel="--Todos--" itemValue="" />
+									<f:selectItems value="#{multiMB.filtroTablas}"></f:selectItems>
+
+								</p:selectOneMenu></td>
+						</tr>
+						
+						<tr>
+							<td><p:commandButton id="buscar" value="Buscar" ajax="true"
+									action="#{multiMB.listarMultiTabla}"
+									update=":frmDataTableMulti:pnlDataTableMulti">
+								</p:commandButton></td>
+							<td><p:commandButton id="nuevo" value="Nuevo" ajax="true"									
+									actionListener="#{multiMB.nuevaMultiTabla}"
+									update=":frmRegistroMulti:pnlGridRegistro"
+									onclick="dlgModalRegistro.show();">
+								</p:commandButton></td>
+						</tr>
+
+					</table>
+					<p:dataTable id="dtbMulti" value="#{multiMB.multiTablas}"
+						var="mult" paginator="true" rows="10" paginatorPosition="bottom"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+						currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords}"
+						emptyMessage="No hay registros">
+
+						<p:column headerText="Cod. Mult">
+							<h:outputText value="#{mult.id.codMult}" />
+						</p:column>
+						
+						<p:column headerText="Cod. Elem">
+							<h:outputText value="#{mult.id.codElem}" />
+						</p:column> 
+						
+						<p:column headerText="Valor 1">
+							<h:outputText value="#{mult.valor1}" />
+						</p:column>
+						<p:column headerText="Valor 2">
+							<h:outputText value="#{mult.valor2}" />
+						</p:column>
+						<p:column headerText="Valor 3">
+							<h:outputText value="#{mult.valor3}" />
+						</p:column>
+						<p:column headerText="Valor 4">
+							<h:outputText value="#{mult.valor4}" />
+						</p:column>
+						<p:column headerText="Valor 5">
+							<h:outputText value="#{mult.valor5}" />
+						</p:column>
+						<p:column headerText="Valor 6">
+							<h:outputText value="#{mult.valor6}" />
+						</p:column>
+						<p:column headerText="Valor 7">
+							<h:outputText value="#{mult.valor7}" />
+						</p:column>
+						<p:column headerText="Acción">
+							<p:commandLink id="clinkEditar" ajax="true"								
+								actionListener="#{multiMB.editarMultiTabla}"
+								update=":frmRegistroMulti:pnlGridRegistro"
+								onclick="dlgModalRegistro.show();">
+								<f:param name="codMult" value="#{mult.id.codMult}"></f:param>
+								<f:param name="codElem" value="#{mult.id.codElem}"></f:param>
+								<h:outputText value="Editar" />
+							</p:commandLink>
+						</p:column>
+						<p:column headerText="Eliminar">
+							<!-- <p:commandLink id="clinkEliminar" ajax="true"
+								update=":frmDataTableMulti:pnlDataTableMulti" 
+								actionListener="{multiMB.eliminarMultiTabla}">
+								<f:param name="codMult" value="#{mult.id.codMult}"></f:param>
+								<f:param name="codElem" value="#{mult.id.codElem}"></f:param>
+								<h:outputText value="Eliminar" />
+							</p:commandLink> -->
+							<p:commandLink id="clinkEliminar" ajax="true"								
+								actionListener="#{multiMB.seleccionarMultiTabla}" oncomplete="confirmation.show();">
+								<f:param name="codMult" value="#{mult.id.codMult}"></f:param>
+								<f:param name="codElem" value="#{mult.id.codElem}"></f:param>
+								<h:outputText value="Eliminar" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</p:outputPanel>
+			
+		
+			
+		</h:form>
+		<!--Fin Data Table Oficina -->
+	
+		<p:confirmDialog id="confirmDialog" message="¿Está seguro de eliminar registro?"
+			header="Confirmación" severity="alert" widgetVar="confirmation">
+
+			<h:form id="formRegistroConfirmDialog">
+				<center>
+					<p:commandButton id="confirm" value="Si" ajax="true"
+									update=":frmDataTableMulti:pnlDataTableMulti" 
+									actionListener="#{multiMB.eliminarMultiTabla}"
+									oncomplete="confirmation.hide();">								
+					</p:commandButton>				
+					<p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+				</center>
+			</h:form>
+		</p:confirmDialog>
+		
+		<h:form id="frmRegistroMulti">
+			<p:outputPanel id="pnlRegistro">
+				<p:dialog id="modalRegistro" header="Actualización de Multi-Tabla"					
+					widgetVar="dlgModalRegistro" modal="true" height="350" width="400">					
+
+					<p:panelGrid id="pnlGridRegistro" columns="2" cellspacing="0" cellpadding="2">
+					
+						<h:outputText id="outCodMult" value="Cod. Mult.:  " />				
+						<h:inputText id="inpCodMult" value="#{multiMB.multiTabla.id.codMult}" disabled="#{multiMB.flagEditar}" size="50" maxlength="3" />
+						
+						<h:outputText id="outCodElem" value="Cod. Elem.:  " />				
+						<h:inputText id="inpCodElem" value="#{multiMB.multiTabla.id.codElem}" disabled="#{multiMB.flagEditar}" size="50" maxlength="4" />
+						
+						<h:outputText id="outValor1" value="Valor 1:  " />				
+						<h:inputText id="inpValor1" value="#{multiMB.multiTabla.valor1}" size="50" />
+						
+						<h:outputText id="outValor2" value="Valor 2:  " />				
+						<h:inputText id="inpValor2" value="#{multiMB.multiTabla.valor2}" size="50" />
+						
+						<h:outputText id="outValor3" value="Valor 3:  " />				
+						<h:inputText id="inpValor3" value="#{multiMB.multiTabla.valor3}" size="50" />
+						
+						<h:outputText id="outValor4" value="Valor 4:  " />				
+						<h:inputText id="inpValor4" value="#{multiMB.multiTabla.valor4}" size="50" />
+						
+						<h:outputText id="outValor5" value="Valor 5:  " />				
+						<h:inputText id="inpValor5" value="#{multiMB.multiTabla.valor5}" size="50"  />
+						
+						<h:outputText id="outValor6" value="Valor 6:  " />				
+						<h:inputText id="inpValor6" value="#{multiMB.multiTabla.valor6}" size="50" />
+						
+						<h:outputText id="outValor7" value="Valor 7:  " />				
+						<h:inputText id="inpValor7" value="#{multiMB.multiTabla.valor7}" size="50"/>
+						
+					
+					</p:panelGrid>
+					
+					<!-- <p:panelGrid id="pnlGridRegistroBtn" columns="2" cellspacing="0" cellpadding="2"> -->
+						<center>
+							<p:commandButton value="Guardar" id="btnGuardar" action="#{multiMB.registrar}" update=":frmDataTableMulti:pnlDataTableMulti" oncomplete="dlgModalRegistro.hide();" />
+							<p:commandButton value="Cancelar" id="btnCancelar" onclick="dlgModalRegistro.hide();" />
+						</center>
+					<!-- </p:panelGrid> -->
+
+				</p:dialog>
+			</p:outputPanel>
+		</h:form>
+		
+		
+		
+	</ui:define>
+</ui:composition>
+
+</html>
