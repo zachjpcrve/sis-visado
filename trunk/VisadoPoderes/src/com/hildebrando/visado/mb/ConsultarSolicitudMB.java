@@ -69,6 +69,7 @@ import com.hildebrando.visado.modelo.TiivsSolicitudOperbanId;
 import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
 import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
 import com.hildebrando.visado.service.NivelService;
+import com.hildebrando.visado.service.TiposDoiService;
 
 @ManagedBean(name = "consultarSolicitudMB")
 @SessionScoped
@@ -183,6 +184,8 @@ public class ConsultarSolicitudMB {
 	private TiivsAgrupacionPersona tiivsAgrupacionPersonaCapturado;
 	private String redirect = "";
 	private String mesajeConfirmacion = "";
+	private boolean mostrarRazonSocial = false;
+	private String codigoRazonSocial = "0000";
 	
 	public ConsultarSolicitudMB() {		
 		inicializarContructor();
@@ -204,6 +207,7 @@ public class ConsultarSolicitudMB {
 			setFlagMostrarACOficina(true);
 		}
 		estilosNavegador=new EstilosNavegador();
+		obtenCodRazonSocial();
 	}
 	
 	/*
@@ -4019,6 +4023,14 @@ public class ConsultarSolicitudMB {
 		this.objTiivsPersonaResultado.setCodPer(this.objTiivsPersonaCapturado.getCodPer());
 		this.objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
 		this.flagUpdatePersona = true;
+		
+		if(objTiivsPersonaCapturado.getTipDoi()!=null){ 
+			if(objTiivsPersonaCapturado.getTipDoi().equals(this.codigoRazonSocial)){ //CODIGO RAZON SOCIAL
+				this.mostrarRazonSocial = true;
+			} else {
+				this.mostrarRazonSocial = false;
+			}
+		}
 	}
 
 	public void eliminarPersona() {
@@ -4192,12 +4204,25 @@ public class ConsultarSolicitudMB {
 				bResult=validarTipoDocumentos();
 				}
 		}
-		if (objTiivsPersonaResultado.getNombre() == null
-				|| objTiivsPersonaResultado.getNombre().equals("")) {
-			sMensaje = "Ingrese el Nombre";
-			bResult = false;
-			Utilitarios.mensajeInfo("INFO", sMensaje);
+		
+		if(objTiivsPersonaResultado.getTipDoi()!=null && !objTiivsPersonaResultado.getTipDoi().equals(this.codigoRazonSocial)){ //CODIGO RAZONSOCIAL
+			if (objTiivsPersonaResultado.getNombre() == null
+					|| objTiivsPersonaResultado.getNombre().equals("")) {
+				sMensaje = "Ingrese el Nombre";
+				bResult = false;
+				Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
 		}
+		
+		if(objTiivsPersonaResultado.getTipDoi()!=null && objTiivsPersonaResultado.getTipDoi().equals(this.codigoRazonSocial)){ //CODIGO RAZONSOCIAL
+			if (objTiivsPersonaResultado.getApePat() == null
+					|| objTiivsPersonaResultado.getApePat().equals("")) {
+				sMensaje = "Ingrese la Razón Social";
+				bResult = false;
+				Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}
+		
 		if(!objTiivsPersonaResultado.getCodCen().isEmpty()){
 		if(objTiivsPersonaResultado.getCodCen().length()!=8){
 			sMensaje = "El código central debe ser de 8 caracteres";
@@ -4404,6 +4429,7 @@ public class ConsultarSolicitudMB {
 				objTiivsPersonaSeleccionado = new TiivsPersona();
 				lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
 				this.tiivsAgrupacionPersonaCapturado = null;
+				this.mostrarRazonSocial = false;//mostrar campo datos de cliente
 			}
 
 		}
@@ -5172,6 +5198,25 @@ public class ConsultarSolicitudMB {
 		logger.info("**************************** limpiar Comentario ****************************");
 		 this.solicitudRegistrarT.setObs("");
 	}
+	
+	public void cambiarRazonSocial(ValueChangeEvent e){		
+		
+		String codTipoDocumento = (String) e.getNewValue();
+		if (codTipoDocumento!=null && codTipoDocumento.equals(this.codigoRazonSocial)) {//CODIGO RAZONSOCIAL
+			this.mostrarRazonSocial = true;
+			objTiivsPersonaResultado.setTipDoi(this.codigoRazonSocial);
+			objTiivsPersonaResultado.setApeMat("");
+			objTiivsPersonaResultado.setNombre("");
+		} else {
+			this.mostrarRazonSocial = false;
+			objTiivsPersonaResultado.setTipDoi("");
+		}	
+	}
+	
+	private void obtenCodRazonSocial() {					
+		TiposDoiService tiposDoiService = new TiposDoiService(); 			
+		codigoRazonSocial = tiposDoiService.obtenerCodPersonaJuridica();
+	}
 
 	public CombosMB getCombosMB() {
 		return combosMB;
@@ -5789,4 +5834,13 @@ public class ConsultarSolicitudMB {
 	public void setRedirect(String redirect) {
 		this.redirect = redirect;
 	}
+
+	public boolean isMostrarRazonSocial() {
+		return mostrarRazonSocial;
+	}
+
+	public void setMostrarRazonSocial(boolean mostrarRazonSocial) {
+		this.mostrarRazonSocial = mostrarRazonSocial;
+	}
+	
 }
