@@ -86,7 +86,7 @@ public class ConsultarSolicitudMB {
 	private PDFViewerMB pdfViewerMB;
 	@ManagedProperty(value = "#{visadoDocumentosMB}")
 	private VisadoDocumentosMB visadoDocumentosMB;
-
+	private String patter;
 	EstilosNavegador estilosNavegador;
 	private TiivsSolicitud solicitudRegistrarT;
 	private TiivsSolicitud solicitudRegistrarTCopia;
@@ -5211,6 +5211,25 @@ public class ConsultarSolicitudMB {
 			this.mostrarRazonSocial = false;
 			objTiivsPersonaResultado.setTipDoi("");
 		}	
+		
+		this.obterPatterDelTipoDocumento(codTipoDocumento);
+	}
+	@SuppressWarnings("unchecked")
+	private void obterPatterDelTipoDocumento(String codTipoDocumento){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC));
+		filtroMultitabla.add(Restrictions.eq("id.codElem",codTipoDocumento));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			 patter=listaMultiTabla.get(0).getValor4();
+			logger.info("patter : "+patter);
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas: " + e);
+		}
+		
+		
 	}
 	
 	private void obtenCodRazonSocial() {					
@@ -5841,6 +5860,14 @@ public class ConsultarSolicitudMB {
 
 	public void setMostrarRazonSocial(boolean mostrarRazonSocial) {
 		this.mostrarRazonSocial = mostrarRazonSocial;
+	}
+
+	public String getPatter() {
+		return this.patter;
+	}
+
+	public void setPatter(String patter) {
+		this.patter = patter;
 	}
 	
 }
