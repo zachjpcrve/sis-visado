@@ -63,6 +63,7 @@ import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperbanId;
 import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
 import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
+import com.hildebrando.visado.service.TiposDoiService;
 
 @ManagedBean(name = "solicitudRegMB")
 @SessionScoped
@@ -1610,9 +1611,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		lstTiivsPersona = new ArrayList<TiivsPersona>();
 		oficina = new TiivsOficina1();
 		
-		codigoRazonSocial = obtenCodRazonSocial(); 
+		obtenCodRazonSocial(); 
 
-		// }
 
 		return "/faces/paginas/solicitud.xhtml";
 	}	
@@ -3093,7 +3093,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}		
 	
 	public void cambiarRazonSocial(ValueChangeEvent e){		
-		
+		logger.info("************cambiarRazonSocial()*¨**************");
 		String codTipoDocumento = (String) e.getNewValue();
 		if (codTipoDocumento!=null && codTipoDocumento.equals(this.codigoRazonSocial)) {//CODIGO RAZONSOCIAL
 			this.mostrarRazonSocial = true;
@@ -3106,36 +3106,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}	
 	}
 	
-	private String obtenCodRazonSocial() {
-
-		String sCodRazSocial = "";
-
-		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
-
-		filtroMultitabla.add(Restrictions.eq("id.codMult",
-				ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC));
-
-		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
-
-		try {
-			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
-		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA
-					+ "de multitablas: " + e);
-		}
-
-		for (TiivsMultitabla multi : listaMultiTabla) {
-			if (multi.getValor2() != null && multi.getValor2().equals("1")) {
-				if (multi.getValor6() != null && multi.getValor6().equals("1")) {
-					sCodRazSocial = multi.getId().getCodElem();
-					break;
-				}
-			}
-
-		}
-		return sCodRazSocial;
+	private void obtenCodRazonSocial() {
+		TiposDoiService tiposDoiService = new TiposDoiService(); 			
+		codigoRazonSocial = tiposDoiService.obtenerCodPersonaJuridica();
 	}
 
 	public List<TiivsMultitabla> getLstMultitabla() {
