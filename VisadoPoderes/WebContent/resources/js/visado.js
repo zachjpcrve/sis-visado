@@ -87,6 +87,7 @@ function validaNumeroPorTipoDoi(e, ent, obj, fn) {
 
 		//document.getElementById("formRegistrar:cboTipoDoi2_input").value;
 	var txtCodigo= document.getElementById("formRegistrar:inputHidden").value;
+	//alert('txtCodigo ' +txtCodigo);
 	//Se captura la tecla presionada             
 	var tecla = (document.all) ? e.keyCode : e.which;
 	var patron;
