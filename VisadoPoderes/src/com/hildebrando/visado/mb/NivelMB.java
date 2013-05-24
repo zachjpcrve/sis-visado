@@ -282,7 +282,7 @@ public class NivelMB {
 		
 			}else{
 			retorno=false;
-			Utilitarios.mensajeError("Error","El rango fin no puede ser 0, ingrese rangos validos");
+			Utilitarios.mensajeError("Error","El rango fin no puede ser 0, ingrese rangos válidos");
 			break;
 		     }
 		}
