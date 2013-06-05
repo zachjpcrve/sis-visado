@@ -77,7 +77,7 @@ public class VisadoDocumentosMB {
 			lstParametros = paramDAO.buscarDinamico(filtroParam);
 
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de parametros: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de parametros: " + e);
 		}
 		
 		if(lstParametros!=null){
