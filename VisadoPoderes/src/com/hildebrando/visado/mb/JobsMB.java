@@ -44,6 +44,8 @@ public class JobsMB {
 	private static ConsultarSolicitudMB consultarMB;
 	public static Logger logger = Logger.getLogger(JobsMB.class);
 	
+	
+	
 	public static void cargarFeriados() {
 		try {
 
