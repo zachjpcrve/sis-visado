@@ -351,7 +351,7 @@ public class CombosMB{
 		try {
 			tmpLista = solicitudService.traerEstadosFlujoSolicitud();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de EstadosFlujoSolicitud: "+e);
 		}
 		
 		int j = 0;
@@ -375,8 +375,10 @@ public class CombosMB{
 		}
 		
 		estados = sortByComparator(tmpEstados);
-						
-		logger.debug("Lista final de estados:" + estados.size());
+		if(estados!=null){
+			logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"EstadosFlujoSolicitud es:"+estados.size());
+		}		
+		
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
