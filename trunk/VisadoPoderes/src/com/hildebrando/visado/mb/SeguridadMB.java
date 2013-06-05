@@ -277,7 +277,7 @@ public class SeguridadMB {
         	
         	if(ListaMiembros.size()>0){
         		logger.debug(ConstantesVisado.SEGURIDAD.USER_ACCESO_OK);
-        		response.sendRedirect("./bienvenido.xhtml");
+        		response.sendRedirect("./paginas/bienvenido.xhtml");
         	}else{
             	request.getSession().setAttribute("strMensaje",ConstantesVisado.SEGURIDAD.USER_NO_REGISTR);
             	response.sendRedirect("./sinAcceso.jsp");
