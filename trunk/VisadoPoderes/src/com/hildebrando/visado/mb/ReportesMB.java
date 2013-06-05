@@ -196,7 +196,7 @@ public class ReportesMB {
 		
 		if (getAnio() == 0) 
 		{
-			sAnio = "2013";
+			sAnio = "2013"; //TODO Cambiar este dato en el archivo properties
 			setTextoAnioMes(Utilitarios.buscarMesxCodigo(getMes()) + ConstantesVisado.ESPACIO_BLANCO + sAnio);
 		} 
 		else 
@@ -238,7 +238,7 @@ public class ReportesMB {
 					+ usuario.getApellido1() + ConstantesVisado.ESPACIO_BLANCO
 					+ usuario.getApellido2();
 		} else {
-			logger.debug("Error al obtener datos del usuario de session para mostrar en el excel");
+			logger.error("Error al obtener datos del usuario de session para mostrar en el excel");
 		}
 		return resultado;
 	}
@@ -321,12 +321,12 @@ public class ReportesMB {
 		boolean retorno = true;
 		
 		if(getAnio()==0){
-			mensaje="Ingrese Año valido";
+			mensaje="Ingrese Año válido";
 			Utilitarios.mensaje(mensaje, "");
 			retorno=false;
 		}
 		if(getMes()==0){
-			mensaje="Ingrese mes valido";
+			mensaje="Ingrese mes válido";
 			Utilitarios.mensaje(mensaje, "");
 			retorno=false;
 		}
@@ -520,7 +520,7 @@ public class ReportesMB {
 				combosMB.setLstOficina1(ofiDAO.buscarDinamico(filtroOfic1));
 
 			} catch (Exception exp) {
-				logger.debug("No se pudo encontrar la oficina");
+				logger.error("No se pudo encontrar la oficina");
 			}
 
 			if (lstTmp.size() > 0) {
@@ -4448,7 +4448,7 @@ public class ReportesMB {
 		try {
 			tmpLista = solicDAO.buscarDinamico(filtro);
 		} catch (Exception ex) {
-			logger.debug("Error al buscar los tipos de comision: " + ex.getMessage());
+			logger.error("Error al buscar los tipos de comision: " + ex.getMessage());
 		}
 
 		if (tmpLista.size() > 0) {
