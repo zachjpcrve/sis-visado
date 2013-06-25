@@ -251,9 +251,9 @@ public class JasperController {
     	List<SolicitudPDF> cabecera = new ArrayList<SolicitudPDF>();
     	SolicitudPDF solicitudPDF= new SolicitudPDF();
     	
-    	
     	//Cabecera del reporte
-    	if(SOLICITUD_TEMP!=null){
+    	if(SOLICITUD_TEMP!=null)
+    	{
     		 try {
     		logger.info("Solicitidu-CodSolicitud: "+SOLICITUD_TEMP.getCodSoli());
     		logger.info("Solicitidu-NroVoucher: "+SOLICITUD_TEMP.getNroVoucher());
@@ -272,11 +272,16 @@ public class JasperController {
     		logger.info("Solicitidu-Moneda: "+SOLICITUD_TEMP.getMoneda());
     		if(SOLICITUD_TEMP.getMoneda().equalsIgnoreCase(ConstantesVisado.MONEDAS.COD_SOLES)){
     			solicitudPDF.setMoneda(ConstantesVisado.MONEDAS.SIMBOLO_SOLES);
+    			//solicitudPDF.setMonedaComision(ConstantesVisado.MONEDAS.SIMBOLO_SOLES);
     		} else if (SOLICITUD_TEMP.getMoneda().equalsIgnoreCase(ConstantesVisado.MONEDAS.COD_DOLAR)){
     			solicitudPDF.setMoneda(ConstantesVisado.MONEDAS.SIMBOLO_DOLAR);
+    			//solicitudPDF.setMonedaComision(ConstantesVisado.MONEDAS.SIMBOLO_DOLAR);
     		} else if (SOLICITUD_TEMP.getMoneda().equalsIgnoreCase(ConstantesVisado.MONEDAS.COD_EUROS)){
     			solicitudPDF.setMoneda(ConstantesVisado.MONEDAS.SIMBOLO_EURO);
+    			//solicitudPDF.setMonedaComision(ConstantesVisado.MONEDAS.SIMBOLO_EURO);
     		}
+    		
+    		solicitudPDF.setMonedaComision(ConstantesVisado.MONEDAS.SIMBOLO_SOLES);
     		    		
     		logger.info("Solicitid-Lista Agrupacion-size: "+lstAgrupacionSimpleDto.size());
     		solicitudPDF.setLstAgrupacionSimpleDto(lstAgrupacionSimpleDto); //agregar agrupaciones    		
