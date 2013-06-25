@@ -19,7 +19,6 @@ import com.bbva.persistencia.generica.dao.SeguridadDao;
 import com.bbva.persistencia.generica.util.Sesion;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.conexion.__Conexion2;
-import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.grupobbva.bc.per.tele.seguridad.ServiciosSeguridadBbva;
 import com.hildebrando.visado.dto.MiembroDto;
 

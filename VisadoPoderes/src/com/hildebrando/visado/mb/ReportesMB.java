@@ -2183,35 +2183,19 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_5,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								8,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,8,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_6,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								9,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,9,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_7,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								10,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,10,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_8,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								11,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,11,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_9,
 								true, true, false, HSSFColor.DARK_BLUE.index);
@@ -2375,59 +2359,31 @@ public class ReportesMB {
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_29,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								32,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,32,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_30,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								33,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,33,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_NRO_31,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								34,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,34,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_TOTAL_MES,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								35,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,35,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_COSTO,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								36,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,36, CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_HONORARIOS,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								37,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,37,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_IMPUESTO,
 								true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(
-								wb,
-								rowT,
-								38,
-								CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb,rowT,38,CellStyle.ALIGN_CENTER,
 								CellStyle.VERTICAL_CENTER,
 								ConstantesVisado.COLUMNAS_RPT_LIQUIDACION.COLUMNA_TOTAL,
 								true, true, false, HSSFColor.DARK_BLUE.index);
@@ -2440,91 +2396,54 @@ public class ReportesMB {
 						HSSFCellStyle.VERTICAL_CENTER, true, false, true,
 						HSSFColor.DARK_BLUE.index);
 
-				for (AgrupacionPlazoDto tmp : lstLiquidacion) {
+				for (AgrupacionPlazoDto tmp : lstLiquidacion) 
+				{
 					Row row = sheet.createRow((short) numReg);
 
 					// Columna Estudio en Excel
-					Utilitarios.SetearEstiloCelda(wb, row, 1, tmp.getEstudio(),
-							estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 1, tmp.getEstudio(),	estilo);
 
 					// Utilitarios.crearCell(wb, row, 0,
 					// CellStyle.ALIGN_LEFT,CellStyle.VERTICAL_CENTER,
 					// tmp.getEstudio(),true,
 					// false,true,HSSFColor.DARK_BLUE.index);
-					Utilitarios.SetearEstiloCelda(wb, row, 2, tmp.getPlazo(),
-							estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 3,
-							String.valueOf(tmp.getSubTotalDia1()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 4,
-							String.valueOf(tmp.getSubTotalDia2()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 5,
-							String.valueOf(tmp.getSubTotalDia3()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 6,
-							String.valueOf(tmp.getSubTotalDia4()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 7,
-							String.valueOf(tmp.getSubTotalDia5()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 8,
-							String.valueOf(tmp.getSubTotalDia6()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 9,
-							String.valueOf(tmp.getSubTotalDia7()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 10,
-							String.valueOf(tmp.getSubTotalDia8()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 11,
-							String.valueOf(tmp.getSubTotalDia9()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 12,
-							String.valueOf(tmp.getSubTotalDia10()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 13,
-							String.valueOf(tmp.getSubTotalDia11()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 14,
-							String.valueOf(tmp.getSubTotalDia12()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 15,
-							String.valueOf(tmp.getSubTotalDia13()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 16,
-							String.valueOf(tmp.getSubTotalDia14()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 17,
-							String.valueOf(tmp.getSubTotalDia15()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 18,
-							String.valueOf(tmp.getSubTotalDia16()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 19,
-							String.valueOf(tmp.getSubTotalDia17()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 20,
-							String.valueOf(tmp.getSubTotalDia18()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 21,
-							String.valueOf(tmp.getSubTotalDia19()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 22,
-							String.valueOf(tmp.getSubTotalDia20()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 23,
-							String.valueOf(tmp.getSubTotalDia21()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 24,
-							String.valueOf(tmp.getSubTotalDia22()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 25,
-							String.valueOf(tmp.getSubTotalDia23()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 26,
-							String.valueOf(tmp.getSubTotalDia24()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 27,
-							String.valueOf(tmp.getSubTotalDia25()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 28,
-							String.valueOf(tmp.getSubTotalDia26()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 29,
-							String.valueOf(tmp.getSubTotalDia27()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 30,
-							String.valueOf(tmp.getSubTotalDia28()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 31,
-							String.valueOf(tmp.getSubTotalDia29()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 32,
-							String.valueOf(tmp.getSubTotalDia30()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 33,
-							String.valueOf(tmp.getSubTotalDia31()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 34,
-							String.valueOf(tmp.getSubTotalMes()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 35,
-							String.valueOf(tmp.getCosto()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 36,
-							String.valueOf(tmp.getHonorarios()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 37,
-							String.valueOf(tmp.getImpuesto()), estilo);
-					Utilitarios.SetearEstiloCelda(wb, row, 38,
-							String.valueOf(tmp.getgTotal()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 2,tmp.getPlazo(),estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 3,String.valueOf(tmp.getSubTotalDia1()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 4,String.valueOf(tmp.getSubTotalDia2()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 5,String.valueOf(tmp.getSubTotalDia3()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 6,String.valueOf(tmp.getSubTotalDia4()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 7,String.valueOf(tmp.getSubTotalDia5()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 8,String.valueOf(tmp.getSubTotalDia6()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 9,String.valueOf(tmp.getSubTotalDia7()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 10,String.valueOf(tmp.getSubTotalDia8()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 11,String.valueOf(tmp.getSubTotalDia9()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 12,String.valueOf(tmp.getSubTotalDia10()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 13,String.valueOf(tmp.getSubTotalDia11()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 14,String.valueOf(tmp.getSubTotalDia12()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 15,String.valueOf(tmp.getSubTotalDia13()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 16,String.valueOf(tmp.getSubTotalDia14()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 17,String.valueOf(tmp.getSubTotalDia15()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 18,String.valueOf(tmp.getSubTotalDia16()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 19,String.valueOf(tmp.getSubTotalDia17()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 20,String.valueOf(tmp.getSubTotalDia18()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 21,String.valueOf(tmp.getSubTotalDia19()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 22,String.valueOf(tmp.getSubTotalDia20()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 23,String.valueOf(tmp.getSubTotalDia21()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 24,String.valueOf(tmp.getSubTotalDia22()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 25,String.valueOf(tmp.getSubTotalDia23()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 26,String.valueOf(tmp.getSubTotalDia24()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 27,String.valueOf(tmp.getSubTotalDia25()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 28,String.valueOf(tmp.getSubTotalDia26()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 29,String.valueOf(tmp.getSubTotalDia27()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 30,String.valueOf(tmp.getSubTotalDia28()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 31,String.valueOf(tmp.getSubTotalDia29()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 32,String.valueOf(tmp.getSubTotalDia30()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 33,String.valueOf(tmp.getSubTotalDia31()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 34,String.valueOf(tmp.getSubTotalMes()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 35,String.valueOf(tmp.getCosto()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 36,String.valueOf(tmp.getHonorarios()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 37,String.valueOf(tmp.getImpuesto()), estilo);
+					Utilitarios.SetearEstiloCelda(wb, row, 38,String.valueOf(tmp.getgTotal()), estilo);
 
 					/*
 					 * if (tmp.getLstSolAT()!=null) { for (Liquidacion liqAT:
