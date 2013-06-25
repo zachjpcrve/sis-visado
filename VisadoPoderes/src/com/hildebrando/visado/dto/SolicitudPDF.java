@@ -20,6 +20,7 @@ public class SolicitudPDF implements Serializable
 	private Double importe;
 	private String tipoServicio;
 	private String moneda;
+	private String monedaComision;
 	private JRDataSource DOCUMENTOS;
 	private JRDataSource OPERACIONES;
 	private JRDataSource AGRUPACION;
@@ -116,5 +117,13 @@ public class SolicitudPDF implements Serializable
 
 	public void setLstAgrupacionSimpleDto(List<AgrupacionSimpleDto> lstAgrupacionSimpleDto) {
 		this.lstAgrupacionSimpleDto = lstAgrupacionSimpleDto;		
+	}
+
+	public String getMonedaComision() {
+		return monedaComision;
+	}
+
+	public void setMonedaComision(String monedaComision) {
+		this.monedaComision = monedaComision;
 	}
 }
