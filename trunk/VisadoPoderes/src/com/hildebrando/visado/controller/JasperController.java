@@ -360,7 +360,7 @@ public class JasperController {
 			Timestamp fechaComentario = null;
 			
 			String nombrePDF =  "Observacion_" +codSoli+"_" + movimiento + ".pdf";
-			if(lstHist.size()>0){
+			if(lstHist!=null && lstHist.size()>0){
 				obs = lstHist.get(0).getObs();
 				fechaComentario = lstHist.get(0).getFecha();
 			}
