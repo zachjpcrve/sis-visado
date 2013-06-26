@@ -2777,8 +2777,7 @@ public class ConsultarSolicitudMB {
 
 		}catch(Throwable t){
 			logger.error("Throwable ::: "+ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+t.getMessage());
-		}
-		
+		}				
 	}
 		
 	public String redireccionar(){
@@ -5236,6 +5235,11 @@ public class ConsultarSolicitudMB {
 	private void obtenCodRazonSocial() {					
 		TiposDoiService tiposDoiService = new TiposDoiService(); 			
 		codigoRazonSocial = tiposDoiService.obtenerCodPersonaJuridica();
+	}
+	
+	public void actualizarVoucher(){
+		//solicitudRegistrarT.nroVoucher
+		logger.info("this.getSolicitudRegistrarT().getNroVoucher():" + this.getSolicitudRegistrarT().getNroVoucher());
 	}
 
 	public CombosMB getCombosMB() {
