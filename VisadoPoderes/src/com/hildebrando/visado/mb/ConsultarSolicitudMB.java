@@ -2418,7 +2418,8 @@ public class ConsultarSolicitudMB {
 		//Validacion de numero de voucher
 		if (solicitudRegistrarT.getNroVoucher() == null ) {
 			mensaje = "Ingrese el Nro Voucher";
-			retorno =this.validarNroVoucher();;
+			//retorno =this.validarNroVoucher();
+			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 			
 		}else if (solicitudRegistrarT.getNroVoucher().equals("")){
