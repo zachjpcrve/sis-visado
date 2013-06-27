@@ -166,12 +166,20 @@
 															<tr>
 																<td><h:outputText styleClass="outputText"
 																		id="outNroVaucher" value="Nro. Voucher *:" /></td>
-																<td><h:inputText styleClass="inputText"
+																<td><script type="text/javascript" language="javascript">															            
+																	    function clickear () {															                	
+																                    this.document.getElementById('formSolicitudRegistro:btnBorrar').click();																                    															                   
+																                }  
+																</script>
+																<div style="size: 0px; width: 0.5px; height: 0.5px; visibility: hidden; ">
+																	<p:commandButton id="btnBorrar" value="Click" action="#{solicitudRegMB.actualizarVoucher}"/>
+																 </div>
+																<h:inputText styleClass="inputText"
 																		immediate="false" required="false"
 																		requiredMessage="Ingrese el Nro Voucher"
 																		id="txtNroVaucher" style="width:100px;" maxlength="11"
 																		onkeypress="return validaNumero(event,'0',this,'0');"
-																		onblur="validaNumero(event,'0',this,'1');"
+																		onblur="validaNumero(event,'0',this,'1');clickear();"
 																		value="#{solicitudRegMB.solicitudRegistrarT.nroVoucher}">
 																		<f:ajax event="keyup" />
 																	</h:inputText></td>
