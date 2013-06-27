@@ -635,9 +635,9 @@ public class SolicitudRegistroMB {
 				} 
 			}
 			
-			if (lstTiivsPersona.size() == 0 && busco) {
+			//if (lstTiivsPersona.size() == 0 && busco) {
 				//Utilitarios.mensajeInfo("INFO","No se han encontrado resultados para los criterios de busqueda seleccionados");
-			}
+			//}
 		}
 
 		return lstTiivsPersona;
@@ -2798,29 +2798,34 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		this.solicitudRegistrarT.setFechaRespuesta(time);
 		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date().getTime()));
 	}
+	public void actualizarVoucher(){
+		//solicitudRegistrarT.nroVoucher
+		logger.info("this.getSolicitudRegistrarT().getNroVoucher():" + this.getSolicitudRegistrarT().getNroVoucher());
+	}
 	@SuppressWarnings({ "unchecked", "null" })
-	public boolean validarNroVoucher() throws Exception{
-		boolean booleano=true;
+	public boolean validarNroVoucher() throws Exception {
+		boolean booleano = true;
 		if (!this.sEstadoSolicitud.equals("BORRADOR")) {
-		String mensaje="Ingrese un Nro de Vourcher no registrado ";
-		Busqueda filtroNroVoucher = Busqueda.forClass(TiivsSolicitud.class);
-		GenericDao<TiivsSolicitud, String> serviceNroVoucher=(GenericDao<TiivsSolicitud, String>) SpringInit.getApplicationContext().getBean("genericoDao");
-		List<TiivsSolicitud> lstSolicitud =new ArrayList<TiivsSolicitud>();
-		lstSolicitud=serviceNroVoucher.buscarDinamico(filtroNroVoucher);
-		if(lstSolicitud!=null){
-			logger.info("Tamanio de la lista de Solicitudes " +lstSolicitud.size());
-		for (TiivsSolicitud a : lstSolicitud) {
-			if(a!=null||!a.equals("")){
-			if(a.getNroVoucher()!=null){
-			if(a.getNroVoucher().trim().equals(this.solicitudRegistrarT.getNroVoucher())){
-				booleano=false;
-				Utilitarios.mensajeInfo("INFO", mensaje);
-				break;
+			String mensaje = "Ingrese un Nro de Vourcher no registrado ";
+			Busqueda filtroNroVoucher = Busqueda.forClass(TiivsSolicitud.class);
+			filtroNroVoucher.add(Restrictions.not(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)));
+			GenericDao<TiivsSolicitud, String> serviceNroVoucher = (GenericDao<TiivsSolicitud, String>) SpringInit
+					.getApplicationContext().getBean("genericoDao");
+			List<TiivsSolicitud> lstSolicitud = new ArrayList<TiivsSolicitud>();
+			lstSolicitud = serviceNroVoucher.buscarDinamico(filtroNroVoucher);
+			if (lstSolicitud != null) {
+				for (TiivsSolicitud a : lstSolicitud) {
+					if (a != null || !a.equals("")) {
+						if (a.getNroVoucher() != (null)) {
+							if (a.getNroVoucher().equals(this.solicitudRegistrarT.getNroVoucher())) {
+								booleano = false;
+								Utilitarios.mensajeInfo("INFO", mensaje);
+								break;
+							}
+						}
+					}
+				}
 			}
-			}
-		  }
-		}
-		}
 		}
 		return booleano;
 	}
@@ -2952,23 +2957,23 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}
 		
 		//Validacion de numero de voucher
-		if (solicitudRegistrarT.getNroVoucher() == null ) {
-			mensaje = "Ingrese el Nro Voucher";
-			retorno = false;
-			Utilitarios.mensajeInfo("INFO", mensaje);
-			
-		}else if (solicitudRegistrarT.getNroVoucher().equals("")){
-			mensaje = "Ingrese el Nro Voucher";
-			retorno = false;
-			Utilitarios.mensajeInfo("INFO", mensaje);
-			
-		} else if (solicitudRegistrarT.getNroVoucher().length() < 11) {
-			mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
-			retorno = false;
-			Utilitarios.mensajeInfo("INFO", mensaje);
-		} else if(this.validarNroVoucher()==false){
-			retorno = false;
-		}
+				if (solicitudRegistrarT.getNroVoucher()==null){
+					mensaje = "Ingrese el Nro Voucher";
+					retorno = false;
+					Utilitarios.mensajeInfo("INFO", mensaje);
+			      }
+				else if (solicitudRegistrarT.getNroVoucher().equals("")){
+						mensaje = "Ingrese el Nro Voucher";
+						retorno = false;
+						Utilitarios.mensajeInfo("INFO", mensaje);
+				 }else if (solicitudRegistrarT.getNroVoucher().length() < 11) {
+						mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
+						retorno = false;
+						Utilitarios.mensajeInfo("INFO", mensaje);
+					}
+				 else {
+					retorno =this.validarNroVoucher();
+				    }
 				 
 		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
 			mensaje = "Ingrese la sección Apoderado y Poderdante";
