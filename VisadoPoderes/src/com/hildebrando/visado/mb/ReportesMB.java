@@ -896,15 +896,17 @@ public class ReportesMB {
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			logger.debug("Error al buscar las solicitudes: "
-					+ ex.getStackTrace());
+			logger.debug("Error al buscar las solicitudes: " + ex.getStackTrace());
 		}
 
-		if (solicitudes.size() > 0) {
+		if (solicitudes.size() > 0) 
+		{
 			actualizarDatosDeBusqueda();
 			setTxtMsgDialog("Que desea hacer?");
 			mostrarBotones = true;
-		} else {
+		} 
+		else 
+		{
 			setTxtMsgDialog("No se encontraron registros que coinciden con los criterios de búsqueda ingresados");
 			mostrarBotones = false;
 		}
@@ -986,60 +988,123 @@ public class ReportesMB {
 
 	}
 
-	private void actualizarDatosDeBusqueda() {
+	private void actualizarDatosDeBusqueda() 
+	{
 		String cadena = "";
 
 		// Se obtiene y setea la descripcion del Estado en la grilla
-		for (TiivsSolicitud tmpSol : solicitudes) {
-			// Cargar data de poderdantes
+		for (TiivsSolicitud tmpSol : solicitudes) 
+		{
+			//Cargar data de poderdantes
+			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
+			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
+			AgrupacionSimpleDto agrupacionSimpleDto  =new AgrupacionSimpleDto(); 
+			List<TiivsPersona>lstPersonas=new ArrayList<TiivsPersona>();
+			TiivsPersona objPersona=new TiivsPersona();
+			
+		    lstPoderdantes = new ArrayList<TiivsPersona>();
+		    lstApoderdantes = new ArrayList<TiivsPersona>();
+		    //lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
+		   
+		    for (TiivsSolicitudAgrupacion x : tmpSol.getTiivsSolicitudAgrupacions()) 
+		    {
+			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) 
+			   {
+				    if (tmpSol.getCodSoli().equals(d.getCodSoli()) && tmpSol.getCodSoli().equals(x.getId().getCodSoli()))
+				    {
+				    	//logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
+				    	//lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
+					    objPersona=new TiivsPersona();
+					    objPersona=d.getTiivsPersona();
+					    objPersona.setTipPartic(d.getTipPartic());
+					    objPersona.setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
+					    objPersona.setClasifPer(d.getClasifPer());
+					    objPersona.setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getClasifPer().trim()));
+					    objPersona.setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
+					    lstPersonas.add(objPersona);
+						  
+					    if(d.getTipPartic().trim().equals(ConstantesVisado.PODERDANTE))
+					    {
+							lstPoderdantes.add(d.getTiivsPersona());
+					    }
+						else if(d.getTipPartic().trim().equals(ConstantesVisado.APODERADO))
+						{
+							lstApoderdantes.add(d.getTiivsPersona());
+						}
+					    
+					    agrupacionSimpleDto = new AgrupacionSimpleDto();
+						agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(tmpSol.getCodSoli(), x.getId().getNumGrupo()));
+						agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
+						agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
+						agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionEstado(x.getEstado().trim()));
+						agrupacionSimpleDto.setLstPersonas(lstPersonas);
+						lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+				    }
+			   }
+		    }
+		    
+		    cadena="";
+		    for (TiivsPersona tmpPoder: lstPoderdantes)
+		    {
+		    	cadena += devolverDesTipoDOI(tmpPoder.getTipDoi()) + ConstantesVisado.DOS_PUNTOS + tmpPoder.getNumDoi() +
+						  ConstantesVisado.GUION + (tmpPoder.getApePat()==null?"":tmpPoder.getApePat()) + " " + (tmpPoder.getApeMat()==null?"":tmpPoder.getApeMat()) + " " + 
+						  (tmpPoder.getNombre()==null?"":tmpPoder.getNombre()) + ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
+		    	
+		    }
+		    
+		    tmpSol.setTxtPoderdante(cadena);
+			
+			// Cargar data de apoderados
+			cadena="";
+						
+			for (TiivsPersona tmpApor: lstApoderdantes)
+		    {
+		    	cadena += devolverDesTipoDOI(tmpApor.getTipDoi()) + ConstantesVisado.DOS_PUNTOS + tmpApor.getNumDoi() +
+						  ConstantesVisado.GUION + (tmpApor.getApePat()== null ?"":tmpApor.getApePat()) + " " + (tmpApor.getApeMat()==null?"":tmpApor.getApeMat()) + " " + 
+						  (tmpApor.getNombre()==null?"": tmpApor.getNombre()) + ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
+		    }
+			
+			tmpSol.setTxtApoderado(cadena);
+			
+			
+			/*// Cargar data de poderdantes
 			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
 			AgrupacionSimpleDto agrupacionSimpleDto = new AgrupacionSimpleDto();
 			List<TiivsPersona> lstPersonas = new ArrayList<TiivsPersona>();
 			TiivsPersona objPersona = new TiivsPersona();
-
 			lstPoderdantes = new ArrayList<TiivsPersona>();
 			lstApoderdantes = new ArrayList<TiivsPersona>();
 
-			for (TiivsSolicitudAgrupacion x : tmpSol
-					.getTiivsSolicitudAgrupacions()) {
-				for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) {
-					if (tmpSol.getCodSoli().equals(d.getCodSoli())
-							&& tmpSol.getCodSoli().equals(
-									x.getId().getCodSoli())) {
+			for (TiivsSolicitudAgrupacion x : tmpSol.getTiivsSolicitudAgrupacions())
+			{
+				for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas())
+				{
+					if (tmpSol.getCodSoli().equals(d.getCodSoli()) && tmpSol.getCodSoli().equals(x.getId().getCodSoli()))
+					{
 						objPersona = new TiivsPersona();
 						objPersona = d.getTiivsPersona();
 						objPersona.setTipPartic(d.getTipPartic());
-						objPersona.setsDesctipPartic(this
-								.obtenerDescripcionTipoRegistro(d
-										.getTipPartic().trim()));
+						objPersona.setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
 						objPersona.setClasifPer(d.getClasifPer());
-						objPersona.setsDescclasifPer(this
-								.obtenerDescripcionClasificacion(d
-										.getClasifPer().trim()));
-						objPersona.setsDesctipDoi(this
-								.obtenerDescripcionDocumentos(d
-										.getTiivsPersona().getTipDoi().trim()));
+						objPersona.setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getClasifPer().trim()));
+						objPersona.setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
 						lstPersonas.add(objPersona);
 
-						if (d.getTipPartic().trim()
-								.equals(ConstantesVisado.PODERDANTE)) {
+						if (d.getTipPartic().trim().equals(ConstantesVisado.PODERDANTE))
+						{
 							lstPoderdantes.add(d.getTiivsPersona());
-						} else if (d.getTipPartic().trim()
-								.equals(ConstantesVisado.APODERADO)) {
+						} 
+						else if (d.getTipPartic().trim().equals(ConstantesVisado.APODERADO))
+						{
 							lstApoderdantes.add(d.getTiivsPersona());
 						}
 
 						agrupacionSimpleDto = new AgrupacionSimpleDto();
-						agrupacionSimpleDto
-								.setId(new TiivsSolicitudAgrupacionId(tmpSol
-										.getCodSoli(), x.getId().getNumGrupo()));
+						agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(tmpSol.getCodSoli(), x.getId().getNumGrupo()));
 						agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
 						agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
-						agrupacionSimpleDto
-								.setsEstado(Utilitarios
-										.obternerDescripcionEstado(x
-												.getEstado().trim()));
+						agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionEstado(x.getEstado().trim()));
 						agrupacionSimpleDto.setLstPersonas(lstPersonas);
 						lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 					}
@@ -1047,7 +1112,8 @@ public class ReportesMB {
 			}
 
 			cadena = "";
-			for (TiivsPersona tmpPoder : lstPoderdantes) {
+			for (TiivsPersona tmpPoder : lstPoderdantes) 
+			{
 				cadena += devolverDesTipoDOI(tmpPoder.getTipDoi())
 						+ ConstantesVisado.DOS_PUNTOS + tmpPoder.getNumDoi()
 						+ ConstantesVisado.GUION + tmpPoder.getApePat() + " "
@@ -1060,7 +1126,8 @@ public class ReportesMB {
 			// Cargar data de apoderados
 			cadena = "";
 
-			for (TiivsPersona tmpApor : lstApoderdantes) {
+			for (TiivsPersona tmpApor : lstApoderdantes) 
+			{
 				cadena += devolverDesTipoDOI(tmpApor.getTipDoi())
 						+ ConstantesVisado.DOS_PUNTOS + tmpApor.getNumDoi()
 						+ ConstantesVisado.GUION + tmpApor.getApePat() + " "
@@ -1068,7 +1135,7 @@ public class ReportesMB {
 						+ ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
 			}
 
-			tmpSol.setTxtApoderado(cadena);
+			tmpSol.setTxtApoderado(cadena);*/
 
 			// logger.info("Tamanio total agrupaciones de Solicitud: " +
 			// tmpSol.getCodSoli() + ": " + lstAgrupacionSimpleDto.size());
@@ -3813,11 +3880,8 @@ public class ReportesMB {
 
 					// Columna Tipo Solicitud en Excel
 					Utilitarios.crearCell(wb, row, 3, HSSFCellStyle.ALIGN_LEFT,
-							HSSFCellStyle.VERTICAL_CENTER, Utilitarios
-									.validarCampoNull(tmp
-											.getTiivsTipoSolicitud()
-											.getDesTipServicio()), true, false,
-							true, HSSFColor.DARK_BLUE.index);
+							HSSFCellStyle.VERTICAL_CENTER, 
+							Utilitarios.validarCampoNull(tmp.getTiivsTipoSolicitud().getDesTipServicio()), true, false,	true, HSSFColor.DARK_BLUE.index);
 
 					/*// Columna Tipo Comision en Excel
 					Utilitarios.crearCell(wb, row, 4, HSSFCellStyle.ALIGN_LEFT,
@@ -3826,30 +3890,23 @@ public class ReportesMB {
 
 					// Columna Cod Oficina en Excel
 					Utilitarios.crearCell(wb, row, 4, HSSFCellStyle.ALIGN_LEFT,
-							HSSFCellStyle.VERTICAL_CENTER, Utilitarios
-									.validarCampoNull(tmp.getTiivsOficina1()
-											.getCodOfi()), true, false, true,
+							HSSFCellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsOficina1().getCodOfi()), true, false, true,
 							HSSFColor.DARK_BLUE.index);
 
 					// Columna Oficina en Excel
 					Utilitarios.crearCell(wb, row, 5, HSSFCellStyle.ALIGN_LEFT,
-							HSSFCellStyle.VERTICAL_CENTER, Utilitarios
-									.validarCampoNull(tmp.getTiivsOficina1()
-											.getDesOfi()), true, false, true,
+							HSSFCellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getTiivsOficina1().getDesOfi()), true, false, true,
 							HSSFColor.DARK_BLUE.index);
 
 					// Columna Moneda en Excel
 					Utilitarios.crearCell(wb, row, 6, HSSFCellStyle.ALIGN_LEFT,
 							HSSFCellStyle.VERTICAL_CENTER,
-							buscarAbrevMoneda(Utilitarios.validarCampoNull(tmp
-									.getMoneda())), true, false, true,
+							buscarAbrevMoneda(Utilitarios.validarCampoNull(tmp.getMoneda())), true, false, true,
 							HSSFColor.DARK_BLUE.index);
 
 					// Columna Importe en Excel
 					Utilitarios.crearCell(wb, row, 7, HSSFCellStyle.ALIGN_LEFT,
-							HSSFCellStyle.VERTICAL_CENTER, Utilitarios
-									.validarCampoNull(tmp.getImporte()
-											.toString()), true, false, true,
+							HSSFCellStyle.VERTICAL_CENTER, Utilitarios.validarCampoNull(tmp.getImporte().toString()), true, false, true,
 							HSSFColor.DARK_BLUE.index);
 
 					// Columna Nro Voucher en Excel
@@ -3880,7 +3937,7 @@ public class ReportesMB {
 								Utilitarios.SetearEstiloCelda(wb, row, 10,tmpPersonaPod.getCodCen(), estilo);
 
 								// Columna Poderdante en Excel
-								Utilitarios.SetearEstiloCelda(wb, row, 11,tmpPersonaPod.getNombre(), estilo);
+								Utilitarios.SetearEstiloCelda(wb, row, 11,tmpPersonaPod.getNombre()+ " " + tmpPersonaPod.getApePat() + " " + tmpPersonaPod.getApeMat(), estilo);
 
 								// Columna Tipo DOI en Excel
 								Utilitarios.SetearEstiloCelda(wb,row,12,obtenerDescripcionDocumentos(tmpPersonaPod.getTipDoi().trim()),estilo);
@@ -3914,13 +3971,15 @@ public class ReportesMB {
 								// true, false,true,HSSFColor.DARK_BLUE.index);
 
 								// Columna Particicacion en Excel
-								Utilitarios.SetearEstiloCelda(wb,row,14,obtenerDescripcionClasificacion(tmpPersonaPod.getTipPartic().trim()),estilo);
+								//Utilitarios.SetearEstiloCelda(wb,row,14,obtenerDescripcionClasificacion(tmpPersonaPod.getClasifPer().trim()),estilo);
+								
+								Utilitarios.SetearEstiloCelda(wb,row,14,tmpPersonaPod.getsDescclasifPer(),estilo);
 								// Utilitarios.crearCell(wb, row, 19,
 								// HSSFCellStyle.ALIGN_LEFT,HSSFCellStyle.VERTICAL_CENTER,
 								// obtenerDescripcionClasificacion(tmpPersonaPod.getTipPartic().trim()),
 								// true, false,true,HSSFColor.DARK_BLUE.index);
 
-								filaTmp++;
+								//filaTmp++;
 
 								row.setRowNum(filaTmp);
 							}
@@ -3979,16 +4038,20 @@ public class ReportesMB {
 								// true, false,true,HSSFColor.DARK_BLUE.index);
 
 								// Columna Particicacion en Excel
-								Utilitarios.SetearEstiloCelda(wb,row,20,obtenerDescripcionClasificacion(tmpPersonaApod.getTipPartic().trim()),estilo);
+								//Utilitarios.SetearEstiloCelda(wb,row,20,obtenerDescripcionClasificacion(tmpPersonaApod.getClasifPer().trim()),estilo);
+								
+								Utilitarios.SetearEstiloCelda(wb,row,20,tmpPersonaApod.getsDescclasifPer(),estilo);
 								// Utilitarios.crearCell(wb, row, 19,
 								// HSSFCellStyle.ALIGN_LEFT,HSSFCellStyle.VERTICAL_CENTER,
 								// obtenerDescripcionClasificacion(tmpPersonaApod.getTipPartic().trim()),
 								// true, false,true,HSSFColor.DARK_BLUE.index);
 
-								filaTmp++;
+								
 
 								row.setRowNum(filaTmp);
 							}
+							
+							filaTmp++;
 						}
 					}
 
@@ -4425,17 +4488,22 @@ public class ReportesMB {
 		return resultado;
 	}
 
-	public List<AgrupacionSimpleDto> buscarAgrupacionesxSolicitud(String codSoli) {
+	public List<AgrupacionSimpleDto> buscarAgrupacionesxSolicitud(String codSoli) 
+	{
 		List<AgrupacionSimpleDto> tmpLista = new ArrayList<AgrupacionSimpleDto>();
 
-		for (AgrupacionSimpleDto tmpAgrup : lstAgrupacionSimpleDto) {
-			if (tmpAgrup.getId().getCodSoli().equals(codSoli)) {
-				tmpLista.add(tmpAgrup);
+		for (AgrupacionSimpleDto tmpAgrup : lstAgrupacionSimpleDto) 
+		{
+			if (tmpAgrup.getId().getCodSoli().equals(codSoli)) 
+			{
+				if (tmpLista.size()==0)
+				{
+					tmpLista.add(tmpAgrup);
+				}
 			}
 		}
 
-		logger.info("Agrupaciones encontradas de la solicitud: " + codSoli
-				+ ": " + tmpLista.size());
+		logger.info("Agrupaciones encontradas de la solicitud: " + codSoli + ": " + tmpLista.size());
 
 		return tmpLista;
 	}
