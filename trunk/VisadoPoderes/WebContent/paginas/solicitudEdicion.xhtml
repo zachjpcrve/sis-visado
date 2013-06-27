@@ -62,7 +62,8 @@
 				<p:commandButton style="width:0;height:0" value=""
 					id="btnRedirecionar" icon="ui-icon-document"
 					update=":formSolicitudRegistro:idMsmSolicitudRegistro"
-					action="#{consultarSolicitudMB.redireccionar}" ajax="false">
+					action="#{consultarSolicitudMB.redireccionar}" 
+					ajax="false">
 				</p:commandButton>
 		</div>
 	
@@ -154,11 +155,11 @@
 															<td>
 															
 																<script type="text/javascript" language="javascript">															            
-																	            function clickear () {															                	
+																	    function clickear () {															                	
 																                    this.document.getElementById('formSolicitudRegistro:btnBorrar').click();																                    															                   
 																                }  
 																</script>
-																<div style="visibility: hidden; size: 0px; width: 0px">
+																<div style="size: 0px; width: 0.5px; height: 0.5px; visibility: hidden; ">
 																	<p:commandButton id="btnBorrar" value="Click" action="#{consultarSolicitudMB.actualizarVoucher}"/>
 																 </div>
 																<h:inputText styleClass="inputText" immediate="false"  required="false" 
