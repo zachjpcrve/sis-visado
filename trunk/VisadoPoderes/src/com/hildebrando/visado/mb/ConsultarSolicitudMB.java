@@ -2416,23 +2416,23 @@ public class ConsultarSolicitudMB {
 		}
 		
 		//Validacion de numero de voucher
-		if (solicitudRegistrarT.getNroVoucher() == null ) {
-			mensaje = "Ingrese el Nro Voucher";
-			//retorno =this.validarNroVoucher();
-			retorno = false;
-			Utilitarios.mensajeInfo("INFO", mensaje);
-			
-		}else if (solicitudRegistrarT.getNroVoucher().equals("")){
+		if (solicitudRegistrarT.getNroVoucher()==null){
 			mensaje = "Ingrese el Nro Voucher";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
-			
-		} 
-//		else if (solicitudRegistrarT.getNroVoucher().length() < 11) {
-//			mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
-//			retorno = false;
-//			Utilitarios.mensajeInfo("INFO", mensaje);
-//		}
+	      }
+		else if (solicitudRegistrarT.getNroVoucher().equals("")){
+				mensaje = "Ingrese el Nro Voucher";
+				retorno = false;
+				Utilitarios.mensajeInfo("INFO", mensaje);
+		 }else if (solicitudRegistrarT.getNroVoucher().length() < 11) {
+				mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
+				retorno = false;
+				Utilitarios.mensajeInfo("INFO", mensaje);
+			}
+		 else {
+			retorno =this.validarNroVoucher();
+		    }
 				 
 		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
 			mensaje = "Ingrese la sección Apoderado y Poderdante";
@@ -2507,6 +2507,7 @@ public class ConsultarSolicitudMB {
 		if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 			String mensaje = "Ingrese un Nro de Vourcher no registrado ";
 			Busqueda filtroNroVoucher = Busqueda.forClass(TiivsSolicitud.class);
+			filtroNroVoucher.add(Restrictions.not(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)));
 			GenericDao<TiivsSolicitud, String> serviceNroVoucher = (GenericDao<TiivsSolicitud, String>) SpringInit
 					.getApplicationContext().getBean("genericoDao");
 			List<TiivsSolicitud> lstSolicitud = new ArrayList<TiivsSolicitud>();
@@ -2515,8 +2516,7 @@ public class ConsultarSolicitudMB {
 				for (TiivsSolicitud a : lstSolicitud) {
 					if (a != null || !a.equals("")) {
 						if (a.getNroVoucher() != (null)) {
-							if (a.getNroVoucher().equals(
-									this.solicitudRegistrarT.getNroVoucher())) {
+							if (a.getNroVoucher().equals(this.solicitudRegistrarT.getNroVoucher())) {
 								booleano = false;
 								Utilitarios.mensajeInfo("INFO", mensaje);
 								break;
