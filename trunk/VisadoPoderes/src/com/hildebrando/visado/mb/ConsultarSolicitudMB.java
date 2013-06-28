@@ -5196,7 +5196,7 @@ public class ConsultarSolicitudMB {
 
 	public void limpiarComentario() {
 		logger.info("**************************** limpiar Comentario ****************************");
-		 this.solicitudRegistrarT.setObs("");
+		 this.solicitudRegistrarT.setObs(null);
 	}
 	
 	public void cambiarRazonSocial(ValueChangeEvent e){		
