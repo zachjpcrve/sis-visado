@@ -81,9 +81,9 @@
 			  	<h:panelGrid columns="3">
 					<p:commandButton id="comentar" value="Comentar" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" actionListener="#{consultarSolicitudMB.habilitarComentario}" onclick="ActivarAutoGuardar();"/>
 					<p:commandButton id="guardarComentario" value="Guardar" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento" action="#{consultarSolicitudMB.guardarComentario}" disabled="#{consultarSolicitudMB.bMostrarComentario}" />
-			  		<p:commandButton id="clearButton" type="button" value="Limpiar" 			  			  
+			  		<p:commandButton id="clearButton" value="Limpiar" 			  			  
 			  			disabled="#{consultarSolicitudMB.bMostrarComentario}" 
-			  			icon="ui-icon-close"  onclick="editor.clear()" />
+			  			icon="ui-icon-close"  actionListener="#{consultarSolicitudMB.limpiarComentario}" update=":formSolicitudSeguimiento:editor"/>
 				</h:panelGrid>
 				<h:panelGrid id="pnlEditor">	
 					<p:editor id="editor" onchange="actualizarEditor();" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="800" height="320" disabled="#{consultarSolicitudMB.bMostrarComentario}"/>
