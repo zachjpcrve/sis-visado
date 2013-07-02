@@ -11,6 +11,8 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.log4j.Logger;
 
+import com.bbva.common.util.ConstantesVisado;
+
 public class ClienteFTP 
 {
 	private String username, password, host ;
@@ -43,7 +45,18 @@ public class ClienteFTP
 
 	public void setDirectorio(String directorio) throws IOException 
 	{
-		ftpCliente.changeWorkingDirectory(directorio);
+		if(directorio!=null && !directorio.equals("")){
+			boolean result = ftpCliente.changeWorkingDirectory(directorio); 
+			
+			logger.debug("resultado cambio directorio: "+result);
+			if(result==false){
+				result = ftpCliente.makeDirectory(directorio);
+				logger.debug("resultado creacion directorio: "+result);
+				ftpCliente.changeWorkingDirectory(directorio);
+			}		
+		}
+		
+		
 	}
 
 
@@ -84,6 +97,7 @@ public class ClienteFTP
 			
 		} catch (IOException e) {
             e.printStackTrace();
+            logger.error(e);
         } finally {
             try 
             {
@@ -93,15 +107,23 @@ public class ClienteFTP
                 }
                // ftpCliente.disconnect();
             } catch (IOException e) {
+            	logger.error(e);
                 e.printStackTrace();
             }
         }
 	}
 	
+	
+  /** Metodo que se encarga de la subida de archivos via FTP al FileServer
+	* @param ruta Directorio fuente desde donde se enviará el archivo
+	* @param file Nombre de archivo a ser transferido via FTP  **/
+	
 	public void upLoadOneFiles(String file,String ruta)
 	{
+		logger.debug("=== upLoadOneFiles() ===");
 		FileInputStream fis =null;
-		logger.debug("Ruta: " + ruta);
+		logger.debug("[upLoad]-Ruta:" + ruta);
+		logger.debug("[upLoad]-Archivo: "+file);
 		try 
 		{
 			fis = new FileInputStream(ruta);
@@ -111,8 +133,12 @@ public class ClienteFTP
 			ftpCliente.storeFile(file, fis);
 			
 		} catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"(IOException):"+e);
+        }catch(Exception e1){
+        	logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al subir archivos al ftp:"+e1);
+        	e1.printStackTrace();
+        } 
+		finally {
             try 
             {
                 if (fis != null) 
@@ -122,6 +148,7 @@ public class ClienteFTP
 //               ftpCliente.disconnect();
             } catch (IOException e) {
                 e.printStackTrace();
+                logger.error(e);
             }
         }
 	}
