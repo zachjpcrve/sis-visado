@@ -243,8 +243,12 @@ public class PDFViewerMB {
 		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
 		try {
 			cliente.setDirectorio(carpetaRemota);
+			
 		} catch (IOException e1) {
 			e1.printStackTrace();
+			logger.error(e1);
+		} catch (Exception e){
+			logger.error(e);
 		}
 		
 		if (cliente!=null)
@@ -289,7 +293,7 @@ public class PDFViewerMB {
 
 		}
 		
-		logger.debug("Parametros leidos de BD");
+		logger.debug("==Parametros leidos de BD==");
 		logger.debug("Dir Server: " + urlServer);
 		logger.debug("Dir Local: " + dirLocal);
 		logger.debug("Server: " + server);
