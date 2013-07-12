@@ -20,6 +20,12 @@ public class ClienteFTP
 	FTPClient ftpCliente;
 	public static Logger logger = Logger.getLogger(ClienteFTP.class);
 	
+	/**
+	 * Metodo que se encarga de realizar la conexion y login al servidor FTP
+	 * @param host Servidor FTP
+	 * @param username Usuario de conexion 
+	 * @param password Clave
+	 * */
 	public ClienteFTP(String host,String username,String password)
 	{
         this.username = username;
@@ -29,57 +35,66 @@ public class ClienteFTP
         
         try {
         		ftpCliente.connect(this.host);
-        		this.login=ftpCliente.login(this.username, this.password);
-        		if(this.login)
-        		{
-        			logger.debug("Login success...");
+        		this.login = ftpCliente.login(this.username, this.password);
+        		if(this.login){
+        			logger.debug("Login exitoso");
         		}
-        		else
-        		{
-        			logger.debug("Failure success...");
+        		else{
+        			logger.debug("Login fallido.");
         		}
         } catch (IOException e) {
-        	logger.debug("Error al conectarse al FTP debido a: " + e.getMessage());
+        	logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al conectarse al FTP debido a: "+e);
         }
 	}
 
+	/**
+	 * Metodo que se encarga para establecer el directorio remoto de documentos
+	 * @param directorio Carpeta para guardar los documentos escaneados
+	 * * */
 	public void setDirectorio(String directorio) throws IOException 
 	{
-		if(directorio!=null && !directorio.equals("")){
-			boolean result = ftpCliente.changeWorkingDirectory(directorio); 
-			
-			logger.debug("resultado cambio directorio: "+result);
-			if(result==false){
-				result = ftpCliente.makeDirectory(directorio);
-				logger.debug("resultado creacion directorio: "+result);
-				ftpCliente.changeWorkingDirectory(directorio);
-			}		
+		try{
+			if(directorio!=null && !directorio.equals("")){
+				logger.debug("[FTP]-setDirectorio:"+directorio);
+				boolean result = ftpCliente.changeWorkingDirectory(directorio); 
+				
+				logger.debug("[FTP]-resultado cambio directorio: "+result);
+				if(result==false){
+					result = ftpCliente.makeDirectory(directorio);
+					logger.debug("resultado creacion directorio: "+result);
+					ftpCliente.changeWorkingDirectory(directorio);
+				}		
+			}
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al setDirectorio: "+e);		
 		}
-		
-		
 	}
 
 
 	public List listar() throws IOException
 	{
+		logger.debug("=== listar() ===");
 		List lista= new ArrayList(); 
-		
-		if(this.login)
-		{ 			
-			FTPFile[] ftpFiles = ftpCliente.listFiles();
-		    for (FTPFile ftpFile : ftpFiles) 
-		    {
-		    	if (ftpFile.getType() == FTPFile.FILE_TYPE) 
-		    	{
-		    		lista.add(ftpFile.getName()); //agregamos a la lista emlementos
-			    } 
-                
-		    }
-		}
-		else
-		{   
-			logger.debug("No logeado...");
-		}
+		try{
+			if(this.login)
+			{ 			
+				FTPFile[] ftpFiles = ftpCliente.listFiles();
+			    for (FTPFile ftpFile : ftpFiles) 
+			    {
+			    	if (ftpFile.getType() == FTPFile.FILE_TYPE) 
+			    	{
+			    		lista.add(ftpFile.getName()); //agregamos a la lista elementos
+				    } 
+	                
+			    }
+			}
+			else
+			{   
+				logger.debug("No logeado...");
+			}
+		}catch(Exception e){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al listar(): "+e);
+		}		
 		return lista;	
 	}
 	
@@ -131,7 +146,7 @@ public class ClienteFTP
 			ftpCliente.setBufferSize(4096);
 			ftpCliente.setFileTransferMode(FTP.BINARY_FILE_TYPE);
 			ftpCliente.storeFile(file, fis);
-			
+			logger.debug("[upLoad]-storeFile");
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"(IOException):"+e);
         }catch(Exception e1){
@@ -145,39 +160,50 @@ public class ClienteFTP
                 {
                     fis.close();
                 }
-//               ftpCliente.disconnect();
+                //ftpCliente.disconnect();
             } catch (IOException e) {
                 e.printStackTrace();
-                logger.error(e);
+                logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IOException:"+e);
             }
         }
+		logger.debug("=== saliendo de upLoadOneFiles() ===");
 	}
+	
+	/** Metodo que se encarga de renombrar un archivo
+	* @param nuevoNombre Nombre renombrado nuevo
+	* @param antiguoNombre Nombre a renombrar  **/
 	
 	public void renombrarArchivo(String nuevoNombre, String antiguoNombre)
 	{
 		logger.debug("==== renombrarArchivo() ====");		
 		try {
-			logger.debug("nuevoNombre()==>"+nuevoNombre + "   antiguoNombre ==>"+antiguoNombre);
+			logger.debug("[Renombrar]- nuevoNombre: "+nuevoNombre + "   antiguoNombre:"+antiguoNombre);
 			ftpCliente.rename(antiguoNombre, nuevoNombre);
 			ftpCliente.disconnect();
 		} catch (IOException e) {
             e.printStackTrace();
-            logger.debug(""+e);
-        }
+            logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IOException al renombrarArchivo:"+e);
+        }catch(Exception e1){
+        	logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al renombrarArchivo:"+e1);
+        } 
 	}
 
 	public void deleteFiles(List<String> aliasArchivos) {
-		
+		logger.debug("==== deleteFiles() ===");
 		try {
-			logger.debug("Numero de ficheros a eliminar:"+aliasArchivos.size());
+			if(aliasArchivos!=null){
+				logger.debug("Numero de ficheros a eliminar:"+aliasArchivos.size());
+			}
 			for(String archivo : aliasArchivos){
-				logger.debug("Eliminando fichero:" + archivo);
+				logger.debug("[Delete]-fichero: " + archivo);
 				ftpCliente.deleteFile(archivo);
 			}
 			ftpCliente.disconnect();
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"IOException al deleteFiles:"+e);
+		} catch(Exception e1){
+        	logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al deleteFiles:"+e1);
+        } 
 	}
 
 	public void renombrarArchivos(List<String> fromFicheros,
@@ -192,9 +218,10 @@ public class ClienteFTP
 			}
 			ftpCliente.disconnect();
 		} catch (IOException e) {
-            logger.debug("Error al renombrar archivos debido a: " + e.getMessage());
-        }
-		
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IOException al renombrarArchivos:"+e);
+        }catch(Exception e1){
+        	logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al renombrarArchivos:"+e1);
+        } 		
 	}
 	
 	public boolean downloadFile(String rutaLocal, String rutaRemota){
@@ -208,13 +235,19 @@ public class ClienteFTP
 			ftpCliente.setFileType(FTP.BINARY_FILE_TYPE);
 			ftpCliente.setBufferSize(4096);
 			ftpCliente.setFileTransferMode(FTP.BINARY_FILE_TYPE);
-			
+			if(rutaRemota!=null){
+				logger.debug("[RecuperarArchivo]-rutaRemota"+rutaRemota);
+			}
 			iRet = ftpCliente.retrieveFile(rutaRemota, fos);
 			
 		} catch (IOException e) {
 			iRet = false;
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en downloadFile:"+e);
             e.printStackTrace();
-        } finally {
+        } catch(Exception e1){
+        	logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al retrieveFile:"+e1);
+        }
+		finally {
             try 
             {
                 if (fos != null) 
@@ -223,6 +256,7 @@ public class ClienteFTP
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en downloadFile-IOException:"+e);
             }
         }		
 		return iRet;		
