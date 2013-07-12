@@ -121,11 +121,8 @@ public class PDFViewerMB {
 		}
 
 		} catch (Exception e) {
-			
-			logger.debug("Error al cargar el listado de parametros",e);
+			logger.error("Error al cargar el listado de parametros",e);
 		}
-		
-		
 	}
 	
 	public boolean validarObligatorioPDF()
@@ -205,6 +202,7 @@ public class PDFViewerMB {
 	
 	public String cargarUnicoPDF(String ruta)
 	{
+		logger.debug("== cargarUnicoPDF() ==");
 		String urlServer="";
 		String server="";
 		String loginServer="";
@@ -232,7 +230,7 @@ public class PDFViewerMB {
 
 		}
 	
-		logger.debug("Parametros leidos de BD");
+		logger.debug("--Parametros leidos de BD--");
 		logger.debug("Dir Server: " + urlServer);
 		logger.debug("Dir Local: " + dirLocal);
 		logger.debug("Server: " + server);
@@ -253,21 +251,17 @@ public class PDFViewerMB {
 		
 		if (cliente!=null)
 		{
-			
 			File Listfile = new File(dirLocal);
-
 			cliente.upLoadOneFiles(Listfile.getName(),dirLocal);
-			
 			rutaResultante=urlServer+Listfile.getName();
-			
 		}
-		
 		
 		return rutaResultante;
 	}
 	
 	public String cargarUnicoPDF(final String nombreArchivo, String ruta)
 	{
+		logger.debug("==== cargarUnicoPDF()-OK === ");
 		String urlServer="";
 		String server="";
 		String loginServer="";
@@ -297,7 +291,7 @@ public class PDFViewerMB {
 		logger.debug("Dir Server: " + urlServer);
 		logger.debug("Dir Local: " + dirLocal);
 		logger.debug("Server: " + server);
-		logger.debug("Login Server:_" + loginServer);
+		logger.debug("Login Server:" + loginServer);
 		logger.debug("Pass Server: " + passServer);
 		logger.debug("Carpeta Remota: " + carpetaRemota);
 		
@@ -306,6 +300,7 @@ public class PDFViewerMB {
 		try {
 			cliente.setDirectorio(carpetaRemota);
 		} catch (IOException e1) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"IOException: "+e1);
 			e1.printStackTrace();
 		}
 		
@@ -316,7 +311,7 @@ public class PDFViewerMB {
 			 
 			cliente.upLoadOneFiles(nombreArchivo,dirLocal);
 			
-			rutaResultante=urlServer+nombreArchivo;
+			rutaResultante = urlServer+nombreArchivo;
 			
 		}
 		return rutaResultante;
@@ -452,8 +447,9 @@ public class PDFViewerMB {
 		
 	public void showPDF()
 	{
+		logger.debug("== showPDF()==");
 		String archivoPDF=getSelectEscaneado().getNomArchivo();
-		logger.debug("PDF File: " +archivoPDF);
+		logger.debug("archivoPDF: " +archivoPDF);
 		//setUrlPDF(archivoPDF);
 		//setMostrarPDF(true);
 		
@@ -463,8 +459,7 @@ public class PDFViewerMB {
 
 	
 
-	public void eliminarArchivos(List<String> aliasArchivos) {
-		
+	public void eliminarArchivos(List<String> aliasArchivos) {		
 		
 		String urlServer="";
 		String server="";
@@ -474,8 +469,7 @@ public class PDFViewerMB {
 		String dirLocal="";
 		String rutaResultante="";
 		
-		//String codUsuario="P014773";
-		
+		//String codUsuario="P014773";		
 		//String dirPDF = "ftp://hilde:$i$tema$2012@10.172.0.4/VISADO/PDF/";
 		
 		if (parametros != null) {
@@ -572,7 +566,7 @@ public class PDFViewerMB {
 	}
 
 	public boolean descargarArchivo(String ubicacionLocal, String aliasArchivo) {
-		
+		logger.debug("== descargarArchivo()===");
 		String urlServer="";
 		String server="";
 		String loginServer="";
@@ -626,12 +620,9 @@ public class PDFViewerMB {
 			if (cliente!=null)
 			{			
 				iRet = cliente.downloadFile(ubicacionLocal,aliasArchivo);						
-			}
-			
+			}			
 		}
-
-		return iRet;
-		
+		return iRet;		
 	}
 	
 	public List<Escaneado> getLstPDFEscaneados() {
