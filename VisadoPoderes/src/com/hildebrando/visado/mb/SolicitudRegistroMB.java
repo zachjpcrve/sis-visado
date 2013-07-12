@@ -3068,10 +3068,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			
 			String ruta = pdfViewerMB.cargarUnicoPDF(anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo(),sUbicacionTemporal + anexo.getAliasTemporal());					
 			if (ruta.compareTo("") != 0) {
-				logger.debug("subio: " + anexo.getAliasTemporal());
+				logger.debug("Se subio el archivo: [" + anexo.getAliasTemporal() +"] al servidor.");
 				exito = exito && true;
 			} else {
-				logger.debug("no subio: " + anexo.getAliasTemporal());
+				logger.debug("No se pudo subir el archivo: [" + anexo.getAliasTemporal() +"] al servidor.");
 				exito = exito && false;
 			}
 		}
