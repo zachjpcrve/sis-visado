@@ -2802,6 +2802,12 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		//solicitudRegistrarT.nroVoucher
 		logger.info("this.getSolicitudRegistrarT().getNroVoucher():" + this.getSolicitudRegistrarT().getNroVoucher());
 	}
+	
+	/**
+	 * Metodo que se encarga de la validacion del nro de voucher ingresado 
+	 * al registrar una solicitud de visado
+	* */
+	
 	@SuppressWarnings({ "unchecked", "null" })
 	public boolean validarNroVoucher() throws Exception {
 		boolean booleano = true;
@@ -3055,7 +3061,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		return sCadena;
 		
 	}
-	 
+	
+	/**
+	 * Metodo que se encarga de cargar los archivos .PDF hacia el servidor FTP
+	 * @return boolean true/false Indica el exito de la operacion
+	 * */
 	public boolean cargarArchivosFTP(){
 		
 		logger.info("************cargarArchivosFTP()*¨**************");
