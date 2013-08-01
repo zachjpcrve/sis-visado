@@ -39,13 +39,25 @@ public class HttpTransferFiles {
 	        HttpPost post = new HttpPost(url);
 	        MultipartEntity entity = new MultipartEntity();
 	        
+	        if(ficherosLeidos!=null){
+	        	System.out.println("Tamaño lista de ficheros: " + ficherosLeidos.size());
+	        }
+	        
+	        System.out.println("Tamaño archivos en trama request - antes: " + entity.getContentLength());
+	        
 	        for(File file : ficherosLeidos){
 	        	entity.addPart("file", new FileBody(file));
-	        }        
+	        }
+	        
+	    	System.out.println("Tamaño archivos en trama request - despues: " + entity.getContentLength());
+	        
 	        post.setEntity(entity);        
 
 	        HttpResponse response;
+	        
 			response = client.execute(post);
+			
+			System.out.println("Despues de ejecutar request: " + response);
         	        			
 			this.filesLoaded = leerResponse(response,post,client);
 						
@@ -55,11 +67,13 @@ public class HttpTransferFiles {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}      
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}	
 
 	
-	private String leerResponse(HttpResponse response, HttpPost post,HttpClient client) throws IllegalStateException, IOException {
+	private String leerResponse(HttpResponse response, HttpPost post,HttpClient client) throws Exception {
         
         String archivosSubidos = "";
         
@@ -96,7 +110,12 @@ public class HttpTransferFiles {
                 post.abort();
                 throw ex;
                 
-            } finally {
+            } catch (Exception ex) {
+
+                // In case of an IOException the connection will be released
+                // back to the connection manager automatically
+                throw ex;
+             } finally {
 
                 // Closing the input stream will trigger connection release
                 instream.close();
