@@ -148,7 +148,8 @@ public class AgregarDocumentos extends JApplet {
             System.out.println("Cantidad de archivos leidos : " + lstFicherosLeidos.size());
             documentosLeidos = sNombreDocLeidos;   
             ficherosLeidos = lstFicherosLeidos;                     
-            sDocumentosCargados = subirArchivoHTTP(ficherosLeidos);            
+            sDocumentosCargados = subirArchivoHTTP(ficherosLeidos);
+            System.out.println("Documentos cargados por HTTP:" + sDocumentosCargados);
             ejecutarFuncion("actualizarDocumentos", documentosLeidos,sDocumentosCargados);//ojo modificar java script
         }
         System.out.println("********actualizar:Fin*************");
