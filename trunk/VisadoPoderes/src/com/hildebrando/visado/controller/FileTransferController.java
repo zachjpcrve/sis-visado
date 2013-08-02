@@ -52,25 +52,24 @@ public class FileTransferController {
 			
 	@RequestMapping(value = "/cargar", method = RequestMethod.POST)	
 	public @ResponseBody String procesoCarga(HttpServletResponse response, HttpServletRequest request) throws Exception {
-		logger.info("*************** procesoCargas ******************");
-		
+		logger.info("============ INICIA procesoCarga ==========");
 		String result="";
-		
-		
 			FileItemFactory factory = new DiskFileItemFactory();
 			
 			ServletFileUpload upload = new ServletFileUpload(factory);
-		    //upload.setSizeMax(1000000);
+			//upload.setSizeMax(1000000);
 
 		    List<FileItem> fileItems = upload.parseRequest(request);
 		    // Process the uploaded items 
 		    
 		    String path = request.getRealPath(File.separator) + File.separator + ConstantesVisado.FILES;
+		    logger.debug("getRealPath: "+request.getRealPath(File.separator));
+		    
 		    List<String> listaArchivos = new ArrayList<String>();
 		    StringBuilder sb = new StringBuilder();
 		    sb.append(FIELD_FILES_LOADED);
 		    
-		    logger.info("Carpeta Files : " + path);
+		    logger.info("[ProcesoCarga]-Carpeta Files : " + path);
 		    File filePath = new File(path);
 		    if(!filePath.exists()){
 		    	filePath.mkdir();
@@ -80,11 +79,11 @@ public class FileTransferController {
 		    	FileItem item = fileItems.get(i);
 		    	String name = FilenameUtils.getBaseName(item.getName());
 		    	String ext = FilenameUtils.getExtension(item.getName()).toLowerCase();
-		    	logger.info("Archivo recibido " + name + "." + ext);		    	
+		    	logger.info("[ProcesoCarga]-Archivo recibido " + name + "." + ext);		    	
 		    	File file=null;
 		    	try {
 		    		file = File.createTempFile(name + "_", "." + ext, filePath);
-		    		logger.info("Archivo copiado " + file.getName());
+		    		logger.info("[ProcesoCarga]-Archivo copiado a /files/:" + file.getName());
 			        item.write(file);
 			        listaArchivos.add(file.getName());
 			        sb.append(file.getName());
@@ -101,10 +100,9 @@ public class FileTransferController {
 		    		}
 		    	}
 		    }	   	 	   	    		   
-		    result = sb.toString();
-		
+		    result = sb.toString();		
 	    
-	    logger.info("*************** procesoCarga: FIN ******************");
+		logger.info("============ SALIENDO de procesoCarga ==========");
 		return result;
 	}
 	
