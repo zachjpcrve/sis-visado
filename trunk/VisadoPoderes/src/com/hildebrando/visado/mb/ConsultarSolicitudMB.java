@@ -2161,24 +2161,28 @@ public class ConsultarSolicitudMB {
 		return resultado;
 	}
 
-	public boolean descargarAnexosFileServer() 
-	{
-		logger.info("********************** descargarAnexosFileServer():INICIO ********************************");
-
+	/**
+	 * Metodo encargado de obtener los anexos (archivos PDF) asociados a la
+	 * solicitud de visado. Verifica la existencia en la ubicación temporal, si 
+	 * este no es el caso se conecta via FTP y devuelve los .PDFs requeridos.
+	 * @return iRet Puede tomar el valor true/false
+	 * **/
+	public boolean descargarAnexosFileServer() {
+		logger.info("====== INICIANDO descargarAnexosFileServer() ======");
 		boolean iRet = true;
-
 		String sUbicacionTemporal = this.getUbicacionTemporal();
-		logger.debug("ubicacion temporal " + sUbicacionTemporal);
-
-
-		logger.debug("Cantidad de anexos a descargar: " + this.lstAnexoSolicitud.size());
+		logger.debug("[Ubicacion Temporal]:" + sUbicacionTemporal);
+		if(lstAnexoSolicitud!=null){
+			logger.debug("[FileServer]-Cantidad Anexos:" + this.lstAnexoSolicitud.size());	
+		}
+		
 		for (TiivsAnexoSolicitud a : this.lstAnexoSolicitud)
 		{
-			File fileTemporal = new File(sUbicacionTemporal
-					+ a.getAliasTemporal());
+			logger.debug("\n---------------------- Recuperando archivo ---------------------------------------------");
+			File fileTemporal = new File(sUbicacionTemporal	+ a.getAliasTemporal());
 			if (!fileTemporal.exists()) 
 			{
-				logger.info("Archivo no existe se descargara:" 	+ a.getAliasArchivo());
+				logger.info("Archivo no existe, se descargara:" + a.getAliasArchivo());
 
 				File fichTemp = null;
 				boolean bSaved = false;
@@ -2189,19 +2193,16 @@ public class ConsultarSolicitudMB {
 					}
 
 					String fileName = a.getId().getCodSoli() + "_" + a.getAliasArchivo();
-					String extension = fileName.substring(fileName
-							.lastIndexOf("."));
+					logger.debug("[Anexo]-fileName:"+fileName);
+					String extension = fileName.substring(fileName.lastIndexOf("."));
 					String sNombreTemporal = "";
 					String sNombrePrefijo = a.getAliasArchivo().substring(0, a.getAliasArchivo().lastIndexOf(".")) + "_";
-					fichTemp = File.createTempFile(sNombrePrefijo, extension, new File(
-							sUbicacionTemporal));
-					sNombreTemporal = fichTemp.getName().substring(
-							1 + fichTemp.getName().lastIndexOf(File.separator));
-					logger.debug("sNombreTemporal: " + sNombreTemporal);
+					fichTemp = File.createTempFile(sNombrePrefijo, extension, new File(sUbicacionTemporal));
+					sNombreTemporal = fichTemp.getName().substring(1 + fichTemp.getName().lastIndexOf(File.separator));
+					logger.debug("[Anexo]-sNombreTemporal: " + sNombreTemporal);
 
 					PDFViewerMB pdfViewerMB = new PDFViewerMB();
-					if (pdfViewerMB.descargarArchivo(
-							fichTemp.getAbsolutePath(), fileName)) {
+					if (pdfViewerMB.descargarArchivo(fichTemp.getAbsolutePath(), fileName)) {
 						a.setAliasTemporal(sNombreTemporal);
 					} else {
 						a.setAliasTemporal("");
@@ -2210,14 +2211,17 @@ public class ConsultarSolicitudMB {
 					bSaved = true;
 
 				} catch (IOException e) {
-					logger.debug("Error al descargar archivo: "
-							+ a.getAliasArchivo());
+					logger.debug("Error al descargar archivo: "		+ a.getAliasArchivo());
 					logger.debug(e.toString());
 					e.printStackTrace();
 					bSaved = false;
-				} finally {
-					fichTemp.deleteOnExit(); // Delete the file when the
-												// JVM terminates
+				} catch (Exception e){
+					logger.error(e);
+					bSaved = false;
+				}
+				finally {
+					// Elimina el archivo cuando JVM finaliza
+					fichTemp.deleteOnExit(); 												
 				}
 				if (bSaved) {
 					GenericDao<TiivsAnexoSolicitud, Object> anexoDAO = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit
@@ -2225,20 +2229,18 @@ public class ConsultarSolicitudMB {
 					try {
 						anexoDAO.modificar(a);
 					} catch (Exception ex) {
-						logger.debug("No se actualizará el anexo "
-								+ ex.getMessage());
+						logger.debug("No se actualizará el anexo "	+ ex.getMessage());
 					}
 					iRet = iRet && true;
 				} else {
 					logger.debug("Error no se actualizará anexo");
 					iRet = iRet && false;
 				}
-
 			} else {
 				logger.info("Archivo ya existe en ubicacion temporal ");
 			}
 		}
-		logger.info("********************** descargarAnexosFileServer():FIN ***********************************");
+		logger.info("====== SALIENDO de descargarAnexosFileServer() ======");
 		return iRet;
 	}
 
