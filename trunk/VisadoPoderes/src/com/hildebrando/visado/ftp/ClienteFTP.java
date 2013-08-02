@@ -58,10 +58,10 @@ public class ClienteFTP
 				logger.debug("[FTP]-setDirectorio:"+directorio);
 				boolean result = ftpCliente.changeWorkingDirectory(directorio); 
 				
-				logger.debug("[FTP]-resultado cambio directorio: "+result);
+				//logger.debug("[FTP]-resultado cambio directorio: "+result);
 				if(result==false){
 					result = ftpCliente.makeDirectory(directorio);
-					logger.debug("resultado creacion directorio: "+result);
+					logger.debug("[FTP]-Resultado Creacion directorio: "+result);
 					ftpCliente.changeWorkingDirectory(directorio);
 				}		
 			}
@@ -135,7 +135,7 @@ public class ClienteFTP
 	
 	public void upLoadOneFiles(String file,String ruta)
 	{
-		logger.debug("=== upLoadOneFiles() ===");
+		logger.debug("=== iniciando upLoadOneFiles() ===");
 		FileInputStream fis =null;
 		logger.debug("[upLoad]-Ruta:" + ruta);
 		logger.debug("[upLoad]-Archivo: "+file);
@@ -225,7 +225,7 @@ public class ClienteFTP
 	}
 	
 	public boolean downloadFile(String rutaLocal, String rutaRemota){
-		
+		logger.debug("====== INICIA downloadFile() =======");
 		FileOutputStream fos = null;		
 		boolean iRet = true;
 		try 
@@ -235,9 +235,13 @@ public class ClienteFTP
 			ftpCliente.setFileType(FTP.BINARY_FILE_TYPE);
 			ftpCliente.setBufferSize(4096);
 			ftpCliente.setFileTransferMode(FTP.BINARY_FILE_TYPE);
-			if(rutaRemota!=null){
-				logger.debug("[RecuperarArchivo]-rutaRemota"+rutaRemota);
+			if(rutaLocal!=null){
+				logger.debug("[RecuperarArchivo]-rutaLocal: "+rutaLocal);
 			}
+			if(rutaRemota!=null){
+				logger.debug("[RecuperarArchivo]-rutaRemota: "+rutaRemota);
+			}
+			
 			iRet = ftpCliente.retrieveFile(rutaRemota, fos);
 			
 		} catch (IOException e) {
@@ -245,6 +249,7 @@ public class ClienteFTP
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en downloadFile:"+e);
             e.printStackTrace();
         } catch(Exception e1){
+        	iRet = false;
         	logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al retrieveFile:"+e1);
         }
 		finally {
@@ -259,6 +264,9 @@ public class ClienteFTP
                 logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en downloadFile-IOException:"+e);
             }
         }		
+		logger.debug("[RecuperarArchivo]-iRet: "+iRet);
+		
+		logger.debug("====== SALIENDO de downloadFile() =======");
 		return iRet;		
 	}
 }
