@@ -114,7 +114,7 @@ public class PDFViewerMB {
 //		filtroParam.add(Restrictions.eq("codUsuario", getCodUsuario()));
 				
 		List<TiivsParametros> lstParametros = paramDAO.buscarDinamico(filtroParam);
-		logger.debug("Lista de parametros encontrados: " + lstParametros.size());
+		//logger.debug("Lista de parametros encontrados: " + lstParametros.size());
 		
 		if(lstParametros.size()>0){
 			parametros = lstParametros.get(0);
@@ -261,7 +261,7 @@ public class PDFViewerMB {
 	
 	public String cargarUnicoPDF(final String nombreArchivo, String ruta)
 	{
-		logger.debug("==== cargarUnicoPDF()-OK === ");
+		logger.debug("============= INICIA cargarUnicoPDF()-OK ============ ");
 		String urlServer="";
 		String server="";
 		String loginServer="";
@@ -269,6 +269,7 @@ public class PDFViewerMB {
 		String carpetaRemota="";
 		String dirLocal="";
 		String rutaResultante="";
+		logger.debug("[CARGAR_UNICO_PDF]-nombreArchivo:"+nombreArchivo);
 				
 		if (parametros != null) {
 			urlServer = ConstantesVisado.PROTOCOLO_FTP
@@ -284,17 +285,14 @@ public class PDFViewerMB {
 			loginServer = parametros.getLoginServer();
 			passServer = parametros.getPassServer();
 			carpetaRemota = parametros.getCarpetaRemota();
-
 		}
 		
-		logger.debug("==Parametros leidos de BD==");
-		logger.debug("Dir Server: " + urlServer);
-		logger.debug("Dir Local: " + dirLocal);
-		logger.debug("Server: " + server);
-		logger.debug("Login Server:" + loginServer);
-		logger.debug("Pass Server: " + passServer);
-		logger.debug("Carpeta Remota: " + carpetaRemota);
-		
+		logger.debug("==PARAMETROS BD==");
+		logger.debug("\tDir Server: " + urlServer);
+		logger.debug("\tDir Local-Ruta: " + dirLocal);
+		logger.debug("\tServer: " + server);
+		logger.debug("\tLogin Server:" + loginServer + "\tPass:" + passServer);
+		logger.debug("\tCarpeta Remota: " + carpetaRemota);		
 				
 		ClienteFTP cliente = new ClienteFTP(server, loginServer, passServer);
 		try {
@@ -302,6 +300,8 @@ public class PDFViewerMB {
 		} catch (IOException e1) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"IOException: "+e1);
 			e1.printStackTrace();
+		}catch(Exception e){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+": "+e);
 		}
 		
 		if (cliente!=null)
@@ -312,8 +312,10 @@ public class PDFViewerMB {
 			cliente.upLoadOneFiles(nombreArchivo,dirLocal);
 			
 			rutaResultante = urlServer+nombreArchivo;
+			logger.debug("rutaResultante: "+rutaResultante);
 			
 		}
+		logger.debug("============= SALIENDO de cargarUnicoPDF()-OK ============ ");
 		return rutaResultante;
 	}
 	
@@ -566,7 +568,9 @@ public class PDFViewerMB {
 	}
 
 	public boolean descargarArchivo(String ubicacionLocal, String aliasArchivo) {
-		logger.debug("== descargarArchivo()===");
+		logger.debug("==== INICIA descargarArchivo()===");
+		logger.debug("[descargarArchivo]-ubicacionLocal:"+ubicacionLocal);
+		logger.debug("[descargarArchivo]-aliasArchivo:"+aliasArchivo);
 		String urlServer="";
 		String server="";
 		String loginServer="";
@@ -596,14 +600,12 @@ public class PDFViewerMB {
 
 		}
 		
-		logger.debug("Parametros leidos de BD");
-		logger.debug("Dir Server: " + urlServer);
-		logger.debug("Dir Local: " + dirLocal);
-		logger.debug("Server: " + server);
-		logger.debug("Login Server:_" + loginServer);
-		logger.debug("Pass Server: " + passServer);
-		logger.debug("Carpeta Remota: " + carpetaRemota);
-		
+		logger.debug(" -- Parametros BD-FTP --");
+		logger.debug("\tDir Server: " + urlServer);
+		logger.debug("\tDir Local: " + dirLocal);
+		logger.debug("\tServer: " + server);
+		logger.debug("\tLogin Server:_" + loginServer + "Pass: " + passServer);
+		logger.debug("\tCarpeta Remota: " + carpetaRemota);		
 		
 		if(iResultCargaParametros == 0){
 			logger.debug("No se ha logrado cargar los parámetros de conexión al FTP");
@@ -619,9 +621,11 @@ public class PDFViewerMB {
 			
 			if (cliente!=null)
 			{			
-				iRet = cliente.downloadFile(ubicacionLocal,aliasArchivo);						
+				iRet = cliente.downloadFile(ubicacionLocal,aliasArchivo);
+				logger.debug("[descargarArchivo]-iRet:"+iRet);
 			}			
 		}
+		logger.debug("==== SALIENDO de descargarArchivo()===");
 		return iRet;		
 	}
 	
