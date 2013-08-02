@@ -426,6 +426,12 @@ public class SolicitudRegistroMB {
 		}
 	}	
 
+	/**
+	 * Metodo encargado de listar los documentos de visado por tipo de solicitud
+	 * en base al item seleccionado. Muestra los documetos obligatorios y 
+	 * opcionales según sea el caso.
+	 * @param e Evento de seleccion del tipo {@link ValueChangeEvent}
+	 * **/
 	public void listarDocumentosXSolicitud(ValueChangeEvent e) {
 		//logger.info("ValuechanceEvent :  " + e.getNewValue());
 		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -444,7 +450,7 @@ public class SolicitudRegistroMB {
 
 			//logger.info(" e.getNewValue()  " + (String) e.getNewValue()+ "  lstTipoSolicitudDocumentos.size : "+ lstTipoSolicitudDocumentos.size());
 		} catch (Exception ex) {
-			logger.info("Error al cargar el listado de documentos por tipo de soliciitud");
+			logger.error("Error al cargar el listado de documentos por tipo de soliciitud" +ex);
 			ex.printStackTrace();
 		}
 		
@@ -452,6 +458,11 @@ public class SolicitudRegistroMB {
 		
 	}		
 
+	/**
+	 * Metodo encargado de asociar la lista de documentos escaneados/existentes en
+	 * la carpeta D:\VisadoPoderes\Escaneados con la lista de documentos mostrados
+	 * en el combo del formulario de registro.
+	 * **/
 	public void actualizarListadoDocumentos() {
 		
 		addArchivosTemporalesToDelete();
@@ -461,6 +472,7 @@ public class SolicitudRegistroMB {
 		for (TiivsTipoSolicDocumento s : lstTipoSolicitudDocumentos) {
 			String nombreCorto = s.getTiivsDocumento().getNombre();
 			String formato = s.getTiivsDocumento().getFormato();
+			logger.debug("nombreCorto:"+nombreCorto + "   formato:"+formato);
 			if (s.getObligatorio()!=null && s.getObligatorio().equals("1") ){
 				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId()
 						.getCodDoc(), s.getTiivsDocumento().getDescripcion(),
@@ -1772,10 +1784,14 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				}
 			}
 		}catch(Exception e){
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al establecerTipoSolicitud(): "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al establecerTipoSolicitud(): "+e);
 		}
 	}
 
+	/**
+	 * Metodo encargado de borrar un archivo en la seccion documentos del
+	 * formulario de registro de solicitud de visado, con el botón "Eliminar".
+	 * */
 	public void quitarDocumentosXTipoSolicitud() {
 		try{
 			logger.info("== quitarDocumentosXTipoSolicitud() ==");						
@@ -1827,40 +1843,44 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	 * invocado desde el applet
 	 * */
 	public void actualizarDocumentosXTipoSolicitud(ActionEvent ae){		
-		logger.info("*****************actualizarDocumentosXTipoSolicitud*****************");
+		logger.info("====== actualizarDocumentosXTipoSolicitud =====");
 		
 		//logger.info("documentos Leidos: " + documentosLeidos);		
-		logger.info("documentos Leidos: " + visadoDocumentosMB.getDocumentosLeidos());
-		logger.info("documentos Cargados: " + visadoDocumentosMB.getDocumentosCargados());
+		logger.info("[Applet-Actualizar]-Documentos LEIDOS: " + visadoDocumentosMB.getDocumentosLeidos());
+		logger.info("[Applet-Actualizar]-Documentos CARGADOS: " + visadoDocumentosMB.getDocumentosCargados());
 		String []aDocumentosLeidos = visadoDocumentosMB.getDocumentosLeidos().split(",");
 		String []aDocumentosCargados = visadoDocumentosMB.getDocumentosCargados().split(",");
 		String nombreDoc = "";
 		
-		//Actualiza lista de documentos
-		
+		//Actualiza lista de documentos		
 		if(aDocumentosLeidos.length == aDocumentosCargados.length){
 			
 			//for(String documento : aDocumentosLeidos){
 			for(int i=0;i<aDocumentosLeidos.length;i++){
 				String documentoLeido = aDocumentosLeidos[i];
 				String documentoCargado = aDocumentosCargados[i];
-				logger.info("Buscando coincidencias para:" + documentoLeido);
+				logger.info("[Applet-Actualizar]-\tBuscando coincidencias para:" + documentoLeido);
 				if(!documentoLeido.trim().isEmpty()){
 					nombreDoc = documentoLeido.substring(0, documentoLeido.lastIndexOf("."));			
 					
 					//Agregar a listado de documentos tabla documentos
 					for(DocumentoTipoSolicitudDTO doc : lstdocumentos){
-						logger.info("nombreDoc = doc.getItem():" + nombreDoc + "=" + doc.getNombreCorto());
+						//logger.info("nombreDoc = doc.getItem():" + nombreDoc + "=" + doc.getNombreCorto());
 						if(doc.getNombreCorto().equals(nombreDoc)){
+							logger.debug("\t[CONCIDEN]-nombreDoc = doc.getItem():" + nombreDoc + "  =" + doc.getNombreCorto());
 							doc.setAlias(documentoLeido);
 							doc.setAliasTemporal(Utilitarios.modificarExtension(documentoCargado));
-							logger.info("actualizó nombre documento:" + doc.getAlias());
+							logger.info("\t[Applet-Actualizar]-Se actualiza nombre documento:" + doc.getAlias());
 							
-							//agregar a lista de anexos de la solicitud
+							//Agregar a lista de anexos de la solicitud
 							TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
 							objAnexo.setId(new TiivsAnexoSolicitudId(null, doc.getItem()));
 							objAnexo.setAliasArchivo(doc.getAlias());
 							objAnexo.setAliasTemporal(doc.getAliasTemporal());
+							
+							logger.debug("==> doc.getAlias():"+doc.getAlias() + "\tdoc.getAliasTemporal():"+doc.getAliasTemporal());
+							
+							
 							lstAnexoSolicitud.add(objAnexo);
 													
 							//Actualiza lstTipoSolicitudDocumentos (listBox de documentos)		
@@ -1879,9 +1899,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		establecerTipoSolicitud();
 				
-		logger.info("(Tabla) lstdocumentos tamaño:" + lstdocumentos.size());
-		logger.info("(Anexos)lstAnexoSolicitud tamaño:" + lstdocumentos.size());
+		logger.info("(Tabla) lstdocumentos tamanhio:" + lstdocumentos.size());
+		logger.info("(Anexos)lstAnexoSolicitud tamanhio:" + lstdocumentos.size());
 		logger.info("(Combo) lstTipoSolicitudDocumentos tamaño:" + lstdocumentos.size());
+		
+		logger.info("====== SALIENDO de actualizarDocumentosXTipoSolicitud =====");
 	}
 	
 	/**
@@ -2639,13 +2661,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 	    
 		try {
-			logger.info("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getMoneda());
+			logger.info("[REGISTR_SOLIC]-Moneda: " +this.solicitudRegistrarT.getMoneda());
 			
 			this.solicitudRegistrarT.setFecha(new Date());
 			this.solicitudRegistrarT.setEstado(this.solicitudRegistrarT.getEstado().trim());
 			this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 
-			logger.info("usuario.getUID() " + usuario.getUID());
+			logger.info("[REGISTR_SOLIC]-Usuario:" + usuario.getUID());
 			this.solicitudRegistrarT.setRegUsuario(usuario.getUID());
 			this.solicitudRegistrarT.setNomUsuario(usuario.getNombre());
 			
@@ -2653,7 +2675,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			{
 				if (oficina!=null)
 				{
-					logger.info("tiivsOficina1.codOfi ::::::: "+ oficina.getCodOfi());
+					logger.info("[REGISTR_SOLIC]-tiivsOficina1.codOfi ::::::: "+ oficina.getCodOfi());
 					for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
 						if (tiivsOficina1.getCodOfi().equals(oficina.getCodOfi())) {
 							this.solicitudRegistrarT.setTiivsOficina1(oficina);
@@ -2664,7 +2686,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			}
 			else
 			{
-				logger.info("tiivsOficina1.codOfi ::::::: "+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+				logger.info("[REGISTR_SOLIC]-tiivsOficina1.codOfi ::::::: "+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
 				for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
 					if (tiivsOficina1.getCodOfi().equals(this.solicitudRegistrarT.getTiivsOficina1().getCodOfi())) {
 						this.solicitudRegistrarT.setTiivsOficina1(tiivsOficina1);
@@ -2686,6 +2708,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				esValido = this.validarRegistroSolicitud();
 			}
 			
+			logger.debug("[REGISTR_SOLIC]-esValido:"+esValido);
+			
 			//if (this.validarRegistroSolicitud()) 
 			if (esValido)
 			{
@@ -2696,7 +2720,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				
 				SolicitudDao<TiivsPersona, Object> servicePK = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 				String sCodigoSol = servicePK.obtenerPKNuevaSolicitud();
-				logger.debug(" sCodigoSol " + sCodigoSol);
+				logger.debug("[REGISTR_SOLIC]-sCodigoSol " + sCodigoSol);
 				this.solicitudRegistrarT.setCodSoli(sCodigoSol);
 		
 		
@@ -2709,22 +2733,26 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						a.setIdAgrupacion(null);//para que la bd asigne id agrupacion
 					}
 				}
-				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
 				
-				  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
+				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
+				TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 				  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),1+""));
 				  objHistorial.setEstado(this.solicitudRegistrarT.getEstado());
 				  objHistorial.setNomUsuario(usuario.getNombre());
 				  objHistorial.setObs(this.solicitudRegistrarT.getObs());
 				  objHistorial.setFecha(new Timestamp(new Date().getTime()));
 				  objHistorial.setRegUsuario(usuario.getUID());
-				  serviceHistorialSolicitud.insertar(objHistorial);
-				 
 				  
-				  for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
+				  serviceHistorialSolicitud.insertar(objHistorial);
+				  
+				if(this.lstAnexoSolicitud!=null){
+					logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+" de Anexos es:"+this.lstAnexoSolicitud.size());
+				}
+				for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
 					  n.getId().setCodSoli(solicitudRegistrarT.getCodSoli());
+					  logger.debug("[ANEXO]-Id:"+n.getId() + "  Alias:"+n.getAliasArchivo()+"  AliasTemp:"+n.getAliasTemporal());
 					  serviceAnexos.insertar(n);
-				   }
+				}
 				 
 				
 				for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
@@ -2736,7 +2764,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				
 				 //Carga ficheros al FTP
 				  boolean bRet = cargarArchivosFTP();
-				  logger.info("Resultado de carga de archivos al FTP:" + bRet);
+				  logger.info("[REGISTR_SOLIC]-Resultado de carga de archivos al FTP:" + bRet);
 				  //Elimina archivos temporales
 				  eliminarArchivosTemporales();
 				  
@@ -2755,9 +2783,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					Utilitarios.mensajeInfo("INFO", mensaje);
 				}
 
-				logger.info("objResultado.getCodSoli(); "+ objResultado.getCodSoli());
-				logger.info("objResultado.getTiivsSolicitudAgrupacions() "+ objResultado.getTiivsSolicitudAgrupacions().size());
-				logger.info("this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getImporte());					
+				logger.info("[REGISTR_SOLIC]-objResultado.getCodSoli(); "+ objResultado.getCodSoli());
+				logger.info("[REGISTR_SOLIC]-objResultado.getTiivsSolicitudAgrupacions() "+ objResultado.getTiivsSolicitudAgrupacions().size());
+				logger.info("[REGISTR_SOLIC]-this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getImporte());					
 				
 				if (actualizarBandeja)
 				{
@@ -3066,30 +3094,34 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	 * Metodo que se encarga de cargar los archivos .PDF hacia el servidor FTP
 	 * @return boolean true/false Indica el exito de la operacion
 	 * */
-	public boolean cargarArchivosFTP(){
-		
-		logger.info("************cargarArchivosFTP()*¨**************");
-		
+	public boolean cargarArchivosFTP(){		
+		logger.info("========= cargarArchivosFTP() ========");		
 		boolean exito = true;
 		String sUbicacionTemporal = getUbicacionTemporal();									
-		logger.info("ubicacion temporal "+ sUbicacionTemporal);
-
-		for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){
-			
+		logger.info("[CARGAR-FTP]-Ubicacion temporal "+ sUbicacionTemporal);
+		if(lstAnexoSolicitud!=null){
+			logger.debug("[CARGAR-FTP]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
+		}
+		for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){			
 			String ruta = pdfViewerMB.cargarUnicoPDF(anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo(),sUbicacionTemporal + anexo.getAliasTemporal());					
+			logger.debug("** [CARGAR-FTP]-ruta"+ruta);
 			if (ruta.compareTo("") != 0) {
-				logger.debug("Se subio el archivo: [" + anexo.getAliasTemporal() +"] al servidor.");
+				logger.debug("[CARGAR-FTP]-Se subio el archivo: [" + anexo.getAliasTemporal() +"] al servidor.");
 				exito = exito && true;
 			} else {
-				logger.debug("No se pudo subir el archivo: [" + anexo.getAliasTemporal() +"] al servidor.");
+				logger.debug("[CARGAR-FTP]-No se pudo subir el archivo: [" + anexo.getAliasTemporal() +"] al servidor.");
 				exito = exito && false;
 			}
 		}
 		return exito;
 	}
 				
+	/**
+	 * Metod que se encargar de limpiar los documentos temporales que ya no
+	 * son necesarios almacenar en el directorio de visado.
+	 * **/
 	public void eliminarArchivosTemporales() {	
-		logger.info("************eliminarArchivosTemporales()*¨**************");
+		logger.info("************ eliminarArchivosTemporales() **************");
 		logger.info("Archivos a eliminar:" + aliasFilesToDelete.size()); 	
 		File fileToDelete = null;
 		
@@ -3097,9 +3129,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			logger.debug("borrar archivo: " + this.getUbicacionTemporal() + sfile);
 			fileToDelete = new File(this.getUbicacionTemporal() + sfile);
 			if(fileToDelete.delete()){
-				logger.debug("borro archivo temporal :" + sfile);
+				logger.debug("Se ha BORRADO el archivo temporal :" + sfile);
 			} else {
-				logger.debug("no borro archivo temporal :" + sfile);
+				logger.debug("No se ha BORRADO el archivo temporal :" + sfile);
 			}
 		}
 		
