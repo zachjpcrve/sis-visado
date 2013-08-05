@@ -115,14 +115,14 @@ public class FiltroUpdUsuario implements Filter {
 		      
 		        	
 		        	if(grupoAdm ==null && grupoJrd==null ){
-		        		logger.info("ROL OFICINA");
+		        		//logger.info("ROL OFICINA");
 		        		sesion.setAttribute("PERFIL_USUARIO", ConstantesVisado.OFICINA);
 		        	}else{
 		        		 if (grupoAdm ==null) {
-		        			 logger.info("ROL ABOGADO");
+		        			// logger.info("ROL ABOGADO");
 		        			 sesion.setAttribute("PERFIL_USUARIO", ConstantesVisado.ABOGADO);
 		        		 }else{	
-		        			 logger.info("ROL SSJJ");
+		        			 //logger.info("ROL SSJJ");
 		        			 sesion.setAttribute("PERFIL_USUARIO", ConstantesVisado.SSJJ);
 		        		 }
 		        	}
