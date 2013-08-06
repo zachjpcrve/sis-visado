@@ -1,8 +1,13 @@
 package com.hildebrando.visado.mb;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -10,17 +15,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -142,7 +154,8 @@ public class SolicitudRegistroMB {
 	public static Logger logger = Logger.getLogger(SolicitudRegistroMB.class);
 	String cadenaEscanerFinal = "";
 	//http://172.31.9.41:9080/NAEWeb/pages/escaner/InvocaEscaner.xhtml?idEmpresa=1&idSistema=98&txLogin=P014773
-	private UploadedFile file;
+	private UploadedFile fileUpload;
+	private StreamedContent fileDownload;
 	private String sMonedaImporteGlobal;  
 	private String ancho_FieldSet;
 	private String ancho_FieldSet_Poder;
@@ -168,12 +181,12 @@ public class SolicitudRegistroMB {
 	private String codigoRazonSocial = "0000";
 	
 	
-    public UploadedFile getFile() {  
-        return file;  
+    public UploadedFile getFileUpload() {  
+        return fileUpload;  
     }  
   
-    public void setFile(UploadedFile file) {  
-        this.file = file;  
+    public void setFileUpload(UploadedFile fileUpload) {  
+        this.fileUpload = fileUpload;  
     }  
 
 	public SolicitudRegistroMB() {
@@ -364,12 +377,12 @@ public class SolicitudRegistroMB {
 	
 	public String cargarUnicoPDF(String aliasArchivo) {
 		
-		if(file == null){
+		if(fileUpload == null){
 			Utilitarios.mensajeInfo("", "No se ha seleccionado ningún archivo");
 			return "";
 		}
 		
-		byte fileBytes[] = getFile().getContents();
+		byte fileBytes[] = getFileUpload().getContents();
 
 		File fichTemp = null;
 		String sUbicacionTemporal = "";
@@ -379,7 +392,8 @@ public class SolicitudRegistroMB {
 		try {
 			
 			//Obteniendo ubicación del proyecto
-			sUbicacionTemporal = Utilitarios.getProjectPath()  + File.separator + ConstantesVisado.FILES + File.separator;			
+			//sUbicacionTemporal = Utilitarios.getProjectPath()  + File.separator + ConstantesVisado.FILES + File.separator;
+			sUbicacionTemporal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator + ConstantesVisado.FILES + File.separator;
 			this.setUbicacionTemporal(sUbicacionTemporal);
 			
 			logger.debug("  Ubicacion Temporal:"+ sUbicacionTemporal);
@@ -387,7 +401,7 @@ public class SolicitudRegistroMB {
 			File fDirectory = new File(sUbicacionTemporal);
 			fDirectory.mkdirs();	
 			
-			String extension = file.getFileName().substring(getFile().getFileName().lastIndexOf("."));
+			String extension = fileUpload.getFileName().substring(getFileUpload().getFileName().lastIndexOf("."));
 						
 			if(aliasArchivo.equals("")){
 				aliasArchivo = "temp";
@@ -2762,8 +2776,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					 serviceSoli.insertar(a);
 				}
 				
-				 //Carga ficheros al FTP
-				  boolean bRet = cargarArchivosFTP();
+				 //Carga ficheros al File Server
+				  boolean bRet = cargarArchivosFileServer();
 				  logger.info("[REGISTR_SOLIC]-Resultado de carga de archivos al FTP:" + bRet);
 				  //Elimina archivos temporales
 				  eliminarArchivosTemporales();
@@ -3091,11 +3105,39 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}
 	
 	/**
+	 * Metodo que se encarga de cargar los archivos .PDF hacia el FileServer
+	 * @return boolean true/false Indica el exito de la operacion
+	 * */
+	public boolean cargarArchivosFileServer(){			
+		logger.info("========= cargarArchivosFileServer() ========");		
+		boolean exito = true;
+		String sUbicacionTemporal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator + ConstantesVisado.FILES + File.separator;
+		String ubicacionFinal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator;		
+		logger.info("[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);
+		if(lstAnexoSolicitud!=null){
+			logger.debug("[CARGAR-FILESERVER]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
+		}
+		for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){													
+			File srcFile = new File(sUbicacionTemporal + anexo.getAliasTemporal());						
+			File destFile = new File(ubicacionFinal + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
+			try {
+				FileUtils.moveFile(srcFile, destFile);
+			} catch (IOException e) {
+				logger.error("Error al mover el archvo al fileServer", e);
+			}
+			if(!destFile.isFile() && destFile.length()>0){
+				exito = false;
+			}
+		}
+		return exito;		
+	}
+	
+	/**
 	 * Metodo que se encarga de cargar los archivos .PDF hacia el servidor FTP
 	 * @return boolean true/false Indica el exito de la operacion
 	 * */
-	public boolean cargarArchivosFTP(){		
-		logger.info("========= cargarArchivosFTP() ========");		
+	public boolean cargarArchivosFTP(){					
+		logger.info("========= cargarArchivosFileServer() ========");		
 		boolean exito = true;
 		String sUbicacionTemporal = getUbicacionTemporal();									
 		logger.info("[CARGAR-FTP]-Ubicacion temporal "+ sUbicacionTemporal);
@@ -3170,6 +3212,73 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas: " + e);
 		}
 		
+		
+	}
+	
+	public String descargarDocumento() {
+
+		HttpServletResponse response = (HttpServletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		
+		
+		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		
+		String nombreDocumento = params.get("nombreArchivo");
+		
+		String rutaDocumento = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS
+				+ File.separator + ConstantesVisado.FILES + File.separator + nombreDocumento;
+		
+		
+		String outputFileName = rutaDocumento;
+		
+		File outputPDF = new File(outputFileName);
+
+		// Get ready to return pdf to user
+		BufferedInputStream input = null;
+		BufferedOutputStream output = null;
+		try {
+			// Open file.
+			input = new BufferedInputStream(new FileInputStream(outputPDF),
+					10240);
+
+			// Return PDF to user
+			// Init servlet response.
+			response.reset();
+			response.setHeader("Content-Type", "application/pdf");
+			response.setHeader("Content-Length",
+					String.valueOf(outputPDF.length()));
+			response.setHeader("Content-Disposition", "attachment; filename=\""
+					+ nombreDocumento + "\"");
+			output = new BufferedOutputStream(response.getOutputStream(), 10240);
+
+			// Write file contents to response.
+			byte[] buffer = new byte[10240];
+			int length;
+			while ((length = input.read(buffer)) > 0) {
+				output.write(buffer, 0, length);
+			}
+
+			// Finalize task.
+			output.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				output.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				input.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		FacesContext.getCurrentInstance().responseComplete();
+		
+		return "";
 		
 	}
 
@@ -3662,7 +3771,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	public void setPatter(String patter) {
 		this.patter = patter;
 	}
-	
-	
+
+	public StreamedContent getFileDownload() {
+		return fileDownload;
+	}
+
+	public void setFileDownload(StreamedContent fileDownload) {
+		this.fileDownload = fileDownload;
+	}
 	
 }

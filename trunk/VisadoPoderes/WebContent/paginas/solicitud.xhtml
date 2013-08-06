@@ -487,7 +487,7 @@
 													            </p:column>
 																		<f:selectItem itemLabel="Otros" itemValue="Otros" />
 																	</p:selectOneMenu></td>
-																<td><p:fileUpload value="#{solicitudRegMB.file}"
+																<td><p:fileUpload value="#{solicitudRegMB.fileUpload}"
 																		id="idfileUpload" mode="simple" update="idfileUpload"
 																		auto="false" sizeLimit="100000"
 																		allowTypes="/(\.|\/)(pdf)$/" /></td>
@@ -524,11 +524,20 @@
 																				disabled="true" />
 																		</p:column>
 																		<p:column headerText="Archivo">
-																			<h:outputLink
-																				onclick="window.open('../../files/#{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;"
+																		
+																			<!-- <h:outputLink
+																				onclick="window.open('../../files/{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;"
 																				value="#">
-																				<h:outputText value="#{s.alias}" />
-																			</h:outputLink>
+																				<h:outputText value="{s.alias}" />
+																			</h:outputLink>		 -->																	
+																			
+																			<h:commandLink id="downloadLink"
+																				action="#{solicitudRegMB.descargarDocumento}" immediate="true"
+																				>	
+																				<h:outputText value="#{s.alias}" />																			
+																				<f:param name="nombreArchivo" value="#{s.aliasTemporal}"/>
+																			</h:commandLink>
+																			
 																		</p:column>
 																		<p:column headerText="Eliminar">
 																			<p:commandButton 
