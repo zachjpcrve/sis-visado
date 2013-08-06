@@ -505,9 +505,17 @@
 																		<p:selectBooleanCheckbox value="#{s.bobligacion}"  disabled="true"/>																	
 																	</p:column>
 																	<p:column headerText="Archivo" >																																																			
-																		<h:outputLink onclick="window.open('../../files/#{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
-																			<h:outputText value="#{s.alias}" /> 
-																		</h:outputLink>																																																																																																																																									
+																		<!-- <h:outputLink onclick="window.open('../../files/{s.aliasTemporal}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
+																			<h:outputText value="{s.alias}" /> 
+																		</h:outputLink>							 -->		
+																		
+																		<h:commandLink id="downloadLink"
+																			action="#{consultarSolicitudMB.descargarDocumento}" immediate="true"
+																			target="_blank" >	
+																			<h:outputText value="#{s.alias}" />																			
+																			<f:param name="nombreArchivo" value="#{s.aliasTemporal}"/>
+																		</h:commandLink>
+																																																																																																																																																		
 																	</p:column>
 																	<p:column headerText="Eliminar">
 																	 	<p:commandButton 

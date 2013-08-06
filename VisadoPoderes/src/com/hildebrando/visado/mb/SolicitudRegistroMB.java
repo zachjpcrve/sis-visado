@@ -3129,7 +3129,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			File srcFile = new File(sUbicacionTemporal + anexo.getAliasTemporal());						
 			File destFile = new File(ubicacionFinal + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
 			try {
-				FileUtils.moveFile(srcFile, destFile);
+				FileUtils.copyFile(srcFile, destFile);
 			} catch (IOException e) {
 				logger.error("Error al mover el archivo al fileServer", e);
 			}
