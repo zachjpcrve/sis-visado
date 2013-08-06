@@ -1,6 +1,9 @@
 package com.hildebrando.visado.mb;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -22,7 +25,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -2170,28 +2175,44 @@ public class ConsultarSolicitudMB {
 	public boolean descargarAnexosFileServer() {
 		logger.info("====== INICIANDO descargarAnexosFileServer() ======");
 		boolean iRet = true;
-		String sUbicacionTemporal = this.getUbicacionTemporal();
+		String sUbicacionTemporal;
+		String sUbicacionFinal;
+				
+		//Si la solicitud tiene no esta en estado REGISTRADO (Vista de solicitud) se copian la carpeta de la aplicacion;
+		
+		if(this.getSolicitudRegistrarT().getEstado().equalsIgnoreCase(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)){
+			sUbicacionTemporal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS + File.separator + ConstantesVisado.FILES + File.separator;
+		} else {
+			sUbicacionTemporal = Utilitarios.getProjectPath() + File.separator + ConstantesVisado.FILES + File.separator;
+		}
+		
+		sUbicacionFinal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS + File.separator;
+		
 		logger.debug("[Ubicacion Temporal]:" + sUbicacionTemporal);
 		if(lstAnexoSolicitud!=null){
 			logger.debug("[FileServer]-Cantidad Anexos:" + this.lstAnexoSolicitud.size());	
 		}
 		
+		File srcFile = null;
+		File fichTemp = null;
+		File fDirectory =null;
+		
 		for (TiivsAnexoSolicitud a : this.lstAnexoSolicitud)
 		{
 			logger.debug("\n---------------------- Recuperando archivo ---------------------------------------------");
-			File fileTemporal = new File(sUbicacionTemporal	+ a.getAliasTemporal());
-			if (!fileTemporal.exists()) 
+			fichTemp = new File(sUbicacionTemporal	+ a.getAliasTemporal());
+			if (!fichTemp.exists()) 
 			{
 				logger.info("Archivo no existe, se descargara:" + a.getAliasArchivo());
-
-				File fichTemp = null;
+				
 				boolean bSaved = false;
 				try {
-					File fDirectory = new File(sUbicacionTemporal);
+					fDirectory = new File(sUbicacionTemporal);
 					if (!fDirectory.exists()) {
 						fDirectory.mkdirs();
 					}
 
+					//Crea archivo temporal
 					String fileName = a.getId().getCodSoli() + "_" + a.getAliasArchivo();
 					logger.debug("[Anexo]-fileName:"+fileName);
 					String extension = fileName.substring(fileName.lastIndexOf("."));
@@ -2201,14 +2222,28 @@ public class ConsultarSolicitudMB {
 					sNombreTemporal = fichTemp.getName().substring(1 + fichTemp.getName().lastIndexOf(File.separator));
 					logger.debug("[Anexo]-sNombreTemporal: " + sNombreTemporal);
 
-					PDFViewerMB pdfViewerMB = new PDFViewerMB();
-					if (pdfViewerMB.descargarArchivo(fichTemp.getAbsolutePath(), fileName)) {
+					srcFile = new File(sUbicacionFinal + a.getId().getCodSoli() +  "_" + a.getAliasArchivo());
+					
+					//Copia los archivos del File server a la carpeta temporal
+					FileUtils.copyFile(srcFile, fichTemp);
+					
+					if(fichTemp!=null && fichTemp.exists()){
 						a.setAliasTemporal(sNombreTemporal);
 					} else {
 						a.setAliasTemporal("");
 						logger.debug("Archivo no existe en el File Server");
 					}
+					
 					bSaved = true;
+					
+//					PDFViewerMB pdfViewerMB = new PDFViewerMB();
+//					if (pdfViewerMB.descargarArchivo(fichTemp.getAbsolutePath(), fileName)) {
+//						a.setAliasTemporal(sNombreTemporal);
+//					} else {
+//						a.setAliasTemporal("");
+//						logger.debug("Archivo no existe en el File Server");
+//					}
+//					bSaved = true;					
 
 				} catch (IOException e) {
 					logger.debug("Error al descargar archivo: "		+ a.getAliasArchivo());
@@ -2576,6 +2611,39 @@ public class ConsultarSolicitudMB {
 		}
 		return exito;
 	}
+	
+	
+	/**
+	 * Metodo que se encarga de cargar los archivos .PDF hacia el FileServer
+	 * @return boolean true/false Indica el exito de la operacion
+	 * */
+	public boolean cargarArchivosFileServer(){			
+		logger.info("========= cargarArchivosFileServer() ========");		
+		boolean exito = true;
+		String sUbicacionTemporal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator + ConstantesVisado.FILES + File.separator;
+		String ubicacionFinal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator;		
+		logger.info("[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);
+		if(lstAnexoSolicitud!=null){
+			logger.debug("[CARGAR-FILESERVER]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
+		}
+		for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){													
+			File srcFile = new File(sUbicacionTemporal + anexo.getAliasTemporal());						
+			File destFile = new File(ubicacionFinal + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
+			try {
+				FileUtils.copyFile(srcFile, destFile);
+			} catch (IOException e) {
+				logger.error("Error al mover el archivo al fileServer", e);
+			}
+			catch (Exception ex) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al mover archivo al fileServer:" + ex);
+			}
+			if(!destFile.isFile() && destFile.length()>0){
+				exito = false;
+			}
+		}
+		logger.debug("exito:"+exito);
+		return exito;		
+	}
 
 	public void eliminarArchivosTemporales() {
 		logger.info("************eliminarArchivosTemporales()*¨**************");
@@ -2693,8 +2761,11 @@ public class ConsultarSolicitudMB {
 				
 								  
 				// Carga ficheros al FTP
-				boolean bRet = cargarArchivosFTP();
-				logger.info("Resultado de carga de archivos al FTP:" + bRet);
+//				boolean bRet = cargarArchivosFTP();
+//				logger.info("Resultado de carga de archivos al FTP:" + bRet);
+				 //Carga ficheros al File Server
+				boolean bRet = cargarArchivosFileServer();
+				logger.info("[REGISTR_SOLIC]-Resultado de carga de archivos al FileServer:" + bRet);
 				// Elimina archivos temporales
 				eliminarArchivosTemporales();
 
@@ -3460,8 +3531,10 @@ public class ConsultarSolicitudMB {
 			// Obteniendo ubicación del proyecto
 			HttpServletRequest request = (HttpServletRequest) FacesContext
 					.getCurrentInstance().getExternalContext().getRequest();
-			sUbicacionTemporal = request.getRealPath(File.separator)
-					+ File.separator + "files" + File.separator;
+			
+			//sUbicacionTemporal = request.getRealPath(File.separator) + File.separator + "files" + File.separator;
+			sUbicacionTemporal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator + ConstantesVisado.FILES + File.separator;
+			
 			this.setUbicacionTemporal(sUbicacionTemporal);
 
 			logger.debug("ubicacion temporal " + sUbicacionTemporal);
@@ -5246,6 +5319,77 @@ public class ConsultarSolicitudMB {
 
 	public CombosMB getCombosMB() {
 		return combosMB;
+	}
+	
+	public String descargarDocumento() {
+		logger.debug("=== inicia descargarDocumento() ====");
+		HttpServletResponse response = (HttpServletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		
+		
+		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		
+		String nombreDocumento = params.get("nombreArchivo");
+		logger.debug("[DESCARG_DOC]-nombreDocumento: "+nombreDocumento);
+		
+		String rutaDocumento = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS
+				+ File.separator + ConstantesVisado.FILES + File.separator + nombreDocumento;
+		
+		logger.debug("[DESCARG_DOC]-rutaDocumento: "+rutaDocumento);
+		String outputFileName = rutaDocumento;
+		
+		File outputPDF = new File(outputFileName);
+
+		// Get ready to return pdf to user
+		BufferedInputStream input = null;
+		BufferedOutputStream output = null;
+		try {
+			// Open file.
+			input = new BufferedInputStream(new FileInputStream(outputPDF),10240);
+
+			// Return PDF to user
+			// Init servlet response.
+			response.reset();
+			response.setHeader("Content-Type", "application/pdf");
+			response.setHeader("Content-Length",String.valueOf(outputPDF.length()));
+			response.setHeader("Content-Disposition", "attachment; filename=\""+ nombreDocumento + "\"");
+			output = new BufferedOutputStream(response.getOutputStream(), 10240);
+
+			// Write file contents to response.
+			byte[] buffer = new byte[10240];
+			int length;
+			while ((length = input.read(buffer)) > 0) {
+				output.write(buffer, 0, length);
+			}
+			logger.debug("finalizando OK");
+			// Finalize task.
+			output.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:"+e);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento:"+ex);
+		} 
+		finally {
+			try {
+				output.close();
+			} catch (IOException e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento:"+e);
+				e.printStackTrace();
+			}
+			try {
+				input.close();
+			} catch (IOException e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:"+e);
+				e.printStackTrace();
+			}
+		}
+		FacesContext.getCurrentInstance().responseComplete();
+		
+		logger.debug("=== saliendo de descargarDocumento() ====");
+		
+		return "";		
 	}
 
 	public void setCombosMB(CombosMB combosMB) {

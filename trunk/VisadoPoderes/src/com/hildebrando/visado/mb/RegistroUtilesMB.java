@@ -1,15 +1,23 @@
 package com.hildebrando.visado.mb;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -499,8 +507,7 @@ public class RegistroUtilesMB {
 			fechaRetorno = fecha.getTime();
 		}		
 		return fechaRetorno;
-	}
-	
+	}			
 	
 	public String getEntrada() {
 		return entrada;
