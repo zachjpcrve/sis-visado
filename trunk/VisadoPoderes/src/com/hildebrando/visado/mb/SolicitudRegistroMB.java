@@ -376,7 +376,7 @@ public class SolicitudRegistroMB {
 	}
 	
 	public String cargarUnicoPDF(String aliasArchivo) {
-		
+		logger.debug("== inicia cargarUnicoPDF()====");
 		if(fileUpload == null){
 			Utilitarios.mensajeInfo("", "No se ha seleccionado ningún archivo");
 			return "";
@@ -396,7 +396,7 @@ public class SolicitudRegistroMB {
 			sUbicacionTemporal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator + ConstantesVisado.FILES + File.separator;
 			this.setUbicacionTemporal(sUbicacionTemporal);
 			
-			logger.debug("  Ubicacion Temporal:"+ sUbicacionTemporal);
+			logger.debug(" -> Ubicacion Temporal:"+ sUbicacionTemporal);
 			
 			File fDirectory = new File(sUbicacionTemporal);
 			fDirectory.mkdirs();	
@@ -2689,7 +2689,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			{
 				if (oficina!=null)
 				{
-					logger.info("[REGISTR_SOLIC]-tiivsOficina1.codOfi ::::::: "+ oficina.getCodOfi());
+					logger.info("[REGISTR_SOLIC]-codOficina: "+ oficina.getCodOfi());
 					for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
 						if (tiivsOficina1.getCodOfi().equals(oficina.getCodOfi())) {
 							this.solicitudRegistrarT.setTiivsOficina1(oficina);
@@ -2700,7 +2700,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			}
 			else
 			{
-				logger.info("[REGISTR_SOLIC]-tiivsOficina1.codOfi ::::::: "+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+				logger.info("[REGISTR_SOLIC]-codOficina: "+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
 				for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
 					if (tiivsOficina1.getCodOfi().equals(this.solicitudRegistrarT.getTiivsOficina1().getCodOfi())) {
 						this.solicitudRegistrarT.setTiivsOficina1(tiivsOficina1);
@@ -2729,7 +2729,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			{
 				if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 					this.enviarSolicitudSSJJ();
-					logger.info(solicitudRegistrarT.getTiivsEstudio().getCodEstudio());					
+					logger.info("Estudio: "+solicitudRegistrarT.getTiivsEstudio().getCodEstudio());					
 				}
 				
 				SolicitudDao<TiivsPersona, Object> servicePK = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
@@ -2778,7 +2778,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				
 				 //Carga ficheros al File Server
 				  boolean bRet = cargarArchivosFileServer();
-				  logger.info("[REGISTR_SOLIC]-Resultado de carga de archivos al FTP:" + bRet);
+				  logger.info("[REGISTR_SOLIC]-Resultado de carga de archivos al FileServer:" + bRet);
 				  //Elimina archivos temporales
 				  eliminarArchivosTemporales();
 				  
@@ -2809,7 +2809,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			}
 		} catch (Exception e) {
 			this.redirect="";
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage(),e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e);
 			Utilitarios.mensajeError("ERROR", "Ocurrió un Error al grabar la Solicitud");
 
 		}
@@ -2823,12 +2823,16 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		return redirect;
 	}		
 
-	/**Enviar la solicitud a SSJJ*/
+	/**
+	 * Metodo que se encarga del envío de la solicitud de visado a  SSJJ (Servicios 
+	 * Juridicos). Aqui es donse se obtiene el estudio de menor carga y se setea el
+	 * estado ENVIADO.
+	 * */
 	public void enviarSolicitudSSJJ() {
 		Timestamp time = new Timestamp(objRegistroUtilesMB.obtenerFechaRespuesta().getTime());
-		logger.info("time : " + time);
+		logger.info("[EnviarSSJJ]-FechaRespuesta : " + time);
 		String sCodigoEstudio = objRegistroUtilesMB.obtenerEstudioMenorCarga();
-		logger.info(" sCodigoEstudio +  " + sCodigoEstudio);
+		logger.info("[EnviarSSJJ]-CodEstudio-menorCarga: +  " + sCodigoEstudio);
 		for (TiivsEstudio x : combosMB.getLstEstudio()) {
 			if (x.getCodEstudio().equals(sCodigoEstudio)) {
 				this.solicitudRegistrarT.setTiivsEstudio(x);
@@ -2981,14 +2985,18 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		return retorno;
 	}
 	
-	private boolean validarEnvioSolicitud() throws Exception {
-		
+	/**
+	 * Metodo que se encarga de la validacion de la solicitud de visado, entre
+	 * las validaciones se consideran que los campos no sean nulos, obligatoriedad
+	 * de algunas secciones, etc
+	 * @return true/false Respuesta de validacion
+	 * */
+	private boolean validarEnvioSolicitud() throws Exception {		
 		  
 		boolean retorno = true;
 		String mensaje = "";
 		
-		logger.info("solicitudRegistrarT.getTiivsOficina1() "+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
-		
+		logger.info("[VALIDA_ENV_SOLIC]-Oficina:"+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
 		//Validacion de oficina
 		if (solicitudRegistrarT.getTiivsOficina1() == null) {
 			mensaje = "Ingrese una Oficina";
@@ -3021,7 +3029,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					}
 				 else {
 					retorno =this.validarNroVoucher();
-				    }
+				 }
 				 
 		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
 			mensaje = "Ingrese la sección Apoderado y Poderdante";
@@ -3123,12 +3131,16 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			try {
 				FileUtils.moveFile(srcFile, destFile);
 			} catch (IOException e) {
-				logger.error("Error al mover el archvo al fileServer", e);
+				logger.error("Error al mover el archivo al fileServer", e);
+			}
+			catch (Exception ex) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al mover archivo al fileServer:" + ex);
 			}
 			if(!destFile.isFile() && destFile.length()>0){
 				exito = false;
 			}
 		}
+		logger.debug("exito:"+exito);
 		return exito;		
 	}
 	
@@ -3216,7 +3228,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}
 	
 	public String descargarDocumento() {
-
+		logger.debug("=== inicia descargarDocumento() ====");
 		HttpServletResponse response = (HttpServletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		
@@ -3224,11 +3236,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		
 		String nombreDocumento = params.get("nombreArchivo");
-		
+		logger.debug("[DESCARG_DOC]-nombreDocumento: "+nombreDocumento);
 		String rutaDocumento = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS
 				+ File.separator + ConstantesVisado.FILES + File.separator + nombreDocumento;
 		
-		
+		logger.debug("[DESCARG_DOC]-rutaDocumento: "+rutaDocumento);
 		String outputFileName = rutaDocumento;
 		
 		File outputPDF = new File(outputFileName);
@@ -3238,17 +3250,14 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		BufferedOutputStream output = null;
 		try {
 			// Open file.
-			input = new BufferedInputStream(new FileInputStream(outputPDF),
-					10240);
+			input = new BufferedInputStream(new FileInputStream(outputPDF),10240);
 
 			// Return PDF to user
 			// Init servlet response.
 			response.reset();
 			response.setHeader("Content-Type", "application/pdf");
-			response.setHeader("Content-Length",
-					String.valueOf(outputPDF.length()));
-			response.setHeader("Content-Disposition", "attachment; filename=\""
-					+ nombreDocumento + "\"");
+			response.setHeader("Content-Length",String.valueOf(outputPDF.length()));
+			response.setHeader("Content-Disposition", "attachment; filename=\""+ nombreDocumento + "\"");
 			output = new BufferedOutputStream(response.getOutputStream(), 10240);
 
 			// Write file contents to response.
@@ -3257,29 +3266,35 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			while ((length = input.read(buffer)) > 0) {
 				output.write(buffer, 0, length);
 			}
-
+			logger.debug("finalizando OK");
 			// Finalize task.
 			output.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:"+e);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento:"+ex);
+		} 
+		finally {
 			try {
 				output.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento:"+e);
 				e.printStackTrace();
 			}
 			try {
 				input.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:"+e);
 				e.printStackTrace();
 			}
 		}
 		FacesContext.getCurrentInstance().responseComplete();
 		
-		return "";
+		logger.debug("=== saliendo de descargarDocumento() ====");
 		
+		return "";		
 	}
 
 	private void obtenCodRazonSocial() {
