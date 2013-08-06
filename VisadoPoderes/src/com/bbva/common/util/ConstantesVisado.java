@@ -194,6 +194,7 @@ public class ConstantesVisado {
 	public static final String PROTOCOLO_FTP="ftp";
 	public static final String SALTO_LINEA = "\n";
 	public static final String EXTENSION_XLS = ".xls";
+	public static final String EXTENSION_PDF = ".pdf";
 	public static final String ESPACIO_BLANCO =" ";
 	public static final String UNDERLINE = "_";
 	
@@ -479,6 +480,7 @@ public class ConstantesVisado {
 	
 		public static final int DOCUMENTO_OBLIGATORIO = 1;
 		public static final String CARPETA_LOG_CLIENTE = "C:/Visado Poderes/log";
+		public static final String PATH_FILE_SERVER_DOCUMENTOS = "D:/mnt/compartido/visado/documentos";
 	
 	static public class MENSAJE_CARTA_ATENCION {
 		public static final String MENSAJE_OFICINA="¿Está seguro de generar la Carta de atención? Luego de la generación no podrá volverse a imprimir.";
