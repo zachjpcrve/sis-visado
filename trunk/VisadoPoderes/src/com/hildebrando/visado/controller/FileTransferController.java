@@ -41,11 +41,14 @@ public class FileTransferController {
 			//upload.setSizeMax(1000000);
 
 		    List<FileItem> fileItems = upload.parseRequest(request);
+		    if(fileItems!=null){
+		    	logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"fileItems es:"+fileItems.size());
+		    }
 		    // Process the uploaded items 
 		    
 		    //String path = request.getRealPath(File.separator) + File.separator + ConstantesVisado.FILES;
 		    String path = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator + ConstantesVisado.FILES + File.separator;
-		    logger.debug("getRealPath: "+request.getRealPath(File.separator));
+		    //logger.debug("getRealPath: "+request.getRealPath(File.separator));
 		    
 		    List<String> listaArchivos = new ArrayList<String>();
 		    StringBuilder sb = new StringBuilder();
@@ -54,6 +57,7 @@ public class FileTransferController {
 		    logger.info("[ProcesoCarga]-Carpeta Files : " + path);
 		    File filePath = new File(path);
 		    if(!filePath.exists()){
+		    	logger.debug("Se creara el directorio si no existe");
 		    	filePath.mkdir();
 		    }
 		    	
