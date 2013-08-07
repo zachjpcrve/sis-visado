@@ -77,6 +77,14 @@ import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
 import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
 import com.hildebrando.visado.service.TiposDoiService;
 
+/**
+ * Clase encargada del registro de la solicitud de visado, esto implica
+ * el envio de archivos adjuntos, obtener listados de BD, validaciones antes
+ * del registro de la solcicitud, etc.
+ * @author hildebrando
+ * @version 1.0
+ * **/
+
 @ManagedBean(name = "solicitudRegMB")
 @SessionScoped
 public class SolicitudRegistroMB {
@@ -227,8 +235,8 @@ public class SolicitudRegistroMB {
 		ancho_Popup_Poder=(String) Utilitarios.getObjectInSession("ANCHO_POPUP_PODER");
 		ancho_Revoc_Poder=(String) Utilitarios.getObjectInSession("ANCHO_REVOC_PODER");
 		
-		logger.info("Ancho Fieldset Datos Generales: " + ancho_FieldSet);
-		logger.info("Ancho Fieldset Datos Poderdantes: " + ancho_FieldSet_Poder);
+		//logger.debug("Ancho Fieldset Datos Generales: " + ancho_FieldSet);
+		//logger.debug("Ancho Fieldset Datos Poderdantes: " + ancho_FieldSet_Poder);
 		
 		String sPerfilUsu=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
@@ -264,12 +272,10 @@ public class SolicitudRegistroMB {
 		logger.info("**************************** eliminarPersona ****************************");
 		logger.info("Codigo de la persona capturada a Eliminar " +objTiivsPersonaCapturado.getCodPer());
 		logger.info(" Lista de las Personas Antes de Remover " +lstTiivsPersona.size());
-		logger.info(" q es '????  " +objTiivsPersonaCapturado.getTipPartic());
+		logger.info(" TipoParticipe: " +objTiivsPersonaCapturado.getTipPartic());
 		logger.info(" objTiivsPersonaCapturado  " + objTiivsPersonaCapturado.getCodPer());
 		
 		logger.info(" getTiivsAgrupacionPersonas  " + objTiivsPersonaCapturado.getCodPer());
-		
-		
 		logger.info(" tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas() inicio " + tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size());
 		
 		
@@ -286,7 +292,6 @@ public class SolicitudRegistroMB {
 		logger.info(" tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas() despues " + tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size());
 		logger.info(" lstTiivsPersona despues " + lstTiivsPersona.size());
 		
-
 	}
 
 	/*public void eliminarPersona() {
@@ -335,7 +340,7 @@ public class SolicitudRegistroMB {
 					lstClasificacionPersona.add(t);
 				}
 				
-				logger.debug("tamanio lista clasificacion: "+lstClasificacionPersona.size());
+				logger.debug("Tamanio lista clasificacion: "+lstClasificacionPersona.size());
 			}
 			else
 			{
@@ -461,10 +466,9 @@ public class SolicitudRegistroMB {
 			logger.info("lstTipoSolicitudDocumentos.size()" + lstTipoSolicitudDocumentos.size());
 
 			actualizarListadoDocumentos();
-
-			//logger.info(" e.getNewValue()  " + (String) e.getNewValue()+ "  lstTipoSolicitudDocumentos.size : "+ lstTipoSolicitudDocumentos.size());
+			
 		} catch (Exception ex) {
-			logger.error("Error al cargar el listado de documentos por tipo de soliciitud" +ex);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al cargar el listado de documentos por tipo de soliciitud" +ex);
 			ex.printStackTrace();
 		}
 		
@@ -1587,9 +1591,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		if (usuario!=null)
 		{
-			logger.debug("usuario en session? --> " + usuario.getNombre());
-			logger.debug("CodOfi: " + usuario.getBancoOficina().getCodigo().trim());
-			logger.debug("DesOfi: "+ usuario.getBancoOficina().getDescripcion().trim());
+			logger.debug("Usuario Sesion:" + usuario.getNombre());
+			logger.debug("CodigoOficina: " + usuario.getBancoOficina().getCodigo().trim());
+			logger.debug("DescripcionOficina: "+ usuario.getBancoOficina().getDescripcion().trim());
 		}
 		
 		TiivsOficina1 oficina = new TiivsOficina1();
@@ -2008,8 +2012,12 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}
 	}
 
+	/**
+	 * Metodo que se encarga de agregar una operacion bancaria en el 
+	 * formulario de registro de solicitud de visado.
+	 * */
 	public void agregarOperacionBancaria() {
-		logger.info(" ************************** agrearOperacionBancaria  ****************************** ");
+		logger.info(" ===== agregarOperacionBancaria() ===== ");
 		
 		if (this.validarOperacionBancaria()) {
 			for (TiivsOperacionBancaria n : combosMB.getLstOpeBancaria()) {
@@ -2645,11 +2653,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}
 
 	public void llamarComision() {
-		logger.info("************************** llamar Comision *****************************");
+		logger.info("=== llamarComision() ===");
 		this.solicitudRegistrarT.setTipoComision(objRegistroUtilesMB.obtenerTipoComision(this.solicitudRegistrarT));
 		this.solicitudRegistrarT.setComision(objRegistroUtilesMB.obtenerComision(solicitudRegistrarT.getTipoComision()));
-		logger.info("TIPO COMISION : " + this.solicitudRegistrarT.getTipoComision());
-		logger.info("COMISION : " + this.solicitudRegistrarT.getComision());
+		logger.info(" TipoComision: " + this.solicitudRegistrarT.getTipoComision());
+		logger.info(" Comision : " + this.solicitudRegistrarT.getComision());
 
 	}
 
@@ -2770,9 +2778,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				 
 				
 				for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
-					logger.info("a.getId().getCodOperBan() **** "+ a.getId().getCodOperBan());
+					logger.info("[REGISTR_SOLIC]-OperacionBancaria-id: "+ a.getId().getCodOperBan());
 					a.getId().setCodSoli(this.solicitudRegistrarT.getCodSoli());
-					logger.info("a.getId().getCodSoli() **** "+ a.getId().getCodSoli());
+					logger.info("[REGISTR_SOLIC]-CodSolicitud: "+ a.getId().getCodSoli());
 					 serviceSoli.insertar(a);
 				}
 				
@@ -3125,15 +3133,18 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		if(lstAnexoSolicitud!=null){
 			logger.debug("[CARGAR-FILESERVER]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
 		}
-		for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){													
-			File srcFile = new File(sUbicacionTemporal + anexo.getAliasTemporal());						
+		for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){		
+			logger.debug("======== Mover archivo ========");
+			File srcFile = new File(sUbicacionTemporal + anexo.getAliasTemporal());	
+			logger.debug("srcFile:"+sUbicacionTemporal + anexo.getAliasTemporal());
 			File destFile = new File(ubicacionFinal + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
+			logger.debug("destFile:"+ubicacionFinal + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
 			try {
 				FileUtils.copyFile(srcFile, destFile);
+				logger.debug("Despues de mover el archivo ...");
 			} catch (IOException e) {
 				logger.error("Error al mover el archivo al fileServer", e);
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al mover archivo al fileServer:" + ex);
 			}
 			if(!destFile.isFile() && destFile.length()>0){
