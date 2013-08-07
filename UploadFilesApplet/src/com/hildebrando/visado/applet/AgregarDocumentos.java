@@ -14,14 +14,12 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
@@ -237,6 +235,42 @@ public class AgregarDocumentos extends JApplet {
             }
         });
     }
+    
+    
+	public int eliminarDocumentos() {
+		System.out.println("********eliminarDocumento:Inicio*************");
+		String sPathCliente = getParameter("path_cliente");
+		int i = 0;		
+		try {
+			
+			File file = new File(sPathCliente);
+			File[] files = file.listFiles(new FilenameFilter() {
+				public boolean accept(File dir, String name) {
+					return name.toLowerCase().endsWith(".pdf");
+				}
+			});
+						
+			for (File f : files) {
+				f.delete();
+				i++;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Numero de archivos eliminados: " + i);
+		System.out.println("********eliminarDocumento:Fin*************");
+		return 0;
+	}
+
+	public void eliminarDocumentosConPermisos() {
+		AccessController.doPrivileged(new PrivilegedAction<String>() {
+			@Override
+			public String run() {
+				eliminarDocumentos();
+				return null;
+			}
+		});
+	}    
     
     /**** Fin Metodos a ser invocado desde java script *************/
     
