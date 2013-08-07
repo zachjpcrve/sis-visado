@@ -3562,23 +3562,30 @@ public class ConsultarSolicitudMB {
 			canalSalida.write(fileBytes);
 
 			canalSalida.flush();
+			
 			return sNombreTemporal;
 
 		} catch (IOException e) {
-			logger.debug("error anexo " + e.toString());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"IOException al cargarUnicoPDF: " + e);
 			String sMensaje = "Se produjo un error al adjuntar fichero";
 			Utilitarios.mensajeInfo("", sMensaje);
 			return "";
-		} finally {
+		}catch (Exception ex) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al cargarUnicoPDF: " + ex);
+			String sMensaje = "Se produjo un error al adjuntar fichero";
+			Utilitarios.mensajeInfo("", sMensaje);
+			return "";
+		}  
+		finally {
 
-			fichTemp.deleteOnExit(); // Delete the file when the
-			// JVM terminates
-
+			fichTemp.deleteOnExit();
 			if (canalSalida != null) {
 				try {
 					canalSalida.close();
 				} catch (IOException x) {
-					// handle error
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IOException: "+x);
+				}catch(Exception e){
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+e);
 				}
 			}
 		}
