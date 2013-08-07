@@ -21,6 +21,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bbva.common.util.ConstantesVisado;
 
+/**
+ * Clase encargada del envío de archivos al FileServer, esto se realiza cuando es
+ * invocada mediante el botón "Actualizar" del Applet en el formulario de registro.
+ * @author hildebrando
+ * @version 1.0
+ * **/
 
 @Controller
 @RequestMapping("/principal")
