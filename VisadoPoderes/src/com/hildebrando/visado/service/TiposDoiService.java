@@ -156,7 +156,7 @@ public class TiposDoiService {
 		try {
 			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA
 					+ "de multitablas: " + e);
 		}
 
