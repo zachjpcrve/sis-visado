@@ -144,7 +144,6 @@ public class ConsultarSolicitudMB {
 	private String sNivelSolicitud;
 	private String sMonedaImporteGlobal;
 	private String sCodDocumento;
-	private String ubicacionTemporal  = "";
 	private String sEstadoSolicitud = "";
 	private String sTextoEstadoReservado="";
 	String cadenaEscanerFinal = "";
@@ -518,9 +517,7 @@ public class ConsultarSolicitudMB {
 		objTiivsPersonaBusqueda = new TiivsPersona();
 		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
 		
-		listaTemporalEliminarOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();
-		
-		this.ubicacionTemporal = Utilitarios.getProjectPath() + File.separator + ConstantesVisado.FILES + File.separator;
+		listaTemporalEliminarOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();				
 			
 	}
 
@@ -2181,12 +2178,12 @@ public class ConsultarSolicitudMB {
 		//Si la solicitud tiene no esta en estado REGISTRADO (Vista de solicitud) se copian la carpeta de la aplicacion;
 		
 		if(this.getSolicitudRegistrarT().getEstado().equalsIgnoreCase(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)){
-			sUbicacionTemporal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS + File.separator + ConstantesVisado.FILES + File.separator;
+			sUbicacionTemporal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER) + File.separator + ConstantesVisado.FILES + File.separator;
 		} else {
 			sUbicacionTemporal = Utilitarios.getProjectPath() + File.separator + ConstantesVisado.FILES + File.separator;
 		}
 		
-		sUbicacionFinal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS + File.separator;
+		sUbicacionFinal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER) + File.separator;
 		
 		logger.debug("[Ubicacion Temporal]:" + sUbicacionTemporal);
 		if(lstAnexoSolicitud!=null){
@@ -2594,7 +2591,11 @@ public class ConsultarSolicitudMB {
 		logger.info("************cargarArchivosFTP()*¨**************");
 
 		boolean exito = true;
-		String sUbicacionTemporal = getUbicacionTemporal();
+				
+		String sUbicacionTemporal = Utilitarios
+				.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+				+ File.separator + ConstantesVisado.FILES + File.separator;
+		
 		logger.info("ubicacion temporal " + sUbicacionTemporal);
 
 		for (TiivsAnexoSolicitud anexo : lstAnexoSolicitud) {
@@ -2620,9 +2621,10 @@ public class ConsultarSolicitudMB {
 	public boolean cargarArchivosFileServer(){			
 		logger.info("========= cargarArchivosFileServer() ========");		
 		boolean exito = true;
-		String sUbicacionTemporal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator + ConstantesVisado.FILES + File.separator;
-		String ubicacionFinal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator;		
-		logger.info("[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);
+		String ubicacionFinal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)  + File.separator;		
+		String sUbicacionTemporal = ubicacionFinal + ConstantesVisado.FILES + File.separator;
+		logger.info("[CARGAR-FILESERVER]-Ubicacion final "+ ubicacionFinal);
+		logger.info("[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);	
 		if(lstAnexoSolicitud!=null){
 			logger.debug("[CARGAR-FILESERVER]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
 		}
@@ -2650,10 +2652,14 @@ public class ConsultarSolicitudMB {
 		logger.info("Archivos a eliminar:" + aliasFilesToDelete.size());
 		File fileToDelete = null;
 
+		String sUbicacionTemporal = Utilitarios
+				.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+				+ File.separator + ConstantesVisado.FILES + File.separator;
+		
 		for (String sfile : aliasFilesToDelete) {
-			logger.debug("borrar archivo: " + this.getUbicacionTemporal()
+			logger.debug("borrar archivo: " + sUbicacionTemporal
 					+ sfile);
-			fileToDelete = new File(this.getUbicacionTemporal() + sfile);
+			fileToDelete = new File(sUbicacionTemporal + sfile);
 			if (fileToDelete.delete()) {
 				logger.debug("borro archivo temporal :" + sfile);
 			} else {
@@ -3527,15 +3533,10 @@ public class ConsultarSolicitudMB {
 		FileOutputStream canalSalida = null;
 
 		try {
-
-			// Obteniendo ubicación del proyecto
-			HttpServletRequest request = (HttpServletRequest) FacesContext
-					.getCurrentInstance().getExternalContext().getRequest();
 			
-			//sUbicacionTemporal = request.getRealPath(File.separator) + File.separator + "files" + File.separator;
-			sUbicacionTemporal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator + ConstantesVisado.FILES + File.separator;
-			
-			this.setUbicacionTemporal(sUbicacionTemporal);
+			sUbicacionTemporal = Utilitarios
+					.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+					+ File.separator + ConstantesVisado.FILES + File.separator;			
 
 			logger.debug("ubicacion temporal " + sUbicacionTemporal);
 
@@ -5339,7 +5340,7 @@ public class ConsultarSolicitudMB {
 		String nombreDocumento = params.get("nombreArchivo");
 		logger.debug("[DESCARG_DOC]-nombreDocumento: "+nombreDocumento);
 		
-		String rutaDocumento = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS
+		String rutaDocumento = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
 				+ File.separator + ConstantesVisado.FILES + File.separator + nombreDocumento;
 		
 		logger.debug("[DESCARG_DOC]-rutaDocumento: "+rutaDocumento);
@@ -5898,13 +5899,13 @@ public class ConsultarSolicitudMB {
 		this.sCodDocumento = sCodDocumento;
 	}
 
-	public String getUbicacionTemporal() {
-		return ubicacionTemporal;
-	}
-
-	public void setUbicacionTemporal(String ubicacionTemporal) {
-		this.ubicacionTemporal = ubicacionTemporal;
-	}
+//	public String getUbicacionTemporal() {
+//		return ubicacionTemporal;
+//	}
+//
+//	public void setUbicacionTemporal(String ubicacionTemporal) {
+//		this.ubicacionTemporal = ubicacionTemporal;
+//	}
 
 	public DocumentoTipoSolicitudDTO getSelectedDocumentoDTO() {
 		return selectedDocumentoDTO;

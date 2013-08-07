@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -38,8 +39,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.springframework.context.support.ResourceBundleMessageSource;
 
+import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.general.service.TablaGeneralServiceLocator;
 
 public class Utilitarios {
 	
@@ -947,4 +951,24 @@ public class Utilitarios {
 		  java.util.Collections.sort(list);
 		  return list;
 		}
+	
+	public static String getPropiedad(String key){		
+		String value;
+		try{
+			ResourceBundleMessageSource boundle = (ResourceBundleMessageSource) SpringInit
+					.getApplicationContext().getBean("messageSource");		
+			
+			Locale locale = (Locale) SpringInit.getApplicationContext().getBean("locale");
+			
+			value = boundle.getMessage(key, new String[]{}, locale);
+			
+		}catch(org.springframework.context.NoSuchMessageException ex){
+			log.info(ConstantesVisado.MENSAJE.OCURRE_ERROR + ":" + ex.getMessage());
+			value="";
+		}catch(Exception ex){
+			log.info(ConstantesVisado.MENSAJE.OCURRE_ERROR + ":" + ex.getMessage());
+			value="";
+		}
+		return value;
+	}
 }

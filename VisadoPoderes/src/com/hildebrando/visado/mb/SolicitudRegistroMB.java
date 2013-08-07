@@ -129,7 +129,7 @@ public class SolicitudRegistroMB {
 	private String sCodDocumento;
 	private TiivsTipoSolicDocumento selectedTipoDocumento;
 	private DocumentoTipoSolicitudDTO selectedDocumentoDTO = new DocumentoTipoSolicitudDTO();
-	private String ubicacionTemporal;
+	//private String ubicacionTemporal;
 	private List<String> aliasFilesToDelete;
 
 	private IILDPeUsuario usuario;
@@ -396,10 +396,10 @@ public class SolicitudRegistroMB {
 		
 		try {
 			
-			//Obteniendo ubicación del proyecto
-			//sUbicacionTemporal = Utilitarios.getProjectPath()  + File.separator + ConstantesVisado.FILES + File.separator;
-			sUbicacionTemporal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator + ConstantesVisado.FILES + File.separator;
-			this.setUbicacionTemporal(sUbicacionTemporal);
+			//Obteniendo ubicación del file server			
+			sUbicacionTemporal = Utilitarios
+					.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+					+ File.separator + ConstantesVisado.FILES + File.separator;			
 			
 			logger.debug(" -> Ubicacion Temporal:"+ sUbicacionTemporal);
 			
@@ -3127,9 +3127,12 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	public boolean cargarArchivosFileServer(){			
 		logger.info("========= cargarArchivosFileServer() ========");		
 		boolean exito = true;
-		String sUbicacionTemporal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator + ConstantesVisado.FILES + File.separator;
-		String ubicacionFinal = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator;		
-		logger.info("[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);
+				
+		String ubicacionFinal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)  + File.separator;		
+		String sUbicacionTemporal = ubicacionFinal + ConstantesVisado.FILES + File.separator;
+				
+		logger.info("[CARGAR-FILESERVER]-Ubicacion final "+ ubicacionFinal);
+		logger.info("[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);		
 		if(lstAnexoSolicitud!=null){
 			logger.debug("[CARGAR-FILESERVER]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
 		}
@@ -3162,7 +3165,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	public boolean cargarArchivosFTP(){					
 		logger.info("========= cargarArchivosFileServer() ========");		
 		boolean exito = true;
-		String sUbicacionTemporal = getUbicacionTemporal();									
+						
+		String sUbicacionTemporal = Utilitarios
+				.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+				+ File.separator + ConstantesVisado.FILES + File.separator;
+		
 		logger.info("[CARGAR-FTP]-Ubicacion temporal "+ sUbicacionTemporal);
 		if(lstAnexoSolicitud!=null){
 			logger.debug("[CARGAR-FTP]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
@@ -3190,9 +3197,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		logger.info("Archivos a eliminar:" + aliasFilesToDelete.size()); 	
 		File fileToDelete = null;
 		
+		String sUbicacionTemporal = Utilitarios
+				.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+				+ File.separator + ConstantesVisado.FILES + File.separator;
+		
 		for(String sfile : aliasFilesToDelete){
-			logger.debug("borrar archivo: " + this.getUbicacionTemporal() + sfile);
-			fileToDelete = new File(this.getUbicacionTemporal() + sfile);
+			logger.debug("borrar archivo: " + sUbicacionTemporal + sfile);
+			fileToDelete = new File(sUbicacionTemporal + sfile);
 			if(fileToDelete.delete()){
 				logger.debug("Se ha BORRADO el archivo temporal :" + sfile);
 			} else {
@@ -3248,7 +3259,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		String nombreDocumento = params.get("nombreArchivo");
 		logger.debug("[DESCARG_DOC]-nombreDocumento: "+nombreDocumento);
-		String rutaDocumento = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS
+		String rutaDocumento = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
 				+ File.separator + ConstantesVisado.FILES + File.separator + nombreDocumento;
 		
 		logger.debug("[DESCARG_DOC]-rutaDocumento: "+rutaDocumento);
@@ -3624,15 +3635,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 	public void setbBooleanPopupTipoCambio(boolean bBooleanPopupTipoCambio) {
 		this.bBooleanPopupTipoCambio = bBooleanPopupTipoCambio;
-	}
-
-	public String getUbicacionTemporal() {
-		return ubicacionTemporal;
-	}
-
-	public void setUbicacionTemporal(String ubicacionTemporal) {
-		this.ubicacionTemporal = ubicacionTemporal;
-	}
+	}	
 
 	public List<ComboDto> getLstClasificacionPersona() {
 		return this.lstClasificacionPersona;

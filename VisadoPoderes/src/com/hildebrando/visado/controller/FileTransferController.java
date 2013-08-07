@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.persistencia.generica.util.Utilitarios;
 
 /**
  * Clase encargada del envío de archivos al FileServer, esto se realiza cuando es
@@ -52,8 +53,8 @@ public class FileTransferController {
 		    }
 		    // Process the uploaded items 
 		    
-		    //String path = request.getRealPath(File.separator) + File.separator + ConstantesVisado.FILES;
-		    String path = ConstantesVisado.PATH_FILE_SERVER_DOCUMENTOS  + File.separator + ConstantesVisado.FILES + File.separator;
+		    //String path = request.getRealPath(File.separator) + File.separator + ConstantesVisado.FILES;		    
+		    String path = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)  + File.separator + ConstantesVisado.FILES + File.separator;
 		    //logger.debug("getRealPath: "+request.getRealPath(File.separator));
 		    
 		    List<String> listaArchivos = new ArrayList<String>();
