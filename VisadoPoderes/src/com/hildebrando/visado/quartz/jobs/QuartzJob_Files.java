@@ -26,17 +26,14 @@ public class QuartzJob_Files implements Job  {
 		limpiarDirectorioFiles();	
 	}	
 
+	/*
+	 * Realiza la limpieza de los archivos temporales que 
+	 * se almacena en la carpeta "files" de la ruta del File Server
+	 * 
+	 * */
 	public void limpiarDirectorioFiles(){
 		
-		int diferenciaEnDias = 1;
-		Date fechaActual = Calendar.getInstance().getTime();
-		long tiempoActual = fechaActual.getTime();
-		long unDia = diferenciaEnDias * 24 * 60 * 60 * 1000;
-		Date fechaAyer = new Date(tiempoActual - unDia);
-
-		logger.debug("Inciando tarea de limpieza de archivos:");
-		logger.debug("Fecha corte :" + fechaAyer);
-		
+				
 		String path = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
 		
 		logger.info("path:" + path);
@@ -57,12 +54,44 @@ public class QuartzJob_Files implements Job  {
 				
 		logger.info("directory exists?:" + directory.exists());
 		
-		if(directory.exists()){
-			
+		try {
+			logger.info("Se procederá a la limpieza de archivos de la carpeta:" + directory.getAbsolutePath());
+			limpiarDirectorio(directory);
+		} catch (Exception e){
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR + ":" + e.getMessage());
+		}
+		
+		
+		directory = new File(
+				Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+						+ File.separator + ConstantesVisado.FILES);
+		
+		try {
+			logger.info("Se procederá a la limpieza de archivos de la carpeta:" + directory.getAbsolutePath());
+			limpiarDirectorio(directory);
+		} catch (Exception e){
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR + ":" + e.getMessage());
+		}		
+
+	}
+
+	@SuppressWarnings("unchecked")
+	private void limpiarDirectorio(File directory) {
+		
+		int diferenciaEnDias = 1;
+		Date fechaActual = Calendar.getInstance().getTime();
+		long tiempoActual = fechaActual.getTime();
+		long unDia = diferenciaEnDias * 24 * 60 * 60 * 1000;
+		Date fechaAyer = new Date(tiempoActual - unDia);
+		logger.debug("Inciando tarea de limpieza de archivos:");
+		logger.debug("Fecha corte :" + fechaAyer);
+
+		if (directory.exists()) {
+
 			List<File> files = null;
 			String ext[] = { "pdf", "PDF" };
 			files = (List<File>) FileUtils.listFiles(directory, ext, true);
-			
+
 			logger.debug("Numero de archivos PDF en el directorio:"
 					+ FileUtils.listFiles(directory, ext, false).size());
 
@@ -81,9 +110,9 @@ public class QuartzJob_Files implements Job  {
 
 			logger.debug("Número de archivos eliminados: " + num1);
 			logger.debug("Número de archivos mantenidos: " + num2);
-			
+
 		} else {
-			logger.info("Ubicación de carpeta no existe:" );
+			logger.info("Ubicación de carpeta no existe:");
 		}
 
 	}
