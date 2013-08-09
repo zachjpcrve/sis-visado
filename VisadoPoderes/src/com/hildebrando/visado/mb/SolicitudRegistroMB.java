@@ -506,9 +506,13 @@ public class SolicitudRegistroMB {
 	}
 	
 	public void addArchivosTemporalesToDelete(){		
-		for(TiivsAnexoSolicitud a : lstAnexoSolicitud){	
-			aliasFilesToDelete.add(a.getAliasTemporal());
-		}				
+		try{
+			for(TiivsAnexoSolicitud a : lstAnexoSolicitud){	
+				aliasFilesToDelete.add(a.getAliasTemporal());
+			}
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al addArchivosTemporalesToDelete():"+e);
+		}
 	}
 
 	public void obtenerPersonaSeleccionada() {
