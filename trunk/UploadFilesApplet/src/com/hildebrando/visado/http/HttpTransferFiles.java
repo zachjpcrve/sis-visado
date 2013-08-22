@@ -33,14 +33,19 @@ public class HttpTransferFiles {
 	}
 	
 	public void sendFiles(List<File> ficherosLeidos) {	
-		System.out.println("=== sendFiles() ===");
+		System.out.println("=== sendFiles():Inicio ===");
 		try {
+			System.out.println("[Send]-Url:"+url);			
 			HttpClient client = new DefaultHttpClient();
 	        HttpPost post = new HttpPost(url);
+	        System.out.println("[Send]-post:"+post);	
 	        MultipartEntity entity = new MultipartEntity();
-	        
+	        System.out.println("[Send]-entity");
 	        if(ficherosLeidos!=null){
 	        	System.out.println("[Send]-Tamaño lista de ficheros: " + ficherosLeidos.size());
+	        	for(File a: ficherosLeidos){
+	        		System.out.println("[ARCHIVO]-a.getPath: "+a.getPath() + "\ta.getName:"+a.getName());
+	        	}
 	        }
 	        
 	        System.out.println("[Send]-Tamaño archivos en trama request - antes: " + entity.getContentLength());
@@ -57,20 +62,26 @@ public class HttpTransferFiles {
 	        
 			response = client.execute(post);
 			
-			System.out.println("[Send]-Despues de ejecutar request: " + response);
+			System.out.println("[Send]-Despues de ejecutar [response]-: " + response);
+			System.out.println("[Send]-Despues de ejecutar [client]-: " + client);
+			System.out.println("[Send]-Despues de ejecutar [post]-: " + post);
         	        			
 			this.filesLoaded = leerResponse(response,post,client);
 						
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			System.out.println("Ha   ocurrido un error al enviar los archivos:"+e);
-			e.printStackTrace();
+		} catch (ClientProtocolException e1) {
+			System.out.println("Ha ocurrido un ClientProtocolException:"+e1);
+			e1.printStackTrace();
+		} catch (IllegalStateException e2) {
+			System.out.println("Ha ocurrido un IllegalStateException:"+e2);
+			e2.printStackTrace();
+		} catch (IOException e3) {
+			System.out.println("Ha ocurrido un IOException:"+e3);
+			e3.printStackTrace();
+		} catch (Exception e4) {
+			System.out.println("[Send]-Ha ocurrido un error al enviar los archivos:"+e4);
+			e4.printStackTrace();
 		}
+		System.out.println("=== sendFiles():Fin ===");
 	}	
 
 	
@@ -78,23 +89,26 @@ public class HttpTransferFiles {
         
         String archivosSubidos = "";
         
-        System.out.println(response.getStatusLine());
+        System.out.println("\nrsponse.response.getStatusLine()"+response.getStatusLine());
  
         HttpEntity entity = response.getEntity();
         
         if (entity != null) {
             InputStream instream = entity.getContent();
             try {
-                
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(instream));
+                System.out.println("[leerResponse]-inputStream:"+instream);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(instream));
+                System.out.println("[leerResponse]-reader:"+reader);
                 // do something useful with the response
                 String line = reader.readLine();
-                System.out.println(line);             
+                System.out.println("[leerResponse]-line: "+line);             
                 String field = FIELD_FILES_LOADED;
+                System.out.println("[leerResponse]-field:"+field);
                 if(line.startsWith(field)){
                     //FILES_LOADED=DOIDAPO_251571415801498931.PDF,IMPFOEL_7095448649017491933.PDF# 
-                    archivosSubidos = line.substring(line.indexOf(field) + field.length(), line.indexOf(FIELD_END));
+                    System.out.println("[leerResponse]-comparando.");
+                	archivosSubidos = line.substring(line.indexOf(field) + field.length(), line.indexOf(FIELD_END));
+                	System.out.println("[leerResponse]-terminando de comparar:"+archivosSubidos);
                 }
                 
             } catch (IOException ex) {
@@ -117,7 +131,7 @@ public class HttpTransferFiles {
                 // back to the connection manager automatically
                 throw ex;
              } finally {
-
+            	 System.out.println("finaalizando leer");
                 // Closing the input stream will trigger connection release
                 instream.close();
                 
@@ -159,6 +173,57 @@ public class HttpTransferFiles {
 		this.filesLoaded = filesLoaded;
 	}
 
+	/*public void sendFilesLocal(List<File> ficherosLeidos,String urlNueva) {	
+		System.out.println("=== sendFilesLocal():Inicio ===");
+		try {
+			System.out.println("[Send]-Url:"+urlNueva);			
+			HttpClient client = new DefaultHttpClient();
+	        HttpPost post = new HttpPost(urlNueva);
+	        System.out.println("[Send]-post:"+post);	
+	        MultipartEntity entity = new MultipartEntity();
+	       
+	        if(ficherosLeidos!=null){
+	        	System.out.println("[Send]-Tamaño lista de ficheros: " + ficherosLeidos.size());
+	        }
+	        
+	        System.out.println("[Send]-Tamaño archivos en trama request - antes: " + entity.getContentLength());
+	        
+	        for(File file : ficherosLeidos){
+	        	entity.addPart("file", new FileBody(file));
+	        }
+	        System.out.println("[Send]-entity-contenType:"+entity.getContentType());
+	        System.out.println("[Send]-entity-contentLenght:"+entity.getContentLength());
+	        
+	    	System.out.println("[Send]-Tamaño archivos en trama request - despues: " + entity.getContentLength());
+	        
+	        post.setEntity(entity);        
+
+	        HttpResponse response;
+	        
+			response = client.execute(post);
+			
+			System.out.println("[Send]-Despues de ejecutar request: " + response);
+			System.out.println("[Send]-Despues de ejecutar post: " + post);
+			System.out.println("[Send]-Despues de ejecutar client: " + client);
+        	        			
+			String aa = leerResponse(response,post,client);
+			System.out.println("aa: "+aa);
+						
+		} catch (ClientProtocolException e1) {
+			System.out.println("Ha ocurrido un ClientProtocolException:"+e1);
+			e1.printStackTrace();
+		} catch (IllegalStateException e2) {
+			System.out.println("Ha ocurrido un IllegalStateException:"+e2);
+			e2.printStackTrace();
+		} catch (IOException e3) {
+			System.out.println("Ha ocurrido un IOException:"+e3);
+			e3.printStackTrace();
+		} catch (Exception e4) {
+			System.out.println("Ha ocurrido un error al enviar los archivos:"+e4);
+			e4.printStackTrace();
+		}
+		System.out.println("=== sendFilesLocal():Fin ===");
+	}*/
 	
 
 	
