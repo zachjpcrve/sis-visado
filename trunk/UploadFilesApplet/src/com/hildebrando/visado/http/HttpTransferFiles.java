@@ -25,7 +25,7 @@ public class HttpTransferFiles {
 	private static final String FIELD_SEPARATOR = ",";
 	
 	private String url;
-	private String filesLoaded; 
+	private String filesLoaded;
 	
 	public HttpTransferFiles() {		
 		url = "";
@@ -33,23 +33,23 @@ public class HttpTransferFiles {
 	}
 	
 	public void sendFiles(List<File> ficherosLeidos) {	
-		
+		System.out.println("=== sendFiles() ===");
 		try {
 			HttpClient client = new DefaultHttpClient();
 	        HttpPost post = new HttpPost(url);
 	        MultipartEntity entity = new MultipartEntity();
 	        
 	        if(ficherosLeidos!=null){
-	        	System.out.println("Tamaño lista de ficheros: " + ficherosLeidos.size());
+	        	System.out.println("[Send]-Tamaño lista de ficheros: " + ficherosLeidos.size());
 	        }
 	        
-	        System.out.println("Tamaño archivos en trama request - antes: " + entity.getContentLength());
+	        System.out.println("[Send]-Tamaño archivos en trama request - antes: " + entity.getContentLength());
 	        
 	        for(File file : ficherosLeidos){
 	        	entity.addPart("file", new FileBody(file));
 	        }
 	        
-	    	System.out.println("Tamaño archivos en trama request - despues: " + entity.getContentLength());
+	    	System.out.println("[Send]-Tamaño archivos en trama request - despues: " + entity.getContentLength());
 	        
 	        post.setEntity(entity);        
 
@@ -57,7 +57,7 @@ public class HttpTransferFiles {
 	        
 			response = client.execute(post);
 			
-			System.out.println("Despues de ejecutar request: " + response);
+			System.out.println("[Send]-Despues de ejecutar request: " + response);
         	        			
 			this.filesLoaded = leerResponse(response,post,client);
 						
@@ -68,6 +68,7 @@ public class HttpTransferFiles {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
+			System.out.println("Ha   ocurrido un error al enviar los archivos:"+e);
 			e.printStackTrace();
 		}
 	}	
@@ -97,13 +98,13 @@ public class HttpTransferFiles {
                 }
                 
             } catch (IOException ex) {
-
+            	System.out.println("Ha ocurrido una IOException:"+ex);
                 // In case of an IOException the connection will be released
                 // back to the connection manager automatically
                 throw ex;
                 
             } catch (RuntimeException ex) {
-
+            	System.out.println("Ha ocurrido una RuntimeException:"+ex);
                 // In case of an unexpected exception you may want to abort
                 // the HTTP request in order to shut down the underlying
                 // connection and release it back to the connection manager.
@@ -111,7 +112,7 @@ public class HttpTransferFiles {
                 throw ex;
                 
             } catch (Exception ex) {
-
+            	System.out.println("Ha ocurrido una excepcion:"+ex);
                 // In case of an IOException the connection will be released
                 // back to the connection manager automatically
                 throw ex;
