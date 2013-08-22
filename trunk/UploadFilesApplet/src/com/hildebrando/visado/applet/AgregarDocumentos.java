@@ -4,11 +4,6 @@
  */
 package com.hildebrando.visado.applet;
 
-import com.hildebrando.visado.ftp.ClienteFTP;
-import com.hildebrando.visado.http.HttpTransferFiles;
-import com.hildebrando.visado.util.Constantes;
-import com.hildebrando.visado.util.Utiles;
-
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -19,6 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +22,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
+import com.hildebrando.visado.ftp.ClienteFTP;
+import com.hildebrando.visado.http.HttpTransferFiles;
+import com.hildebrando.visado.util.Constantes;
+import com.hildebrando.visado.util.Utiles;
 
 /**
  *
@@ -44,6 +45,7 @@ public class AgregarDocumentos extends JApplet {
         try {
             initComponents();
         } catch (Exception e){
+        	System.out.println("Ha ocurrido una exception en initComponents:"+e);
             e.printStackTrace();
         }
     }
@@ -73,8 +75,10 @@ public class AgregarDocumentos extends JApplet {
         container.add(button);
     }
     
-    /*
-     * Metodos a ser invocado desde java script
+    /**
+     * Metodo que es invocado desde el botón "Actualizar" de 
+     * la aplicación por medio de Javascript. 
+     * @param documento Nombre del documento
      */        
     public void abrirDocumento(String documento){
         System.out.println("********abrirDocumento:Inicio*************");
@@ -130,33 +134,50 @@ public class AgregarDocumentos extends JApplet {
         System.out.println("********sendToFTP:Fin*************");
     }
     
-    
-    public void actualizar()  {   
-        System.out.println("********actualizar:Inicio*************"); 
-        String sNombreDocLeidos = "";
-        List<File> lstFicherosLeidos = null;
-        String sPathCliente = getParameter(Constantes.PATH_CLIENTE);
-        String sDocumentosLeer = getParameter(Constantes.DOCUMENTOS_LEER);    
-        String sDocumentosCargados = "";
-        Archivo archivo = new Archivo();                
-        if(archivo.obtenerListaFiles(sPathCliente, sDocumentosLeer) == 1){
-            sNombreDocLeidos = archivo.getNombreFilesReaded();
-            lstFicherosLeidos = archivo.getFilesReaded();
-            System.out.println("Documentos obtenidos : " + sNombreDocLeidos);
-            System.out.println("Cantidad de archivos leidos : " + lstFicherosLeidos.size());
-            documentosLeidos = sNombreDocLeidos;   
-            ficherosLeidos = lstFicherosLeidos;                     
-            sDocumentosCargados = subirArchivoHTTP(ficherosLeidos);
-            System.out.println("Documentos cargados por HTTP:" + sDocumentosCargados);
-            ejecutarFuncion("actualizarDocumentos", documentosLeidos,sDocumentosCargados);//ojo modificar java script
-        }
-        System.out.println("********actualizar:Fin*************");
+    /**
+     * Metodo que se encarga de leer los documentos que se encuentran en la carpeta 
+     * de escaneo y que son asociados a la lista de Documentos solicitados por la 
+     * aplicación de Visado. Se encarga también del envío de archivos via HTTP.
+     * **/
+    public void actualizar()  {
+    	System.out.println("************ actualizar()-Inicio *********** "); 
+    	System.out.println("[Actualizar]-Fecha Inicio: "+Utiles.formatoFechaHora(new Date()));
+    	String sNombreDocLeidos = "";
+    	List<File> lstFicherosLeidos = null;
+        try{
+        	String sPathCliente = getParameter(Constantes.PATH_CLIENTE);
+            String sDocumentosLeer = getParameter(Constantes.DOCUMENTOS_LEER);    
+            String sDocumentosCargados = "";
+            Archivo archivo = new Archivo();                
+            if(archivo.obtenerListaFiles(sPathCliente, sDocumentosLeer) == 1){
+                sNombreDocLeidos = archivo.getNombreFilesReaded();
+                lstFicherosLeidos = archivo.getFilesReaded();
                 
+                System.out.println("[Actualizar]-Documentos obtenidos: " + sNombreDocLeidos);
+                if(lstFicherosLeidos!=null){
+                	System.out.println("[Actualizar]-Cantidad de archivos leidos : " + lstFicherosLeidos.size());	
+                }
+                
+                documentosLeidos = sNombreDocLeidos;   
+                ficherosLeidos = lstFicherosLeidos;    
+                
+                sDocumentosCargados = subirArchivoHTTP(ficherosLeidos);
+                
+                System.out.println("[Actualizar]-Documentos cargados por HTTP:" + sDocumentosCargados);
+                
+                ejecutarFuncion("actualizarDocumentos", documentosLeidos,sDocumentosCargados);//ojo modificar java script
+                System.out.println("[Actualizar]-Se terminó de actualizar documentos.");
+            }            
+        }catch (Exception e) {
+			System.out.println("Ha ocurrido un error al actualizar documentos:"+e);
+		}
+        System.out.println("[Actualizar]-Fecha Fin: "+Utiles.formatoFechaHora(new Date()));
+        System.out.println("************ actualizar()-Final *********** "); 
     }        
     
    
 	public void actualizarConPermisos(){
-        AccessController.doPrivileged(new PrivilegedAction<String>() {
+		AccessController.doPrivileged(new PrivilegedAction<String>() {
             @Override
             public String run() {
                 actualizar();
@@ -182,23 +203,37 @@ public class AgregarDocumentos extends JApplet {
         System.out.println("********cargarMultipleFTP:Fin*************");        
     }
     
-       
+    /**
+     * Metodo que se encarga del envio de archivos leidos (.PDF) de la carpeta 
+     * "Escaneados al directorio /files/ del FileServer via HTTP.
+     * @param ficherosLeidos2 Lista de ficheros leidos del tipo {@link File}
+     * @return tramaDocumentosCargados Contiene la trama de documentos cargados
+     * **/   
     private String subirArchivoHTTP(List<File> ficherosLeidos2) {
+    	System.out.println("== subirArchivosHTTP ==");
     	String tramaDocumentosCargados = "";
-    	HttpTransferFiles httpTransferFiles = new HttpTransferFiles();
-    	httpTransferFiles.setUrl(getParameter(Constantes.URL_SERVER));
-    	httpTransferFiles.sendFiles(ficherosLeidos);
-    	//tramaDocumentosCargados = Utiles.armaTramaLista(httpTransferFiles.getNameSentFiles());
-    	tramaDocumentosCargados = httpTransferFiles.getFilesLoaded();
-    	System.out.println("Archivos cargados:" + tramaDocumentosCargados);
-		return tramaDocumentosCargados;
+    	try{    		
+    		if(ficherosLeidos!=null){
+    			System.out.println("Se subiran ["+ficherosLeidos.size() +"] al FileServer.");
+    		}
+        	HttpTransferFiles httpTransferFiles = new HttpTransferFiles();
+        	httpTransferFiles.setUrl(getParameter(Constantes.URL_SERVER));
+        	httpTransferFiles.sendFiles(ficherosLeidos);
+        	//tramaDocumentosCargados = Utiles.armaTramaLista(httpTransferFiles.getNameSentFiles());
+        	tramaDocumentosCargados = httpTransferFiles.getFilesLoaded();
+        	System.out.println("\t TramaDocsCargados->" + tramaDocumentosCargados);
+    		
+    	}catch (Exception e) {
+			System.out.println("Ha ocurrido una excepcion al subirArchivoHTTP: "+e);
+		}
+    	return tramaDocumentosCargados;
 	}    
 
 	public void cargarMultipleFTPConPermisos(final String codigoSolicitud){
         AccessController.doPrivileged(new PrivilegedAction<String>() {
             @Override
             public String run() {
-                cargarMultipleFTP(codigoSolicitud);
+            	cargarMultipleFTP(codigoSolicitud);
                 return null;
             }
         });
@@ -255,6 +290,7 @@ public class AgregarDocumentos extends JApplet {
 				i++;
 			}
 		} catch (Exception e) {
+			System.out.println("Ha ocurrido un error al eliminar el archivo:"+e);
 			e.printStackTrace();
 		}
 		System.out.println("Numero de archivos eliminados: " + i);
@@ -280,21 +316,33 @@ public class AgregarDocumentos extends JApplet {
      * Metodos invocados desde el Jpanel del Apllet
      * JApplet
      */
-    private void actualizar(ActionEvent e)  {   
-        String sNombreDocLeidos = "";
-        List<File> lstFicherosLeidos = null;
-        String sPathCliente = getParameter(Constantes.PATH_CLIENTE);
-        String sDocumentosLeer = getParameter(Constantes.DOCUMENTOS_LEER);        
-        Archivo archivo = new Archivo();                
-        if(archivo.obtenerListaFiles(sPathCliente, sDocumentosLeer) == 1){
-            sNombreDocLeidos = archivo.getNombreFilesReaded();
-            lstFicherosLeidos = archivo.getFilesReaded();
-            System.out.println("Documentos obtenidos : " + sNombreDocLeidos);
-            System.out.println("Cantidad de archivos leidos : " + lstFicherosLeidos.size());
-            documentosLeidos = sNombreDocLeidos;   
-            ficherosLeidos = lstFicherosLeidos;
-            ejecutarFuncion("actualizarDocumentos", documentosLeidos);
-        }
+    private void actualizar(ActionEvent e)  {  
+    	System.out.println("== actualizar(ActionEvent):INICIO ==");
+    	try{
+    		String sNombreDocLeidos = "";
+            List<File> lstFicherosLeidos = null;
+            String sPathCliente = getParameter(Constantes.PATH_CLIENTE);
+            String sDocumentosLeer = getParameter(Constantes.DOCUMENTOS_LEER);        
+            Archivo archivo = new Archivo();                
+            if(archivo.obtenerListaFiles(sPathCliente, sDocumentosLeer) == 1){
+                sNombreDocLeidos = archivo.getNombreFilesReaded();
+                lstFicherosLeidos = archivo.getFilesReaded();
+                System.out.println("[Act-Event]-Documentos obtenidos : " + sNombreDocLeidos);
+                if(lstFicherosLeidos!=null){
+                	System.out.println("[Act-Event]-Cantidad de archivos leidos : " + lstFicherosLeidos.size());	
+                }            
+                documentosLeidos = sNombreDocLeidos;   
+                ficherosLeidos = lstFicherosLeidos;
+                
+                ejecutarFuncion("actualizarDocumentos", documentosLeidos);
+                System.out.println("Se termino de actualizar los documentos.");
+            }
+            
+    	}catch (Exception ex) {
+			System.out.println("Ha ocurrido una excepcion en actualizar (Event):"+ex);
+		}
+       
+    	System.out.println("== actualizar(ActionEvent):FIN ==");
     }    
      /**** Fin Metodos a ser invocado desde java script *************/
     
@@ -302,6 +350,7 @@ public class AgregarDocumentos extends JApplet {
     
     private void ejecutarFuncion(String funcion, Object... parametros) {        
         try {
+        	System.out.println("[ejecutarFuncion]-nombre:"+funcion);
             StringBuilder builder = new StringBuilder(Constantes.URL_JAVA_SCRIPT);
             builder.append(funcion).append("(");
             int i=0;
@@ -321,7 +370,7 @@ public class AgregarDocumentos extends JApplet {
             System.out.println("Ejecutar: " + ejecFuncion);
             getAppletContext().showDocument(new URL(ejecFuncion));
         } catch (Exception e) {                      
-            System.out.println("Error al ejecutar la funcion");
+            System.out.println("Ha ocurrido una excepcion al ejecutar la funcion:"+e);
             e.printStackTrace();
         }
     }
@@ -342,6 +391,7 @@ public class AgregarDocumentos extends JApplet {
         try {
             clienteFTP.setDirectorio(directory);
         } catch (IOException ex) {
+        	System.out.println("Ha ocurrido una IOException: "+ex);
             Logger.getLogger(AgregarDocumentos.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("Subir " + file.getName() + " de " + file.getAbsolutePath());
@@ -369,7 +419,7 @@ public class AgregarDocumentos extends JApplet {
         }
         System.out.println("Subir " + file.getName() + " de " + file.getAbsolutePath());
         clienteFTP.upLoadOneFiles(codigoSolicitud + "_" + file.getName(), file.getAbsolutePath());
-        System.out.println("********subirArchivoFTP:Inicio*************"); 
+        System.out.println("********subirArchivoFTP:Fin*************"); 
     }
     
 }
