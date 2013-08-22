@@ -80,24 +80,31 @@ public class ClienteFTP {
     
     public void upLoadOneFiles(String file, String ruta) {
         FileInputStream fis = null;
-        System.out.println("Ruta: " + ruta);
+        System.out.println("[UploadFT]-Ruta: " + ruta);
         try {
             fis = new FileInputStream(ruta);
             ftpCliente.setFileType(FTP.BINARY_FILE_TYPE);
             ftpCliente.setBufferSize(4096);
             ftpCliente.setFileTransferMode(FTP.BINARY_FILE_TYPE);
             ftpCliente.storeFile(file, fis);
+            System.out.println("[UploadFT]-file:"+file);
 
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
+            System.out.println("Ha ocurrido un IOException-upLoadOneFiles:"+e);
+        }catch(Exception ex){
+        	ex.printStackTrace();
+        	System.out.println("Ha ocurrido una Exception-upLoadOneFiles:"+ex);
+        } 
+        finally {
             try {
                 if (fis != null) {
                     fis.close();
                 }
 //               ftpCliente.disconnect();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+                System.out.println("Ha ocurrido un IOException e2-upLoadOneFiles:"+e2);
             }
         }
     }
