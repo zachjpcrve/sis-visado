@@ -210,22 +210,29 @@ public class AgregarDocumentos extends JApplet {
      * @return tramaDocumentosCargados Contiene la trama de documentos cargados
      * **/   
     private String subirArchivoHTTP(List<File> ficherosLeidos2) {
-    	System.out.println("== subirArchivosHTTP ==");
+    	System.out.println("== subirArchivosHTTP:Inicio ==");
     	String tramaDocumentosCargados = "";
     	try{    		
     		if(ficherosLeidos!=null){
-    			System.out.println("Se subiran ["+ficherosLeidos.size() +"] al FileServer.");
+    			System.out.println("Se subiran ["+ficherosLeidos.size() +"] archivos al FileServer.");
+    			for(File aa: ficherosLeidos){
+    				System.out.println("[Fichero]:"+aa.getName() + "\t Path:"+aa.getPath() + "\tAbsPath:"+aa.getAbsolutePath());
+    			}
     		}
         	HttpTransferFiles httpTransferFiles = new HttpTransferFiles();
         	httpTransferFiles.setUrl(getParameter(Constantes.URL_SERVER));
+        	System.out.println("[Upload]-getUrl:"+httpTransferFiles.getUrl());
         	httpTransferFiles.sendFiles(ficherosLeidos);
+        	System.out.println("[Upload]-Se termino el sendFiles.");
         	//tramaDocumentosCargados = Utiles.armaTramaLista(httpTransferFiles.getNameSentFiles());
         	tramaDocumentosCargados = httpTransferFiles.getFilesLoaded();
-        	System.out.println("\t TramaDocsCargados->" + tramaDocumentosCargados);
+        	
     		
     	}catch (Exception e) {
 			System.out.println("Ha ocurrido una excepcion al subirArchivoHTTP: "+e);
 		}
+    	System.out.println("\t [Upload]-TramaDocsCargados->" + tramaDocumentosCargados);
+    	System.out.println("== subirArchivosHTTP:Fin ==");
     	return tramaDocumentosCargados;
 	}    
 
