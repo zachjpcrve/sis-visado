@@ -56,12 +56,13 @@ public class Archivo {
     
     
     public int obtenerListaFiles(String pathCliente, String sDocumentos) {
+    	System.out.println("==== obtenerListaFiles() =====");
         int result = 0;
         
         try {
             String ubicacion = pathCliente;
-            System.out.println("ubicacion:" + ubicacion);
-            System.out.println("listaDocumentos:" + sDocumentos);            
+            System.out.println("[APP]-Directorio Escaneados: " + ubicacion);
+            System.out.println("[APP]-ListaCodigoDocs:" + sDocumentos);            
             String []aDocumentos = sDocumentos.split(Constantes.SEPARADOR);
             File file;
             for(String documento : aDocumentos){
@@ -70,16 +71,17 @@ public class Archivo {
                     this.setNombreFilesReaded(this.getNombreFilesReaded() + file.getName() + Constantes.SEPARADOR);
                     this.getFilesReaded().add(file);
                 } else {
-                    System.out.println("No existe " + documento);
+                    System.out.println("No existe documento: " + documento);
                 }
             }
             result = 1;
         } catch(Exception e){
-             System.out.println("error");            
+            System.out.println("Ha ocurrido un error en obtenerListaFiles:"+e);            
             e.printStackTrace();
             new RuntimeException(e);
             result = 0;
         }          
+        System.out.println("[APP]-result:"+result);
         return result;
     }
 
@@ -129,14 +131,14 @@ public class Archivo {
                     ous.close();
                 }
             } catch (IOException e) {
-                // swallow, since not that important
+            	System.out.println("Ha ocurrido una IOExcepcion: "+e);
             }
             try {
                 if (ios != null) {
                     ios.close();
                 }
             } catch (IOException e) {
-                // swallow, since not that important
+                System.out.println("Ha ocurrido una IOExcepcion: "+e);
             }
         }
         return ous.toByteArray();
