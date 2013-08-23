@@ -18,10 +18,10 @@
 		<h:panelGrid columns="5">
 
 			<p:tabMenu activeIndex="0" style="width:350px;">
-				<p:menuitem value="Solicitud" url="/faces/paginas/solicitud.xhtml"
-					icon="ui-icon-star" />
-				<p:menuitem value="Instrucciones"
-					url="/faces/paginas/comentarioSolicitud.xhtml" icon="ui-icon-star" />
+				<p:menuitem value="Solicitud" id="solicitud" url="/faces/paginas/solicitud.xhtml" 
+					icon="ui-icon-star" style="background-color:#c6deff;" />
+				<p:menuitem value="Instrucciones" id="instrucciones" icon="ui-icon-star"
+					url="/faces/paginas/comentarioSolicitud.xhtml"/>
 
 			</p:tabMenu>
 
@@ -106,7 +106,7 @@
 																<td><h:outputText styleClass="outputText"
 																		id="txtCodNumSol" value="Nro. Solicitud:" /></td>
 																<td><h:inputText styleClass="inputText" id="text1"
-																		style="width:100px;"
+																		style="width:100px;background-color:#EBEBE4;"
 																		value="#{solicitudRegMB.solicitudRegistrarT.codSoli}"
 																		disabled="false" readonly="true" /></td>
 																<td><p:graphicImage
@@ -118,7 +118,7 @@
 																<td><h:outputText styleClass="outputText"
 																		id="text3" value="Estado:" /></td>
 																<td><h:inputText styleClass="inputText"
-																		id="txtEstado" style="width:100px;"
+																		id="txtEstado" style="width:100px;background-color:#EBEBE4;"
 																		value="#{solicitudRegMB.solicitudRegistrarT.descEstado}"
 																		disabled="false" readonly="true" /></td>
 																<td><p:graphicImage
@@ -136,9 +136,9 @@
 																		rendered="#{consultarSolicitudMB.flagMostrarACOficina}"/>
 																		
 																	<h:inputText styleClass="inputText" rendered="#{solicitudRegMB.flagMostrarSOMOficina}"
-																		id="cboOficina" style="width:100px;"
+																		id="cboOficina" style="width:100px;background-color:#EBEBE4;"
 																		value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.descripcionMostrar}"
-																		disabled="true" readonly="true" />			
+																		disabled="false" readonly="true" />			
 																	<!--  itemLabel="#{ofi.codOfi}-#{ofi.desOfi}(#{ofi.tiivsTerritorio.codTer}-#{ofi.tiivsTerritorio.desTer})" itemValue="#{ofi}" rendered="#{solicitudRegMB.flagMostrarACOficina}"
 																    value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.codOfi}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.desOfi}(#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.codTer}-#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.tiivsTerritorio.desTer}"
 																	<p:selectOneMenu
@@ -192,7 +192,7 @@
 																<td><h:outputText styleClass="outputText"
 																		id="outComision" value="Comisión:" /></td>
 																<td><h:inputText styleClass="inputText"
-																		id="txtComision" style="width:100px;"
+																		id="txtComision" style="width:100px;background-color:#EBEBE4;"
 																		value="#{solicitudRegMB.solicitudRegistrarT.comision}"
 																		readonly="true">
 																		<f:convertNumber pattern="#,###,##0.00" locale="en" />
@@ -206,7 +206,7 @@
 																<td><h:outputText styleClass="outputText"
 																		id="outImpTotal" value="Importe Total:" /></td>
 																<td><h:inputText styleClass="inputText"
-																		id="txtImpTotal" style="width:100px;"
+																		id="txtImpTotal" style="width:100px;background-color:#EBEBE4;"
 																		value="#{solicitudRegMB.solicitudRegistrarT.sImporteMoneda}"
 																		disabled="false" readonly="true">
 																		<f:convertNumber pattern="#,###,##0.00" locale="en" />
@@ -229,8 +229,8 @@
 													<table>
 														<tr>
 															<td style="width: 380px;"><h:outputText
-																	title="Representante(Solicitante)/Representado(Usuario/Cliente)"
-																	value="Representante(Solicitante)/Representado(Usuario/Cliente)" /></td>
+																	title="#{solicitudRegMB.tipoRegistro}"
+																	value="#{solicitudRegMB.tipoRegistro}" /></td>
 															<td></td>
 															<td></td>
 															<td></td>
@@ -253,12 +253,12 @@
 																			<tr>
 																				<th class="ui-state-default">
 																					<div class="ui-dt-c">
-																						<SPAN>Representado</SPAN>
+																						<SPAN>#{solicitudRegMB.poderdante}</SPAN>
 																					</div>
 																				</th>
 																				<th class="ui-state-default">
 																					<div class="ui-dt-c">
-																						<SPAN>Representante</SPAN>
+																						<SPAN>#{solicitudRegMB.apoderdante}</SPAN>
 																					</div>
 																				</th>
 																				<th class="ui-state-default">
@@ -582,7 +582,11 @@
 																		title="Tipo de Operación"></h:outputText></td>
 																<td><p:selectOneMenu id="cboTipoOperacion"
 																		value="#{solicitudRegMB.objSolicBancaria.id.codOperBan}"
+																		valueChangeListener="#{solicitudRegMB.validarOperacionesBancarias}" 
 																		immediate="true" disabled="false" style="width:160px;">
+																		<p:ajax update=":formSolicitudRegistro:intImporte,
+																                	   	:formSolicitudRegistro:cboMoneda,
+																                		:formSolicitudRegistro:txtImporteSoles" event="change"></p:ajax>
 																		<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 																		<f:selectItems value="#{combosMB.lstOpeBancaria}"
 																			var="opeBan" itemValue="#{opeBan.codOperBan}"
@@ -593,7 +597,7 @@
 																<td><p:selectOneMenu style="width:160px;"
 																		id="cboMoneda" onchange="valorImporteSoles();"
 																		value="#{solicitudRegMB.objSolicBancaria.id.moneda}"
-																		immediate="true" disabled="false"
+																		immediate="true" disabled="#{solicitudRegMB.bBooleanMoneda}"
 																		valueChangeListener="#{solicitudRegMB.validarTipoCambioDisabled}">
 																		<p:ajax update=":formSolicitudRegistro:intImporte,
 																                	   	:formSolicitudRegistro:intTipoCambio,
@@ -609,6 +613,7 @@
 																<td><h:inputText
 																		value="#{solicitudRegMB.objSolicBancaria.importe}" 
 																		onkeypress="return validaNumero(event,'0',this,'0');"
+																		disabled="#{solicitudRegMB.bBooleanImporte}" 
 																		onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();"
 																		id="intImporte" maxlength="16" >
 																		<f:convertNumber pattern="#,###,##0.00" locale="en" />
@@ -634,6 +639,7 @@
 																		id="outImporteSoles" value="Importe en Soles:"></h:outputText></td>
 																<td><h:inputText 
 																		value="#{solicitudRegMB.objSolicBancaria.importeSoles}"
+																		style="background-color:#EBEBE4;"
 																		readonly="true" id="txtImporteSoles">
 																		<f:convertNumber pattern="#,###,##0.00" locale="en" />
 																	</h:inputText>
@@ -737,8 +743,8 @@
 						<tbody>
 							<tr>
 								<td><h:outputText
-										title="Representante(Solicitante) / Representado(Usuario/Cliente)"
-										value="Representante(Solicitante) / Representado(Usuario/Cliente)" /></td>
+										title="#{solicitudRegMB.tipoRegistro}"
+										value="#{solicitudRegMB.tipoRegistro}" /></td>
 							</tr>
 						</tbody>
 					</table>
@@ -844,8 +850,8 @@
 						<tbody>
 							<tr>
 								<td><h:outputText
-										title="Representante(Solicitante) / Representado(Usuario/Cliente)"
-										value="Representante(Solicitante) / Representado(Usuario/Cliente)" /></td>
+										title="#{solicitudRegMB.tipoRegistro}"
+										value="#{solicitudRegMB.tipoRegistro}" /></td>
 							</tr>
 						</tbody>
 					</table>

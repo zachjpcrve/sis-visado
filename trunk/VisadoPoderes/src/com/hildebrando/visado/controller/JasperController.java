@@ -408,9 +408,9 @@ public class JasperController {
 				uno.setItem1(parametros[0]);
 				uno.setItem2(parametros[1]);
 				uno.setItem3(parametros[2]);
-				uno.setItem4(parametros[3]);
-				Double importeLimite = Double.valueOf(parametros[4]);
-				Double importe = Double.valueOf(parametros[5]);
+//				uno.setItem4(parametros[3]);
+				Double importeLimite = Double.valueOf(parametros[3]);
+				Double importe = Double.valueOf(parametros[4]);
 				
 				uno.setImporte(importe);
 				uno.setImporteLimite(importeLimite);

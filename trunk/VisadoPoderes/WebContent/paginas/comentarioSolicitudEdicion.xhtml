@@ -12,7 +12,7 @@
 
 		<p:tabMenu activeIndex="0" style="width:350px;">
 	                           <p:menuitem value="Solicitud" url="/faces/paginas/solicitudEdicion.xhtml" icon="ui-icon-star" />
-		           <p:menuitem value="Instrucciones" url="/faces/paginas/comentarioSolicitudEdicion.xhtml" icon="ui-icon-star" />
+		           <p:menuitem value="Instrucciones" url="/faces/paginas/comentarioSolicitudEdicion.xhtml" icon="ui-icon-star" style="background-color:#c6deff;"/>
 		</p:tabMenu>
 
 		<p:toolbar>
@@ -36,7 +36,7 @@
 		
 		<h:form id="formSolicitudRegistro">
 	      <p:messages id="idGrowlSolicitudRegistro"></p:messages>
-			<p:editor id="editor" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="400" height="400"/>
+			<p:editor id="editor" onchange="actualizarEditor();" value="#{consultarSolicitudMB.solicitudRegistrarT.obs}" width="400" height="400"/>
 
 			<h:panelGrid columns="2" style="margin-top:10px">
 				<!-- <p:commandButton id="submitButton" value="Guardar" update="editor" actionListener="{consultarSolicitudMB.seterComentario}"
@@ -45,7 +45,8 @@
 					icon="ui-icon-close" />
 			</h:panelGrid>
 		
-
+			<p:remoteCommand name="actualizarEditor" update=":formSolicitudRegistro:editor" />
+			
 		</h:form>
 
    <p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"  

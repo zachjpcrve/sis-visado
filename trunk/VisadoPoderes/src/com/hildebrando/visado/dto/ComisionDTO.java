@@ -1,12 +1,5 @@
 package com.hildebrando.visado.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-
-import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 
 public class ComisionDTO {
 	
@@ -14,7 +7,7 @@ public class ComisionDTO {
 	private String item1;
 	private String item2;
 	private String item3;
-	private String item4;
+//	private String item4;
 	private Double importe;
 	private Double importeLimite;
 	public String getItem1() {
@@ -35,12 +28,12 @@ public class ComisionDTO {
 	public void setItem3(String item3) {
 		this.item3 = item3;
 	}
-	public String getItem4() {
+	/*public String getItem4() {
 		return item4;
 	}
 	public void setItem4(String item4) {
 		this.item4 = item4;
-	}
+	}*/
 	public Double getImporte() {
 		return importe;
 	}

@@ -4,10 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -24,14 +23,12 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.common.util.EstilosNavegador;
-import com.bbva.consulta.reniec.ObtenerPersonaReniecService;
-import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecServiceImpl;
+import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Persona;
 import com.bbva.persistencia.generica.dao.Busqueda;
@@ -103,6 +99,11 @@ public class SolicitudRegistroMB {
 	@ManagedProperty(value = "#{consultarSolicitudMB}")
 	private ConsultarSolicitudMB consultarSolicitudMB;
 	private String patter;
+	private String tipoRegistro;
+	private String poderdante;
+	private String apoderdante;
+	private boolean bBooleanMoneda;
+	private boolean bBooleanImporte;
 	
 	private TiivsSolicitudOperban objSolicBancaria;
 	private List<TiivsSolicitudOperban> lstSolicBancarias;
@@ -592,8 +593,8 @@ public class SolicitudRegistroMB {
 			if (objTiivsPersonaBusqueda.getNumDoi() != null) {
 				logger.info("[RENIEC]-DNI:"+ objTiivsPersonaBusqueda.getNumDoi());
 
-				ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
-				//ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
+//				ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
+				ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
 				
 				resultado = reniecService.devolverPersonaReniecDNI("P013371", "0553",objTiivsPersonaBusqueda.getNumDoi());
 				logger.debug("[RENIEC]-resultado: "+resultado.getCode());
@@ -1461,6 +1462,11 @@ public class SolicitudRegistroMB {
 					lstApoderdantes.add(n);
 					logger.info(" apoderado : " + n.getCodPer());
 				}
+				//SE AGREGO IF DE HEREDEROS
+				if (n.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)) {
+					lstApoderdantes.add(n);
+					logger.info(" heredero : " + n.getCodPer());
+				}
 			}
 			
 			this.llamarComision();
@@ -1526,6 +1532,8 @@ private void armaAgrupacionSimple() {
 					}
 					else  if(d.getTipPartic().trim().equals(ConstantesVisado.APODERADO))
 					{
+						lstApoderdantes.add(d.getTiivsPersona());
+					}else if(d.getTipPartic().trim().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
 						lstApoderdantes.add(d.getTiivsPersona());
 					}
 			   }
@@ -1646,7 +1654,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		oficina = new TiivsOficina1();
 		
 		obtenCodRazonSocial(); 
-
+		obtenerTipoRegistro();
+		obtenerEtiquetasTipoRegistro();
 
 		return "/faces/paginas/solicitud.xhtml";
 	}	
@@ -1953,9 +1962,12 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			result = false;
 		}
 		if (objSolicBancaria.getImporte() == 0) {
-			sMensaje = "Ingrese el Importe";
-			Utilitarios.mensajeInfo("", sMensaje);
-			result = false;
+			/*** SE AGREGA CONDICIONANTE DE TIPO DE OPERACION ***/
+			if(isDineraria(objSolicBancaria.getId().getCodOperBan())){
+				sMensaje = "Ingrese el Importe";
+				Utilitarios.mensajeInfo("", sMensaje);
+				result = false;	
+			}
 		}
 		if (!flagUpdateOperacionSolic) {
 			for (TiivsSolicitudOperban x : lstSolicBancarias) {
@@ -1996,6 +2008,23 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}
 		return result;
 	}
+	
+	private boolean isDineraria(String codigoOperacion){
+		GenericDao<TiivsOperacionBancaria, Object> service = 
+							(GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		try {
+			TiivsOperacionBancaria operacion = service.buscarById(TiivsOperacionBancaria.class, (Serializable) codigoOperacion);
+			if(operacion!=null){
+				if(operacion.getTipo().compareTo(ConstantesVisado.NO_DINERARIA)!=0){
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			logger.error("+++ Falló al obtener Operación", e);
+			e.printStackTrace();
+		}		
+		return false;
+	}
 
 	int icontSoles = 0, icontDolares = 0, icontEuros = 0;
 	double valorFinal = 0;
@@ -2013,6 +2042,35 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			bBooleanPopupTipoCambio=false;
 		
 		}
+		}
+	}
+	
+	public void validarOperacionesBancarias(ValueChangeEvent e){
+		if(e.getNewValue()!=null){
+			GenericDao<TiivsOperacionBancaria, Object> service = (GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			try {
+				TiivsOperacionBancaria operacion = service.buscarById(TiivsOperacionBancaria.class, (Serializable) e.getNewValue());
+				if(operacion!=null){
+					if(operacion.getTipo().compareTo(ConstantesVisado.NO_DINERARIA)==0){
+						objSolicBancaria.getId().setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+						objSolicBancaria.setImporte(0.00);
+						objSolicBancaria.setImporteSoles(0.00);
+						objSolicBancaria.setTipoCambio(0.00);
+						bBooleanPopupTipoCambio = true;
+						bBooleanMoneda = true;
+						bBooleanImporte = true;
+					}else{
+						objSolicBancaria.getId().setMoneda("");
+						objSolicBancaria.setImporte(null);
+						objSolicBancaria.setImporteSoles(null);
+						objSolicBancaria.setTipoCambio(0.00);
+						bBooleanMoneda = false;
+						bBooleanImporte = false;
+					}
+				}
+			} catch (Exception e1) {
+				logger.error("+++ Falló al buscar operacion", e1);
+			}
 		}
 	}
 
@@ -2958,10 +3016,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				for (TiivsAgrupacionPersona xa : lstAgrupacionPersona) {
 					if(xa.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 					   contPoderdante++;
-					
 					}else if(xa.getTipPartic().equals(ConstantesVisado.APODERADO)){
 						contApoderado++;
-						
+					}else if(xa.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
+						contApoderado++;
 					}
 				}
 				if(contPoderdante==0||contApoderado==0){
@@ -3064,6 +3122,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					}else if(xa.getTipPartic().equals(ConstantesVisado.APODERADO)){
 						contApoderado++;
 						
+					}else if(xa.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
+						contApoderado++;
 					}
 				}
 				if(contPoderdante==0||contApoderado==0){
@@ -3326,6 +3386,86 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	private void obtenCodRazonSocial() {
 		TiposDoiService tiposDoiService = new TiposDoiService(); 			
 		codigoRazonSocial = tiposDoiService.obtenerCodPersonaJuridica();
+	}
+	
+	//SE AGREGA METODO PARA OBTENER EL TIPO DE REGISTRO POR BD
+	private void obtenerTipoRegistro(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			tipoRegistro = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						tipoRegistro += multitabla.getValor1();	
+					}else{
+						tipoRegistro += multitabla.getValor1() + " / ";
+					}
+				}
+			}
+			
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+	
+	private void obtenerPonderdante(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("valor3", ConstantesVisado.R1_PODERDANTE));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			poderdante = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						poderdante += multitabla.getValor1();	
+					}else{
+						poderdante += multitabla.getValor1() + " - ";
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+	
+	private void obtenerAponderdante(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("valor3", ConstantesVisado.R2_APODERADO));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			apoderdante = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						apoderdante += multitabla.getValor1();	
+					}else{
+						apoderdante += multitabla.getValor1() + " - ";
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+	
+	//METODO PARA OBTENER ETIQUETAS DE TIPO DE REGISTRO DESDE BD Y MOSTRARLO EN GRILLA
+	private void obtenerEtiquetasTipoRegistro(){
+		obtenerPonderdante();
+		obtenerAponderdante();
 	}
 
 	public List<TiivsMultitabla> getLstMultitabla() {
@@ -3803,6 +3943,46 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 	public void setPatter(String patter) {
 		this.patter = patter;
+	}
+
+	public String getTipoRegistro() {
+		return this.tipoRegistro;
+	}
+
+	public void setTipoRegistro(String tipoRegistro) {
+		this.tipoRegistro = tipoRegistro;
+	}
+	
+	public String getPoderdante() {
+		return this.poderdante;
+	}
+
+	public void setPoderdante(String poderdante) {
+		this.poderdante = poderdante;
+	}
+	
+	public String getApoderdante() {
+		return this.apoderdante;
+	}
+
+	public void setApoderdante(String apoderdante) {
+		this.apoderdante = apoderdante;
+	}
+	
+	public boolean isbBooleanMoneda() {
+		return bBooleanMoneda;
+	}
+
+	public void setbBooleanMoneda(boolean bBooleanMoneda) {
+		this.bBooleanMoneda = bBooleanMoneda;
+	}
+
+	public boolean isbBooleanImporte() {
+		return bBooleanImporte;
+	}
+
+	public void setbBooleanImporte(boolean bBooleanImporte) {
+		this.bBooleanImporte = bBooleanImporte;
 	}
 
 	public StreamedContent getFileDownload() {

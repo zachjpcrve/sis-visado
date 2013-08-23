@@ -67,13 +67,20 @@ public class ClasificacionService {
 					clasificaciones.get(i).setValor2(ConstantesVisado.VALOR2_ESTADO_INACTIVO_LISTA);
 				}
 				
-				if (clasificaciones.get(i).getValor3().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_REPRESENTANTE))
+				/*if (clasificaciones.get(i).getValor3().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_REPRESENTANTE))
 				{
 					clasificaciones.get(i).setValor3(ConstantesVisado.TIPO_PARTICIPACION.REPRESENTANTE);
 				}
 				else
 				{
 					clasificaciones.get(i).setValor3(ConstantesVisado.TIPO_PARTICIPACION.REPRESENTADO);
+				}*/
+				if(clasificaciones.get(i).getValor3().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_REPRESENTANTE)){
+					clasificaciones.get(i).setValor3(ConstantesVisado.TIPO_PARTICIPACION.REPRESENTANTE);
+				}else if(clasificaciones.get(i).getValor3().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_REPRESENTADO)){
+					clasificaciones.get(i).setValor3(ConstantesVisado.TIPO_PARTICIPACION.REPRESENTADO);
+				}else if(clasificaciones.get(i).getValor3().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
+					clasificaciones.get(i).setValor3(ConstantesVisado.TIPO_PARTICIPACION.HEREDERO);
 				}
 			}
 			

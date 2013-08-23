@@ -18,7 +18,7 @@
 
 			<p:tabMenu activeIndex="0" style="width:350px;">
 				<p:menuitem value="Solicitud" url="/faces/paginas/solicitudEdicion.xhtml"
-					icon="ui-icon-star" />
+					icon="ui-icon-star" style="background-color:#c6deff;" />
 				<p:menuitem value="Instrucciones"
 					url="/faces/paginas/comentarioSolicitudEdicion.xhtml" icon="ui-icon-star" />
 			
@@ -45,6 +45,10 @@
 					<p:commandButton value="Imprimir" id="btnImprimir3"
 						icon="ui-icon-document" />
 					 -->
+					 <p:commandButton value="Imprimir" id="btnImprimir3"
+						onclick="window.location.href='../../main/download/pdfReportSolicitudVisado.htm'"
+						icon="ui-icon-document" />
+						
 					<p:commandButton value="Salir" id="btnSalir3" onclick="window.location.href='./bienvenido.xhtml'"
 						icon="ui-icon-document" />
 						
@@ -218,8 +222,8 @@
 												<table>
 													<tr>
 														<td style="width: 380px;"><h:outputText
-																	title="Representante(Solicitante)/Representado(Usuario/Cliente)"
-																	value="Representante(Solicitante)/Representado(Usuario/Cliente)" /></td>
+																	title="#{consultarSolicitudMB.tipoRegistro}"
+																	value="#{consultarSolicitudMB.tipoRegistro}" /></td>
 														<td></td>
 														<td></td>
 														<td></td>
@@ -241,12 +245,12 @@
 															<tr>
 															<th class="ui-state-default">
 															<div class="ui-dt-c">
-															<SPAN>Representado</SPAN>
+															<SPAN>#{consultarSolicitudMB.poderdante}</SPAN>
 															</div>
 															</th>
 															<th class="ui-state-default">
 															<div class="ui-dt-c">
-															<SPAN>Representante</SPAN>
+															<SPAN>#{consultarSolicitudMB.apoderdante}</SPAN>
 															</div>
 															</th>
 															<th class="ui-state-default">
@@ -559,8 +563,13 @@
 														<td><p:selectOneMenu styleClass="selectOneMenu"
 																id="cboTipoOperacion"
 																value="#{consultarSolicitudMB.objSolicBancaria.id.codOperBan}"
+																valueChangeListener="#{consultarSolicitudMB.validarOperacionesBancarias}"
 																immediate="true" 
 																disabled="false" >
+																<p:ajax update=":formSolicitudRegistro:intImporte,
+																                	   	:formSolicitudRegistro:cboMoneda,
+																                	   	:formSolicitudRegistro:intTipoCambio,
+																                		:formSolicitudRegistro:txtImporteSoles" event="change"></p:ajax>
 																<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
 																<f:selectItems value="#{combosMB.lstOpeBancaria}" var="opeBan"
 																			itemValue="#{opeBan.codOperBan}" itemLabel="#{opeBan.desOperBan}" /> 
@@ -572,7 +581,8 @@
 																id="cboMoneda" onchange="valorImporteSoles();"
 																value="#{consultarSolicitudMB.objSolicBancaria.id.moneda}"
 																immediate="true" 
-																disabled="false" valueChangeListener="#{consultarSolicitudMB.validarTipoCambioDisabled}">
+																disabled="#{consultarSolicitudMB.bBooleanMoneda}"
+																valueChangeListener="#{consultarSolicitudMB.validarTipoCambioDisabled}">
 																<p:ajax update=":formSolicitudRegistro:intImporte,
 																                :formSolicitudRegistro:intTipoCambio,
 																                :formSolicitudRegistro:txtImporteSoles" event="change"></p:ajax>
@@ -584,7 +594,7 @@
 														<td><h:outputText styleClass="outputText" id="outImporte" value="Importe:" title="Importe:"></h:outputText>
 														</td>
 														<td><h:inputText value="#{consultarSolicitudMB.objSolicBancaria.importe}" onkeypress="return validaNumero(event,'0',this,'0');"
-																 onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();"  id="intImporte" maxlength="16" >
+																 onblur="validaNumero(event,'0',this,'1'); valorImporteSoles();"  id="intImporte" maxlength="16" disabled="#{consultarSolicitudMB.bBooleanImporte}" >
 																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
 																</h:inputText>	
 															</td>

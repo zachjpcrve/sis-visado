@@ -12,6 +12,7 @@ public class TiivsOperacionBancaria implements java.io.Serializable {
 	private String codOperBan;
 	private String desOperBan;
 	private String activo;
+	private String tipo;
 	private Set<TiivsSolicitudOperban> tiivsSolicitudOperbans = new HashSet<TiivsSolicitudOperban>();
 
 	public TiivsOperacionBancaria() {
@@ -22,10 +23,11 @@ public class TiivsOperacionBancaria implements java.io.Serializable {
 	}
 
 	public TiivsOperacionBancaria(String codOperBan, String desOperBan,
-			String activo, Set<TiivsSolicitudOperban> tiivsSolicitudOperbans) {
+			String activo, String tipo, Set<TiivsSolicitudOperban> tiivsSolicitudOperbans) {
 		this.codOperBan = codOperBan;
 		this.desOperBan = desOperBan;
 		this.activo = activo;
+		this.tipo = tipo;
 		this.tiivsSolicitudOperbans = tiivsSolicitudOperbans;
 	}
 
@@ -51,6 +53,14 @@ public class TiivsOperacionBancaria implements java.io.Serializable {
 
 	public void setActivo(String activo) {
 		this.activo = activo;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	public Set<TiivsSolicitudOperban> getTiivsSolicitudOperbans() {
