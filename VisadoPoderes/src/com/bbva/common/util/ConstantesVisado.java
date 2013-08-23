@@ -27,6 +27,14 @@ public class ConstantesVisado {
 	public static final java.lang.String APODERADO="0002";
 	public static final java.lang.String PODERDANTE="0001";
 	
+	/*** SE AGREGARON 4 VARIABLES ***/
+	public static final java.lang.String R1_PODERDANTE="R1";
+	public static final java.lang.String R2_APODERADO="R2";
+	
+	public static final java.lang.String DINERARIA = "DINERARIA";
+	public static final java.lang.String NO_DINERARIA = "NO DINERARIA";
+	
+	
 	public static final java.lang.String ID_RANGO_IMPORTE_MENOR_CINCUENTA = "0001";
 	public static final java.lang.String ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE = "0002";
 	public static final java.lang.String ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA = "0003";
@@ -537,10 +545,18 @@ public class ConstantesVisado {
 	}
 	
 	static public class TIPO_PARTICIPACION{
-		public static final java.lang.String CODIGO_REPRESENTANTE = "0002"; //0002
-		public static final java.lang.String CODIGO_REPRESENTADO  = "0001"; //0002
+		/*public static final java.lang.String CODIGO_REPRESENTANTE = "0002"; //0002
+		public static final java.lang.String CODIGO_REPRESENTADO  = "0001"; //0002*/
 		
-		public static final java.lang.String REPRESENTANTE="Representante";
-		public static final java.lang.String REPRESENTADO="Representado";
+		public static final java.lang.String CODIGO_REPRESENTANTE = "0002"; //0002 //apoderado
+		public static final java.lang.String CODIGO_REPRESENTADO  = "0001"; //titular
+		public static final java.lang.String CODIGO_HEREDERO  = "0003"; //heredero
+		
+		/*public static final java.lang.String REPRESENTANTE="Representante";
+		public static final java.lang.String REPRESENTADO="Representado";*/
+		
+		public static final java.lang.String REPRESENTANTE="Apoderado";
+		public static final java.lang.String REPRESENTADO="Titular";
+		public static final java.lang.String HEREDERO="Heredero";
 	}
 }

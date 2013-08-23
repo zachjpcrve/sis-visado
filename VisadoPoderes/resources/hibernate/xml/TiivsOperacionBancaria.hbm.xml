@@ -14,6 +14,9 @@
         <property name="activo" type="java.lang.String">
             <column name="ACTIVO" length="1" />
         </property>
+        <property name="tipo" type="string">
+            <column name="TIPO" length="50" />
+        </property>
         <set name="tiivsSolicitudOperbans" table="TIIVS_SOLICITUD_OPERBAN" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="COD_OPER_BAN" length="7" not-null="true" />

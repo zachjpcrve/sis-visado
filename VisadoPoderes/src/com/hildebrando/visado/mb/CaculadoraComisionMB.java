@@ -21,11 +21,11 @@ public class CaculadoraComisionMB {
 	private Integer item1;
 	private Integer item2;
 	private Integer item3;
-	private Integer item4;
-	private boolean verItem1 = false;
-	private boolean verItem2 = true;
-	private boolean verItem3 = true;
-	private boolean verItem4 = true;
+//	private Integer item4=0;
+	private boolean verItem1 = false; 
+	private boolean verItem2 = true; 
+	private boolean verItem3 = true; 
+//	private boolean verItem4 = true;
 	private Double resultado;
 	private Double importeLimite;
 	private String [] importes;
@@ -41,7 +41,21 @@ public class CaculadoraComisionMB {
 		int criterio=0;
 		resultado = new Double(200);
 		
-		if(item1!=null && item1 == 1)	{
+		if(item1!=null && item1 == 1){
+			criterio = 4;
+		}else{
+			if(item2!=null && item2 == 0){
+				criterio = 3;
+			}else{
+				if(item3!=null && item3 == 1){
+					criterio = 2;
+				}else if(item3!=null && item3 == 0){
+					criterio = 1;
+				}
+			}
+		}
+		
+		/*if(item1!=null && item1 == 1)	{
 			if(item2!=null && item2 == 1){
 				criterio = 1;
 			} else {
@@ -55,7 +69,7 @@ public class CaculadoraComisionMB {
 					criterio = 4;
 				} 
 			}
-		}
+		}*/
 			
 		try {
 			resultado = Double.valueOf(importes[criterio]);
@@ -63,7 +77,32 @@ public class CaculadoraComisionMB {
 			resultado = new Double(0);
 		}
 		
-		if(item1!=null && item1 == 1){
+		if(item1!=null && item1 == 0){
+			verItem2 = false;
+			verItem3 = true;
+			
+			if(item2!=null && item2 == 1){
+				verItem3 = false;
+			}else{
+				verItem3 = true;
+				item3 = null;	
+			}
+		}else{
+			verItem2 = true;
+			verItem3 = true;
+			item2 = null;
+			item3 = null;
+		}
+		
+		/*else if(item2!=null && item2 == 1){
+			verItem3 = false;
+			item3 = null;
+		}else if(item2!=null && item2 == 0){
+			verItem3 = true;
+			item3 = null;
+		}*/
+		
+		/*if(item1!=null && item1 == 1){
 			verItem2 = false;
 			verItem3 = true;
 			verItem4 = true;
@@ -72,7 +111,7 @@ public class CaculadoraComisionMB {
 			verItem2 = true;
 			verItem3 = false;
 			verItem4 = false;
-			item2=null;
+			item2=null;*/
 			
 /*			if(item3!=null && item3 == 1){
 				verItem4 = true;
@@ -87,10 +126,7 @@ public class CaculadoraComisionMB {
 			if(item4!=null && item4 == 0) {
 				verItem3 = false;
 			}*/
-		}
-		
-		
-		
+//		}	
 	}
 
 	private void obtenerParametros() 
@@ -128,12 +164,12 @@ public class CaculadoraComisionMB {
 		item1 = null;
 		item2 = null;
 		item3 = null;
-		item4 = null;
+//		item4 = null;
 		resultado = new Double(0);
 		verItem1 = false;
 		verItem2 = true;
 		verItem3 = true;
-		verItem4 = true;
+//		verItem4 = true;
 	}
 	
 	public Double getResultado() {
@@ -174,13 +210,8 @@ public class CaculadoraComisionMB {
 
 	public void setItem3(Integer item3) {
 		this.item3 = item3;
-		if(item3!=null && item3 == 0){
-			item4 = new Integer(1);
-		} else if(item3!=null && item3 == 1) {
-			item4 = new Integer(0);
-		}
 	}
-
+/*
 	public Integer getItem4() {
 		return item4;
 	}
@@ -192,7 +223,7 @@ public class CaculadoraComisionMB {
 		} else if(item4!=null && item4 == 1) {
 			item3 = new Integer(0);
 		}
-	}
+	}*/
 
 	public boolean isVerItem1() {
 		return verItem1;
@@ -218,12 +249,12 @@ public class CaculadoraComisionMB {
 		this.verItem3 = verItem3;
 	}
 
-	public boolean isVerItem4() {
+	/*public boolean isVerItem4() {
 		return verItem4;
 	}
 
 	public void setVerItem4(boolean verItem4) {
 		this.verItem4 = verItem4;
-	}
+	}*/
 	
 }

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -191,6 +192,12 @@ public class ConsultarSolicitudMB {
 	private boolean mostrarRazonSocial = false;
 	private String codigoRazonSocial = "0000";
 	
+	private String tipoRegistro;
+	private String poderdante;
+	private String apoderdante;
+	private boolean bBooleanMoneda;
+	private boolean bBooleanImporte;
+	
 	public ConsultarSolicitudMB() {		
 		inicializarContructor();
 		cargarDocumentos();
@@ -212,6 +219,8 @@ public class ConsultarSolicitudMB {
 		}
 		estilosNavegador=new EstilosNavegador();
 		obtenCodRazonSocial();
+		obtenerTipoRegistro();
+		obtenerEtiquetasTipoRegistro();
 	}
 	
 	/*
@@ -632,14 +641,69 @@ public class ConsultarSolicitudMB {
 		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)) {
 			redirect = "/faces/paginas/solicitudEdicion.xhtml";
 			//obtenerSolicitud();
-		} else {
-			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-			request.getSession(true).setAttribute("SOLICITUD_TEMP", solicitudRegistrarT);						
+		} else {					
 			redirect = "/faces/paginas/detalleSolicitud.xhtml";
 		}
+		/*** SE MUEVEN LAS 2 LINEAS DE ABAJO, ORIGINALMENTE ESTABAN DENTRO DEL ELSE ***/
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession(true).setAttribute("SOLICITUD_TEMP", solicitudRegistrarT);
 		return redirect;
 	}
 
+	//METODO PARA OBTENER ETIQUETAS DE TIPO DE REGISTRO DESDE BD Y MOSTRARLO EN GRILLA
+	private void obtenerEtiquetasTipoRegistro(){
+		obtenerPonderdante();
+		obtenerAponderdante();
+	}
+	
+	private void obtenerPonderdante(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("valor3", ConstantesVisado.R1_PODERDANTE));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			poderdante = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						poderdante += multitabla.getValor1();	
+					}else{
+						poderdante += multitabla.getValor1() + " - ";
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+	
+	private void obtenerAponderdante(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("valor3", ConstantesVisado.R2_APODERADO));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			apoderdante = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						apoderdante += multitabla.getValor1();	
+					}else{
+						apoderdante += multitabla.getValor1() + " - ";
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+		
 	public void abogadosXEstudios(ValueChangeEvent e) {
 		logger.info("*************** abogadosXEstudios *********************"
 				+ e.getNewValue());
@@ -846,6 +910,9 @@ public class ConsultarSolicitudMB {
 						lstPoderdantes.add(d.getTiivsPersona());
 					}
 					else  if(d.getTipPartic().trim().equals(ConstantesVisado.APODERADO))
+					{
+						lstApoderdantes.add(d.getTiivsPersona());
+					}else if(d.getTipPartic().trim().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO))
 					{
 						lstApoderdantes.add(d.getTiivsPersona());
 					}
@@ -2383,10 +2450,10 @@ public class ConsultarSolicitudMB {
 				for (TiivsAgrupacionPersona xa : lstAgrupacionPersona) {
 					if(xa.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 					   contPoderdante++;
-					
 					}else if(xa.getTipPartic().equals(ConstantesVisado.APODERADO)){
 						contApoderado++;
-						
+					}else if(xa.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
+						contApoderado++;
 					}
 				}
 				if(contPoderdante==0||contApoderado==0){
@@ -3725,9 +3792,12 @@ public class ConsultarSolicitudMB {
 			result = false;
 		}
 		if (objSolicBancaria.getImporte() == 0) {
-			sMensaje = "Ingrese el Importe";
-			Utilitarios.mensajeInfo("", sMensaje);
-			result = false;
+			/*** SE AGREGA CONDICIONANTE DE TIPO DE OPERACION ***/
+			if(isDineraria(objSolicBancaria.getId().getCodOperBan())){
+				sMensaje = "Ingrese el Importe";
+				Utilitarios.mensajeInfo("", sMensaje);
+				result = false;	
+			}
 		}
 		if (!flagUpdateOperacionSolic) {
 			for (TiivsSolicitudOperban x : lstSolicBancarias) {
@@ -3770,6 +3840,22 @@ public class ConsultarSolicitudMB {
 		return result;
 	}
 
+	private boolean isDineraria(String codigoOperacion){
+		GenericDao<TiivsOperacionBancaria, Object> service = 
+							(GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		try {
+			TiivsOperacionBancaria operacion = service.buscarById(TiivsOperacionBancaria.class, (Serializable) codigoOperacion);
+			if(operacion!=null){
+				if(operacion.getTipo().compareTo(ConstantesVisado.NO_DINERARIA)!=0){
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			logger.error("+++ Falló al obtener Operación", e);
+			e.printStackTrace();
+		}		
+		return false;
+	}
 	public void obtenerAccionAgregarOperacionBancaria() {
 		logger.info("**************************** obtenerAccionAgregarOperacionBancaria ****************************");
 		logger.info("********************************************* : "
@@ -5262,6 +5348,35 @@ public class ConsultarSolicitudMB {
 		return result;
 	}
 
+	//SE AGREGA METODO PARA OBTENER EL TIPO DE REGISTRO POR BD
+	private void obtenerTipoRegistro() {
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("id.codMult",
+				ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			tipoRegistro = "";
+			if (listaMultiTabla.size() > 0) {
+				for (TiivsMultitabla multitabla : listaMultiTabla) {
+					contador++;
+					if (contador.compareTo(listaMultiTabla.size()) == 0) {
+						tipoRegistro += multitabla.getValor1();
+					} else {
+						tipoRegistro += multitabla.getValor1() + " / ";
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT
+					+ "de multitablas: " + e);
+		}
+	}
+		
 	/* Termino metodos del registro */
 	
 	
@@ -5398,6 +5513,35 @@ public class ConsultarSolicitudMB {
 		logger.debug("=== saliendo de descargarDocumento() ====");
 		
 		return "";		
+	}
+	
+	public void validarOperacionesBancarias(ValueChangeEvent e){
+		if(e.getNewValue()!=null){
+			GenericDao<TiivsOperacionBancaria, Object> service = (GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			try {
+				TiivsOperacionBancaria operacion = service.buscarById(TiivsOperacionBancaria.class, (Serializable) e.getNewValue());
+				if(operacion!=null){
+					if(operacion.getTipo().compareTo(ConstantesVisado.NO_DINERARIA)==0){
+						objSolicBancaria.getId().setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+						objSolicBancaria.setImporte(0.00);
+						objSolicBancaria.setImporteSoles(0.00);
+						objSolicBancaria.setTipoCambio(0.00);
+						bBooleanPopupTipoCambio = true;
+						bBooleanMoneda = true;
+						bBooleanImporte = true;
+					}else{
+						objSolicBancaria.getId().setMoneda("");
+						objSolicBancaria.setImporte(null);
+						objSolicBancaria.setImporteSoles(null);
+						objSolicBancaria.setTipoCambio(0.00);
+						bBooleanMoneda = false;
+						bBooleanImporte = false;
+					}
+				}
+			} catch (Exception e1) {
+				logger.error("+++ Falló al buscar operacion", e1);
+			}
+		}
 	}
 
 	public void setCombosMB(CombosMB combosMB) {
@@ -6029,4 +6173,43 @@ public class ConsultarSolicitudMB {
 		this.patter = patter;
 	}
 	
+	public String getTipoRegistro() {
+		return this.tipoRegistro;
+	}
+
+	public void setTipoRegistro(String tipoRegistro) {
+		this.tipoRegistro = tipoRegistro;
+	}
+	
+	public String getPoderdante() {
+		return this.poderdante;
+	}
+
+	public void setPoderdante(String poderdante) {
+		this.poderdante = poderdante;
+	}
+	
+	public String getApoderdante() {
+		return this.apoderdante;
+	}
+
+	public void setApoderdante(String apoderdante) {
+		this.apoderdante = apoderdante;
+	}
+	
+	public boolean isbBooleanMoneda() {
+		return bBooleanMoneda;
+	}
+
+	public void setbBooleanMoneda(boolean bBooleanMoneda) {
+		this.bBooleanMoneda = bBooleanMoneda;
+	}
+
+	public boolean isbBooleanImporte() {
+		return bBooleanImporte;
+	}
+
+	public void setbBooleanImporte(boolean bBooleanImporte) {
+		this.bBooleanImporte = bBooleanImporte;
+	}
 }

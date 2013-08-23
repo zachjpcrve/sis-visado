@@ -22,8 +22,7 @@
 				<p:toolbarGroup align="rigth">				
 					<!-- <p:commandButton value="Imprimir" id="btnImprimir3" onclick="window.print();return false;" icon="ui-icon-document"/> -->
 					
-					<p:commandButton value="Imprimir" id="btnImprimir3" onclick="window.location.href='../../main/download/calculoComision.htm?param=#{calculadoraMB.item1};#{calculadoraMB.item2};#{calculadoraMB.item3};#{calculadoraMB.item4};#{calculadoraMB.importeLimite};#{calculadoraMB.resultado}'" icon="ui-icon-document"/>
-					
+					<p:commandButton value="Imprimir" id="btnImprimir3" onclick="window.location.href='../../main/download/calculoComision.htm?param=#{calculadoraMB.item1};#{calculadoraMB.item2};#{calculadoraMB.item3};#{calculadoraMB.importeLimite};#{calculadoraMB.resultado}'" icon="ui-icon-document"/>					
 					<p:commandButton value="Salir" id="btnSalir3" onclick="window.location.href='./bienvenido.xhtml'" icon="ui-icon-document"/>
 					
 				</p:toolbarGroup>
@@ -38,7 +37,7 @@
 			<center><h3>CALCULADORA DE COMISIÓN</h3></center>
 		
 			<h:panelGrid id="pnlCabecera" columns="4" >
-				<p:spacer  width="270" height="10" />
+				<p:spacer  width="330" height="10" />
 				<h:outputText>Si</h:outputText>
 				<p:spacer  width="10" height="10" />
 				<h:outputText>No</h:outputText>		
@@ -47,7 +46,7 @@
 			<h:panelGrid id="pnlCalculadora" columns="4" >
 								
 								
-				<h:outputText value="1. Por lo menos un Representado es de tipo Fallecido" />
+				<h:outputText value="1. ¿ El beneficiario de la operación bancaria es persona jurídica?" />
 				
 				<h:selectOneRadio id="radioButton1" value="#{calculadoraMB.item1}" disabled="#{calculadoraMB.verItem1}">  
 			        <f:selectItem itemLabel="" itemValue="1" />  
@@ -57,9 +56,9 @@
 								
 				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem1" />
 					
-				<p:tooltip for="questionItem1" value="Por lo menos un poderdante es de tipo Fallecido" showEffect="slide" />
+				<p:tooltip for="questionItem1" value="SI: Persona Juridica / NO: Persona Natural" showEffect="slide"  />
 
-				<h:outputText value="2. Monto global de las operaciones es mayor a #{calculadoraMB.importeLimite}" />
+				<h:outputText value="2. ¿ Dispondrá de bienes de fallecido?" />
 
 				<h:selectOneRadio id="radioButton2" value="#{calculadoraMB.item2}" disabled="#{calculadoraMB.verItem2}">  
 			        <f:selectItem itemLabel="" itemValue="1" />  
@@ -69,9 +68,9 @@
 
 				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem2" />
 				
-				<p:tooltip for="questionItem2" value="Monto global de las operaciones es mayor a #{calculadoraMB.importeLimite}" showEffect="slide" />
+				<p:tooltip for="questionItem2" value="SI: Persona Natural dispondra de Bienes de Fallecido / NO: Persona Natural No dispondra de Bienes de Fallecido" showEffect="slide" />
 
-				<h:outputText value="3. El Representado es persona natural" />
+				<h:outputText value="3. ¿ El importe a disponer es menor a #{calculadoraMB.importeLimite}?" />
 
 				<h:selectOneRadio id="radioButton3" value="#{calculadoraMB.item3}" disabled="#{calculadoraMB.verItem3}">  
 			        <f:selectItem itemLabel="" itemValue="1" />  
@@ -81,19 +80,7 @@
 
 				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem3" />
 				
-				<p:tooltip for="questionItem3" value="El poderdante es persona natural" showEffect="slide" />
-
-				<h:outputText value="4. El Representado es persona jurídica" />
-
-				<h:selectOneRadio id="radioButton4" value="#{calculadoraMB.item4}" disabled="#{calculadoraMB.verItem4}" >  
-			        <f:selectItem itemLabel="" itemValue="1" />  
-			        <f:selectItem itemLabel="" itemValue="0" />   
-			        <p:ajax listener="#{calculadoraMB.calcularComision}" update="textResultado, pnlCalculadora,:pnlToolBar" />
-				</h:selectOneRadio>				
-
-				<p:graphicImage value="/resources/images/pregunta.jpg" id="questionItem4" />
-				
-				<p:tooltip for="questionItem4" value="El poderdante es persona juridica" showEffect="slide" />
+				<p:tooltip for="questionItem3" value="SI: El importe a disponer es menor a #{calculadoraMB.importeLimite} / NO: El importe es mayor a #{calculadoraMB.importeLimite}" showEffect="slide" />
 
 			</h:panelGrid>
 
@@ -103,7 +90,7 @@
 
 				<h:outputText>Ud. debe pagar:</h:outputText>
 
-				<p:spacer width="100" height="10" />
+				<p:spacer width="150" height="10" />
 				
 				<h:inputText id="textResultado" styleClass="inputText" maxlength="10" value="PEN S/. #{calculadoraMB.resultado}" disabled="true" />
 
