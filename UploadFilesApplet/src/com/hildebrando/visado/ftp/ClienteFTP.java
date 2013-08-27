@@ -10,7 +10,9 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
 /**
- *
+ * Clase que se encarga de abrir una conexión FTP para el UpLoad de
+ * archivos. También contempla renombrar archivos y seteo de directorio
+ * de trabajo para los documentos. 
  * @author Hildebrando
  */
 public class ClienteFTP {
@@ -46,9 +48,10 @@ public class ClienteFTP {
     
 
     public void upLoadFiles(String file, String ruta) {
+    	System.out.println("== upLoadFiles:Inicio ==");
         FileInputStream fis = null;
-
         try {
+        	System.out.println("\tArchivo:"+file+"  Ruta:"+ruta);
             fis = new FileInputStream(file);
             ftpCliente.setFileType(FTP.BINARY_FILE_TYPE);
             ftpCliente.setFileTransferMode(FTP.BINARY_FILE_TYPE);
@@ -56,8 +59,12 @@ public class ClienteFTP {
             ftpCliente.storeFile(file, fis);
 
         } catch (IOException e) {
+        	System.out.println("Ha ocurrido una IOException en upLoadFiles:"+e);
             e.printStackTrace();
-        } finally {
+        } catch(Exception exc){
+        	System.out.println("Ha ocurrido una Exception en upLoadFiles:"+exc);
+        } 
+        finally {
             try {
                 if (fis != null) {
                     fis.close();
@@ -65,17 +72,25 @@ public class ClienteFTP {
                 // ftpCliente.disconnect();
             } catch (IOException e) {
                 e.printStackTrace();
+                System.out.println("Ha ocurrido una IOException en upLoadFiles:"+e);
             }
         }
     }
     
     public void renombrarArchivo(String nuevoNombre, String antiguoNombre) {
+    	System.out.println("== renombrarArchivo:Inicio ==");
         try {
+        	System.out.println("[Nombre]-Antiguo:"+antiguoNombre + "   Nuevo:"+nuevoNombre);
             ftpCliente.rename(antiguoNombre, nuevoNombre);
             ftpCliente.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Ha ocurrido una IOException en renombrarArchivo:"+e);
+        } catch(Exception exc){
+        	exc.printStackTrace();
+        	System.out.println("Ha ocurrido una Exception en renombrarArchivo:"+exc);
         }
+        System.out.println("== renombrarArchivo:Fin ==");
     }
     
     public void upLoadOneFiles(String file, String ruta) {
