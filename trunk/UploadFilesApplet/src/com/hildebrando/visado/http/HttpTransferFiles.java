@@ -106,9 +106,12 @@ public class HttpTransferFiles {
                 System.out.println("[leerResponse]-field:"+field);
                 if(line.startsWith(field)){
                     //FILES_LOADED=DOIDAPO_251571415801498931.PDF,IMPFOEL_7095448649017491933.PDF# 
-                    System.out.println("[leerResponse]-comparando.");
-                	archivosSubidos = line.substring(line.indexOf(field) + field.length(), line.indexOf(FIELD_END));
-                	System.out.println("[leerResponse]-terminando de comparar:"+archivosSubidos);
+                    if(!line.equalsIgnoreCase(field)){
+                    	System.out.println("[leerResponse]-comparando.");
+                    	archivosSubidos = line.substring(line.indexOf(field) + field.length(), line.indexOf(FIELD_END));
+                    	System.out.println("[leerResponse]-terminando de comparar:"+archivosSubidos);
+                    }
+                    System.out.println("Son iguales indexOf");
                 }
                 
             } catch (IOException ex) {
