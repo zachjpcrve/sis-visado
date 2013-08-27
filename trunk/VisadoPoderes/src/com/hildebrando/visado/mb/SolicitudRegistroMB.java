@@ -1,4281 +1,3996 @@
-package com.hildebrando.legal.mb;
+package com.hildebrando.visado.mb;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.faces.event.ValueChangeEvent;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.primefaces.event.CloseEvent;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.RowEditEvent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
+import com.bbva.common.util.ConstantesVisado;
+import com.bbva.common.util.EstilosNavegador;
+import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
+import com.bbva.consulta.reniec.util.BResult;
+import com.bbva.consulta.reniec.util.Persona;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
-import com.hildebrando.legal.modelo.Abogado;
-import com.hildebrando.legal.modelo.AbogadoEstudio;
-import com.hildebrando.legal.modelo.AbogadoEstudioId;
-import com.hildebrando.legal.modelo.Actividad;
-import com.hildebrando.legal.modelo.ActividadProcesal;
-import com.hildebrando.legal.modelo.ActividadProcesalMan;
-import com.hildebrando.legal.modelo.Anexo;
-import com.hildebrando.legal.modelo.Calificacion;
-import com.hildebrando.legal.modelo.Clase;
-import com.hildebrando.legal.modelo.ContraCautela;
-import com.hildebrando.legal.modelo.Cuantia;
-import com.hildebrando.legal.modelo.Cuota;
-import com.hildebrando.legal.modelo.Entidad;
-import com.hildebrando.legal.modelo.EstadoCautelar;
-import com.hildebrando.legal.modelo.EstadoExpediente;
-import com.hildebrando.legal.modelo.Estudio;
-import com.hildebrando.legal.modelo.Etapa;
-import com.hildebrando.legal.modelo.Expediente;
-import com.hildebrando.legal.modelo.Feriado;
-import com.hildebrando.legal.modelo.Honorario;
-import com.hildebrando.legal.modelo.Inculpado;
-import com.hildebrando.legal.modelo.Instancia;
-import com.hildebrando.legal.modelo.Involucrado;
-import com.hildebrando.legal.modelo.Materia;
-import com.hildebrando.legal.modelo.Moneda;
-import com.hildebrando.legal.modelo.Oficina;
-import com.hildebrando.legal.modelo.Organo;
-import com.hildebrando.legal.modelo.Persona;
-import com.hildebrando.legal.modelo.Proceso;
-import com.hildebrando.legal.modelo.Recurrencia;
-import com.hildebrando.legal.modelo.Resumen;
-import com.hildebrando.legal.modelo.Riesgo;
-import com.hildebrando.legal.modelo.RolInvolucrado;
-import com.hildebrando.legal.modelo.SituacionActProc;
-import com.hildebrando.legal.modelo.SituacionCuota;
-import com.hildebrando.legal.modelo.SituacionHonorario;
-import com.hildebrando.legal.modelo.SituacionInculpado;
-import com.hildebrando.legal.modelo.TipoCautelar;
-import com.hildebrando.legal.modelo.TipoDocumento;
-import com.hildebrando.legal.modelo.TipoExpediente;
-import com.hildebrando.legal.modelo.TipoHonorario;
-import com.hildebrando.legal.modelo.TipoInvolucrado;
-import com.hildebrando.legal.modelo.Ubigeo;
-import com.hildebrando.legal.modelo.Usuario;
-import com.hildebrando.legal.modelo.Via;
-import com.hildebrando.legal.service.AbogadoService;
-import com.hildebrando.legal.service.ConsultaService;
-import com.hildebrando.legal.service.OrganoService;
-import com.hildebrando.legal.service.PersonaService;
-import com.hildebrando.legal.util.SglConstantes;
-import com.hildebrando.legal.util.Util;
-import com.hildebrando.legal.util.Utilitarios;
-import com.hildebrando.legal.view.AbogadoDataModel;
-import com.hildebrando.legal.view.CuantiaDataModel;
-import com.hildebrando.legal.view.InvolucradoDataModel;
-import com.hildebrando.legal.view.OrganoDataModel;
-import com.hildebrando.legal.view.PersonaDataModel;
+import com.bbva.persistencia.generica.dao.SolicitudDao;
+import com.bbva.persistencia.generica.util.Utilitarios;
+import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
+import com.hildebrando.visado.converter.PersonaDataModal;
+import com.hildebrando.visado.dto.AgrupacionSimpleDto;
+import com.hildebrando.visado.dto.ApoderadoDTO;
+import com.hildebrando.visado.dto.ComboDto;
+import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
+import com.hildebrando.visado.dto.OperacionBancariaDTO;
+import com.hildebrando.visado.dto.SeguimientoDTO;
+import com.hildebrando.visado.dto.Solicitud;
+import com.hildebrando.visado.dto.TipoDocumento;
+import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
+import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
+import com.hildebrando.visado.modelo.TiivsAnexoSolicitudId;
+import com.hildebrando.visado.modelo.TiivsEstudio;
+import com.hildebrando.visado.modelo.TiivsHistSolicitud;
+import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
+import com.hildebrando.visado.modelo.TiivsMultitabla;
+import com.hildebrando.visado.modelo.TiivsOficina1;
+import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
+import com.hildebrando.visado.modelo.TiivsPersona;
+import com.hildebrando.visado.modelo.TiivsRevocado;
+import com.hildebrando.visado.modelo.TiivsSolicitud;
+import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
+import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
+import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
+import com.hildebrando.visado.modelo.TiivsSolicitudOperbanId;
+import com.hildebrando.visado.modelo.TiivsTipoSolicDocumento;
+import com.hildebrando.visado.modelo.TiivsTipoSolicitud;
+import com.hildebrando.visado.service.TiposDoiService;
 
 /**
- * Clase encargada de realizar el registro de un expediente 
- * a través del formulario de registro. Algunas secciones contempladas son 
- * Cabecera, Cuantia, Abogado, Resumen, Actividades Procesales, Etc.
- * Implementa {@link Serializable}
+ * Clase encargada del registro de la solicitud de visado, esto implica
+ * el envio de archivos adjuntos, obtener listados de BD, validaciones antes
+ * del registro de la solcicitud, etc.
  * @author hildebrando
  * @version 1.0
- */
-public class RegistroExpedienteMB implements Serializable {
+ * **/
 
-	private static final long serialVersionUID = -1963075122904356898L;
-	/**
-	 * Escribe los logs en un archivo externo seg&uacute;n la configuraci&oacute;n
-	 * del <code>log4j.properties</code>.
-	 */
-	public static Logger logger = Logger.getLogger(RegistroExpedienteMB.class);
+@ManagedBean(name = "solicitudRegMB")
+@SessionScoped
+public class SolicitudRegistroMB {
 
-	private int proceso;
-	private List<Proceso> procesos;
-	private int via;
-	private List<Via> vias;
-	private int instancia;
-	private List<Instancia> instancias;
-	private Usuario responsable;
-	private String nroExpeOficial;
-	private Date inicioProceso;
-	private int estado;
-	private List<EstadoExpediente> estados;
-	private Oficina oficina;
-	private int tipo;
-	private Organo organo1;
-	private List<TipoExpediente> tipos;
-	private List<Entidad> entidades;
-	private String secretario;
-	private int calificacion;
-	private List<Calificacion> calificaciones;
-	private Recurrencia recurrencia;
-	private Abogado abogado;
-	private Estudio estudio;
-	private AbogadoDataModel abogadoDataModel;
-	private List<TipoHonorario> tipoHonorarios;
-	private List<String> tipoHonorariosString;
-	private Honorario honorario;
-	private int contadorHonorario = 0;
-	private int contadorInvolucrado = 0;
-	private int contadorInculpado = 0;
-	private int contadorCuantia = 0;
-	private int contadorResumen = 0;
-	private List<Cuota> cuotas;
-	private List<Moneda> monedas;
-	private List<String> monedasString;
-	private List<SituacionHonorario> situacionHonorarios;
-	private List<String> situacionHonorariosString;
-	private List<SituacionCuota> situacionCuotas;
-	private List<String> situacionCuotasString;
-	private Involucrado involucrado;
-	private Persona persona;
-	private List<RolInvolucrado> rolInvolucrados;
-	private List<String> rolInvolucradosString;
-	private List<TipoInvolucrado> tipoInvolucrados;
-	private List<String> tipoInvolucradosString;
-	private InvolucradoDataModel involucradoDataModel;
-	private Involucrado selectedInvolucrado;
-	private List<Clase> clases;
-	private List<TipoDocumento> tipoDocumentos;
-	private PersonaDataModel personaDataModelBusq;
-	private Cuantia cuantia;
-	private Cuantia selectedCuantia;
-	private CuantiaDataModel cuantiaDataModel;
-	private List<SituacionInculpado> situacionInculpados;
-	private List<String> situacionInculpadosString;
-	private Inculpado inculpado;
-	private Inculpado selectedInculpado;
-	private List<Inculpado> inculpados;
-	private int moneda;
-	private double montoCautelar;
-	private int tipoCautelar;
-	private List<TipoCautelar> tipoCautelares;
-	private String descripcionCautelar;
-	private int contraCautela;
-	private double importeCautelar;
-	private int estadoCautelar;
-	private List<EstadoCautelar> estadosCautelares;
-	private int riesgo;
-	private List<Riesgo> riesgos;
-
-	private UploadedFile file;
-	private Anexo anexo;
-	private List<Anexo> anexos;
-	private Anexo selectedAnexo;
-
-	private String todoResumen;
-	private String resumen;
-	private Date fechaResumen;
-	private List<Resumen> resumens;
-	private Resumen selectedResumen;
-
-	private Organo organo;
-	private OrganoDataModel organoDataModel;
-	private Organo selectedOrgano;
-
-	private List<Honorario> honorarios;
-	private Honorario selectedHonorario;
-	private Persona selectPersona;
-	private Persona selectInvolucrado;
-	private List<ContraCautela> contraCautelas;
-
-	private List<Ubigeo> ubigeos;
-
-	private boolean tabAsigEstExt;
-	private boolean tabCaucion;
-	private boolean tabCuanMat;
-
-	private Abogado selectedAbogado;
-
-	private boolean reqPenal;
-	private boolean reqCabecera;
-
-	private ConsultaService consultaService;
-
-	private AbogadoService abogadoService;
-
-	private PersonaService personaService;
-
-	private OrganoService organoService;
-
-	private boolean flagDeshabilitadoGeneral;
-	private boolean flagColumnGeneralHonorario;
-	private boolean flagColumnGeneral;
-	private boolean flagColumnsBtnHonorario;
-
-	private boolean flagLectResp;
-	private File archivo;
-	private String txtOrgano;
-	private int idEntidad;
-	private int idUbigeo;
-	private String txtRegistroCA;
-	private Integer DNI;
-	private String txtNombre;
-	private String txtApePat;
-	private String txtApeMat;
-	private String txtTel;
-	private String txtCorreo;
-	private String txtTitulo;
-	private String txtComentario;
-	private Date fechaInicio;
-	private Ubigeo ubigeo;
-	// Para mantenimiento de personas
-	private int idClase;
-	private Integer codCliente;
-	private int idTipoDocumento;
-	private Long numeroDocumento;
-	private String txtNombres;
-	private String txtApellidoPaterno;
-	private String txtApellidoMaterno;
-	// Para mantenimiento de inculpados
-	private int idClase_inclp;
-	private Integer codCliente_inclp;
-	private int idTipoDocumento_inclp;
-	private Long numeroDocumento_inclp;
-	private String txtNombres_inclp;
-	private String txtApellidoPaterno_inclp;
-	private String txtApellidoMaterno_inclp;
-	private String pretendidoMostrar;
-
-	public void verAnexo() {
-		logger.debug("=== inicio verAnexo()====");
-		logger.debug("[ANEXO]-Ubicacion Temporal:"
-				+ getSelectedAnexo().getUbicacionTemporal());
-		/*
-		 * return
-		 * getSelectedAnexo().getUbicacionTemporal()+"?faces-redirect=true";
-		 * File file = new File(getSelectedAnexo().getUbicacionTemporal()); try
-		 * { Desktop.getDesktop().open(file); } catch (IOException e) {
-		 * logger.debug("erro al abrir "+ e.toString()); }
-		 */
-	}
-
-	/**
-	 * Metodo que se encarga de "Agregar" un Comentario en la grilla
-	 * de Resumen del formulario de registro de expediente
-	 * @param e ActionEvent
-	 * */
-	public void agregarTodoResumen(ActionEvent e) {
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		if (getFechaResumen() == null) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Fecha de Resumen Requerido", "Fecha de Resumen Requerido");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
-		} else {
-			if (getResumen() == "") {
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-					"Resumen Requerido","Resumen Requerido");
-				FacesContext.getCurrentInstance().addMessage(null, msg);
-			} else {
-				Resumen resumen = new Resumen();
-				resumen.setUsuario(getResponsable());
-				resumen.setTexto(getResumen());
-				resumen.setFecha(getFechaResumen());
-
-				contadorResumen++;
-				resumen.setNumero(contadorResumen);
-				getResumens().add(resumen);
-
-				// Se limpian los campos del formulario
-				setResumen("");
-				setFechaResumen(null);
-			}
-		}
-	}
-
-	public void deleteHonorario() {
-		getHonorarios().remove(selectedHonorario);
-	}
-
-	public void deleteAnexo() {
-		getAnexos().remove(selectedAnexo);
-	}
-
-	public void deleteInvolucrado() {
-		List<Involucrado> involucrados = (List<Involucrado>) getInvolucradoDataModel().getWrappedData();
-		involucrados.remove(getSelectedInvolucrado());
-		involucradoDataModel = new InvolucradoDataModel(involucrados);
-	}
-
-	public void deleteCuantia() {
-		List<Cuantia> cuantias = (List<Cuantia>) getCuantiaDataModel().getWrappedData();
-		cuantias.remove(getSelectedCuantia());
-		cuantiaDataModel = new CuantiaDataModel(cuantias);
-	}
-
-	public void deleteInculpado() {
-		inculpados.remove(getSelectedInculpado());
-	}
-
-	public void deleteResumen() {
-		resumens.remove(getSelectedResumen());
-	}
-
-	/**
-	 * Metodo que se encarga de consultar y recuperar una lista de abogados. 
-	 * También se realizan validaciones para realizar la búsqueda.
-	 * @param e ActionEvent
-	 * */
-	@SuppressWarnings("unchecked")
-	public void buscarAbogado(ActionEvent e) {
-		logger.debug("== inicia buscarAbogado() ===");
-		try {
-			Abogado abg = new Abogado();
-			List<Abogado> results = new ArrayList<Abogado>();
-			if (getTxtRegistroCA() != null) {
-				abg.setRegistroca(getTxtRegistroCA());
-			}
-			if (getDNI() != null) {
-				abg.setDni(getDNI());
-			}
-			if (getTxtNombre() != null) {
-				abg.setNombres(getTxtNombre());
-			}
-			if (getTxtApePat() != null) {
-				abg.setApellidoPaterno(getTxtApePat());
-			}
-			if (getTxtApeMat() != null) {
-				abg.setApellidoMaterno(getTxtApeMat());
-			}
-			if (getTxtTel() != null) {
-				abg.setTelefono(getTxtTel());
-			}
-			if (getTxtCorreo() != null) {
-				abg.setCorreo(getTxtCorreo());
-			}
-
-			results = consultaService.getAbogadosByAbogadoEstudio(abg,getEstudio());
-			if (results != null) {
-				logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA+ "abogados POPUP es:[" + results.size() + "]");
-			}
-			abogadoDataModel = new AbogadoDataModel(results);
-		} catch (Exception e2) {
-			logger.error(SglConstantes.MSJ_ERROR_CONSULTAR + "abogados POPUP:"+ e2);
-		}
-		logger.debug("== saliendo de buscarAbogado() ===");
-	}
-
-	public void agregarHonorario(ActionEvent e2) {
-		logger.debug("=== inicia agregarHonorario() ===");
-
-		if (honorario.getAbogado() == null) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Abogado Requerido", "Abogado Requerido");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
-		} else {
-			if (honorario.getTipoHonorario().getDescripcion() == "") {
-				FacesMessage msg = new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, "Honorario Requerido",
-						"Honorario Requerido");
-				FacesContext.getCurrentInstance().addMessage(null, msg);
-			} else {
-				if (honorario.getCantidad() == 0) {
-					FacesMessage msg = new FacesMessage(
-							FacesMessage.SEVERITY_ERROR, "Cuotas Requerido",
-							"Cuotas Requerido");
-					FacesContext.getCurrentInstance().addMessage(null, msg);
-				} else {
-					if (honorario.getMoneda().getSimbolo() == "") {
-						FacesMessage msg = new FacesMessage(
-								FacesMessage.SEVERITY_ERROR,
-								"Moneda Requerido", "Moneda Requerido");
-						FacesContext.getCurrentInstance().addMessage(null, msg);
-					} else {
-						if (honorario.getMonto() == 0.0) {
-							FacesMessage msg = new FacesMessage(
-									FacesMessage.SEVERITY_ERROR,
-									"Monto Requerido", "Monto Requerido");
-							FacesContext.getCurrentInstance().addMessage(null,
-									msg);
-						} else {
-							if (honorario.getSituacionHonorario()
-									.getDescripcion() == "") {
-								FacesMessage msg = new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Situación Requerido",
-										"Situación Requerido");
-								FacesContext.getCurrentInstance().addMessage(
-										null, msg);
-							} else {
-								// TipoHonorario
-								for (TipoHonorario tipo : getTipoHonorarios()) {
-									if (tipo.getDescripcion().compareTo(
-											honorario.getTipoHonorario()
-													.getDescripcion()) == 0) {
-										honorario.setTipoHonorario(tipo);
-										break;
-									}
-								}
-								// Moneda
-								for (Moneda moneda : getMonedas()) {
-									if (moneda.getSimbolo().compareTo(
-											honorario.getMoneda().getSimbolo()) == 0) {
-										honorario.setMoneda(moneda);
-										break;
-									}
-								}
-								// Situacion honorario
-								for (SituacionHonorario situacionHonorario : getSituacionHonorarios()) {
-									if (situacionHonorario.getDescripcion().compareTo(honorario.getSituacionHonorario().getDescripcion()) == 0) {
-										honorario.setSituacionHonorario(situacionHonorario);
-										break;
-									}
-								}
-								
-								if (getHonorario().getAbogado()!=null)
-								{
-									logger.debug("Abogado seleccionado: " + getHonorario().getAbogado().getNombreCompleto());
-								}
-								
-								// Abogado Estudio
-								List<AbogadoEstudio> abogadoEstudios = consultaService.getAbogadoEstudioByAbogado(getHonorario().getAbogado());
-								if (abogadoEstudios != null) {
-									if (abogadoEstudios.size() != 0) {
-										honorario.setEstudio(abogadoEstudios
-												.get(0).getEstudio()
-												.getNombre());
-									}
-								}
-
-								// Situacion pendiente
-								if (honorario.getSituacionHonorario().getIdSituacionHonorario() == 1) {
-
-									double importe = getHonorario().getMonto() / getHonorario().getCantidad().intValue();
-									importe = Math.rint(importe * 100) / 100;
-									
-									//Busqueda de situacion cuota (reconfirmacion)
-									List<SituacionCuota> situacionCuotaTMP = new ArrayList<SituacionCuota>();
-									GenericDao<SituacionCuota, Object> situacionCuotaDAO = (GenericDao<SituacionCuota, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-									Busqueda filtroSC = Busqueda.forClass(SituacionCuota.class);
-									filtroSC.add(Restrictions.eq("descripcion", SglConstantes.SITUACION_CUOTA_PENDIENTE));
-									
-									try {
-										situacionCuotaTMP = situacionCuotaDAO.buscarDinamico(filtroSC);
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-									
-									setFlagColumnsBtnHonorario(true);
-									//setFlagColumnGeneral(false);
-									setFlagColumnGeneralHonorario(false);
-																	
-									honorario.setMontoPagado(0.0);
-									honorario.setCuotas(new ArrayList<Cuota>());
-
-									Calendar cal = Calendar.getInstance();
-									for (int i = 1; i <= getHonorario()
-											.getCantidad().intValue(); i++) {
-										Cuota cuota = new Cuota();
-										cuota.setNumero(i);
-										cuota.setMoneda(honorario.getMoneda()
-												.getSimbolo());
-										cuota.setNroRecibo("000" + i);
-										cuota.setImporte(importe);
-										cal.add(Calendar.MONTH, 1);
-										Date date = cal.getTime();
-										cuota.setFechaPago(date);
-										
-										if (situacionCuotaTMP!=null)
-										{
-											if (situacionCuotaTMP.size()>0)
-											{
-												cuota.setSituacionCuota(new SituacionCuota());
-												cuota.getSituacionCuota()
-														.setIdSituacionCuota(
-																situacionCuotaTMP.get(0)
-																		.getIdSituacionCuota());
-												cuota.getSituacionCuota()
-														.setDescripcion(
-																situacionCuotaTMP.get(0)
-																		.getDescripcion());
-											}
-										}
-										
-										
-										cuota.setFlagPendiente(true);
-
-										honorario.addCuota(cuota);
-									}
-									honorario.setFlagPendiente(true);
-								} else {
-									logger.debug("La situación del honorario no es PENDIENTE ");
-									honorario.setMontoPagado(honorario.getMonto());
-									honorario.setFlagPendiente(false);
-								}
-
-								contadorHonorario++;
-								honorario.setNumero(contadorHonorario);
-
-								honorarios.add(honorario);
-
-								honorario = new Honorario();
-								honorario.setCantidad(0);
-								honorario.setMonto(0.0);
-
-							}
-						}
-					}
-				}
-			}
-		}
-		logger.debug("=== saliendo de agregarHonorario() ===");
-	}
+	@ManagedProperty(value = "#{combosMB}")
+	private CombosMB combosMB;
+	private List<ComboDto> lstClasificacionPersona;
+	@ManagedProperty(value = "#{pdfViewerMB}")
+	private PDFViewerMB pdfViewerMB;
+	@ManagedProperty(value = "#{seguimientoMB}")
+	private SeguimientoMB seguimientoMB;	
+	@ManagedProperty(value = "#{registroUtilesMB}")
+	RegistroUtilesMB objRegistroUtilesMB;
+	@ManagedProperty(value = "#{visadoDocumentosMB}")
+	private VisadoDocumentosMB visadoDocumentosMB;
+	@ManagedProperty(value = "#{consultarSolicitudMB}")
+	private ConsultarSolicitudMB consultarSolicitudMB;
+	private String patter;
+	private String tipoRegistro;
+	private String poderdante;
+	private String apoderdante;
+	private boolean bBooleanMoneda;
+	private boolean bBooleanImporte;
 	
-	/**
-	 * Metodo que se encarga de adjuntar/cargar un archivo en la sección Anexo
-	 * del formulario de registro de expediente
-	 * @param e Representa el evento del tipo {@link ActionEvent}
-	 * */
-	public void agregarAnexo(ActionEvent en) {
-		if (file == null) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Cargar Archivo", "Cargar Archivo");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
-		} else {
-			if (getTxtTitulo() == "") {
-				FacesMessage msg = new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, "Título Requerido","Título Requerido");
-				FacesContext.getCurrentInstance().addMessage(null, msg);
-			} else {
-				if (getTxtComentario() == "") {
-					FacesMessage msg = new FacesMessage(
-						FacesMessage.SEVERITY_ERROR,"Comentario Requerido", "Comentario Requerido");
-					FacesContext.getCurrentInstance().addMessage(null, msg);
-				} else {
-					if (getFechaInicio() == null) {
-						FacesMessage msg = new FacesMessage(
-								FacesMessage.SEVERITY_ERROR,"Fecha Inicio Requerido","Fecha Inicio Requerido");
-						FacesContext.getCurrentInstance().addMessage(null, msg);
-					} else {
-						/*
-						 * String ubicacionTemporal=
-						 * Util.getMessage("ruta_documento") + File.separator +
-						 * "documento" ;
-						 * 
-						 * File fichSalida= new File(ubicacionTemporal);
-						 * fichSalida.mkdirs();
-						 * 
-						 * byte fileBytes[]= getFile().getContents(); String
-						 * ubicacionTemporal2=ubicacionTemporal + File.separator
-						 * + getFile().getFileName(); File fichSalida2 = new
-						 * File(ubicacionTemporal2);
-						 * 
-						 * 
-						 * try { FileOutputStream canalSalida = new
-						 * FileOutputStream(fichSalida2);
-						 * canalSalida.write(fileBytes); canalSalida.close(); }
-						 * catch (IOException e) { e.printStackTrace(); }
-						 */
+	private TiivsSolicitudOperban objSolicBancaria;
+	private List<TiivsSolicitudOperban> lstSolicBancarias;
+	private TiivsSolicitud solicitudRegistrarT;
+	private Solicitud solicitudRegistrar;
+	private List<TiivsMultitabla> lstMultitabla;
+	private List<ApoderadoDTO> lstClientes;
+	private List<OperacionBancariaDTO> lstOperaciones;
+	private List<DocumentoTipoSolicitudDTO> lstdocumentos;
+	private List<DocumentoTipoSolicitudDTO> lstdocumentosOpcional;
+	private List<SeguimientoDTO> lstSeguimiento;
+	private List<TiivsOperacionBancaria> lstTiivsOperacionBancaria;
+	private TiivsPersona objTiivsPersonaBusqueda;
+	private TiivsPersona objTiivsPersonaResultado;
+	private TiivsPersona objTiivsPersonaSeleccionado;
+	private TiivsPersona objTiivsPersonaCapturado;
+	private Set<TiivsAgrupacionPersona> lstTiivsAgrupacionPersonas;
+	private Set<TiivsSolicitudAgrupacion> lstTiivsSolicitudAgrupacion;
+	private List<AgrupacionSimpleDto> lstAgrupacionSimpleDto;
+	private List<TiivsAnexoSolicitud> lstAnexoSolicitud;
+	private PersonaDataModal personaDataModal;
+	private String iTipoSolicitud = "";
+	private TiivsSolicitudOperban objSolicitudOperacionCapturadoOld =new TiivsSolicitudOperban();
+	private String sCodDocumento;
+	private TiivsTipoSolicDocumento selectedTipoDocumento;
+	private DocumentoTipoSolicitudDTO selectedDocumentoDTO = new DocumentoTipoSolicitudDTO();
+	//private String ubicacionTemporal;
+	private List<String> aliasFilesToDelete;
 
-						byte fileBytes[] = getFile().getContents();
+	private IILDPeUsuario usuario;
+	private int numGrupo = 0;
+	private List<TiivsPersona> lstTiivsPersona;
+	private List<TiivsPersona> lstTiivsPersonaResultado;
+	private List<TiivsTipoSolicDocumento> lstTipoSolicitudDocumentos;
+	private List<TiivsTipoSolicDocumento> lstDocumentosXTipoSolTemp;
+	boolean bBooleanPopup = false;
+	boolean bBooleanPopupTipoCambio = true;
+	boolean bBooleanPopupEmail = true;
+	private boolean flagUpdatePoderdanteApoderados=false;
+	private boolean flagUpdateOperacionSolic = false;
+	private boolean flagUpdateOperacionSolcAgrupac = false;
+	private boolean flagUpdateOperacionSolcDocumen = false;
+	private boolean flagUpdatePersona = false;
+	private boolean flagMostrarACOficina=false;
+	private boolean flagMostrarSOMOficina=true;
+	private String sEstadoSolicitud = "";
+	private TiivsSolicitudOperban objSolicitudOperacionCapturado;
+	private AgrupacionSimpleDto objAgrupacionSimpleDtoCapturado;
+	private TiivsTipoSolicDocumento objDocumentoXSolicitudCapturado;
+	private int indexUpdateOperacion = 0;
+	private int indexUpdateAgrupacionSimpleDto = 0;
+	private int indexUpdateSolicDocumentos = 0;
+	private int indexUpdatePersona = 0;
+	private int indexUpdatePoderdanteApoderado=0;
+	private int numGrupoUpdatePoderdanteApoderado=0;
+	//Map<Integer, TiivsSolicitudOperban> mapSolicitudes;
+	public static Logger logger = Logger.getLogger(SolicitudRegistroMB.class);
+	String cadenaEscanerFinal = "";
+	//http://172.31.9.41:9080/NAEWeb/pages/escaner/InvocaEscaner.xhtml?idEmpresa=1&idSistema=98&txLogin=P014773
+	private UploadedFile fileUpload;
+	private StreamedContent fileDownload;
+	private String sMonedaImporteGlobal;  
+	private String ancho_FieldSet;
+	private String ancho_FieldSet_Poder;
+	private String ancho_Popup_Poder;
+	private String ancho_Revoc_Poder;
+	EstilosNavegador estilosNavegador;
+	private TiivsAgrupacionPersona tiivsAgrupacionPersonaCapturado;
+	private TiivsSolicitudAgrupacion tiivsSolicitudAgrupacionCapturado;
+	private TiivsSolicitud solicitudRegistrarTCopia;
+	List<TiivsAgrupacionPersona> listaTemporalAgrupacionesPersonaBorradores;
+	List<TiivsPersona> listaTemporalPersonasBorradores;
+	List<TiivsPersona> lstTiivsPersonaCopia;
+	private TiivsOficina1 oficina;
+	private String redirect = "";
+	private String mesajeConfirmacion = "";
+	
+	/*private boolean boleanoMensajeInfoGeneral=true;
+	private boolean boleanoMensajeApoderdantePoderdante=true;
+	private boolean boleanoMensajeOperacionesBancarias=true;
+	private boolean boleanoMensajeDocumentos=true;
+	*/
+	private boolean mostrarRazonSocial = false;
+	private String codigoRazonSocial = "0000";
+	
+	
+    public UploadedFile getFileUpload() {  
+        return fileUpload;  
+    }  
+  
+    public void setFileUpload(UploadedFile fileUpload) {  
+        this.fileUpload = fileUpload;  
+    }  
 
-						File fichTemp = null;
-						String ubicacionTemporal2 = "";
-						String sfileName = "";
-						FileOutputStream canalSalida = null;
+	public SolicitudRegistroMB() {
+		solicitudRegistrar = new Solicitud();
+		lstTiivsPersona = new ArrayList<TiivsPersona>();
+		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
+		personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
+		objTiivsPersonaBusqueda = new TiivsPersona();
+		objTiivsPersonaResultado = new TiivsPersona();
+		objTiivsPersonaSeleccionado = new TiivsPersona();
+		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
+		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
+		lstTipoSolicitudDocumentos = new ArrayList<TiivsTipoSolicDocumento>();
+		oficina = new TiivsOficina1();
 
-						try {
-							HttpServletRequest request = (HttpServletRequest) FacesContext
-									.getCurrentInstance().getExternalContext().getRequest();
-							ubicacionTemporal2 = request.getRealPath(File.separator) 
-									+ File.separator + "files" + File.separator;
-							logger.debug("ubicacion temporal " + ubicacionTemporal2);
+		lstDocumentosXTipoSolTemp = new ArrayList<TiivsTipoSolicDocumento>();
+		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
+		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+		objSolicBancaria = new TiivsSolicitudOperban();
+		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
+		objSolicBancaria.setTiivsOperacionBancaria(new TiivsOperacionBancaria());
+		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
+		lstOperaciones = new ArrayList<OperacionBancariaDTO>();
+		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
+		this.instanciarSolicitudRegistro();
 
-							File fDirectory = new File(ubicacionTemporal2);
-							fDirectory.mkdirs();
-
-							fichTemp = File.createTempFile(
-								"temp",	getFile().getFileName().substring(
-								getFile().getFileName().lastIndexOf(".")),
-							
-							new File(ubicacionTemporal2));
-
-							canalSalida = new FileOutputStream(fichTemp);
-							canalSalida.write(fileBytes);
-							canalSalida.flush();
-							sfileName = fichTemp.getName();
-							logger.debug("sfileName " + sfileName);
-
-						} catch (IOException e) {
-							logger.debug("error anexo " + e.toString());
-						} finally {
-							// Delete the file when the JVM terminates
-							fichTemp.deleteOnExit(); 
-							if (canalSalida != null) {
-								try {
-									canalSalida.close();
-								} catch (IOException x) {
-									// handle error
-								}
-							}
-						}
-
-						// Blob b = Hibernate.createBlob(fileBytes);
-						getAnexo().setBytes(fileBytes);
-						getAnexo().setUbicacionTemporal(sfileName);
-
-						getAnexo().setUbicacion(
-								getFile().getFileName().substring(
-										1 + getFile().getFileName()
-												.lastIndexOf(File.separator)));
-						getAnexo().setFormato(
-								getFile()
-										.getFileName()
-										.substring(
-												getFile().getFileName()
-														.lastIndexOf("."))
-										.toUpperCase());
-						getAnexos().add(getAnexo());
-
-						setAnexo(new Anexo());
-						getAnexo().setFechaInicio(new Date());
-						setFile(null);
-
-					}
-
-				}
-			}
-		}
-
-	}
-
-	public void handleFileUpload(FileUploadEvent event) {
-		FacesMessage msg = new FacesMessage("Archivo ", event.getFile()
-				.getFileName() + " almacenado correctamente.");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
-		// FacesUtils.getRequestContext().execute("clearInvalidFileMsg()");
-		// .getRequestContext().execute("clearInvalidFileMsg()");
-		setFile(event.getFile());
-	}
-
-	public void handleFileUpload2() {
-		FacesMessage msg = new FacesMessage("Archivo ", this.archivo.getName()
-				+ " almacenado correctamente.");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
-		setFile((UploadedFile) archivo);
-	}
-
-	public void agregarAbogado(ActionEvent e2) {
-		logger.info("=== agregarAbogado() ====");
-		List<Abogado> abogadosBD = new ArrayList<Abogado>();
-		if (getDNI() == null || getTxtNombre() == "" || getTxtApeMat() == ""
-				|| getTxtApePat() == "" || getEstudio()==null) 
+		
+		aliasFilesToDelete = new ArrayList<String>();
+		
+		selectedTipoDocumento = new TiivsTipoSolicDocumento();
+		//mapSolicitudes=new HashMap<Integer, TiivsSolicitudOperban>();
+		
+		this.cadenaEscanerFinal = this.prepararURLEscaneo();	
+		 estilosNavegador=new EstilosNavegador();
+		estilosNavegador.estilosNavegador();
+		ancho_FieldSet = (String) Utilitarios.getObjectInSession("ANCHO_FIELDSET");
+		ancho_FieldSet_Poder = (String) Utilitarios.getObjectInSession("ANCHO_FIELDSET_PODER");
+		ancho_Popup_Poder=(String) Utilitarios.getObjectInSession("ANCHO_POPUP_PODER");
+		ancho_Revoc_Poder=(String) Utilitarios.getObjectInSession("ANCHO_REVOC_PODER");
+		
+		//logger.debug("Ancho Fieldset Datos Generales: " + ancho_FieldSet);
+		//logger.debug("Ancho Fieldset Datos Poderdantes: " + ancho_FieldSet_Poder);
+		
+		String sPerfilUsu=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		
+		if (sPerfilUsu.equals(ConstantesVisado.SSJJ))
 		{
-			FacesMessage msg = new FacesMessage(
-					FacesMessage.SEVERITY_INFO,
-					"Datos Requeridos: Nro Documento, Nombres, Apellido Paterno, Apellido Materno, Estudio",
-					"Datos Requeridos");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
-			setDNI(null);
-		} else {
-			Abogado abg = new Abogado();
-			AbogadoEstudio abgEs = new AbogadoEstudio();
-			if (getTxtRegistroCA() != null) {
-				abg.setRegistroca(getTxtRegistroCA());
-			}
-			abg.setDni(getDNI());
-			abg.setNombres(getTxtNombre());
-			abg.setApellidoPaterno(getTxtApePat());
-			abg.setApellidoMaterno(getTxtApeMat());
-			
-			String nombreCompleto= abg.getNombres() + " " + abg.getApellidoPaterno() + " " + abg.getApellidoMaterno();
-			abg.setNombreCompleto(nombreCompleto);
-
-			if (getTxtTel() != null) {
-				abg.setTelefono(getTxtTel());
-			}
-			if (getTxtCorreo() != null) {
-				abg.setCorreo(getTxtCorreo());
-			}
-
-			abogadosBD = consultaService.getAbogadosByAbogado(abg);
-
-			Abogado abogadobd = new Abogado();
-			AbogadoEstudio abogadoEsBD = new AbogadoEstudio();
-
-			if (abogadosBD.size() == 0) {
-				try {
-					getAbogado().setNombreCompleto(
-							getAbogado().getNombres() + " "
-									+ getAbogado().getApellidoPaterno() + " "
-									+ getAbogado().getApellidoMaterno());
-					
-					logger.debug("[ADD_ABOG]-Nombre:" + getAbogado().getNombreCompleto());
-					abogadobd = abogadoService.registrar(abg);
-					
-					logger.debug(SglConstantes.MSJ_EXITO_REGISTRO+"el Abogado-Id:[" + abogadobd.getIdAbogado() + "].");
-					
-					//Seteo del abogado estudio
-					abgEs.setAbogado(abogadobd);
-					abgEs.setEstado('A');
-					abgEs.setEstudio(getEstudio());
-					
-					AbogadoEstudioId id = new AbogadoEstudioId();
-					id.setIdAbogado(abogadobd.getIdAbogado());
-					id.setIdEstudio(getEstudio().getIdEstudio());
-					
-					abgEs.setId(id);					
-					
-					logger.debug("Se registra el abogado con ID: " + abogadobd.getIdAbogado() + " en la tabla Abogado-Estudio");
-					abogadoEsBD = abogadoService.registrarAbogadoEstudio(abgEs);
-					FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Abogado agregado",	"Abogado agregado");
-					FacesContext.getCurrentInstance().addMessage(null, msg);
-				} catch (Exception e) {
-					e.printStackTrace();
-					logger.error(SglConstantes.MSJ_ERROR_REGISTR + "el Abogado:" + e);
-				}
-
-			} else {
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"Abogado Existente", "Abogado Existente");
-				FacesContext.getCurrentInstance().addMessage(null, msg);
-			}
-
-			List<Abogado> abogados = new ArrayList<Abogado>();
-			abogados.add(abogadobd);
-			abogadoDataModel = new AbogadoDataModel(abogados);
-
-			// Limpiar datos
-			setTxtRegistroCA("");
-			setTxtNombre("");
-			setDNI(null);
-			setTxtApePat("");
-			setTxtApeMat("");
-			setTxtCorreo("");
-			setTxtTel("");
-			setEstudio(new Estudio());
+			setFlagMostrarSOMOficina(false);
+			setFlagMostrarACOficina(true);
 		}
-	}
-
-	public void buscarPersona(ActionEvent e) {
-		logger.debug("=== buscarPersona() ===");
-		try {
-			if (getIdClase() != -1 || getCodCliente() != null
-					|| getIdTipoDocumento() != -1 || getNumeroDocumento() != 0
-					|| getTxtNombres() != "" || getTxtApellidoMaterno() != ""
-					|| getTxtApellidoPaterno() != "") {
-				Persona per = new Persona();
-				Clase cls = new Clase();
-				cls.setIdClase(getIdClase());
-				TipoDocumento tdoc = new TipoDocumento();
-				tdoc.setIdTipoDocumento(getIdTipoDocumento());
-
-				per.setCodCliente(getCodCliente());
-				per.setNumeroDocumento(getNumeroDocumento());
-				per.setNombres(getTxtNombres());
-				per.setApellidoMaterno(getTxtApellidoMaterno());
-				per.setApellidoPaterno(getTxtApellidoPaterno());
-				per.setClase(cls);
-				per.setTipoDocumento(tdoc);
-
-				List<Persona> personas = consultaService.getPersonasByPersona(per);
-
-				if(personas!=null){
-					logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA+"de Personas es: ["+personas.size()+"]");
-				}
-				personaDataModelBusq = new PersonaDataModel(personas);
-
-				// Limpiar datos de persona
-				setIdClase(-1);
-				setCodCliente(null);
-				setIdTipoDocumento(-1);
-				setNumeroDocumento(null);
-				setTxtNombres("");
-				setTxtApellidoMaterno("");
-				setTxtApellidoPaterno("");
-			} else {				
-				Persona per = new Persona();
-				Clase cls = new Clase();
-				TipoDocumento tdoc = new TipoDocumento();
-				per.setClase(cls);
-				per.setTipoDocumento(tdoc);
-
-				List<Persona> personas = consultaService.getPersonasByPersona(per);
-				
-				if(personas!=null){
-					logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA+"de Personas es: ["+personas.size()+"]");
-				}
-				personaDataModelBusq = new PersonaDataModel(personas);
-			}
-		} catch (Exception e1) {
-			logger.error(SglConstantes.MSJ_ERROR_EXCEPTION+"al consultar Personas:"+e1);
-		}
-	}
-
-	public void buscarInculpado(ActionEvent e) {
-		logger.debug("=== buscarInculpado()===");
-		if (getIdClase_inclp() != -1 || getCodCliente_inclp() != null
-				|| getIdTipoDocumento_inclp() != -1
-				|| getNumeroDocumento_inclp() != 0
-				|| getTxtNombres_inclp() != ""
-				|| getTxtApellidoMaterno_inclp() != ""
-				|| getTxtApellidoPaterno_inclp() != "") {
-			Persona per = new Persona();
-			Clase cls = new Clase();
-			TipoDocumento tdoc = new TipoDocumento();
-			tdoc.setIdTipoDocumento(getIdTipoDocumento_inclp());
-			cls.setIdClase(getIdClase_inclp());
-
-			per.setCodCliente(getCodCliente_inclp());
-			per.setNumeroDocumento(getNumeroDocumento_inclp());
-			per.setNombres(getTxtNombres_inclp());
-			per.setApellidoMaterno(getTxtApellidoMaterno_inclp());
-			per.setApellidoPaterno(getTxtApellidoPaterno_inclp());
-			per.setTipoDocumento(tdoc);
-			per.setClase(cls);
-
-			List<Persona> personas = consultaService.getPersonasByPersona(per);
-
-			if(personas!=null){
-				logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA+"de Personas es: ["+personas.size()+"]");
-			}
-
-			personaDataModelBusq = new PersonaDataModel(personas);
-
-			// Limpiar datos de inculpado
-			setIdClase_inclp(-1);
-			setCodCliente_inclp(null);
-			setIdTipoDocumento_inclp(-1);
-			setNumeroDocumento_inclp(null);
-			setTxtNombres_inclp("");
-			setTxtApellidoMaterno_inclp("");
-			setTxtApellidoPaterno_inclp("");
-		} else {
-			Persona per = new Persona();
-			Clase cls = new Clase();
-			TipoDocumento tdoc = new TipoDocumento();
-			per.setClase(cls);
-			per.setTipoDocumento(tdoc);
-
-			List<Persona> personas = consultaService.getPersonasByPersona(per);
-
-			if(personas!=null){
-				logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA+"de Personas es: ["+personas.size()+"]");
-			}
-			personaDataModelBusq = new PersonaDataModel(personas);
-		}
-	}
-
-	/**
-	 * Metodo que se encarga de buscar organos en el popup
-	 * "Mantenimiento Organo"
-	 * @param e ActionEvent
-	 * **/
-	public void buscarOrganos(ActionEvent e) {
-		logger.debug("=== buscarOrganos() ===");
-		try {
-			if (getTxtOrgano() != null || getIdEntidad() != 0
-					|| getUbigeo() != null) {
-				logger.debug("[BUSQ_ORG]-txtOrgano():" + getTxtOrgano());
-				Organo tmp = new Organo();
-				Entidad ent = new Entidad();
-
-				if (getTxtOrgano() != null) {
-					tmp.setNombre(getTxtOrgano());
-				}
-				if (getIdEntidad() != 0) {
-					ent.setIdEntidad(getIdEntidad());
-					tmp.setEntidad(ent);
-				} else {
-					tmp.setEntidad(ent);
-				}
-
-				if (getUbigeo() != null) {
-					tmp.setUbigeo(getUbigeo());
-				}
-
-				List<Organo> organos = consultaService.getOrganosByOrgano(tmp);
-				if (organos != null) {
-					logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA
-							+ "organos POPUP es:[" + organos.size() + "]");
-				} else {
-					logger.debug("La consulta de organos devuelve NULL");
-				}
-
-				organoDataModel = new OrganoDataModel(organos);
-
-			} else {
-				logger.debug("Buscando sin filtros en el Mantenimiento de Organos");
-
-				Organo tmp = new Organo();
-				Entidad ent = new Entidad();
-				tmp.setEntidad(ent);
-
-				List<Organo> organos = consultaService.getOrganosByOrgano(tmp);
-				if (organos != null) {
-					logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA
-							+ "organos POPUP es:[" + organos.size() + "]");
-				} else {
-					logger.debug("La consulta de organos devuelve NULL");
-				}
-
-				organoDataModel = new OrganoDataModel(organos);
-			}
-			// Limpiar datos
-			setIdEntidad(0);
-			setTxtOrgano("");
-			Organo org = new Organo();
-			Ubigeo ub = new Ubigeo();
-			org.setUbigeo(ub);
-
-		} catch (Exception e1) {
-			logger.error(SglConstantes.MSJ_ERROR_CONSULTAR + "organos popup:"+ e1);
-		}
-		logger.debug("=== saliendo de buscarOrganos() ===");
-	}
-
-	public void agregarOrgano(ActionEvent e2) {
-		List<Organo> organos = new ArrayList<Organo>();
-
-		if (getTxtOrgano() == null || getIdEntidad() == 0
-				|| getOrgano() == null) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Datos Requeridos: ", "Entidad, Órgano, Distrito");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
-		} else {
-			logger.debug("==Datos a grabar==");
-			logger.debug("[ADD_ORG]-Nombre: " + getTxtOrgano());
-			logger.debug("[ADD_ORG]-CodEntidad: " + getIdEntidad());
-
-			Organo tmp = new Organo();
-			Entidad ent = new Entidad();
-
-			if (getTxtOrgano() != null) {
-				tmp.setNombre(getTxtOrgano());
-			}
-			if (getIdEntidad() != 0) {
-				ent.setIdEntidad(getIdEntidad());
-				tmp.setEntidad(ent);
-			} else {
-				tmp.setEntidad(ent);
-			}
-			if (getUbigeo() != null) {
-				tmp.setUbigeo(getUbigeo());
-			}
-
-			organos = consultaService.getOrganosByOrganoEstricto(tmp);
-
-			Organo organobd = new Organo();
-
-			if (organos.size() == 0) {
-				try {
-					organobd = organoService.registrar(tmp);
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"Exito: ", "Órgano Agregado"));
-					// TODO Limpiar los datos ingresados
-				} catch (Exception e) {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"No Exitoso: ", "Órgano No Agregado"));
-					logger.error(SglConstantes.MSJ_ERROR_REGISTR + "el Organo:"	+ e);
-				}
-			} else {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"No Exitoso: ", "Órgano Existente"));
-			}
-
-			List<Organo> organos2 = new ArrayList<Organo>();
-			organos2.add(organobd);
-			organoDataModel = new OrganoDataModel(organos2);
-
-			// Limpiar datos
-			logger.debug("= Limpiando datos despues de Agregar =");
-			setIdEntidad(0);
-			setTxtOrgano("");
-			setUbigeo(new Ubigeo());
-		}
-	}
-
-	public void agregarCuantia(ActionEvent e) {
-
-		if (cuantia.getMoneda().getSimbolo() == "") {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Moneda Requerido", "Moneda Requerido");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
-			
-		} else {
-
-			if (cuantia.getPretendido() == 0.0) {
-				FacesMessage msg = new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, "Pretendido Requerido",
-						"Pretendido Requerido");
-				FacesContext.getCurrentInstance().addMessage(null, msg);
-			} else {
-				for (Moneda m : getMonedas()) {
-					if (m.getSimbolo().equals(
-							getCuantia().getMoneda().getSimbolo())) {
-						cuantia.setMoneda(m);
-						break;
-					}
-				}
-
-				List<Cuantia> cuantias;
-				if (cuantiaDataModel == null) {
-					cuantias = new ArrayList<Cuantia>();
-				} else {
-					cuantias = (List<Cuantia>) cuantiaDataModel.getWrappedData();
-				}
-				contadorCuantia++;
-				getCuantia().setNumero(contadorCuantia);
-				cuantias.add(getCuantia());
-
-				cuantiaDataModel = new CuantiaDataModel(cuantias);
-
-				cuantia = new Cuantia();
-
-			}
-		}
-	}
-
-	public void agregarInvolucrado(ActionEvent e) {
-		if (involucrado.getPersona() == null) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Nombre Requerido", "Nombre Requerido");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
-		} else {
-			if (involucrado.getRolInvolucrado().getNombre() == "") {
-				FacesMessage msg = new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, "Rol Requerido",
-						"Abogado Requerido");
-				FacesContext.getCurrentInstance().addMessage(null, msg);
-			} else {
-				for (RolInvolucrado rol : getRolInvolucrados()) {
-					if (rol.getNombre() == getInvolucrado().getRolInvolucrado()
-							.getNombre()) {
-						involucrado.setRolInvolucrado(rol);
-						break;
-					}
-				}
-
-				for (TipoInvolucrado tipo : getTipoInvolucrados()) {
-					if (tipo.getNombre() == getInvolucrado()
-							.getTipoInvolucrado().getNombre()) {
-						involucrado.setTipoInvolucrado(tipo);
-						break;
-					}
-				}
-
-				List<Involucrado> involucrados;
-				if (involucradoDataModel == null) {
-					involucrados = new ArrayList<Involucrado>();
-				} else {
-					involucrados = (List<Involucrado>) involucradoDataModel
-							.getWrappedData();
-				}
-
-				contadorInvolucrado++;
-				getInvolucrado().setNumero(contadorInvolucrado);
-
-				involucrados.add(getInvolucrado());
-				involucradoDataModel = new InvolucradoDataModel(involucrados);
-
-				involucrado = new Involucrado();
-			}
-		}
-	}
-
-	public void agregarInculpado(ActionEvent e) {
-		if (inculpado.getPersona() == null) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Inculpado Requerido", "Inculpado Requerido");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
-		} else {
-			if (inculpado.getFecha() == null) {
-				FacesMessage msg = new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, "Fecha Requerido",
-						"Fecha Requerido");
-				FacesContext.getCurrentInstance().addMessage(null, msg);
-
-			} else {
-				if (inculpado.getMoneda().getSimbolo() == "") {
-					FacesMessage msg = new FacesMessage(
-							FacesMessage.SEVERITY_ERROR, "Moneda Requerido",
-							"Materia Requerido");
-					FacesContext.getCurrentInstance().addMessage(null, msg);
-
-				} else {
-					if (inculpado.getMonto() == 0.0) {
-						FacesMessage msg = new FacesMessage(
-								FacesMessage.SEVERITY_ERROR, "Monto Requerido",
-								"Monto Requerido");
-						FacesContext.getCurrentInstance().addMessage(null, msg);
-					} else {
-						if (inculpado.getNrocupon() == 0) {
-
-							FacesMessage msg = new FacesMessage(
-									FacesMessage.SEVERITY_ERROR,
-									"Numero Cupón Requerido",
-									"Numero Cupón Requerido");
-							FacesContext.getCurrentInstance().addMessage(null,
-									msg);
-
-						} else {
-
-							if (inculpado.getSituacionInculpado().getNombre() == "") {
-
-								FacesMessage msg = new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,
-										"Situación Requerido",
-										"Situación Requerido");
-								FacesContext.getCurrentInstance().addMessage(
-										null, msg);
-
-							} else {
-
-								for (Moneda moneda : getMonedas()) {
-									if (moneda.getSimbolo().equals(
-											getInculpado().getMoneda()
-													.getSimbolo()))
-										inculpado.setMoneda(moneda);
-								}
-
-								for (SituacionInculpado situac : getSituacionInculpados()) {
-									if (situac.getNombre().equals(
-											getInculpado()
-													.getSituacionInculpado()
-													.getNombre()))
-										inculpado.setSituacionInculpado(situac);
-								}
-
-								if (inculpados == null) {
-
-									inculpados = new ArrayList<Inculpado>();
-								}
-
-								contadorInculpado++;
-								getInculpado().setNumero(contadorInculpado);
-								inculpados.add(getInculpado());
-
-								inculpado = new Inculpado();
-
-							}
-
-						}
-
-					}
-				}
-
-			}
-
-		}
-
-	}
-
-	public void agregarPersona(ActionEvent e) {
-
-		logger.info("Ingreso a agregarDetallePersona..");
-
-		if (getIdClase() == -1 || getIdTipoDocumento() == -1
-				|| getNumeroDocumento() == 0 || getTxtNombres() == ""
-				|| getTxtApellidoMaterno() == ""
-				|| getTxtApellidoPaterno() == "") {
-
-			FacesMessage msg = new FacesMessage(
-					FacesMessage.SEVERITY_INFO,
-					"Datos Requeridos: Clase, Tipo Doc, Nro Documento, Nombre, Apellido Paterno, Apellido Materno",
-					"");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
-			
-			setIdClase(-1);
-			setIdTipoDocumento(-1);
-
-		} else {
-			Persona per = new Persona();
-			Clase cls = new Clase();
-			cls.setIdClase(getIdClase());
-			per.setCodCliente(getCodCliente());
-			TipoDocumento tdoc = new TipoDocumento();
-			tdoc.setIdTipoDocumento(getIdTipoDocumento());
-			per.setNumeroDocumento(getNumeroDocumento());
-			per.setNombres(getTxtNombres());
-			per.setApellidoMaterno(getTxtApellidoMaterno());
-			per.setApellidoPaterno(getTxtApellidoPaterno());
-			per.setClase(cls);
-			per.setTipoDocumento(tdoc);
-
-			List<Persona> personas = new ArrayList<Persona>();
-
-			personas = consultaService.getPersonasByPersona(per);
-
-			Persona personabd = new Persona();
-
-			if (personas.size() == 0) {
-
-				try {
-					per.setNombreCompleto(per.getNombres() + " "
-							+ per.getApellidoPaterno() + " "
-							+ per.getApellidoMaterno());
-					personabd = personaService.registrar(per);
-					FacesMessage msg = new FacesMessage(
-							FacesMessage.SEVERITY_INFO, "Persona agregada",
-							"Persona agregada");
-					FacesContext.getCurrentInstance().addMessage(null, msg);
-
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-
-			} else {
-
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"Persona Existente", "Persona Existente");
-				FacesContext.getCurrentInstance().addMessage(null, msg);
-			}
-
-			/*List<Persona> personas2 = new ArrayList<Persona>();
-			personas2.add(personabd);
-			personaDataModelBusq = new PersonaDataModel(personas2);*/
-			
-			buscarPersona(e);
-			
-			// Limpiar datos de persona
-			setIdClase(-1);
-			setCodCliente(null);
-			setIdTipoDocumento(-1);
-			setNumeroDocumento(null);
-			setTxtNombres("");
-			setTxtApellidoMaterno("");
-			setTxtApellidoPaterno("");
-			
-			
-
-		}
-
-	}
-
-	public void agregar_Inculpado(ActionEvent e) {
-		if (getIdClase_inclp() == -1 || getIdTipoDocumento_inclp() == -1
-				|| getNumeroDocumento_inclp() == 0
-				|| getTxtNombres_inclp() == ""
-				|| getTxtApellidoMaterno_inclp() == ""
-				|| getTxtApellidoPaterno_inclp() == "") {
-
-			FacesMessage msg = new FacesMessage(
-					FacesMessage.SEVERITY_INFO,
-					"Datos Requeridos: Clase, Tipo Doc, Nro Documento, Nombre, Apellido Paterno, Apellido Materno",
-					"");
-			FacesContext.getCurrentInstance().addMessage(null, msg);
-		} else {
-			Persona per = new Persona();
-			Clase cls = new Clase();
-			cls.setIdClase(getIdClase_inclp());
-			per.setCodCliente(getCodCliente_inclp());
-			TipoDocumento tdoc = new TipoDocumento();
-			tdoc.setIdTipoDocumento(getIdTipoDocumento_inclp());
-			per.setNumeroDocumento(getNumeroDocumento_inclp());
-			per.setNombres(getTxtNombres_inclp());
-			per.setApellidoMaterno(getTxtApellidoMaterno_inclp());
-			per.setApellidoPaterno(getTxtApellidoPaterno_inclp());
-
-			List<Persona> personas = new ArrayList<Persona>();
-
-			personas = consultaService.getPersonasByPersona(per);
-
-			Persona personabd = new Persona();
-
-			if (personas.size() == 0) {
-				try {
-					per.setNombreCompleto(per.getNombres() + " "
-							+ per.getApellidoPaterno() + " "
-							+ per.getApellidoMaterno());
-					personabd = personaService.registrar(per);
-					FacesMessage msg = new FacesMessage(
-							FacesMessage.SEVERITY_INFO, "Persona agregada",
-							"Persona agregada");
-					FacesContext.getCurrentInstance().addMessage(null, msg);
-
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-			} else {
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"Persona Existente", "Persona Existente");
-				FacesContext.getCurrentInstance().addMessage(null, msg);
-			}
-
-			List<Persona> personas2 = new ArrayList<Persona>();
-			personas2.add(personabd);
-			personaDataModelBusq = new PersonaDataModel(personas2);
-
-			// Limpiar datos de inculpado
-			setIdClase_inclp(-1);
-			setCodCliente_inclp(null);
-			setIdTipoDocumento_inclp(-1);
-			setNumeroDocumento_inclp(null);
-			setTxtNombres_inclp("");
-			setTxtApellidoMaterno_inclp("");
-			setTxtApellidoPaterno_inclp("");
-		}
-	}
-
-	public String agregarDetalleInculpado(ActionEvent e) {
-		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"Inculpado Agregado", "Inculpado Agregado");
-		
-		FacesContext.getCurrentInstance().addMessage(null, msg);
-		List<Persona> personas = new ArrayList<Persona>();
-		personaDataModelBusq = new PersonaDataModel(personas);
-		return null;
-	}
-
-	public void seleccionarOrgano() {
-		try {
-			logger.debug("Organo seleccionado:");
-			logger.debug("Nombre: " + getSelectedOrgano().getNombre());
-			logger.debug("Distrito: "
-					+ getSelectedOrgano().getUbigeo().getDistrito());
-			logger.debug("Provincia: "
-					+ getSelectedOrgano().getUbigeo().getProvincia());
-			logger.debug("Departamento: "
-					+ getSelectedOrgano().getUbigeo().getDepartamento());
-
-			if (getSelectedOrgano().getUbigeo().getDistrito() != null
-					&& getSelectedOrgano().getUbigeo().getProvincia() != null
-					&& getSelectedOrgano().getUbigeo().getDepartamento() != null) {
-				String descripcion = getSelectedOrgano()
-						.getNombre()
-						.toUpperCase()
-						.concat("(")
-						.concat(getSelectedOrgano().getUbigeo().getDistrito()
-								.toUpperCase())
-						.concat(", ")
-						.concat(getSelectedOrgano().getUbigeo().getProvincia()
-								.toUpperCase())
-						.concat(", ")
-						.concat(getSelectedOrgano().getUbigeo()
-								.getDepartamento().toUpperCase()).concat(")");
-
-				logger.debug("Descripcion seleccionada: " + descripcion);
-
-				getSelectedOrgano().setNombreDetallado(descripcion);
-
-				organo1 = getSelectedOrgano();
-			} else {
-				FacesMessage msg = new FacesMessage(
-						FacesMessage.SEVERITY_INFO,
-						"Debe seleccionar un órgano con distrito diferente a vacío o nulo",
-						"");
-				FacesContext.getCurrentInstance().addMessage(null, msg);
-			}
-		} catch (Exception e) {
-			logger.debug("Error: ", e);
-		}
-	}
-
-	public void seleccionarAbogado() {
-		getSelectedAbogado().setNombreCompletoMayuscula(
-				getSelectedAbogado().getNombres().toUpperCase()	+ " "
-				+ getSelectedAbogado().getApellidoPaterno().toUpperCase()+ " "
-				+ getSelectedAbogado().getApellidoMaterno().toUpperCase());
-		
-		getHonorario().setAbogado(getSelectedAbogado());
-	}
-
-	public void seleccionarPersona() {
-		getSelectPersona().setNombreCompletoMayuscula(
-				getSelectPersona().getNombres().toUpperCase()+ " "
-				+ getSelectPersona().getApellidoPaterno().toUpperCase()+ " "
-				+ getSelectPersona().getApellidoMaterno().toUpperCase());
-		
-		getInvolucrado().setPersona(getSelectPersona());
-	}
-
-	public void seleccionarInvolucrado() {
-		getSelectInvolucrado().setNombreCompletoMayuscula(
-			getSelectInvolucrado().getNombres().toUpperCase()+ " "
-			+ getSelectInvolucrado().getApellidoPaterno().toUpperCase()+ " "
-			+ getSelectInvolucrado().getApellidoMaterno().toUpperCase());
-
-		getInculpado().setPersona(getSelectInvolucrado());
-	}
-
-	public void limpiarAnexo(ActionEvent e) {
-		setTxtComentario("");
-		setTxtTitulo("");
-		setAnexo(new Anexo());
-	}
-
-	public void limpiarOrgano(CloseEvent event) {
-		/*
-		 * setOrgano(new Organo()); getOrgano().setEntidad(new Entidad());
-		 * getOrgano().setUbigeo(new Ubigeo());
-		 * organoDataModel = new OrganoDataModel(new ArrayList<Organo>());
-		 */
-		// Limpiar datos
-		setIdEntidad(0);
-		setTxtOrgano("");
-		setUbigeo(new Ubigeo());
-	}
-
-	public void limpiarOrgano(ActionEvent event) {
-		/* setOrgano(new Organo()); getOrgano().setEntidad(new Entidad());
-		 * getOrgano().setUbigeo(new Ubigeo());
-		 * organoDataModel = new OrganoDataModel(new ArrayList<Organo>());
-		 */
-		// Limpiar datos
-		setIdEntidad(0);
-		setTxtOrgano("");
-		setUbigeo(new Ubigeo());
-	}
-
-	public void limpiarAbogado(CloseEvent event) {
-		/*setAbogado(new Abogado()); getAbogado().setDni(null);
-		 * setEstudio(new Estudio());
-		 * abogadoDataModel = new AbogadoDataModel(new ArrayList<Abogado>());
-		 */
-
-		setTxtRegistroCA("");
-		setTxtNombre("");
-		setDNI(null);
-		setTxtApePat("");
-		setTxtApeMat("");
-		setTxtCorreo("");
-		setTxtTel("");
-		setEstudio(new Estudio());
-	}
-
-	public void limpiarAbogado(ActionEvent event) {
-		/*
-		 * setAbogado(new Abogado()); getAbogado().setDni(null);
-		 * setEstudio(new Estudio());
-		 * 
-		 * abogadoDataModel = new AbogadoDataModel(new ArrayList<Abogado>());
-		 */
-
-		setTxtRegistroCA("");
-		setTxtNombre("");
-		setDNI(null);
-		setTxtApePat("");
-		setTxtApeMat("");
-		setTxtCorreo("");
-		setTxtTel("");
-		setEstudio(new Estudio());
-	}
-
-	public void limpiarPersona(CloseEvent event) {
-
-		/*
-		 * setPersona(new Persona()); getPersona().setClase(new Clase());
-		 * getPersona().setCodCliente(null); getPersona().setTipoDocumento(new
-		 * TipoDocumento()); getPersona().setNumeroDocumento(null);
-		 * 
-		 * personaDataModelBusq = new PersonaDataModel(new
-		 * ArrayList<Persona>());
-		 */
-
-		setIdClase(-1);
-		setCodCliente(null);
-		setIdTipoDocumento(-1);
-		setNumeroDocumento(null);
-		setTxtNombres("");
-		setTxtApellidoMaterno("");
-		setTxtApellidoPaterno("");
-	}
-
-	public void limpiarPersona(ActionEvent event) {
-
-		/*
-		 * setPersona(new Persona()); getPersona().setClase(new Clase());
-		 * getPersona().setCodCliente(null); getPersona().setTipoDocumento(new
-		 * TipoDocumento()); getPersona().setNumeroDocumento(null);
-		 * 
-		 * personaDataModelBusq = new PersonaDataModel(new
-		 * ArrayList<Persona>());
-		 */
-
-		setIdClase(-1);
-		setCodCliente(null);
-		setIdTipoDocumento(-1);
-		setNumeroDocumento(null);
-		setTxtNombres("");
-		setTxtApellidoMaterno("");
-		setTxtApellidoPaterno("");
-	}
-
-	public void limpiarInculpado(ActionEvent event) {
-
-		/*
-		 * setPersona(new Persona()); getPersona().setClase(new Clase());
-		 * getPersona().setCodCliente(null); getPersona().setTipoDocumento(new
-		 * TipoDocumento()); getPersona().setNumeroDocumento(null);
-		 * 
-		 * personaDataModelBusq = new PersonaDataModel(new
-		 * ArrayList<Persona>());
-		 */
-
-		setIdClase_inclp(-1);
-		setCodCliente_inclp(null);
-		setIdTipoDocumento_inclp(-1);
-		setNumeroDocumento_inclp(null);
-		setTxtNombres_inclp("");
-		setTxtApellidoMaterno_inclp("");
-		setTxtApellidoPaterno_inclp("");
-	}
-
-	public void limpiarInculpado(CloseEvent event) {
-		setIdClase_inclp(-1);
-		setCodCliente_inclp(null);
-		setIdTipoDocumento_inclp(-1);
-		setNumeroDocumento_inclp(null);
-		setTxtNombres_inclp("");
-		setTxtApellidoMaterno_inclp("");
-		setTxtApellidoPaterno_inclp("");
-	}
-
-	public void limpiar(ActionEvent e) {
-		logger.debug("limpiando los valores de la pantalla principal del expediente");
-		Calendar calendar = Calendar.getInstance();
-
-		setNroExpeOficial("");
-		setInicioProceso(null);
-		setEstado(0);
-		setProceso(0);
-		setVia(0);
-		setInstancia(0);
-		setResponsable(new Usuario());
-		setOficina(new Oficina());
-		setTipo(0);
-		setOrgano1(new Organo());
-		setSecretario("");
-		setCalificacion(0);
-		setRecurrencia(new Recurrencia());
-
-		setHonorario(new Honorario());
-		setHonorarios(new ArrayList<Honorario>());
-
-		setInvolucrado(new Involucrado());
-		setInvolucradoDataModel(new InvolucradoDataModel());
-
-		setCuantia(new Cuantia());
-		setCuantiaDataModel(new CuantiaDataModel());
-
-		setInculpado(new Inculpado());
-		setInculpados(new ArrayList<Inculpado>());
-
-		setMoneda(0);
-		setMontoCautelar(0.0);
-		setTipoCautelar(0);
-		setDescripcionCautelar("");
-		setContraCautela(0);
-		setImporteCautelar(0.0);
-		setEstadoCautelar(0);
-
-		setFechaResumen(null);
-		setResumen("");
-		setTodoResumen("");
-		setResumens(new ArrayList<Resumen>());
-
-		setAnexo(new Anexo());
-		setAnexos(new ArrayList<Anexo>());
-
-		setRiesgo(0);
-
-		/*
-		 * FacesContext fc = FacesContext.getCurrentInstance(); ExternalContext
-		 * exc = fc.getExternalContext(); HttpSession session1 = (HttpSession)
-		 * exc.getSession(true);
-		 * 
-		 * com.grupobbva.seguridad.client.domain.Usuario usuarioAux=
-		 * (com.grupobbva.seguridad.client.domain.Usuario)
-		 * session1.getAttribute("usuario");
-		 * 
-		 * FacesContext.getCurrentInstance().getExternalContext().invalidateSession
-		 * ();
-		 * 
-		 * ExternalContext context =
-		 * FacesContext.getCurrentInstance().getExternalContext(); HttpSession
-		 * session = (HttpSession) context.getSession(true);
-		 * session.setAttribute("usuario", usuarioAux);
-		 */
-
-	}
-
-	public String home() {
-		FacesContext fc = FacesContext.getCurrentInstance();
-		ExternalContext exc = fc.getExternalContext();
-		HttpSession session1 = (HttpSession) exc.getSession(true);
-
-		com.grupobbva.seguridad.client.domain.Usuario usuarioAux = (com.grupobbva.seguridad.client.domain.Usuario) session1
-				.getAttribute("usuario");
-		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-		HttpSession session = (HttpSession) context.getSession(true);
-		session.setAttribute("usuario", usuarioAux);
-
-		return "consultaExpediente.xhtml?faces-redirect=true";
-	}
-
-	@SuppressWarnings("unchecked")
-	public void guardar(ActionEvent event) 
-	{
-		logger.debug("==== guardar Expediente() ====");
-		/**/
-		if (getProceso() > 0) {
-			if (getVia() > 0) {
-				if (getInstancia() > 0) {
-					if (getNroExpeOficial().length() > 0) {
-						if (getEstado() > 0) {
-							if (getOficina() != null) {
-								if (getCalificacion() > 0) {
-									if (getTipo() > 0) {
-										if (getOrgano1() != null) {
-											/**/
-											GenericDao<Expediente, Object> expedienteDAO = (GenericDao<Expediente, Object>) SpringInit
-													.getApplicationContext().getBean("genericoDao");
-
-											Busqueda filtro = Busqueda.forClass(Expediente.class);
-											List<Expediente> expedientes = consultaService.getExpedienteByNroExpediente(getNroExpeOficial());
-
-											if (expedientes.size() == 0) {
-												logger.debug("No existe expediente con Nro: "+ getNroExpeOficial());
-
-												Expediente expediente = new Expediente();
-												// expedienteService.registrar(expediente);
-
-												GenericDao<EstadoExpediente, Object> estadoExpedienteDAO = (GenericDao<EstadoExpediente, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-												GenericDao<Proceso, Object> procesoDAO = (GenericDao<Proceso, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-												GenericDao<Via, Object> viaDAO = (GenericDao<Via, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-												GenericDao<Instancia, Object> instanciaDAO = (GenericDao<Instancia, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-												GenericDao<TipoExpediente, Object> tipoExpedienteDAO = (GenericDao<TipoExpediente, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-												GenericDao<Calificacion, Object> calificacionDAO = (GenericDao<Calificacion, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-
-												EstadoExpediente estadoExpedientebd = new EstadoExpediente();
-												Proceso procesobd = new Proceso();
-												Via viabd = new Via();
-												Instancia instanciabd = new Instancia();
-												TipoExpediente tipoExpedientebd = new TipoExpediente();
-												Calificacion calificacionbd = new Calificacion();
-												try {
-													estadoExpedientebd = estadoExpedienteDAO.buscarById(EstadoExpediente.class,	getEstado());
-													procesobd = procesoDAO.buscarById(Proceso.class,getProceso());
-													viabd = viaDAO.buscarById(Via.class,getVia());
-													instanciabd = instanciaDAO.buscarById(Instancia.class,getInstancia());
-													tipoExpedientebd = tipoExpedienteDAO.buscarById(TipoExpediente.class,getTipo());
-													calificacionbd = calificacionDAO.buscarById(Calificacion.class,	getCalificacion());
-												} catch (Exception e1) {
-													logger.error(SglConstantes.MSJ_ERROR_EXCEPTION+" :"+e1);
-												}
-
-												expediente.setNumeroExpediente(getNroExpeOficial());
-												expediente.setFechaInicioProceso(getInicioProceso());
-												expediente.setEstadoExpediente(estadoExpedientebd);
-												expediente.setProceso(procesobd);
-												expediente.setVia(viabd);
-												expediente.setInstancia(instanciabd);
-												expediente.setUsuario(getResponsable());
-												expediente.setOficina(getOficina());
-												expediente.setTipoExpediente(tipoExpedientebd);
-												expediente.setOrgano(getOrgano1());
-												expediente.setSecretario(getSecretario());
-												expediente.setCalificacion(calificacionbd);
-												expediente.setRecurrencia(getRecurrencia());
-
-												
-												//Honorarios
-												List<Honorario> honorarios = getHonorarios();
-												expediente.setHonorarios(new ArrayList<Honorario>());
-												
-												for (Honorario honorario : honorarios) {
-													if (honorario != null) {
-														for (TipoHonorario tipo : getTipoHonorarios()) {
-															if (honorario.getTipoHonorario().getDescripcion().equals(tipo.getDescripcion())) {
-																honorario.setTipoHonorario(tipo);
-																break;
-															}
-														}
-														
-														for (Moneda moneda : getMonedas()) {
-															if (honorario.getMoneda().getSimbolo().equals(moneda.getSimbolo())) {
-																honorario.setMoneda(moneda);
-																break;
-															}
-														}
-
-														for (SituacionHonorario situacionHonorario : getSituacionHonorarios()) {
-															if (honorario.getSituacionHonorario().getDescripcion().equals(situacionHonorario.getDescripcion())) {
-																honorario.setSituacionHonorario(situacionHonorario);
-																break;
-															}
-														}
-
-														expediente.addHonorario(honorario);
-													}
-												}
-												
-												//Involucrados
-												List<Involucrado> involucrados = (List<Involucrado>) getInvolucradoDataModel().getWrappedData();
-												expediente.setInvolucrados(new ArrayList<Involucrado>());
-												
-												for (Involucrado involucrado : involucrados) {
-													if (involucrado != null) {
-														for (RolInvolucrado rol : getRolInvolucrados()) {
-															if (rol.getNombre().equals(involucrado.getRolInvolucrado().getNombre())) {
-																involucrado.setRolInvolucrado(rol);
-																break;
-															}
-														}
-
-														for (TipoInvolucrado tipo : getTipoInvolucrados()) {
-															if (tipo.getNombre().equals(involucrado.getTipoInvolucrado().getNombre())) {
-																involucrado.setTipoInvolucrado(tipo);
-																break;
-															}
-														}
-
-														expediente.addInvolucrado(involucrado);
-													}
-												}
-
-												//Cuantias
-												List<Cuantia> cuantias = (List<Cuantia>) getCuantiaDataModel().getWrappedData();
-												expediente.setCuantias(new ArrayList<Cuantia>());
-												for (Cuantia cuantia : cuantias) {
-													if (cuantia != null) {
-														for (Moneda m : getMonedas()) {
-															if (m.getSimbolo().equals(cuantia.getMoneda().getSimbolo())) {
-																cuantia.setMoneda(m);
-																break;
-															}
-														}
-														
-														expediente.addCuantia(cuantia);
-													}
-												}
-
-												//Inculpados
-												List<Inculpado> inculpados = getInculpados();
-												expediente.setInculpados(new ArrayList<Inculpado>());
-												
-												for (Inculpado inculpado : inculpados) {
-													if (inculpado != null) {
-														for (Moneda moneda : getMonedas()) {
-															if (moneda.getSimbolo().equals(inculpado.getMoneda().getSimbolo())) {
-																inculpado.setMoneda(moneda);
-																break;
-															}
-														}
-
-														for (SituacionInculpado s : getSituacionInculpados()) {
-															if (s.getNombre().equals(inculpado.getSituacionInculpado().getNombre())) {
-																inculpado.setSituacionInculpado(s);
-																break;
-															}
-														}
-
-														expediente.addInculpado(inculpado);
-													}
-												}
-
-												GenericDao<Moneda, Object> monedaDAO = (GenericDao<Moneda, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-												GenericDao<TipoCautelar, Object> tipoCautelarDAO = (GenericDao<TipoCautelar, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-												GenericDao<ContraCautela, Object> contraCautelaDAO = (GenericDao<ContraCautela, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-												GenericDao<EstadoCautelar, Object> estadoCautelarDAO = (GenericDao<EstadoCautelar, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-
-												Moneda monedabd = new Moneda();
-												TipoCautelar tipoCautelarbd = new TipoCautelar();
-												ContraCautela contraCautelabd = new ContraCautela();
-												EstadoCautelar estadoCautelarbd = new EstadoCautelar();
-
-												try {
-													monedabd = monedaDAO.buscarById(Moneda.class,getMoneda());
-													tipoCautelarbd = tipoCautelarDAO.buscarById(TipoCautelar.class,	getTipoCautelar());
-													contraCautelabd = contraCautelaDAO.buscarById(ContraCautela.class,getContraCautela());
-													estadoCautelarbd = estadoCautelarDAO.buscarById(EstadoCautelar.class,getEstadoCautelar());
-												} catch (Exception e) {
-													logger.error(SglConstantes.MSJ_ERROR_EXCEPTION+e);
-												}
-
-												expediente.setMoneda(monedabd);
-												expediente.setMontoCautelar(getMontoCautelar());
-												expediente.setTipoCautelar(tipoCautelarbd);
-												expediente.setDescripcionCautelar(getDescripcionCautelar());
-												expediente.setContraCautela(contraCautelabd);
-												expediente.setImporteCautelar(getImporteCautelar());
-												expediente.setEstadoCautelar(estadoCautelarbd);
-
-												//Resumen
-												List<Resumen> resumens = getResumens();
-												expediente.setResumens(new ArrayList<Resumen>());
-
-												for (Resumen resumen : resumens)
-													if (resumen != null){
-														expediente.addResumen(resumen);
-													}
-
-												//Anexos
-												List<Anexo> anexos = getAnexos();
-												expediente.setAnexos(new ArrayList<Anexo>());
-
-												if (anexos != null) {
-													if (anexos.size() > 0) {
-
-														File fichUbicacion;
-														String ubicacion = "";
-
-														if (expediente.getInstancia() == null) {
-															ubicacion = Util.getMessage("ruta_documento")+ File.separator
-																	+ expediente.getNumeroExpediente()+ File.separator
-																	+ "sin-instancia";
-														} else {
-															ubicacion = Util.getMessage("ruta_documento")+ File.separator
-																	+ expediente.getNumeroExpediente()+ File.separator
-																	+ expediente.getInstancia().getNombre();
-														}
-
-														fichUbicacion = new File(ubicacion);
-														fichUbicacion.mkdirs();
-
-														for (Anexo anexo : anexos)
-															if (anexo != null) {
-																anexo.setUbicacion(ubicacion+ File.separator
-																		+ anexo.getUbicacion());
-
-																byte b[] = anexo.getBytes();
-																File fichSalida = new File(anexo.getUbicacion());
-																try {
-																	FileOutputStream canalSalida = new FileOutputStream(fichSalida);
-																	canalSalida.write(b);
-																	canalSalida.close();
-																}
-																catch (IOException e) {
-																	logger.error(SglConstantes.MSJ_ERROR_EXCEPTION+"IOException en Anexos:"+e);
-																}catch(Exception e1){
-																	logger.error(SglConstantes.MSJ_ERROR_EXCEPTION+"en Anexos:"+e1);
-																}
-																
-																expediente.addAnexo(anexo);
-															}
-													}
-												}
-
-												GenericDao<Riesgo, Object> riesgoDAO = (GenericDao<Riesgo, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-												GenericDao<Actividad, Object> actividadDAO = (GenericDao<Actividad, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-												GenericDao<SituacionActProc, Object> situacionActProcDAO = (GenericDao<SituacionActProc, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-												GenericDao<Etapa, Object> etapaDAO = (GenericDao<Etapa, Object>) SpringInit
-														.getApplicationContext().getBean("genericoDao");
-
-												filtro = Busqueda.forClass(Actividad.class);
-
-												Riesgo riesgobd = new Riesgo();
-												List<Actividad> actividades = new ArrayList<Actividad>();
-												SituacionActProc situacionActProc = new SituacionActProc();
-												Etapa etapabd = new Etapa();
-
-												try {
-													riesgobd = riesgoDAO.buscarById(Riesgo.class,getRiesgo());
-													actividades = actividadDAO.buscarDinamico(filtro);
-													situacionActProc = situacionActProcDAO.buscarById(SituacionActProc.class,1);
-													etapabd = etapaDAO.buscarById(Etapa.class,1);
-
-												} catch (Exception e) {
-													logger.error(SglConstantes.MSJ_ERROR_CONSULTAR+"risgos, actividades, sitActPro y Etapas:"+e);
-												}
-
-												expediente.setRiesgo(riesgobd);
-												expediente.setFlagRevertir(SglConstantes.COD_NO_REVERTIR);
-												expediente.setActividadProcesals(new ArrayList<ActividadProcesal>());
-
-												SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-
-												//Date date = new Date();
-												Date date = expediente.getFechaInicioProceso();
-												logger.debug("[EXP]-FechaInicioProceso:"+expediente.getFechaInicioProceso());
-												try {
-													//String dates = format.format(new Date());
-													String dates = format.format(expediente.getFechaInicioProceso());
-													date = format.parse(dates);
-													logger.debug("[EXP]-date.parse:"+date);
-												} catch (ParseException e) {
-													logger.error(SglConstantes.MSJ_ERROR_EXCEPTION+"ParseException:"+e);
-												}catch(Exception e1){
-													logger.error(SglConstantes.MSJ_ERROR_EXCEPTION+e1);
-												}
-												/** Actividades Procesales 08/08/2013*/
-												GenericDao<ActividadProcesalMan, Object> actividadProcesalDAO = 
-														(GenericDao<ActividadProcesalMan, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-												Busqueda filtroActProcesal = Busqueda.forClass(ActividadProcesalMan.class);
-												/** Solo Civiles*/
-												filtroActProcesal.add(Restrictions.eq("proceso.idProceso", 1));
-												//filtroActProcesal.add(Restrictions.eq("via.idVia", viabd.getIdVia()));
-												List<ActividadProcesalMan> lstListado=new ArrayList<ActividadProcesalMan>();
-											    try {
-													lstListado=actividadProcesalDAO.buscarDinamico(filtroActProcesal);
-												} catch (Exception e1) {
-													logger.error(SglConstantes.MSJ_ERROR_CONSULTAR+"las ActividadProcesalMan:"+e1);
-												}
-											    if(lstListado!=null){
-											    	logger.info(SglConstantes.MSJ_TAMANHIO_LISTA+"Actividades Procesales-CIVIL ok es: "+lstListado.size());
-											    }
-
-												//TODO - Verificar
-												// Si es un proceso CIVIL
-												if (procesobd != null) {
-													if (procesobd.getIdProceso() == 1) {
-														logger.debug("[EXP]-Proceso:"+procesobd.getIdProceso() +"\t"+ procesobd.getNombre());
-														logger.debug("[EXP]-Via:"+viabd.getIdVia() +"\t"+ viabd.getNombre());
-
-														if (actividades != null) {
-
-															for (Actividad actividad : actividades) { 
-
-																ActividadProcesal actividadProcesal = new ActividadProcesal();
-																actividadProcesal.setSituacionActProc(situacionActProc);
-																actividadProcesal.setEtapa(etapabd);
-																actividadProcesal.setFechaActividad(new Timestamp(date.getTime()));
-																//logger.debug("actividadProcesal-fechaActividad:"+actividadProcesal.getFechaActividad());
-
-																for (ActividadProcesalMan x : lstListado) {  // Inicio del For
-																	//Para todos
-																	if (actividad.getIdActividad() == x.getActividad().getIdActividad()) { 
-																		actividadProcesal.setPlazoLey(x.getPlazo()+"");
-
-																		Date fechaVencimiento = calcularFechaVencimiento(date,x.getPlazo());
-																		actividadProcesal.setFechaVencimiento(new Timestamp(fechaVencimiento.getTime()));
-																		actividadProcesal.setActividad(actividad);
-																		expediente.addActividadProcesal(actividadProcesal);
-																	}
-														//1	OPOSICIONES Y TACHAS
-														
-																	
-																/*if (actividad.getIdActividad() == 1) { 
-																	
-                                                                   
-																	if(x.getActividad().getIdActividad()==1)
-																	{
-																		actividadProcesal.setPlazoLey(x.getPlazo()+"");
-
-																		Date fechaVencimiento = calcularFechaVencimiento(
-																			date,Integer.parseInt(Util.getMessage(x.getPlazo()+"")));
-																		actividadProcesal.setFechaVencimiento(new Timestamp(fechaVencimiento.getTime()));
-																	}
-															    	
-																	actividadProcesal.setActividad(actividad);
-																	expediente.addActividadProcesal(actividadProcesal);
-																}
-																//2	EXCEPCIONES
-															if (actividad.getIdActividad() == 2) {
-
-																	actividadProcesal.setActividad(actividad);
-																	if(x.getActividad().getIdActividad()==2){
-																	actividadProcesal.setPlazoLey(Util.getMessage("diasActividad2"));
-
-																	Date fechaVencimiento = calcularFechaVencimiento(
-																	   date,Integer.parseInt(Util.getMessage("diasActividad2")));
-																	actividadProcesal.setFechaVencimiento(new Timestamp(fechaVencimiento.getTime()));
-																	}
-
-																	
-																		
-																	expediente.addActividadProcesal(actividadProcesal);
-																}
-																//4	CONTESTACIÓN DE LA DEMANDA
-																if (actividad.getIdActividad() == 4) {
-
-																	actividadProcesal.setActividad(actividad);
-																	if(x.getActividad().getIdActividad()==4){
-																	actividadProcesal.setPlazoLey(Util.getMessage("diasActividad3"));
-
-																	Date fechaVencimiento = calcularFechaVencimiento(
-																		date,Integer.parseInt(Util.getMessage("diasActividad3")));
-
-																	actividadProcesal.setFechaVencimiento(new Timestamp(fechaVencimiento.getTime()));
-																	}
-																	expediente.addActividadProcesal(actividadProcesal);
-																}
-															*/
-																
-																} // Fin del For
-
-															}
-														}
-
-													}
-
-													try {
-														expedienteDAO.save(expediente);
-														FacesContext.getCurrentInstance().addMessage("growl",
-															new FacesMessage(FacesMessage.SEVERITY_INFO,"Exitoso","Se registró el expediente"));
-														logger.debug(SglConstantes.MSJ_EXITO_REGISTRO+"el expediente.");
-
-														setFlagColumnGeneral(false);
-														setFlagDeshabilitadoGeneral(true);
-
-													} catch (Exception e) {
-														FacesContext.getCurrentInstance().addMessage("growl",
-															new FacesMessage(FacesMessage.SEVERITY_ERROR,"No Exitoso","No se registró el expediente "));
-														logger.debug(SglConstantes.MSJ_ERROR_REGISTR+"el expediente:"+ e);
-
-														setFlagColumnGeneral(true);
-														setFlagDeshabilitadoGeneral(false);
-													}
-												} else {
-													FacesContext.getCurrentInstance().addMessage("growl",
-														new FacesMessage(FacesMessage.SEVERITY_ERROR,"Campos requeridos","No se registró el expediente "));
-													logger.debug(SglConstantes.MSJ_ERROR_REGISTR+"el expediente.");
-												}
-
-											} else {
-
-												FacesContext.getCurrentInstance().addMessage("growl",
-														new FacesMessage(FacesMessage.SEVERITY_ERROR,"Existe expediente","El número de expediente ya existe"));
-													logger.debug("El numero de expediente ["+ getNroExpeOficial()+"] ya existe.");
-
-												setFlagColumnGeneral(true);
-												setFlagDeshabilitadoGeneral(false);
-
-											}
-
-											/**/
-										} else {
-											FacesMessage msg = new FacesMessage(
-												FacesMessage.SEVERITY_ERROR,"Órgano Requerido","Órgano Requerido");
-											FacesContext.getCurrentInstance().addMessage("growl_cab",msg);
-										}
-									} else {
-										FacesMessage msg = new FacesMessage(
-												FacesMessage.SEVERITY_ERROR,"Tipo Requerido","Tipo Requerido");
-										FacesContext.getCurrentInstance().addMessage("growl_cab", msg);
-									}
-								} else {
-									FacesMessage msg = new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,"Calificación Requerido","Calificación Requerido");
-									FacesContext.getCurrentInstance().addMessage("growl_cab", msg);
-								}
-							} else {
-								FacesMessage msg = new FacesMessage(
-										FacesMessage.SEVERITY_ERROR,"Oficina Requerido","Oficina Requerido");
-								FacesContext.getCurrentInstance().addMessage("growl_cab", msg);
-							}
-						} else {
-							FacesMessage msg = new FacesMessage(
-									FacesMessage.SEVERITY_ERROR,"Estado Requerido", "Estado Requerido");
-							FacesContext.getCurrentInstance().addMessage("growl_cab", msg);
-						}
-
-					} else {
-						FacesMessage msg = new FacesMessage(
-								FacesMessage.SEVERITY_ERROR,"Número Expediente Oficial Requerido","Número Expediente Oficial Requerido");
-						FacesContext.getCurrentInstance().addMessage("growl_cab", msg);
-					}
-
-				} else {
-					FacesMessage msg = new FacesMessage(
-							FacesMessage.SEVERITY_ERROR, "Instancia Requerido","Instancia Requerido");
-					FacesContext.getCurrentInstance().addMessage("growl_cab",msg);
-				}
-
-			} else {
-				FacesMessage msg = new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, "Via Requerido","Via Requerido");
-				FacesContext.getCurrentInstance().addMessage("growl_cab", msg);
-			}
-		} else {
-			FacesMessage msg = new FacesMessage(
-					FacesMessage.SEVERITY_ERROR,"Proceso Requerido", "Proceso Requerido");
-			FacesContext.getCurrentInstance().addMessage("growl_cab", msg);
-		}
-		/**/
-
-	}
-
-	public Date sumaDias(Date fechaOriginal, int dias) {
-
-		if (dias > 0) {
-
-			Date fechaFin = sumaTiempo(fechaOriginal, Calendar.DAY_OF_MONTH, dias);
-
-			int diasNL = getDiasNoLaborables(fechaOriginal, fechaFin);
-
-			return sumaTiempo(fechaOriginal, Calendar.DAY_OF_MONTH, dias + diasNL);
-
-		} else {
-
-			Date fechaFin = sumaTiempo(fechaOriginal, Calendar.DAY_OF_MONTH, 0);
-
-			return fechaFin;
-		}
-
-	}
-
-	public int getDomingos(Calendar fechaInicial, Calendar fechaFinal) {
-
-		int dias = 0;
-
-		// mientras la fecha inicial sea menor o igual que la fecha final se
-		// cuentan los dias
-		while (fechaInicial.before(fechaFinal)
-				|| fechaInicial.equals(fechaFinal)) {
-
-			// si el dia de la semana de la fecha minima es diferente de sabado
-			// o domingo
-			if (fechaInicial.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-				// se aumentan los dias de diferencia entre min y max
-				dias++;
-			}
-			// se suma 1 dia para hacer la validacion del siguiente dia.
-			fechaInicial.add(Calendar.DATE, 1);
-
-		}
-
-		return dias;
-
-	}
-
-	public int getDiasNoLaborables(Date fechaInicio, Date FechaFin) 
+		//logger.info("desdefe feedfcdf " +this.solicitudRegistrarT.getTiivsOficina1().getDescripcionMostrar());
+	}	
+	
+	public List<TiivsOficina1> completeNomOficina(String query) 
 	{	
-		logger.debug("-----------------En el metodo getDiasNoLaborales-----------------------");
-		
-		logger.debug("Se obtiene los campos sabado y domingo del properties para validar si se toman en cuenta en calculos");
-		
-		boolean validarSabado = Boolean.valueOf(Util.getMessage("sabado"));
-		boolean validarDomingo = Boolean.valueOf(Util.getMessage("domingo"));
-		
-		List<Feriado> resultadofn = new ArrayList<Feriado>();
-		List<Feriado> resultadoflo = new ArrayList<Feriado>();
+		List<TiivsOficina1> results = new ArrayList<TiivsOficina1>();
 
-		int sumaFeriadosNacionales = 0;
-		int sumaFeriadosOrgano = 0;
-		int sumaDNL = 0;
-		int sumaSabados =0;
-		int sumaDomingos = 0;
-
-		Calendar calendarInicial = Calendar.getInstance();
-		calendarInicial.setTime(fechaInicio);
-		
-		logger.debug("Parametros de Fecha Inicio (antes): " + fechaInicio);
-		logger.debug("Parametros de Fecha Inicio (despues): " + calendarInicial);
-
-		Calendar calendarFinal = Calendar.getInstance();
-		calendarFinal.setTime(FechaFin);
-		
-		logger.debug("Parametros de Fecha Fin (antes): " + FechaFin);
-		logger.debug("Parametros de Fecha Fin (despues): " + calendarFinal);
-		
-		//Si el flag sabado es true entonces sumar los sabados como no laborales
-		if (!validarSabado)
+		for (TiivsOficina1 oficina : combosMB.getLstOficina1()) 
 		{
-			sumaSabados = Utilitarios.getSabados(calendarInicial, calendarFinal);
-		}
-		
-		logger.debug("Resultado sumaSabados: " + sumaSabados);
-		
-		calendarInicial.setTime(fechaInicio);
-		calendarFinal.setTime(FechaFin);
-		
-		//Si el flag domingo es true entonces sumar los domingos como no laborales
-		if (!validarDomingo)
-		{
-			sumaDomingos = Utilitarios.getDomingos(calendarInicial, calendarFinal);
-		}
-		
-		logger.debug("Resultado sumaDomingos: " + sumaDomingos);
-
-		//sumaDomingos = getDomingos(calendarInicial, calendarFinal);
-
-		GenericDao<Feriado, Object> feriadoDAO = (GenericDao<Feriado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-
-		Busqueda filtroNac = Busqueda.forClass(Feriado.class);
-		filtroNac.add(Restrictions.between("fecha", fechaInicio, FechaFin));
-		filtroNac.add(Restrictions.eq("indicador", 'N'));
-		filtroNac.add(Restrictions.eq("estado", 'A'));
-
-		try {
-			resultadofn = feriadoDAO.buscarDinamico(filtroNac);
-		} catch (Exception e1) {
-			logger.error(SglConstantes.MSJ_ERROR_CONSULTAR+"feriados Nacionales:"+e1);
-		}
-
-		logger.debug("Valida si se tiene que restar los sabados para el calculo de dias no laborales: " + validarSabado);
-		//Valida si se tiene que restar los sabados para el calculo de dias no laborales 
-		if (validarSabado)
-		{
-			resultadofn = restarSabados(resultadofn);
-		}		
-		
-		logger.debug("Valida si se tiene que restar los domingos para el calculo de dias no laborales: " + validarDomingo);
-		//Valida si se tiene que restar los domingos para el calculo de dias no laborales 
-		if (validarDomingo)
-		{
-			resultadofn = restarDomingos(resultadofn);
-		}
-
-		sumaFeriadosNacionales = resultadofn.size();
-
-		Busqueda filtroOrg = Busqueda.forClass(Feriado.class);
-
-		if (getOrgano1() != null) 
-		{
-			filtroOrg.add(Restrictions.eq("organo.idOrgano", getOrgano1().getIdOrgano()));
-			filtroOrg.add(Restrictions.eq("tipo", 'O'));
-			filtroOrg.add(Restrictions.eq("indicador", 'L'));
-			filtroOrg.add(Restrictions.eq("estado", 'A'));
-			filtroOrg.add(Restrictions.between("fecha", fechaInicio, FechaFin));
-
-			try {
-				resultadoflo = feriadoDAO.buscarDinamico(filtroOrg);
-			} catch (Exception e1) {
-				logger.error(SglConstantes.MSJ_ERROR_CONSULTAR+"feriados Locales:"+e1);
-			}
-
-			resultadoflo = restarDomingos(resultadoflo);
-
-			sumaFeriadosOrgano = resultadoflo.size();
-		}
-
-		sumaDNL = sumaFeriadosNacionales + sumaFeriadosOrgano + sumaDomingos + sumaSabados;
-		
-		logger.debug("Dias no laborales: " + sumaDNL);
-
-		return sumaDNL;
-	}
-
-	public List<Feriado> restarDomingos(List<Feriado> feriados) {
-
-		List<Feriado> feri = new ArrayList<Feriado>();
-
-		for (Feriado fer : feriados) {
-
-			Calendar calendarInicial = Calendar.getInstance();
-			calendarInicial.setTime(fer.getFecha());
-
-			if (!esDomingo(calendarInicial)) {
-				feri.add(fer);
-			}
-		}
-
-		return feri;
-	}
-	
-	public List<Feriado> restarSabados(List<Feriado> feriados) {
-
-		List<Feriado> feri = new ArrayList<Feriado>();
-
-		for (Feriado fer : feriados) {
-
-			Calendar calendarInicial = Calendar.getInstance();
-			calendarInicial.setTime(fer.getFecha());
-
-			if (!Utilitarios.esSabado(calendarInicial)) {
-				feri.add(fer);
-			}
-		}
-
-		return feri;
-	}
-
-	public Date calcularFechaVencimiento(Date fechaOriginal, int dias) 
-	{	
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		Date fechaTMP = sumaDias(fechaOriginal, dias);
-
-		if (esValido(fechaTMP)) 
-		{	
-			boolean validarSabado = Boolean.valueOf(Util.getMessage("sabado"));
-			boolean validarDomingo = Boolean.valueOf(Util.getMessage("domingo"));
-			int totalSuma=0;
-			
-			Calendar tmpFecha = Calendar.getInstance();
-			tmpFecha.setTime(fechaTMP);
-			
-			if (esSabado(tmpFecha))
+			if (oficina.getCodOfi() != null) 
 			{
-				if (!validarSabado)
+				String texto = oficina.getDesOfi();
+
+				if (texto.contains(query.toUpperCase())) 
 				{
-					if (!validarDomingo)
-					{
-						totalSuma+=2;
-					}
-					else
-					{
-						totalSuma+=1;
-					}
-				}
-			}
-			else if (esDomingo(tmpFecha))
-			{
-				if (!validarDomingo)
-				{
-					totalSuma+=1;
-				}
-			}
-			else
-			{
-				totalSuma=0;
-			}
-			
-			
-			tmpFecha.add(Calendar.DAY_OF_MONTH, totalSuma);
-			Date fechaResultante = new Date(tmpFecha.getTimeInMillis());
-			
-			Calendar calendario = Calendar.getInstance();
-			calendario.setTimeInMillis(fechaTMP.getTime());
-
-			int diasTotales = Utilitarios.diferenciaTiempo(fechaOriginal, fechaResultante);
-			
-			int diasNL = getDiasNoLaborables(fechaOriginal, fechaTMP);
-			
-			int diferenciaTMP = diasTotales-diasNL;
-			
-			logger.debug("diasTotales: " + diasTotales);
-			logger.debug("dias no laborales" + diasNL);
-			
-			if (diferenciaTMP!=dias)
-			{
-				int diferenciaTMP2 = dias-diferenciaTMP;
-				
-				logger.debug("Dias de diferencia: " + diferenciaTMP2);
-				logger.debug("Fecha antes de sumar dias para cumplir plazo: " + fechaTMP);
-				
-				if (diferenciaTMP2>0)
-				{
-					fechaTMP = sumaTiempo(fechaTMP, Calendar.DAY_OF_MONTH, diferenciaTMP2);	
-				}
-				
-				while (!esValido(fechaTMP)) 
-				{
-					fechaTMP = sumaTiempo(fechaTMP, Calendar.DAY_OF_MONTH, 1);	
-				}
-			}
-			
-			logger.debug("Fecha de fin luego de validacion: " + fechaTMP);
-			
-			Date newDate = fechaTMP;
-			Date date2 = new Date();
-			
-			if (newDate!=null)
-			{
-				String format = dateFormat.format(newDate);
-
-				try {
-					date2 = dateFormat.parse(format);
-				} catch (ParseException e1) {
-					logger.error(SglConstantes.MSJ_ERROR_CONVERTIR+"la Fecha Vencimiento:"+e1);
-				}	
-			}
-				
-			return date2;
-
-		} else {
-			
-			while (!esValido(fechaTMP)) 
-			{
-				fechaTMP = sumaTiempo(fechaTMP, Calendar.DAY_OF_MONTH, 1);	
-			}
-			
-			Calendar calendario = Calendar.getInstance();
-			calendario.setTimeInMillis(fechaTMP.getTime());
-
-			int diasTotales = Utilitarios.diferenciaTiempo(fechaOriginal, fechaTMP);
-			
-			int diasNL = getDiasNoLaborables(fechaOriginal, fechaTMP);
-			
-			int diferenciaTMP = diasTotales-diasNL;
-			
-			logger.debug("diasTotales: " + diasTotales);
-			logger.debug("dias no laborales" + diasNL);
-			
-			if (diferenciaTMP!=dias)
-			{
-				int diferenciaTMP2 = dias-diferenciaTMP;
-				
-				logger.debug("Dias de diferencia: " + diferenciaTMP2);
-				logger.debug("Fecha antes de sumar dias para cumplir plazo: " + fechaTMP);
-				
-				if (diferenciaTMP2>0)
-				{
-					fechaTMP = sumaTiempo(fechaTMP, Calendar.DAY_OF_MONTH, diferenciaTMP2);	
-				}
-				
-				while (!esValido(fechaTMP)) 
-				{
-					fechaTMP = sumaTiempo(fechaTMP, Calendar.DAY_OF_MONTH, 1);	
-				}
-			}	
-			
-			logger.debug("Fecha de fin luego de validacion: " + fechaTMP);
-				
-			String format = dateFormat.format(fechaTMP);
-			Date date2 = new Date();
-			
-			try {
-				date2 = dateFormat.parse(format);
-			} catch (ParseException e1) {
-				logger.error(SglConstantes.MSJ_ERROR_CONVERTIR+"la Fecha Vencimiento:"+e1);
-			}
-
-			return date2;
-
-		}
-	}
-
-	public static boolean esDomingo(Calendar fecha) {
-
-		if (fecha.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-
-			return true;
-		} else {
-
-			return false;
-		}
-	}
-	
-	public static boolean esSabado(Calendar fecha) {
-
-		if (fecha.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-
-			return true;
-		} else {
-
-			return false;
-		}
-	}
-
-	public boolean esFeriado(Date fecha) {
-
-		int sumaFeriadosNacionales = 0;
-		int sumaFeriadosOrgano = 0;
-		int sumaDF = 0;
-
-		List<Feriado> resultadofn = new ArrayList<Feriado>();
-		List<Feriado> resultadofo = new ArrayList<Feriado>();
-
-		GenericDao<Feriado, Object> feriadoDAO = (GenericDao<Feriado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-
-		Busqueda filtroNac = Busqueda.forClass(Feriado.class);
-		filtroNac.add(Restrictions.eq("fecha", fecha));
-		filtroNac.add(Restrictions.eq("indicador", 'N'));
-		filtroNac.add(Restrictions.eq("estado", 'A'));
-
-		try {
-			resultadofn = feriadoDAO.buscarDinamico(filtroNac);
-
-		} catch (Exception e1) {
-			logger.error(SglConstantes.MSJ_ERROR_CONSULTAR+"feriados Nacionales:"+e1);
-		}
-
-		sumaFeriadosNacionales = resultadofn.size();
-
-		Busqueda filtroOrg = Busqueda.forClass(Feriado.class);
-
-		if (getOrgano1() != null) {
-
-			filtroOrg.add(Restrictions.eq("organo.idOrgano", getOrgano1()
-					.getIdOrgano()));
-			filtroOrg.add(Restrictions.eq("tipo", 'O'));
-			filtroOrg.add(Restrictions.eq("indicador", 'L'));
-			filtroOrg.add(Restrictions.eq("estado", 'A'));
-			filtroOrg.add(Restrictions.eq("fecha", fecha));
-
-			try {
-
-				resultadofo = feriadoDAO.buscarDinamico(filtroOrg);
-
-			} catch (Exception e1) {
-				logger.error(SglConstantes.MSJ_ERROR_CONSULTAR+"feriados Organo:"+e1);
-			}
-
-			sumaFeriadosOrgano = resultadofo.size();
-
-		}
-
-		sumaDF = sumaFeriadosNacionales + sumaFeriadosOrgano;
-
-		if (sumaDF > 0) {
-
-			return true;
-		} else {
-
-			return false;
-		}
-
-	}
-
-	public boolean esValido(Date date) {
-
-		Calendar calendarInicial = Calendar.getInstance();
-		calendarInicial.setTime(date);
-
-		boolean flagDomingo = esDomingo(calendarInicial);
-		boolean flagFeriado = esFeriado(date);
-
-		if (flagDomingo == true || flagFeriado == true) {
-
-			return false;
-
-		} else {
-
-			return true;
-		}
-
-	}
-
-	private static Date sumaTiempo(Date fechaOriginal, int field, int amount) {
-		int cantSabados=0;
-		int cantDomingos=0;
-		
-		boolean validarSabado = Boolean.valueOf(Util.getMessage("sabado"));
-		boolean validarDomingo = Boolean.valueOf(Util.getMessage("domingo"));
-		
-		Calendar calendario = Calendar.getInstance();
-		calendario.setTimeInMillis(fechaOriginal.getTime());
-		
-		calendario.add(field, amount);
-		
-		if (esSabado(calendario))
-		{
-			if (!validarSabado)
-			{
-				cantSabados++;
-			}
-		}
-		if (esDomingo(calendario))
-		{
-			if (!validarDomingo)
-			{
-				cantDomingos++;
-			}
-		}
-		
-		calendario.add(field, cantSabados+cantDomingos);
-		Date fechaResultante = new Date(calendario.getTimeInMillis());
-
-		return fechaResultante;
-	}
-
-	
-	public List<Recurrencia> completeRecurrencia(String query) {
-		List<Recurrencia> recurrencias = consultaService.getRecurrencias();
-		if (recurrencias != null) {
-			logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA + "recurrencias es:["+ recurrencias.size() + "]. ");
-		}
-		List<Recurrencia> results = new ArrayList<Recurrencia>();
-		for (Recurrencia rec : recurrencias) {
-			if (rec.getNombre() != null) {
-				if (rec.getNombre().toUpperCase().contains(query.toUpperCase())) {
-					results.add(rec);
-				}
-			}
-		}
-		return results;
-	}
-
-	public List<Materia> completeMaterias(String query) {
-		List<Materia> results = new ArrayList<Materia>();
-		List<Materia> materias = consultaService.getMaterias();
-		if (materias != null) {
-			logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA + "materias es:["+ materias.size() + "]. ");
-		}
-		for (Materia mat : materias) {
-			String descripcion = "".concat(
-				mat.getDescripcion() != null ? mat.getDescripcion().toLowerCase() : "").concat(" ");
-			if (descripcion.contains(query.toLowerCase())) {
-				results.add(mat);
-			}
-		}
-		return results;
-	}
-
-	public List<Persona> completePersona(String query) {
-		logger.debug("=== completePersona ===");
-		List<Persona> results = new ArrayList<Persona>();
-		List<Persona> personas = consultaService.getPersonas();
-		if (personas != null) {
-			logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA + "personas es:["+ personas.size() + "]. ");
-		}
-
-		for (Persona pers : personas) {
-			String nombreCompletoMayuscula = ""
-					.concat(pers.getNombres() != null ? pers.getNombres().toUpperCase() : "").concat(" ")
-					.concat(pers.getApellidoPaterno() != null ? pers.getApellidoPaterno().toUpperCase() : "")
-					.concat(" ").concat(pers.getApellidoMaterno() != null ? pers.getApellidoMaterno().toUpperCase() : "");
-
-			if (nombreCompletoMayuscula.contains(query.toUpperCase())) {
-				pers.setNombreCompletoMayuscula(nombreCompletoMayuscula);
-				results.add(pers);
-			}
-		}
-		return results;
-	}
-
-	public List<Oficina> completeOficina(String query) {
-		logger.debug("=== completeOficina ===");
-
-		List<Oficina> results = new ArrayList<Oficina>();
-		List<Oficina> oficinas = consultaService.getOficinas();
-
-		if (oficinas != null) {
-			logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA + "oficinas es:["+ oficinas.size() + "]. ");
-		}
-
-		for (Oficina oficina : oficinas) {
-			if (oficina.getTerritorio() != null) {
-				String texto = oficina.getCodigo()
-						.concat(" ").concat(oficina.getNombre() != null ? oficina.getNombre().toUpperCase() : "").concat(" (")
-						.concat(oficina.getTerritorio().getDescripcion() != null ? oficina.getTerritorio().getDescripcion().toUpperCase(): "").concat(")");
-			
-				if (texto.contains(query.toUpperCase())) {
-					oficina.setNombreDetallado(texto);
 					results.add(oficina);
 				}
 			}
 		}
-		return results;
-	}
 
-	public List<Estudio> completeEstudio(String query) {
-		List<Estudio> estudios = consultaService.getEstudios();
-		List<Estudio> results = new ArrayList<Estudio>();
-		if (estudios != null) {
-			logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA + "estudios es:["+ estudios.size() + "]. ");
-		}
-		for (Estudio est : estudios) {
-			if (est.getNombre() != null) {
-				if (est.getNombre().toUpperCase().contains(query.toUpperCase())) {
-					results.add(est);
-				}
-			}
-		}
-
-		return results;
-	}
-
-	public List<Abogado> completeAbogado(String query) {
-		logger.debug("=== completeAbogado ===");
-		List<Abogado> abogados = consultaService.getAbogados();
-		List<Abogado> results = new ArrayList<Abogado>();
-
-		if (abogados != null) {
-			logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA + "abogados es:["+ abogados.size() + "]. ");
-		}
-		
-		for (Abogado abog : abogados) {
-			String nombreCompletoMayuscula = ""	.concat(abog.getNombres() != null ? 
-					abog.getNombres().toUpperCase() : "").concat(" ").concat(abog.getApellidoPaterno() != null ? abog
-					.getApellidoPaterno().toUpperCase() : "").concat(" ").concat(abog.getApellidoMaterno() != null ? abog
-					.getApellidoMaterno().toUpperCase() : "");
-			if (nombreCompletoMayuscula.contains(query.toUpperCase())) {
-				abog.setNombreCompletoMayuscula(nombreCompletoMayuscula);
-				results.add(abog);
-			}
-		}
-		return results;
-	}
-
-	public List<Organo> completeOrgano(String query) {
-		logger.debug("=== completeOrgano()=== ");
-		List<Organo> results = new ArrayList<Organo>();
-		List<Organo> organos = consultaService.getOrganos();
-		String descripcion = "";
-
-		if (organos != null) {
-			logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA + "organos es:["+ organos.size() + "]. ");
-		}
-
-		for (Organo organo : organos) {
-			if (organo.getUbigeo() != null) {
-				descripcion = "".concat(organo.getNombre() != null ? organo.getNombre().toUpperCase() : "")
-						.concat("(").concat(organo.getUbigeo().getDistrito() != null ? organo
-						.getUbigeo().getDistrito().toUpperCase() : "")
-						.concat(", ").concat(organo.getUbigeo().getProvincia() != null ? organo
-						.getUbigeo().getProvincia().toUpperCase() : "")
-						.concat(", ").concat(organo.getUbigeo().getDepartamento() != null ? organo
-						.getUbigeo().getDepartamento().toUpperCase() : "").concat(")");
-			}
-
-			if (descripcion.toUpperCase().contains(query.toUpperCase())) {
-				if (descripcion.compareTo("") != 0) {
-					organo.setNombreDetallado(descripcion);
-					results.add(organo);
-				}
-			}
-		}
 		return results;
 	}
 	
-	/**
-	 * Metodo usado para mostrar un filtro autocompletable de Distrito
-	 * @param query Representa el query
-	 * @return List<Ubigeo> Representa la lista de Ubigeos
-	 * **/
-	public List<Ubigeo> completeDistrito(String query) 
-	{
-		List<Ubigeo> results = new ArrayList<Ubigeo>();
-		List<Ubigeo> ubigeos = consultaService.getUbigeos();
-
-		if (ubigeos != null){
-			logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA + "ubigeos es:[" + ubigeos.size() + "]. ");
-		}
-
-		for (Ubigeo ubig : ubigeos){
-			String descripcion = ubig.getCodDist().concat(" - ")
-					.concat(ubig.getDistrito() != null ? ubig.getDistrito().toUpperCase() : "").concat(",")
-					.concat(ubig.getProvincia() != null ? ubig.getProvincia().toUpperCase() : "").concat(",")
-					.concat(ubig.getDepartamento() != null ? ubig.getDepartamento().toUpperCase() : "").concat(" ");
-			
-			//logger.debug("Validacion para mostrar un solo registro de ubigeo de distrito");
-			
-			if (descripcion.toUpperCase().contains(query.toUpperCase()) && ubig.getCodDist().compareTo(ubig.getCodProv())!=0) 
-			{
-				ubig.setDescripcionDistrito(descripcion);
-				results.add(ubig);
-			}
-		}
-		return results;
-	}
-
-	/**
-	 * Metodo usado para mostrar un filtro autocompletable de Responsable
-	 * @param query Representa el query
-	 * @return List Representa la lista de responsable
-	 * **/
-	public List<Usuario> completeResponsable(String query) {
-		List<Usuario> results = new ArrayList<Usuario>();
-
-		List<Usuario> usuarios = consultaService.getUsuarios();
-
-		if (usuarios != null) {
-			logger.debug(SglConstantes.MSJ_TAMANHIO_LISTA + "usuarios es:["+ usuarios.size() + "]. ");
-		}
-
-		for (Usuario usuario : usuarios) {
-
-			if (usuario.getNombres().toUpperCase()
-					.contains(query.toUpperCase())
-					|| usuario.getApellidoPaterno().toUpperCase()
-							.contains(query.toUpperCase())
-					|| usuario.getApellidoMaterno().toUpperCase()
-							.contains(query.toUpperCase())
-					|| usuario.getCodigo().toUpperCase()
-							.contains(query.toUpperCase())) {
-
-				usuario.setNombreDescripcion(usuario.getCodigo() + " - "
-						+ usuario.getNombres() + " "
-						+ usuario.getApellidoPaterno() + " "
-						+ usuario.getApellidoMaterno());
-
-				results.add(usuario);
-			}
-		}
-		return results;
-	}
-
-	/**
-	 * Listener que se ejecuta cada vez que se modifica el proceso 
-	 * en los combos en el formulario de registro de expediente
-	 * */
-	public void cambioProceso() {
-		setTabAsigEstExt(false);
-		setTabCuanMat(false);
-		setTabCaucion(false);
-
-		if (getProceso() != 0) {
-			//1	Civil
-			if (getProceso() == 1 || getProceso() == 3) {
-				setTabCaucion(true);
-				setReqPenal(true);
-				setReqCabecera(true);
-			}
-			//2	Penal
-			if (getProceso() == 2) {
-				setTabAsigEstExt(true);
-				setTabCuanMat(true);
-				setReqPenal(true);
-				setReqCabecera(true);
-			}
-
-			vias = consultaService.getViasByProceso(getProceso());
-			instancias = new ArrayList<Instancia>();
-
-		} else {
-			vias = new ArrayList<Via>();
-		}
-	}
-
-	/**
-	 * Listener que se ejecuta cada vez que se modifica la via 
-	 * en los combos en el formulario de registro de expediente
-	 * */
-	public void cambioVia() {
-		if (getVia() != 0) {
-			instancias = consultaService.getInstanciasByVia(getVia());
-			setInstancia(instancias.get(0).getIdInstancia());
-		} else {
-			instancias = new ArrayList<Instancia>();
-		}
-	}
-
-	public RegistroExpedienteMB() {
-		// TODO Limpiar datos
-	}
-
-	@PostConstruct
-	@SuppressWarnings("unchecked")
-	private void cargarCombos() {
-
-		logger.debug("=== Inicializando valores cargarCombos() ===");
-
-		Calendar cal = Calendar.getInstance();
-		inicioProceso = cal.getTime();
-		fechaResumen = cal.getTime();
-
-		selectedOrgano = new Organo();
-
-		FacesContext fc = FacesContext.getCurrentInstance();
-		ExternalContext exc = fc.getExternalContext();
-		HttpSession session1 = (HttpSession) exc.getSession(true);
-
-		com.grupobbva.seguridad.client.domain.Usuario usuario = (com.grupobbva.seguridad.client.domain.Usuario) session1
-				.getAttribute("usuario");
+	public void eliminarPersona() {
+		logger.info("**************************** eliminarPersona ****************************");
+		logger.info("Codigo de la persona capturada a Eliminar " +objTiivsPersonaCapturado.getCodPer());
+		logger.info(" Lista de las Personas Antes de Remover " +lstTiivsPersona.size());
+		logger.info(" TipoParticipe: " +objTiivsPersonaCapturado.getTipPartic());
+		logger.info(" objTiivsPersonaCapturado  " + objTiivsPersonaCapturado.getCodPer());
 		
-		//com.grupobbva.seguridad.client.domain.Usuario usuario= new com.grupobbva.seguridad.client.domain.Usuario();
-		//usuario.setUsuarioId("P015740");
-		if (usuario.getUsuarioId() != null) {
-			logger.debug("Recuperando usuario sesion: "	+ usuario.getUsuarioId());
+		logger.info(" getTiivsAgrupacionPersonas  " + objTiivsPersonaCapturado.getCodPer());
+		logger.info(" tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas() inicio " + tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size());
+		
+		
+		TiivsAgrupacionPersona agruPersonaRemove = null;
+		for(TiivsAgrupacionPersona aPer : tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas()){
+			if(aPer.getCodPer() == objTiivsPersonaCapturado.getCodPer() && aPer.getTipPartic() == objTiivsPersonaCapturado.getTipPartic()){
+				agruPersonaRemove = aPer;
+			}
 		}
+		this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().remove(agruPersonaRemove);
+		
+		lstTiivsPersona.remove(objTiivsPersonaCapturado);
+		
+		logger.info(" tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas() despues " + tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size());
+		logger.info(" lstTiivsPersona despues " + lstTiivsPersona.size());
+		
+	}
 
-		GenericDao<Usuario, Object> usuarioDAO = (GenericDao<Usuario, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(Usuario.class);
-		filtro.add(Restrictions.eq("codigo", usuario.getUsuarioId()));
-		List<Usuario> usuarios = new ArrayList<Usuario>();
+	/*public void eliminarPersona() {
+		logger.info("**************************** eliminarPersona ****************************");
+		logger.info(objTiivsPersonaCapturado.getCodPer());
+		lstTiivsPersona.remove(objTiivsPersonaCapturado);
+		objTiivsPersonaCapturado=new TiivsPersona();
+        this.flagUpdatePersona=false;
+	}*/
 
+	public void actualizarClasificacion()
+	{
+		if (objTiivsPersonaResultado!=null)
+		{
+			if (objTiivsPersonaResultado.getTipPartic()!=null)
+			{
+				lstClasificacionPersona= new ArrayList<ComboDto>();
+				
+				for (ComboDto tmp: lstClasificacionPersona)
+				{
+					lstClasificacionPersona.remove(tmp);
+				}		
+				
+				GenericDao<TiivsMultitabla, Object> serviceClas = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+				Busqueda filtroTipoClas = Busqueda.forClass(TiivsMultitabla.class);
+				filtroTipoClas.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA));
+				filtroTipoClas.add(Restrictions.eq("valor3", objTiivsPersonaResultado.getTipPartic()));
+				filtroTipoClas.add(Restrictions.eq("valor2", "1"));
+				filtroTipoClas.addOrder(Order.asc("valor1"));
+				List<TiivsMultitabla> lstTmpMult = new ArrayList<TiivsMultitabla>();
+				
+				try
+				{
+					lstTmpMult=serviceClas.buscarDinamico(filtroTipoClas);
+				}
+				catch (Exception e) 
+				{
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de datos de Clasificacion de personas: "+e);
+				}
+				
+				for (TiivsMultitabla mult: lstTmpMult)
+				{
+					ComboDto t = new ComboDto();
+					t.setKey(mult.getId().getCodElem());
+					t.setDescripcion(mult.getValor1());
+					lstClasificacionPersona.add(t);
+				}
+				
+				logger.debug("Tamanio lista clasificacion: "+lstClasificacionPersona.size());
+			}
+			else
+			{
+				lstClasificacionPersona= new ArrayList<ComboDto>();
+				
+				for (ComboDto tmp: lstClasificacionPersona)
+				{
+					lstClasificacionPersona.remove(tmp);
+				}				
+				
+				GenericDao<TiivsMultitabla, Object> serviceClas = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+				Busqueda filtroTipoClas = Busqueda.forClass(TiivsMultitabla.class);
+				filtroTipoClas.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_CLASIFICACION_PERSONA));
+				filtroTipoClas.add(Restrictions.eq("valor2", "1"));
+				filtroTipoClas.addOrder(Order.asc("valor1"));
+				List<TiivsMultitabla> lstTmpMult = new ArrayList<TiivsMultitabla>();
+				
+				try
+				{
+					lstTmpMult=serviceClas.buscarDinamico(filtroTipoClas);
+				}
+				catch (Exception e) 
+				{
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de datos de Clasificacion de personas: "+e);
+				}
+				
+				for (TiivsMultitabla mult: lstTmpMult)
+				{
+					ComboDto t = new ComboDto();
+					t.setKey(mult.getId().getCodElem());
+					t.setDescripcion(mult.getValor1());
+					lstClasificacionPersona.add(t);
+				}
+				
+				logger.debug("tamanio lista clasificacion: "+lstClasificacionPersona.size());
+			}
+		}
+	}
+	
+	public String cargarUnicoPDF(String aliasArchivo) {
+		logger.debug("== inicia cargarUnicoPDF()====");
+		if(fileUpload == null){
+			Utilitarios.mensajeInfo("", "No se ha seleccionado ningún archivo");
+			return "";
+		}
+		
+		byte fileBytes[] = getFileUpload().getContents();
+
+		File fichTemp = null;
+		String sUbicacionTemporal = "";
+		String sNombreTemporal = "";
+		FileOutputStream canalSalida = null;
+		
 		try {
-			usuarios = usuarioDAO.buscarDinamico(filtro);
+			
+			//Obteniendo ubicación del file server			
+			sUbicacionTemporal = Utilitarios
+					.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+					+ File.separator + ConstantesVisado.FILES + File.separator;			
+			
+			logger.debug(" -> Ubicacion Temporal:"+ sUbicacionTemporal);
+			
+			File fDirectory = new File(sUbicacionTemporal);
+			fDirectory.mkdirs();	
+			
+			String extension = fileUpload.getFileName().substring(getFileUpload().getFileName().lastIndexOf("."));
+						
+			if(aliasArchivo.equals("")){
+				aliasArchivo = "temp";
+			} else {
+				aliasArchivo = aliasArchivo + "_";
+			}
+			
+			fichTemp = File.createTempFile(aliasArchivo, extension, new File(sUbicacionTemporal));
+			
+			sNombreTemporal = fichTemp.getName();
+									
+			logger.debug("  NombreArchivoTEMP: " + sNombreTemporal);
+			
+			canalSalida = new FileOutputStream(fichTemp);
+			canalSalida.write(fileBytes);
+			
+			canalSalida.flush();
+			return sNombreTemporal;
+
+		} catch (IOException e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IO Exception:"+e);
+			String sMensaje = "Se produjo un error al adjuntar fichero";
+			Utilitarios.mensajeInfo("", sMensaje);
+			return "";
+		} finally {
+			if(fichTemp!=null){
+				fichTemp.deleteOnExit(); // Delete the file when the JVM terminates
+			}
+			if (canalSalida != null) {
+				try {
+					canalSalida.close();
+				} catch (IOException x) {
+					// handle error
+				}
+			}
+		}
+	}	
+
+	/**
+	 * Metodo encargado de listar los documentos de visado por tipo de solicitud
+	 * en base al item seleccionado. Muestra los documetos obligatorios y 
+	 * opcionales según sea el caso.
+	 * @param e Evento de seleccion del tipo {@link ValueChangeEvent}
+	 * **/
+	public void listarDocumentosXSolicitud(ValueChangeEvent e) {
+		//logger.info("ValuechanceEvent :  " + e.getNewValue());
+		GenericDao<TiivsTipoSolicDocumento, Object> genTipoSolcDocumDAO = (GenericDao<TiivsTipoSolicDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroTipoSolcDoc = Busqueda.forClass(TiivsTipoSolicDocumento.class);
+		filtroTipoSolcDoc.add(Restrictions.eq("tiivsTipoSolicitud.codTipSolic",(String) e.getNewValue()));
+		filtroTipoSolcDoc.add(Restrictions.eq("activo",'1'));
+		filtroTipoSolcDoc.addOrder(Order.desc("obligatorio"));
+		try {
+			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);			
+			lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstDocumentosXTipoSolTemp).clone();
+			
+			logger.info("lstDocumentosXTipoSolTemp.size()" + lstDocumentosXTipoSolTemp.size());
+			logger.info("lstTipoSolicitudDocumentos.size()" + lstTipoSolicitudDocumentos.size());
+
+			actualizarListadoDocumentos();
+			
+		} catch (Exception ex) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al cargar el listado de documentos por tipo de soliciitud" +ex);
+			ex.printStackTrace();
+		}
+		
+		visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(lstDocumentosXTipoSolTemp));	
+		
+	}		
+
+	/**
+	 * Metodo encargado de asociar la lista de documentos escaneados/existentes en
+	 * la carpeta D:\VisadoPoderes\Escaneados con la lista de documentos mostrados
+	 * en el combo del formulario de registro.
+	 * **/
+	public void actualizarListadoDocumentos() {
+		
+		addArchivosTemporalesToDelete();
+		
+		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+
+		for (TiivsTipoSolicDocumento s : lstTipoSolicitudDocumentos) {
+			String nombreCorto = s.getTiivsDocumento().getNombre();
+			String formato = s.getTiivsDocumento().getFormato();
+			logger.debug("nombreCorto:"+nombreCorto + "   formato:"+formato);
+			if (s.getObligatorio()!=null && s.getObligatorio().equals("1") ){
+				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId()
+						.getCodDoc(), s.getTiivsDocumento().getDescripcion(),
+						true + "", "", "", nombreCorto, formato));
+			} else {								
+				lstdocumentos.add(new DocumentoTipoSolicitudDTO(s.getId()
+						.getCodDoc(), s.getTiivsDocumento().getDescripcion(),
+						false + "", "", "", nombreCorto, formato));
+			}
+		}
+
+		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
+	}
+	
+	public void addArchivosTemporalesToDelete(){		
+		try{
+			for(TiivsAnexoSolicitud a : lstAnexoSolicitud){	
+				aliasFilesToDelete.add(a.getAliasTemporal());
+			}
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al addArchivosTemporalesToDelete():"+e);
+		}
+	}
+
+	public void obtenerPersonaSeleccionada() {
+		logger.info(objTiivsPersonaSeleccionado.getCodPer());
+		this.objTiivsPersonaResultado = this.objTiivsPersonaSeleccionado;
+		bBooleanPopup=false;
+	}
+
+	public void buscarPersona() {
+		logger.info("=== buscarPersona() ===");
+		logger.info("[BUSQ_PERS]-TipoDoi:"+ objTiivsPersonaBusqueda.getTipDoi());
+		logger.info("[BUSQ_PERS]-NroDoi:"+ objTiivsPersonaBusqueda.getNumDoi());
+		try {
+			List<TiivsPersona> lstTiivsPersonaLocal = new ArrayList<TiivsPersona>();
+			//Se realiza la busqueda en BD Local
+			lstTiivsPersonaLocal = this.buscarPersonaLocal();
+			
+			List<TiivsPersona> lstTiivsPersonaReniec = new ArrayList<TiivsPersona>();
+			if (lstTiivsPersonaLocal.size() == 0) {
+				//Se realiza la busqueda mediente servicio de RENIEC
+				lstTiivsPersonaReniec = this.buscarPersonaReniec();
+				if (lstTiivsPersonaReniec.size() == 0) {
+					objTiivsPersonaResultado = new TiivsPersona();
+					this.bBooleanPopup = false;
+					 Utilitarios.mensajeInfo("INFO",ConstantesVisado.MENSAJE.NO_RESULTADOS+"para la busqueda.");
+				} else if (lstTiivsPersonaReniec.size() == 1) {
+					objTiivsPersonaResultado = lstTiivsPersonaReniec.get(0);
+					this.bBooleanPopup = false;
+				} else if (lstTiivsPersonaReniec.size() > 1) {
+					this.bBooleanPopup = true;
+					lstTiivsPersonaResultado = lstTiivsPersonaReniec;
+				}
+			} else if (lstTiivsPersonaLocal.size() == 1) {
+				logger.info(ConstantesVisado.MENSAJE.SI_RESULTADOS+"lstTiivsPersonaLocal:  "+ lstTiivsPersonaLocal.size());
+				this.bBooleanPopup = false;
+				objTiivsPersonaResultado = lstTiivsPersonaLocal.get(0);
+			} else if (lstTiivsPersonaLocal.size() > 1) {
+				this.bBooleanPopup = true;
+				lstTiivsPersonaResultado = lstTiivsPersonaLocal;
+
+				personaDataModal = new PersonaDataModal(
+						lstTiivsPersonaResultado);
+			} else {
+				this.bBooleanPopup = true;
+			}
+		
 		} catch (Exception e) {
-			logger.error(SglConstantes.MSJ_ERROR_OBTENER + "el usuario:" + e);
+			Utilitarios.mensajeError("ERROR", e.getMessage());
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la persona (Local/Reniec)");
 		}
-
-		if (usuarios != null) {
-
-			if (usuarios.size() != 0) {
-
-				usuarios.get(0).setNombreDescripcion(
-						usuarios.get(0).getCodigo() + " - "
-								+ usuarios.get(0).getNombres() + " "
-								+ usuarios.get(0).getApellidoPaterno() + " "
-								+ usuarios.get(0).getApellidoMaterno());
-
-				setResponsable(usuarios.get(0));
-			}
-
-		}
-
-		oficina = new Oficina();
-
-		honorario = new Honorario();
-		honorario.setCantidad(0);
-		honorario.setMonto(0.0);
-		setHonorarios(new ArrayList<Honorario>());
-
-		involucrado = new Involucrado();
-		involucradoDataModel = new InvolucradoDataModel(new ArrayList<Involucrado>());
-
-		cuantia = new Cuantia();
-		cuantia.setPretendido(0.0);
-		cuantiaDataModel = new CuantiaDataModel(new ArrayList<Cuantia>());
-
-		inculpado = new Inculpado();
-		inculpado.setFecha(cal.getTime());
-		inculpado.setMonto(0.0);
-		inculpado.setNrocupon(0000);
-		inculpados = new ArrayList<Inculpado>();
-
-		resumens = new ArrayList<Resumen>();
-
-		anexo = new Anexo();
-		anexo.setFechaInicio(cal.getTime());
-		anexos = new ArrayList<Anexo>();
-
-		organo = new Organo();
-		organo.setEntidad(new Entidad());
-		organo.setUbigeo(new Ubigeo());
-
-		organo1 = new Organo();
-		organo1.setEntidad(new Entidad());
-		organo1.setUbigeo(new Ubigeo());
-
-		ubigeo = new Ubigeo();
-
-		organoDataModel = new OrganoDataModel(new ArrayList<Organo>());
-
-		persona = new Persona();
-		persona.setClase(new Clase());
-		persona.setCodCliente(null);
-		persona.setTipoDocumento(new TipoDocumento());
-		persona.setNumeroDocumento(null);
-
-		selectPersona = new Persona();
-
-		abogado = new Abogado();
-		abogado.setDni(null);
-
-		estudio = new Estudio();
-		abogadoDataModel = new AbogadoDataModel(new ArrayList<Abogado>());
-
-		personaDataModelBusq = new PersonaDataModel(new ArrayList<Persona>());
-
-		setReqPenal(false);
-		setReqCabecera(false);
-
-		setFlagColumnGeneral(true);
-		setFlagDeshabilitadoGeneral(false);
-
-		logger.debug("Cargando combos para registro expediente");
-
-		estados = consultaService.getEstadoExpedientes();
-
-		procesos = consultaService.getProcesos();
-
-		if (usuarios.get(0).getRol().getIdRol() == 1) {
-
-			setFlagLectResp(false);
-
-		} else {
-
-			setFlagLectResp(true);
-		}
-
-		tipos = consultaService.getTipoExpedientes();
-		entidades = consultaService.getEntidads();
-		calificaciones = consultaService.getCalificacions();
-		tipoHonorarios = consultaService.getTipoHonorarios();
-		monedas = consultaService.getMonedas();
-		situacionHonorarios = consultaService.getSituacionHonorarios();
-		situacionCuotas = consultaService.getSituacionCuota();
-		situacionInculpados = consultaService.getSituacionInculpados();
-		rolInvolucrados = consultaService.getRolInvolucrados();
-		tipoInvolucrados = consultaService.getTipoInvolucrados();
-		clases = consultaService.getClases();
-		tipoDocumentos = consultaService.getTipoDocumentos();
-		tipoCautelares = consultaService.getTipoCautelars();
-		contraCautelas = consultaService.getContraCautelas();
-		estadosCautelares = consultaService.getEstadoCautelars();
-		riesgos = consultaService.getRiesgos();
-
-		vias = new ArrayList<Via>();
-		instancias = new ArrayList<Instancia>();
-
-		tipoHonorariosString = new ArrayList<String>();
-		for (TipoHonorario t : tipoHonorarios)
-			tipoHonorariosString.add(t.getDescripcion());
-
-		monedasString = new ArrayList<String>();
-		for (Moneda m : monedas)
-			monedasString.add(m.getSimbolo());
-
-		situacionHonorariosString = new ArrayList<String>();
-		for (SituacionHonorario s : situacionHonorarios)
-			situacionHonorariosString.add(s.getDescripcion());
-
-		situacionCuotasString = new ArrayList<String>();
-		for (SituacionCuota s : situacionCuotas)
-			situacionCuotasString.add(s.getDescripcion());
-
-		situacionInculpadosString = new ArrayList<String>();
-		for (SituacionInculpado s : situacionInculpados)
-			situacionInculpadosString.add(s.getNombre());
-
-		rolInvolucradosString = new ArrayList<String>();
-		for (RolInvolucrado r : rolInvolucrados)
-			rolInvolucradosString.add(r.getNombre());
-
-		tipoInvolucradosString = new ArrayList<String>();
-		for (TipoInvolucrado t : tipoInvolucrados)
-			tipoInvolucradosString.add(t.getNombre());
-
 	}
 
-	public void editHonor(RowEditEvent event) {
-		logger.debug("=== inicia editHonor() ===");
-		GenericDao<SituacionCuota, Object> situacionCuotasDAO = (GenericDao<SituacionCuota, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+	public void limpiarCriteriosBusqueda() {
+		objTiivsPersonaBusqueda.setCodCen("");
+		objTiivsPersonaBusqueda.setTipDoi("");
+		objTiivsPersonaBusqueda.setNumDoi("");
+		objTiivsPersonaResultado.setTipDoi("");
+		objTiivsPersonaResultado.setNumDoi("");
+		objTiivsPersonaResultado.setCodCen("");
+		objTiivsPersonaResultado.setApePat("");
+		objTiivsPersonaResultado.setApeMat("");
+		objTiivsPersonaResultado.setNombre("");
+		objTiivsPersonaResultado.setTipPartic("");
+		objTiivsPersonaResultado.setClasifPer("");
+		objTiivsPersonaResultado.setClasifPerOtro("");
+		objTiivsPersonaResultado.setEmail("");
+		objTiivsPersonaResultado.setNumCel("");
+	}
 
-		Honorario honorarioModif = ((Honorario) event.getObject());
-		if (honorarioModif != null) {
-			logger.debug("[EDIT_HONORAR]-Numero:" + honorarioModif.getNumero());
-			logger.debug("[EDIT_HONORAR]-Monto:" + honorarioModif.getMonto());
-		}
+	public List<TiivsPersona> buscarPersonaReniec() throws Exception {
+		logger.debug("==== inicia buscarPersonaReniec() ==== ");
+		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
+		try{
+			BResult resultado = null;
+			TiivsPersona objPersona = null;
+			Persona persona = null;
+			if (objTiivsPersonaBusqueda.getNumDoi() != null) {
+				logger.info("[RENIEC]-DNI:"+ objTiivsPersonaBusqueda.getNumDoi());
 
-		for (Honorario honorario : honorarios) {
-
-			// Valida si el honorario selecionado coincide con la lista
-			if (honorarioModif.getNumero() == honorario.getNumero()) {
-
-				// Situacion "Pendiente"
-				//if (honorario.getSituacionHonorario().getIdSituacionHonorario() == 1) {
-				if(honorarioModif.getSituacionHonorario().getDescripcion().compareTo(SglConstantes.SITUACION_HONORARIO_PENDIENTE)==0)
-				{	
-					double importe = honorarioModif.getMonto()
-							/ honorarioModif.getCantidad().intValue();
-
-					importe = Math.rint(importe * 100) / 100;
-
-					List<SituacionCuota> situacionCuotas = new ArrayList<SituacionCuota>();
+//				ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
+				ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
+				
+				resultado = reniecService.devolverPersonaReniecDNI("P013371", "0553",objTiivsPersonaBusqueda.getNumDoi());
+				logger.debug("[RENIEC]-resultado: "+resultado.getCode());
+				
+				if (resultado.getCode() == 0) {
 					
-					Busqueda filtro = Busqueda.forClass(SituacionCuota.class);
-					filtro.add(Restrictions.eq("descripcion", SglConstantes.SITUACION_CUOTA_PENDIENTE));
+					persona = (Persona) resultado.getObject();
+					logger.info("PERSONA : " + persona.getNombreCompleto()
+							+ "\nDNI: " + persona.getNumerodocIdentidad());
+					objPersona = new TiivsPersona();
+					objPersona.setNumDoi(persona.getNumerodocIdentidad());
+					objPersona.setNombre(persona.getNombre());
+					objPersona.setApePat(persona.getApellidoPaterno());
+					objPersona.setApeMat(persona.getApellidoMaterno());
+					objPersona.setTipDoi(objTiivsPersonaBusqueda.getTipDoi());
+					objPersona.setCodCen(objTiivsPersonaBusqueda.getCodCen());
 					
-					try {
-						situacionCuotas = situacionCuotasDAO.buscarDinamico(filtro);
-					} catch (Exception e) {
-						logger.error(SglConstantes.MSJ_ERROR_CONSULTAR+"situacionCuotas: "+e);
-					}
-					SituacionCuota situacionCuota = situacionCuotas.get(0);
-
-					// honorario.setMontoPagado(0.0);
-					honorario.setCuotas(new ArrayList<Cuota>());
-
-					Calendar cal = Calendar.getInstance();
-
-					for (int i = 1; i <= honorarioModif.getCantidad()
-							.intValue(); i++) {
-						Cuota cuota = new Cuota();
-						cuota.setNumero(i);
-						cuota.setMoneda(honorarioModif.getMoneda().getSimbolo());
-						cuota.setNroRecibo("000" + i);
-						cuota.setImporte(importe);
-						cal.add(Calendar.MONTH, 1);
-						Date date = cal.getTime();
-						cuota.setFechaPago(date);
-
-						cuota.setSituacionCuota(new SituacionCuota());
-						cuota.getSituacionCuota().setIdSituacionCuota(
-								situacionCuota.getIdSituacionCuota());
-						cuota.getSituacionCuota().setDescripcion(
-								situacionCuota.getDescripcion());
-						cuota.setFlagPendiente(true);
-
-						honorario.addCuota(cuota);
-
-					}
-
+					lstTiivsPersona.add(objPersona);
 				}
-
 			}
+			logger.debug("==== saliendo de buscarPersonaReniec() ==== ");
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"");
 		}
-
-		FacesMessage msg = new FacesMessage("Honorario Editado",
-				"Honorario Editado al modificar algunos campos");
-		FacesContext.getCurrentInstance().addMessage("growl", msg);
-
-		logger.debug("=== saliendo de editHonor() ===");
-
+		return lstTiivsPersona;
+		
 	}
 
-	public void editDetHonor(RowEditEvent event) {
+	public List<TiivsPersona> buscarPersonaLocal() throws Exception {
+		logger.info("=== buscarPersonaLocal() ===");
+		boolean busco = false;
+		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
+		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
 
-		logger.debug("=== inicia editDetHonor() ===");
-		Cuota cuotaModif = ((Cuota) event.getObject());
-		if (cuotaModif != null) {
-			logger.debug("cuotaModif.getImporte():" + cuotaModif.getImporte());
-			logger.debug("cuotaModif.getMonto():"
-					+ cuotaModif.getHonorario().getMonto());
-		}
-		double importe = cuotaModif.getImporte();
-		double importeRestante = cuotaModif.getHonorario().getMonto() - importe;
-
-		double importeNuevo = 0.0;
-
-		if (cuotaModif.getHonorario().getCantidad().intValue() > 1) {
-
-			importeNuevo = importeRestante
-					/ (cuotaModif.getHonorario().getCantidad().intValue() - 1);
-			importeNuevo = Math.rint(importeNuevo * 100) / 100;
-
+		if ((objTiivsPersonaBusqueda.getTipDoi() == null 
+		  || objTiivsPersonaBusqueda.getTipDoi().equals(""))
+		 && (objTiivsPersonaBusqueda.getNumDoi() == null
+		  || objTiivsPersonaBusqueda.getNumDoi().equals(""))) {
+			Utilitarios.mensajeInfo("INFO","Ingrese al menos un criterio de busqueda");
+		} else if (objTiivsPersonaBusqueda.getNumDoi() == null
+				|| objTiivsPersonaBusqueda.getNumDoi().equals("")) {
+			Utilitarios.mensajeInfo("INFO", "Ingrese el Número de Doi");
+		} else if (objTiivsPersonaBusqueda.getTipDoi() == null
+				|| objTiivsPersonaBusqueda.getTipDoi().equals("")) {
+			Utilitarios.mensajeInfo("INFO", "Ingrese el Tipo de Doi");
 		} else {
-
-			importeNuevo = importe;
-		}
-
-		for (Honorario honorario : honorarios) {
-
-			if (cuotaModif.getHonorario().getNumero() == honorario.getNumero()) {
-
-				for (Cuota cuota : cuotas) {
-
-					if (cuota.getNumero() == cuotaModif.getNumero()) {
-
-						logger.debug("cuotaModif.getSituacionCuota().getDescripcion():"
-								+ cuotaModif.getSituacionCuota()
-										.getDescripcion());
-
-						if (cuotaModif.getSituacionCuota().getDescripcion()
-								.equals("Pagado")
-								|| cuotaModif.getSituacionCuota()
-										.getDescripcion().equals("Baja")) {
-
-							// honorario.setMonto(importeRestante);
-							honorario.setMontoPagado(honorario.getMontoPagado()
-									+ importe);
-
-							if (honorario.getMonto().compareTo(
-									honorario.getMontoPagado()) == 0) {
-								SituacionHonorario situacionHonorario = getSituacionHonorarios()
-										.get(1);
-								honorario
-										.setSituacionHonorario(situacionHonorario);
-								honorario.setFlagPendiente(false);
-							}
-							cuota.setFlagPendiente(false);
+			if (objTiivsPersonaBusqueda.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CODIGO_CENTRAL)) {
+				filtro.add(Restrictions.eq("codCen",objTiivsPersonaBusqueda.getNumDoi()));
+				busco = true;
+				
+				lstTiivsPersona = service.buscarDinamico(filtro);
+				
+				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+							tiivsPersona.setsDesctipDoi(p.getDescripcion());
 						}
-						cuota.setImporte(importe);
-
-					} else {
-
-						cuota.setImporte(importeNuevo);
 					}
-
 				}
+			}else{
+				filtro.add(Restrictions.eq("tipDoi",objTiivsPersonaBusqueda.getTipDoi().trim()));
+				filtro.add(Restrictions.eq("numDoi",objTiivsPersonaBusqueda.getNumDoi().trim()));
+				busco = true;
+				
+               lstTiivsPersona = service.buscarDinamico(filtro);
+				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+							tiivsPersona.setsDesctipDoi(p.getDescripcion());
+						}
+					}
+				} 
+			}
+			
+			//if (lstTiivsPersona.size() == 0 && busco) {
+				//Utilitarios.mensajeInfo("INFO","No se han encontrado resultados para los criterios de busqueda seleccionados");
+			//}
+		}
 
-				honorario.setCuotas(cuotas);
+		return lstTiivsPersona;
+	}
+	public boolean validarPersonaEnListaDeAgrupaciones(){
+		logger.info("=== validarPersonaEnListaDeAgrupaciones() ===");
+		boolean retorno = false;
+		logger.info("=== lstTiivsAgrupacionPersonas  ==="+lstTiivsAgrupacionPersonas.size());
+		for (TiivsAgrupacionPersona x : lstTiivsAgrupacionPersonas) {
+			logger.debug("x.getCodPer() " +x.getCodPer());
+			logger.debug("objTiivsPersonaResultado.getTipPartic() " +objTiivsPersonaResultado.getTipPartic());
+			
+			if(x.getTiivsPersona().getTipDoi().equals(objTiivsPersonaResultado.getTipDoi())
+					&& x.getTiivsPersona().getNumDoi().equals(objTiivsPersonaResultado.getNumDoi())
+					&& !(x.getTipPartic().equals(objTiivsPersonaResultado.getTipPartic()))){
+				String sMensaje = "No Se puede agregar una misma persona como representante y representado";
+				Utilitarios.mensajeInfo("", sMensaje);
+				retorno = true;
 				break;
+			}/*else if(objTiivsPersonaResultado.getCodPer()!=0){
+				if (x.getCodPer() == objTiivsPersonaResultado.getCodPer()) {
+					String sMensaje = "Persona ya registrada, Ingrese otros datos de persona. ";
+					Utilitarios.mensajeInfo("", sMensaje);
+					retorno = false;
+					break;
+				}
+				}*/
+			}
+		return retorno;
+	}
+	public boolean validarbuscarPersonaLocal() {
+		logger.info("=== validarbuscarPersonaLocal() ===");
+		boolean busco = false;
+		boolean retorno = false;
+		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
+		GenericDao<TiivsPersona, Object> service = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
+
+		if ((objTiivsPersonaResultado.getTipDoi() == null 
+		  || objTiivsPersonaResultado.getTipDoi().equals(""))
+		 && (objTiivsPersonaResultado.getNumDoi() == null
+		  || objTiivsPersonaResultado.getNumDoi().equals(""))) {
+			//Utilitarios.mensajeInfo("INFO","Ingrese al menos un criterio de busqueda");
+		} else if (objTiivsPersonaResultado.getNumDoi() == null
+				|| objTiivsPersonaResultado.getNumDoi().equals("")) {
+		//	Utilitarios.mensajeInfo("INFO", "Ingrese el Número de Doi");
+		} else if (objTiivsPersonaResultado.getTipDoi() == null
+				|| objTiivsPersonaResultado.getTipDoi().equals("")) {
+			//Utilitarios.mensajeInfo("INFO", "Ingrese el Tipo de Doi");
+		} else {
+			if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CODIGO_CENTRAL)) {
+				filtro.add(Restrictions.eq("codCen",objTiivsPersonaResultado.getNumDoi()));
+				busco = true;
+				
+				try {
+					lstTiivsPersona = service.buscarDinamico(filtro);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+							retorno =true;
+						}
+					}
+				}
+			}else{
+				filtro.add(Restrictions.eq("tipDoi",objTiivsPersonaResultado.getTipDoi().trim()));
+				filtro.add(Restrictions.eq("numDoi",objTiivsPersonaResultado.getNumDoi().trim()));
+				busco = true;
+				
+               try {
+				lstTiivsPersona = service.buscarDinamico(filtro);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+				/*for (TiivsPersona tiivsPersona : lstTiivsPersona) {
+					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+							tiivsPersona.setsDesctipDoi(p.getDescripcion());
+						}
+					}
+				} */
+               retorno=true;
+			}
+			
+			if (lstTiivsPersona.size() == 0 && busco) {
+				retorno=false;
+				//Utilitarios.mensajeInfo("INFO","No se han encontrado resultados para los criterios de busqueda seleccionados");
+			}else{
+				retorno=true;
+			}
+		}
+
+		return retorno;
+	}
+
+
+
+	public String redirectDetalleSolicitud() {
+		logger.info(" **** redirectDetalleSolicitud ***");
+		return "/faces/paginas/detalleSolicitudEstadoEnviado.xhtml";
+	}
+
+	public Set<TiivsSolicitudAgrupacion> agregarSolicitudArupacion(TiivsSolicitud solicitud,  int iNumGrupo, Set<TiivsAgrupacionPersona> lstTiivsAgrupacionPersonas) {
+		logger.info("iNumGrupo : " + iNumGrupo);
+
+		Set<TiivsSolicitudAgrupacion> lstSolicitudArupacion = new HashSet<TiivsSolicitudAgrupacion>();
+		lstSolicitudArupacion =solicitud.getTiivsSolicitudAgrupacions();
+		TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion = new TiivsSolicitudAgrupacion();
+		TiivsSolicitudAgrupacionId tiivsSolicitudAgrupacionId = new TiivsSolicitudAgrupacionId();
+		tiivsSolicitudAgrupacionId.setCodSoli(solicitud.getCodSoli());
+		tiivsSolicitudAgrupacionId.setNumGrupo(iNumGrupo);
+		tiivsSolicitudAgrupacion.setId(tiivsSolicitudAgrupacionId);
+		tiivsSolicitudAgrupacion.setTiivsAgrupacionPersonas(lstTiivsAgrupacionPersonas);
+		tiivsSolicitudAgrupacion.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO);
+
+		lstSolicitudArupacion.add(tiivsSolicitudAgrupacion);
+		logger.info("TAMANIO DE LA SOLICI AGRUPA " + lstSolicitudArupacion.size());
+		return lstSolicitudArupacion;
+	}
+
+	public void agregarPersona() 
+	{
+		logger.info("****************** agregarPersona ********************");
+		if (validarPersona()) {
+			if (validarRegistroDuplicado()) 
+			{
+				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) 
+				{
+					if (objTiivsPersonaResultado.getTipDoi().equals(p.getCodTipoDoc())) {objTiivsPersonaResultado.setsDesctipDoi(p.getDescripcion());}
+				}
+				for (ComboDto p : combosMB.getLstTipoRegistroPersona()) 
+				{
+					if (objTiivsPersonaResultado.getTipPartic().equals(p.getKey())) {objTiivsPersonaResultado.setsDesctipPartic(p.getDescripcion());}
+				}
+				for (ComboDto p : combosMB.getLstClasificacionPersona()) 
+				{
+					if (objTiivsPersonaResultado.getClasifPer().equals(p.getKey())) {objTiivsPersonaResultado.setsDescclasifPer(p.getDescripcion());}
+					//if (objTiivsPersonaResultado.getClasifPer().equals("99")) {objTiivsPersonaResultado.setsDescclasifPer(objTiivsPersonaResultado.getClasifPerOtro());}
+				}
+				
+				/** Se agrega a la lista de personas en la grilla*/				
+				if (!flagUpdatePersona) {
+					if(objTiivsPersonaResultado.getCodPer()==0){
+						objTiivsPersonaResultado = actualizarPersona(objTiivsPersonaResultado);		
+					}
+					//objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
+					
+					TiivsAgrupacionPersona agruPersona = new TiivsAgrupacionPersona();
+					agruPersona.setTiivsPersona(objTiivsPersonaResultado);
+					agruPersona.setClasifPer(objTiivsPersonaResultado.getClasifPer());
+					agruPersona.setTipPartic(objTiivsPersonaResultado.getTipPartic());
+					agruPersona.setCodPer(objTiivsPersonaResultado.getCodPer());
+					
+					agruPersona.setNumGrupo(tiivsSolicitudAgrupacionCapturado.getId().getNumGrupo()); 
+					agruPersona.setCodSoli(tiivsSolicitudAgrupacionCapturado.getId().getCodSoli()); 
+					agruPersona.setIdAgrupacion(tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size()+1); 
+					
+					agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);					
+					objTiivsPersonaResultado.setIdAgrupacion(agruPersona.getIdAgrupacion());					
+					this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().add(agruPersona);					
+					lstTiivsPersona.add(objTiivsPersonaResultado);
+				} else {
+					// update
+					
+					objTiivsPersonaResultado = actualizarPersona(objTiivsPersonaResultado);
+					
+					logger.info("Index Update: " + indexUpdatePersona);
+					this.lstTiivsPersona.set(indexUpdatePersona,objTiivsPersonaResultado);
+					
+					if(tiivsAgrupacionPersonaCapturado!=null){
+						objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
+						this.tiivsAgrupacionPersonaCapturado.setTiivsPersona(objTiivsPersonaResultado);
+						this.tiivsAgrupacionPersonaCapturado.setClasifPer(objTiivsPersonaResultado.getClasifPer());
+						this.tiivsAgrupacionPersonaCapturado.setTipPartic(objTiivsPersonaResultado.getTipPartic());
+						this.tiivsAgrupacionPersonaCapturado.setCodPer(objTiivsPersonaResultado.getCodPer());
+					}
+															
+					flagUpdatePersona = false;
+				}
+				logger.info("Tamanio de la lista lstTiivsPersona " +lstTiivsPersona.size());
+				logger.info("Tamanio de la lista PersonaResultado " +lstTiivsPersonaResultado.size());
+				personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
+				logger.info("tamanio de personaDataModal  en el metodo agregar ::::: " +personaDataModal.getRowCount());
+				objTiivsPersonaResultado = new TiivsPersona();
+				objTiivsPersonaBusqueda = new TiivsPersona();
+				objTiivsPersonaSeleccionado = new TiivsPersona();
+				lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
+				this.tiivsAgrupacionPersonaCapturado = null;
+				this.mostrarRazonSocial = false;//mostrar campo datos de cliente
 			}
 
 		}
-
-		/*
-		 * for(Honorario honorario: honorarios){
-		 * 
-		 * if (cuotaModif.getHonorario().getNumero() == honorario.getNumero()) {
-		 * 
-		 * 
-		 * 
-		 * double importe = cuotaModif.getImporte(); double importeRestante =
-		 * honorario.getMonto() - importe; double importeNuevo = importeRestante
-		 * / honorario.getCantidad().intValue(); importeNuevo =
-		 * Math.rint(importeNuevo*100)/100;
-		 * 
-		 * honorario.setMonto(importeRestante);
-		 * honorario.setMontoPagado(honorario.getMontoPagado() + importe);
-		 * 
-		 * 
-		 * SituacionCuota situacionCuota = getSituacionCuotas().get(0);
-		 * 
-		 * honorario.setMontoPagado(0.0); honorario.setCuotas(new
-		 * ArrayList<Cuota>());
-		 * 
-		 * Calendar cal = Calendar.getInstance();
-		 * 
-		 * for (int i = 1; i <= honorario.getCantidad().intValue(); i++) { Cuota
-		 * cuota = new Cuota(); cuota.setNumero(i);
-		 * cuota.setMoneda(honorario.getMoneda().getSimbolo());
-		 * cuota.setNroRecibo("000" + i); cuota.setImporte(importe);
-		 * cal.add(Calendar.MONTH, 1); Date date = cal.getTime();
-		 * cuota.setFechaPago(date);
-		 * 
-		 * cuota.setSituacionCuota(new SituacionCuota());
-		 * cuota.getSituacionCuota
-		 * ().setIdSituacionCuota(situacionCuota.getIdSituacionCuota());
-		 * cuota.getSituacionCuota
-		 * ().setDescripcion(situacionCuota.getDescripcion());
-		 * 
-		 * honorario.addCuota(cuota);
-		 * 
-		 * }
-		 * 
-		 * break; }
-		 * 
-		 * }
-		 */
-
-		logger.debug("== saliendo de editDetHonor() === ");
-		FacesMessage msg = new FacesMessage("Cuota Editada", "Cuota Editada");
-		FacesContext.getCurrentInstance().addMessage("growl", msg);
 	}
-
-	public void editInv(RowEditEvent event) {
-
-	}
-
-	public void editCua(RowEditEvent event) {
-
-	}
-
-	public void editIncul(RowEditEvent event) {
-
-	}
-
-	public void editRes(RowEditEvent event) {
-
-	}
-
-	public void editAnex(RowEditEvent event) {
-
-	}
-
-	public void onCancel(RowEditEvent event) {
-		FacesMessage msg = new FacesMessage("Honorario Cancelado","Honorario Cancelado");
-
-		FacesContext.getCurrentInstance().addMessage(null, msg);
-	}
-
-	public List<Inculpado> getInculpados() {
-		return inculpados;
-	}
-
-	public void setInculpados(List<Inculpado> inculpados) {
-		this.inculpados = inculpados;
-	}
-
-	public CuantiaDataModel getCuantiaDataModel() {
-		return cuantiaDataModel;
-	}
-
-	public void setCuantiaDataModel(CuantiaDataModel cuantiaDataModel) {
-		this.cuantiaDataModel = cuantiaDataModel;
-	}
-
-	public String getNroExpeOficial() {
-		return nroExpeOficial;
-	}
-
-	public void setNroExpeOficial(String nroExpeOficial) {
-		this.nroExpeOficial = nroExpeOficial;
-	}
-
-	public Organo getSelectedOrgano() {
-		return selectedOrgano;
-	}
-
-	public void setSelectedOrgano(Organo selectedOrgano) {
-		this.selectedOrgano = selectedOrgano;
-	}
-
-	public Oficina getOficina() {
-		return oficina;
-	}
-
-	public void setOficina(Oficina oficina) {
-		this.oficina = oficina;
-	}
-
-	public Persona getPersona() {
+	private TiivsPersona actualizarPersona(TiivsPersona persona) {
+		logger.info("********actualizarPersona******************");
+		TiivsPersona personaRetorno = new TiivsPersona();
+		
+		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit
+		.getApplicationContext().getBean("genericoDao");
+		
+		try {
+			persona.setUsuarioRegistro(this.usuario.getUID());
+			persona.setFechaRegistro(new Timestamp(new Date().getTime()));
+			personaRetorno=servicePers.insertarMerge(persona);
+			
+			logger.info("Codigo de la persona a Insertar : "+personaRetorno.getCodPer());
+						
+			persona.setCodPer(personaRetorno.getCodPer());
+			persona.setCodCen(personaRetorno.getCodCen());
+			persona.setTipDoi(personaRetorno.getTipDoi());
+			persona.setNumDoi(personaRetorno.getNumDoi());
+			persona.setNombre(personaRetorno.getNombre());
+			persona.setApeMat(personaRetorno.getApeMat());
+			persona.setApePat(personaRetorno.getApePat());
+			persona.setNumCel(personaRetorno.getNumCel());
+			persona.setEmail(personaRetorno.getEmail());
+			
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR,e);
+		}
 		return persona;
 	}
 
-	public void setPersona(Persona persona) {
-		this.persona = persona;
-	}
-
-	public Persona getSelectPersona() {
-		return selectPersona;
-	}
-
-	public void setSelectPersona(Persona selectPersona) {
-		this.selectPersona = selectPersona;
-	}
-
-	public Inculpado getInculpado() {
-		return inculpado;
-	}
-
-	public void setInculpado(Inculpado inculpado) {
-		this.inculpado = inculpado;
-	}
-
-	public Abogado getAbogado() {
-		return abogado;
-	}
-
-	public void setAbogado(Abogado abogado) {
-		this.abogado = abogado;
-	}
-
-	public AbogadoDataModel getAbogadoDataModel() {
-		return abogadoDataModel;
-	}
-
-	public void setAbogadoDataModel(AbogadoDataModel abogadoDataModel) {
-		this.abogadoDataModel = abogadoDataModel;
-	}
-
-	public boolean isTabAsigEstExt() {
-		return tabAsigEstExt;
-	}
-
-	public void setTabAsigEstExt(boolean tabAsigEstExt) {
-		this.tabAsigEstExt = tabAsigEstExt;
-	}
-
-	public boolean isTabCaucion() {
-		return tabCaucion;
-	}
-
-	public void setTabCaucion(boolean tabCaucion) {
-		this.tabCaucion = tabCaucion;
-	}
-
-	public boolean isTabCuanMat() {
-		return tabCuanMat;
-	}
-
-	public void setTabCuanMat(boolean tabCuanMat) {
-		this.tabCuanMat = tabCuanMat;
-	}
-
-	public String getSecretario() {
-		return secretario;
-	}
-
-	public void setSecretario(String secretario) {
-		this.secretario = secretario;
-	}
-
-	public Cuantia getCuantia() {
-		return cuantia;
-	}
-
-	public void setCuantia(Cuantia cuantia) {
-		this.cuantia = cuantia;
-	}
-
-	public Organo getOrgano() {
-		return organo;
-	}
-
-	public void setOrgano(Organo organo) {
-		this.organo = organo;
-	}
-
-	public OrganoDataModel getOrganoDataModel() {
-		return organoDataModel;
-	}
-
-	public void setOrganoDataModel(OrganoDataModel organoDataModel) {
-		this.organoDataModel = organoDataModel;
-	}
-
-	public PersonaDataModel getPersonaDataModelBusq() {
-		return personaDataModelBusq;
-	}
-
-	public void setPersonaDataModelBusq(PersonaDataModel personaDataModelBusq) {
-		this.personaDataModelBusq = personaDataModelBusq;
-	}
-
-	public Cuantia getSelectedCuantia() {
-		return selectedCuantia;
-	}
-
-	public void setSelectedCuantia(Cuantia selectedCuantia) {
-		this.selectedCuantia = selectedCuantia;
-	}
-
-	public Inculpado getSelectedInculpado() {
-		return selectedInculpado;
-	}
-
-	public void setSelectedInculpado(Inculpado selectedInculpado) {
-		this.selectedInculpado = selectedInculpado;
-	}
-
-	public List<Proceso> getProcesos() {
-		return procesos;
-	}
-
-	public void setProcesos(List<Proceso> procesos) {
-		this.procesos = procesos;
-	}
-
-	public List<EstadoExpediente> getEstados() {
-		return estados;
-	}
-
-	public void setEstados(List<EstadoExpediente> estados) {
-		this.estados = estados;
-	}
-
-	public List<TipoExpediente> getTipos() {
-		return tipos;
-	}
-
-	public void setTipos(List<TipoExpediente> tipos) {
-		this.tipos = tipos;
-	}
-
-	public List<Moneda> getMonedas() {
-		return monedas;
-	}
-
-	public void setMonedas(List<Moneda> monedas) {
-		this.monedas = monedas;
-	}
-
-	public List<Calificacion> getCalificaciones() {
-		return calificaciones;
-	}
-
-	public void setCalificaciones(List<Calificacion> calificaciones) {
-		this.calificaciones = calificaciones;
-	}
-
-	public List<Via> getVias() {
-		return vias;
-	}
-
-	public void setVias(List<Via> vias) {
-		this.vias = vias;
-	}
-
-	public List<Instancia> getInstancias() {
-		return instancias;
-	}
-
-	public void setInstancias(List<Instancia> instancias) {
-		this.instancias = instancias;
-	}
-
-	public int getProceso() {
-		return proceso;
-	}
-
-	public void setProceso(int proceso) {
-		this.proceso = proceso;
-	}
-
-	public Usuario getResponsable() {
-		return responsable;
-	}
-
-	public void setResponsable(Usuario responsable) {
-		this.responsable = responsable;
-	}
-
-	public List<Entidad> getEntidades() {
-		return entidades;
-	}
-
-	public void setEntidades(List<Entidad> entidades) {
-		this.entidades = entidades;
-	}
-
-	public Organo getOrgano1() {
-		return organo1;
-	}
-
-	public void setOrgano1(Organo organo1) {
-		this.organo1 = organo1;
-	}
-
-	public Recurrencia getRecurrencia() {
-		return recurrencia;
-	}
-
-	public void setRecurrencia(Recurrencia recurrencia) {
-		this.recurrencia = recurrencia;
-	}
-
-	public List<TipoHonorario> getTipoHonorarios() {
-		return tipoHonorarios;
-	}
-
-	public void setTipoHonorarios(List<TipoHonorario> tipoHonorarios) {
-		this.tipoHonorarios = tipoHonorarios;
-	}
-
-	public Honorario getHonorario() {
-		return honorario;
-	}
-
-	public void setHonorario(Honorario honorario) {
-		this.honorario = honorario;
-	}
-
-	public Honorario getSelectedHonorario() {
-		return selectedHonorario;
-	}
-
-	public void setSelectedHonorario(Honorario selectedHonorario) {
-		this.selectedHonorario = selectedHonorario;
-	}
-
-	public List<Honorario> getHonorarios() {
-		return honorarios;
-	}
-
-	public void setHonorarios(List<Honorario> honorarios) {
-		this.honorarios = honorarios;
-	}
-
-	public List<SituacionCuota> getSituacionCuotas() {
-		return situacionCuotas;
-	}
-
-	public void setSituacionCuotas(List<SituacionCuota> situacionCuotas) {
-		this.situacionCuotas = situacionCuotas;
-	}
-
-	public List<SituacionInculpado> getSituacionInculpados() {
-		return situacionInculpados;
-	}
-
-	public void setSituacionInculpados(
-			List<SituacionInculpado> situacionInculpados) {
-		this.situacionInculpados = situacionInculpados;
-	}
-
-	public List<Cuota> getCuotas() {
-		return cuotas;
-	}
-
-	public void setCuotas(List<Cuota> cuotas) {
-		this.cuotas = cuotas;
-	}
-
-	public Involucrado getInvolucrado() {
-		return involucrado;
-	}
-
-	public void setInvolucrado(Involucrado involucrado) {
-		this.involucrado = involucrado;
-	}
-
-	public List<RolInvolucrado> getRolInvolucrados() {
-		return rolInvolucrados;
-	}
-
-	public void setRolInvolucrados(List<RolInvolucrado> rolInvolucrados) {
-		this.rolInvolucrados = rolInvolucrados;
-	}
-
-	public InvolucradoDataModel getInvolucradoDataModel() {
-		return involucradoDataModel;
-	}
-
-	public void setInvolucradoDataModel(
-			InvolucradoDataModel involucradoDataModel) {
-		this.involucradoDataModel = involucradoDataModel;
-	}
-
-	public Involucrado getSelectedInvolucrado() {
-		return selectedInvolucrado;
-	}
-
-	public void setSelectedInvolucrado(Involucrado selectedInvolucrado) {
-		this.selectedInvolucrado = selectedInvolucrado;
-	}
-
-	public List<TipoInvolucrado> getTipoInvolucrados() {
-		return tipoInvolucrados;
-	}
-
-	public void setTipoInvolucrados(List<TipoInvolucrado> tipoInvolucrados) {
-		this.tipoInvolucrados = tipoInvolucrados;
-	}
-
-	public List<Clase> getClases() {
-		return clases;
-	}
-
-	public void setClases(List<Clase> clases) {
-		this.clases = clases;
-	}
-
-	public List<TipoDocumento> getTipoDocumentos() {
-		return tipoDocumentos;
-	}
-
-	public void setTipoDocumentos(List<TipoDocumento> tipoDocumentos) {
-		this.tipoDocumentos = tipoDocumentos;
-	}
-
-	public List<Riesgo> getRiesgos() {
-		return riesgos;
-	}
-
-	public void setRiesgos(List<Riesgo> riesgos) {
-		this.riesgos = riesgos;
-	}
-
-	public List<EstadoCautelar> getEstadosCautelares() {
-		return estadosCautelares;
-	}
-
-	public void setEstadosCautelares(List<EstadoCautelar> estadosCautelares) {
-		this.estadosCautelares = estadosCautelares;
-	}
-
-	public int getVia() {
-		return via;
-	}
-
-	public void setVia(int via) {
-		this.via = via;
-	}
-
-	public int getInstancia() {
-		return instancia;
-	}
-
-	public void setInstancia(int instancia) {
-		this.instancia = instancia;
-	}
-
-	public int getEstado() {
-		return estado;
-	}
-
-	public void setEstado(int estado) {
-		this.estado = estado;
-	}
-
-	public int getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(int tipo) {
-		this.tipo = tipo;
-	}
-
-	public int getCalificacion() {
-		return calificacion;
-	}
-
-	public void setCalificacion(int calificacion) {
-		this.calificacion = calificacion;
-	}
-
-	public Date getInicioProceso() {
-		return inicioProceso;
-	}
-
-	public void setInicioProceso(Date inicioProceso) {
-		this.inicioProceso = inicioProceso;
-	}
-
-	public int getMoneda() {
-		return moneda;
-	}
-
-	public void setMoneda(int moneda) {
-		this.moneda = moneda;
-	}
-
-	public double getMontoCautelar() {
-		return montoCautelar;
-	}
-
-	public void setMontoCautelar(double montoCautelar) {
-		this.montoCautelar = montoCautelar;
-	}
-
-	public double getImporteCautelar() {
-		return importeCautelar;
-	}
-
-	public void setImporteCautelar(double importeCautelar) {
-		this.importeCautelar = importeCautelar;
-	}
-
-	public String getDescripcionCautelar() {
-		return descripcionCautelar;
-	}
-
-	public void setDescripcionCautelar(String descripcionCautelar) {
-		this.descripcionCautelar = descripcionCautelar;
-	}
-
-	public List<TipoCautelar> getTipoCautelares() {
-		return tipoCautelares;
-	}
-
-	public void setTipoCautelares(List<TipoCautelar> tipoCautelares) {
-		this.tipoCautelares = tipoCautelares;
-	}
-
-	public int getTipoCautelar() {
-		return tipoCautelar;
-	}
-
-	public void setTipoCautelar(int tipoCautelar) {
-		this.tipoCautelar = tipoCautelar;
-	}
-
-	public List<ContraCautela> getContraCautelas() {
-		return contraCautelas;
-	}
-
-	public void setContraCautelas(List<ContraCautela> contraCautelas) {
-		this.contraCautelas = contraCautelas;
-	}
-
-	public int getRiesgo() {
-		return riesgo;
-	}
-
-	public void setRiesgo(int riesgo) {
-		this.riesgo = riesgo;
-	}
-
-	public int getContraCautela() {
-		return contraCautela;
-	}
-
-	public void setContraCautela(int contraCautela) {
-		this.contraCautela = contraCautela;
-	}
-
-	public Estudio getEstudio() {
-		return estudio;
-	}
-
-	public void setEstudio(Estudio estudio) {
-		this.estudio = estudio;
-	}
-
-	public int getEstadoCautelar() {
-		return estadoCautelar;
-	}
-
-	public void setEstadoCautelar(int estadoCautelar) {
-		this.estadoCautelar = estadoCautelar;
-	}
-
-	public UploadedFile getFile() {
-		return file;
-	}
-
-	public void setFile(UploadedFile file) {
-		this.file = file;
-	}
-
-	public Anexo getAnexo() {
-		return anexo;
-	}
-
-	public void setAnexo(Anexo anexo) {
-		this.anexo = anexo;
-	}
-
-	public List<Anexo> getAnexos() {
-		return anexos;
-	}
-
-	public void setAnexos(List<Anexo> anexos) {
-		this.anexos = anexos;
-	}
-
-	public Anexo getSelectedAnexo() {
-		return selectedAnexo;
-	}
-
-	public void setSelectedAnexo(Anexo selectedAnexo) {
-		this.selectedAnexo = selectedAnexo;
-	}
-
-	public List<SituacionHonorario> getSituacionHonorarios() {
-		return situacionHonorarios;
-	}
-
-	public void setSituacionHonorarios(
-			List<SituacionHonorario> situacionHonorarios) {
-		this.situacionHonorarios = situacionHonorarios;
-	}
-
-	public List<String> getSituacionHonorariosString() {
-		return situacionHonorariosString;
-	}
-
-	public void setSituacionHonorariosString(
-			List<String> situacionHonorariosString) {
-		this.situacionHonorariosString = situacionHonorariosString;
-	}
-
-	public List<String> getMonedasString() {
-		return monedasString;
-	}
-
-	public void setMonedasString(List<String> monedasString) {
-		this.monedasString = monedasString;
-	}
-
-	public List<String> getTipoHonorariosString() {
-		return tipoHonorariosString;
-	}
-
-	public void setTipoHonorariosString(List<String> tipoHonorariosString) {
-		this.tipoHonorariosString = tipoHonorariosString;
-	}
-
-	public List<String> getSituacionCuotasString() {
-		return situacionCuotasString;
-	}
-
-	public void setSituacionCuotasString(List<String> situacionCuotasString) {
-		this.situacionCuotasString = situacionCuotasString;
-	}
-
-	public List<String> getRolInvolucradosString() {
-		return rolInvolucradosString;
-	}
-
-	public void setRolInvolucradosString(List<String> rolInvolucradosString) {
-		this.rolInvolucradosString = rolInvolucradosString;
-	}
-
-	public List<String> getTipoInvolucradosString() {
-		return tipoInvolucradosString;
-	}
-
-	public void setTipoInvolucradosString(List<String> tipoInvolucradosString) {
-		this.tipoInvolucradosString = tipoInvolucradosString;
-	}
-
-	public List<String> getSituacionInculpadosString() {
-		return situacionInculpadosString;
-	}
-
-	public void setSituacionInculpadosString(
-			List<String> situacionInculpadosString) {
-		this.situacionInculpadosString = situacionInculpadosString;
-	}
-
-	public boolean isReqPenal() {
-		return reqPenal;
-	}
-
-	public void setReqPenal(boolean reqPenal) {
-		this.reqPenal = reqPenal;
-	}
-
-	public boolean isReqCabecera() {
-		return reqCabecera;
-	}
-
-	public void setReqCabecera(boolean reqCabecera) {
-		this.reqCabecera = reqCabecera;
-	}
-
-	public List<Resumen> getResumens() {
-		return resumens;
-	}
-
-	public void setResumens(List<Resumen> resumens) {
-		this.resumens = resumens;
-	}
-
-	public Date getFechaResumen() {
-		return fechaResumen;
-	}
-
-	public void setFechaResumen(Date fechaResumen) {
-		this.fechaResumen = fechaResumen;
-	}
-
-	public String getResumen() {
-		return resumen;
-	}
-
-	public void setResumen(String resumen) {
-		this.resumen = resumen;
-	}
-
-	public String getTodoResumen() {
-		return todoResumen;
-	}
-
-	public void setTodoResumen(String todoResumen) {
-		this.todoResumen = todoResumen;
-	}
-
-	public Abogado getSelectedAbogado() {
-		return selectedAbogado;
-	}
-
-	public void setSelectedAbogado(Abogado selectedAbogado) {
-		this.selectedAbogado = selectedAbogado;
-	}
-
-	public Persona getSelectInvolucrado() {
-		return selectInvolucrado;
-	}
-
-	public void setSelectInvolucrado(Persona selectInvolucrado) {
-		this.selectInvolucrado = selectInvolucrado;
-	}
-
-	public int getContadorHonorario() {
-		return contadorHonorario;
-	}
-
-	public void setContadorHonorario(int contadorHonorario) {
-		this.contadorHonorario = contadorHonorario;
-	}
-
-	public void setConsultaService(ConsultaService consultaService) {
-		this.consultaService = consultaService;
-	}
-
-	public void setAbogadoService(AbogadoService abogadoService) {
-		this.abogadoService = abogadoService;
-	}
-
-	public void setPersonaService(PersonaService personaService) {
-		this.personaService = personaService;
-	}
-
-	public void setOrganoService(OrganoService organoService) {
-		this.organoService = organoService;
-	}
-
-	public Resumen getSelectedResumen() {
-		return selectedResumen;
-	}
-
-	public void setSelectedResumen(Resumen selectedResumen) {
-		this.selectedResumen = selectedResumen;
-	}
-
-	public List<Ubigeo> getUbigeos() {
-		return ubigeos;
-	}
-
-	public void setUbigeos(List<Ubigeo> ubigeos) {
-		this.ubigeos = ubigeos;
-	}
-
-	public int getContadorInvolucrado() {
-		return contadorInvolucrado;
-	}
-
-	public void setContadorInvolucrado(int contadorInvolucrado) {
-		this.contadorInvolucrado = contadorInvolucrado;
-	}
-
-	public int getContadorInculpado() {
-		return contadorInculpado;
-	}
-
-	public void setContadorInculpado(int contadorInculpado) {
-		this.contadorInculpado = contadorInculpado;
-	}
-
-	public int getContadorCuantia() {
-		return contadorCuantia;
-	}
-
-	public void setContadorCuantia(int contadorCuantia) {
-		this.contadorCuantia = contadorCuantia;
-	}
-
-	public int getContadorResumen() {
-		return contadorResumen;
-	}
-
-	public void setContadorResumen(int contadorResumen) {
-		this.contadorResumen = contadorResumen;
-	}
-
-	public boolean isFlagDeshabilitadoGeneral() {
-		return flagDeshabilitadoGeneral;
-	}
-
-	public void setFlagDeshabilitadoGeneral(boolean flagDeshabilitadoGeneral) {
-		this.flagDeshabilitadoGeneral = flagDeshabilitadoGeneral;
-	}
-
-	public boolean isFlagColumnGeneral() {
-		return flagColumnGeneral;
-	}
-
-	public void setFlagColumnGeneral(boolean flagColumnGeneral) {
-		this.flagColumnGeneral = flagColumnGeneral;
-	}
-
-	public boolean isFlagLectResp() {
-		return flagLectResp;
-	}
-
-	public void setFlagLectResp(boolean flagLectResp) {
-		this.flagLectResp = flagLectResp;
-	}
-
-	public File getArchivo() {
-		return archivo;
-	}
-
-	public void setArchivo(File archivo) {
-		this.archivo = archivo;
-	}
-
-	public String getTxtOrgano() {
-		return txtOrgano;
-	}
-
-	public void setTxtOrgano(String txtOrgano) {
-		this.txtOrgano = txtOrgano;
-	}
-
-	public int getIdEntidad() {
-		return idEntidad;
-	}
-
-	public void setIdEntidad(int idEntidad) {
-		this.idEntidad = idEntidad;
-	}
-
-	public int getIdUbigeo() {
-		return idUbigeo;
-	}
-
-	public void setIdUbigeo(int idUbigeo) {
-		this.idUbigeo = idUbigeo;
-	}
-
-	public String getTxtRegistroCA() {
-		return txtRegistroCA;
-	}
-
-	public void setTxtRegistroCA(String txtRegistroCA) {
-		this.txtRegistroCA = txtRegistroCA;
-	}
-
-	public Integer getDNI() {
-		return DNI;
-	}
-
-	public void setDNI(Integer dNI) {
-		DNI = dNI;
-	}
-
-	public String getTxtNombre() {
-		return txtNombre;
-	}
-
-	public void setTxtNombre(String txtNombre) {
-		this.txtNombre = txtNombre;
-	}
-
-	public String getTxtApePat() {
-		return txtApePat;
-	}
-
-	public void setTxtApePat(String txtApePat) {
-		this.txtApePat = txtApePat;
-	}
-
-	public String getTxtApeMat() {
-		return txtApeMat;
-	}
-
-	public void setTxtApeMat(String txtApeMat) {
-		this.txtApeMat = txtApeMat;
-	}
-
-	public String getTxtTel() {
-		return txtTel;
-	}
-
-	public void setTxtTel(String txtTel) {
-		this.txtTel = txtTel;
-	}
-
-	public String getTxtCorreo() {
-		return txtCorreo;
-	}
-
-	public void setTxtCorreo(String txtCorreo) {
-		this.txtCorreo = txtCorreo;
-	}
-
-	public String getTxtTitulo() {
-		return txtTitulo;
-	}
-
-	public void setTxtTitulo(String txtTitulo) {
-		this.txtTitulo = txtTitulo;
-	}
-
-	public String getTxtComentario() {
-		return txtComentario;
-	}
-
-	public void setTxtComentario(String txtComentario) {
-		this.txtComentario = txtComentario;
-	}
-
-	public Date getFechaInicio() {
-		return fechaInicio;
-	}
-
-	public void setFechaInicio(Date fechaInicio) {
-		this.fechaInicio = fechaInicio;
-	}
-
-	public Ubigeo getUbigeo() {
-		return ubigeo;
-	}
-
-	public void setUbigeo(Ubigeo ubigeo) {
-		this.ubigeo = ubigeo;
-	}
-
-	public int getIdClase() {
-		return idClase;
-	}
-
-	public void setIdClase(int idClase) {
-		this.idClase = idClase;
-	}
-
-	public int getIdTipoDocumento() {
-		return idTipoDocumento;
-	}
-
-	public void setIdTipoDocumento(int idTipoDocumento) {
-		this.idTipoDocumento = idTipoDocumento;
-	}
-
-	public Long getNumeroDocumento() {
-		return numeroDocumento;
-	}
-
-	public void setNumeroDocumento(Long numeroDocumento) {
-		this.numeroDocumento = numeroDocumento;
-	}
-
-	public int getIdClase_inclp() {
-		return idClase_inclp;
-	}
-
-	public void setIdClase_inclp(int idClase_inclp) {
-		this.idClase_inclp = idClase_inclp;
-	}
-
-	public int getIdTipoDocumento_inclp() {
-		return idTipoDocumento_inclp;
-	}
-
-	public void setIdTipoDocumento_inclp(int idTipoDocumento_inclp) {
-		this.idTipoDocumento_inclp = idTipoDocumento_inclp;
-	}
-
-	public Long getNumeroDocumento_inclp() {
-		return numeroDocumento_inclp;
-	}
-
-	public void setNumeroDocumento_inclp(Long numeroDocumento_inclp) {
-		this.numeroDocumento_inclp = numeroDocumento_inclp;
-	}
-
-	public String getTxtNombres() {
-		return txtNombres;
-	}
-
-	public void setTxtNombres(String txtNombres) {
-		this.txtNombres = txtNombres;
-	}
-
-	public String getTxtNombres_inclp() {
-		return txtNombres_inclp;
-	}
-
-	public void setTxtNombres_inclp(String txtNombres_inclp) {
-		this.txtNombres_inclp = txtNombres_inclp;
-	}
-
-	public String getTxtApellidoPaterno_inclp() {
-		return txtApellidoPaterno_inclp;
-	}
-
-	public void setTxtApellidoPaterno_inclp(String txtApellidoPaterno_inclp) {
-		this.txtApellidoPaterno_inclp = txtApellidoPaterno_inclp;
-	}
-
-	public String getTxtApellidoMaterno_inclp() {
-		return txtApellidoMaterno_inclp;
-	}
-
-	public void setTxtApellidoMaterno_inclp(String txtApellidoMaterno_inclp) {
-		this.txtApellidoMaterno_inclp = txtApellidoMaterno_inclp;
-	}
-
-	public String getTxtApellidoPaterno() {
-		return txtApellidoPaterno;
-	}
-
-	public void setTxtApellidoPaterno(String txtApellidoPaterno) {
-		this.txtApellidoPaterno = txtApellidoPaterno;
-	}
-
-	public String getTxtApellidoMaterno() {
-		return txtApellidoMaterno;
-	}
-
-	public void setTxtApellidoMaterno(String txtApellidoMaterno) {
-		this.txtApellidoMaterno = txtApellidoMaterno;
-	}
-
-	public String getPretendidoMostrar() {
-		return pretendidoMostrar;
-	}
-
-	public void setPretendidoMostrar(String pretendidoMostrar) {
-		this.pretendidoMostrar = pretendidoMostrar;
-	}
-
-	public Integer getCodCliente() {
-		return codCliente;
-	}
-
-	public void setCodCliente(Integer codCliente) {
-		this.codCliente = codCliente;
-	}
-
-	public Integer getCodCliente_inclp() {
-		return codCliente_inclp;
-	}
-
-	public void setCodCliente_inclp(Integer codCliente_inclp) {
-		this.codCliente_inclp = codCliente_inclp;
-	}
-
-	public boolean isFlagColumnsBtnHonorario() {
-		return flagColumnsBtnHonorario;
-	}
-
-	public void setFlagColumnsBtnHonorario(boolean flagColumnsBtnHonorario) {
-		this.flagColumnsBtnHonorario = flagColumnsBtnHonorario;
-	}
-
-	public boolean isFlagColumnGeneralHonorario() {
-		return flagColumnGeneralHonorario;
-	}
-
-	public void setFlagColumnGeneralHonorario(boolean flagColumnGeneralHonorario) {
-		this.flagColumnGeneralHonorario = flagColumnGeneralHonorario;
-	}
+/*
+	public void agregarPersona() {
+		logger.info("****************** agregarPersona ********************");
+		if (validarPersona()) {
+			if (validarRegistroDuplicado()) {
+
+				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+					if (objTiivsPersonaResultado.getTipDoi().equals(p.getCodTipoDoc())) {
+						objTiivsPersonaResultado.setsDesctipDoi(p.getDescripcion());
+					}
+				}
+				for (ComboDto p : combosMB.getLstTipoRegistroPersona()) {
+					if (objTiivsPersonaResultado.getTipPartic().equals(
+							p.getKey())) {
+						objTiivsPersonaResultado.setsDesctipPartic(p
+								.getDescripcion());
+					}
+				}
+				for (ComboDto p : combosMB.getLstClasificacionPersona()) {
+					if (objTiivsPersonaResultado.getClasifPer().equals(
+							p.getKey())) {
+						objTiivsPersonaResultado.setsDescclasifPer(p
+								.getDescripcion());
+					}
+					if (objTiivsPersonaResultado.getClasifPer().equals("99")) {
+						objTiivsPersonaResultado
+								.setsDescclasifPer(objTiivsPersonaResultado
+										.getClasifPerOtro());
+					}
+				}
+
+				if (!flagUpdatePersona) {
+					lstTiivsPersona.add(objTiivsPersonaResultado);
+					logger.info("lstTiivsPersona.size : " + lstTiivsPersona.size());
+					objTiivsPersonaResultado = new TiivsPersona();
+					objTiivsPersonaBusqueda = new TiivsPersona();
+					objTiivsPersonaSeleccionado = new TiivsPersona();
+					lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
+					personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
+					logger.info("lstTiivsPersonaResultado.size : " + lstTiivsPersonaResultado.size());
+				} else {
+					// update
+					logger.info("Index Update: " + indexUpdatePersona);
+
+					this.lstTiivsPersona.set(indexUpdatePersona,objTiivsPersonaResultado);
+					personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
+					objTiivsPersonaResultado = new TiivsPersona();
+					objTiivsPersonaBusqueda = new TiivsPersona();
+					objTiivsPersonaSeleccionado = new TiivsPersona();
+					flagUpdatePersona = false;
+				}
+			}
+
+		}
+		// return objTiivsPersonaBusqueda;
+
+	}
+*/
+	public boolean validarRegistroDuplicado() {
+		logger.info("******************************* validarRegistroDuplicado ******************************* "
+				+ objTiivsPersonaResultado.getNumDoi());
+		boolean bResult = true;
+		String sMensaje = "";
+		for (TipoDocumento c : combosMB.getLstTipoDocumentos()) {
+			if (objTiivsPersonaResultado.getTipDoi().equals(c.getCodTipoDoc())) {
+				objTiivsPersonaResultado.setsDesctipDoi(c.getDescripcion());
+			}
+		}
+		for (ComboDto c : combosMB.getLstTipoRegistroPersona()) {
+			if (objTiivsPersonaResultado.getTipPartic().equals(c.getKey())) {
+				objTiivsPersonaResultado.setsDesctipPartic(c.getDescripcion());
+			}
+		}
+		if (!flagUpdatePersona) {
+			for (TiivsPersona p : lstTiivsPersona) {
+				if (objTiivsPersonaResultado.getNumDoi().equals(p.getNumDoi())) {
+					bResult = false;
+					sMensaje = "Ya existe una persona con número de Doi :  "
+							+ p.getNumDoi() + " y Tipo de Registro : "
+							+ objTiivsPersonaResultado.getsDesctipPartic();
+					Utilitarios.mensajeInfo("INFO", sMensaje);
+				}
+			}
+			
+			//if(objTiivsPersonaResultado.getTipDoi())
+		}
+
+		return bResult;
+	}
+
+	public void editarPersona() {
+		logger.info("***************************** editarPersona ************************************ ");
+		for (int i = 0; i < this.lstTiivsPersona.size(); i++) {
+			if (objTiivsPersonaCapturado.equals(this.lstTiivsPersona.get(i))) {
+				indexUpdatePersona = i;
+			}
+		}
+		
+		//Captura agrupacion persona
+		for(TiivsAgrupacionPersona agruPersona: this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas()){
+			//Si Personacapturado es igual a algun elemento de  this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas		
+			
+			if(agruPersona.getIdAgrupacion().equals(objTiivsPersonaCapturado.getIdAgrupacion())){
+				tiivsAgrupacionPersonaCapturado = agruPersona;
+				break;
+			}
+		}
+		
+		//this.objTiivsPersonaResultado=new TiivsPersona();  
+		this.objTiivsPersonaResultado.setApeMat(this.objTiivsPersonaCapturado.getApeMat());
+		this.objTiivsPersonaResultado.setTipDoi(this.objTiivsPersonaCapturado.getTipDoi());
+		this.objTiivsPersonaResultado.setNumDoi(this.objTiivsPersonaCapturado.getNumDoi());
+		this.objTiivsPersonaResultado.setCodCen(this.objTiivsPersonaCapturado.getCodCen());
+		this.objTiivsPersonaResultado.setApePat(this.objTiivsPersonaCapturado.getApePat());
+		this.objTiivsPersonaResultado.setNombre(this.objTiivsPersonaCapturado.getNombre());
+		this.objTiivsPersonaResultado.setTipPartic(this.objTiivsPersonaCapturado.getTipPartic());
+		this.objTiivsPersonaResultado.setClasifPer(this.objTiivsPersonaCapturado.getClasifPer());
+		actualizarClasificacion();
+		//this.objTiivsPersonaResultado.setClasifPerOtro(this.objTiivsPersonaCapturado.getClasifPerOtro());
+		this.objTiivsPersonaResultado.setEmail(this.objTiivsPersonaCapturado.getEmail());
+		this.objTiivsPersonaResultado.setNumCel(this.objTiivsPersonaCapturado.getNumCel());
+		this.objTiivsPersonaResultado.setCodPer(this.objTiivsPersonaCapturado.getCodPer());
+		this.objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
+		this.flagUpdatePersona = true;
+		
+		if(objTiivsPersonaCapturado.getTipDoi()!=null){ 
+			if(objTiivsPersonaCapturado.getTipDoi().equals(this.codigoRazonSocial)){ //CODIGO RAZON SOCIAL
+				this.mostrarRazonSocial = true;
+			} else {
+				this.mostrarRazonSocial = false;
+			}
+		} 		
+	}
+
+	public boolean validarPersona() {
+		logger.info("******************************* validarPersona ******************************* "
+				+ objTiivsPersonaResultado.getTipPartic());
+		boolean bResult = true;
+		String sMensaje = "";
+		logger.info("objTiivsPersonaResultado.getClasifPer() "+ objTiivsPersonaResultado.getClasifPer());
+		
+		if (objTiivsPersonaResultado.getTipDoi().equals("")) {
+			sMensaje = "Seleccione el Tipo de Documento";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+		}
+		if (objTiivsPersonaResultado.getNumDoi().equals("")) {
+			sMensaje = "Ingrese el Número de Doi";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+		}else{
+			if (!objTiivsPersonaResultado.getTipDoi().equals("")) {
+				bResult=validarTipoDocumentos();
+				}
+		}
+		
+		if(objTiivsPersonaResultado.getTipDoi()!=null && !objTiivsPersonaResultado.getTipDoi().equals(this.codigoRazonSocial)){ //CODIGO RAZONSOCIAL
+			if (objTiivsPersonaResultado.getNombre() == null
+					|| objTiivsPersonaResultado.getNombre().equals("")) {
+				sMensaje = "Ingrese el Nombre";
+				bResult = false;
+				Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}
+		
+		if(objTiivsPersonaResultado.getTipDoi()!=null && objTiivsPersonaResultado.getTipDoi().equals(this.codigoRazonSocial)){ //CODIGO RAZONSOCIAL
+			if (objTiivsPersonaResultado.getApePat() == null
+					|| objTiivsPersonaResultado.getApePat().equals("")) {
+				sMensaje = "Ingrese la Razón Social";
+				bResult = false;
+				Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}
+		
+		if(!objTiivsPersonaResultado.getCodCen().isEmpty()){
+		if(objTiivsPersonaResultado.getCodCen().length()!=8){
+			sMensaje = "El código central debe ser de 8 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+		}
+		}
+		if (objTiivsPersonaResultado.getClasifPer() == null
+				|| objTiivsPersonaResultado.getClasifPer().equals("")) {
+			sMensaje = "Ingrese el Tipo de Clasificación";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+		}
+		if (!objTiivsPersonaResultado.getEmail().equals("")) {
+			if (!Utilitarios.validateEmail(objTiivsPersonaResultado.getEmail())) {
+				sMensaje = "Ingrese un email valido";
+				bResult = false;
+				Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}
+		if ((objTiivsPersonaResultado.getTipPartic() == null || objTiivsPersonaResultado
+				.getTipPartic().equals(""))) {
+			sMensaje = "Ingrese el Tipo de Participacion";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+		} else if (objTiivsPersonaResultado.getClasifPer().equals("99")
+				&& (objTiivsPersonaResultado.getClasifPerOtro().equals("") || objTiivsPersonaResultado
+						.getClasifPerOtro() == null)) {
+			sMensaje = "Ingrese la descipcion Tipo de Participacion";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+		} else if (!flagUpdatePersona) {
+			
+			/** VALIDAR QUE EL NUMERO DE DOCUMENTO  NO SE ENCUENTRE REGISTRADO TAMPOCO EN BD */
+			 if(objTiivsPersonaResultado.getCodPer()==0&&validarbuscarPersonaLocal()){
+				sMensaje = "Persona ya registrada, Ingrese una nueva, o busque a la persona ";
+				bResult = false;
+				Utilitarios.mensajeInfo("", sMensaje);
+			
+				/** FIN DE LA VALIDACION **/
+			}else if(validarPersonaEnListaDeAgrupaciones()){
+				bResult=false;
+			}
+			else{
+			
+				
+			for (TiivsPersona x : lstTiivsPersona) {
+				logger.debug("x.getCodPer() " +x.getCodPer());
+				logger.debug("objTiivsPersonaResultado.getCodPer() " +objTiivsPersonaResultado.getCodPer());
+				
+				
+				if(x.getTipDoi().equals(objTiivsPersonaResultado.getTipDoi())
+						&& x.getNumDoi().equals(objTiivsPersonaResultado.getNumDoi())){
+					sMensaje = "Persona con Documento ya ingresado, Ingrese otros datos de persona. ";
+					Utilitarios.mensajeInfo("", sMensaje);
+					bResult = false;
+					break;
+				}else if(objTiivsPersonaResultado.getCodPer()!=0){
+					if (x.getCodPer() == objTiivsPersonaResultado.getCodPer()) {
+						sMensaje = "Persona ya registrada, Ingrese otros datos de persona. ";
+						Utilitarios.mensajeInfo("", sMensaje);
+						bResult = false;
+						break;
+					}
+					}	
+				}
+			}
+			
+		}
+		
+		logger.info("bResult " +bResult);
+
+		return bResult;
+
+	}
+	
+	
+	public boolean 	validarTipoDocumentos() {
+		logger.info("***************** validarTipoDocumentos ********************* ");
+		boolean bResult = true;
+		String sMensaje = "";
+		if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CODIGO_CENTRAL)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=8){
+			sMensaje = "El Número de documento debe ser de 8 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}else if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.CODIGO_C_U_S_P_P)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=11){
+			sMensaje = "El código CUSPP debe ser de 11 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}else if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_RUC)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=11){
+			sMensaje = "El Ruc debe ser de 11 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}else if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_RUC_ANTIGUO)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=8){
+			sMensaje = "El Ruc Antiguo debe ser de 8 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}else if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_DNI)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=8){
+			sMensaje = "El Dni debe ser de 8 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}else if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CARNET_DIPLOMATICO)) {
+			if(objTiivsPersonaResultado.getNumDoi().length()!=8){
+			sMensaje = "El Carnet Diplomático debe ser de 8 caracteres";
+			bResult = false;
+			Utilitarios.mensajeInfo("INFO", sMensaje);
+			}
+		}
+			
+		
+		return bResult;
+	}
+
+	public void agregarActionListenerAgrupacion(){
+		  logger.info("********************** agregarActionListenerAgrupacion ********************* " );
+		  lstTiivsPersona=new ArrayList<TiivsPersona>();
+		  objTiivsPersonaBusqueda=new TiivsPersona();
+		  objTiivsPersonaResultado=new TiivsPersona();
+		  flagUpdatePoderdanteApoderados=false;
+		  combosMB=new CombosMB();
+		  lstClasificacionPersona=combosMB.getLstClasificacionPersona();
+		  logger.info("tamanioo actual **** " +combosMB.getLstClasificacionPersona().size());
+		 listaTemporalAgrupacionesPersonaBorradores=new ArrayList<TiivsAgrupacionPersona>();
+		 listaTemporalPersonasBorradores=new ArrayList<TiivsPersona>();
+		 lstTiivsPersonaCopia=new ArrayList<TiivsPersona>();
+		 int NumeroGrupoMax=0;
+		 if(lstAgrupacionSimpleDto.size()!=0){
+			 NumeroGrupoMax= lstAgrupacionSimpleDto.get(0).getId().getNumGrupo();
+		 }
+		 
+		 for (int i = 0; i < lstAgrupacionSimpleDto.size(); i++) {
+			 logger.info("lstAgrupacionSimpleDto.get(i).getId().getNumGrupo() :: " +lstAgrupacionSimpleDto.get(i).getId().getNumGrupo());
+			 if(lstAgrupacionSimpleDto.get(i).getId().getNumGrupo()>=NumeroGrupoMax) {
+				 NumeroGrupoMax=lstAgrupacionSimpleDto.get(i).getId().getNumGrupo();
+			 }
+		}
+		 
+		 		 
+		numGrupo=NumeroGrupoMax;
+		logger.info("El maximo numero de Grupo :: " +numGrupo);
+		
+		TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion = new TiivsSolicitudAgrupacion();
+		TiivsSolicitudAgrupacionId tiivsSolicitudAgrupacionId = new TiivsSolicitudAgrupacionId();
+		tiivsSolicitudAgrupacionId.setCodSoli(solicitudRegistrarT.getCodSoli());
+		tiivsSolicitudAgrupacionId.setNumGrupo(numGrupo+1);
+		tiivsSolicitudAgrupacion.setId(tiivsSolicitudAgrupacionId);
+		tiivsSolicitudAgrupacion.setTiivsSolicitud(this.solicitudRegistrarT);
+		tiivsSolicitudAgrupacion.setEstado("1");
+		
+		this.solicitudRegistrarT.getTiivsSolicitudAgrupacions().add(tiivsSolicitudAgrupacion);		
+		this.tiivsSolicitudAgrupacionCapturado = tiivsSolicitudAgrupacion;		
+		
+	  }
+	public boolean validarAgregarAgrupacion(){
+		boolean returno=true;
+		logger.info("***************************** validarAgregarAgrupacion ***************************************");
+		String mensaje="Por lo menos ingrese un Poderdante o Apoderado";
+		if(lstTiivsPersona.size()==0){
+			returno=false;
+			Utilitarios.mensajeInfo("", mensaje);
+		}
+		return returno;
+	}
+	
+
+	
+ /* public void agregarAgrupacion(){
+	  if(validarAgregarAgrupacion()){
+		  logger.info("***************************** agregarAgrupacion ***************************************");
+		  if(!flagUpdatePoderdanteApoderados){// INDICA QUE ES UN REGISTRO NUEVO
+			
+	  numGrupo=numGrupo+1;
+	  logger.info("********************** agregarAgrupacion ********************* " +numGrupo);
+	  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
+	  List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
+	  for (TiivsPersona n : lstTiivsPersona) {
+		  if(n.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+			  lstPoderdantes.add(n);}
+		  if(n.getTipPartic().equals(ConstantesVisado.APODERADO)){
+			  lstApoderdantes.add(n);}
+		  logger.info("objTiivsPersonaResultado.getCodPer() : "+n.getCodPer());
+	
+		  TiivsAgrupacionPersona  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersona();
+		  tiivsAgrupacionPersonaId.setNumGrupo(numGrupo);
+		  tiivsAgrupacionPersonaId.setCodSoli(solicitudRegistrarT.getCodSoli());
+		  tiivsAgrupacionPersonaId.setCodPer(n.getCodPer());
+		  tiivsAgrupacionPersonaId.setClasifPer(n.getClasifPer());
+		  tiivsAgrupacionPersonaId.setTipPartic(n.getTipPartic());
+		  tiivsAgrupacionPersonaId.setTiivsPersona(n);
+		  //tiivsAgrupacionPersona.setId(tiivsAgrupacionPersonaId);
+		  //lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
+		  lstTiivsAgrupacionPersonas.add(tiivsAgrupacionPersonaId);
+	}  
+	  logger.info("lstPoderdantes " +lstPoderdantes.size());
+	  logger.info("lstApoderdantes " +lstApoderdantes.size());
+	  AgrupacionSimpleDto agrupacionSimpleDto =new AgrupacionSimpleDto();
+	   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), numGrupo));
+	   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
+	   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
+	   agrupacionSimpleDto.setsEstado(ConstantesVisado.ESTADOS.ESTADO_ACTIVO);
+	   agrupacionSimpleDto.setiEstado(Integer.parseInt(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
+	   agrupacionSimpleDto.setLstPersonas(this.lstTiivsPersona);
+	  lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+	  solicitudRegistrarT.setTiivsSolicitudAgrupacions(this.agregarSolicitudArupacion(solicitudRegistrarT,numGrupo,lstTiivsAgrupacionPersonas ));
+	  //solicitudRegistrarT.setTiivsSolicitudAgrupacions(lstTiivsAgrupacionPersonas );
+	  logger.info("tamanio de lstTiivsAgrupacionPersonas "+lstTiivsAgrupacionPersonas.size());
+	  lstTiivsPersona=new ArrayList<TiivsPersona>();
+	  lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
+		logger.info("Tamanio de la lista Solicitud Agrupacion : " +solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
+	  this.llamarComision();
+	   numGrupoUpdatePoderdanteApoderado=0;
+	  numGrupo=0;
+
+	  
+	  bBooleanPopup=false;
+		  } else if(flagUpdatePoderdanteApoderados){ //INDICA QUE SE VA A MODIFICAR una agrupacion 
+			 logger.info("SE MODIFICARA " +indexUpdatePoderdanteApoderado);
+			 
+			  List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
+			  List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
+			  Set<TiivsAgrupacionPersona> lstTempAgrupacion=null;
+			  for (TiivsPersona objTiivsPersonaResultado : lstTiivsPersona) {
+				  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+					  lstPoderdantes.add(objTiivsPersonaResultado);}
+				  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.APODERADO)){
+					  lstApoderdantes.add(objTiivsPersonaResultado);}
+				  logger.info("objTiivsPersonaResultado.getCodPer() : "+objTiivsPersonaResultado.getCodPer());
+				  TiivsAgrupacionPersona  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersona();
+				  logger.info("numGrupo cambiar esto  " +numGrupoUpdatePoderdanteApoderado);
+				  tiivsAgrupacionPersonaId.setNumGrupo(numGrupoUpdatePoderdanteApoderado);
+				  tiivsAgrupacionPersonaId.setCodSoli(solicitudRegistrarT.getCodSoli());
+				  tiivsAgrupacionPersonaId.setCodPer(objTiivsPersonaResultado.getCodPer());
+				  tiivsAgrupacionPersonaId.setClasifPer(objTiivsPersonaResultado.getClasifPer());
+				  tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado.getTipPartic());
+				  tiivsAgrupacionPersonaId.setTiivsPersona(objTiivsPersonaResultado);
+				  lstTempAgrupacion=new HashSet<TiivsAgrupacionPersona>();
+				  for (TiivsAgrupacionPersona  x : lstTiivsAgrupacionPersonas) {
+					  if(!x.equals(tiivsAgrupacionPersonaId)){
+						  lstTempAgrupacion.add(tiivsAgrupacionPersonaId);}
+				}
+			}  
+			  
+			  lstTiivsAgrupacionPersonas.addAll(lstTempAgrupacion);
+			  
+			  logger.info("lstPoderdantes " +lstPoderdantes.size());
+			  logger.info("lstApoderdantes " +lstApoderdantes.size());
+
+			  AgrupacionSimpleDto agrupacionSimpleDto =null;
+			for (TiivsSolicitudAgrupacion x : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+				lstTiivsAgrupacionPersonas=x.getTiivsAgrupacionPersonas();
+				System.out.println(" lstTiivsAgrupacionPersonas " +lstTiivsAgrupacionPersonas.size());
+				for (TiivsAgrupacionPersona c : lstTiivsAgrupacionPersonas) {
+					   agrupacionSimpleDto =new AgrupacionSimpleDto();
+					   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(c.getCodSoli(), c.getNumGrupo()));
+					   agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
+					   agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
+					   agrupacionSimpleDto.setsEstado(ConstantesVisado.ESTADOS.ESTADO_ACTIVO);
+					   agrupacionSimpleDto.setiEstado(Integer.parseInt(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
+					   agrupacionSimpleDto.setLstPersonas(this.lstTiivsPersona);
+					   this.lstAgrupacionSimpleDto.set(indexUpdatePoderdanteApoderado, agrupacionSimpleDto);
+				}
+				 
+			} 
+			
+		  }
+	  
+	  
+	  } 
+	  
+ }*/
+  
+	public List<Integer> existe(List<Integer> listaTemporal2){
+        List<Integer> listaTemporal=new ArrayList<Integer>();
+        List<Integer> arraycar=new ArrayList<Integer>();
+        arraycar=listaTemporal2;
+        
+	        for(int i=0;i<arraycar.size();i++){
+	            for(int j=0;j<arraycar.size()-1;j++){
+	                if(i!=j){
+	                    if(arraycar.get(i)==arraycar.get(j)){
+	                        arraycar.set(j, 99);
+	                    }
+	                }
+	            }
+	        }   
+	        for (Integer integer : arraycar) {
+	        	if(integer!=99){
+	        		listaTemporal.add(integer);
+	        	}
+	        	}
+      return listaTemporal;
+}
+	public boolean validarSiAgrupacionEstaRevocada(){
+		boolean retorno =false;
+		logger.info("***************************** validarSiAgrupacionEstaRevocada ***************************************");
+		try {
+		List<TiivsRevocado> listaRevocadoDeDondeComparar=new ArrayList<TiivsRevocado>();
+		GenericDao<TiivsRevocado, Object> serviceSolicitud = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
+		filtro.add(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_ACTIVO_REVOCADO));
+		filtro.addOrder(Order.asc("codAgrup"));
+		listaRevocadoDeDondeComparar = serviceSolicitud.buscarDinamico(filtro);
+		logger.info("**** listaRevocadoDeDondeComparar **** "+listaRevocadoDeDondeComparar.size());
+		List<ComboDto> listaPersonasXAgrupacionXAgrupacion=null;
+		int i;
+		List<Integer> listaCodAgrupaciones = new ArrayList<Integer>();
+		for (TiivsRevocado e : listaRevocadoDeDondeComparar) {
+			listaCodAgrupaciones.add(e.getCodAgrup());
+		}
+		List<Integer> listaCodAgrupacionesAcomparar = new ArrayList<Integer>();
+		listaCodAgrupacionesAcomparar=existe(listaCodAgrupaciones);
+		
+		for (Integer a : listaCodAgrupacionesAcomparar) {
+			listaPersonasXAgrupacionXAgrupacion =new ArrayList<ComboDto>();
+		for (TiivsRevocado x : listaRevocadoDeDondeComparar) {
+			if(a.equals(x.getCodAgrup())){
+				logger.info("Codigo Agrupacion - 1 - ::::: " +a + " x.getCodPer()::: " +x.getTiivsPersona().getCodPer() +" x.getTipPartic() ::: " +x.getTipPartic() +" x.getNumGrupo():: " +x.getCodAgrup());
+				listaPersonasXAgrupacionXAgrupacion.add(new ComboDto(x.getTiivsPersona().getCodPer()+"",x.getTipPartic(),x.getCodAgrup()));
+			}
+		}
+		logger.info(" lstTiivsAgrupacionPersonas :: " +lstTiivsAgrupacionPersonas.size());
+		if(listaPersonasXAgrupacionXAgrupacion.size()==lstTiivsAgrupacionPersonas.size()){
+			i = 0;
+			for (TiivsAgrupacionPersona an : lstTiivsAgrupacionPersonas) {
+				for (ComboDto bn : listaPersonasXAgrupacionXAgrupacion) {
+					logger.info("an.getCodPer() :: " +an.getCodPer() + " ::: an.getTipPartic()  "+an.getTipPartic());
+					logger.info("bn.getKey() :: " +bn.getKey() + " ::: bn.getDescripcion()  "+bn.getDescripcion());
+					if(an.getCodPer()==Integer.parseInt(bn.getKey()) && an.getTipPartic().trim().equals(bn.getDescripcion().trim()) ){
+						//logger.info("Una combinacion es igual " + an.getNumGrupo());
+						i++;
+					}
+				}
+			}
+			if(i==listaPersonasXAgrupacionXAgrupacion.size()){
+				logger.info("Toda la combinación es igual a la de Revocado Num Grupo : " +a);
+				Utilitarios.mensajeInfo("INFO ", "La combinación fue Revocada" );
+				retorno =true;
+				break;
+				
+			}
+		}
+		
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return retorno;
+	}
+	public void agregarAgrupacion() {
+		if (validarAgregarAgrupacion()) {
+		
+			logger.info("***************************** agregarAgrupacion ***************************************");
+			
+						
+			
+			lstTiivsAgrupacionPersonas = this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas();
+			
+			if (lstTiivsAgrupacionPersonas == null){
+				lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
+			}
+			
+			logger.info("lstTiivsAgrupacionPersonas: inicio " + lstTiivsAgrupacionPersonas.size());
+			
+			limpiarAgrupacionesVacias();			
+
+			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
+			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
+
+			logger.debug("lstTiivsPersona " +lstTiivsPersona.size());
+
+			for (TiivsPersona n : lstTiivsPersona) {
+				if (n.getTipPartic().equals(ConstantesVisado.PODERDANTE)) {
+					lstPoderdantes.add(n);
+					logger.info(" poderdante : " + n.getCodPer());
+				}
+				if (n.getTipPartic().equals(ConstantesVisado.APODERADO)) {
+					lstApoderdantes.add(n);
+					logger.info(" apoderado : " + n.getCodPer());
+				}
+				//SE AGREGO IF DE HEREDEROS
+				if (n.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)) {
+					lstApoderdantes.add(n);
+					logger.info(" heredero : " + n.getCodPer());
+				}
+			}
+			
+			this.llamarComision();
+			
+			logger.info("lstTiivsAgrupacionPersonas: fin " + lstTiivsAgrupacionPersonas.size());
+			String estadoRevocado=null;
+			if(validarSiAgrupacionEstaRevocada()){
+				/** Se revocara la Combinacion**/
+				 estadoRevocado =ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_3;
+				 this.tiivsSolicitudAgrupacionCapturado.setEstado(estadoRevocado);
+			}else{
+				estadoRevocado=null;
+			}
+			this.armaAgrupacionSimple();
+
+		}
+		
+		this.tiivsSolicitudAgrupacionCapturado = null;
+		
+	}
+
+	private void limpiarAgrupacionesVacias() {
+		
+		Set<TiivsSolicitudAgrupacion> lstSolAgruToRemove = new HashSet<TiivsSolicitudAgrupacion>();
+		for(TiivsSolicitudAgrupacion solAgru: this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()){
+			if(solAgru.getTiivsAgrupacionPersonas().size()==0){					
+				lstSolAgruToRemove.add(solAgru);
+			}
+		}			
+		this.solicitudRegistrarT.getTiivsSolicitudAgrupacions().removeAll(lstSolAgruToRemove);		
+	}
+
+private void armaAgrupacionSimple() {
+		
+		
+		List<TiivsPersona> lstPoderdantes = null;
+		List<TiivsPersona> lstApoderdantes = null;
+		AgrupacionSimpleDto agrupacionSimpleDto  =null; ;
+		List<TiivsPersona>lstPersonas=null;
+		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
+		
+		for (TiivsSolicitudAgrupacion x : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) 
+		   {
+			   lstPoderdantes = new ArrayList<TiivsPersona>();
+			   lstApoderdantes = new ArrayList<TiivsPersona>();
+			   lstPersonas=new ArrayList<TiivsPersona>();
+			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) 
+			   {    
+				    d.getTiivsPersona().setTipPartic(d.getTipPartic());
+				    d.getTiivsPersona().setClasifPer(d.getClasifPer());
+				    d.getTiivsPersona().setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
+				    d.getTiivsPersona().setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getClasifPer().trim()));
+				    d.getTiivsPersona().setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
+				    if(d.getIdAgrupacion()!=null){
+				    	d.getTiivsPersona().setIdAgrupacion(d.getIdAgrupacion());
+				    }
+				    
+				    lstPersonas.add(d.getTiivsPersona());
+				   
+					if(d.getTipPartic().trim().equals(ConstantesVisado.PODERDANTE))
+					{
+						lstPoderdantes.add(d.getTiivsPersona());
+					}
+					else  if(d.getTipPartic().trim().equals(ConstantesVisado.APODERADO))
+					{
+						lstApoderdantes.add(d.getTiivsPersona());
+					}else if(d.getTipPartic().trim().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
+						lstApoderdantes.add(d.getTiivsPersona());
+					}
+			   }
+			    agrupacionSimpleDto = new AgrupacionSimpleDto();
+				agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(this.solicitudRegistrarT.getCodSoli(), x.getId().getNumGrupo()));
+				agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
+				agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
+				agrupacionSimpleDto.setsEstado(Utilitarios.obternerDescripcionEstado(x.getEstado().trim()));
+				agrupacionSimpleDto.setLstPersonas(lstPersonas);
+			    lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
+			   
+			   
+		   }
+		
+			logger.info("Lista Poderdantes: " + lstPoderdantes.size());
+		   logger.info("Lista Apoderados: " + lstApoderdantes.size());
+		
+	}
+public String obtenerDescripcionDocumentos(String idTipoDocumentos) {
+	String descripcion = "";
+	for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
+		if (z.getCodTipoDoc().trim().equals(idTipoDocumentos)) {
+			descripcion = z.getDescripcion();
+			break;
+		}
+	}
+	return descripcion;
+}
+public String obtenerDescripcionClasificacion(String idTipoClasificacion) {
+	String descripcion = "";
+	for (ComboDto z : combosMB.getLstClasificacionPersona()) {
+		if (z.getKey().trim().equals(idTipoClasificacion)) {
+			descripcion = z.getDescripcion();
+			break;
+		}
+	}
+	return descripcion;
+}
+
+public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
+	String descripcion = "";
+	for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+		if (z.getKey().trim().equals(idTipoTipoRegistro)) {
+			descripcion = z.getDescripcion();
+			break;
+		}
+	}
+	return descripcion;
+}
+	public String instanciarSolicitudRegistro() {
+		logger.info("********************** instanciarSolicitudRegistro *********************");
+		sEstadoSolicitud = "BORRADOR";
+		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
+		lstTiivsSolicitudAgrupacion = new HashSet<TiivsSolicitudAgrupacion>();
+		solicitudRegistrarT = new TiivsSolicitud();
+		solicitudRegistrarT.setImporte((double) 0);
+		solicitudRegistrarT.setTiivsSolicitudAgrupacions(lstTiivsSolicitudAgrupacion);
+		solicitudRegistrarT.setTiivsOficina1(new TiivsOficina1());
+		solicitudRegistrarT.setTiivsTipoSolicitud(new TiivsTipoSolicitud());
+		String grupoAdm = (String) Utilitarios.getObjectInSession("GRUPO_ADM");
+		String grupoOfi = (String) Utilitarios.getObjectInSession("GRUPO_OFI");
+
+		logger.debug("********grupoAdm ****** " + grupoAdm
+				+ "  ******* grupoOfi ******** " + grupoOfi);
+		// if (grupoAdm == null && grupoOfi!= null) {
+		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
+		
+		if (usuario!=null)
+		{
+			logger.debug("Usuario Sesion:" + usuario.getNombre());
+			logger.debug("CodigoOficina: " + usuario.getBancoOficina().getCodigo().trim());
+			logger.debug("DescripcionOficina: "+ usuario.getBancoOficina().getDescripcion().trim());
+		}
+		
+		TiivsOficina1 oficina = new TiivsOficina1();
+		oficina.setCodOfi(usuario.getBancoOficina().getCodigo());
+
+		List<TiivsOficina1> lstOficinas1 = new ArrayList<TiivsOficina1>();
+		combosMB = new CombosMB();
+		lstOficinas1 = combosMB.getLstOficina();
+
+		if (lstOficinas1 != null && lstOficinas1.size() != 0) {
+			for (TiivsOficina1 o : lstOficinas1) {
+			//	logger.debug("codigo ofi usuario : "+ usuario.getBancoOficina().getCodigo().trim()+" :::: "+o.getCodOfi());
+				if (usuario.getBancoOficina().getCodigo().trim().equals(o.getCodOfi())) {
+					this.solicitudRegistrarT.setTiivsOficina1(o);
+					break;
+				} else {
+					if(this.solicitudRegistrarT.getTiivsOficina1()==null){
+					this.solicitudRegistrarT.setTiivsOficina1(new TiivsOficina1());
+					}
+				}
+			}
+		
+		}
+	
+		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02);
+		this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_REGISTRADO_T02);
+
+		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
+		personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
+		objTiivsPersonaBusqueda = new TiivsPersona();
+		objTiivsPersonaResultado = new TiivsPersona();
+		objTiivsPersonaSeleccionado = new TiivsPersona();
+		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
+		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
+		lstTipoSolicitudDocumentos = new ArrayList<TiivsTipoSolicDocumento>();
+
+		lstDocumentosXTipoSolTemp = new ArrayList<TiivsTipoSolicDocumento>();
+		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
+		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+		objSolicBancaria = new TiivsSolicitudOperban();
+		objSolicBancaria.setTipoCambio(0.0);
+		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
+		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
+		iTipoSolicitud = "";
+		lstTiivsPersona = new ArrayList<TiivsPersona>();
+		oficina = new TiivsOficina1();
+		
+		obtenCodRazonSocial(); 
+		obtenerTipoRegistro();
+		obtenerEtiquetasTipoRegistro();
+
+		return "/faces/paginas/solicitud.xhtml";
+	}	
+
+	public void actualizarListaDocumentosXTipo(TiivsAnexoSolicitud objAnexo) {
+		
+		try{
+			logger.info("=== actualizarListaDocumentosXTipo() ===");
+			if (objAnexo.getId().getCodDoc().contains(ConstantesVisado.PREFIJO_OTROS)) {
+				String sAlias = objAnexo.getAliasArchivo();
+				String sAliasTemporal = objAnexo.getAliasTemporal();
+				DocumentoTipoSolicitudDTO doc = new DocumentoTipoSolicitudDTO(
+						objAnexo.getId().getCodDoc(),
+						ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS, false + "",
+						sAlias, sAliasTemporal, "", "");
+				lstdocumentos.add(doc);
+				return;
+			}
+
+			for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
+
+				if (s.getId().getCodDoc().equals(objAnexo.getId().getCodDoc())) {
+					this.lstTipoSolicitudDocumentos.remove(s);
+					break;
+				}
+			}
+
+			for (DocumentoTipoSolicitudDTO doc : lstdocumentos) {
+				if (doc.getItem().equals(objAnexo.getId().getCodDoc())) {
+					doc.setAlias(objAnexo.getAliasArchivo());
+					doc.setAliasTemporal(objAnexo.getAliasTemporal());
+					break;
+				}
+			}
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al actualizarListaDocumentosXTipo"+e);
+		}
+		
+	}
+
+	public boolean validarTotalDocumentos() {
+		boolean result = false;
+		String sMensaje = "";
+		for (TiivsTipoSolicDocumento x : this.lstTipoSolicitudDocumentos) {
+			for (TiivsAnexoSolicitud a : lstAnexoSolicitud) {
+				if (Integer.parseInt(x.getObligatorio()) == ConstantesVisado.DOCUMENTO_OBLIGATORIO&& x.getId().getCodDoc().equals(a.getId().getCodDoc())) {
+					result = true; 
+				} else {
+					sMensaje = "Faltan Ingresar Documentos Obligatorios.";
+					Utilitarios.mensajeInfo("INFO", sMensaje);
+					break;
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Metodo que se encarga de validar que los documentos no sean 
+	 * duplicados, es decir si ya existe un documento en la lista.
+	 * @return result Flag booleano
+	 * **/
+	public boolean ValidarDocumentosDuplicados() {
+		boolean result = true;
+		String sMensaje = "";
+		for (TiivsAnexoSolicitud a : this.lstAnexoSolicitud) {
+			if (a.getId().getCodDoc().equals(sCodDocumento) 
+					&& !sCodDocumento.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
+				result = false;
+				sMensaje = "Documento ya se encuentra en la lista de Documentos";
+				Utilitarios.mensajeInfo("INFO ", sMensaje);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Metodo que se encarga de adjuntar y asociar el archivo 
+	 * seleccionado a la lista de documentos requeridos por 
+	 * tipo de solicitud en la aplicacion
+	 * **/
+	public void agregarDocumentosXTipoSolicitud() {
+	/*	boleanoMensajeInfoGeneral=false;
+		 boleanoMensajeApoderdantePoderdante=false;
+		 boleanoMensajeOperacionesBancarias=false;
+		 boleanoMensajeDocumentos=true;*/
+		try{
+			logger.info("=== agregarDocumentosXTipoSolicitud() ===");
+			logger.info("[Adjuntar]-TipoSolicitud: " + iTipoSolicitud);
+			String aliasCortoDocumento="";
+			if(selectedTipoDocumento!=null){
+				sCodDocumento = selectedTipoDocumento.getId().getCodDoc();
+			} else {
+				logger.debug("selectedTipoDocumento es null");
+				sCodDocumento = null;
+			}
+			//Se valida que el doc no sea vacio o nulo.
+			if(sCodDocumento == null || sCodDocumento.isEmpty()){
+				Utilitarios.mensajeInfo("", "Debe seleccionar un documento");
+				 return;
+			}
+			logger.info("[Adjuntar]-codDocumento: " + sCodDocumento);
+			logger.info("lstAnexoSolicitud.size() :  " + lstAnexoSolicitud.size());
+			
+			//Se valida la duplicidad de documentos
+			if (this.ValidarDocumentosDuplicados()) {
+													
+				if (sCodDocumento.equalsIgnoreCase(ConstantesVisado.VALOR_TIPO_DOCUMENTO_OTROS)) {
+					sCodDocumento = ConstantesVisado.PREFIJO_OTROS+String.format("%06d", lstdocumentos.size() + 1);
+					aliasCortoDocumento = sCodDocumento;
+				} else {
+					aliasCortoDocumento = selectedTipoDocumento.getTiivsDocumento().getNombre();
+				}
+							
+				String sAliasTemporal = cargarUnicoPDF(aliasCortoDocumento);
+										
+				if(sAliasTemporal == null || sAliasTemporal.trim() ==""){	
+					logger.debug("El sAliasTemporal es nulo o vacio.");
+					return;
+				}
+				
+				String sExtension = sAliasTemporal.substring(sAliasTemporal.lastIndexOf("."));
+				aliasCortoDocumento += sExtension;
+				
+				logger.info("[Adjuntar]-aliasArchivo: " + aliasCortoDocumento);
+				logger.info("[Adjuntar]-aliasArchivoTemporal: " + sAliasTemporal);
+				
+				TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
+				objAnexo.setId(new TiivsAnexoSolicitudId(null, sCodDocumento));
+				objAnexo.setAliasArchivo(aliasCortoDocumento.toUpperCase());
+				objAnexo.setAliasTemporal(sAliasTemporal);
+				
+				lstAnexoSolicitud.add(objAnexo);
+				
+				this.actualizarListaDocumentosXTipo(objAnexo);
+
+				establecerTipoSolicitud();
+				
+			}
+			
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al agregarDocumentosXTipoSolicitud():"+e);
+		}	
+	}
+	/**
+	 * Metodo que se encarga de establecer/setear el 
+	 * tipo de solicitud según el valor iTipoSolicitud.
+	 * **/
+	private void establecerTipoSolicitud(){
+		try{
+			for (TiivsTipoSolicitud tipoSoli : combosMB.getLstTipoSolicitud()) {
+				if (tipoSoli.getCodTipSolic().equals(iTipoSolicitud)) {
+					solicitudRegistrarT.setTiivsTipoSolicitud(tipoSoli);
+					break;
+				} else {
+					solicitudRegistrarT.setTiivsTipoSolicitud(null);
+				}
+			}
+		}catch(Exception e){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al establecerTipoSolicitud(): "+e);
+		}
+	}
+
+	/**
+	 * Metodo encargado de borrar un archivo en la seccion documentos del
+	 * formulario de registro de solicitud de visado, con el botón "Eliminar".
+	 * */
+	public void quitarDocumentosXTipoSolicitud() {
+		try{
+			logger.info("== quitarDocumentosXTipoSolicitud() ==");						
+			if (this.selectedDocumentoDTO.getAlias().isEmpty()) {
+				return;
+			}
+			logger.info("[QUITAR_DOC]-iTipoSolicitud: " + iTipoSolicitud);
+			logger.info("[QUITAR_DOC]-lstAnexoSolicitud: " + lstAnexoSolicitud.size());
+			logger.info("[QUITAR_DOC]-SelectedTipoDocumento: " + this.selectedDocumentoDTO.getItem());
+			
+			for (TiivsAnexoSolicitud anexo : lstAnexoSolicitud) {
+				if (anexo.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {
+					lstAnexoSolicitud.remove(anexo);
+					this.aliasFilesToDelete.add(anexo.getAliasTemporal());
+					break;
+				}
+			}
+
+			// Para el llenado del listado (listBox)
+			int i = 0;
+			for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
+				if (s.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {				
+					this.lstTipoSolicitudDocumentos.add(s);				
+					//this.lstTipoSolicitudDocumentos.add(i,s);											
+					break;
+				}
+				i++;
+			}
+
+			// listado documentos
+			for (DocumentoTipoSolicitudDTO doc : lstdocumentos) {			
+				if (doc.getItem().equals(selectedDocumentoDTO.getItem())) {
+					doc.setAlias("");
+					doc.setAliasTemporal("");
+					if(doc.getItem().contains(ConstantesVisado.PREFIJO_OTROS)){
+						logger.info("Este documento es de tipo otros");
+						lstdocumentos.remove(doc);
+					}
+					break;
+				}			
+			}
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al quitar documentos: "+e);
+		}
+	}
+	
+	/*
+	 * Metodo que actualiza la lista de documentos, este método es indirectamente
+	 * invocado desde el applet
+	 * */
+	public void actualizarDocumentosXTipoSolicitud(ActionEvent ae){		
+		logger.info("====== actualizarDocumentosXTipoSolicitud =====");
+		
+		//logger.info("documentos Leidos: " + documentosLeidos);		
+		logger.info("[Applet-Actualizar]-Documentos LEIDOS: " + visadoDocumentosMB.getDocumentosLeidos());
+		logger.info("[Applet-Actualizar]-Documentos CARGADOS: " + visadoDocumentosMB.getDocumentosCargados());
+		String []aDocumentosLeidos = visadoDocumentosMB.getDocumentosLeidos().split(",");
+		String []aDocumentosCargados = visadoDocumentosMB.getDocumentosCargados().split(",");
+		String nombreDoc = "";
+		
+		//Actualiza lista de documentos		
+		if(aDocumentosLeidos.length == aDocumentosCargados.length){
+			
+			//for(String documento : aDocumentosLeidos){
+			for(int i=0;i<aDocumentosLeidos.length;i++){
+				String documentoLeido = aDocumentosLeidos[i];
+				String documentoCargado = aDocumentosCargados[i];
+				logger.info("[Applet-Actualizar]-\tBuscando coincidencias para:" + documentoLeido);
+				if(!documentoLeido.trim().isEmpty()){
+					nombreDoc = documentoLeido.substring(0, documentoLeido.lastIndexOf("."));			
+					
+					//Agregar a listado de documentos tabla documentos
+					for(DocumentoTipoSolicitudDTO doc : lstdocumentos){
+						//logger.info("nombreDoc = doc.getItem():" + nombreDoc + "=" + doc.getNombreCorto());
+						if(doc.getNombreCorto().equals(nombreDoc)){
+							logger.debug("\t[CONCIDEN]-nombreDoc = doc.getItem():" + nombreDoc + "  =" + doc.getNombreCorto());
+							doc.setAlias(documentoLeido);
+							doc.setAliasTemporal(Utilitarios.modificarExtension(documentoCargado));
+							logger.info("\t[Applet-Actualizar]-Se actualiza nombre documento:" + doc.getAlias());
+							
+							//Agregar a lista de anexos de la solicitud
+							TiivsAnexoSolicitud objAnexo = new TiivsAnexoSolicitud();
+							objAnexo.setId(new TiivsAnexoSolicitudId(null, doc.getItem()));
+							objAnexo.setAliasArchivo(doc.getAlias());
+							objAnexo.setAliasTemporal(doc.getAliasTemporal());
+							
+							logger.debug("==> doc.getAlias():"+doc.getAlias() + "\tdoc.getAliasTemporal():"+doc.getAliasTemporal());
+							
+							
+							lstAnexoSolicitud.add(objAnexo);
+													
+							//Actualiza lstTipoSolicitudDocumentos (listBox de documentos)		
+							for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
+								if (s.getId().getCodDoc().equals(objAnexo.getId().getCodDoc())) {
+									this.lstTipoSolicitudDocumentos.remove(s);
+									break;
+								}
+							}												
+						}
+					}										
+				}
+			}		
+			
+		}
+		
+		establecerTipoSolicitud();
+				
+		logger.info("(Tabla) lstdocumentos tamanhio:" + lstdocumentos.size());
+		logger.info("(Anexos)lstAnexoSolicitud tamanhio:" + lstdocumentos.size());
+		logger.info("(Combo) lstTipoSolicitudDocumentos tamaño:" + lstdocumentos.size());
+		
+		logger.info("====== SALIENDO de actualizarDocumentosXTipoSolicitud =====");
+	}
+	
+	/**
+	 * Metodo que valida la operacion bancaria, incluye validaciones
+	 * de los diferentes campos en el formulario (No vacios, no nulos, etc)
+	 * @return resul Tipo booelan
+	 * **/
+	public boolean validarOperacionBancaria() {
+		boolean result = true;
+		String sMensaje = "";
+		if (objSolicBancaria.getId().getCodOperBan().equals("")) {
+			sMensaje = "Ingrese un tipo de Operación";
+			Utilitarios.mensajeInfo("", sMensaje);
+			result = false;
+		}
+		if (objSolicBancaria.getId().getMoneda().equals("")) {
+			sMensaje = "Seleccione una moneda";
+			Utilitarios.mensajeInfo("", sMensaje);
+			result = false;
+		}
+		if (!objSolicBancaria.getId().getMoneda().equals("")&& !objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)
+				&& objSolicBancaria.getTipoCambio() == 0) {
+			sMensaje = "Ingrese el Tipo de Cambio";
+			Utilitarios.mensajeInfo("", sMensaje);
+			result = false;
+		}
+		if (objSolicBancaria.getImporte() == 0) {
+			/*** SE AGREGA CONDICIONANTE DE TIPO DE OPERACION ***/
+			if(isDineraria(objSolicBancaria.getId().getCodOperBan())){
+				sMensaje = "Ingrese el Importe";
+				Utilitarios.mensajeInfo("", sMensaje);
+				result = false;	
+			}
+		}
+		if (!flagUpdateOperacionSolic) {
+			for (TiivsSolicitudOperban x : lstSolicBancarias) {
+				if (x.getId().getCodOperBan().equals(objSolicBancaria.getId().getCodOperBan())
+						&& x.getId().getMoneda().trim().equals(objSolicBancaria.getId().getMoneda().trim())) {
+					sMensaje = "Tipo de Operación con la misma moneda ya registrado, Ingrese otra moneda";
+					Utilitarios.mensajeInfo("", sMensaje);
+					result = false;
+					break;
+				}
+			}
+		}else{
+			int conunt =0, index=0;
+			for (TiivsSolicitudOperban x : lstSolicBancarias) {
+				index++;
+				if (x.getId().getCodOperBan().equals(objSolicBancaria.getId().getCodOperBan())){
+					//System.out.println("x.getMoneda().trim() " +x.getId().getMoneda().trim());
+					//System.out.println("objSolicBancaria.getMoneda().trim()) " +objSolicBancaria.getId().getMoneda().trim());
+					
+					if(x.getId().getMoneda().trim().equals(objSolicBancaria.getId().getMoneda().trim())) {
+						conunt++;
+						//logger.info("conunt "+conunt);
+						//System.out.println("x.getMoneda() " +x.getId().getMoneda());
+						//System.out.println("objSolicBancaria.getMoneda() " + objSolicBancaria.getId().getMoneda());
+						
+							break;
+						
+				}/*else if(!x.getMoneda().trim().equals(objSolicBancaria.getMoneda().trim())) {
+					System.out.println(" no lo deja ");
+					sMensaje = "Tipo de Operación con la misma moneda ya registrado, Ingrese otra moneda";
+					Utilitarios.mensajeInfo("", sMensaje);
+					result = false;
+					break;
+				}*/
+					
+				}
+			}
+		}
+		return result;
+	}
+	
+	private boolean isDineraria(String codigoOperacion){
+		GenericDao<TiivsOperacionBancaria, Object> service = 
+							(GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		try {
+			TiivsOperacionBancaria operacion = service.buscarById(TiivsOperacionBancaria.class, (Serializable) codigoOperacion);
+			if(operacion!=null){
+				if(operacion.getTipo().compareTo(ConstantesVisado.NO_DINERARIA)!=0){
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			logger.error("+++ Falló al obtener Operación", e);
+			e.printStackTrace();
+		}		
+		return false;
+	}
+
+	int icontSoles = 0, icontDolares = 0, icontEuros = 0;
+	double valorFinal = 0;
+	int item = 0;
+	String AntiguoValorDelTipoCambio =null;
+	public void validarTipoCambioDisabled(ValueChangeEvent e){
+		if(e.getNewValue()!=null){
+		logger.info(" validarTipoCambioDisabled " +e.getNewValue());
+		AntiguoValorDelTipoCambio=(String) e.getOldValue();
+		if (e.getNewValue().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+			this.objSolicBancaria.setTipoCambio(0.0);
+			bBooleanPopupTipoCambio=true;
+		}else{
+			//this.objSolicBancaria.setTipoCambio(0.0);
+			bBooleanPopupTipoCambio=false;
+		
+		}
+		}
+	}
+	
+	public void validarOperacionesBancarias(ValueChangeEvent e){
+		if(e.getNewValue()!=null){
+			GenericDao<TiivsOperacionBancaria, Object> service = (GenericDao<TiivsOperacionBancaria, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			try {
+				TiivsOperacionBancaria operacion = service.buscarById(TiivsOperacionBancaria.class, (Serializable) e.getNewValue());
+				if(operacion!=null){
+					if(operacion.getTipo().compareTo(ConstantesVisado.NO_DINERARIA)==0){
+						objSolicBancaria.getId().setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+						objSolicBancaria.setImporte(0.00);
+						objSolicBancaria.setImporteSoles(0.00);
+						objSolicBancaria.setTipoCambio(0.00);
+						bBooleanPopupTipoCambio = true;
+						bBooleanMoneda = true;
+						bBooleanImporte = true;
+					}else{
+						objSolicBancaria.getId().setMoneda("");
+						objSolicBancaria.setImporte(null);
+						objSolicBancaria.setImporteSoles(null);
+						objSolicBancaria.setTipoCambio(0.00);
+						bBooleanMoneda = false;
+						bBooleanImporte = false;
+					}
+				}
+			} catch (Exception e1) {
+				logger.error("+++ Falló al buscar operacion", e1);
+			}
+		}
+	}
+
+	/**
+	 * Metodo que se encarga de agregar una operacion bancaria en el 
+	 * formulario de registro de solicitud de visado.
+	 * */
+	public void agregarOperacionBancaria() {
+		logger.info(" ===== agregarOperacionBancaria() ===== ");
+		
+		if (this.validarOperacionBancaria()) {
+			for (TiivsOperacionBancaria n : combosMB.getLstOpeBancaria()) {
+				if (n.getCodOperBan().equals(objSolicBancaria.getId().getCodOperBan())) {
+					this.objSolicBancaria.setTiivsOperacionBancaria(n);
+					break;
+				}
+			}
+			if (!this.flagUpdateOperacionSolic) {
+				if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+					objSolicBancaria.setImporteSoles(objSolicBancaria.getImporte());
+					this.objSolicBancaria.getId().setsDescMoneda(ConstantesVisado.MONEDAS.SOLES);
+				}
+				if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) {
+					objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+					this.objSolicBancaria.getId().setsDescMoneda(ConstantesVisado.MONEDAS.DOLARES);
+				}
+				if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) {
+					objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+					this.objSolicBancaria.getId().setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
+				}
+
+				item++;
+				objSolicBancaria.setsItem("00" + item);
+				this.lstSolicBancarias.add(objSolicBancaria);
+				for (TiivsSolicitudOperban x : lstSolicBancarias) {
+					if(x.getId().getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+						icontSoles++;
+					}else 
+						if(x.getId().getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+						icontDolares++;
+					}else 
+						if(x.getId().getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+						icontEuros++;
+					}
+					
+				}
+				
+				
+				if (icontDolares == 0 && icontEuros == 0 && icontSoles > 0) {
+					//ONLI SOLES
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporte();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					//Double valorTemp = (double) (Math.round(valorFinal*100)/100);
+					
+					/*DecimalFormat formateador = new DecimalFormat("###,###.##");
+					Double monto=(double) Math.round(valorFinal*100)/100;
+					formateador.format(monto);
+					
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ monto);*/
+					
+					if (valorFinal % 1 == 0)
+					{
+						DecimalFormat formateador = new DecimalFormat("###,###");
+						DecimalFormatSymbols dfs = formateador.getDecimalFormatSymbols();
+						dfs.setDecimalSeparator('.');
+						dfs.setGroupingSeparator(',');
+						formateador.setDecimalFormatSymbols(dfs);
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ formateador.format(valorFinal) + ".00");
+					}
+					else
+					{
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ valorFinal);
+					}
+					
+					//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+  ((double) Math.round(valorFinal*100)/100));
+	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+				}
+				if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) {
+					//ONLI DOLARES
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporte();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					
+					/*DecimalFormat formateador = new DecimalFormat("###,###.##");
+					Double monto=(double) Math.round(valorFinal*100)/100;
+					formateador.format(monto);
+					
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ monto);*/
+					
+					if (valorFinal % 1 == 0)
+					{
+						DecimalFormat formateador = new DecimalFormat("###,###");
+						DecimalFormatSymbols dfs = formateador.getDecimalFormatSymbols();
+						dfs.setDecimalSeparator('.');
+						dfs.setGroupingSeparator(',');
+						formateador.setDecimalFormatSymbols(dfs);
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+ formateador.format(valorFinal) + ".00");
+					}
+					else
+					{
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+ valorFinal);
+					}
+					
+					//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+  ((double)Math.round(valorFinal*100)/100));
+	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
+				}
+				if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) {
+					//ONLI EUROS
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporte();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					
+					/*DecimalFormat formateador = new DecimalFormat("###,###.##");
+					Double monto=(double) Math.round(valorFinal*100)/100;
+					formateador.format(monto);
+					
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ monto);*/
+					
+					if (valorFinal % 1 == 0)
+					{
+						DecimalFormat formateador = new DecimalFormat("###,###");
+						DecimalFormatSymbols dfs = formateador.getDecimalFormatSymbols();
+						dfs.setDecimalSeparator('.');
+						dfs.setGroupingSeparator(',');
+						formateador.setDecimalFormatSymbols(dfs);
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+ formateador.format(valorFinal) + ".00");
+					}
+					else
+					{
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+ valorFinal);
+					}
+					
+					//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+ ( (double) Math.round(valorFinal*100)/100));
+	                this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_EUROS);
+				}
+				if (icontDolares  > 0 && icontEuros > 0 && icontSoles == 0
+						|| icontDolares  > 0 && icontEuros == 0&& icontSoles > 0 
+						|| icontDolares == 0 && icontEuros > 0 && icontSoles > 0
+						|| icontDolares > 0  && icontEuros > 0 && icontSoles > 0) 
+				{
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporteSoles();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					
+					/*DecimalFormat formateador = new DecimalFormat("###,###.##");
+					Double monto=(double) Math.round(valorFinal*100)/100;
+					formateador.format(monto);
+					
+					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ monto);*/
+					
+					if (valorFinal % 1 == 0)
+					{
+						DecimalFormat formateador = new DecimalFormat("###,###");
+						DecimalFormatSymbols dfs = formateador.getDecimalFormatSymbols();
+						dfs.setDecimalSeparator('.');
+						dfs.setGroupingSeparator(',');
+						formateador.setDecimalFormatSymbols(dfs);
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ formateador.format(valorFinal) + ".00");
+					}
+					else
+					{
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ valorFinal);
+					}
+					
+					//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+  ((double) Math.round(valorFinal*100)/100));
+	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+				}
+
+				
+			}else {
+				
+				logger.info("objSolicitudOperacionCapturadoOld"+objSolicBancaria.getImporte());
+				
+				if (objSolicitudOperacionCapturado.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+					objSolicitudOperacionCapturado.setImporteSoles(objSolicitudOperacionCapturado.getImporte());
+					objSolicitudOperacionCapturado.setTipoCambio(0.0);
+					this.objSolicitudOperacionCapturado.getId().setsDescMoneda(ConstantesVisado.MONEDAS.SOLES);
+				}
+				if (objSolicitudOperacionCapturado.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) {
+					objSolicitudOperacionCapturado.setImporteSoles(objSolicitudOperacionCapturado.getTipoCambio()* objSolicitudOperacionCapturado.getImporte());
+					this.objSolicitudOperacionCapturado.getId().setsDescMoneda(ConstantesVisado.MONEDAS.DOLARES);
+				}
+				if (objSolicitudOperacionCapturado.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) {
+					objSolicitudOperacionCapturado.setImporteSoles(objSolicitudOperacionCapturado.getTipoCambio()* objSolicitudOperacionCapturado.getImporte());
+					this.objSolicitudOperacionCapturado.getId().setsDescMoneda(ConstantesVisado.MONEDAS.EUROS);
+				}
+				//actualizar registro 
+				this.lstSolicBancarias.set(indexUpdateOperacion,objSolicitudOperacionCapturado);
+				
+				for (TiivsSolicitudOperban x : lstSolicBancarias) {
+					if(x.getId().getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+						icontSoles++;
+					}else 
+						if(x.getId().getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+						icontDolares++;
+					}else 
+						if(x.getId().getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+						icontEuros++;
+					}
+				}
+				
+				if (icontDolares == 0 && icontEuros == 0 && icontSoles > 0) {
+					//ONLI SOLES
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporte();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					
+					if (valorFinal % 1 == 0)
+					{
+						DecimalFormat formateador = new DecimalFormat("###,###");
+						DecimalFormatSymbols dfs = formateador.getDecimalFormatSymbols();
+						dfs.setDecimalSeparator('.');
+						dfs.setGroupingSeparator(',');
+						formateador.setDecimalFormatSymbols(dfs);
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ formateador.format(valorFinal) + ".00");
+					}
+					else
+					{
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ valorFinal);
+					}
+					
+					//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ ((double)Math.round(valorFinal*100)/100));
+	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+				}
+				if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) {
+					//ONLI DOLARES
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporte();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					
+					if (valorFinal % 1 == 0)
+					{
+						DecimalFormat formateador = new DecimalFormat("###,###");
+						DecimalFormatSymbols dfs = formateador.getDecimalFormatSymbols();
+						dfs.setDecimalSeparator('.');
+						dfs.setGroupingSeparator(',');
+						formateador.setDecimalFormatSymbols(dfs);
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+ formateador.format(valorFinal) + ".00");
+					}
+					else
+					{
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+ valorFinal);
+					}
+					
+					//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+((double)Math.round(valorFinal*100)/100));
+	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
+				}
+				if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) {
+					//ONLI EUROS
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporte();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					
+					if (valorFinal % 1 == 0)
+					{
+						DecimalFormat formateador = new DecimalFormat("###,###");
+						DecimalFormatSymbols dfs = formateador.getDecimalFormatSymbols();
+						dfs.setDecimalSeparator('.');
+						dfs.setGroupingSeparator(',');
+						formateador.setDecimalFormatSymbols(dfs);
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+ formateador.format(valorFinal) + ".00");
+					}
+					else
+					{
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+ valorFinal);
+					}
+					
+					//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+((double)Math.round(valorFinal*100)/100));
+	                this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_EUROS);
+				}
+				if (icontDolares  > 0 && icontEuros > 0 && icontSoles == 0
+						|| icontDolares  > 0 && icontEuros == 0&& icontSoles > 0 
+						|| icontDolares == 0 && icontEuros > 0 && icontSoles > 0
+						|| icontDolares > 0  && icontEuros > 0 && icontSoles > 0) 
+				{
+					for (TiivsSolicitudOperban x : lstSolicBancarias) {
+						valorFinal=valorFinal+x.getImporteSoles();
+						this.solicitudRegistrarT.setImporte(valorFinal);
+					}
+					
+					if (valorFinal % 1 == 0)
+					{
+						DecimalFormat formateador = new DecimalFormat("###,###");
+						DecimalFormatSymbols dfs = formateador.getDecimalFormatSymbols();
+						dfs.setDecimalSeparator('.');
+						dfs.setGroupingSeparator(',');
+						formateador.setDecimalFormatSymbols(dfs);
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ formateador.format(valorFinal) + ".00");
+					}
+					else
+					{
+						this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ valorFinal);
+					}
+					
+					//this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+((double)Math.round(valorFinal*100)/100));
+	            	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+				}
+
+				
+			}
+		  icontDolares=0;icontEuros=0;icontSoles=0;valorFinal=0;
+          objSolicBancaria=new TiivsSolicitudOperban();
+          objSolicBancaria.setId(new TiivsSolicitudOperbanId());
+          objSolicBancaria.setTipoCambio(0.0);
+          objSolicBancaria.setImporte(0.0);
+          objSolicBancaria.setImporteSoles(0.0);
+          this.bBooleanPopupTipoCambio=true;
+          this.flagUpdateOperacionSolic=false;
+          this.objSolicitudOperacionCapturado=new TiivsSolicitudOperban();
+          this.objSolicitudOperacionCapturado.setId(new TiivsSolicitudOperbanId());
+          this.valorFinal=0;
+          this.llamarComision();
+        
+		}
+
+	}
+
+	public void limpiarListaSolicitudesBancarias() {
+		logger.info("**************************** limpiarListaSolicitudesBancarias ****************************");
+		this.objSolicBancaria=new TiivsSolicitudOperban();
+		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
+		this.objSolicBancaria.setTipoCambio(0.00);
+		this.objSolicBancaria.setImporte(0.00);
+		bBooleanPopupTipoCambio=true;
+		
+		flagUpdateOperacionSolic=false;
+		//this.lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
+	}
+
+	public void seterComentario() {
+		logger.info("**************************** Setear Comentario ****************************");
+		logger.info("Comentario : " + this.solicitudRegistrarT.getObs());
+	}
+	public void limpiarComentario() {
+		logger.info("**************************** limpiar Comentario ****************************");
+		 this.solicitudRegistrarT.setObs("");
+	}
+
+	public void eliminarOperacionBancaria() {
+		logger.info("**************************** eliminarOperacionBancaria ****************************");
+		// String valor = Utilitarios.capturarParametro("objOperacion");
+		// logger.info("CODIGO DE OPERACION "+valor);
+		
+		
+		logger.info(objSolicitudOperacionCapturado.getImporte());
+		lstSolicBancarias.remove(objSolicitudOperacionCapturado);
+		
+		
+		for (TiivsSolicitudOperban x : lstSolicBancarias) {
+			if(x.getId().getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
+				icontSoles++;
+			}else 
+				if(x.getId().getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_DOLAR)){
+				icontDolares++;
+			}else 
+				if(x.getId().getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_EUROS)){
+				icontEuros++;
+			}
+		}
+		
+		if (icontDolares == 0 && icontEuros == 0 && icontSoles > 0) {
+			//ONLI SOLES
+			for (TiivsSolicitudOperban x : lstSolicBancarias) {
+				valorFinal=valorFinal+x.getImporte();
+				this.solicitudRegistrarT.setImporte(valorFinal);
+			}
+			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+((double) Math.round(valorFinal*100)/100));
+        	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+		}
+		if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) {
+			//ONLI DOLARES
+			for (TiivsSolicitudOperban x : lstSolicBancarias) {
+				valorFinal=valorFinal+x.getImporte();
+				this.solicitudRegistrarT.setImporte(valorFinal);
+			}
+			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_DOLAR+((double) Math.round(valorFinal*100)/100));
+        	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
+		}
+		if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) {
+			//ONLI EUROS
+			for (TiivsSolicitudOperban x : lstSolicBancarias) {
+				valorFinal=valorFinal+x.getImporte();
+				this.solicitudRegistrarT.setImporte(valorFinal);
+			}
+			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_EURO+((double) Math.round(valorFinal*100)/100));
+            this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_EUROS);
+		}
+		if (       icontDolares  > 0 && icontEuros > 0 && icontSoles == 0
+				|| icontDolares  > 0 && icontEuros == 0&& icontSoles > 0 
+				|| icontDolares == 0 && icontEuros > 0 && icontSoles > 0
+				|| icontDolares > 0  && icontEuros > 0 && icontSoles > 0) {
+			for (TiivsSolicitudOperban x : lstSolicBancarias) {
+				valorFinal=valorFinal+x.getImporteSoles();
+				this.solicitudRegistrarT.setImporte(valorFinal);
+			}
+			this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+((double) Math.round(valorFinal*100)/100));
+        	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
+		}
+
+		
+		this.limpiarOperacionesBancarias();
+        this.llamarComision();
+		
+
+	     
+
+	}
+	public void limpiarOperacionesBancarias(){
+		icontDolares=0;icontEuros=0;icontSoles=0;valorFinal=0;
+		  objSolicBancaria=new TiivsSolicitudOperban();
+		  objSolicBancaria.setId(new TiivsSolicitudOperbanId());
+		  objSolicBancaria.setTipoCambio(0.0);
+          objSolicBancaria.setImporte(0.0);
+          objSolicBancaria.setImporteSoles(0.0);
+		  this.flagUpdateOperacionSolic=false;
+		  this.objSolicitudOperacionCapturado=new TiivsSolicitudOperban();
+		  this.objSolicitudOperacionCapturado.setId(new TiivsSolicitudOperbanId());
+		  this.valorFinal=0.0;
+		  if(lstSolicBancarias.size()==0){
+				this.solicitudRegistrarT.setsImporteMoneda(valorFinal+"");
+		  	this.solicitudRegistrarT.setMoneda(null);
+			}
+	}
+
+	public void eliminarArupacion() {
+		logger.info("********************** eliminarArupacion *********************************** ");
+
+		this.lstAgrupacionSimpleDto.remove(this.objAgrupacionSimpleDtoCapturado);
+		Set<TiivsSolicitudAgrupacion> lstSolicitudAgrupacion = 
+				          (Set<TiivsSolicitudAgrupacion>) this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
+
+		logger.info("Tamanio de la lista Solicitud Agrupacion : "+ lstSolicitudAgrupacion.size());
+		for (TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion : lstSolicitudAgrupacion) {
+			if (tiivsSolicitudAgrupacion.getId().equals(
+					this.objAgrupacionSimpleDtoCapturado.getId())) {
+				lstSolicitudAgrupacion.remove(tiivsSolicitudAgrupacion);
+				break;
+			}
+		}
+		//numGrupo--;
+		
+		
+	/*	 for (TiivsPersona objTiivsPersonaResultado : lstTiivsPersona) {
+			  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+				  lstPoderdantes.add(objTiivsPersonaResultado);}
+			  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.APODERADO)){
+				  lstApoderdantes.add(objTiivsPersonaResultado);}
+			  logger.info("objTiivsPersonaResultado.getCodPer() : "+objTiivsPersonaResultado.getCodPer());
+			  TiivsAgrupacionPersona  tiivsAgrupacionPersonaId =new TiivsAgrupacionPersona();
+			  logger.info("numGrupo cambiar esto  " +numGrupoUpdatePoderdanteApoderado);
+			  tiivsAgrupacionPersonaId.setNumGrupo(numGrupoUpdatePoderdanteApoderado);
+			  tiivsAgrupacionPersonaId.setCodSoli(solicitudRegistrarT.getCodSoli());
+			  tiivsAgrupacionPersonaId.setCodPer(objTiivsPersonaResultado.getCodPer());
+			  tiivsAgrupacionPersonaId.setClasifPer(objTiivsPersonaResultado.getClasifPer());
+			  tiivsAgrupacionPersonaId.setTipPartic(objTiivsPersonaResultado.getTipPartic());
+			  tiivsAgrupacionPersonaId.setTiivsPersona(objTiivsPersonaResultado);
+			  lstTempAgrupacion=new HashSet<TiivsAgrupacionPersona>();
+			  //lstTempAgrupacion.addAll(lstTiivsAgrupacionPersonas);
+			  for (TiivsAgrupacionPersona  x : lstTiivsAgrupacionPersonas) {
+				  if(!x.equals(tiivsAgrupacionPersonaId)){
+					  lstTempAgrupacion.add(tiivsAgrupacionPersonaId);}
+			}
+		} 
+		*/
+		
+		// lstTiivsAgrupacionPersonas.remove(objAgrupacionSimpleDtoCapturado.g)
+		logger.info("Tamanio de la lista Solicitud Agrupacion : "+ lstSolicitudAgrupacion.size());
+		this.llamarComision();
+		this.objAgrupacionSimpleDtoCapturado = new AgrupacionSimpleDto();
+		
+		
+	}
+
+	public void verAgrupacion() {
+		logger.info("********************** verAgrupacion *********************************** ");
+
+		logger.info("this.getCodSoli  "+ this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
+		logger.info("this.getNumGrupo  "+ this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
+		logger.info("this.getLstPersonas  "+ this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
+	}
+	public String verEditarAgrupacion(){
+		logger.info("********************** verEditarAgrupacion *********************************** ");
+		logger.info("this.getCodSoli  "+ this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
+		logger.info("this.getNumGrupo  "+ this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
+		logger.info("this.getLstPersonas  "+ this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
+		
+		
+		combosMB=new CombosMB();
+		lstClasificacionPersona=combosMB.getLstClasificacionPersona();
+		logger.info("tamanioo actual de la lista de Clasificacion **** " +lstClasificacionPersona.size());
+		
+		for (TiivsSolicitudAgrupacion a : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+			if (a.getId().equals(objAgrupacionSimpleDtoCapturado.getId())) {
+				tiivsSolicitudAgrupacionCapturado = a;
+				break;
+			}
+		}
+
+				  
+		/**Recien se empieza a llenar la lista de Persona */
+		
+		setLstTiivsPersona(objAgrupacionSimpleDtoCapturado.getLstPersonas());
+		
+		/*for (AgrupacionSimpleDto dd: this.solicitudRegistrarTCopia.getLstAgrupacionSimpleDto()) {
+			if(dd.equals(objAgrupacionSimpleDtoCapturado)){
+				lstTiivsPersonaCopia =new ArrayList<TiivsPersona>();
+				lstTiivsPersonaCopia.addAll(dd.getLstPersonas());				
+			}
+			break;
+		}
+		*/
+		listaTemporalPersonasBorradores=new ArrayList<TiivsPersona>();
+		listaTemporalAgrupacionesPersonaBorradores=new ArrayList<TiivsAgrupacionPersona>();
+		logger.info("this.getLstPersonas  "+ lstTiivsPersona.size());
+		flagUpdatePoderdanteApoderados=true;
+		bBooleanPopup=false;
+		//return  "/faces/paginas/solicitudEdicion.xhtml";
+		return "";
+	}
+/*	public void verEditarAgrupacion(){
+		logger.info("********************** verEditarAgrupacion *********************************** ");
+		logger.info("this.getCodSoli  "+ this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
+		logger.info("this.getNumGrupo  "+ this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
+		logger.info("this.getLstPersonas  "+ this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
+		
+		for (int i = 0; i < lstAgrupacionSimpleDto.size(); i++) {
+           if(lstAgrupacionSimpleDto.get(i).equals(objAgrupacionSimpleDtoCapturado)){
+        	   indexUpdatePoderdanteApoderado=i;
+        	   numGrupoUpdatePoderdanteApoderado=lstAgrupacionSimpleDto.get(i).getId().getNumGrupo();
+        	   for (TiivsSolicitudAgrupacion a : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+				if(a.getId().getNumGrupo()==numGrupoUpdatePoderdanteApoderado){
+					lstTiivsAgrupacionPersonas=a.getTiivsAgrupacionPersonas();
+				}
+			   }
+        	   break;
+			}
+		}
+		setLstTiivsPersona(this.objAgrupacionSimpleDtoCapturado.getLstPersonas());
+		flagUpdatePoderdanteApoderados=true;
+	}
+	*/
+	
+	
+	int y=0;
+	public void obtenerAccionAgregarOperacionBancaria() {
+		logger.info("**************************** obtenerAccionAgregarOperacionBancaria ****************************");
+		logger.info("********************************************* : "+ objSolicBancaria.getImporte());
+		
+		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+			objSolicBancaria.setImporteSoles(objSolicBancaria.getImporte());
+			objSolicBancaria.setTipoCambio(0.0);
+		}
+		
+		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) {
+			
+			objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+			
+		}
+		if (objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) {
+			
+			objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+			
+		}
+		/** SAMIRA*/
+		if(!objSolicBancaria.getId().getMoneda().equals(AntiguoValorDelTipoCambio)&&!objSolicBancaria.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)&&AntiguoValorDelTipoCambio!=null){
+			logger.info("*** objSolicBancaria.getId().getMoneda() ***"+objSolicBancaria.getId().getMoneda());
+			logger.info("nuevoValorDelTipoCambio ********* " + AntiguoValorDelTipoCambio);
+			objSolicBancaria.setTipoCambio(0.0);
+			objSolicBancaria.setImporteSoles(objSolicBancaria.getTipoCambio()* objSolicBancaria.getImporte());
+			AntiguoValorDelTipoCambio=null;
+		}
+	}
+	public void editarOperacionBancaria() {
+		logger.info("**************************** editarOperacionBancaria ****************************");
+		
+		for (int i = 0; i < this.lstSolicBancarias.size(); i++) {
+			if (objSolicitudOperacionCapturado.equals(this.lstSolicBancarias.get(i))) {
+				indexUpdateOperacion = i;
+				break;
+			}
+		}
+		y=y+1;
+		logger.info("yyyyyyy : " +y);
+	//	Map<String, TiivsSolicitudOperban> mapSolicitudes=new HashMap<String, TiivsSolicitudOperban>();
+		//mapSolicitudes.put(y, objSolicitudOperacionCapturado);
+		
+		//Set set = mapSolicitudes.entrySet(); 
+		// Get an iterator 
+		//Iterator iterate = set.iterator(); 
+		// Display elements 
+		
+		
+		//logger.info("mapSolicitudes.get(mapSolicitudes.size()).getImporte()"+mapSolicitudes.get(mapSolicitudes.size()).getImporte());
+		//if(!flagUpdateOperacionSolic){
+		this.objSolicitudOperacionCapturadoOld= this.objSolicitudOperacionCapturado;
+		this.objSolicitudOperacionCapturadoOld.setId(this.objSolicitudOperacionCapturado.getId());
+		this.objSolicitudOperacionCapturadoOld.setImporte(this.objSolicitudOperacionCapturado.getImporte());
+		this.objSolicitudOperacionCapturadoOld.setImporteSoles(this.objSolicitudOperacionCapturado.getImporteSoles());
+		this.objSolicitudOperacionCapturadoOld.setTiivsOperacionBancaria(this.objSolicitudOperacionCapturado.getTiivsOperacionBancaria());
+		this.objSolicitudOperacionCapturadoOld.setTipoCambio(this.objSolicitudOperacionCapturado.getTipoCambio());
+		this.objSolicitudOperacionCapturadoOld.setsItem(this.objSolicitudOperacionCapturado.getsItem());
+		//}
+		this.objSolicBancaria = this.objSolicitudOperacionCapturado;
+		
+		/** Validar el disabled del tipo de cambio */
+		if (objSolicitudOperacionCapturado.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+			this.objSolicBancaria.setTipoCambio(0.0);
+			bBooleanPopupTipoCambio=true;
+		}else{
+			bBooleanPopupTipoCambio=false;
+		
+		}
+		/** Fin del Validar el disabled del tipo de cambio */
+		
+		/** Setear el flag para actualizar las operaciones bancarias*/
+		this.flagUpdateOperacionSolic = true;
+	}
+
+	public void editarAgrupacionSimpleDto() {
+		logger.info("************************** editarAgrupacionSimpleDto *****************************");
+		for (int i = 0; i < this.lstAgrupacionSimpleDto.size(); i++) {
+			if (objAgrupacionSimpleDtoCapturado
+					.equals(this.lstAgrupacionSimpleDto.get(i))) {
+				indexUpdateAgrupacionSimpleDto = i;
+			}
+		}
+		this.lstTiivsPersona = new ArrayList<TiivsPersona>();
+		/*
+		 * for (TiivsPersona f :
+		 * this.objAgrupacionSimpleDtoCapturado.getLstApoderdantes()) {
+		 * lstTiivsPersona. }
+		 */
+		this.flagUpdateOperacionSolcAgrupac = true;
+	}
+
+	public void llamarComision() {
+		logger.info("=== llamarComision() ===");
+		this.solicitudRegistrarT.setTipoComision(objRegistroUtilesMB.obtenerTipoComision(this.solicitudRegistrarT));
+		this.solicitudRegistrarT.setComision(objRegistroUtilesMB.obtenerComision(solicitudRegistrarT.getTipoComision()));
+		logger.info(" TipoComision: " + this.solicitudRegistrarT.getTipoComision());
+		logger.info(" Comision : " + this.solicitudRegistrarT.getComision());
+
+	}
+
+	@SuppressWarnings({ "unused", "unchecked" })
+	@Transactional
+	public void registrarSolicitud() 
+	{
+	/*	boleanoMensajeInfoGeneral=true;
+		 boleanoMensajeApoderdantePoderdante=true;
+		 boleanoMensajeOperacionesBancarias=true;
+		 boleanoMensajeDocumentos=false;*/
+		String mensaje = "";
+//		String redirect = "";
+		this.redirect = "";
+		boolean actualizarBandeja=false;
+		
+		establecerTipoSolicitud();
+		
+		logger.info("*********************** registrarSolicitud ************************");
+		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+        GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+	    
+		try {
+			logger.info("[REGISTR_SOLIC]-Moneda: " +this.solicitudRegistrarT.getMoneda());
+			
+			this.solicitudRegistrarT.setFecha(new Date());
+			this.solicitudRegistrarT.setEstado(this.solicitudRegistrarT.getEstado().trim());
+			this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
+
+			logger.info("[REGISTR_SOLIC]-Usuario:" + usuario.getUID());
+			this.solicitudRegistrarT.setRegUsuario(usuario.getUID());
+			this.solicitudRegistrarT.setNomUsuario(usuario.getNombre());
+			
+			if (flagMostrarACOficina)
+			{
+				if (oficina!=null)
+				{
+					logger.info("[REGISTR_SOLIC]-codOficina: "+ oficina.getCodOfi());
+					for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
+						if (tiivsOficina1.getCodOfi().equals(oficina.getCodOfi())) {
+							this.solicitudRegistrarT.setTiivsOficina1(oficina);
+							break;
+						} 
+					}
+				}
+			}
+			else
+			{
+				logger.info("[REGISTR_SOLIC]-codOficina: "+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+				for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
+					if (tiivsOficina1.getCodOfi().equals(this.solicitudRegistrarT.getTiivsOficina1().getCodOfi())) {
+						this.solicitudRegistrarT.setTiivsOficina1(tiivsOficina1);
+						break;
+					} 
+				}
+			}
+			
+			
+			
+			this.limpiarAgrupacionesVacias();
+
+			logger.info("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : "+ solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
+			
+			boolean esValido = false;
+			if(!this.sEstadoSolicitud.equals("BORRADOR")){ 	//Validacion para envio de solicitud a SSJJ
+				esValido = this.validarEnvioSolicitud();
+			} else { 	//Validacion para registro de solicitud (Borrador)
+				esValido = this.validarRegistroSolicitud();
+			}
+			
+			logger.debug("[REGISTR_SOLIC]-esValido:"+esValido);
+			
+			//if (this.validarRegistroSolicitud()) 
+			if (esValido)
+			{
+				if (!this.sEstadoSolicitud.equals("BORRADOR")) {
+					this.enviarSolicitudSSJJ();
+					logger.info("Estudio: "+solicitudRegistrarT.getTiivsEstudio().getCodEstudio());					
+				}
+				
+				SolicitudDao<TiivsPersona, Object> servicePK = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+				String sCodigoSol = servicePK.obtenerPKNuevaSolicitud();
+				logger.debug("[REGISTR_SOLIC]-sCodigoSol " + sCodigoSol);
+				this.solicitudRegistrarT.setCodSoli(sCodigoSol);
+		
+		
+				for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+					  //x.setTiivsSolicitud(this.solicitudRegistrarT);
+					  x.getId().setCodSoli(sCodigoSol);
+					  for (TiivsAgrupacionPersona a : x.getTiivsAgrupacionPersonas()) {
+						a.setCodSoli(x.getId().getCodSoli());
+						a.setNumGrupo(x.getId().getNumGrupo());
+						a.setIdAgrupacion(null);//para que la bd asigne id agrupacion
+					}
+				}
+				
+				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
+				TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
+				  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),1+""));
+				  objHistorial.setEstado(this.solicitudRegistrarT.getEstado());
+				  objHistorial.setNomUsuario(usuario.getNombre());
+				  objHistorial.setObs(this.solicitudRegistrarT.getObs());
+				  objHistorial.setFecha(new Timestamp(new Date().getTime()));
+				  objHistorial.setRegUsuario(usuario.getUID());
+				  
+				  serviceHistorialSolicitud.insertar(objHistorial);
+				  
+				if(this.lstAnexoSolicitud!=null){
+					logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+" de Anexos es:"+this.lstAnexoSolicitud.size());
+				}
+				for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
+					  n.getId().setCodSoli(solicitudRegistrarT.getCodSoli());
+					  logger.debug("[ANEXO]-Id:"+n.getId() + "  Alias:"+n.getAliasArchivo()+"  AliasTemp:"+n.getAliasTemporal());
+					  serviceAnexos.insertar(n);
+				}
+				 
+				
+				for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
+					logger.info("[REGISTR_SOLIC]-OperacionBancaria-id: "+ a.getId().getCodOperBan());
+					a.getId().setCodSoli(this.solicitudRegistrarT.getCodSoli());
+					logger.info("[REGISTR_SOLIC]-CodSolicitud: "+ a.getId().getCodSoli());
+					 serviceSoli.insertar(a);
+				}
+				
+				 //Carga ficheros al File Server
+				  boolean bRet = cargarArchivosFileServer();
+				  logger.info("[REGISTR_SOLIC]-Resultado de carga de archivos al FileServer:" + bRet);
+				  //Elimina archivos temporales
+				  eliminarArchivosTemporales();
+				  
+				if (objResultado.getCodSoli() != "" || objResultado != null) {
+					if (this.sEstadoSolicitud.equals("BORRADOR")) {
+						mesajeConfirmacion = "Se registró correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
+						actualizarBandeja=true;
+					} else {
+						mesajeConfirmacion = "Se envió a SSJJ correctamente la Solicitud con codigo : "+ objResultado.getCodSoli();
+						actualizarBandeja=true;
+					}
+					//redirect = "/faces/paginas/bandejaSeguimiento.xhtml";					
+					this.redirect = consultarSolicitudMB.redirectDetalleSolicitud(objResultado.getCodSoli());					
+				} else {
+					mensaje = "Error al generar la Solicitud ";
+					Utilitarios.mensajeInfo("INFO", mensaje);
+				}
+
+				logger.info("[REGISTR_SOLIC]-objResultado.getCodSoli(); "+ objResultado.getCodSoli());
+				logger.info("[REGISTR_SOLIC]-objResultado.getTiivsSolicitudAgrupacions() "+ objResultado.getTiivsSolicitudAgrupacions().size());
+				logger.info("[REGISTR_SOLIC]-this.solicitudRegistrarT.importe : " +this.solicitudRegistrarT.getImporte());					
+				
+				if (actualizarBandeja)
+				{
+					this.seguimientoMB.busquedaSolicitudxCodigo(objResultado.getCodSoli());
+				}
+				
+			}
+		} catch (Exception e) {
+			this.redirect="";
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e);
+			Utilitarios.mensajeError("ERROR", "Ocurrió un Error al grabar la Solicitud");
+
+		}
+		logger.info("Redirec:" + this.redirect);
+//		return this.redirect; 
+
+	}
+		
+	public String redireccionar(){
+		Utilitarios.mensajeInfo("INFO", mesajeConfirmacion);
+		return redirect;
+	}		
+
+	/**
+	 * Metodo que se encarga del envío de la solicitud de visado a  SSJJ (Servicios 
+	 * Juridicos). Aqui es donse se obtiene el estudio de menor carga y se setea el
+	 * estado ENVIADO.
+	 * */
+	public void enviarSolicitudSSJJ() {
+		Timestamp time = new Timestamp(objRegistroUtilesMB.obtenerFechaRespuesta().getTime());
+		logger.info("[EnviarSSJJ]-FechaRespuesta : " + time);
+		String sCodigoEstudio = objRegistroUtilesMB.obtenerEstudioMenorCarga();
+		logger.info("[EnviarSSJJ]-CodEstudio-menorCarga: +  " + sCodigoEstudio);
+		for (TiivsEstudio x : combosMB.getLstEstudio()) {
+			if (x.getCodEstudio().equals(sCodigoEstudio)) {
+				this.solicitudRegistrarT.setTiivsEstudio(x);
+				break;
+			}
+		}
+		this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02);
+		this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
+		this.solicitudRegistrarT.setFechaRespuesta(time);
+		this.solicitudRegistrarT.setFechaEnvio(new Timestamp(new Date().getTime()));
+	}
+	public void actualizarVoucher(){
+		//solicitudRegistrarT.nroVoucher
+		logger.info("this.getSolicitudRegistrarT().getNroVoucher():" + this.getSolicitudRegistrarT().getNroVoucher());
+	}
+	
+	/**
+	 * Metodo que se encarga de la validacion del nro de voucher ingresado 
+	 * al registrar una solicitud de visado
+	* */
+	
+	@SuppressWarnings({ "unchecked", "null" })
+	public boolean validarNroVoucher() throws Exception {
+		boolean booleano = true;
+		if (!this.sEstadoSolicitud.equals("BORRADOR")) {
+			String mensaje = "Ingrese un Nro de Vourcher no registrado ";
+			Busqueda filtroNroVoucher = Busqueda.forClass(TiivsSolicitud.class);
+			filtroNroVoucher.add(Restrictions.not(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)));
+			GenericDao<TiivsSolicitud, String> serviceNroVoucher = (GenericDao<TiivsSolicitud, String>) SpringInit
+					.getApplicationContext().getBean("genericoDao");
+			List<TiivsSolicitud> lstSolicitud = new ArrayList<TiivsSolicitud>();
+			lstSolicitud = serviceNroVoucher.buscarDinamico(filtroNroVoucher);
+			if (lstSolicitud != null) {
+				for (TiivsSolicitud a : lstSolicitud) {
+					if (a != null || !a.equals("")) {
+						if (a.getNroVoucher() != (null)) {
+							if (a.getNroVoucher().equals(this.solicitudRegistrarT.getNroVoucher())) {
+								booleano = false;
+								Utilitarios.mensajeInfo("INFO", mensaje);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		return booleano;
+	}
+
+	public void registrarSolicitudBorrador() {
+		sEstadoSolicitud = "BORRADOR";
+	}
+
+	public void registrarSolicitudEnviado() {
+		sEstadoSolicitud = "ENVIADO";
+	}
+
+	private boolean validarRegistroSolicitud() throws Exception {
+		
+		  
+		boolean retorno = true;
+		String mensaje = "";
+		
+		logger.info("solicitudRegistrarT.getTiivsOficina1() "+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+		if (solicitudRegistrarT.getTiivsOficina1() == null) {
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if(solicitudRegistrarT.getTiivsOficina1().getCodOfi()==null){
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if (solicitudRegistrarT.getTiivsOficina1().getCodOfi().equals("")) {
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+		/*
+		if (solicitudRegistrarT.getNroVoucher() == null ) {
+			mensaje = "Ingrese el Nro Voucher";
+			retorno =this.validarNroVoucher();;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+			
+		}else if (solicitudRegistrarT.getNroVoucher().equals("")){
+			mensaje = "Ingrese el Nro Voucher";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+			
+		} else if (solicitudRegistrarT.getNroVoucher().length() < 11) {
+			mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		*/
+		 
+		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
+			mensaje = "Ingrese la sección Apoderado y Poderdante";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}else{
+			Set<TiivsAgrupacionPersona> lstAgrupacionPersona=null;
+			int conuntNumAgru=0;
+			
+			for (TiivsSolicitudAgrupacion a : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+				conuntNumAgru=a.getId().getNumGrupo();
+				logger.info("conuntNumAgru : " +conuntNumAgru);
+				lstAgrupacionPersona=a.getTiivsAgrupacionPersonas();
+				logger.info("lstAgrupacionPersona : " +lstAgrupacionPersona.size());
+				int contPoderdante=0, contApoderado=0;
+				for (TiivsAgrupacionPersona xa : lstAgrupacionPersona) {
+					if(xa.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+					   contPoderdante++;
+					}else if(xa.getTipPartic().equals(ConstantesVisado.APODERADO)){
+						contApoderado++;
+					}else if(xa.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
+						contApoderado++;
+					}
+				}
+				if(contPoderdante==0||contApoderado==0){
+//					retorno= false;
+//					Utilitarios.mensajeInfo("INFO", "Ingrese por lo menos un Poderdante y un Apoderado, por cada Combinación");
+					break;
+					
+				}
+				logger.info("contPoderdante : " +contPoderdante);
+				logger.info("contApoderado : " +contApoderado);
+			}
+			
+		}
+		if (solicitudRegistrarT.getTiivsTipoSolicitud() == (null)) {
+			mensaje = "Seleccione el Tipo de Solicitud ";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+//		if (this.lstAnexoSolicitud.size() == 0) {
+//			mensaje = "Ingrese los documentos Obligatorios";
+//			retorno = false;
+//			Utilitarios.mensajeInfo("INFO", mensaje);
+//		}
+
+		if (this.lstSolicBancarias.size() == 0) {
+
+			mensaje = "Ingrese al menos una Operación Bancaria";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+		return retorno;
+	}
+	
+	/**
+	 * Metodo que se encarga de la validacion de la solicitud de visado, entre
+	 * las validaciones se consideran que los campos no sean nulos, obligatoriedad
+	 * de algunas secciones, etc
+	 * @return true/false Respuesta de validacion
+	 * */
+	private boolean validarEnvioSolicitud() throws Exception {		
+		  
+		boolean retorno = true;
+		String mensaje = "";
+		
+		logger.info("[VALIDA_ENV_SOLIC]-Oficina:"+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+		//Validacion de oficina
+		if (solicitudRegistrarT.getTiivsOficina1() == null) {
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if(solicitudRegistrarT.getTiivsOficina1().getCodOfi()==null){
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		} else if (solicitudRegistrarT.getTiivsOficina1().getCodOfi().equals("")) {
+			mensaje = "Ingrese una Oficina";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+		//Validacion de numero de voucher
+				if (solicitudRegistrarT.getNroVoucher()==null){
+					mensaje = "Ingrese el Nro Voucher";
+					retorno = false;
+					Utilitarios.mensajeInfo("INFO", mensaje);
+			      }
+				else if (solicitudRegistrarT.getNroVoucher().equals("")){
+						mensaje = "Ingrese el Nro Voucher";
+						retorno = false;
+						Utilitarios.mensajeInfo("INFO", mensaje);
+				 }else if (solicitudRegistrarT.getNroVoucher().length() < 11) {
+						mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
+						retorno = false;
+						Utilitarios.mensajeInfo("INFO", mensaje);
+					}
+				 else {
+					retorno =this.validarNroVoucher();
+				 }
+				 
+		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
+			mensaje = "Ingrese la sección Apoderado y Poderdante";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}else{
+			Set<TiivsAgrupacionPersona> lstAgrupacionPersona=null;
+			int conuntNumAgru=0;
+			
+			for (TiivsSolicitudAgrupacion a : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
+				conuntNumAgru=a.getId().getNumGrupo();
+				logger.info("conuntNumAgru : " +conuntNumAgru);
+				lstAgrupacionPersona=a.getTiivsAgrupacionPersonas();
+				logger.info("lstAgrupacionPersona : " +lstAgrupacionPersona.size());
+				int contPoderdante=0, contApoderado=0;
+				for (TiivsAgrupacionPersona xa : lstAgrupacionPersona) {
+					if(xa.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+					   contPoderdante++;
+					
+					}else if(xa.getTipPartic().equals(ConstantesVisado.APODERADO)){
+						contApoderado++;
+						
+					}else if(xa.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
+						contApoderado++;
+					}
+				}
+				if(contPoderdante==0||contApoderado==0){
+					retorno= false;
+					Utilitarios.mensajeInfo("INFO", "Ingrese por lo menos un Poderdante y un Apoderado, por cada Combinación");
+					break;
+					
+				}
+				logger.info("contPoderdante : " +contPoderdante);
+				logger.info("contApoderado : " +contApoderado);
+			}
+			
+		}
+		if (solicitudRegistrarT.getTiivsTipoSolicitud() == (null)) {
+			mensaje = "Seleccione el Tipo de Solicitud ";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+		if (this.lstAnexoSolicitud.size() == 0) {
+			mensaje = "Ingrese los documentos Obligatorios";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+		for(TiivsTipoSolicDocumento docRequerido :  lstTipoSolicitudDocumentos){
+			if(docRequerido.getObligatorio().equals("1")){
+				mensaje = "Ingrese los documentos Obligatorios";
+				retorno = false;
+				Utilitarios.mensajeInfo("INFO", mensaje);
+				break;
+			}
+		}
+
+		if (this.lstSolicBancarias.size() == 0) {
+
+			mensaje = "Ingrese al menos una Operación Bancaria";
+			retorno = false;
+			Utilitarios.mensajeInfo("INFO", mensaje);
+		}
+		
+			
+		
+		return retorno;
+	}
+
+	public String prepararURLEscaneo() {			
+		logger.info("***********prepararURLEscaneo***************");
+		
+		String sCadena = "";		
+		try{				
+			pdfViewerMB = new PDFViewerMB();	
+			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID());			
+		}catch(Exception e){
+			logger.error("Error al obtener parámetros de APPLET",e);
+		}
+		return sCadena;
+		
+	}
+	
+	/**
+	 * Metodo que se encarga de cargar los archivos .PDF hacia el FileServer
+	 * @return boolean true/false Indica el exito de la operacion
+	 * */
+	public boolean cargarArchivosFileServer(){			
+		logger.info("========= cargarArchivosFileServer() ========");		
+		boolean exito = true;
+				
+		String ubicacionFinal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)  + File.separator;		
+		String sUbicacionTemporal = ubicacionFinal + ConstantesVisado.FILES + File.separator;
+				
+		logger.info("[CARGAR-FILESERVER]-Ubicacion final "+ ubicacionFinal);
+		logger.info("[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);		
+		if(lstAnexoSolicitud!=null){
+			logger.debug("[CARGAR-FILESERVER]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
+		}
+		for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){		
+			logger.debug("======== Mover archivo ========");
+			File srcFile = new File(sUbicacionTemporal + anexo.getAliasTemporal());	
+			logger.debug("srcFile:"+sUbicacionTemporal + anexo.getAliasTemporal());
+			File destFile = new File(ubicacionFinal + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
+			logger.debug("destFile:"+ubicacionFinal + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
+			try {
+				FileUtils.copyFile(srcFile, destFile);
+				logger.debug("Despues de mover el archivo ...");
+			} catch (IOException e) {
+				logger.error("Error al mover el archivo al fileServer", e);
+			} catch (Exception ex) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al mover archivo al fileServer:" + ex);
+			}
+			if(!destFile.isFile() && destFile.length()>0){
+				exito = false;
+			}
+		}
+		logger.debug("exito:"+exito);
+		return exito;		
+	}
+	
+	/**
+	 * Metodo que se encarga de cargar los archivos .PDF hacia el servidor FTP
+	 * @return boolean true/false Indica el exito de la operacion
+	 * */
+	public boolean cargarArchivosFTP(){					
+		logger.info("========= cargarArchivosFileServer() ========");		
+		boolean exito = true;
+						
+		String sUbicacionTemporal = Utilitarios
+				.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+				+ File.separator + ConstantesVisado.FILES + File.separator;
+		
+		logger.info("[CARGAR-FTP]-Ubicacion temporal "+ sUbicacionTemporal);
+		if(lstAnexoSolicitud!=null){
+			logger.debug("[CARGAR-FTP]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
+		}
+		for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){			
+			String ruta = pdfViewerMB.cargarUnicoPDF(anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo(),sUbicacionTemporal + anexo.getAliasTemporal());					
+			logger.debug("** [CARGAR-FTP]-ruta"+ruta);
+			if (ruta.compareTo("") != 0) {
+				logger.debug("[CARGAR-FTP]-Se subio el archivo: [" + anexo.getAliasTemporal() +"] al servidor.");
+				exito = exito && true;
+			} else {
+				logger.debug("[CARGAR-FTP]-No se pudo subir el archivo: [" + anexo.getAliasTemporal() +"] al servidor.");
+				exito = exito && false;
+			}
+		}
+		return exito;
+	}
+				
+	/**
+	 * Metod que se encargar de limpiar los documentos temporales que ya no
+	 * son necesarios almacenar en el directorio de visado.
+	 * **/
+	public void eliminarArchivosTemporales() {	
+		logger.info("************ eliminarArchivosTemporales() **************");
+		logger.info("Archivos a eliminar:" + aliasFilesToDelete.size()); 	
+		File fileToDelete = null;
+		
+		String sUbicacionTemporal = Utilitarios
+				.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+				+ File.separator + ConstantesVisado.FILES + File.separator;
+		
+		for(String sfile : aliasFilesToDelete){
+			logger.debug("borrar archivo: " + sUbicacionTemporal + sfile);
+			fileToDelete = new File(sUbicacionTemporal + sfile);
+			if(fileToDelete.delete()){
+				logger.debug("Se ha BORRADO el archivo temporal :" + sfile);
+			} else {
+				logger.debug("No se ha BORRADO el archivo temporal :" + sfile);
+			}
+		}
+		
+		fileToDelete = null;
+		aliasFilesToDelete = new ArrayList<String>();		
+	}		
+	
+	public void cambiarRazonSocial(ValueChangeEvent e){		
+		logger.info("************cambiarRazonSocial()*¨**************");
+		String codTipoDocumento = (String) e.getNewValue();
+		if (codTipoDocumento!=null && codTipoDocumento.equals(this.codigoRazonSocial)) {//CODIGO RAZONSOCIAL
+			this.mostrarRazonSocial = true;
+			objTiivsPersonaResultado.setTipDoi(this.codigoRazonSocial);
+			objTiivsPersonaResultado.setApeMat("");
+			objTiivsPersonaResultado.setNombre("");
+		} else {
+			this.mostrarRazonSocial = false;
+			objTiivsPersonaResultado.setTipDoi("");
+		}	
+		
+		this.obterPatterDelTipoDocumento(codTipoDocumento);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void obterPatterDelTipoDocumento(String codTipoDocumento){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC));
+		filtroMultitabla.add(Restrictions.eq("id.codElem",codTipoDocumento));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			 patter=listaMultiTabla.get(0).getValor4();
+			logger.info("patter : "+patter);
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas: " + e);
+		}
+		
+		
+	}
+	
+	public String descargarDocumento() {
+		logger.debug("=== inicia descargarDocumento() ====");
+		HttpServletResponse response = (HttpServletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		
+		
+		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		
+		String nombreDocumento = params.get("nombreArchivo");
+		logger.debug("[DESCARG_DOC]-nombreDocumento: "+nombreDocumento);
+		String rutaDocumento = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+				+ File.separator + ConstantesVisado.FILES + File.separator + nombreDocumento;
+		
+		logger.debug("[DESCARG_DOC]-rutaDocumento: "+rutaDocumento);
+		String outputFileName = rutaDocumento;
+		
+		File outputPDF = new File(outputFileName);
+
+		// Get ready to return pdf to user
+		BufferedInputStream input = null;
+		BufferedOutputStream output = null;
+		try {
+			// Open file.
+			input = new BufferedInputStream(new FileInputStream(outputPDF),10240);
+
+			// Return PDF to user
+			// Init servlet response.
+			response.reset();
+			response.setHeader("Content-Type", "application/pdf");
+			response.setHeader("Content-Length",String.valueOf(outputPDF.length()));
+			response.setHeader("Content-Disposition", "attachment; filename=\""+ nombreDocumento + "\"");
+			output = new BufferedOutputStream(response.getOutputStream(), 10240);
+
+			// Write file contents to response.
+			byte[] buffer = new byte[10240];
+			int length;
+			while ((length = input.read(buffer)) > 0) {
+				output.write(buffer, 0, length);
+			}
+			logger.debug("finalizando OK");
+			// Finalize task.
+			output.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:"+e);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento:"+ex);
+		} 
+		finally {
+			try {
+				output.close();
+			} catch (IOException e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento:"+e);
+				e.printStackTrace();
+			}
+			try {
+				input.close();
+			} catch (IOException e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:"+e);
+				e.printStackTrace();
+			}
+		}
+		FacesContext.getCurrentInstance().responseComplete();
+		
+		logger.debug("=== saliendo de descargarDocumento() ====");
+		
+		return "";		
+	}
+
+	private void obtenCodRazonSocial() {
+		TiposDoiService tiposDoiService = new TiposDoiService(); 			
+		codigoRazonSocial = tiposDoiService.obtenerCodPersonaJuridica();
+	}
+	
+	//SE AGREGA METODO PARA OBTENER EL TIPO DE REGISTRO POR BD
+	private void obtenerTipoRegistro(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			tipoRegistro = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						tipoRegistro += multitabla.getValor1();	
+					}else{
+						tipoRegistro += multitabla.getValor1() + " / ";
+					}
+				}
+			}
+			
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+	
+	private void obtenerPonderdante(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("valor3", ConstantesVisado.R1_PODERDANTE));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			poderdante = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						poderdante += multitabla.getValor1();	
+					}else{
+						poderdante += multitabla.getValor1() + " - ";
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+	
+	private void obtenerAponderdante(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("valor3", ConstantesVisado.R2_APODERADO));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			apoderdante = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						apoderdante += multitabla.getValor1();	
+					}else{
+						apoderdante += multitabla.getValor1() + " - ";
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+	
+	//METODO PARA OBTENER ETIQUETAS DE TIPO DE REGISTRO DESDE BD Y MOSTRARLO EN GRILLA
+	private void obtenerEtiquetasTipoRegistro(){
+		obtenerPonderdante();
+		obtenerAponderdante();
+	}
+
+	public List<TiivsMultitabla> getLstMultitabla() {
+		return lstMultitabla;
+	}
+
+	public void setLstMultitabla(List<TiivsMultitabla> lstMultitabla) {
+		this.lstMultitabla = lstMultitabla;
+	}
+
+	public List<ApoderadoDTO> getLstClientes() {
+		return lstClientes;
+	}
+
+	public void setLstClientes(List<ApoderadoDTO> lstClientes) {
+		this.lstClientes = lstClientes;
+	}
+
+	public List<OperacionBancariaDTO> getLstOperaciones() {
+		return lstOperaciones;
+	}
+
+	public void setLstOperaciones(List<OperacionBancariaDTO> lstOperaciones) {
+		this.lstOperaciones = lstOperaciones;
+	}
+
+	public List<DocumentoTipoSolicitudDTO> getLstdocumentos() {
+		return lstdocumentos;
+	}
+
+	public void setLstdocumentos(List<DocumentoTipoSolicitudDTO> lstdocumentos) {
+		this.lstdocumentos = lstdocumentos;
+	}
+
+	public List<SeguimientoDTO> getLstSeguimiento() {
+		return lstSeguimiento;
+	}
+
+	public void setLstSeguimiento(List<SeguimientoDTO> lstSeguimiento) {
+		this.lstSeguimiento = lstSeguimiento;
+	}
+
+	public List<DocumentoTipoSolicitudDTO> getLstdocumentosOpcional() {
+		return lstdocumentosOpcional;
+	}
+
+	public void setLstdocumentosOpcional(
+			List<DocumentoTipoSolicitudDTO> lstdocumentosOpcional) {
+		this.lstdocumentosOpcional = lstdocumentosOpcional;
+	}
+
+	public List<TiivsOperacionBancaria> getLstTiivsOperacionBancaria() {
+		return lstTiivsOperacionBancaria;
+	}
+
+	public void setLstTiivsOperacionBancaria(
+			List<TiivsOperacionBancaria> lstTiivsOperacionBancaria) {
+		this.lstTiivsOperacionBancaria = lstTiivsOperacionBancaria;
+	}
+
+	public Solicitud getSolicitudRegistrar() {
+		return solicitudRegistrar;
+	}
+
+	public void setSolicitudRegistrar(Solicitud solicitudRegistrar) {
+		this.solicitudRegistrar = solicitudRegistrar;
+	}
+
+	public TiivsPersona getObjTiivsPersonaBusqueda() {
+		return objTiivsPersonaBusqueda;
+	}
+
+	public void setObjTiivsPersonaBusqueda(TiivsPersona objTiivsPersonaBusqueda) {
+		this.objTiivsPersonaBusqueda = objTiivsPersonaBusqueda;
+	}
+
+	public TiivsPersona getObjTiivsPersonaResultado() {
+		return objTiivsPersonaResultado;
+	}
+
+	public void setObjTiivsPersonaResultado(
+			TiivsPersona objTiivsPersonaResultado) {
+		this.objTiivsPersonaResultado = objTiivsPersonaResultado;
+	}
+
+	public List<TiivsPersona> getLstTiivsPersona() {
+		return lstTiivsPersona;
+	}
+
+	public void setLstTiivsPersona(List<TiivsPersona> lstTiivsPersona) {
+		this.lstTiivsPersona = lstTiivsPersona;
+	}
+
+	public PersonaDataModal getPersonaDataModal() {
+		return personaDataModal;
+	}
+
+	public void setPersonaDataModal(PersonaDataModal personaDataModal) {
+		this.personaDataModal = personaDataModal;
+	}
+
+	public TiivsPersona getObjTiivsPersonaSeleccionado() {
+		return objTiivsPersonaSeleccionado;
+	}
+
+	public void setObjTiivsPersonaSeleccionado(
+			TiivsPersona objTiivsPersonaSeleccionado) {
+		this.objTiivsPersonaSeleccionado = objTiivsPersonaSeleccionado;
+	}
+
+	public List<TiivsPersona> getLstTiivsPersonaResultado() {
+		return lstTiivsPersonaResultado;
+	}
+
+	public void setLstTiivsPersonaResultado(
+			List<TiivsPersona> lstTiivsPersonaResultado) {
+		this.lstTiivsPersonaResultado = lstTiivsPersonaResultado;
+	}
+
+	public CombosMB getCombosMB() {
+		return combosMB;
+	}
+
+	public void setCombosMB(CombosMB combosMB) {
+		this.combosMB = combosMB;
+	}
+
+	public Set<TiivsAgrupacionPersona> getLstTiivsAgrupacionPersonas() {
+		return lstTiivsAgrupacionPersonas;
+	}
+
+	public void setLstTiivsAgrupacionPersonas(
+			Set<TiivsAgrupacionPersona> lstTiivsAgrupacionPersonas) {
+		this.lstTiivsAgrupacionPersonas = lstTiivsAgrupacionPersonas;
+	}
+
+	public boolean isbBooleanPopup() {
+		return bBooleanPopup;
+	}
+
+	public void setbBooleanPopup(boolean bBooleanPopup) {
+		this.bBooleanPopup = bBooleanPopup;
+	}
+
+	public List<AgrupacionSimpleDto> getLstAgrupacionSimpleDto() {
+		return lstAgrupacionSimpleDto;
+	}
+
+	public void setLstAgrupacionSimpleDto(
+			List<AgrupacionSimpleDto> lstAgrupacionSimpleDto) {
+		this.lstAgrupacionSimpleDto = lstAgrupacionSimpleDto;
+	}
+
+	public String getiTipoSolicitud() {
+		return iTipoSolicitud;
+	}
+
+	public void setiTipoSolicitud(String iTipoSolicitud) {
+		this.iTipoSolicitud = iTipoSolicitud;
+	}
+
+	public List<TiivsTipoSolicDocumento> getLstTipoSolicitudDocumentos() {
+		return lstTipoSolicitudDocumentos;
+	}
+
+	public void setLstTipoSolicitudDocumentos(
+			List<TiivsTipoSolicDocumento> lstTipoSolicitudDocumentos) {
+		this.lstTipoSolicitudDocumentos = lstTipoSolicitudDocumentos;
+	}
+
+	public List<TiivsAnexoSolicitud> getLstAnexoSolicitud() {
+		return lstAnexoSolicitud;
+	}
+
+	public void setLstAnexoSolicitud(List<TiivsAnexoSolicitud> lstAnexoSolicitud) {
+		this.lstAnexoSolicitud = lstAnexoSolicitud;
+	}
+
+	public TiivsSolicitud getSolicitudRegistrarT() {
+		return solicitudRegistrarT;
+	}
+
+	public void setSolicitudRegistrarT(TiivsSolicitud solicitudRegistrarT) {
+		this.solicitudRegistrarT = solicitudRegistrarT;
+	}
+
+	public TiivsSolicitudOperban getObjSolicBancaria() {
+		return objSolicBancaria;
+	}
+
+	public void setObjSolicBancaria(TiivsSolicitudOperban objSolicBancaria) {
+		this.objSolicBancaria = objSolicBancaria;
+	}
+
+	public List<TiivsSolicitudOperban> getLstSolicBancarias() {
+		return lstSolicBancarias;
+	}
+
+	public void setLstSolicBancarias(
+			List<TiivsSolicitudOperban> lstSolicBancarias) {
+		this.lstSolicBancarias = lstSolicBancarias;
+	}
+
+	public PDFViewerMB getPdfViewerMB() {
+		return pdfViewerMB;
+	}
+
+	public void setPdfViewerMB(PDFViewerMB pdfViewerMB) {
+		this.pdfViewerMB = pdfViewerMB;
+	}
+
+	public Set<TiivsSolicitudAgrupacion> getLstTiivsSolicitudAgrupacion() {
+		return lstTiivsSolicitudAgrupacion;
+	}
+
+	public void setLstTiivsSolicitudAgrupacion(
+			Set<TiivsSolicitudAgrupacion> lstTiivsSolicitudAgrupacion) {
+		this.lstTiivsSolicitudAgrupacion = lstTiivsSolicitudAgrupacion;
+	}
+
+	public RegistroUtilesMB getObjRegistroUtilesMB() {
+		return objRegistroUtilesMB;
+	}
+
+	public void setObjRegistroUtilesMB(RegistroUtilesMB objRegistroUtilesMB) {
+		this.objRegistroUtilesMB = objRegistroUtilesMB;
+	}
+
+	public TiivsSolicitudOperban getObjSolicitudOperacionCapturado() {
+		return objSolicitudOperacionCapturado;
+	}
+
+	public void setObjSolicitudOperacionCapturado(
+			TiivsSolicitudOperban objSolicitudOperacionCapturado) {
+		this.objSolicitudOperacionCapturado = objSolicitudOperacionCapturado;
+	}
+
+	public AgrupacionSimpleDto getObjAgrupacionSimpleDtoCapturado() {
+		return objAgrupacionSimpleDtoCapturado;
+	}
+
+	public void setObjAgrupacionSimpleDtoCapturado(
+			AgrupacionSimpleDto objAgrupacionSimpleDtoCapturado) {
+		this.objAgrupacionSimpleDtoCapturado = objAgrupacionSimpleDtoCapturado;
+	}
+
+	public TiivsTipoSolicDocumento getObjDocumentoXSolicitudCapturado() {
+		return objDocumentoXSolicitudCapturado;
+	}
+
+	public void setObjDocumentoXSolicitudCapturado(
+			TiivsTipoSolicDocumento objDocumentoXSolicitudCapturado) {
+		this.objDocumentoXSolicitudCapturado = objDocumentoXSolicitudCapturado;
+	}
+
+	public DocumentoTipoSolicitudDTO getSelectedDocumentoDTO() {
+		return selectedDocumentoDTO;
+	}
+
+	public void setSelectedDocumentoDTO(DocumentoTipoSolicitudDTO selectedDocumentoDTO) {
+		this.selectedDocumentoDTO = selectedDocumentoDTO;
+	}
+
+	public TiivsPersona getObjTiivsPersonaCapturado() {
+		return objTiivsPersonaCapturado;
+	}
+
+	public void setObjTiivsPersonaCapturado(
+			TiivsPersona objTiivsPersonaCapturado) {
+		this.objTiivsPersonaCapturado = objTiivsPersonaCapturado;
+	}
+
+	public int getIndexUpdatePersona() {
+		return indexUpdatePersona;
+	}
+
+	public void setIndexUpdatePersona(int indexUpdatePersona) {
+		this.indexUpdatePersona = indexUpdatePersona;
+	}	
+	
+	public TiivsTipoSolicDocumento getSelectedTipoDocumento() {
+		return selectedTipoDocumento;
+	}
+
+	public void setSelectedTipoDocumento(
+			TiivsTipoSolicDocumento selectedTipoDocumento) {
+		this.selectedTipoDocumento = selectedTipoDocumento;
+	}
+
+	public String getsCodDocumento() {
+		return sCodDocumento;
+	}
+
+	public void setsCodDocumento(String sCodDocumento) {
+		this.sCodDocumento = sCodDocumento;
+	}
+
+	public String getCadenaEscanerFinal() {
+		return cadenaEscanerFinal;
+	}
+
+	public void setCadenaEscanerFinal(String cadenaEscanerFinal) {
+		this.cadenaEscanerFinal = cadenaEscanerFinal;
+	}
+	
+	
+
+	public boolean isbBooleanPopupTipoCambio() {
+		return bBooleanPopupTipoCambio;
+	}
+
+	public void setbBooleanPopupTipoCambio(boolean bBooleanPopupTipoCambio) {
+		this.bBooleanPopupTipoCambio = bBooleanPopupTipoCambio;
+	}	
+
+	public List<ComboDto> getLstClasificacionPersona() {
+		return this.lstClasificacionPersona;
+	}
+
+	public void setLstClasificacionPersona(List<ComboDto> lstClasificacionPersona) {
+		this.lstClasificacionPersona = lstClasificacionPersona;
+	}
+
+	/*public boolean isBoleanoMensajeInfoGeneral() {
+		return this.boleanoMensajeInfoGeneral;
+	}
+
+	public void setBoleanoMensajeInfoGeneral(boolean boleanoMensajeInfoGeneral) {
+		this.boleanoMensajeInfoGeneral = boleanoMensajeInfoGeneral;
+	}
+
+	public boolean isBoleanoMensajeApoderdantePoderdante() {
+		return this.boleanoMensajeApoderdantePoderdante;
+	}
+
+	public void setBoleanoMensajeApoderdantePoderdante(
+			boolean boleanoMensajeApoderdantePoderdante) {
+		this.boleanoMensajeApoderdantePoderdante = boleanoMensajeApoderdantePoderdante;
+	}
+
+	public boolean isBoleanoMensajeOperacionesBancarias() {
+		return this.boleanoMensajeOperacionesBancarias;
+	}
+
+	public void setBoleanoMensajeOperacionesBancarias(
+			boolean boleanoMensajeOperacionesBancarias) {
+		this.boleanoMensajeOperacionesBancarias = boleanoMensajeOperacionesBancarias;
+	}
+
+	public boolean isBoleanoMensajeDocumentos() {
+		return this.boleanoMensajeDocumentos;
+	}
+
+	public void setBoleanoMensajeDocumentos(boolean boleanoMensajeDocumentos) {
+		this.boleanoMensajeDocumentos = boleanoMensajeDocumentos;
+	}*/		
+
+	public SeguimientoMB getSeguimientoMB() {
+		return seguimientoMB;
+	}
+
+	public void setSeguimientoMB(SeguimientoMB seguimientoMB) {
+		this.seguimientoMB = seguimientoMB;
+	}
+
+	public VisadoDocumentosMB getVisadoDocumentosMB() {
+		return visadoDocumentosMB;
+	}
+
+	public void setVisadoDocumentosMB(VisadoDocumentosMB visadoDocumentosMB) {
+		this.visadoDocumentosMB = visadoDocumentosMB;
+	}
+
+	public ConsultarSolicitudMB getConsultarSolicitudMB() {
+		return consultarSolicitudMB;
+	}
+
+	public void setConsultarSolicitudMB(ConsultarSolicitudMB consultarSolicitudMB) {
+		this.consultarSolicitudMB = consultarSolicitudMB;
+	}
+
+	public String getAncho_FieldSet() {
+		return ancho_FieldSet;
+	}
+
+	public void setAncho_FieldSet(String ancho_FieldSet) {
+		this.ancho_FieldSet = ancho_FieldSet;
+	}
+
+	public String getAncho_FieldSet_Poder() {
+		return ancho_FieldSet_Poder;
+	}
+
+	public void setAncho_FieldSet_Poder(String ancho_FieldSet_Poder) {
+		this.ancho_FieldSet_Poder = ancho_FieldSet_Poder;
+	}
+
+	public String getAncho_Popup_Poder() {
+		return ancho_Popup_Poder;
+	}
+
+	public void setAncho_Popup_Poder(String ancho_Popup_Poder) {
+		this.ancho_Popup_Poder = ancho_Popup_Poder;
+	}
+
+	public String getAncho_Revoc_Poder() {
+		return ancho_Revoc_Poder;
+	}
+
+	public void setAncho_Revoc_Poder(String ancho_Revoc_Poder) {
+		this.ancho_Revoc_Poder = ancho_Revoc_Poder;
+	}
+
+	public TiivsAgrupacionPersona getTiivsAgrupacionPersonaCapturado() {
+		return this.tiivsAgrupacionPersonaCapturado;
+	}
+
+	public void setTiivsAgrupacionPersonaCapturado(
+			TiivsAgrupacionPersona tiivsAgrupacionPersonaCapturado) {
+		this.tiivsAgrupacionPersonaCapturado = tiivsAgrupacionPersonaCapturado;
+	}
+
+	public TiivsSolicitudAgrupacion getTiivsSolicitudAgrupacionCapturado() {
+		return this.tiivsSolicitudAgrupacionCapturado;
+	}
+
+	public void setTiivsSolicitudAgrupacionCapturado(
+			TiivsSolicitudAgrupacion tiivsSolicitudAgrupacionCapturado) {
+		this.tiivsSolicitudAgrupacionCapturado = tiivsSolicitudAgrupacionCapturado;
+	}
+
+	public boolean isFlagMostrarACOficina() {
+		return flagMostrarACOficina;
+	}
+
+	public void setFlagMostrarACOficina(boolean flagMostrarACOficina) {
+		this.flagMostrarACOficina = flagMostrarACOficina;
+	}
+
+	public boolean isFlagMostrarSOMOficina() {
+		return flagMostrarSOMOficina;
+	}
+
+	public void setFlagMostrarSOMOficina(boolean flagMostrarSOMOficina) {
+		this.flagMostrarSOMOficina = flagMostrarSOMOficina;
+	}
+
+	public TiivsOficina1 getOficina() {
+		return oficina;
+	}
+
+	public void setOficina(TiivsOficina1 oficina) {
+		this.oficina = oficina;
+	}
+	
+	public String getRedirect() {
+		return redirect;
+	}
+
+	public void setRedirect(String redirect) {
+		this.redirect = redirect;
+	}
+
+	public boolean isMostrarRazonSocial() {
+		return mostrarRazonSocial;
+	}
+
+	public void setMostrarRazonSocial(boolean mostrarRazonSocial) {
+		this.mostrarRazonSocial = mostrarRazonSocial;
+	}
+
+	public String getPatter() {
+		return this.patter;
+	}
+
+	public void setPatter(String patter) {
+		this.patter = patter;
+	}
+
+	public String getTipoRegistro() {
+		return this.tipoRegistro;
+	}
+
+	public void setTipoRegistro(String tipoRegistro) {
+		this.tipoRegistro = tipoRegistro;
+	}
+	
+	public String getPoderdante() {
+		return this.poderdante;
+	}
+
+	public void setPoderdante(String poderdante) {
+		this.poderdante = poderdante;
+	}
+	
+	public String getApoderdante() {
+		return this.apoderdante;
+	}
+
+	public void setApoderdante(String apoderdante) {
+		this.apoderdante = apoderdante;
+	}
+	
+	public boolean isbBooleanMoneda() {
+		return bBooleanMoneda;
+	}
+
+	public void setbBooleanMoneda(boolean bBooleanMoneda) {
+		this.bBooleanMoneda = bBooleanMoneda;
+	}
+
+	public boolean isbBooleanImporte() {
+		return bBooleanImporte;
+	}
+
+	public void setbBooleanImporte(boolean bBooleanImporte) {
+		this.bBooleanImporte = bBooleanImporte;
+	}
+
+	public StreamedContent getFileDownload() {
+		return fileDownload;
+	}
+
+	public void setFileDownload(StreamedContent fileDownload) {
+		this.fileDownload = fileDownload;
+	}
+	
 }
