@@ -67,6 +67,9 @@
         <property name="tipoComision" type="string">
             <column name="TIPO_COMISION" length="7" />
         </property>
+        <property name="exoneraComision" type="string">
+            <column name="EXONERA_COMISION" length="1"  />
+        </property>
         <set name="tiivsSolicitudNivels" table="TIIVS_SOLICITUD_NIVEL"  inverse="false" cascade="all" lazy="false" fetch="select" >
             <key>
                 <column name="COD_SOLI" length="7" not-null="true" />

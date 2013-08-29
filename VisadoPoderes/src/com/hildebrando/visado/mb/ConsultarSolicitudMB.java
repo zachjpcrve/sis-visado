@@ -198,6 +198,11 @@ public class ConsultarSolicitudMB {
 	private boolean bBooleanMoneda;
 	private boolean bBooleanImporte;
 	
+	private boolean bComision;
+	private boolean bFlagComision;
+	private String descripcionComision;
+	private String glosaComision;
+	
 	public ConsultarSolicitudMB() {		
 		inicializarContructor();
 		cargarDocumentos();
@@ -221,7 +226,9 @@ public class ConsultarSolicitudMB {
 		obtenCodRazonSocial();
 		obtenerTipoRegistro();
 		obtenerEtiquetasTipoRegistro();
+		obtenerPagoComision();
 	}
+	
 	
 	/*
 	 * Metodo que actualiza los listados de los Combos
@@ -760,6 +767,13 @@ public class ConsultarSolicitudMB {
 			if(lstSolicBancariasCopia!=null)
 			{
 				logger.info(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstSolicBancariasCopia es: ["+lstSolicBancariasCopia.size()+"].");	
+			}
+			
+			if(solicitudRegistrarT.getExoneraComision()!=null
+					&& solicitudRegistrarT.getExoneraComision().compareTo("1")==0){
+				this.setbFlagComision(true);
+			}else{
+				this.setbFlagComision(false);
 			}
 			
 			//FIN  BY SAMIRA 
@@ -5379,6 +5393,26 @@ public class ConsultarSolicitudMB {
 		
 	/* Termino metodos del registro */
 	
+	private void obtenerPagoComision(){
+		bComision = false;
+		bFlagComision = false;
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_PAGO_COMISION));
+		filtroMultitabla.add(Restrictions.eq("id.codElem", ConstantesVisado.CODIGO_FLAG_PAGO_COMISION));
+		try {
+			List<TiivsMultitabla> listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			if(listaMultiTabla.size()>0){
+				if(listaMultiTabla.get(0).getValor2().compareTo("1")==0){
+					bComision = true;
+					descripcionComision = listaMultiTabla.get(0).getValor1();
+					glosaComision = listaMultiTabla.get(0).getValor3();
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
 	
 	public void guardarComentario(){
 		logger.info("**************************** Guardar Comentario ****************************");
@@ -6212,4 +6246,37 @@ public class ConsultarSolicitudMB {
 	public void setbBooleanImporte(boolean bBooleanImporte) {
 		this.bBooleanImporte = bBooleanImporte;
 	}
+
+	public boolean isbComision() {
+		return bComision;
+	}
+
+	public void setbComision(boolean bComision) {
+		this.bComision = bComision;
+	}
+
+	public boolean isbFlagComision() {
+		return bFlagComision;
+	}
+
+	public void setbFlagComision(boolean bFlagComision) {
+		this.bFlagComision = bFlagComision;
+	}
+
+	public String getGlosaComision() {
+		return glosaComision;
+	}
+
+	public void setGlosaComision(String glosaComision) {
+		this.glosaComision = glosaComision;
+	}
+
+	public String getDescripcionComision() {
+		return descripcionComision;
+	}
+
+	public void setDescripcionComision(String descripcionComision) {
+		this.descripcionComision = descripcionComision;
+	}
+	
 }

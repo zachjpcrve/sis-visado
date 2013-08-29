@@ -21,7 +21,6 @@ import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
-import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.Estado;
 import com.hildebrando.visado.dto.EstadosNivel;
@@ -346,7 +345,7 @@ public class CombosMB{
 	public void traerEstadosFlujoSolicitud()
 	{
 		List<Estado> tmpLista = new ArrayList<Estado>();
-		SolicitudDao<Estado, Object> solicitudService = (SolicitudDao<Estado, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+		/*SolicitudDao<Estado, Object> solicitudService = (SolicitudDao<Estado, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 		
 		try {
 			tmpLista = solicitudService.traerEstadosFlujoSolicitud();
@@ -372,7 +371,25 @@ public class CombosMB{
 		if (indice==-1)
 		{
 			tmpEstados.put(ConstantesVisado.ESTADOS.ESTADO_VENCIDO_T02.toUpperCase(), ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02);
+		}*/
+		Map<String, String> tmpEstados = new HashMap<String, String>();
+		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
+		filtro.add(Restrictions.eq("valor2", "1"));
+		List<TiivsMultitabla> tmpEstado = new ArrayList<TiivsMultitabla>();
+		try {
+			tmpEstado = service.buscarDinamico(filtro);
+			if(tmpEstado!=null){
+				for(TiivsMultitabla estado:tmpEstado){
+					tmpEstados.put(estado.getValor1().toUpperCase(), estado.getId().getCodElem());
+				}
+			}
+		} catch (Exception e) {
+
+			e.printStackTrace();
 		}
+		
 		
 		estados = sortByComparator(tmpEstados);
 		if(estados!=null){

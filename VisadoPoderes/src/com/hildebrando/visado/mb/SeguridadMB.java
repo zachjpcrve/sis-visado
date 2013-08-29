@@ -15,12 +15,14 @@ import org.apache.log4j.Logger;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
+import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.SeguridadDao;
 import com.bbva.persistencia.generica.util.Sesion;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.conexion.__Conexion2;
 import com.grupobbva.bc.per.tele.seguridad.ServiciosSeguridadBbva;
 import com.hildebrando.visado.dto.MiembroDto;
+import com.hildebrando.visado.modelo.Ldapperu2;
 
 /**
  * Clase que se encarga de manejar la seguridad de la aplicacion, 
@@ -34,8 +36,8 @@ public class SeguridadMB {
 	public static Logger logger = Logger.getLogger(SeguridadMB.class);
 	HttpServletRequest request;
 	HttpServletResponse response;
-	private String sCodUsuarioBBVA="P015740";
-	//private String sCodUsuarioBBVA="P017433";
+//	private String sCodUsuarioBBVA="P015740";
+	private String sCodUsuarioBBVA="P017433";
 	private String idSesion = "";
 	private String usuarioCodigo = "";
 	private boolean bNoLogeado = true;
@@ -172,7 +174,7 @@ public class SeguridadMB {
 		
 		//PARTE LDAP
 		logger.info("IIVP Usuario:" + reg);    		
-		//usuario = (Ldapperu2) usuService.buscarDinamico(Busqueda.forClass(Ldapperu2.class));
+//		usuario = (Ldapperu2) usuService.buscarDinamico(Busqueda.forClass(Ldapperu2.class));
 		
 		
 		

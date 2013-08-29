@@ -17,7 +17,7 @@
 
 			<p:tabMenu activeIndex="0" style="width:680px;">
 				<p:menuitem value="Solicitud" url="/faces/paginas/detalleSolicitud.xhtml"
-					icon="ui-icon-star" />
+					icon="ui-icon-star" style="background-color:#c6deff;" />
 				<p:menuitem value="Seguimiento" actionListener="#{consultarSolicitudMB.obtenerHistorialSolicitud}" ajax="false"
 					url="/faces/paginas/seguimientoPestania.xhtml" icon="ui-icon-star" />
 			
@@ -119,6 +119,17 @@
 																</h:outputText>
 																</td>
 														</tr>
+														
+														<c:if test="${consultarSolicitudMB.bComision}">
+																<tr>
+																	<td colspan="12">
+																		<p:selectBooleanCheckbox value="#{consultarSolicitudMB.bFlagComision}" disabled="true"/>  #{solicitudRegMB.descripcionComision}
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="12"><h:outputText value="#{consultarSolicitudMB.glosaComision}" /></td>
+																</tr>
+														</c:if>
 
 												</tbody>
 											</table>
@@ -131,8 +142,8 @@
 											<table>
 												<tr>
 													<td style="width: 380px;"><h:outputText
-															title="Representante(Solicitante)/Representado(Usuario/Cliente)"
-															value="Representante(Solicitante)/Representado(Usuario/Cliente)" /></td>
+															title="#{consultarSolicitudMB.tipoRegistro}"
+															value="#{consultarSolicitudMB.tipoRegistro}" /></td>
 													<td></td>
 													<td></td>
 													<td></td>
@@ -150,12 +161,12 @@
 														<tr>
 														<th class="ui-state-default">
 														<div class="ui-dt-c">
-														<SPAN>Representado</SPAN>
+														<SPAN>#{consultarSolicitudMB.poderdante}</SPAN>
 														</div>
 														</th>
 														<th class="ui-state-default">
 														<div class="ui-dt-c">
-														<SPAN>Representante</SPAN>
+														<SPAN>#{consultarSolicitudMB.poderdante}</SPAN>
 														</div>
 														</th>
 														<th class="ui-state-default">
@@ -321,8 +332,8 @@
 				<tbody>
 					<tr>
 						<td style="width:25%;"><h:outputText
-								title="Representante(Solicitante)/Representado(Usuario/Cliente)"
-								value="Representante(Solicitante)/Representado(Usuario/Cliente)" /></td>
+								title="#{consultarSolicitudMB.tipoRegistro}"
+								value="#{consultarSolicitudMB.tipoRegistro}" /></td>
 					</tr>
 				</tbody>
 			</table>

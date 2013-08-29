@@ -36,7 +36,7 @@
 								
 								<td><h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
 								<td><p:autoComplete id="acNomOFina" value="#{reportesMB.oficinaRPT}"
-										completeMethod="#{seguimientoMB.completeNomOficina}" 
+										completeMethod="#{seguimientoMB.completeNomOficina}" style="width:300px;"
 										var="ofi" converter="oficinaConverter" size="24" 
 										itemLabel="#{ofi.nombreDetallado}" itemValue="#{ofi}"/>
 								</td>

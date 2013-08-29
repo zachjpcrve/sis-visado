@@ -50,7 +50,8 @@ inputTextPopup{
 	color:#254077;
 }
 .ui-state-default a, .ui-state-default a:link{
-	color:white !important;
+/* 	color:white !important; */
+	color:#254077 !important;
 }
 .ui-widget-header .ui-state-default{
 	color: black !important;

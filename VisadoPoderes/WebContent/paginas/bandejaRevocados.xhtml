@@ -121,10 +121,10 @@
 				<p:column headerText="Nro.">
 					<h:outputText value="#{revocado.correlativo}" />
 				</p:column>
-				<p:column headerText="Representado" style="width: 50px;">
+				<p:column headerText="#{revocadosMB.poderdante}" style="width: 50px;">
 					<h:outputText value="#{revocado.nombreCompletoPoderdantes}" />
 				</p:column>
-				<p:column headerText="Representante" style="width: 50px;">
+				<p:column headerText="#{revocadosMB.apoderdante}" style="width: 50px;">
 					<h:outputText value="#{revocado.nombreCompletoApoderados}" />
 				</p:column>
 				<p:column headerText="F. Revocación">
@@ -240,7 +240,7 @@
 		<!-- Pendiente/Editar -->
 		<p:dialog widgetVar="dlgApoPodPendEdit" 
 			modal="true" id="idDlgApoPod"
-			header="Representante / Representado"
+			header="#{revocadosMB.tipoRegistro}"
 			width="#{revocadosMB.ancho_Popup_Revoc_Poder}"
 			height="#{revocadosMB.alto_Popup_Revoc_Poder}">
 
@@ -252,13 +252,16 @@
 					
 				</h:panelGrid>
 				
+				<h:inputHidden id="inputHidden" value="#{revocadosMB.patter}"></h:inputHidden>
 				<p:panel header="Búsqueda">
 					<h:panelGrid columns="12" id="gridApodPodEd">
 
 						<h:outputLabel value="T.DOI/ C.Central*: " style="color:red" />
 						<p:selectOneMenu id="cboTipoDoi"
 							value="#{revocadosMB.objTiivsPersonaBusquedaDlg.tipDoi}"
+							valueChangeListener="#{revocadosMB.cambiarRazonSocial}"	
 							style="width: 120px">
+							<p:ajax  update=":frmPendEdit:pnlNuevo, :frmPendEdit:inputHidden" event="change" />
 							<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 							<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 								itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
@@ -280,7 +283,7 @@
 					</h:panelGrid>
 				</p:panel>
 				
-				<p:panel header="Nuevo Registro">
+				<p:panel header="Nuevo Registro" id="pnlNuevo">
 				
 					<h:panelGrid columns="6" id="gridApodPodEd2">
 						<h:outputLabel value="T.DOI/ C.Central*: " style="color:red"/>
@@ -309,7 +312,7 @@
 	
 					</h:panelGrid>
 	
-					<h:panelGrid columns="6" id="gridApodPodEd3">
+					<h:panelGrid columns="6" id="gridApodPodEd3" rendered="#{!revocadosMB.mostrarRazonSocial}">
 	
 						<h:outputText id="outApPaterno" value="Ap.Paterno:" />
 						<p:inputText styleClass="inputTextPopup" id="txtApellidoPaterno"
@@ -323,6 +326,13 @@
 						<p:inputText styleClass="inputTextPopup" id="txtNombres" size="25"
 							value="#{revocadosMB.objTiivsPersonaAgregar.nombre}" />
 	
+					</h:panelGrid>
+					
+					<h:panelGrid columns="2" id="gridApodPodRZ3" rendered="#{revocadosMB.mostrarRazonSocial}">
+						<h:outputText id="outRazonSocial" value="Razón Social:" />
+						<h:inputText styleClass="inputTextPopup" id="txtRazonSocial"
+										size="70" maxlength="500"
+										value="#{revocadosMB.objTiivsPersonaAgregar.apePat}" />
 					</h:panelGrid>
 	
 					<h:panelGrid columns="2" id="gridApodPod3">
@@ -536,7 +546,7 @@
 
 		<!-- Activo/Editar -->
 		<p:dialog widgetVar="dlgApoPodActEdit" modal="true"
-			id="idDlgApoPodEdit" header="Representante/Representado">
+			id="idDlgApoPodEdit" header="#{revocadosMB.tipoRegistro}">
 
 			<h:form id="frmActEdit">
 			<p:outputPanel id="pnlfrmActEdit"> 
@@ -694,7 +704,7 @@
 		</p:confirmDialog>
 
 		<p:confirmDialog widgetVar="cfdGuardar"
-			message="¿Está seguro de guardar los representantes / representados? "
+			message="¿Está seguro de guardar los #{revocadosMB.tipoRegistro} ? "
 			header="Mensaje de Información" appendToBody="true"
 			showEffect="explode" hideEffect="explode" severity="alert"
 			modal="true">
@@ -735,7 +745,7 @@
 
 		<!-- Ver -->
 		<p:dialog widgetVar="dlgApoPodVer" modal="true" id="idDlgApoPodVer"
-			header="Representante/Representado" showEffect="fade" hideEffect="explode"
+			header="#{revocadosMB.tipoRegistro}" showEffect="fade" hideEffect="explode"
 			width="#{revocadosMB.ancho_Popup_Revoc_Poder}">
 
 			<h:form id="frmApodPodVer">

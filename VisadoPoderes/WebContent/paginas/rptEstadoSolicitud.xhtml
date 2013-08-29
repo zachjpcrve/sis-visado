@@ -35,7 +35,7 @@
 									</p:selectOneMenu>
 								</td>
 								<td><h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
-								<td><p:autoComplete id="acNomOFina" value="#{reportesMB.oficina}"
+								<td><p:autoComplete id="acNomOFina" value="#{reportesMB.oficina}" style="width:300px;"
 										completeMethod="#{seguimientoMB.completeNomOficina}" 
 										var="ofi" converter="oficinaConverter" size="24" 
 										itemLabel="#{ofi.nombreDetallado}" itemValue="#{ofi}"/>

@@ -13,7 +13,7 @@
 	
 	<script type="text/JavaScript" src="../resources/js/visado.js" />	
 
-		<p:tabMenu activeIndex="0"  style="width:1120px;margin-top: 0px; "   >
+		<p:tabMenu activeIndex="0"  style="width:1155px;margin-top: 0px; "   >
 			<p:menuitem value="Solicitud" url="/faces/paginas/bandejaSeguimiento.xhtml" icon="ui-icon-star" />
 			
 		</p:tabMenu>
@@ -24,230 +24,179 @@
 					
 					<p:spacer height="1"/>
 					
-					<table id="tablaBusSol" border="0" bordercolor="#00BFFF" >
-						<tbody>
-							<tr bordercolor="white">
-								<td ><h:outputText styleClass="outputText" id="txtCod" value="Nro. Solicitud:" /></td>
-								<td ><p:inputText id="text100" value="#{seguimientoMB.codSolicitud}" maxlength="7" size="15" 
-									onkeypress="return validaNumero(event,'0',this,'0');" onblur="validaNumero(event,'0',this,'1');"/>
-								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtSolicitud" /></td>	
-								<p:tooltip for="tooltxtSolicitud" value="Número de solicitud" showEffect="fade" hideEffect="fade" />  
-								<td ><h:outputText styleClass="outputText" id="txtEstado" value="Estado:" /></td>
-								<td >
+					<p:accordionPanel multiple="true">
+						<p:tab title="Búsqueda Básica" >
+								<h:panelGrid columns="8"> 
+									<h:outputText styleClass="outputText" id="txtCod" value="Nro. Solicitud:" />
+									<p:inputText id="text100" value="#{seguimientoMB.codSolicitud}" maxlength="7" size="15" 
+													onkeypress="return validaNumero(event,'0',this,'0');" onblur="validaNumero(event,'0',this,'1');"/>
+											
+									<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtSolicitud" />	
+									<p:tooltip for="tooltxtSolicitud" value="Número de solicitud" showEffect="fade" hideEffect="fade" />
+											
+									<h:outputText styleClass="outputText" id="txtEstado" value="Estado:" />
+											
 									<p:selectCheckboxMenu id="scmEstados" label="--TODOS--" value="#{seguimientoMB.lstEstadoSelected}" 
-										panelStyle="width:220px;" style="width:162px;" scrollHeight="250">  
-								        <f:selectItems value="#{seguimientoMB.combosMB.estados}"/>  
+													panelStyle="width:220px;" style="width:162px;" scrollHeight="250">  
+								     				<f:selectItems value="#{seguimientoMB.combosMB.estados}"/>  
 								    </p:selectCheckboxMenu>  
-								</td>	
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtEstado" /></td>
-								<p:tooltip for="tooltxtEstado" value="Estado de la solicitud" showEffect="fade" hideEffect="fade" /> 
-								 
-								<td ><h:outputText styleClass="outputText" id="txtImporte" value="Importe:" /></td>
-								<td >
-									<p:selectOneMenu value="#{seguimientoMB.idImporte}" id="somImporte" style="width:155px;">
+											
+									<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtEstado" />
+									<p:tooltip for="tooltxtEstado" value="Estado de la solicitud" showEffect="fade" hideEffect="fade" />
+								</h:panelGrid>
+								
+								<h:panelGrid columns="16"> 
+									<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI Representante:" />
+									<h:inputText styleClass="inputText" id="text18" maxlength="18" 
+																value="#{seguimientoMB.nroDOIApoderado}" disabled="false" size="18"/>
+									<p:graphicImage value="/resources/images/pregunta.jpg" id="toolDOIApoderado" />
+								   	<p:tooltip for="toolDOIApoderado" value="Número de Documento del Representante" 
+																								showEffect="fade" hideEffect="fade" />
+									<h:outputText styleClass="outputText" id="txtApod" value="Representante:" />
+									<p:autoComplete completeMethod="#{seguimientoMB.completePersona}"
+													value="#{seguimientoMB.objTiivsPersonaBusquedaNomApod}"
+													forceSelection="true" var="ap" converter="personaCvtr"
+													itemLabel="#{ap.nombreCompletoMayuscula}" itemValue="#{ap}"
+													size="25">
+									</p:autoComplete>
+									<p:graphicImage value="/resources/images/pregunta.jpg" id="toolApoderado" />
+									
+									<p:tooltip for="toolApoderado" value="Representante" showEffect="fade" hideEffect="fade" />
+								
+											
+									<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI Representado:" />
+											
+									<h:inputText styleClass="inputText" id="text17" maxlength="18" size="18" value="#{seguimientoMB.nroDOIPoderdante}" disabled="false" />
+											
+									<p:graphicImage value="/resources/images/pregunta.jpg" id="toolDOIPoderdante" />
+											
+									<p:tooltip for="toolDOIPoderdante" value="Número de Documento del Representado" showEffect="fade" hideEffect="fade" />
+											
+											
+									<h:outputText styleClass="outputText" id="txtPoder" value="Representado:" />
+										
+											
+									<p:autoComplete completeMethod="#{seguimientoMB.completePersona}"
+														value="#{seguimientoMB.objTiivsPersonaBusquedaNomPoder}"
+														forceSelection="true" var="pod" converter="personaCvtr"
+														itemLabel="#{pod.nombreCompletoMayuscula}" itemValue="#{pod}"
+														size="23">
+									</p:autoComplete>
+											
+									<p:graphicImage value="/resources/images/pregunta.jpg" id="toolPoderdante" />	
+									<p:tooltip for="toolPoderdante" value="Representado" showEffect="fade" hideEffect="fade" />	
+								
+								</h:panelGrid>
+						</p:tab>		
+						
+						<p:tab title="Búsqueda Avanzada" >
+							<h:panelGrid columns="12"> 
+								<h:outputText styleClass="outputText" id="txtImporte" value="Importe:" />
+								<p:selectOneMenu value="#{seguimientoMB.idImporte}" id="somImporte" style="width:155px;">
 										<f:selectItem itemLabel="--TODOS--" itemValue="" />
 										<f:selectItems value="#{seguimientoMB.combosMB.lstRangosImporte}" var="imp"
-											itemValue="#{imp.codigoRango}" itemLabel="#{imp.descripcion}" />
-									</p:selectOneMenu>
-								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtImporte" /></td>
+												itemValue="#{imp.codigoRango}" itemLabel="#{imp.descripcion}" />
+								</p:selectOneMenu>
+									
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtImporte" />
 								<p:tooltip for="tooltxtImporte" value="Importe" showEffect="fade" hideEffect="fade" />  
 								
-								<td ><h:outputText styleClass="outputText" id="txtTipoSol" value="T. de Solicitud:" /></td>
-								<td >
-									<p:selectCheckboxMenu id="scmTSolicitud" label="--TODOS--" value="#{seguimientoMB.lstTipoSolicitudSelected}" 
-										panelStyle="width:300px;" style="width:167px;" scrollHeight="250">  
-								        <f:selectItems value="#{seguimientoMB.combosMB.tiposSolicitud}" />  
-								    </p:selectCheckboxMenu>
-								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTSolicitud" /></td>
+								<h:outputText styleClass="outputText" id="txtTipoSol" value="T. de Solicitud:" />
+									
+								<p:selectCheckboxMenu id="scmTSolicitud" label="--TODOS--" value="#{seguimientoMB.lstTipoSolicitudSelected}" 
+											panelStyle="width:300px;" style="width:167px;" scrollHeight="250">  
+								      <f:selectItems value="#{seguimientoMB.combosMB.tiposSolicitud}" />  
+								 </p:selectCheckboxMenu>
+									
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTSolicitud" />
 								<p:tooltip for="tooltxtTSolicitud" value="Tipo de Solicitud" showEffect="fade" hideEffect="fade" />  
 								
-							</tr>
-							<tr bordercolor="white">
-								<td >
-									<h:outputText styleClass="outputText" id="txtTipoFecha" value="Tipo Fecha:" />
-								</td>
-								<td >
-									<p:selectOneMenu value="#{seguimientoMB.idTiposFecha}" id="somTiposFecha" style="width:120px;">
+									
+								<h:outputText styleClass="outputText" id="txtTipoFecha" value="Tipo Fecha:" />
+								<p:selectOneMenu value="#{seguimientoMB.idTiposFecha}" id="somTiposFecha" style="width:120px;">
 										<f:selectItem itemLabel="--SELECCIONE--" itemValue="" />
 										<f:selectItems value="#{seguimientoMB.combosMB.lstTiposFecha}" var="tipoFec"
-											itemValue="#{tipoFec.codigoTipoFecha}" itemLabel="#{tipoFec.descripcion}" />
-									</p:selectOneMenu>
-								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTFecha" /></td>
-								<p:tooltip for="tooltxtTFecha" value="Tipo de Fecha" showEffect="fade" hideEffect="fade" />  
-								
-								<td ><h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" /></td>
-								<td >
-									<p:calendar  id="calFecIni" disabled="#{seguimientoMB.noMostrarFechas}"
-										pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaInicio}" 
-										showOn="button" maxlength="10" size="23" locale="es" />
-								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecIni" /></td>
+												itemValue="#{tipoFec.codigoTipoFecha}" itemLabel="#{tipoFec.descripcion}" />
+								</p:selectOneMenu>
+									
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTFecha" />
+								<p:tooltip for="tooltxtTFecha" value="Tipo de Fecha" showEffect="fade" hideEffect="fade" />
+							</h:panelGrid>
+							
+							<h:panelGrid columns="12"> 
+								<h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" />
+								<p:calendar  id="calFecIni" disabled="#{seguimientoMB.noMostrarFechas}"
+											pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaInicio}" 
+											showOn="button" maxlength="10" size="23" locale="es" />
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecIni" />
 								<p:tooltip for="tooltxtFecIni" value="Fecha de Inicio" showEffect="fade" hideEffect="fade" />  
+									
+								<h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin:" />
 								
-								<td ><h:outputText styleClass="outputText" id="txtFechaFin" value="Fecha de Fin:" /></td>
-								<td >
-									<p:calendar  id="calFecFin" disabled="#{seguimientoMB.noMostrarFechas}"
-										pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaFin}"
-										showOn="button" maxlength="10" size="21" locale="es"/>
-								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecFin" /></td>
+								<p:calendar  id="calFecFin" disabled="#{seguimientoMB.noMostrarFechas}"
+											pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaFin}"
+											showOn="button" maxlength="10" size="21" locale="es"/>
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecFin" />
 								<p:tooltip for="tooltxtFecFin" value="Fecha de Fin" showEffect="fade" hideEffect="fade" />  
-								
-								<td >
-									<h:outputText styleClass="outputText" id="txtTipoOpe" value="T. de Operación:" />
-								</td>
-								<td >
-									<p:selectOneMenu value="#{seguimientoMB.idOpeBan}" id="somTipoOpe" style="width:167px;">
-										<f:selectItem itemLabel="--TODOS--" itemValue="" />
-										<f:selectItems value="#{seguimientoMB.combosMB.lstOpeBancaria}" var="tipoOpe"
-											itemValue="#{tipoOpe.codOperBan}" itemLabel="#{tipoOpe.desOperBan}" />
-									</p:selectOneMenu>
-								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTOperacion" /></td>
+								<h:outputText styleClass="outputText" id="txtTipoOpe" value="T. de Operación:" />
+								<p:selectOneMenu value="#{seguimientoMB.idOpeBan}" id="somTipoOpe" style="width:167px;">
+											<f:selectItem itemLabel="--TODOS--" itemValue="" />
+											<f:selectItems value="#{seguimientoMB.combosMB.lstOpeBancaria}" var="tipoOpe"
+												itemValue="#{tipoOpe.codOperBan}" itemLabel="#{tipoOpe.desOperBan}" />
+								</p:selectOneMenu>
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTOperacion" />
 								<p:tooltip for="tooltxtTOperacion" value="Tipo de Operación" showEffect="fade" hideEffect="fade" />  
-							</tr>
-						</tbody>
-					</table>
-					
-					<p:spacer height="1"/>
-					
-					<table border="0" bordercolor="#00BFFF">
-						<tbody>
-							<tr bordercolor="white">
-								<td >
-									<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI Representante:" />
-								</td>
-								<td >
-									<h:inputText styleClass="inputText" id="text18" maxlength="18" value="#{seguimientoMB.nroDOIApoderado}" disabled="false" size="11"/>
-								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolDOIApoderado" /></td>
-								<p:tooltip for="toolDOIApoderado" value="Número de Documento del Representante" showEffect="fade" hideEffect="fade" />
-								
-								<td >
-									<h:outputText styleClass="outputText" id="txtApod" value="Representante:" />
-								</td>
-								<td >
-									<p:autoComplete completeMethod="#{seguimientoMB.completePersona}"
-											value="#{seguimientoMB.objTiivsPersonaBusquedaNomApod}"
-											forceSelection="true" var="ap" converter="personaCvtr"
-											itemLabel="#{ap.nombreCompletoMayuscula}" itemValue="#{ap}"
-											size="25">
-									</p:autoComplete>
-								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolApoderado" /></td>
-								<p:tooltip for="toolApoderado" value="Representante" showEffect="fade" hideEffect="fade" />
-								
-								<td >
-									<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI Representado:" />
-								</td>
-								<td >
-									<h:inputText styleClass="inputText" id="text17" maxlength="18" size="18" value="#{seguimientoMB.nroDOIPoderdante}" disabled="false" />
-								</td>	
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolDOIPoderdante" /></td>	
-								<p:tooltip for="toolDOIPoderdante" value="Número de Documento del Representado" showEffect="fade" hideEffect="fade" />
-								
-								<td >
-									<h:outputText styleClass="outputText" id="txtPoder" value="Representado:" />
-								</td>
-								<td >
-									<p:autoComplete completeMethod="#{seguimientoMB.completePersona}"
-											value="#{seguimientoMB.objTiivsPersonaBusquedaNomPoder}"
-											forceSelection="true" var="pod" converter="personaCvtr"
-											itemLabel="#{pod.nombreCompletoMayuscula}" itemValue="#{pod}"
-											size="23">
-									</p:autoComplete>
-								</td>	
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolPoderdante" /></td>	
-								<p:tooltip for="toolPoderdante" value="Representado" showEffect="fade" hideEffect="fade" />			
-							</tr>
+							</h:panelGrid>
 							
-							<tr bordercolor="white">
-								<td>
-									<h:outputText styleClass="outputText" id="txtOficina" value="Oficina:"/>
-								</td>
-								<td>
-									<p:autoComplete id="acNomOFina" value="#{seguimientoMB.oficina}"
-										completeMethod="#{seguimientoMB.completeNomOficina}" var="ofi"
-										converter="oficinaConverter" size="24" disabled="#{seguimientoMB.bloquearOficina}"
-										itemLabel="#{ofi.nombreDetallado}" itemValue="#{ofi}"/>		
-								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtNomOfic" /></td>
+							<h:panelGrid columns="15"> 
+								<h:outputText styleClass="outputText" id="txtOficina" value="Oficina:"/>
+								<p:autoComplete id="acNomOFina" value="#{seguimientoMB.oficina}"
+											completeMethod="#{seguimientoMB.completeNomOficina}" var="ofi"
+											converter="oficinaConverter" size="24" disabled="#{seguimientoMB.bloquearOficina}"
+											itemLabel="#{ofi.nombreDetallado}" itemValue="#{ofi}"/>		
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtNomOfic" />
 								<p:tooltip for="tooltxtNomOfic" value="Oficina" showEffect="fade" hideEffect="fade" /> 
-								<td>
-									<h:outputText styleClass="outputText" id="txtNivel" value="Nivel:" />
-								</td>
-								<td>
-									<p:selectCheckboxMenu id="scmNivel" label="--TODOS--" value="#{seguimientoMB.lstNivelSelected}" panelStyle="width:100px;"  
-										style="width:150px;" scrollHeight="200">  
-								        <f:selectItems value="#{seguimientoMB.combosMB.niveles}" />  
-								    </p:selectCheckboxMenu>  
-								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolNivel" /></td>	
+								<h:outputText styleClass="outputText" id="txtNivel" value="Nivel:" />
+								<p:selectCheckboxMenu id="scmNivel" label="--TODOS--" value="#{seguimientoMB.lstNivelSelected}" panelStyle="width:100px;"  
+											style="width:150px;" scrollHeight="200">  
+									        <f:selectItems value="#{seguimientoMB.combosMB.niveles}" />  
+									    </p:selectCheckboxMenu>  
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="toolNivel" />
 								<p:tooltip for="toolNivel" value="Nivel" showEffect="fade" hideEffect="fade" />	
-								<td>
-									<h:outputText styleClass="outputText" id="txtEstNivel" value="Estado del Nivel:" />
-								</td>
-								<td>
-									<p:selectCheckboxMenu id="scmEstadoNivel" label="--TODOS--" value="#{seguimientoMB.lstEstadoNivelSelected}" 
-											panelStyle="width:120px;" style="width:125px;">  
-								        <f:selectItems value="#{seguimientoMB.combosMB.estadosNivel}"/>  
-								    </p:selectCheckboxMenu> 
-								</td>
-								<td ><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstNivel"  /></td>	
+								<h:outputText styleClass="outputText" id="txtEstNivel" value="Estado del Nivel:" />
+								<p:selectCheckboxMenu id="scmEstadoNivel" label="--TODOS--" value="#{seguimientoMB.lstEstadoNivelSelected}" 
+												panelStyle="width:120px;" style="width:125px;">  
+									        <f:selectItems value="#{seguimientoMB.combosMB.estadosNivel}"/>  
+								</p:selectCheckboxMenu> 
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstNivel"  />	
 								<p:tooltip for="toolEstNivel" value="Estados del Nivel" showEffect="fade" hideEffect="fade" />	
-								<td>
-									<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio:" />
-								</td>
-								<td>
-									<p:selectCheckboxMenu id="scmEstudio" label="--TODOS--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:120px;" 
-										style="width:160px;" scrollHeight="100">  
-								        <f:selectItems value="#{consultarSolicitudMB.combosMB.estudios}" />  
-								    </p:selectCheckboxMenu>  
-								</td>
-								<td><p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstudio"/></td>	
-								<p:tooltip for="toolEstudio" value="Estudio" showEffect="fade" hideEffect="fade"/>	
-								 		
-							</tr>
+								<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio:" />
+								<p:selectCheckboxMenu id="scmEstudio" label="--TODOS--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:120px;" 
+											style="width:160px;" scrollHeight="100">  
+									        <f:selectItems value="#{consultarSolicitudMB.combosMB.estudios}" />  
+								</p:selectCheckboxMenu>  
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstudio"/>
+									<p:tooltip for="toolEstudio" value="Estudio" showEffect="fade" hideEffect="fade"/>
+							</h:panelGrid>
 							
-							<tr bordercolor="white">
-								<td>
-									<h:outputText styleClass="outputText" id="txtEnRev" value="En revisión:" />
-								</td>
-								<td >
-									<p:selectBooleanCheckbox id="bEnRevision" value="#{seguimientoMB.bRevision}"/>  
-								</td>
-								<td >
-									<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEnRev" />
-									<p:tooltip for="toolEnRev" value="Solicitudes en revisión" showEffect="fade" hideEffect="fade" />	
-								</td>			
-								<td>
-									<h:outputText styleClass="outputText" id="txtDel" value="Delegados:" rendered="#{sessionScope.GRUPO_OFI == null}"/>
-								</td>
-								<td>
-									<p:selectBooleanCheckbox id="bDelegados" value="#{seguimientoMB.bDelegados}" rendered="#{sessionScope.GRUPO_OFI == null}"/>  
-								</td>
-								<td >
-									<p:graphicImage value="/resources/images/pregunta.jpg" id="toolDele" rendered="#{sessionScope.GRUPO_OFI == null}"/>
-									<p:tooltip for="toolDele" value="Solicitudes con delegación de niveles" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_OFI == null}"/>
-								</td>
-													
-								<td>
-									<h:outputText styleClass="outputText" id="txtRevc" value="Revocatoria:" />
-								</td>
-								<td>
-									<p:selectBooleanCheckbox id="bExonerados" value="#{seguimientoMB.bRevocatoria}"/>  
-								</td>
-								<td >
-									<p:graphicImage value="/resources/images/pregunta.jpg" id="toolRevc" />
-									<p:tooltip for="toolRevc" value="Solicitudes con revocatoria" showEffect="fade" hideEffect="fade" />
-								</td>	
-							</tr>
-						</tbody>			
-					</table>
+							<h:panelGrid columns="12"> 
+								<h:outputText styleClass="outputText" id="txtEnRev" value="En revisión:" />
+								<p:selectBooleanCheckbox id="bEnRevision" value="#{seguimientoMB.bRevision}"/>  
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEnRev" />
+								<p:tooltip for="toolEnRev" value="Solicitudes en revisión" showEffect="fade" hideEffect="fade" />	
+								<h:outputText styleClass="outputText" id="txtDel" value="Delegados:" rendered="#{sessionScope.GRUPO_OFI == null}"/>
+								<p:selectBooleanCheckbox id="bDelegados" value="#{seguimientoMB.bDelegados}" rendered="#{sessionScope.GRUPO_OFI == null}"/>  
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="toolDele" rendered="#{sessionScope.GRUPO_OFI == null}"/>
+								<p:tooltip for="toolDele" value="Solicitudes con delegación de niveles" showEffect="fade" hideEffect="fade" rendered="#{sessionScope.GRUPO_OFI == null}"/>
+								<h:outputText styleClass="outputText" id="txtRevc" value="Revocatoria:" />
+								<p:selectBooleanCheckbox id="bExonerados" value="#{seguimientoMB.bRevocatoria}"/>  
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="toolRevc" />
+								<p:tooltip for="toolRevc" value="Solicitudes con revocatoria" showEffect="fade" hideEffect="fade" />								
+							</h:panelGrid>
+							 
+						</p:tab>
+										
+					</p:accordionPanel>
 					
 					<p:spacer height="2"/>
 					
