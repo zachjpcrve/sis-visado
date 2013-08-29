@@ -217,6 +217,17 @@
 																<td><p:tooltip for="tooltxtImpTotal"
 																		value="Importe Total" showEffect="slide" /></td>
 															</tr>
+															
+															<c:if test="${solicitudRegMB.bComision}">
+																<tr>
+																	<td colspan="12">
+																		<p:selectBooleanCheckbox value="#{solicitudRegMB.bFlagComision}" />  #{solicitudRegMB.descripcionComision}
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="12"><h:outputText value="#{solicitudRegMB.glosaComision}" /></td>
+																</tr>
+															</c:if>
 
 														</tbody>
 													</table>

@@ -17,6 +17,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -55,6 +56,7 @@ import com.hildebrando.visado.modelo.TiivsRevocado;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
+import com.hildebrando.visado.service.TiposDoiService;
 
 @ManagedBean(name = "revocadosMB")
 @SessionScoped
@@ -141,6 +143,15 @@ public class RevocadosMB {
 	EstilosNavegador estilosNavegador;
 	private Boolean deshabilitarExportar=true;
 	private List<String> lstElimRevo;
+	
+	/**** SE AGREGAN VARIABLES DE ABAJO ***/
+	private String codigoRazonSocial = "0000";
+	private boolean mostrarRazonSocial = false;
+	private String patter;
+	private String tipoRegistro;
+	private String poderdante;
+	private String apoderdante;
+	
 
 	public void setCombosMB(CombosMB combosMB) {
 		this.combosMB = combosMB;
@@ -166,6 +177,10 @@ public class RevocadosMB {
 		cargarCombos();
 		revocados = new ArrayList<Revocado>();
 		cargarCombinacionesRevocadas();
+		//Se agrega
+		obtenCodRazonSocial();
+		obtenerTipoRegistro();
+		obtenerEtiquetasTipoRegistro();
 	}
 	
 	public void cargarCombinacionesRevocadas()
@@ -1534,6 +1549,17 @@ public class RevocadosMB {
 					
 					apoderados.add(tiivsRevocado);
 				}
+				
+				if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
+					
+					String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
+					String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
+					
+					tiivsRevocado.setsDesctipDoi( descDoiApod);
+					tiivsRevocado.setsDesctipPartic(descTipPart);
+					
+					apoderados.add(tiivsRevocado);
+				}
 					
 				if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 					
@@ -1566,6 +1592,20 @@ public class RevocadosMB {
 			List<Revocado> revocadosAux= new ArrayList<Revocado>();
 			
 			if(objTiivsPersonaAgregar.getTipPartic().equals(ConstantesVisado.APODERADO))
+			{
+				String descDoiApod =  getValor1(objTiivsPersonaAgregar.getTipDoi(),listDocumentos);
+				String descTipPart =  getValor1(objTiivsPersonaAgregar.getTipPartic(), listTipoRegistro);
+				
+				apoderado = new TiivsRevocado();				
+				apoderado.setTiivsPersona(objTiivsPersonaAgregar);
+				apoderado.setTipPartic(objTiivsPersonaAgregar.getTipPartic());
+				apoderado.setsDesctipDoi( descDoiApod);
+				apoderado.setsDesctipPartic(descTipPart);			
+				
+				apoderadosNuevo.add(apoderado);
+			}
+			
+			if(objTiivsPersonaAgregar.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO))
 			{
 				String descDoiApod =  getValor1(objTiivsPersonaAgregar.getTipDoi(),listDocumentos);
 				String descTipPart =  getValor1(objTiivsPersonaAgregar.getTipPartic(), listTipoRegistro);
@@ -2439,6 +2479,49 @@ public class RevocadosMB {
 	//								apoderados.add(apoderado);
 									apoderados.add(tiivsRevocado);
 								}
+								
+								if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
+
+									String descDoiApod = getValor1(
+											tiivsRevocado.getTiivsPersona()
+													.getTipDoi(),
+											listDocumentos);
+									String descTipPart = getValor1(
+											tiivsRevocado.getTipPartic(),
+											listTipoRegistro);
+
+									nombreCompletoApoderados = nombreCompletoApoderados
+											+ " "
+											+ descDoiApod
+											+ ":"
+											+ tiivsRevocado.getTiivsPersona()
+													.getNumDoi()
+											+ " - "
+											+ (tiivsRevocado.getTiivsPersona()
+													.getApePat() == null ? ""
+													: tiivsRevocado
+															.getTiivsPersona()
+															.getApePat())
+											+ " "
+											+ (tiivsRevocado.getTiivsPersona()
+													.getApeMat() == null ? ""
+													: tiivsRevocado
+															.getTiivsPersona()
+															.getApeMat())
+											+ " "
+											+ (tiivsRevocado.getTiivsPersona()
+													.getNombre() == null ? ""
+													: tiivsRevocado
+															.getTiivsPersona()
+															.getNombre())
+											+ "\n";
+
+									tiivsRevocado.setsDesctipDoi(descDoiApod);
+									tiivsRevocado
+											.setsDesctipPartic(descTipPart);
+
+									apoderados.add(tiivsRevocado);
+								}
 									
 								if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 									
@@ -2545,6 +2628,126 @@ public class RevocadosMB {
 		
 		return listCodAgrup;
 		
+	}
+	
+	public void cambiarRazonSocial(ValueChangeEvent e){		
+		logger.info("************cambiarRazonSocial()*¨**************");
+		String codTipoDocumento = (String) e.getNewValue();
+		if (codTipoDocumento!=null && codTipoDocumento.equals(this.codigoRazonSocial)) {//CODIGO RAZONSOCIAL
+			this.mostrarRazonSocial = true;
+			objTiivsPersonaAgregar.setTipDoi(this.codigoRazonSocial);
+			objTiivsPersonaAgregar.setApeMat("");
+			objTiivsPersonaAgregar.setNombre("");
+		} else {
+			this.mostrarRazonSocial = false;
+			objTiivsPersonaAgregar.setTipDoi("");
+		}	
+		
+		this.obterPatterDelTipoDocumento(codTipoDocumento);
+	}
+	
+	private void obtenCodRazonSocial() {
+		TiposDoiService tiposDoiService = new TiposDoiService(); 			
+		codigoRazonSocial = tiposDoiService.obtenerCodPersonaJuridica();
+	}
+	
+	//SE AGREGA METODO PARA OBTENER EL TIPO DE REGISTRO POR BD
+	private void obtenerTipoRegistro() {
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("id.codMult",
+				ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			tipoRegistro = "";
+			if (listaMultiTabla.size() > 0) {
+				for (TiivsMultitabla multitabla : listaMultiTabla) {
+					contador++;
+					if (contador.compareTo(listaMultiTabla.size()) == 0) {
+						tipoRegistro += multitabla.getValor1();
+					} else {
+						tipoRegistro += multitabla.getValor1() + " / ";
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT
+					+ "de multitablas: " + e);
+		}
+	}
+	
+	//METODO PARA OBTENER ETIQUETAS DE TIPO DE REGISTRO DESDE BD Y MOSTRARLO EN GRILLA
+	private void obtenerEtiquetasTipoRegistro() {
+		obtenerPonderdante();
+		obtenerAponderdante();
+	}
+	
+	private void obtenerPonderdante(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("valor3", ConstantesVisado.R1_PODERDANTE));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			poderdante = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						poderdante += multitabla.getValor1();	
+					}else{
+						poderdante += multitabla.getValor1() + " - ";
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+	
+	private void obtenerAponderdante(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("valor3", ConstantesVisado.R2_APODERADO));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			apoderdante = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						apoderdante += multitabla.getValor1();	
+					}else{
+						apoderdante += multitabla.getValor1() + " - ";
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+		
+	@SuppressWarnings("unchecked")
+	private void obterPatterDelTipoDocumento(String codTipoDocumento){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC));
+		filtroMultitabla.add(Restrictions.eq("id.codElem",codTipoDocumento));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			 patter=listaMultiTabla.get(0).getValor4();
+			logger.info("patter : "+patter);
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas: " + e);
+		}
 		
 		
 	}
@@ -2960,4 +3163,45 @@ public class RevocadosMB {
 	public void setDeshabilitarExportar(Boolean deshabilitarExportar) {
 		this.deshabilitarExportar = deshabilitarExportar;
 	}
+	
+	public boolean isMostrarRazonSocial() {
+		return mostrarRazonSocial;
+	}
+
+	public void setMostrarRazonSocial(boolean mostrarRazonSocial) {
+		this.mostrarRazonSocial = mostrarRazonSocial;
+	}
+	
+	public String getPatter() {
+		return this.patter;
+	}
+
+	public void setPatter(String patter) {
+		this.patter = patter;
+	}
+
+	public String getTipoRegistro() {
+		return tipoRegistro;
+	}
+
+	public void setTipoRegistro(String tipoRegistro) {
+		this.tipoRegistro = tipoRegistro;
+	}
+
+	public String getPoderdante() {
+		return poderdante;
+	}
+
+	public void setPoderdante(String poderdante) {
+		this.poderdante = poderdante;
+	}
+
+	public String getApoderdante() {
+		return apoderdante;
+	}
+
+	public void setApoderdante(String apoderdante) {
+		this.apoderdante = apoderdante;
+	}
+	
 }

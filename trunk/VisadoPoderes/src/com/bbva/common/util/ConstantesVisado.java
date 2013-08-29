@@ -27,13 +27,15 @@ public class ConstantesVisado {
 	public static final java.lang.String APODERADO="0002";
 	public static final java.lang.String PODERDANTE="0001";
 	
-	/*** SE AGREGARON 4 VARIABLES ***/
+	/*** SE AGREGARON 5 VARIABLES ***/
 	public static final java.lang.String R1_PODERDANTE="R1";
 	public static final java.lang.String R2_APODERADO="R2";
 	
 	public static final java.lang.String DINERARIA = "DINERARIA";
 	public static final java.lang.String NO_DINERARIA = "NO DINERARIA";
 	
+	public static final String CODIGO_MULTITABLA_PAGO_COMISION = "T17";
+	public static final String CODIGO_FLAG_PAGO_COMISION = "0001";
 	
 	public static final java.lang.String ID_RANGO_IMPORTE_MENOR_CINCUENTA = "0001";
 	public static final java.lang.String ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE = "0002";

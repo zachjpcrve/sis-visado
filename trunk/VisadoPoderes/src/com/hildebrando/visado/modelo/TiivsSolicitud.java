@@ -2,7 +2,6 @@ package com.hildebrando.visado.modelo;
 
 // Generated 12/12/2012 12:08:20 PM by Hibernate Tools 3.4.0.CR
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +46,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private String txtOpeBan;
 	private String txtNivel;
 	private Boolean bLiberado;
+	private String exoneraComision;
 	
 	private List<TiivsSolicitudOperban> lstSolicBancarias; ///Solo para el reporte
 	private List<ComboDto> listaPersonasXAgrupacionXSolicitud; ///Para comparar revocados
@@ -70,7 +70,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 	public TiivsSolicitud(String codSoli,
 			TiivsTipoSolicitud tiivsTipoSolicitud, TiivsOficina1 tiivsOficina1,
 			String estado, Timestamp fecha, String regUsuario,
-			String nomUsuario) {
+			String nomUsuario, String exoneraComision) {
 		this.codSoli = codSoli;
 		this.tiivsTipoSolicitud = tiivsTipoSolicitud;
 		this.tiivsOficina1 = tiivsOficina1;
@@ -78,6 +78,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.fecha = fecha;
 		this.regUsuario = regUsuario;
 		this.nomUsuario = nomUsuario;
+		this.exoneraComision = exoneraComision;
 	}
 
 	public TiivsSolicitud(String codSoli, TiivsEstudio tiivsEstudio,
@@ -350,7 +351,16 @@ public class TiivsSolicitud implements java.io.Serializable {
 	public void setbLiberado(Boolean bLiberado) {
 		this.bLiberado = bLiberado;
 	}
-//solo para el reporte
+	
+	public String getExoneraComision() {
+		return exoneraComision;
+	}
+
+	public void setExoneraComision(String exoneraComision) {
+		this.exoneraComision = exoneraComision;
+	}
+
+	//solo para el reporte
 	public List<TiivsSolicitudOperban> getLstSolicBancarias() {
 		return lstSolicBancarias;
 	}

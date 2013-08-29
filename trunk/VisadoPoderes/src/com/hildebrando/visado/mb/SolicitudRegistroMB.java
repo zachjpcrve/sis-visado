@@ -104,6 +104,10 @@ public class SolicitudRegistroMB {
 	private String apoderdante;
 	private boolean bBooleanMoneda;
 	private boolean bBooleanImporte;
+	private boolean bComision;
+	private boolean bFlagComision;
+	private String descripcionComision;
+	private String glosaComision;
 	
 	private TiivsSolicitudOperban objSolicBancaria;
 	private List<TiivsSolicitudOperban> lstSolicBancarias;
@@ -1656,6 +1660,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		obtenCodRazonSocial(); 
 		obtenerTipoRegistro();
 		obtenerEtiquetasTipoRegistro();
+		obtenerPagoComision();
 
 		return "/faces/paginas/solicitud.xhtml";
 	}	
@@ -2779,6 +2784,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				}
 			}
 			
+			if(isbFlagComision()){
+				this.solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_ACTIVO);
+			}else{
+				this.solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_INACTIVO);
+			}
 			
 			
 			this.limpiarAgrupacionesVacias();
@@ -2884,7 +2894,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 		}
 		logger.info("Redirec:" + this.redirect);
-//		return this.redirect; 
+//		return this.redirect;
 
 	}
 		
@@ -3414,6 +3424,27 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}
 	}
 	
+	private void obtenerPagoComision(){
+		bComision = false;
+		bFlagComision = false;
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_PAGO_COMISION));
+		filtroMultitabla.add(Restrictions.eq("id.codElem", ConstantesVisado.CODIGO_FLAG_PAGO_COMISION));
+		try {
+			List<TiivsMultitabla> listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			if(listaMultiTabla.size()>0){
+				if(listaMultiTabla.get(0).getValor2().compareTo("1")==0){
+					bComision = true;
+					descripcionComision = listaMultiTabla.get(0).getValor1();
+					glosaComision = listaMultiTabla.get(0).getValor3();
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+	
 	private void obtenerPonderdante(){
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
@@ -3437,6 +3468,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
 		}
 	}
+	
 	
 	private void obtenerAponderdante(){
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -3983,6 +4015,38 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 	public void setbBooleanImporte(boolean bBooleanImporte) {
 		this.bBooleanImporte = bBooleanImporte;
+	}
+
+	public boolean isbComision() {
+		return bComision;
+	}
+
+	public void setbComision(boolean bComision) {
+		this.bComision = bComision;
+	}
+
+	public String getDescripcionComision() {
+		return descripcionComision;
+	}
+
+	public void setDescripcionComision(String descripcionComision) {
+		this.descripcionComision = descripcionComision;
+	}
+
+	public String getGlosaComision() {
+		return glosaComision;
+	}
+
+	public void setGlosaComision(String glosaComision) {
+		this.glosaComision = glosaComision;
+	}
+
+	public boolean isbFlagComision() {
+		return bFlagComision;
+	}
+
+	public void setbFlagComision(boolean bFlagComision) {
+		this.bFlagComision = bFlagComision;
 	}
 
 	public StreamedContent getFileDownload() {

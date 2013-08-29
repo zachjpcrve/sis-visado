@@ -96,7 +96,7 @@
 															<td><h:outputText styleClass="outputText"
 																	id="txtCodNumSol" value="Nro. Solicitud:" /></td>
 															<td><h:inputText styleClass="inputText" id="text1"
-																	style="width:100px;"
+																	style="width:100px;background-color:#EBEBE4;"
 																	value="#{consultarSolicitudMB.solicitudRegistrarT.codSoli}"
 																	disabled="false" readonly="true" /></td>
 															<td><p:graphicImage
@@ -108,7 +108,7 @@
 															<td><h:outputText styleClass="outputText" id="text3"
 																	value="Estado:" /></td>
 															<td><h:inputText styleClass="inputText"
-																	id="txtEstado" style="width:100px;"
+																	id="txtEstado" style="width:100px;background-color:#EBEBE4;"
 																	value="#{consultarSolicitudMB.solicitudRegistrarT.descEstado}"
 																	disabled="false" readonly="true" /></td>
 															<td><p:graphicImage
@@ -126,7 +126,7 @@
 																			itemLabel="#{ofi.descripcionMostrar}" itemValue="#{ofi}" rendered="#{consultarSolicitudMB.flagMostrarACOficina}"/>
 																			
 																<h:inputText styleClass="inputText" rendered="#{consultarSolicitudMB.flagMostrarSOMOficina}"
-																			id="cboOficina" style="width:100px;"
+																			id="cboOficina" style="width:100px;background-color:#EBEBE4;"
 																			value="#{solicitudRegMB.solicitudRegistrarT.tiivsOficina1.descripcionMostrar}"
 																			disabled="false" readonly="true" />			
 																	<!-- 
@@ -183,7 +183,7 @@
 															<td><h:outputText styleClass="outputText"
 																	id="outComision" value="Comisión:" /></td>
 															<td><h:inputText styleClass="inputText"
-																	id="txtComision" style="width:100px;"
+																	id="txtComision" style="width:100px;background-color:#EBEBE4;"
 																	value="#{consultarSolicitudMB.solicitudRegistrarT.comision}"
 																	readonly="true" >
 																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
@@ -198,7 +198,7 @@
 															<td><h:outputText styleClass="outputText"
 																	id="outImpTotal" value="Importe Total:" /></td>
 															<td ><h:inputText styleClass="inputText" 
-																	id="txtImpTotal" style="width:100px;"
+																	id="txtImpTotal" style="width:100px;background-color:#EBEBE4;"
 																	value="#{consultarSolicitudMB.solicitudRegistrarT.sImporteMoneda}"
 																	disabled="false" readonly="true" >
 																	<f:convertNumber pattern="#,###,##0.00" locale="en" />
@@ -210,6 +210,17 @@
 															<td><p:tooltip for="tooltxtImpTotal"
 																	value="Importe Total" showEffect="slide" /></td>
 														</tr>
+														
+														<c:if test="${consultarSolicitudMB.bComision}">
+															<tr>
+																<td colspan="12">
+																	<p:selectBooleanCheckbox value="#{consultarSolicitudMB.bFlagComision}" />  #{consultarSolicitudMB.descripcionComision}
+																</td>
+															</tr>
+															<tr>
+																<td colspan="12"><h:outputText value="#{consultarSolicitudMB.glosaComision}" /></td>
+															</tr>
+														</c:if>
 	
 													</tbody>
 												</table>
