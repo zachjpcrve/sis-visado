@@ -162,7 +162,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[BBVA Banco Continental © Copyright - Todos los Derechos Reservados]]></text>
+				<text><![CDATA[BBVA Continental © Copyright - Todos los Derechos Reservados]]></text>
 			</staticText>
 		</band>
 	</pageFooter>
