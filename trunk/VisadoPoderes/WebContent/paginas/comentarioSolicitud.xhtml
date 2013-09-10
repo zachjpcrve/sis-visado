@@ -7,6 +7,34 @@
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
 	<ui:define name="contenido">
+
+<!-- Applet Size: width='93px';height='24px  -->
+<applet name="appletVisor" id="appletVisor"
+	code="com.hildebrando.visado.applet.AgregarDocumentos.class"
+	archive="../../uploadFilesApplet.jar" width='1px'
+	height='1px' mayscript="mayscript">
+	<param name="path_cliente"
+		value="#{visadoDocumentosMB.pathCliente}" />
+	<param name="documentos_leer"
+		value="#{visadoDocumentosMB.documentosLeer}" />
+	<param name="directory"
+		value="#{visadoDocumentosMB.directory}" />
+	<param name="carpeta_cliente_log"
+		value="#{visadoDocumentosMB.carpetaClienteLog}" />
+	<param name="url_server"
+		value="#{visadoDocumentosMB.urlCarga}" />
+</applet>
+
+<script type="text/javascript" language="javascript">
+	function appletDeleteFilesAndRedirect(){																																								 
+		redirect = this.document.getElementById('formSolicitudRegistro:idResultRegistro').value;																																							
+		//Si redirect no esta vacio entonces se realizó el registro de forma correcta
+		if(redirect.length>0){
+			document.getElementById('formSolicitudRegistro:btnRedirecionar').click()
+		} 
+	}
+
+</script>
 					
 
 		<h:panelGrid columns="5">
@@ -38,14 +66,20 @@
 		
 		
 		<h:form id="formSolicitudRegistro">
-					
+		
+			<h:inputHidden id="idResultRegistro" value="#{solicitudRegMB.redirect}" />
 			
-	     	<p:messages id="idGrowlSolicitudRegistro"></p:messages>
-	      
-	      	
+			<div style="visibility: hidden;">
+				<p:commandButton style="width:0;height:0" value=""
+					id="btnRedirecionar" icon="ui-icon-document"
+					update=":formSolicitudRegistro:idMsmSolicitudRegistro"
+					action="#{solicitudRegMB.redireccionar}" ajax="false">
+				</p:commandButton>
+			</div>
+					
 			<p:editor id="editor" onchange="actualizarEditor();" value="#{solicitudRegMB.solicitudRegistrarT.obs}" width="400" height="400" />									
 
-			<h:panelGrid columns="2" style="margin-top:10px">
+			<h:panelGrid columns="1" style="margin-top:10px">
 				<!-- <p:commandButton id="submitButton" value="Guardar" update="editor" actionListener="{solicitudRegMB.seterComentario}"
 					 icon="ui-icon-disk" /> -->
 				<p:commandButton id="clearButton"  value="Limpiar" update="editor" actionListener="#{solicitudRegMB.limpiarComentario}"
@@ -60,7 +94,7 @@
    <p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"  
                 header="Confirmación" severity="alert" widgetVar="confirmation" >  
                   
-        <p:commandButton id="confirm" value="Si" update=":formSolicitudRegistro" oncomplete="confirmation.hide()"   
+        <p:commandButton id="confirm" value="Si" update=":formSolicitudRegistro" oncomplete="confirmation.hide(); appletDeleteFilesAndRedirect();"   
                     action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />  
         <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
     </p:confirmDialog> 

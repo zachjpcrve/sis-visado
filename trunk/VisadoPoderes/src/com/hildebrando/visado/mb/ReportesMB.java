@@ -123,6 +123,9 @@ public class ReportesMB {
 	private double impuesto = 0.0;
 	private TiivsOficina1 oficina;
 	private TiivsOficina1 oficinaRPT;
+	//Se agregaron las 2 lineas de abajo
+	private String poderdante;
+	private String apoderdante;
 
 	public static Logger logger = Logger.getLogger(ReportesMB.class);
 
@@ -3639,6 +3642,60 @@ public class ReportesMB {
 
 		os.flush();
 	}
+	
+	//METODO PARA OBTENER ETIQUETAS DE TIPO DE REGISTRO DESDE BD Y MOSTRARLO EN GRILLA
+	private void obtenerEtiquetasTipoRegistro(){
+		obtenerPonderdante();
+		obtenerAponderdante();
+	}
+	
+	private void obtenerPonderdante(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("valor3", ConstantesVisado.R1_PODERDANTE));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			poderdante = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						poderdante += multitabla.getValor1();	
+					}else{
+						poderdante += multitabla.getValor1() + "/";
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+	
+	private void obtenerAponderdante(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("valor3", ConstantesVisado.R2_APODERADO));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			apoderdante = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						apoderdante += multitabla.getValor1();	
+					}else{
+						apoderdante += multitabla.getValor1() + "/";
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
 
 	private void rptExtractor() 
 	{
@@ -3660,7 +3717,8 @@ public class ReportesMB {
 				sheet.setDisplayGridlines(false);
 				// sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
 
-				
+				//obtiene los nombres de BD de tipo de registro
+				obtenerEtiquetasTipoRegistro();
 				
 				// Se crea la cabecera de la tabla de resultados
 				Row rowT = sheet.createRow((short) 7);
@@ -3735,7 +3793,8 @@ public class ReportesMB {
 				
 				Utilitarios.crearCellRPT(wb, rowT, 11,HSSFCellStyle.VERTICAL_CENTER,
 								HSSFCellStyle.VERTICAL_CENTER,
-								ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_NOMBRES,
+//								ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_NOMBRES, 
+								poderdante,
 								true, true, false, HSSFColor.DARK_BLUE.index);
 				
 				Utilitarios.crearCellRPT(wb, rowT, 12,HSSFCellStyle.VERTICAL_CENTER,
@@ -3771,7 +3830,8 @@ public class ReportesMB {
 				//Representante
 				Utilitarios.crearCellRPT(wb, rowT, 15,HSSFCellStyle.VERTICAL_CENTER,
 						HSSFCellStyle.VERTICAL_CENTER,
-						ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_REPRESENTANTE,
+//						ConstantesVisado.RPT_EXT_ETIQUETA_COLUMNA_REPRESENTANTE,
+						apoderdante,
 						true, true, false, HSSFColor.DARK_BLUE.index);
 		
 				Utilitarios.crearCellRPT(wb, rowT, 16,HSSFCellStyle.VERTICAL_CENTER,

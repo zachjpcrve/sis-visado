@@ -8,11 +8,11 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
+
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsMultitablaId;
-import com.hildebrando.visado.service.DocumentoService;
 import com.hildebrando.visado.service.TiposDoiService;
 
 @ManagedBean(name = "tiposDOIMB")

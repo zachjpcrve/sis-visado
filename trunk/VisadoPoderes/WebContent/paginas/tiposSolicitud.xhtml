@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:define name="contenido">
+		<SCRIPT type="text/javascript">
+			function validaLetraTilde(e, ent, obj, fn) {
+				//Se captura la tecla presionada             
+				var tecla = (document.all) ? e.keyCode : e.which;
+				var patron;
+				var te;
+				var result;
+				//Tecla de retroceso (para poder borrar)       
+				if (tecla == 8) {
+					return true;
+				}
+				if (tecla == 32) {
+					return true;
+				}
+				if (ent == '0') {
+					if (fn == '1') {
+						if (obj.value == '') {
+							return true;
+						}
+						var puntos = obj.value.split('.');
+						if (puntos.length > 2) {
+							obj.value = '';
+							obj.focus();
+						}
+					}
+					if (tecla == 46) {
+						if (obj.value.indexOf('.') != -1) {
+							return false;
+						}
+						return true;
+					}
+				} else {
+					if (fn == '1') {
+						if (obj.value.indexOf('.') != -1) {
+							obj.value = '';
+							obj.focus();
+						}
+					}
+				}
+				//Dejar la línea de patron que se necesite y borrar el resto             
+				patron = /[A-Za-záéíóúÁÉÍÓÚñÑ]/; // Solo acepta letras             
+				//patron = /\d/; // Solo acepta números             
+				//patron = /\w/; // Acepta números y letras             
+				//patron = /\D/; // No acepta números             
+				//
+				te = String.fromCharCode(tecla);
+				if (fn == '1') {
+					te = obj.value;
+				}
+				result = patron.test(te);
+				if (result == false) {
+					if (fn == '1') {
+						if (obj.value == '') {
+							return true;
+						}
+						obj.value = '';
+						obj.focus();
+					}
+				}
+				return result;
+			}
+		</SCRIPT>
+		<!-- Mantenimiento Tipos de Solicitud -->
+		<h:form id="frmMantenimientoSolicitud">
+		                <p:outputPanel id="pnlfrmMantenimientoSolicitud"> 
+			<p:panel header="Tipos de Solicitudes de Visado" style="width: 85%">
+				<p:messages id="idMsmSolicitud"></p:messages>
+				<table>
+					<tr>
+						<td><h:outputText value="Código:  " /></td>
+						<td><p:inputText id="txtCodigo" disabled="true"
+								value="#{tiposSolicitudMB.solicitud.codTipSolic}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Descripción:  " /></td>
+						<td><p:inputText id="txtDescripcion" style="width:350px"
+								onkeypress="return validaLetraTilde(event,'0',this,'0');"
+								onblur="validaLetraTilde(event,'0',this,'1');"
+								value="#{tiposSolicitudMB.solicitud.desTipServicio}" maxlength="50" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Estado" /></td>
+						<td><p:selectOneMenu value="#{tiposSolicitudMB.solicitud.activo}">
+								<f:selectItem itemLabel="Activo" itemValue="1" />
+								<f:selectItem itemLabel="Inactivo" itemValue="0" />
+							</p:selectOneMenu></td>
+					</tr>
+
+
+				</table>
+				<p:commandButton id="registrarTipoSolicitud" value="Guardar" ajax="true"
+					action="#{tiposSolicitudMB.listarTiposSolicitud}"
+					actionListener="#{tiposSolicitudMB.registrar}"
+					update=":frmDataTableSolicitud:pnlfrmDataTableSolicitud :frmMantenimientoSolicitud:pnlfrmMantenimientoSolicitud">
+				</p:commandButton>
+				<p:commandButton id="limpiarTipoSolicitud" value="Limpiar" ajax="true"
+					action="#{tiposSolicitudMB.limpiarCampos}"
+					update=":frmMantenimientoSolicitud:pnlfrmMantenimientoSolicitud">
+				</p:commandButton>
+			</p:panel>
+			</p:outputPanel>
+		</h:form>
+		<!--Fin Mantenimiento Tipos de Solicitud -->
+		<!-- Data Table Solicitud -->
+		<h:form id="frmDataTableSolicitud">
+		<p:outputPanel id="pnlfrmDataTableSolicitud">
+			<p:panel header="Tipos de Solicitud" style="width: 85%">
+				<p:dataTable id="dtbUsuarios" value="#{tiposSolicitudMB.solicitudes}"
+					var="sol" paginator="true" rows="50" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+					currentPageReportTemplate="Mostrando {startRecord} de {totalRecords}"
+					emptyMessage="No hay tipos de solicitudes">
+
+					<p:column headerText="Código">
+						<h:outputText value="#{sol.codTipSolic}" />
+					</p:column>
+					<p:column headerText="Descripción">
+						<h:outputText value="#{sol.desTipServicio}" />
+					</p:column>
+
+
+					<p:column headerText="Estado">
+						<h:outputText value="#{sol.desActivo}" />
+					</p:column>
+					<p:column headerText="Acción">
+						<p:commandLink id="clinkEditar" ajax="true"
+							update=":frmMantenimientoSolicitud:pnlfrmMantenimientoSolicitud"
+							actionListener="#{tiposSolicitudMB.editarTipoSolicitud}">
+							<f:param name="codElemento" value="#{sol.codTipSolic}"></f:param>
+							<h:outputText value="Editar" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			</p:outputPanel>
+
+		</h:form>
+		<!--Fin Data Table Solicitud -->
+	</ui:define>
+</ui:composition>
+
+</html>
