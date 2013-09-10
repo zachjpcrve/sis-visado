@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Documentos" pageWidth="555" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
-	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
@@ -187,6 +187,7 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["../../WEB-INF/classes/jasper/"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="estadoAgrupacion" class="java.lang.String"/>
 	<field name="sEstado" class="java.lang.String"/>
 	<field name="lstPersonas" class="java.util.List"/>
 	<field name="PERSONAS" class="net.sf.jasperreports.engine.JRDataSource"/>
@@ -204,21 +205,9 @@
 	</columnHeader>
 	<detail>
 		<band height="57" splitType="Stretch">
-			<textField>
-				<reportElement x="43" y="2" width="74" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{sEstado}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="0" y="2" width="43" height="20" forecolor="#003399"/>
-				<textElement>
-					<font fontName="SansSerif" size="11" isBold="true" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[Estadoo]]></text>
-			</staticText>
 			<componentElement>
 				<reportElement key="table 7" x="0" y="23" width="555" height="32" forecolor="#000000"/>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Table Dataset 1">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{lstPersonas})]]></dataSourceExpression>
 					</datasetRun>
@@ -283,7 +272,7 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="82" >
+					<jr:column width="82">
 						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="82" height="30" forecolor="#003399"/>
@@ -310,7 +299,7 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="77" >
+					<jr:column width="77">
 						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="77" height="30" forecolor="#003399"/>
@@ -394,6 +383,11 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
+			<textField>
+				<reportElement x="0" y="2" width="108" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{estadoAgrupacion}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>

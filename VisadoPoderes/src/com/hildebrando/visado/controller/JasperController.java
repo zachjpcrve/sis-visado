@@ -14,6 +14,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -31,11 +32,15 @@ import com.hildebrando.visado.dto.ComisionDTO;
 import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
 import com.hildebrando.visado.dto.FormatosDTO;
 import com.hildebrando.visado.dto.OperacionesPDF;
+import com.hildebrando.visado.dto.Revocado;
 import com.hildebrando.visado.dto.SolicitudPDF;
 import com.hildebrando.visado.mb.RegistroUtilesMB;
+import com.hildebrando.visado.mb.RevocadosMB;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
+import com.hildebrando.visado.modelo.TiivsPersona;
+import com.hildebrando.visado.modelo.TiivsRevocado;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 
@@ -259,11 +264,14 @@ public class JasperController {
     		logger.info("Solicitidu-NroVoucher: "+SOLICITUD_TEMP.getNroVoucher());
     		solicitudPDF.setCodSoli(SOLICITUD_TEMP.getCodSoli());
     		solicitudPDF.setNroVoucher(SOLICITUD_TEMP.getNroVoucher());    		
-
+    		
     		TiivsMultitabla multi = RegistroUtilesMB.getRowFromMultitabla(ConstantesVisado.CODIGO_MULTITABLA_ESTADOS, SOLICITUD_TEMP.getEstado());
     		String sEstado = multi.getValor1();
     		logger.info("Solicitidu-Estado: "+sEstado);
-    		solicitudPDF.setEstado(sEstado);    		
+    		String estadoAgrupacion = obtenerEstadoAgrupaciones(lstAgrupacionSimpleDto);
+    		logger.info("Solicitidu-Estado-Agrupacion: "+estadoAgrupacion);
+    		solicitudPDF.setEstado(sEstado);
+    		solicitudPDF.setEstadoAgrupacion(estadoAgrupacion);
     		solicitudPDF.setComision(SOLICITUD_TEMP.getComision());
     		solicitudPDF.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
     		solicitudPDF.setTerritorio(SOLICITUD_TEMP.getTiivsOficina1().getTiivsTerritorio().getCodTer() + SOLICITUD_TEMP.getTiivsOficina1().getTiivsTerritorio().getDesTer());
@@ -329,6 +337,203 @@ public class JasperController {
        
         return("pdfReport");
     }
+    
+    private String obtenerEstadoAgrupaciones(List<AgrupacionSimpleDto> agrupaciones){
+    	//Obtenemos los revocados
+//    	RevocadosMB revocados = new RevocadosMB();
+//    	System.out.println("+++ revocados: " + revocados);
+    	/*revocados.buscarRevocado();
+    	List<Revocado> listaRevocados = revocados.getRevocados();
+    	
+    	for(Revocado revocado:listaRevocados){
+    		if(obtenerAgrupacionesRevocados(revocado, agrupaciones)){
+    			return ConstantesVisado.CAMPO_ESTADO_REVOCADO;
+    		}
+    	}*/
+    	List<Revocado> listaRevocados = obtenerRevocados();
+    	if(listaRevocados!=null){
+    		for(Revocado revocado:listaRevocados){
+        		if(obtenerAgrupacionesRevocados(revocado, agrupaciones)){
+        			return ConstantesVisado.CAMPO_ESTADO_REVOCADO;
+        		}
+        	}	
+    	}
+    	return "";
+    }
+    
+    private List<Revocado> obtenerRevocados(){
+    	List<Revocado> revocados = new ArrayList<Revocado>();
+		List<TiivsRevocado> tiivsrevocados = new ArrayList<TiivsRevocado>();
+		
+		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
+		
+		try {
+			tiivsrevocados = service.buscarDinamico(filtro.addOrder(Order.desc("codAgrup")).addOrder(Order.desc("fechaRevocatoria")));
+			if(tiivsrevocados!=null){
+				List<Integer> tmpAgrup = new ArrayList<Integer>();
+				for (TiivsRevocado tmp: tiivsrevocados){
+					if (tmp!=null){
+						tmpAgrup.add(tmp.getCodAgrup());
+					}
+				}
+				/*GenericDao<TiivsRevocado, Object> serviceRev = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+				Busqueda filtroRev = Busqueda.forClass(TiivsRevocado.class);
+				filtroRev.add(Restrictions.in("codAgrup", tmpAgrup));
+				filtroRev.addOrder(Order.desc("codAgrup"));
+				filtroRev.addOrder(Order.desc("fechaRevocatoria"));
+				tiivsrevocados = serviceRev.buscarDinamico(filtroRev);*/
+				
+				List<TiivsRevocado> apoderados;				
+				List<TiivsRevocado> poderdantes;
+				List<Integer>  listCodAgrup =  obtenerListCodAgrupacion();
+				 
+				if(listCodAgrup != null){
+					
+					if(listCodAgrup.size() > 0){
+						
+						for(Integer tiivsRevocado2:listCodAgrup){
+							
+							apoderados= new ArrayList<TiivsRevocado>();
+							poderdantes= new ArrayList<TiivsRevocado>();
+							
+							try{
+								for(TiivsRevocado tiivsRevocado:tiivsrevocados){
+									if(tiivsRevocado.getCodAgrup().compareTo(tiivsRevocado2)==0){
+										if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
+											apoderados.add(tiivsRevocado);
+										}
+										
+										if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
+											apoderados.add(tiivsRevocado);
+										}
+											
+										if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
+											poderdantes.add(tiivsRevocado);
+										}
+									}
+								}
+								
+								Revocado revocado = new Revocado();
+								revocado.setCodAgrupacion(tiivsRevocado2+"");
+								revocado.setApoderados(apoderados);
+								revocado.setPoderdantes(poderdantes);
+								
+								if(apoderados.size() > 0  || poderdantes.size() > 0){
+									revocados.add(revocado);
+								}
+							} catch(Exception e){
+								logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR,e);					
+							}
+						}
+					}
+				}
+			}
+			
+		} catch (Exception e) {
+			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR,e);
+			revocados = null;
+		}
+    	
+    	return revocados;
+    }
+    
+    private List<Integer> obtenerListCodAgrupacion(){
+		
+		 List<Integer> listCodAgrup= new ArrayList<Integer>();
+		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro2 = Busqueda.forClass(TiivsRevocado.class).setProjection(Projections.distinct(Projections.property("codAgrup")));
+		
+		try {
+			listCodAgrup = service.buscarDinamicoInteger(filtro2.addOrder(Order.desc("codAgrup")));
+		} catch (Exception e) {
+			
+			logger.debug("error al obtener la lista de cod de agrupacion "+  e.toString());
+		}
+		
+		return listCodAgrup;
+		
+	}
+    
+    private boolean obtenerAgrupacionesRevocados(Revocado revocado, List<AgrupacionSimpleDto> agrupaciones){
+    	boolean flag = false;
+    	if(agrupaciones.size()>0){
+    		if(revocado!=null){
+    			for(TiivsRevocado rev:revocado.getPoderdantes()){
+    				//Si es titular
+    				if(rev.getTipPartic().compareTo(ConstantesVisado.PODERDANTE)==0 
+    						&& agrupaciones.size()>0){
+    					flag = getPoderdantes(revocado.getPoderdantes(), agrupaciones.get(0).getLstPoderdantes());
+    				}
+    			}
+    			if(flag){
+    				for(TiivsRevocado rev:revocado.getApoderados()){
+        				//Si no es titular
+        				if(rev.getTipPartic().compareTo(ConstantesVisado.PODERDANTE)!=0 
+        						&& agrupaciones.size()>0){
+        					flag = getApoderdantes(revocado.getApoderados(), agrupaciones.get(0).getLstApoderdantes());
+        				}
+        			}	
+    			}
+    		}
+    	}
+    	
+    	return flag;
+    }
+    
+    private boolean getPoderdantes(List<TiivsRevocado> poderdantes, List<TiivsPersona> agrupaciones){
+    	boolean flag = true;
+    	Integer contador = 0;
+    	if(poderdantes.size()!=agrupaciones.size()){
+    		return false;
+    	}
+    	if(agrupaciones.size()>0){
+    		for(TiivsPersona persona:agrupaciones){
+    			if(poderdantes.size()>0){
+    				for(TiivsRevocado rev:poderdantes){
+    					if(persona.getCodPer()==rev.getTiivsPersona().getCodPer()){
+    						contador++;
+    					}
+    				}
+    			}
+    			if(contador==0){
+    				flag = false;
+    				break;
+    			}
+    		}
+    	}
+    	return flag;
+    }
+    
+    private boolean getApoderdantes(List<TiivsRevocado> apoderdantes, List<TiivsPersona> agrupaciones){
+    	boolean flag = true;
+    	Integer contador = 0;
+    	if(apoderdantes.size()!=agrupaciones.size()){
+    		return false;
+    	}
+    	if(agrupaciones.size()>0){
+    		for(TiivsPersona persona:agrupaciones){
+    			if(apoderdantes.size()>0){
+    				for(TiivsRevocado rev:apoderdantes){
+    					if(persona.getCodPer()==rev.getTiivsPersona().getCodPer()
+    							&& rev.getTipPartic().compareTo(ConstantesVisado.APODERADO)==0){
+    						contador++;
+    					}
+    					if(persona.getCodPer()==rev.getTiivsPersona().getCodPer()
+    							&& rev.getTipPartic().compareTo(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)==0){
+    						contador++;
+    					}
+    				}
+    			}
+    			if(contador==0){
+    				flag = false;
+    				break;
+    			}
+    		}
+    	}
+    	return flag;
+    }
+    
         
     @SuppressWarnings("unused")
 	@RequestMapping(value="/download/pdfReportObsHistorial.htm", method=RequestMethod.GET)

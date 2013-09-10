@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
-
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
@@ -24,6 +22,8 @@ public class SolicitudPDF implements Serializable
 	private JRDataSource DOCUMENTOS;
 	private JRDataSource OPERACIONES;
 	private JRDataSource AGRUPACION;
+	//Se agrega variable
+	private String estadoAgrupacion;
 	private List<OperacionesPDF> lstOperaciones=new ArrayList<OperacionesPDF>();	
 	private List<DocumentoTipoSolicitudDTO> lstDocumentos=new ArrayList<DocumentoTipoSolicitudDTO>();
 	private List<AgrupacionSimpleDto> lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
@@ -126,4 +126,13 @@ public class SolicitudPDF implements Serializable
 	public void setMonedaComision(String monedaComision) {
 		this.monedaComision = monedaComision;
 	}
+
+	public String getEstadoAgrupacion() {
+		return estadoAgrupacion;
+	}
+
+	public void setEstadoAgrupacion(String estadoAgrupacion) {
+		this.estadoAgrupacion = estadoAgrupacion;
+	}
+	
 }
