@@ -477,7 +477,9 @@ public class SolicitudRegistroMB {
 			ex.printStackTrace();
 		}
 		
-		visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(lstDocumentosXTipoSolTemp));	
+			
+		// 120913
+		visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(lstTipoSolicitudDocumentos));
 		
 	}		
 
@@ -1799,6 +1801,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 				establecerTipoSolicitud();
 				
+				// 120913
+				visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(lstTipoSolicitudDocumentos));
+				
 			}
 			
 		}catch (Exception e) {
@@ -1888,7 +1893,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		String []aDocumentosCargados = visadoDocumentosMB.getDocumentosCargados().split(",");
 		String nombreDoc = "";
 		
-		//Actualiza lista de documentos		
+        //Actualiza lista de documentos		
 		if(aDocumentosLeidos.length == aDocumentosCargados.length){
 			
 			//for(String documento : aDocumentosLeidos){
@@ -1918,7 +1923,14 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 							
 							
 							lstAnexoSolicitud.add(objAnexo);
-													
+						/*	for (TiivsAnexoSolicitud ori : lstAnexoSolicitud) {
+								
+								for (TiivsAnexoSolicitud temp : lstAnexoSolicitudTemp) {
+									if(!ori.getId().equals(temp.getId())){
+										lstAnexoSolicitudTemp.add(temp);
+									}
+								}
+							}		*/	
 							//Actualiza lstTipoSolicitudDocumentos (listBox de documentos)		
 							for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
 								if (s.getId().getCodDoc().equals(objAnexo.getId().getCodDoc())) {
@@ -1929,17 +1941,20 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						}
 					}										
 				}
-			}		
+			}	
+			
+			// 120913
+			visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(lstTipoSolicitudDocumentos));
 			
 		}
 		
 		establecerTipoSolicitud();
-				
-		logger.info("(Tabla) lstdocumentos tamanhio:" + lstdocumentos.size());
-		logger.info("(Anexos)lstAnexoSolicitud tamanhio:" + lstdocumentos.size());
-		logger.info("(Combo) lstTipoSolicitudDocumentos tamaño:" + lstdocumentos.size());
 		
-		logger.info("====== SALIENDO de actualizarDocumentosXTipoSolicitud =====");
+		logger.info("(Tabla) lstdocumentos tamaño:" + lstdocumentos.size());
+		logger.info("(Anexos)lstAnexoSolicitud tamaño:" + lstAnexoSolicitud.size());
+		logger.info("(Combo) lstTipoSolicitudDocumentos tamaño:" + lstTipoSolicitudDocumentos.size());
+        logger.info("====== SALIENDO de actualizarDocumentosXTipoSolicitud =====");
+        
 	}
 	
 	/**
