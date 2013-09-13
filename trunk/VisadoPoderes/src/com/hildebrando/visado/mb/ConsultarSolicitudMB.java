@@ -3462,8 +3462,8 @@ public class ConsultarSolicitudMB {
 			logger.info("Error al cargar el listado de documentos:",ex);			
 		}
 		
-		
-		this.visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(this.lstTipoSolicitudDocumentos));
+		// 120913
+	     visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(lstTipoSolicitudDocumentos));
 	}
 
 	public void actualizarListadoDocumentos() {
@@ -3584,7 +3584,9 @@ public class ConsultarSolicitudMB {
 
 			this.actualizarListaDocumentosXTipo(objAnexo);
 
-			establecerTipoSolicitud();						
+			establecerTipoSolicitud();	
+			//120913
+			visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(lstTipoSolicitudDocumentos));
 
 		}
 		// solicitudRegistrarT.getTiivsTipoSolicitud().setTiivsTipoSolicDocumentos(tiivsTipoSolicDocumentos);
@@ -3773,14 +3775,15 @@ public class ConsultarSolicitudMB {
 			}		
 			
 		}
-		
+		// 120913
+		visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(lstTipoSolicitudDocumentos));
 		
 		//ver si tambien cambia tipo solicitud
 		establecerTipoSolicitud();
 				
 		logger.info("(Tabla) lstdocumentos tamaño:" + lstdocumentos.size());
-		logger.info("(Anexos)lstAnexoSolicitud tamaño:" + lstdocumentos.size());
-		logger.info("(Combo) lstTipoSolicitudDocumentos tamaño:" + lstdocumentos.size());
+		logger.info("(Anexos)lstAnexoSolicitud tamaño:" + lstAnexoSolicitud.size());
+		logger.info("(Combo) lstTipoSolicitudDocumentos tamaño:" + lstTipoSolicitudDocumentos.size());
 	}
 	
 
