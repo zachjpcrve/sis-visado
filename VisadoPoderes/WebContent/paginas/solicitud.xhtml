@@ -470,7 +470,7 @@
 																		value="#{solicitudRegMB.solicitudRegistrarT.codSoli}" />
 																	<h:inputHidden id="idCodigoDocumentoSelected"
 																		value="#{solicitudRegMB.selectedDocumentoDTO.nombreCorto}" />
-																	<p:remoteCommand name="actDocumentos" update=":formSolicitudRegistro:pnlSolicitudRegistro"
+																	<p:remoteCommand name="actDocumentos" update=":formSolicitudRegistro:pnlSolicitudRegistro,:formSolicitudRegistro:idVisorApplet"
 																		process="@form"
 																		actionListener="#{solicitudRegMB.actualizarDocumentosXTipoSolicitud}" />
 																</td>
@@ -509,7 +509,8 @@
 																		:formSolicitudRegistro:listDocumentosXTipoSoli,
 																		:formSolicitudRegistro:idfileUpload,
 																		:formSolicitudRegistro:cboTipoSolicitud,
-																		:formSolicitudRegistro:tblDocumentos"
+																		:formSolicitudRegistro:tblDocumentos,
+																		:formSolicitudRegistro:idVisorApplet"
 																		ajax="false" 
 																		action="#{solicitudRegMB.agregarDocumentosXTipoSolicitud}" />
 																</td>
