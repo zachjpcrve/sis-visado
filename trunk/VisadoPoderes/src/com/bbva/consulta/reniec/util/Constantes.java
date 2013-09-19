@@ -14,6 +14,9 @@ public class Constantes {
 	
 	public static final String RENIEC_EXITO = "0000";
 	public static final String RENIEC_NO_EXISTE = "5200";
+	public static final String VOUCHER_EXITO = "0000";
+	public static final String VOUCHER_NO_EXISTE = "9999";
+	public static final String VOUCHER_NO_EXISTE_CLIENTE = "No existe información del voucher consultado";
     public static final int    RENIEC_TTL = 0;
     public static final int    RENIEC_LONG_CABECERA = 128;
     public static final int    RENIEC_LONG_SUB_TRAMA_CONSULTA = 15;
@@ -35,6 +38,6 @@ public class Constantes {
     public static final String RENIEC_HOST_INST_SOLICITANTE = "BBVA";
     public static final String RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA = "Error al procesar trama de respuesta";
     //public static final String RENIEC_NO_EXISTE_CLIENTE = "La persona no figura en la Reniec";
-    public static final String RENIEC_NO_EXISTE_CLIENTE = "";    
+    public static final String RENIEC_NO_EXISTE_CLIENTE = "";
     public static final String ERROR_SERVICIO_WEB = "No se ha podido realizar la conexi\u00F3n al servicio web del banco para autentificar el usuario.";
 }

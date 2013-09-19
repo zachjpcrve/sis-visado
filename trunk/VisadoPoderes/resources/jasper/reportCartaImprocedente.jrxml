@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="542" pageHeight="795" columnWidth="502" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.1269722013523664"/>
+	<property name="ireport.zoom" value="1.3636363636363635"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="48"/>
+	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<field name="numeroSolicitud" class="java.lang.String"/>
@@ -12,11 +12,11 @@
 		<band/>
 	</background>
 	<title>
-		<band height="183">
+		<band height="192">
 			<textField>
 				<reportElement x="367" y="9" width="118" height="20"/>
 				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA["N° " + $F{numeroSolicitud}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["NRO " + $F{numeroSolicitud}]]></textFieldExpression>
 			</textField>
 			<image onErrorType="Blank">
 				<reportElement x="22" y="9" width="249" height="41"/>
@@ -37,7 +37,7 @@
 			<textField>
 				<reportElement x="22" y="114" width="453" height="20"/>
 				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA["Atencion: Solicitud de revisión de poderes N° " + $F{numeroSolicitud}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Atención: Solicitud de revisión de poderes N° " + $F{numeroSolicitud}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="22" y="93" width="453" height="20"/>
@@ -48,11 +48,12 @@
 				<reportElement x="22" y="139" width="453" height="1" forecolor="#666666"/>
 			</line>
 			<staticText>
-				<reportElement x="22" y="145" width="453" height="37"/>
+				<reportElement x="22" y="145" width="453" height="40"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<text><![CDATA[De nuestra consideracion:
+				<text><![CDATA[De nuestra consideración:
+
 Mediante la presente le informamos que su solicitud es IMPROCEDENTE, por las siguientes razones:]]></text>
 			</staticText>
 		</band>
@@ -87,7 +88,7 @@ Mediante la presente le informamos que su solicitud es IMPROCEDENTE, por las sig
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[BBVA Banco Continental © Copyright - Todos los Derechos Reservados]]></text>
+				<text><![CDATA[BBVA Continental © Copyright - Todos los Derechos Reservados]]></text>
 			</staticText>
 		</band>
 	</pageFooter>

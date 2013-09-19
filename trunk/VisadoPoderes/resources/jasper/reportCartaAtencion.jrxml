@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="542" pageHeight="795" columnWidth="502" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.5394743546921197"/>
+	<property name="ireport.zoom" value="1.3995221406291998"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="241"/>
+	<property name="ireport.y" value="130"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -13,6 +13,7 @@
 	<field name="instrucciones" class="java.lang.String"/>
 	<field name="numeroDiasForEjecucion" class="java.lang.String"/>
 	<field name="lstOperacionesDS" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<field name="fechaHistorial" class="java.sql.Timestamp"/>
 	<background>
 		<band/>
 	</background>
@@ -47,7 +48,7 @@
 				<textElement textAlignment="Left">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Estimado Gestor,]]></text>
+				<text><![CDATA[Estimado Colaborador,]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -65,7 +66,7 @@
 				<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="17" y="2" width="474" height="50" isPrintWhenDetailOverflows="true"/>
 			</rectangle>
 		</band>
-		<band height="39">
+		<band height="61">
 			<rectangle>
 				<reportElement stretchType="RelativeToBandHeight" x="17" y="1" width="474" height="34" isPrintWhenDetailOverflows="true"/>
 			</rectangle>
@@ -73,6 +74,18 @@
 				<reportElement positionType="Float" isPrintRepeatedValues="false" x="26" y="4" width="459" height="26" isPrintWhenDetailOverflows="true"/>
 				<textElement markup="html"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones}!=null?$F{instrucciones}:" "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="17" y="39" width="106" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de Aprobación:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="123" y="39" width="167" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{fechaHistorial}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -86,7 +99,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[BBVA Banco Continental © Copyright - Todos los Derechos Reservados]]></text>
+				<text><![CDATA[BBVA Continental © Copyright - Todos los Derechos Reservados]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="372" y="3" width="128" height="20" forecolor="#003399"/>
@@ -99,15 +112,30 @@
 	</pageFooter>
 	<summary>
 		<band height="116">
-			<textField>
-				<reportElement x="20" y="13" width="458" height="58"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA["Este documento permite hacer efectiva la operación del Visado de Poderes, señalado en ORGA.2008.035 - BASTANTEO Y VISADO DE PODERES. Para ello, se debe tener en cuenta que luego de generar este documento, Usted tiene " + $F{numeroDiasForEjecucion} + " días para solicitar la ejecución de la operación en la oficina : " + $F{oficina}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="21" y="82" width="459" height="14"/>
+				<reportElement x="33" y="28" width="452" height="80"/>
+				<textElement verticalAlignment="Top" rotation="None">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single" tabStopWidth="5"/>
+				</textElement>
+				<text><![CDATA[Este documento permite hacer efectiva la operación del Visado de Poderes, señalado en ORGA.2008.035 - BASTANTEO Y VISADO DE PODERES.
+Generado este documento no procede reimpresión
+Tener en cuenta que la presente aprobación se ejecuta desde la fecha de aprobación hasta los 7 días siguientes. Transcurrido este plazo deberá presentar nuevamente su solicitud.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="26" y="28" width="5" height="80"/>
 				<textElement/>
-				<text><![CDATA[Pasada la fecha, la validez del documento habrá caducado.]]></text>
+				<text><![CDATA[-
+
+-
+-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="22" y="2" width="159" height="20"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Recomendaciones para Oficina:]]></text>
 			</staticText>
 		</band>
 	</summary>

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 12/12/2012 10:14:03 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hildebrando.visado.modelo.TiivsHostVoucher" table="TTIVS_HOST_VOUCHER">
+        <id name="nroVoucher" type="java.lang.String">
+            <column name="NRO_VOUCHER" />
+            <generator class="assigned" />
+        </id>
+        <property name="tipoPago" type="java.lang.String">
+            <column name="TIPO_PAGO" />
+        </property>
+        <property name="cuenta" type="java.lang.String">
+            <column name="CUENTA" />
+        </property>
+        <property name="montoComision" type="java.lang.String">
+            <column name="MONTO_COMISION" />
+        </property>
+        <property name="divisa" type="java.lang.String">
+            <column name="DIVISA" />
+        </property>
+        <property name="codServicio" type="java.lang.String">
+            <column name="COD_SERVICIO" />
+        </property>
+        <property name="fechaPago" type="java.lang.String">
+            <column name="FECHA_PAGO" />
+        </property>
+        <property name="horaPago" type="java.lang.String">
+            <column name="HORA_PAGO" />
+        </property>
+         <property name="centroPago" type="java.lang.String">
+            <column name="CENTRO_PAGO" />
+        </property>
+         <property name="terminalPago" type="java.lang.String">
+            <column name="TERMINAL_PAGO" />
+        </property>
+        <property name="usuarioPago" type="java.lang.String">
+        	<column name="USUARIO_PAGO"/>
+        </property>
+        <property name="usuarioRegistro" type="string">
+            <column name="USUARIO_REGISTRO" length="7" />                
+        </property>
+        <property name="fechaRegistro" type="java.sql.Timestamp">
+            <column name="FECHA_REGISTRO" />
+        </property>
+        <property name="estado" type="java.lang.String">
+        	<column name="ESTADO"/>
+        </property>
+    </class>
+</hibernate-mapping>

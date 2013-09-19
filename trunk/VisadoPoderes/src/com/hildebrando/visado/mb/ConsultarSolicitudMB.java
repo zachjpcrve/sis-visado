@@ -59,6 +59,7 @@ import com.hildebrando.visado.modelo.TiivsDocumento;
 import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
+import com.hildebrando.visado.modelo.TiivsHostVoucher;
 import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
@@ -202,6 +203,8 @@ public class ConsultarSolicitudMB {
 	private boolean bFlagComision;
 	private String descripcionComision;
 	private String glosaComision;
+	
+	private TiivsHostVoucher objVoucher;
 	
 	public ConsultarSolicitudMB() {		
 		inicializarContructor();
@@ -2142,6 +2145,26 @@ public class ConsultarSolicitudMB {
 		logger.info("this.objAgrupacionSimpleDtoCapturado  " + this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
 		logger.info("this.objAgrupacionSimpleDtoCapturado  " + this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
 		logger.info("this.objAgrupacionSimpleDtoCapturado  " + this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
+	}
+	
+	public void consultarVoucherHost(){
+		logger.info("********************** consultarVoucherHost *********************************** ");
+		if(solicitudRegistrarT!=null){
+			GenericDao<TiivsHostVoucher, Object> service = 
+										(GenericDao<TiivsHostVoucher, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			
+			Busqueda filtroHost = Busqueda.forClass(TiivsHostVoucher.class);
+			filtroHost.add(Restrictions.eq("nroVoucher", solicitudRegistrarT.getNroVoucher()));
+			
+			try {
+				List<TiivsHostVoucher> vouchers = service.buscarDinamico(filtroHost);
+				if(vouchers.size()>0){
+					objVoucher = vouchers.get(0);
+				}
+			} catch (Exception e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"el Voucher de Host:" + e);
+			}
+		}
 	}
 
 	public void obtenerHistorialSolicitud() {
@@ -6280,6 +6303,14 @@ public class ConsultarSolicitudMB {
 
 	public void setDescripcionComision(String descripcionComision) {
 		this.descripcionComision = descripcionComision;
+	}
+
+	public TiivsHostVoucher getObjVoucher() {
+		return objVoucher;
+	}
+
+	public void setObjVoucher(TiivsHostVoucher objVoucher) {
+		this.objVoucher = objVoucher;
 	}
 	
 }

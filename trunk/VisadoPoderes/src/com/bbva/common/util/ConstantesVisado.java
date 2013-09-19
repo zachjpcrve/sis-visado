@@ -37,6 +37,13 @@ public class ConstantesVisado {
 	public static final String CODIGO_MULTITABLA_PAGO_COMISION = "T17";
 	public static final String CODIGO_FLAG_PAGO_COMISION = "0001";
 	
+	public static final String CODIGO_MULTITABLA_VALIDACION_COMISION = "T18";
+	public static final String VALIDACION_INACTIVA ="0001";
+	public static final String ACTIVA_ADVERTENCIA = "0002";
+	public static final String ACTIVA_RESTRICTIVA = "0003";
+	
+	public static final String NOMBRE_ARCHIVO_REVOCATORIA = "DOREV"; //  SUSTENTO_DE_REVOCACION
+	
 	public static final java.lang.String ID_RANGO_IMPORTE_MENOR_CINCUENTA = "0001";
 	public static final java.lang.String ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE = "0002";
 	public static final java.lang.String ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA = "0003";

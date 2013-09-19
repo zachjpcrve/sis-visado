@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.common.util.EstilosNavegador;
+import com.bbva.consulta.host.impl.ObtenerDatosVoucherDUMMY;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Persona;
@@ -59,6 +60,7 @@ import com.hildebrando.visado.modelo.TiivsAnexoSolicitudId;
 import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
+import com.hildebrando.visado.modelo.TiivsHostVoucher;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
@@ -108,6 +110,7 @@ public class SolicitudRegistroMB {
 	private boolean bFlagComision;
 	private String descripcionComision;
 	private String glosaComision;
+	
 	
 	private TiivsSolicitudOperban objSolicBancaria;
 	private List<TiivsSolicitudOperban> lstSolicBancarias;
@@ -184,6 +187,7 @@ public class SolicitudRegistroMB {
 	private TiivsOficina1 oficina;
 	private String redirect = "";
 	private String mesajeConfirmacion = "";
+	private String mesajeValidacionHost = "";
 	
 	/*private boolean boleanoMensajeInfoGeneral=true;
 	private boolean boleanoMensajeApoderdantePoderdante=true;
@@ -1893,7 +1897,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		String []aDocumentosCargados = visadoDocumentosMB.getDocumentosCargados().split(",");
 		String nombreDoc = "";
 		
-        //Actualiza lista de documentos		
+		//Actualiza lista de documentos		
 		if(aDocumentosLeidos.length == aDocumentosCargados.length){
 			
 			//for(String documento : aDocumentosLeidos){
@@ -1923,14 +1927,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 							
 							
 							lstAnexoSolicitud.add(objAnexo);
-						/*	for (TiivsAnexoSolicitud ori : lstAnexoSolicitud) {
-								
-								for (TiivsAnexoSolicitud temp : lstAnexoSolicitudTemp) {
-									if(!ori.getId().equals(temp.getId())){
-										lstAnexoSolicitudTemp.add(temp);
-									}
-								}
-							}		*/	
+													
 							//Actualiza lstTipoSolicitudDocumentos (listBox de documentos)		
 							for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
 								if (s.getId().getCodDoc().equals(objAnexo.getId().getCodDoc())) {
@@ -2822,7 +2819,14 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			//if (this.validarRegistroSolicitud()) 
 			if (esValido)
 			{
+				/*** CAMBIAR DE ESTADO DE SOLICITUD A ENVIADA ***/
+				String mensajeValidacion = "";
 				if (!this.sEstadoSolicitud.equals("BORRADOR")) {
+					/*** REALIZAR VALIDACION DE COBRO DE COMISIONES ***/
+					if(validarCobroComisiones()){
+						logger.info("Solicitud con validación de cobro de comisiones restrictiva");
+						return;
+					}
 					this.enviarSolicitudSSJJ();
 					logger.info("Estudio: "+solicitudRegistrarT.getTiivsEstudio().getCodEstudio());					
 				}
@@ -2843,7 +2847,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					}
 				}
 				
-				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT);
+				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT); //INSERTA LA SOLICITUD
 				TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 				  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),1+""));
 				  objHistorial.setEstado(this.solicitudRegistrarT.getEstado());
@@ -2882,7 +2886,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						mesajeConfirmacion = "Se registró correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
 						actualizarBandeja=true;
 					} else {
-						mesajeConfirmacion = "Se envió a SSJJ correctamente la Solicitud con codigo : "+ objResultado.getCodSoli();
+						mesajeConfirmacion = "Se envió a SSJJ correctamente la Solicitud con codigo : "+ 
+											objResultado.getCodSoli() + "\n" + mesajeValidacionHost;
 						actualizarBandeja=true;
 					}
 					//redirect = "/faces/paginas/bandejaSeguimiento.xhtml";					
@@ -2911,6 +2916,94 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		logger.info("Redirec:" + this.redirect);
 //		return this.redirect;
 
+	}
+	
+	private boolean validarCobroComisiones(){
+		boolean restrictivo = false;
+		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		
+		//Si no esta exonerado a comision
+		if(!isbFlagComision()){
+			Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+			filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_VALIDACION_COMISION));
+			filtroMultitabla.add(Restrictions.eq("valor2",ConstantesVisado.VALOR2_ESTADO_ACTIVO));
+			TiivsMultitabla validacionVoucher = null;
+			
+			try {
+				List<TiivsMultitabla> comisiones = service.buscarDinamico(filtroMultitabla);
+				if(comisiones.size()>0){
+					validacionVoucher = comisiones.get(0);
+				}
+				if(validacionVoucher!=null){
+					if(validacionVoucher.getId().getCodElem().compareTo(ConstantesVisado.VALIDACION_INACTIVA)==0){
+						restrictivo = false;
+					}else{
+						restrictivo = validaComision(validacionVoucher.getId().getCodElem(), validacionVoucher);
+					}
+				}
+			} catch (Exception e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e);
+			}	
+		}
+		return restrictivo;
+	}
+	
+	private boolean validaComision(String tipoValidacion, TiivsMultitabla validacionVoucher){
+		boolean flagValida = true;
+		BResult resultado = null;
+		ObtenerDatosVoucherDUMMY voucherService = new ObtenerDatosVoucherDUMMY();
+		TiivsHostVoucher voucherHost = null;
+		try {
+			resultado = voucherService.obtenerDatosVoucher(solicitudRegistrarT.getNroVoucher());
+			//Inserta en tabla VISPOD el voucher obtenido de Host
+			insertarVoucher(resultado);
+			if(tipoValidacion!=null && tipoValidacion.compareTo(ConstantesVisado.ACTIVA_ADVERTENCIA)==0){
+				if(resultado.getObject()!=null){
+					flagValida = false;
+					voucherHost = (TiivsHostVoucher) resultado.getObject();
+					if(voucherHost.getMontoComision()!=null &&
+							Double.valueOf(voucherHost.getMontoComision()).compareTo(solicitudRegistrarT.getComision())!=0){
+//						Utilitarios.mensajeInfo("INFO", validacionVoucher.getValor3());	
+						mesajeValidacionHost = validacionVoucher.getValor3();
+					}
+				}else{
+					Utilitarios.mensajeInfo("INFO", resultado.getMessage());
+				}
+			}else if (tipoValidacion!=null && tipoValidacion.compareTo(ConstantesVisado.ACTIVA_RESTRICTIVA)==0){
+				if(resultado.getObject()!=null){
+					flagValida = false;
+					voucherHost = (TiivsHostVoucher) resultado.getObject();
+					if(voucherHost.getMontoComision()!=null &&
+							Double.valueOf(voucherHost.getMontoComision()).compareTo(solicitudRegistrarT.getComision())!=0){
+						flagValida = true;
+//						Utilitarios.mensajeError("ERROR", validacionVoucher.getValor3());	
+						mesajeConfirmacion = validacionVoucher.getValor3();
+					}
+				}else{
+					flagValida = true;
+//					Utilitarios.mensajeError("ERROR", resultado.getMessage());
+					mesajeConfirmacion = resultado.getMessage();
+				}
+			}
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e);
+		}
+		return flagValida;
+	}
+	
+	private void insertarVoucher(BResult result){
+		GenericDao<TiivsHostVoucher, Object> service = (GenericDao<TiivsHostVoucher, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		if(result!=null && result.getObject()!=null){
+			TiivsHostVoucher voucher = (TiivsHostVoucher) result.getObject();
+			try {
+				voucher.setUsuarioRegistro(this.usuario.getUID());
+				voucher.setFechaRegistro(new Timestamp(new Date().getTime()));
+				voucher.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO);
+				service.insertar(voucher);
+			} catch (Exception e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e);
+			}
+		}
 	}
 		
 	public String redireccionar(){

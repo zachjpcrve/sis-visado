@@ -22,6 +22,7 @@
 			        <value>hibernate/xml/TiivsTipoSolicDocumento.hbm.xml</value>
 			        <value>hibernate/xml/TiivsParametros.hbm.xml</value>
 			        <value>hibernate/xml/TiivsMultitabla.hbm.xml</value>
+			        <value>hibernate/xml/TiivsHostVoucher.hbm.xml</value>
 			        <value>hibernate/xml/TiivsPersona.hbm.xml</value>
 			        <value>hibernate/xml/TiivsRevocado.hbm.xml</value>			        
 			        <value>hibernate/xml/TiivsAnexoSolicitud.hbm.xml</value>

@@ -8,9 +8,23 @@
 <head>
 <script src="jquery.js" type="text/javascript"></script>
 <script src="jquery.maskedinput.js" type="text/javascript"></script>
+
+<script type="text/javascript" language="javascript">
+	function appletActualizar() {
+		applet = this.document.getElementById('appletVisor');
+		//applet.actualizar();
+		applet.actualizarConPermisos();
+		return false;
+	}
+	
+	
+</script>
+
 </head>
 
 <ui:composition template="../WEB-INF/plantilla/layout.xhtml">
+	<ui:param name="root" value="#{request.contextPath}/" />
+	
 	<ui:define name="contenido">
 		<script type="text/JavaScript" src="../resources/js/visado.js" />
 		<h:form id="frmConsRev">
@@ -244,7 +258,7 @@
 			width="#{revocadosMB.ancho_Popup_Revoc_Poder}"
 			height="#{revocadosMB.alto_Popup_Revoc_Poder}">
 
-			<h:form id="frmPendEdit">
+			<h:form id="frmPendEdit" enctype="multipart/form-data">
 			<p:messages id="globalOnly" globalOnly="true" showDetail="true" />
 			<p:outputPanel id="pnlRegistrarPendEdit">
 
@@ -349,7 +363,7 @@
 					</h:panelGrid>
 				</p:panel>
 				
-				<h:panelGrid columns="4">
+				<h:panelGrid columns="11">
 
 					<p:commandButton id="btnAgregar" value="Agregar"
 						icon="ui-icon-plus"
@@ -372,8 +386,53 @@
 						update=":frmPendEdit:pnlRegistrarPendEdit"
 						ajax="true" />
 						
-						<!-- :frmPendEdit:gridApodPod :frmPendEdit:gridApodPod2 :frmPendEdit:gridApodPod3" -->
+					<p:spacer width="10" height="20" />
 
+					<p:fileUpload value="#{revocadosMB.fileUpload}"
+									id="idfileUpload" mode="simple" update="idfileUpload"
+									sizeLimit="100000"
+									allowTypes="/(\.|\/)(pdf)$/" />
+									
+					<p:commandButton id="btnAceptar"
+									value="Aceptar"
+									update=":frmPendEdit:downloadLink" 
+									actionListener="#{revocadosMB.cargarDocumentoRevocatoria}"
+									/>
+					
+					<p:spacer width="10" height="20" />
+									
+					<h:commandLink id="downloadLink"
+						action="#{revocadosMB.descargarDocumento}" immediate="true" >
+						<h:outputText value="#{revocadosMB.aliasCortoDocumento}" />																			
+									<f:param name="nombreArchivo" value="#{revocadosMB.sAliasTemporal}"/>
+					</h:commandLink>
+					<p:commandButton id="btnEscanear"
+									value="Escanear"
+									onclick="return invocarEscaner('#{solicitudRegMB.cadenaEscanerFinal}');">
+					</p:commandButton> 
+					<p:commandButton value="Actualizar"
+									onclick="return appletActualizar ();" /> 
+							
+							<h:panelGroup id="idVisorApplet">
+									<!-- Applet Size: width='93px';height='24px  -->
+									<applet name="appletVisor" id="appletVisor"
+										code="com.hildebrando.visado.applet.AgregarDocumentos.class"
+										archive="../../uploadFilesApplet.jar" width='1px'
+										height='1px' mayscript="mayscript">
+										<param name="path_cliente"
+											value="#{visadoDocumentosMB.pathCliente}" />
+										<param name="documentos_leer"
+											value="#{visadoDocumentosMB.documentosLeer}" />
+										<param name="directory"
+											value="#{visadoDocumentosMB.directory}" />
+										<param name="carpeta_cliente_log"
+											value="#{visadoDocumentosMB.carpetaClienteLog}" />
+										<param name="url_server"
+											value="#{visadoDocumentosMB.urlCarga}" />
+									</applet>
+							</h:panelGroup> 
+																		
+																		
 				</h:panelGrid>
 
 

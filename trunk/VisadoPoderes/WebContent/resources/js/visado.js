@@ -32,6 +32,7 @@ function validaNumero(e, ent, obj, fn) {
 	var patron;
 	var te;
 	var result;
+	
 	//Tecla de retroceso (para poder borrar)       
 	if (tecla == 8) {
 		return true;
@@ -63,14 +64,20 @@ function validaNumero(e, ent, obj, fn) {
 	}
 		//Dejar la línea de patron que se necesite y borrar el resto             
 	//patron =/[A-Za-z]/; // Solo acepta letras             
-	patron = /\d/; // Solo acepta números             
+	patron = /\d/; // Solo acepta números       //estaba activa      
 	//patron = /\w/; // Acepta números y letras             
 	//patron = /\D/; // No acepta números             
 	//
 	te = String.fromCharCode(tecla);
+	
+	if(isTecla(tecla)){
+		return true;
+	}
+	
 	if (fn == '1') {
 		te = obj.value;
 	}
+
 	result = patron.test(te);
 	if (result == false) {
 		if (fn == '1') {
@@ -83,6 +90,18 @@ function validaNumero(e, ent, obj, fn) {
 	}
 	return result;
 };
+
+function isTecla(tecla){
+	if(tecla>0){
+		//Teclas de direccionamiento
+		if(tecla>=37 && tecla<=40){
+			return true;
+		}
+		return false;
+	}
+	return true;
+};
+
 function validaNumeroPorTipoDoi(e, ent, obj, fn) {
 
 		//document.getElementById("formRegistrar:cboTipoDoi2_input").value;
@@ -135,6 +154,11 @@ function validaNumeroPorTipoDoi(e, ent, obj, fn) {
 	//patron = /\D/; // No acepta números             
 	//
 	te = String.fromCharCode(tecla);
+	
+	if(isTecla(tecla)){
+		return true;
+	}
+	
 	if (fn == '1') {
 		te = obj.value;
 	}
