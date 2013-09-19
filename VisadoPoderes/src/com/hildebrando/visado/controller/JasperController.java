@@ -35,7 +35,6 @@ import com.hildebrando.visado.dto.OperacionesPDF;
 import com.hildebrando.visado.dto.Revocado;
 import com.hildebrando.visado.dto.SolicitudPDF;
 import com.hildebrando.visado.mb.RegistroUtilesMB;
-import com.hildebrando.visado.mb.RevocadosMB;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
@@ -98,6 +97,7 @@ public class JasperController {
 			}			
 			uno.setInstrucciones(sInstr);
 			uno.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getCodOfi()+ " - " + SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
+			uno.setFechaHistorial(SOLICITUD_TEMP.getFechaEstado());
 
 			// Add lista datasource
 			List<OperacionesPDF> lstOperaciones = new ArrayList<OperacionesPDF>();

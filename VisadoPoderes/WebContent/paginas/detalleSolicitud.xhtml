@@ -321,10 +321,20 @@
 						</table>
 					</td>
 				</tr>
+				<tr>
+					<td> 
+						<p:commandButton value="VER DATOS VOUCHER" 
+									update=":formSolicitudConsulta:modalVerVoucher"
+									action="#{consultarSolicitudMB.consultarVoucherHost}"
+									oncomplete="dlgVerVoucher.show();" />
+								
+					</td>
+				</tr>
+				
 			</tbody>
 		</table>
 		
-		    	<p:dialog id="modalVerPersona"
+		   <p:dialog id="modalVerPersona"
 			header="Ver Persona" widgetVar="dlgVerPersona"
 			modal="true" height="250" >
 			<table border="0" width="50px;">
@@ -380,18 +390,57 @@
 			</table>
 		</p:dialog>
 		
-		
-		
-		
-	
-		
+		 <p:dialog id="modalVerVoucher"
+			header="NRO VOUCHER #{consultarSolicitudMB.objVoucher.nroVoucher}" widgetVar="dlgVerVoucher"
+			modal="true" height="230" >
+			<table border="0" width="500px;" id="tableVoucher" cellpadding="4" class="fielset">
+				<tbody>
+					<tr>
+					<td align="left" class="styleLegend2"><h:outputText value="Tipo de Pago "></h:outputText> </td>
+						<td align="left"><h:outputText value="#{consultarSolicitudMB.objVoucher.tipoPago}"></h:outputText> </td>
+					</tr>
+					<tr>
+					<td align="left"><h:outputText value="Nro de la Cuenta "></h:outputText> </td>
+						<td align="left"><h:outputText value="#{consultarSolicitudMB.objVoucher.cuenta}"></h:outputText> </td>
+					</tr>
+					<tr>
+					<td align="left"><h:outputText value="Monto de Comisión "></h:outputText> </td>
+						<td align="left"><h:outputText value="#{consultarSolicitudMB.objVoucher.montoComision}"></h:outputText> </td>
+					</tr>
+					<tr>
+					<td align="left"><h:outputText value="Divisa "></h:outputText> </td>
+						<td align="left"><h:outputText value="#{consultarSolicitudMB.objVoucher.divisa}"></h:outputText> </td>
+					</tr>
+					<tr>
+					<td align="left"><h:outputText value="Código de Servicio "></h:outputText> </td>
+						<td align="left"><h:outputText value="#{consultarSolicitudMB.objVoucher.codServicio}"></h:outputText> </td>
+					</tr>
+					<tr>
+					<td align="left"><h:outputText value="Fecha de Pago "></h:outputText> </td>
+						<td align="left"><h:outputText value="#{consultarSolicitudMB.objVoucher.fechaPago}"></h:outputText> </td>
+					</tr>
+					<tr>
+					<td align="left"><h:outputText value="Hora de Pago "></h:outputText> </td>
+						<td align="left"><h:outputText value="#{consultarSolicitudMB.objVoucher.horaPago}"></h:outputText> </td>
+					</tr>
+					<tr>
+					<td align="left"><h:outputText value="Centro de Pago "></h:outputText> </td>
+						<td align="left"><h:outputText value="#{consultarSolicitudMB.objVoucher.centroPago}"></h:outputText> </td>
+					</tr>
+					<tr>
+					<td align="left"><h:outputText value="Terminal de Pago "></h:outputText> </td>
+						<td align="left"><h:outputText value="#{consultarSolicitudMB.objVoucher.terminalPago}"></h:outputText> </td>
+					</tr>
+					<tr>
+					<td align="left"><h:outputText value="Usuario de Pago "></h:outputText> </td>
+						<td align="left"><h:outputText value="#{consultarSolicitudMB.objVoucher.usuarioPago}"></h:outputText> </td>
+					</tr>
+				</tbody>
+			</table>
+		</p:dialog>
+			
 		</h:form>
 		
-		
-
-    
-
-	
 	</ui:define>
 </ui:composition>
 

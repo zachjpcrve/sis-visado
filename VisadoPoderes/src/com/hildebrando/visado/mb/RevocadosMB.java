@@ -1,8 +1,12 @@
 package com.hildebrando.visado.mb;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -10,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -18,7 +23,9 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -30,6 +37,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -47,6 +55,7 @@ import com.hildebrando.visado.dto.Estado;
 import com.hildebrando.visado.dto.Revocado;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
+import com.hildebrando.visado.modelo.TiivsAnexoSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
@@ -151,7 +160,17 @@ public class RevocadosMB {
 	private String tipoRegistro;
 	private String poderdante;
 	private String apoderdante;
+	private UploadedFile fileUpload;
+	private String aliasCortoDocumento;
+	private String sAliasTemporal;
 	
+	public UploadedFile getFileUpload() {
+		return fileUpload;
+	}
+
+	public void setFileUpload(UploadedFile fileUpload) {
+		this.fileUpload = fileUpload;
+	}
 
 	public void setCombosMB(CombosMB combosMB) {
 		this.combosMB = combosMB;
@@ -2753,18 +2772,232 @@ public class RevocadosMB {
 	}
 	
 	private String getValor1(String codElem, List<TiivsMultitabla> multitabla){
-		
 		for(TiivsMultitabla obj:multitabla){
-			
 			if(obj.getId().getCodElem().compareTo(codElem)==0){
 				return obj.getValor1();
-			}
-			
+			}	
 		}
-		
 		return "";
 	}
 	
+	public void cargarDocumentoRevocatoria(){
+		logger.info("=== cargarDocumentoRevocatoria() ===");
+		aliasCortoDocumento = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA;
+		String extension = fileUpload.getFileName().substring(getFileUpload().getFileName().lastIndexOf("."));
+		sAliasTemporal = aliasCortoDocumento + extension;
+		//org.primefaces.event.FileUploadEvent event
+	}
+	
+	/*public void cargarDocumentoRevocatoria(org.primefaces.event.FileUploadEvent event){
+	    logger.info("=== cargarDocumentoRevocatoria() ===");
+		aliasCortoDocumento = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA;
+		String extension = fileUpload.getFileName().substring(getFileUpload().getFileName().lastIndexOf("."));
+		sAliasTemporal = aliasCortoDocumento + extension;
+		//org.primefaces.event.FileUploadEvent event
+	}*/
+	
+	/**
+	 * Metodo que se encarga de adjuntar y asociar el archivo 
+	 * seleccionado a la lista de documentos requeridos por 
+	 * tipo de solicitud en la aplicacion
+	 * **/
+	public void agregarDocumentoRevocatoria() {
+		try{
+			logger.info("=== agregarDocumentoRevocatoria() ===");
+			aliasCortoDocumento = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA;
+			sAliasTemporal = cargarUnicoPDF(aliasCortoDocumento);
+
+			if (sAliasTemporal == null || sAliasTemporal.trim() == "") {
+				logger.debug("El sAliasTemporal es nulo o vacio.");
+				return;
+			}
+
+			String sExtension = sAliasTemporal.substring(sAliasTemporal
+					.lastIndexOf("."));
+			aliasCortoDocumento += sExtension;
+
+			logger.info("[Adjuntar]-aliasArchivo: " + aliasCortoDocumento);
+			logger.info("[Adjuntar]-aliasArchivoTemporal: " + sAliasTemporal);
+
+			//AGREGAR NUEVO CAMPO EN LA TABLA REVOCATORIA QUE GUARDE EL NOMBRE DEL ARCHIVO TEMPORAL
+			
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al agregarDocumentoRevocatoria():"+e);
+		}	
+	}
+	
+	/**
+	 * Metodo que se encarga de cargar los archivos .PDF hacia el FileServer
+	 * @return boolean true/false Indica el exito de la operacion
+	 * */
+	public boolean cargarArchivosFileServer(){			
+		logger.info("========= cargarArchivosFileServer() ========");		
+		boolean exito = true;
+				
+		String ubicacionFinal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)  + File.separator;		
+		String sUbicacionTemporal = ubicacionFinal + ConstantesVisado.FILES + File.separator;
+				
+		logger.info("[CARGAR-FILESERVER]-Ubicacion final "+ ubicacionFinal);
+		logger.info("[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);		
+		
+		//sAliasTemporal
+		File srcFile = new File(sUbicacionTemporal + sAliasTemporal);	
+		
+		/*for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){		
+			logger.debug("======== Mover archivo ========");
+			File srcFile = new File(sUbicacionTemporal + anexo.getAliasTemporal());	
+			logger.debug("srcFile:"+sUbicacionTemporal + anexo.getAliasTemporal());
+			File destFile = new File(ubicacionFinal + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
+			logger.debug("destFile:"+ubicacionFinal + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
+			try {
+				FileUtils.copyFile(srcFile, destFile);
+				logger.debug("Despues de mover el archivo ...");
+			} catch (IOException e) {
+				logger.error("Error al mover el archivo al fileServer", e);
+			} catch (Exception ex) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al mover archivo al fileServer:" + ex);
+			}
+			if(!destFile.isFile() && destFile.length()>0){
+				exito = false;
+			}
+		}*/
+		logger.debug("exito:"+exito);
+		return exito;		
+	}
+	
+	public String descargarDocumento() {
+		logger.debug("=== inicia descargarDocumento() ====");
+		HttpServletResponse response = (HttpServletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		
+		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		
+		String nombreDocumento = params.get("nombreArchivo");
+		logger.debug("[DESCARG_DOC]-nombreDocumento: "+nombreDocumento);
+		String rutaDocumento = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+				+ File.separator + ConstantesVisado.FILES + File.separator + nombreDocumento;
+		
+		logger.debug("[DESCARG_DOC]-rutaDocumento: "+rutaDocumento);
+		String outputFileName = rutaDocumento;
+		
+		File outputPDF = new File(outputFileName);
+
+		// Get ready to return pdf to user
+		BufferedInputStream input = null;
+		BufferedOutputStream output = null;
+		try {
+			// Open file.
+			input = new BufferedInputStream(new FileInputStream(outputPDF),10240);
+
+			// Return PDF to user
+			// Init servlet response.
+			response.reset();
+			response.setHeader("Content-Type", "application/pdf");
+			response.setHeader("Content-Length",String.valueOf(outputPDF.length()));
+			response.setHeader("Content-Disposition", "attachment; filename=\""+ nombreDocumento + "\"");
+			output = new BufferedOutputStream(response.getOutputStream(), 10240);
+
+			// Write file contents to response.
+			byte[] buffer = new byte[10240];
+			int length;
+			while ((length = input.read(buffer)) > 0) {
+				output.write(buffer, 0, length);
+			}
+			logger.debug("finalizando OK");
+			// Finalize task.
+			output.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:"+e);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento:"+ex);
+		} 
+		finally {
+			try {
+				output.close();
+			} catch (IOException e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento:"+e);
+				e.printStackTrace();
+			}
+			try {
+				input.close();
+			} catch (IOException e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:"+e);
+				e.printStackTrace();
+			}
+		}
+		FacesContext.getCurrentInstance().responseComplete();
+		
+		logger.debug("=== saliendo de descargarDocumento() ====");
+		
+		return "";		
+	}
+	
+	public String cargarUnicoPDF(String aliasArchivo) {
+		logger.debug("== inicia cargarUnicoPDF()====");
+		if(fileUpload == null){
+			Utilitarios.mensajeInfo("", "No se ha seleccionado ningún archivo");
+			return "";
+		}
+		
+		byte fileBytes[] = getFileUpload().getContents();
+
+		File fichTemp = null;
+		String sUbicacionTemporal = "";
+		String sNombreTemporal = "";
+		FileOutputStream canalSalida = null;
+		
+		try {
+			
+			//Obteniendo ubicación del file server			
+			sUbicacionTemporal = Utilitarios
+					.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+					+ File.separator + ConstantesVisado.FILES + File.separator;			
+			
+			logger.debug(" -> Ubicacion Temporal:"+ sUbicacionTemporal);
+			
+			File fDirectory = new File(sUbicacionTemporal);
+			fDirectory.mkdirs();	
+			
+			String extension = fileUpload.getFileName().substring(getFileUpload().getFileName().lastIndexOf("."));
+						
+			if(aliasArchivo.equals("")){
+				aliasArchivo = "temp";
+			} else {
+				aliasArchivo = aliasArchivo + "_";
+			}
+			
+			fichTemp = File.createTempFile(aliasArchivo, extension, new File(sUbicacionTemporal));
+			
+			sNombreTemporal = fichTemp.getName();
+									
+			logger.debug(" NombreArchivoTEMP: " + sNombreTemporal);
+			
+			canalSalida = new FileOutputStream(fichTemp);
+			canalSalida.write(fileBytes);
+			
+			canalSalida.flush();
+			return sNombreTemporal;
+
+		} catch (IOException e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IO Exception:"+e);
+			String sMensaje = "Se produjo un error al adjuntar fichero";
+			Utilitarios.mensajeInfo("", sMensaje);
+			return "";
+		} finally {
+			if(fichTemp!=null){
+				fichTemp.deleteOnExit(); // Delete the file when the JVM terminates
+			}
+			if (canalSalida != null) {
+				try {
+					canalSalida.close();
+				} catch (IOException x) {
+					// handle error
+				}
+			}
+		}
+	}	
 	
 	private String getDate(Date date)
     {
@@ -3202,6 +3435,22 @@ public class RevocadosMB {
 
 	public void setApoderdante(String apoderdante) {
 		this.apoderdante = apoderdante;
+	}
+
+	public String getAliasCortoDocumento() {
+		return aliasCortoDocumento;
+	}
+
+	public void setAliasCortoDocumento(String aliasCortoDocumento) {
+		this.aliasCortoDocumento = aliasCortoDocumento;
+	}
+
+	public String getsAliasTemporal() {
+		return sAliasTemporal;
+	}
+
+	public void setsAliasTemporal(String sAliasTemporal) {
+		this.sAliasTemporal = sAliasTemporal;
 	}
 	
 }

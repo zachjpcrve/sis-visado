@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="612" pageHeight="842" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="0.9743585500000007"/>
+	<property name="ireport.zoom" value="1.2968712300500012"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
@@ -12,7 +12,7 @@
 		<band/>
 	</background>
 	<title>
-		<band height="158">
+		<band height="148">
 			<frame>
 				<reportElement mode="Transparent" x="0" y="11" width="567" height="91" backcolor="#99FF99"/>
 				<textField>
@@ -33,16 +33,16 @@
 				<imageExpression class="java.lang.String"><![CDATA["./resources/images/bbva2.gif"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="17" y="122" width="550" height="35"/>
+				<reportElement x="17" y="122" width="550" height="20"/>
 				<textElement/>
-				<text><![CDATA[Se procedió a generar la atención de su solicitud de revisión de acuerdo a los siguientes motivos puedan que Usted manifiesta :]]></text>
+				<text><![CDATA[Solicito la revisión del resultado de los servicios de visado de poderes por los siguientes motivos:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Transparent" x="17" y="102" width="491" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Estimado Cliente,]]></text>
+				<text><![CDATA[Estimado Señores BBVA,]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -76,36 +76,31 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[BBVA Banco Continental © Copyright - Todos los Derechos Reservados]]></text>
+				<text><![CDATA[BBVA Continental © Copyright - Todos los Derechos Reservados]]></text>
 			</staticText>
 		</band>
 	</pageFooter>
 	<summary>
 		<band height="122">
-			<staticText>
-				<reportElement x="13" y="3" width="553" height="37"/>
-				<textElement/>
-				<text><![CDATA[Luego de la revisión que efectuará el banco, Usted podrá acercarse nuevamente a la misma oficina para conocer el estado de la Solicitud de Revisión que ha solicitado.]]></text>
-			</staticText>
 			<line>
-				<reportElement x="34" y="79" width="204" height="1"/>
+				<reportElement x="34" y="81" width="204" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="380" y="80" width="100" height="20" forecolor="#000099"/>
+				<reportElement x="380" y="82" width="100" height="20" forecolor="#000099"/>
 				<textElement>
 					<font size="13" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Solicitante(s)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="89" y="80" width="100" height="20" forecolor="#000099"/>
+				<reportElement x="89" y="82" width="100" height="20" forecolor="#000099"/>
 				<textElement>
 					<font size="12" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Solicitante(s)]]></text>
 			</staticText>
 			<line>
-				<reportElement x="319" y="78" width="220" height="1"/>
+				<reportElement x="319" y="80" width="220" height="1"/>
 			</line>
 		</band>
 	</summary>
