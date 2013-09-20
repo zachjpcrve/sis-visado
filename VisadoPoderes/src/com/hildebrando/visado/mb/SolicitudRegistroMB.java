@@ -2978,11 +2978,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						flagValida = true;
 //						Utilitarios.mensajeError("ERROR", validacionVoucher.getValor3());	
 						mesajeConfirmacion = validacionVoucher.getValor3();
+						Utilitarios.mensajeError("ERROR", mesajeConfirmacion);
 					}
 				}else{
 					flagValida = true;
 //					Utilitarios.mensajeError("ERROR", resultado.getMessage());
 					mesajeConfirmacion = resultado.getMessage();
+					Utilitarios.mensajeError("ERROR", mesajeConfirmacion);
 				}
 			}
 		} catch (Exception e) {
