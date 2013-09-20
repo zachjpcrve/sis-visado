@@ -76,14 +76,14 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones}!=null?$F{instrucciones}:" "]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Transparent" x="17" y="39" width="106" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="17" y="39" width="114" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Fecha de Aprobación:]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="123" y="39" width="167" height="20"/>
+				<reportElement x="131" y="39" width="167" height="20"/>
 				<textElement/>
 				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{fechaHistorial}]]></textFieldExpression>
 			</textField>
@@ -118,7 +118,7 @@
 					<font size="10" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single" tabStopWidth="5"/>
 				</textElement>
-				<text><![CDATA[Este documento permite hacer efectiva la operación del Visado de Poderes, señalado en ORGA.2008.035 - BASTANTEO Y VISADO DE PODERES.
+				<text><![CDATA[Este documento interno permite hacer efectiva la operación del Visado de Poderes, señalado en ORGA.2008.035 - BASTANTEO Y VISADO DE PODERES.
 Generado este documento no procede reimpresión
 Tener en cuenta que la presente aprobación se ejecuta desde la fecha de aprobación hasta los 7 días siguientes. Transcurrido este plazo deberá presentar nuevamente su solicitud.]]></text>
 			</staticText>
