@@ -90,6 +90,7 @@
 		<filter-class>com.grupobbva.seguridad.client.filter.ValidacionSessionFilter</filter-class>
 		<init-param>
 			<param-name>MODO_DESARROLLO</param-name>
+<!-- 			<param-value>false</param-value> -->
 			<param-value>false</param-value>
 		</init-param>
 		<init-param>
@@ -149,6 +150,7 @@
 	<filter-mapping>
 		<filter-name>PrimeFaces FileUpload Filter</filter-name>
 		<servlet-name>Faces Servlet</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
 
                  

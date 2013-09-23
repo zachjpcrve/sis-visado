@@ -21,6 +21,9 @@ public class Revocado {
 	private String fechaRegistro;
 	private String estado;
 	
+	// Se agrega linea
+	private String aliasArchivo;
+	
 	private boolean flagEditPend;
 	private boolean flagEditAct;
 	private boolean flagDelete;
@@ -124,6 +127,13 @@ public class Revocado {
 	public void setPoderdantes(List<TiivsRevocado> poderdantes) {
 		this.poderdantes = poderdantes;
 	}
+	public String getAliasArchivo() {
+		return aliasArchivo;
+	}
+	public void setAliasArchivo(String aliasArchivo) {
+		this.aliasArchivo = aliasArchivo;
+	}
+	
 	
 //	public List<TiivsPersona> getApoderados() {
 //		return apoderados;
