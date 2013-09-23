@@ -2958,20 +2958,18 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			//Inserta en tabla VISPOD el voucher obtenido de Host
 			insertarVoucher(resultado);
 			if(tipoValidacion!=null && tipoValidacion.compareTo(ConstantesVisado.ACTIVA_ADVERTENCIA)==0){
+				flagValida = false;
 				if(resultado.getObject()!=null){
-					flagValida = false;
 					voucherHost = (TiivsHostVoucher) resultado.getObject();
 					if(voucherHost.getMontoComision()!=null &&
 							Double.valueOf(voucherHost.getMontoComision()).compareTo(solicitudRegistrarT.getComision())!=0){
 //						Utilitarios.mensajeInfo("INFO", validacionVoucher.getValor3());	
 						mesajeValidacionHost = validacionVoucher.getValor3();
 					}
-				}else{
-					Utilitarios.mensajeInfo("INFO", resultado.getMessage());
 				}
 			}else if (tipoValidacion!=null && tipoValidacion.compareTo(ConstantesVisado.ACTIVA_RESTRICTIVA)==0){
+				flagValida = false;
 				if(resultado.getObject()!=null){
-					flagValida = false;
 					voucherHost = (TiivsHostVoucher) resultado.getObject();
 					if(voucherHost.getMontoComision()!=null &&
 							Double.valueOf(voucherHost.getMontoComision()).compareTo(solicitudRegistrarT.getComision())!=0){
@@ -2980,11 +2978,6 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						mesajeConfirmacion = validacionVoucher.getValor3();
 						Utilitarios.mensajeError("ERROR", mesajeConfirmacion);
 					}
-				}else{
-					flagValida = true;
-//					Utilitarios.mensajeError("ERROR", resultado.getMessage());
-					mesajeConfirmacion = resultado.getMessage();
-					Utilitarios.mensajeError("ERROR", mesajeConfirmacion);
 				}
 			}
 		} catch (Exception e) {

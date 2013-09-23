@@ -20,6 +20,8 @@ public class TiivsRevocado implements java.io.Serializable {
 	
 	private String sDesctipPartic;
 	private String sDesctipDoi;
+	
+	private String aliasArchivo;
 
 	public TiivsRevocado() {
 	}
@@ -30,13 +32,14 @@ public class TiivsRevocado implements java.io.Serializable {
 
 	public TiivsRevocado(int codRevocado, TiivsPersona tiivsPersona,
 			String estado, Date fechaRevocatoria, Integer codAgrup,
-			String tipPartic) {
+			String tipPartic, String aliasArchivo) {
 		this.codRevocado = codRevocado;
 		this.tiivsPersona = tiivsPersona;
 		this.estado = estado;
 		this.fechaRevocatoria = fechaRevocatoria;
 		this.codAgrup = codAgrup;
 		this.tipPartic = tipPartic;
+		this.aliasArchivo = aliasArchivo;
 	}
 
 	public int getCodRevocado() {
@@ -106,6 +109,14 @@ public class TiivsRevocado implements java.io.Serializable {
 
 	public void setsDesctipDoi(String sDesctipDoi) {
 		this.sDesctipDoi = sDesctipDoi;
+	}
+
+	public String getAliasArchivo() {
+		return aliasArchivo;
+	}
+
+	public void setAliasArchivo(String aliasArchivo) {
+		this.aliasArchivo = aliasArchivo;
 	}
 
 	

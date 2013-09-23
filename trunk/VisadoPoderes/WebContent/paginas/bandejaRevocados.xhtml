@@ -16,8 +16,6 @@
 		applet.actualizarConPermisos();
 		return false;
 	}
-	
-	
 </script>
 
 </head>
@@ -27,8 +25,8 @@
 	
 	<ui:define name="contenido">
 		<script type="text/JavaScript" src="../resources/js/visado.js" />
-		<h:form id="frmConsRev">
-
+		<h:form id="frmConsRev" >
+			<h:inputHidden id="flag" ></h:inputHidden>
 			<table>
 				<tr>
 					<td>
@@ -260,10 +258,10 @@
 
 			<h:form id="frmPendEdit" enctype="multipart/form-data">
 			<p:messages id="globalOnly" globalOnly="true" showDetail="true" />
+			
 			<p:outputPanel id="pnlRegistrarPendEdit">
-
 				<h:panelGrid columns="1" id="gridMsj" rendered="false">
-					
+					<p:messages globalOnly="true" />
 				</h:panelGrid>
 				
 				<h:inputHidden id="inputHidden" value="#{revocadosMB.patter}"></h:inputHidden>
@@ -363,7 +361,7 @@
 					</h:panelGrid>
 				</p:panel>
 				
-				<h:panelGrid columns="11">
+				<h:panelGrid columns="12" id="gridAgregar">
 
 					<p:commandButton id="btnAgregar" value="Agregar"
 						icon="ui-icon-plus"
@@ -388,51 +386,43 @@
 						
 					<p:spacer width="10" height="20" />
 
-					<p:fileUpload value="#{revocadosMB.fileUpload}"
-									id="idfileUpload" mode="simple" update="idfileUpload"
-									sizeLimit="100000"
-									allowTypes="/(\.|\/)(pdf)$/" />
-									
-					<p:commandButton id="btnAceptar"
-									value="Aceptar"
-									update=":frmPendEdit:downloadLink" 
-									actionListener="#{revocadosMB.cargarDocumentoRevocatoria}"
-									/>
+					<p:fileUpload id="idfileUpload" mode="advanced"  
+									sizeLimit="100000" update=":frmPendEdit:gridApodPod4"
+									showButtons="false"
+									auto="true"
+									label="Examinar"
+									widgetVar="fileuplaod_wgt"
+									invalidFileMessage="Formato inválido"
+									fileUploadListener="#{revocadosMB.handleFileUpload}"
+									allowTypes="/(\.|\/)(pdf)$/" /> 
+								<p:growl id="fileDoc" showDetail="true" />
+						
+					<p:spacer width="10" height="20" />
+					
+					<h:panelGrid columns="1" id="gridApodPod4">
+						<c:if test="#{revocadosMB.flagLinkRevocados==0}">
+							<p:outputLabel id="lblFile" value="#{revocadosMB.sAliasTemporal}" />
+						</c:if>
+						<c:if test="#{revocadosMB.flagLinkRevocados==1}">
+							<h:commandLink id="downloadLink"
+									action="#{revocadosMB.descargarDocumento}" immediate="true"
+							>	
+							<h:outputText value="#{revocadosMB.sAliasTemporal}" />																			
+									<f:param name="nombreArchivo" value="#{revocadosMB.aliasCortoDocumento}"/>
+							</h:commandLink>
+						</c:if>
+					</h:panelGrid>
 					
 					<p:spacer width="10" height="20" />
-									
-					<h:commandLink id="downloadLink"
-						action="#{revocadosMB.descargarDocumento}" immediate="true" >
-						<h:outputText value="#{revocadosMB.aliasCortoDocumento}" />																			
-									<f:param name="nombreArchivo" value="#{revocadosMB.sAliasTemporal}"/>
-					</h:commandLink>
 					<p:commandButton id="btnEscanear"
 									value="Escanear"
-									onclick="return invocarEscaner('#{solicitudRegMB.cadenaEscanerFinal}');">
+									onclick="return invocarEscaner('#{revocadosMB.cadenaEscanerFinal}');">
 					</p:commandButton> 
-					<p:commandButton value="Actualizar"
-									onclick="return appletActualizar ();" /> 
-							
-							<h:panelGroup id="idVisorApplet">
-									<!-- Applet Size: width='93px';height='24px  -->
-									<applet name="appletVisor" id="appletVisor"
-										code="com.hildebrando.visado.applet.AgregarDocumentos.class"
-										archive="../../uploadFilesApplet.jar" width='1px'
-										height='1px' mayscript="mayscript">
-										<param name="path_cliente"
-											value="#{visadoDocumentosMB.pathCliente}" />
-										<param name="documentos_leer"
-											value="#{visadoDocumentosMB.documentosLeer}" />
-										<param name="directory"
-											value="#{visadoDocumentosMB.directory}" />
-										<param name="carpeta_cliente_log"
-											value="#{visadoDocumentosMB.carpetaClienteLog}" />
-										<param name="url_server"
-											value="#{visadoDocumentosMB.urlCarga}" />
-									</applet>
-							</h:panelGroup> 
-																		
-																		
+					<p:commandButton value="Actualizar" id="btnActualizar"
+									 actionListener="#{revocadosMB.actualizarArchivo}"
+									 update=":frmPendEdit:gridApodPod4"
+									 ajax="true"
+									 />	
 				</h:panelGrid>
 
 
@@ -808,12 +798,22 @@
 			width="#{revocadosMB.ancho_Popup_Revoc_Poder}">
 
 			<h:form id="frmApodPodVer">
-
-				<h:panelGrid columns="2" id="gridTitulo">
-					<p:outputLabel value="Estado:" />
-					<h:outputText value="#{revocadosMB.revocadoVer.estado}"></h:outputText>
-
-				</h:panelGrid>
+			   <p:outputPanel id="gridTitulo">
+				  <table width="100%" border="0">
+				   <tr>
+					 <td style="width:50px"><p:outputLabel value="Estado:" /></td>
+					 <td><h:outputText value="#{revocadosMB.revocadoVer.estado}"></h:outputText></td>
+					 <td colspan="20" align="right"><c:if test="#{revocadosMB.flagLinkRevocados==1}">
+							<h:commandLink id="downloadLinkVerRevocado"
+									action="#{revocadosMB.descargarDocumento}" immediate="true"
+							>	
+							<h:outputText value="#{revocadosMB.sAliasTemporal}" />																			
+									<f:param name="nombreArchivo" value="#{revocadosMB.aliasCortoDocumento}"/>
+							</h:commandLink>
+					</c:if></td>
+					</tr>
+				  </table>
+				</p:outputPanel>
 
 				<p:outputPanel id="dtClientes">
 

@@ -25,5 +25,8 @@
         <property name="tipPartic" type="string">
             <column name="TIP_PARTIC" length="4" />
         </property>
+        <property name="aliasArchivo" type="string">
+            <column name="ALIAS_ARCHIVO" length="50" />
+        </property>
     </class>
 </hibernate-mapping>
