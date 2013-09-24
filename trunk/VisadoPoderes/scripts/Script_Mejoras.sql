@@ -90,4 +90,9 @@ INSERT INTO VISPOD.TIIVS_MULTITABLA (COD_MULT, COD_ELEM, VALOR1, VALOR2) VALUES 
 INSERT INTO VISPOD.TIIVS_MULTITABLA (COD_MULT, COD_ELEM, VALOR1, VALOR2, VALOR3) VALUES ('T18', '0002', 'Activa como advertencia', '0', 'Existe diferencia entre monto Host y valor de la solicitud: ');
 INSERT INTO VISPOD.TIIVS_MULTITABLA (COD_MULT, COD_ELEM, VALOR1, VALOR2, VALOR3) VALUES ('T18', '0003', 'Activa como restrictiva', '0', 'Existe diferencia entre monto Host y valor de la solicitud: ');
 
+-- CONFIGURACION DE TABLAS PARAMETRO
+DELETE FROM VISPOD.TTIVS_PARAMETROS;
+insert into VISPOD.TTIVS_PARAMETROS (ID_PARAM,ID_EMPRESA,ID_SISTEMA,RUTA_FICHEROS_LOCAL,SERVER,LOGIN_SERVER,PASS_SERVER,CARPETA_REMOTA,URL_APP_SCAN,COD_USUARIO,RUTA_ARCHIVO_EXPORTAR_EXCEL) 
+values 
+('1','1','98','D:\VisadoPoderes\Escaneados','118.180.36.125','ftpvispod','ftpvispod','/mnt/compartido/visado/documentos/','http://tbalanceador/NAEWeb/pages/escaner/InvocaEscaner.xhtml','P014773','D:\VisadoPoderes\');
 
