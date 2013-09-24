@@ -34,6 +34,7 @@ public class TiivsSolicitud implements java.io.Serializable {
     private String sImporteMoneda;  
 	private Timestamp fechaRespuesta;
 // MODIFICACION 
+	private String flagReimprimir;
 	private String tipoComision;
 	private Double comision;
 	private String nroVoucher;
@@ -392,6 +393,14 @@ public class TiivsSolicitud implements java.io.Serializable {
 	public void setListaPersonasXAgrupacionXSolicitud(
 			List<ComboDto> listaPersonasXAgrupacionXSolicitud) {
 		this.listaPersonasXAgrupacionXSolicitud = listaPersonasXAgrupacionXSolicitud;
+	}
+
+	public String getFlagReimprimir() {
+		return this.flagReimprimir;
+	}
+
+	public void setFlagReimprimir(String flagReimprimir) {
+		this.flagReimprimir = flagReimprimir;
 	}
 
 	
