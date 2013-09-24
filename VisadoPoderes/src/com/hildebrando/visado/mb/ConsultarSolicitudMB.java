@@ -126,6 +126,7 @@ public class ConsultarSolicitudMB {
 	private List<ComboDto> lstDocumentosGenerados;
 	private String textoMensajeCartaAtencion;
 	private boolean bMostrarCartaAtencion = false;
+	private boolean bMostrarReImprimirCartaAtencion = false;
 	private boolean bMostrarCartaRevision = false;
 	private boolean bRevision = false;
 	private boolean flagUpdateOperacionSolic = false;
@@ -1116,7 +1117,7 @@ public class ConsultarSolicitudMB {
 		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02)) 
 		{
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) 
-			{
+			{   this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = false;
@@ -1149,7 +1150,7 @@ public class ConsultarSolicitudMB {
 				this.bSeccionReasignacion = true;
 				this.bSeccionEvaluarNivel = false;				
 				this.bMostrarGenerarRevision = false;
-				
+				this.bMostrarReImprimirCartaAtencion = false;
 			
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
@@ -1165,7 +1166,7 @@ public class ConsultarSolicitudMB {
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
 				this.bMostrarGenerarRevision = false;
-				
+				this.bMostrarReImprimirCartaAtencion = false;
 			}
 		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)) {
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) 
@@ -1181,7 +1182,7 @@ public class ConsultarSolicitudMB {
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
 				this.bMostrarGenerarRevision = false;
-								
+				this.bMostrarReImprimirCartaAtencion = false;				
 				IILDPeUsuario usuarioRPTA = obtenerOrigenEstadoReservado(solicitudRegistrarT);
 				
 				logger.debug("Usuario quien reservo: " + usuarioRPTA.getUID());
@@ -1220,7 +1221,7 @@ public class ConsultarSolicitudMB {
 				this.bSeccionEvaluarNivel = false;
 				this.bMostrarGenerarRevision = false;
 				this.bMostrarMSGEstado_Reservado=false;
-				
+				this.bMostrarReImprimirCartaAtencion = false;
 				/*IILDPeUsuario usuarioRPTA = obtenerOrigenEstadoReservado(solicitudRegistrarT);
 				
 				if (usuarioRPTA!=null)
@@ -1244,7 +1245,7 @@ public class ConsultarSolicitudMB {
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
 				this.bMostrarGenerarRevision = false;
-				
+				this.bMostrarReImprimirCartaAtencion = false;
 			}
 			
 		}else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)) {
@@ -1261,9 +1262,10 @@ public class ConsultarSolicitudMB {
 				this.bSeccionReasignacion = false;
 				this.bSeccionEvaluarNivel = false;
 				this.bMostrarGenerarRevision = false;
-				
+				this.bMostrarReImprimirCartaAtencion = false;
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = true;
 				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
@@ -1278,7 +1280,8 @@ public class ConsultarSolicitudMB {
 				this.listarComboDictamen();
 
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
-
+				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = true;
 				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
@@ -1305,7 +1308,8 @@ public class ConsultarSolicitudMB {
 			}
 			
             if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
-           	
+            	
+            	this.bMostrarReImprimirCartaAtencion = false;
             	this.bMostrarSolicitudVisado = true;
             	this.bMostrarCartaAtencion = false;
             	this.bMostrarCartaRechazo = false;
@@ -1320,6 +1324,7 @@ public class ConsultarSolicitudMB {
             	
         	} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
         		
+        		this.bMostrarReImprimirCartaAtencion = false;
         		this.bMostrarSolicitudVisado = true;
             	this.bMostrarCartaAtencion = false;
             	this.bMostrarCartaRechazo = false;
@@ -1334,6 +1339,7 @@ public class ConsultarSolicitudMB {
             	
         	} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
         		
+        		this.bMostrarReImprimirCartaAtencion = false;
         		this.bMostrarSolicitudVisado = true;
             	this.bMostrarCartaAtencion = false;
             	this.bMostrarCartaRechazo = false;
@@ -1359,7 +1365,8 @@ public class ConsultarSolicitudMB {
 			}
 			
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
-           	
+				
+				this.bMostrarReImprimirCartaAtencion = false;
             	this.bMostrarSolicitudVisado = true;
             	this.bMostrarCartaAtencion = false;
             	this.bMostrarCartaRechazo = true;
@@ -1374,6 +1381,7 @@ public class ConsultarSolicitudMB {
             	
         	} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
         		
+        		this.bMostrarReImprimirCartaAtencion = false;
         		this.bMostrarSolicitudVisado = true;
             	this.bMostrarCartaAtencion = false;
             	this.bMostrarCartaRechazo = true;
@@ -1388,6 +1396,7 @@ public class ConsultarSolicitudMB {
         		
         	} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
         		
+        		this.bMostrarReImprimirCartaAtencion = false;
         		this.bMostrarSolicitudVisado = true;
         		this.bMostrarCartaAtencion = false;
         		this.bMostrarCartaRechazo = true;
@@ -1407,6 +1416,7 @@ public class ConsultarSolicitudMB {
 	else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = true;
@@ -1421,6 +1431,7 @@ public class ConsultarSolicitudMB {
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = true;
@@ -1436,6 +1447,7 @@ public class ConsultarSolicitudMB {
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = true;
@@ -1452,6 +1464,7 @@ public class ConsultarSolicitudMB {
 		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)) {
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = true;
@@ -1465,7 +1478,8 @@ public class ConsultarSolicitudMB {
 				this.bMostrarGenerarRevision = false;
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
-								
+				
+				this.bMostrarReImprimirCartaAtencion = false;				
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = true;
@@ -1482,6 +1496,7 @@ public class ConsultarSolicitudMB {
 				
 			}else if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = true;
@@ -1499,6 +1514,7 @@ public class ConsultarSolicitudMB {
 			
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = true;
@@ -1513,6 +1529,7 @@ public class ConsultarSolicitudMB {
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = true;
 				this.bMostrarCartaRechazo = true;
@@ -1528,6 +1545,7 @@ public class ConsultarSolicitudMB {
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = true;
 				this.bMostrarCartaRechazo = true;
@@ -1545,6 +1563,7 @@ public class ConsultarSolicitudMB {
 			
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = true;
@@ -1559,6 +1578,7 @@ public class ConsultarSolicitudMB {
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = true;
@@ -1574,6 +1594,7 @@ public class ConsultarSolicitudMB {
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = true;
@@ -1590,7 +1611,7 @@ public class ConsultarSolicitudMB {
 			
 		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02)) {
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
-				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
@@ -1608,6 +1629,8 @@ public class ConsultarSolicitudMB {
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = true;
 				/* MEJORA */
+				this.bMostrarReImprimirCartaAtencion = true;
+				/* MEJORA */
 				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
 				this.bMostrarCartaRevision = this.validarSiDictaminadoEnRevision();
 				this.bMostrarCartaImprocedente = this.validarSiDictaminadoEnImprocedente();
@@ -1621,7 +1644,18 @@ public class ConsultarSolicitudMB {
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
 				this.bMostrarSolicitudVisado = true;
-				this.bMostrarCartaAtencion = false;
+				this.bMostrarReImprimirCartaAtencion = false;
+				/*Modificado 24/09/2013. Cuando SSJJ ejecuta la opción de ReImprimir, para oficina se activa nuevamente el link*/
+				if(this.solicitudRegistrarT.getFlagReimprimir().equals(ConstantesVisado.ACTIVO_FLAG_REIMPRIMIR)){
+					this.bMostrarCartaAtencion = true;
+			    /*Modificado 24/09/2013. Para la oficina si es la primera vez debera aparecer la Carta de Atención (Flujo Actual)*/
+				}else if(this.solicitudRegistrarT.getFlagReimprimir().equals(null)){
+					this.bMostrarCartaAtencion = true;
+				/*Modificado 24/09/2013. Si luego de que oficina vuelva a reimprimir, se le desactivara la opción 
+				 * Hasta que SSJJ vuelva a activar la Reimpresión*/
+				}else if(this.solicitudRegistrarT.getFlagReimprimir().equals(ConstantesVisado.DESACTIVO_FLAG_REIMPRIMIR)){
+					this.bMostrarCartaAtencion = false;
+				}
 				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
 				this.bMostrarCartaRevision = this.validarSiDictaminadoEnRevision();
 				this.bMostrarCartaImprocedente = this.validarSiDictaminadoEnImprocedente();
@@ -1637,7 +1671,7 @@ public class ConsultarSolicitudMB {
 		}else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02)) {
 			
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) {
-				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = false;
 				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
@@ -1652,6 +1686,7 @@ public class ConsultarSolicitudMB {
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = true;
 				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
@@ -1666,6 +1701,7 @@ public class ConsultarSolicitudMB {
 				
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
+				this.bMostrarReImprimirCartaAtencion = false;
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarCartaAtencion = true;
 				this.bMostrarCartaRechazo = this.validarSiDictaminadoRechazado();
@@ -1801,7 +1837,22 @@ public class ConsultarSolicitudMB {
 			
 		}
 	}
-
+	/* Modificado 24/09/2013 . Metodo que realiza la acción de ReImpresión de SSJJ hacia Oficina
+	 * */
+    public void ejecutarReimpresion(){
+    	if ( this.PERFIL_USUARIO.trim().equals(ConstantesVisado.SSJJ)){
+    	 GenericDao<TiivsSolicitud, Object> serviceS = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+    	 solicitudRegistrarT.setFlagReimprimir(ConstantesVisado.ACTIVO_FLAG_REIMPRIMIR);
+    	 try {
+			this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
+			this.registrarHistorial(solicitudRegistrarT);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+       	 Utilitarios.mensajeInfo("INFO",	"Se Ejecuto la Reimpresión correctamente para oficina");
+    	}
+		
+    }
 	public void dictaminarSolicitud() 
 	{
 		boolean actualizarBandeja=false;
@@ -1826,7 +1877,7 @@ public class ConsultarSolicitudMB {
 	                    	 Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 						} else if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)
 								  && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
-							 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+						    	 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
 	                    	 solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 	                    	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 	                    	 this.registrarHistorial(solicitudRegistrarT);
@@ -2088,7 +2139,7 @@ public class ConsultarSolicitudMB {
 				|| this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02))) 
 		{
 			logger.info("*********************** actualizarEstadoEjecutadoSolicitud **************************");
-
+			
 			this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02);
 			this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 			this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_EJECUTADO_T02);
@@ -2101,6 +2152,23 @@ public class ConsultarSolicitudMB {
 			this.seguimientoMB.busquedaSolicitudes();
 			
 			this.actualizarEstadoReservadoSolicitud();//
+		}
+		
+		/*Modificado 24/09/2013. Cuando la oficina vuelve a Ejecutar la Carta, se desactiva le flag de Reimprimir
+		  Hasta que SSJJ vuelva a ejecutar la opcion de ReImprimir*/
+		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)
+				&& (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02))){
+		this.solicitudRegistrarT.setFlagReimprimir(ConstantesVisado.DESACTIVO_FLAG_REIMPRIMIR);
+		
+		
+		GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		service.modificar(solicitudRegistrarT);
+
+		this.registrarHistorial(solicitudRegistrarT);
+		this.obtenerHistorialSolicitud();
+		this.seguimientoMB.busquedaSolicitudes();
+		
+		this.actualizarEstadoReservadoSolicitud(); 
 		}
 	}
 
@@ -5746,6 +5814,16 @@ public class ConsultarSolicitudMB {
 	public void setbMostrarCartaAtencion(boolean bMostrarCartaAtencion) {
 		this.bMostrarCartaAtencion = bMostrarCartaAtencion;
 	}
+	
+	public boolean isbMostrarReImprimirCartaAtencion() {
+		return this.bMostrarReImprimirCartaAtencion;
+	}
+
+
+	public void setbMostrarReImprimirCartaAtencion(boolean bMostrarReImprimirCartaAtencion) {
+		this.bMostrarReImprimirCartaAtencion = bMostrarReImprimirCartaAtencion;
+	}
+
 
 	public String getsCodigoEstadoNivel() {
 		return sCodigoEstadoNivel;
