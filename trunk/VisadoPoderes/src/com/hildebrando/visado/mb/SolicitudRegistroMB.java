@@ -26,6 +26,7 @@ import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.net.ftp.FTPClient;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -64,6 +65,7 @@ import com.hildebrando.visado.modelo.TiivsHostVoucher;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
+import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsRevocado;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
@@ -3301,7 +3303,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	 * Metodo que se encarga de cargar los archivos .PDF hacia el FileServer
 	 * @return boolean true/false Indica el exito de la operacion
 	 * */
-	public boolean cargarArchivosFileServer(){			
+	/*public boolean cargarArchivosFileServer(){			
 		logger.info("========= cargarArchivosFileServer() ========");		
 		boolean exito = true;
 				
@@ -3333,6 +3335,76 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}
 		logger.debug("exito:"+exito);
 		return exito;		
+	}*/
+	
+	public boolean cargarArchivosFileServer(){			
+		logger.info("========= cargarArchivosFileServer() ========");		
+		boolean exito = true;
+		TiivsParametros parametro = obtenerParametro();
+		
+//		String ubicacionFinal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)  + File.separator;
+		String ubicacionFinal = null;
+		String sUbicacionTemporal = null;
+		
+		if(lstAnexoSolicitud!=null){
+			logger.debug("[CARGAR-FILESERVER]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
+		}
+		if(parametro!=null){
+			try {
+				ubicacionFinal = parametro.getCarpetaRemota() + File.separator;
+				sUbicacionTemporal = ubicacionFinal + ConstantesVisado.FILES + File.separator;
+				
+				logger.info("[CARGAR-FILESERVER]-Ubicacion final "+ ubicacionFinal);
+				logger.info("[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);		
+				
+				// Instanciamos la conexión por FTP con el file server
+				FTPClient cliente=new FTPClient();
+				try {
+					cliente.connect(parametro.getServer());
+				    boolean login=cliente.login(parametro.getLoginServer(),parametro.getPassServer());
+				    if(login){
+				    	logger.info("+++ Conexión file server exitosa ");
+				    	cliente.changeWorkingDirectory(parametro.getCarpetaRemota()); //nos movemos dentro del arbol de directorios
+				    	for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){
+				    		FileInputStream fis = new FileInputStream(new File(sUbicacionTemporal + anexo.getAliasTemporal())); 
+				    		cliente.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
+				    		boolean res = cliente.storeFile(anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo(), fis );
+				    		if(!res){
+				    			logger.error("+++ ERROR moviendo archivo: " + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
+				    			return false;
+				    		}
+				    		fis.close();
+						}
+				    }
+				} catch (Exception e) {
+					exito = false;
+					logger.error("+++ERROR al instanciar FTP: " + e.getMessage());
+				} finally{
+					cliente.logout();
+			        cliente.disconnect();
+				}
+			} catch (Exception e) {
+				exito = false;
+				logger.error("+++ERROR cargando archivos por FTP: " + e.getMessage());
+			}	
+		}
+		logger.debug("exito:"+exito);
+		return exito;		
+	}
+	
+	private TiivsParametros obtenerParametro(){
+		GenericDao<TiivsParametros, Object> multiDAO = (GenericDao<TiivsParametros, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsParametros.class);
+		List<TiivsParametros> parametros = new ArrayList<TiivsParametros>();
+		try {
+			parametros = multiDAO.buscarDinamico(filtro);
+			if(parametros.size()>0){
+				return parametros.get(0);
+			}
+		} catch (Exception e) {
+			logger.error("+++ERROR obteniendo parametros: " + e.getMessage());
+		}	
+		return null;
 	}
 	
 	/**
