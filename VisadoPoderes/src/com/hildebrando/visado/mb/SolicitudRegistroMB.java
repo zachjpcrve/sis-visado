@@ -3351,7 +3351,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}
 		if(parametro!=null){
 			try {
-				ubicacionFinal = parametro.getCarpetaRemota() + File.separator;
+				ubicacionFinal = parametro.getCarpetaRemota(); //+ File.separator;
 				sUbicacionTemporal = ubicacionFinal + ConstantesVisado.FILES + File.separator;
 				
 				logger.info("[CARGAR-FILESERVER]-Ubicacion final "+ ubicacionFinal);
