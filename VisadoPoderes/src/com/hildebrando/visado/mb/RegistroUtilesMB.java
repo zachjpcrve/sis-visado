@@ -84,7 +84,7 @@ public class RegistroUtilesMB {
 				" GROUP BY EST.COD_ESTUDIO"+
 				" ORDER BY NRO_SOLICITUDES ASC";
 		
-		logger.debug("Consulta Estudio Menor carga: "+sql);
+		logger.debug("\t[SQL]-obtenerEstudioMenorCarga: "+sql);
 		
 
 		try {			
@@ -93,12 +93,11 @@ public class RegistroUtilesMB {
 			if(lstEstudios.size()>0){
 				resultEstudio = (String) lstEstudios.get(0)[0];
 			} else { //asignación automática
-				logger.info("Estudios sin solicitudes pendientes - Se asignará aleatoriamente");
-				logger.debug("Estudios sin solicitudes pendientes - Se asignará aleatoriamente");
+				logger.info("Estudios sin solicitudes pendientes - Se asignara aleatoriamente");
 				resultEstudio = getRandomEstudio();
 			}
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+": " +e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+": " ,e);
 		}	
 		return resultEstudio;
 		
