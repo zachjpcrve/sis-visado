@@ -17,6 +17,8 @@ public class Constantes {
 	public static final String VOUCHER_EXITO = "0000";
 	public static final String VOUCHER_NO_EXISTE = "9999";
 	public static final String VOUCHER_NO_EXISTE_CLIENTE = "No existe información del voucher consultado";
+	public static final String HOST_ERROR = "0001";
+	public static final String MSJ_SERV_HOST_ERROR = "No se obtuvo respuesta exitosa";
     public static final int    RENIEC_TTL = 0;
     public static final int    RENIEC_LONG_CABECERA = 128;
     public static final int    RENIEC_LONG_SUB_TRAMA_CONSULTA = 15;
