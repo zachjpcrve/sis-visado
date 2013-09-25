@@ -44,7 +44,7 @@ public class ConstantesVisado {
 	public static final String ACTIVA_ADVERTENCIA = "0002";
 	public static final String ACTIVA_RESTRICTIVA = "0003";
 	
-	public static final String NOMBRE_ARCHIVO_REVOCATORIA = "SUSTENTO_DE_REVOCACION"; //  SUSTENTO_DE_REVOCACION  DOREV
+	public static final String NOMBRE_ARCHIVO_REVOCATORIA = "SUSTREVOC"; //  SUSTENTO_DE_REVOCACION  DOREV
 	
 	public static final java.lang.String ID_RANGO_IMPORTE_MENOR_CINCUENTA = "0001";
 	public static final java.lang.String ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE = "0002";
