@@ -241,10 +241,11 @@ public class SeguimientoMB
 		}		
 	}	
 	
-	// Descripcion: Metodo que se encarga de cargar las solicitudes en la grilla
-	// @Autor: Cesar La Rosa
-	// @Version: 1.0
-	// @param: -
+	/** Descripcion: Método que se encarga de cargar las solicitudes de visado 
+	 * en la grilla
+	 * @author  Cesar La Rosa
+	 * @version: 1.0
+	**/
 	public void cargarSolicitudes() 
 	{
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -2206,7 +2207,7 @@ public class SeguimientoMB
 	@SuppressWarnings("unchecked")
 	public void busquedaSolicitudxCodigo(String codigo) 
 	{
-		logger.info("Buscando solicitudes");
+		logger.info("==== busquedaSolicitudxCodigo() =====");
 		
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
@@ -2216,8 +2217,7 @@ public class SeguimientoMB
 		try {
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.debug("Error al buscar las solicitudes: " + ex.getStackTrace());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al busquedaSolicitudxCodigo: "+ ex.getStackTrace());
 		}
 
 		if (solicitudes.size() == 0) 
@@ -2717,6 +2717,12 @@ public class SeguimientoMB
 		return results;
 	}
 	
+	/**
+	 * Metodo encargado de mostrar la lista de Personas registradas para
+	 * el filtro autocompletable de la bandeja de consulta
+	 * @param query Representa el caracter de consulta ingresado por el usuario
+	 * @return lstTiivsPersonaResultado Es la lista de {@link TiivsPersona }
+	 * */
 	public List<TiivsPersona> completePersona(String query) 
 	{
 		List<TiivsPersona> lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
@@ -2727,29 +2733,33 @@ public class SeguimientoMB
 		try {
 			lstTiivsPersonaBusqueda = service.buscarDinamico(filtro);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de Personas,",e);
 		}
 
 		for (TiivsPersona pers : lstTiivsPersonaBusqueda) 
 		{
 			if(pers!= null)
 			{	
-				if (pers.getApePat()!=null && pers.getApeMat()!=null)
-				{
-					if (pers.getNombre().toUpperCase() != ""
-							&& pers.getApePat().toUpperCase() != ""
-							&& pers.getApeMat().toUpperCase() != "") 
+				//if (pers.getApePat()!=null && pers.getApeMat()!=null)
+				//{
+					if (pers.getNombre() != null)
+						//&& pers.getApePat().toUpperCase() != ""
+						//&& pers.getApeMat().toUpperCase() != ""
 					{
 						
-						String nombreCompletoMayuscula = pers.getNombre().toUpperCase()
-								+ " " + pers.getApePat().toUpperCase() + " "
-								+ pers.getApeMat().toUpperCase();
+						String nombreCompletoMayuscula = "".concat(pers.getNombre()!=null?pers.getNombre().toUpperCase():"")
+								.concat(" ").concat(pers.getApePat()!=null?pers.getApePat().toUpperCase():"")
+								.concat(" ").concat(pers.getApeMat()!=null?pers.getApeMat().toUpperCase():"");
+								/*pers.getNombre().toUpperCase()+ " " 
+								+ pers.getApePat().toUpperCase() + " "
+								+ pers.getApeMat().toUpperCase();*/
 
-						String nombreCompletoMayusculaBusqueda = pers.getApePat()
-								.toUpperCase()
-								+ " "
+						String nombreCompletoMayusculaBusqueda = "".concat(pers.getApePat()!=null?pers.getApePat().toUpperCase():"")
+								.concat(" ").concat(pers.getApeMat()!=null?pers.getApeMat().toUpperCase():"")
+								.concat(" ").concat(pers.getNombre()!=null?pers.getNombre().toUpperCase():"");
+								/*pers.getApePat().toUpperCase()+ " "
 								+ pers.getApeMat().toUpperCase()
-								+ " " + pers.getNombre().toUpperCase();
+								+ " " + pers.getNombre().toUpperCase();*/
 
 						if (nombreCompletoMayusculaBusqueda.contains(query
 								.toUpperCase())) {
@@ -2759,7 +2769,7 @@ public class SeguimientoMB
 							lstTiivsPersonaResultado.add(pers);
 						}
 					}
-				}
+				//}
 				
 			}
 		}
