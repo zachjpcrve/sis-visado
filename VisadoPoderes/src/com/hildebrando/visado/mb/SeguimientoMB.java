@@ -124,6 +124,11 @@ public class SeguimientoMB
 	private CombosMB combosMB;
 	public static Logger logger = Logger.getLogger(SeguimientoMB.class);
 	
+	//Se agrega abajo
+	private String tipoRegistro;
+	private String poderdante;
+	private String apoderdante;
+	
 	public SeguimientoMB()
 	{
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");	
@@ -188,6 +193,93 @@ public class SeguimientoMB
 		//Carga estado del flujo
 		//combosMB.traerEstadosFlujoSolicitud();
 		//setNoMostrarFechas(true);
+
+		//Se agrega abajo
+		obtenerTipoRegistro();
+		obtenerEtiquetasTipoRegistro();
+	}
+	
+	//SE AGREGA METODO PARA OBTENER EL TIPO DE REGISTRO POR BD
+	private void obtenerTipoRegistro() {
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
+				.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("id.codMult",
+				ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			tipoRegistro = "";
+			if (listaMultiTabla.size() > 0) {
+				for (TiivsMultitabla multitabla : listaMultiTabla) {
+					contador++;
+					if (contador.compareTo(listaMultiTabla.size()) == 0) {
+						tipoRegistro += multitabla.getValor1();
+					} else {
+						tipoRegistro += multitabla.getValor1() + " / ";
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT
+					+ "de multitablas: " + e);
+		}
+	}
+	
+	//METODO PARA OBTENER ETIQUETAS DE TIPO DE REGISTRO DESDE BD Y MOSTRARLO EN GRILLA
+	private void obtenerEtiquetasTipoRegistro() {
+		obtenerPonderdante();
+		obtenerAponderdante();
+	}
+	
+	private void obtenerPonderdante(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("valor3", ConstantesVisado.R1_PODERDANTE));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			poderdante = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						poderdante += multitabla.getValor1();	
+					}else{
+						poderdante += multitabla.getValor1() + " - ";
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
+	}
+	
+	private void obtenerAponderdante(){
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("valor3", ConstantesVisado.R2_APODERADO));
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		Integer contador = 0;
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			apoderdante = "";
+			if(listaMultiTabla.size()>0){
+				for(TiivsMultitabla multitabla:listaMultiTabla){
+					contador++;
+					if(contador.compareTo(listaMultiTabla.size())==0){
+						apoderdante += multitabla.getValor1();	
+					}else{
+						apoderdante += multitabla.getValor1() + " - ";
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+		}
 	}
 	
 	public void setearCamposxPerfil()
@@ -241,11 +333,10 @@ public class SeguimientoMB
 		}		
 	}	
 	
-	/** Descripcion: Método que se encarga de cargar las solicitudes de visado 
-	 * en la grilla
-	 * @author  Cesar La Rosa
-	 * @version: 1.0
-	**/
+	// Descripcion: Metodo que se encarga de cargar las solicitudes en la grilla
+	// @Autor: Cesar La Rosa
+	// @Version: 1.0
+	// @param: -
 	public void cargarSolicitudes() 
 	{
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -3383,4 +3474,29 @@ public class SeguimientoMB
 	public void setMostrarFechaEstado(boolean mostrarFechaEstado) {
 		this.mostrarFechaEstado = mostrarFechaEstado;
 	}
+
+	public String getTipoRegistro() {
+		return tipoRegistro;
+	}
+
+	public void setTipoRegistro(String tipoRegistro) {
+		this.tipoRegistro = tipoRegistro;
+	}
+
+	public String getPoderdante() {
+		return poderdante;
+	}
+
+	public void setPoderdante(String poderdante) {
+		this.poderdante = poderdante;
+	}
+
+	public String getApoderdante() {
+		return apoderdante;
+	}
+
+	public void setApoderdante(String apoderdante) {
+		this.apoderdante = apoderdante;
+	}
+	
 }

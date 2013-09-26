@@ -46,13 +46,13 @@
 								</h:panelGrid>
 								
 								<h:panelGrid columns="16"> 
-									<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI Representante:" />
+									<h:outputText styleClass="outputText" id="txtDOIApod" value="DOI #{seguimientoMB.apoderdante}:" />
 									<h:inputText styleClass="inputText" id="text18" maxlength="18" 
 																value="#{seguimientoMB.nroDOIApoderado}" disabled="false" size="18"/>
 									<p:graphicImage value="/resources/images/pregunta.jpg" id="toolDOIApoderado" />
 								   	<p:tooltip for="toolDOIApoderado" value="Número de Documento del Representante" 
 																								showEffect="fade" hideEffect="fade" />
-									<h:outputText styleClass="outputText" id="txtApod" value="Representante:" />
+									<h:outputText styleClass="outputText" id="txtApod" value="#{seguimientoMB.apoderdante}:" />
 									<p:autoComplete completeMethod="#{seguimientoMB.completePersona}"
 													value="#{seguimientoMB.objTiivsPersonaBusquedaNomApod}"
 													forceSelection="true" var="ap" converter="personaCvtr"
@@ -64,7 +64,7 @@
 									<p:tooltip for="toolApoderado" value="Representante" showEffect="fade" hideEffect="fade" />
 								
 											
-									<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI Representado:" />
+									<h:outputText styleClass="outputText" id="txtDOIPod" value="DOI #{seguimientoMB.poderdante}:" />
 											
 									<h:inputText styleClass="inputText" id="text17" maxlength="18" size="18" value="#{seguimientoMB.nroDOIPoderdante}" disabled="false" />
 											
@@ -73,7 +73,7 @@
 									<p:tooltip for="toolDOIPoderdante" value="Número de Documento del Representado" showEffect="fade" hideEffect="fade" />
 											
 											
-									<h:outputText styleClass="outputText" id="txtPoder" value="Representado:" />
+									<h:outputText styleClass="outputText" id="txtPoder" value="#{seguimientoMB.poderdante}:" />
 										
 											
 									<p:autoComplete completeMethod="#{seguimientoMB.completePersona}"
@@ -268,14 +268,14 @@
 											
 											<p:column width="100">
 												<f:facet name="header">  
-											         <h:outputText value="Representado" style="font-size: 9px"/>  
+											         <h:outputText value="#{seguimientoMB.poderdante}" style="font-size: 9px"/>  
 											    </f:facet> 
 												<h:outputText value="#{tbl.txtPoderdante}" style="font-size: 9px"/>		
 											</p:column>
 											
 											<p:column width="100">
 												<f:facet name="header">  
-											         <h:outputText value="Representante" style="font-size: 9px"/>  
+											         <h:outputText value="#{seguimientoMB.apoderdante}" style="font-size: 9px"/>  
 											    </f:facet> 
 												<h:outputText value="#{tbl.txtApoderado}" style="font-size: 9px"/>		
 											</p:column>
