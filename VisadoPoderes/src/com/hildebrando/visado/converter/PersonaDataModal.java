@@ -12,12 +12,12 @@ public class PersonaDataModal extends ListDataModel<TiivsPersona> implements Sel
 
 	public PersonaDataModal() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public PersonaDataModal(List<TiivsPersona> list) {
 		super(list);
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 	@Override
