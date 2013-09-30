@@ -924,6 +924,29 @@ public class Utilitarios {
 		    return cal.getTime();
 		}
 	  
+	  public static String asignarEquivTipoDoi (String tipoDoi){
+		String tdFin="";	
+			switch(Integer.parseInt(tipoDoi)){
+				case 1:	 tdFin="C"; break; //0001	CÓDIGO CENTRAL
+				case 2:	 tdFin="E"; break; //0002	CARNET DE EXTRANJERIA
+				case 3:  tdFin="R"; break; //0003	RUC
+				case 4:  tdFin="P"; break; //0004	PASAPORTE
+				case 7:  tdFin="M"; break; //0007	CARNET IDENT.MILITAR
+				case 8:  tdFin="X"; break; //0008	DOI DOC EXTRANJERO
+				case 9:  tdFin="N"; break; //0009	RUC ANTIGUO
+				case 10: tdFin="Z"; break; //0010	RUC DEL EMPLEADOR
+				case 11: tdFin="O"; break; //0011	OTRAS INSTITUCIONES
+				case 12: tdFin="T"; break; //0012	CARNET DE FUERZAS PO
+				case 13: tdFin="A"; break; //0013	CÓDIGO CUSPP
+				case 14: tdFin="U"; break; //0014	RUS
+				case 15: tdFin="F"; break; //0015	NRO. SOLICITUD AFPHO
+				case 16: tdFin="L"; break; //0016	DNI
+				case 17: tdFin="D"; break; //0017	CARNET DIPLOMÁTICO
+				//0005	OTROS S			
+			}
+			return tdFin;
+	  }
+	  
 	  public static String validarCampoNull(String campo)
 		{
 			String resultado="";
