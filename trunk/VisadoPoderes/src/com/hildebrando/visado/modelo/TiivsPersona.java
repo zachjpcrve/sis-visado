@@ -209,7 +209,6 @@ public class TiivsPersona implements java.io.Serializable {
 	}
 
 	public void setNombreCompletoMayuscula(String nombreCompletoMayuscula) {
-		// TODO Auto-generated method stub
 		this.nombreCompletoMayuscula = nombreCompletoMayuscula;
 	}
 
