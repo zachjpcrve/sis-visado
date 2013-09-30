@@ -228,6 +228,7 @@ public class ConsultarSolicitudMB {
 		}
 		estilosNavegador=new EstilosNavegador();
 		obtenCodRazonSocial();
+		//Agregados 09/2013
 		obtenerTipoRegistro();
 		obtenerEtiquetasTipoRegistro();
 		obtenerPagoComision();
@@ -238,9 +239,8 @@ public class ConsultarSolicitudMB {
 	 * Metodo que actualiza los listados de los Combos
 	 * */
 	public void actualizarListas(){
-		logger.info("*************actualizarListas************");
+		logger.debug("*************actualizarListas************");
 		combosMB = new CombosMB();	
-		logger.info("**********************************+*****");
 	}
 	
 	public void modificarTextoVentanaCartaAtencion() {
@@ -252,7 +252,7 @@ public class ConsultarSolicitudMB {
 			setTextoMensajeCartaAtencion(ConstantesVisado.MENSAJE_CARTA_ATENCION.MENSAJE_OFICINA);
 		}
 
-		logger.info("Texto Ventana: " + getTextoMensajeCartaAtencion());
+		logger.info("TextoMensajeCartaAtencion:" + getTextoMensajeCartaAtencion());
 	}
 	
 	public List<TiivsOficina1> completeNomOficina(String query) 
@@ -302,7 +302,7 @@ public class ConsultarSolicitudMB {
 				}
 				catch (Exception e) 
 				{
-					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de datos de Clasificacion de personas: "+e);
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de datos de Clasificacion de personas: ",e);
 				}
 				
 				for (TiivsMultitabla mult: lstTmpMult)
@@ -449,9 +449,9 @@ public class ConsultarSolicitudMB {
 	
 	//Ref: SeguimientoPestania: Botón "Generar Revision"
 	public void mostrarCartaRevision() {
-		PERFIL_USUARIO = (String) Utilitarios
-				.getObjectInSession("PERFIL_USUARIO");
-
+		logger.debug("=== en mostrarCartaRevision() ===");
+		PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		logger.debug("[SHOW_CARTA_REV]-PERFIL_USUARIO: "+PERFIL_USUARIO);
 		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 			if(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02)){
 				setbMostrarCartaRevision(true);
@@ -738,10 +738,9 @@ public class ConsultarSolicitudMB {
 		try {
 			GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			solicitudRegistrarT = service.modificar(solicitudRegistrarT);
-			Utilitarios.mensajeInfo("INFO",
-					"Se realizó la reasignación manual Correctamente");
+			Utilitarios.mensajeInfo("INFO","Se realizó la reasignación manual Correctamente");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en reasignacionManual():",e);
 		}
 	}
 
@@ -1099,11 +1098,12 @@ public class ConsultarSolicitudMB {
 
 	public void actualizarEstadoReservadoSolicitud() throws Exception 
 	{
-		logger.debug("En el actualizarEstadoReservadoSolicitud");
+		logger.debug("==== En el actualizarEstadoReservadoSolicitud() ====");
 		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
-		logger.debug("Usuario logueado: " + usuario.getUID());
+		logger.debug("[ActEstRESERV]-Usuario: " + usuario.getUID());
+		logger.debug("[ActEstRESERV]-Estado Solicitud: "+this.solicitudRegistrarT.getEstado());
 		
 		//adecuar
 		//Para Incidencia 34
@@ -1796,10 +1796,11 @@ public class ConsultarSolicitudMB {
 			try {
 				lstHstSolic = service.buscarDinamico(filtro);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"lstHstSolic:",e);
 			}
-			
-			logger.debug("Tamanio lista historial: " + lstHstSolic.size());
+			if(lstHstSolic!=null){
+				logger.debug("Tamanio lista historial: " + lstHstSolic.size());	
+			}
 			
 			if (lstHstSolic.size()>=1)
 			{
@@ -1836,6 +1837,7 @@ public class ConsultarSolicitudMB {
 			descValorDictamen = "";
 			
 		}
+		logger.debug("[obtenerDictamen]-Estado:");		
 	}
 	/* Modificado 24/09/2013 . Metodo que realiza la acción de ReImpresión de SSJJ hacia Oficina
 	 * */
@@ -1858,7 +1860,7 @@ public class ConsultarSolicitudMB {
 		boolean actualizarBandeja=false;
 		
 		logger.info("********************** dictaminarSolicitud *********************************** ");
-		logger.info("********** " + valorDictamen);
+		logger.info("**[valorDictamen]: " + valorDictamen);
 		try {
 
 			GenericDao<TiivsSolicitud, Object> serviceS = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -1987,7 +1989,7 @@ public class ConsultarSolicitudMB {
 			}
 
 		} catch (Exception e) {
-			logger.error("Error al dictaminar solicitud:",e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al dictaminar solicitud:",e);
 			e.printStackTrace();
 		}
 	}
@@ -2342,7 +2344,7 @@ public class ConsultarSolicitudMB {
 	 * @return iRet Puede tomar el valor true/false
 	 * **/
 	public boolean descargarAnexosFileServer() {
-		logger.info("====== INICIANDO descargarAnexosFileServer() ======");
+		logger.debug("====== INICIANDO descargarAnexosFileServer() ======");
 		boolean iRet = true;
 		String sUbicacionTemporal;
 		String sUbicacionFinal;
@@ -2359,7 +2361,7 @@ public class ConsultarSolicitudMB {
 		
 		logger.debug("[Ubicacion Temporal]:" + sUbicacionTemporal);
 		if(lstAnexoSolicitud!=null){
-			logger.debug("[FileServer]-Cantidad Anexos:" + this.lstAnexoSolicitud.size());	
+			logger.info("[FileServer]-Cantidad Anexos:" + this.lstAnexoSolicitud.size());	
 		}
 		
 		File srcFile = null;
@@ -2368,11 +2370,11 @@ public class ConsultarSolicitudMB {
 		
 		for (TiivsAnexoSolicitud a : this.lstAnexoSolicitud)
 		{
-			logger.debug("\n---------------------- Recuperando archivo ---------------------------------------------");
+			logger.debug("---------------------- Recuperando archivo ---------------------------------------------");
 			fichTemp = new File(sUbicacionTemporal	+ a.getAliasTemporal());
 			if (!fichTemp.exists()) 
 			{
-				logger.info("Archivo no existe, se descargara:" + a.getAliasArchivo());
+				logger.debug("Archivo no existe, se descargara:" + a.getAliasArchivo());
 				
 				boolean bSaved = false;
 				try {
@@ -2415,29 +2417,27 @@ public class ConsultarSolicitudMB {
 //					bSaved = true;					
 
 				} catch (IOException e) {
-					logger.debug("Error al descargar archivo: "		+ a.getAliasArchivo());
-					logger.debug(e.toString());
-					e.printStackTrace();
+					logger.error("Error al descargar archivo: "		+ a.getAliasArchivo(),e);
 					bSaved = false;
 				} catch (Exception e){
 					logger.error(e);
 					bSaved = false;
 				}
 				finally {
-					// Elimina el archivo cuando JVM finaliza
 					fichTemp.deleteOnExit(); 												
 				}
 				if (bSaved) {
 					GenericDao<TiivsAnexoSolicitud, Object> anexoDAO = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit
 							.getApplicationContext().getBean("genericoDao");
 					try {
+						logger.debug("[MODIFICAR]-a.getAliasTemporal(): "+a.getAliasTemporal());
 						anexoDAO.modificar(a);
 					} catch (Exception ex) {
-						logger.debug("No se actualizará el anexo "	+ ex.getMessage());
+						logger.error("No se actualizara el anexo "	+ ex.getMessage());
 					}
 					iRet = iRet && true;
 				} else {
-					logger.debug("Error no se actualizará anexo");
+					logger.error("Error no se actualizara anexo");
 					iRet = iRet && false;
 				}
 			} else {
@@ -2454,14 +2454,12 @@ public class ConsultarSolicitudMB {
 	}
 
 	private void cargarDocumentos() {
-
 		GenericDao<TiivsDocumento, Object> documentoDAO = (GenericDao<TiivsDocumento, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroDocumento = Busqueda.forClass(TiivsDocumento.class);
 		try {
 			lstTiivsDocumentos = documentoDAO.buscarDinamico(filtroDocumento);
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al cargarDocumentos():"+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al cargarDocumentos():",e);
 		}
 	}
 
@@ -2809,7 +2807,7 @@ public class ConsultarSolicitudMB {
 				logger.error("Error al mover el archivo al fileServer", e);
 			}
 			catch (Exception ex) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al mover archivo al fileServer:" + ex);
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al mover archivo al fileServer:" , ex);
 			}
 			if(!destFile.isFile() && destFile.length()>0){
 				exito = false;
@@ -3022,12 +3020,10 @@ public class ConsultarSolicitudMB {
 			}
 			bBooleanPopup=false;
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e.getMessage());
-			Utilitarios.mensajeError("ERROR", "Ocurrio un Error al grabar la Solicitud");
-			e.printStackTrace();
-
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION,e);
+			Utilitarios.mensajeError("ERROR", "Ha ocurrido un error al grabar la Solicitud");
 		}catch(Throwable t){
-			logger.error("Throwable ::: "+ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+t.getMessage());
+			logger.error("Throwable ::: "+ConstantesVisado.MENSAJE.OCURRE_EXCEPCION,t);
 		}				
 	}
 		
@@ -3112,8 +3108,7 @@ public class ConsultarSolicitudMB {
 			lista = serviceAgru.buscarDinamico(filtroAgrPer);
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.debug("Error al buscar la agrupacion de personas");
+			logger.error("Error al buscar la agrupacion de personas: ",ex);
 		}
 		
 		if (lista.size()>0)
@@ -3145,8 +3140,7 @@ public class ConsultarSolicitudMB {
 			lista = serviceAgru.buscarDinamico(filtroSolAgrp);
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.debug("Error al buscar la solicitud agrupacion");
+			logger.debug("Error al buscar la solicitud agrupacion: ",ex);
 		}
 		
 		if (lista.size()>0)
@@ -3172,8 +3166,7 @@ public class ConsultarSolicitudMB {
 			listaP = serviceAgru.buscarDinamico(filtroAgrPer);
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.debug("Error al buscar la agrupacion de personas");
+			logger.error("Error al buscar la agrupacion de personas",ex);
 		}
 		
 		for (TiivsAgrupacionPersona b: listaP)
@@ -3389,7 +3382,7 @@ public class ConsultarSolicitudMB {
 		
 		}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 		return retorno;
 	}
@@ -3550,7 +3543,7 @@ public class ConsultarSolicitudMB {
 			actualizarListadoDocumentos();
 
 		} catch (Exception ex) {
-			logger.info("Error al cargar el listado de documentos:",ex);			
+			logger.error("Error al cargar el listado de documentos:",ex);			
 		}
 		
 		// 120913
@@ -3615,7 +3608,7 @@ public class ConsultarSolicitudMB {
 			logger.info("usuario.getUID() ******************** " +usuario.getUID());
 			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID());			
 		}catch(Exception e){
-			logger.error("Error al obtener parámetros de APPLET: "+e);
+			logger.error("Error al obtener parámetros de APPLET: ",e);
 		}
 		return sCadena;
 		
@@ -3741,12 +3734,12 @@ public class ConsultarSolicitudMB {
 			return sNombreTemporal;
 
 		} catch (IOException e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"IOException al cargarUnicoPDF: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"IOException al cargarUnicoPDF: " , e);
 			String sMensaje = "Se produjo un error al adjuntar fichero";
 			Utilitarios.mensajeInfo("", sMensaje);
 			return "";
 		}catch (Exception ex) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al cargarUnicoPDF: " + ex);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al cargarUnicoPDF: " , ex);
 			String sMensaje = "Se produjo un error al adjuntar fichero";
 			Utilitarios.mensajeInfo("", sMensaje);
 			return "";
@@ -3758,9 +3751,9 @@ public class ConsultarSolicitudMB {
 				try {
 					canalSalida.close();
 				} catch (IOException x) {
-					logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IOException: "+x);
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IOException: ",x);
 				}catch(Exception e){
-					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+e);
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR,e);
 				}
 			}
 		}
@@ -3959,8 +3952,7 @@ public class ConsultarSolicitudMB {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("+++ Falló al obtener Operación", e);
-			e.printStackTrace();
+			logger.error("+++ Fallo al obtener Operacion bancaria", e);
 		}		
 		return false;
 	}
@@ -4048,7 +4040,7 @@ public class ConsultarSolicitudMB {
 		}
 
 		if (icontDolares == 0 && icontEuros == 0 && icontSoles > 0) {
-			// ONLI SOLES
+			// SOLO SOLES
 			for (TiivsSolicitudOperban x : lstSolicBancarias) {
 				valorFinal = valorFinal + x.getImporte();
 				this.solicitudRegistrarT.setImporte(valorFinal);
@@ -4060,7 +4052,7 @@ public class ConsultarSolicitudMB {
 					.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 		}
 		if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) {
-			// ONLI DOLARES
+			// SOLO DOLARES
 			for (TiivsSolicitudOperban x : lstSolicBancarias) {
 				valorFinal = valorFinal + x.getImporte();
 				this.solicitudRegistrarT.setImporte(valorFinal);
@@ -4072,7 +4064,7 @@ public class ConsultarSolicitudMB {
 					.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
 		}
 		if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) {
-			// ONLI EUROS
+			// SOLO EUROS
 			for (TiivsSolicitudOperban x : lstSolicBancarias) {
 				valorFinal = valorFinal + x.getImporte();
 				this.solicitudRegistrarT.setImporte(valorFinal);
@@ -5504,7 +5496,7 @@ public class ConsultarSolicitudMB {
 				}
 			}
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " , e);
 		}
 	}
 	
@@ -5516,7 +5508,7 @@ public class ConsultarSolicitudMB {
 			TiivsSolicitud objResultado = service.modificar(this.solicitudRegistrarT);
 			setbMostrarComentario(true);				
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION,e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al guardarComentario(): ",e);
 		}
 	}
 
@@ -5542,6 +5534,8 @@ public class ConsultarSolicitudMB {
 	}
 	@SuppressWarnings("unchecked")
 	private void obterPatterDelTipoDocumento(String codTipoDocumento){
+		logger.debug("=== obterPatterDelTipoDocumento() ===");
+		logger.debug("codTipoDocumento: "+codTipoDocumento);
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
 		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC));
@@ -5549,13 +5543,11 @@ public class ConsultarSolicitudMB {
 		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
 		try {
 			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
-			 patter=listaMultiTabla.get(0).getValor4();
+			patter=listaMultiTabla.get(0).getValor4();
 			logger.info("patter : "+patter);
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas: " , e);
 		}
-		
-		
 	}
 	
 	private void obtenCodRazonSocial() {					
@@ -5616,24 +5608,20 @@ public class ConsultarSolicitudMB {
 			// Finalize task.
 			output.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:"+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:",e);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento:"+ex);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento:",ex);
 		} 
 		finally {
 			try {
 				output.close();
 			} catch (IOException e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento:"+e);
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento:",e);
 			}
 			try {
 				input.close();
 			} catch (IOException e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:"+e);
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:",e);
 			}
 		}
 		FacesContext.getCurrentInstance().responseComplete();
