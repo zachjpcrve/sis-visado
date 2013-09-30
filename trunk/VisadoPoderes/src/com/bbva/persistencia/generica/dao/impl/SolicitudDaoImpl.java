@@ -19,6 +19,7 @@ import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
+import com.bbva.persistencia.generica.dao.SeguridadDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.dto.AgrupacionDelegadosDto;
@@ -34,6 +35,13 @@ import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 
+/**
+ * Clase encargada de consultar información de la solicitud de visado, por ejemplo: Obtener
+ * código de solicitud, estados flujo, etc. También maneja validaciones.
+ * la interface {@link SolicitudDao} y extiende la clase generica {@link GenericDaoImpl}
+ * @version 1.0
+ */
+
 public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		GenericDaoImpl<K, Serializable> implements
 		SolicitudDao<K, Serializable> {
@@ -45,10 +53,10 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	
 	@SuppressWarnings("unchecked")
 	public boolean validarExisteGrupoDelegados(List<TiivsMiembroNivel> listaDelegados ){
-		logger.info("******** validarExisteGrupoDelegados ****** ");
+		logger.info("==== validarExisteGrupoDelegados ====");
 		String sqlGrupo="";
 		final String sql;
-		logger.info("xxxx "+listaDelegados.size());
+		logger.debug("Lista Delegados: "+listaDelegados.size());
 	
 		boolean existe =false;
 		if(listaDelegados.size()>0){
@@ -56,12 +64,11 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		     if(listaDelegados.get(0).getGrupo()!=null){
 			    if(listaDelegados.get(0).getGrupo()!=0){
 			      sqlGrupo=" AND GRUPO!="+listaDelegados.get(0).getGrupo();
+			    }
+		     }
 			}
-		  }
-		}
 		
-		
-		  String sqlAux ="SELECT COUNT(*) FROM " +
+			String sqlAux ="SELECT COUNT(*) FROM " +
 				" (SELECT COUNT(*) MIEMBROS, GRUPO FROM VISPOD.tiivs_miembro_nivel " +
 				" where tipo_rol = 'D' AND cod_niv='"+listaDelegados.get(0).getCodNiv()+"'" +sqlGrupo+
 				" GROUP BY GRUPO ) T " +
@@ -71,11 +78,11 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 							" AND cod_niv='"+x.getCodNiv().trim()+"'" +
 							" AND GRUPO = T.GRUPO AND COD_MIEMBRO = '"+x.getTiivsMiembro().getCodMiembro().trim() +"')=1 " ;
 				}
-		
-		sql=sqlAux;
-		logger.info("sql ::: "+sql);
-		BigDecimal valorRetorno=new BigDecimal(0);
-		List ResultList = (List) getHibernateTemplate().execute(
+				
+			sql=sqlAux;
+			logger.info("sql ::: "+sql);
+			BigDecimal valorRetorno=new BigDecimal(0);
+			List ResultList = (List) getHibernateTemplate().execute(
 				new HibernateCallback() {
 					public List doInHibernate(Session session)
 							throws HibernateException {
@@ -84,18 +91,17 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					}
 				});
 
-		if (ResultList.size() > 0) {
-			for (int i = 0; i <= ResultList.size() - 1; i++) {
-				valorRetorno = (BigDecimal) ResultList.get(i);
-
+			if (ResultList.size() > 0) {
+				for (int i = 0; i <= ResultList.size() - 1; i++) {
+					valorRetorno = (BigDecimal) ResultList.get(i);
+				}
 			}
-		}
 		
-		if(valorRetorno.intValue()==0){
-			existe=false;
-		}else{
-			existe=true;
-		}
+			if(valorRetorno.intValue()==0){
+				existe=false;
+			}else{
+				existe=true;
+			}
 		} 
 		logger.info("existe :: " +existe);
 		return existe;
@@ -129,7 +135,6 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			}
 		}
 		return listaCodgiosSolicitud;
-
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
