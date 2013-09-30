@@ -204,8 +204,7 @@ public class SeguimientoMB
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
-		filtroMultitabla.add(Restrictions.eq("id.codMult",
-				ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
+		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
 		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
 		Integer contador = 0;
 		try {
@@ -221,10 +220,8 @@ public class SeguimientoMB
 					}
 				}
 			}
-
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT
-					+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: ",e);
 		}
 	}
 	
@@ -249,12 +246,12 @@ public class SeguimientoMB
 					if(contador.compareTo(listaMultiTabla.size())==0){
 						poderdante += multitabla.getValor1();	
 					}else{
-						poderdante += multitabla.getValor1() + " - ";
+						poderdante += multitabla.getValor1() + " / ";
 					}
 				}
 			}
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: ",e);
 		}
 	}
 	
@@ -273,7 +270,7 @@ public class SeguimientoMB
 					if(contador.compareTo(listaMultiTabla.size())==0){
 						apoderdante += multitabla.getValor1();	
 					}else{
-						apoderdante += multitabla.getValor1() + " - ";
+						apoderdante += multitabla.getValor1() + " / ";
 					}
 				}
 			}
@@ -333,10 +330,11 @@ public class SeguimientoMB
 		}		
 	}	
 	
-	// Descripcion: Metodo que se encarga de cargar las solicitudes en la grilla
-	// @Autor: Cesar La Rosa
-	// @Version: 1.0
-	// @param: -
+	/** Descripcion: Método que se encarga de cargar las solicitudes de visado 
+	 * en la grilla
+	 * @author  Cesar La Rosa
+	 * @version: 1.0
+	**/
 	public void cargarSolicitudes() 
 	{
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -367,12 +365,9 @@ public class SeguimientoMB
 				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"de solicitudes es:"+solicitudes.size());
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.debug("Error al buscar las solicitudes");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al buscar/cargarSolicitudes: ",ex);
 		}
 		
-		logger.info("Numero de solicitudes encontradas: " + solicitudes.size());
-
 		actualizarDatosGrilla();
 		/*
 		String grupoOfi = (String) Utilitarios.getObjectInSession("GRUPO_OFI");
@@ -395,11 +390,9 @@ public class SeguimientoMB
 		List<TiivsMiembro> result = new ArrayList<TiivsMiembro>();
 		
 		try {
-			result = mDAO.buscarDinamico(filtroM);
-			
+			result = mDAO.buscarDinamico(filtroM);			
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.debug("Error el estudio asociado al abogado");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al buscarEstudioxAbogado: ",ex);
 		}
 		
 		if (result!=null)
@@ -413,6 +406,7 @@ public class SeguimientoMB
 	@SuppressWarnings("unchecked")
 	public void liberarSolicitud()
 	{
+		logger.debug("=== liberarSolicitud() ===");
 		String codigoSolicitud=Utilitarios.capturarParametro("prm_codSoli");
 		logger.info("codigoSolicitud : "+codigoSolicitud);
 		
@@ -421,11 +415,9 @@ public class SeguimientoMB
 		filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, codigoSolicitud));
 		
 		try {
-			solicitudes = solicDAO.buscarDinamico(filtroSol);
-			
+			solicitudes = solicDAO.buscarDinamico(filtroSol);			
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.debug("Error al buscar las solicitudes");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"solicitudes en liberarSolicitud(): ",ex);
 		}
 		
 		if (solicitudes.size()==1)
@@ -445,9 +437,9 @@ public class SeguimientoMB
 					  
 					  registrarHistorial(solicitud);
 				} catch (BeansException e) {
-					e.printStackTrace();
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en liberarSolicitud: ",e);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al modificar la solicitud: ",e);
 				}
 			}
 		}
@@ -1525,8 +1517,7 @@ public class SeguimientoMB
 			}
 						
 		} catch (Exception e) {
-			e.printStackTrace();
-			//logger.info("Error al generar el archivo excel debido a: " + e.getStackTrace());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al generar archivo excel:" ,e);
 		}	
 	}
 	
@@ -1534,18 +1525,15 @@ public class SeguimientoMB
 	{
 		try {
 			exportarExcelPOI();
-			//Abrir archivo excel
-				
+			//Abrir archivo excel				
 			if (rutaArchivoExcel!=null && rutaArchivoExcel.length()>0)
 			{
 				Desktop.getDesktop().open(new File(rutaArchivoExcel));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-			logger.debug("Error al abrir archivo excel debido a: " + e.getMessage());
-		} catch (Exception e1)
-		{
-			e1.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"IO al abrir archivo excel",e);
+		} catch (Exception e1){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al abrir archivo excel",e1);
 		}
 	}
 	
@@ -1557,7 +1545,9 @@ public class SeguimientoMB
 		try {
 			stream = new FileInputStream(rutaArchivoExcel);
 		} catch (FileNotFoundException e) {
-			logger.debug("Error al obtener archivo excel debido a: " + e.getMessage());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener archivo excel, ya que no existe: ",e);
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener archivo excel: ",e);
 		}
 		
 		if (stream!=null)
@@ -1635,6 +1625,7 @@ public class SeguimientoMB
 	@SuppressWarnings("unchecked")
 	public void busquedaSolicitudes() 
 	{
+		logger.debug("===== busquedaSolicitudes() ===");
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
 
@@ -1736,7 +1727,7 @@ public class SeguimientoMB
 						filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 						
 					} catch (ParseException e) {
-						e.printStackTrace();
+						logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al formatearFecha",e);
 					}
 				 	
 				 	filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
@@ -1832,6 +1823,7 @@ public class SeguimientoMB
 		// 11. Filtro por numero de documento de apoderado (funciona)
 		if (getNroDOIApoderado().compareTo("") != 0) 
 		{
+			logger.debug("[Filtro]-getNroDOIApoderado(): "+getNroDOIApoderado());
 			String codSol="";
 			int ind=0;
 			List<String> lstSolicitudes = new ArrayList<String>();
@@ -1841,11 +1833,10 @@ public class SeguimientoMB
 				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIApoderado()) && tmp.getTipPartic().equals(ConstantesVisado.APODERADO))
 				{
 					codSol = tmp.getCodSoli();
+					logger.debug("Busqueda-[Apoderado]-solicitud:"+codSol);
 					lstSolicitudes.add(codSol);
 				}
 			}
-			
-			logger.info("Filtro por numero de documento apoderado: " + getNroDOIApoderado());
 			
 			for (; ind <= lstSolicitudes.size() - 1; ind++) 
 			{
@@ -1896,6 +1887,7 @@ public class SeguimientoMB
 		// 13. Filtro por numero de documento de poderdante (funciona)
 		if (getNroDOIPoderdante().compareTo("") != 0) 
 		{
+			logger.info("[Filtro]-getNroDOIPoderdante():" + getNroDOIPoderdante());
 			String codSol="";
 			int ind=0;
 			List<String> lstSolicitudes = new ArrayList<String>();
@@ -1905,11 +1897,12 @@ public class SeguimientoMB
 				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIPoderdante()) && tmp.getTipPartic().equals(ConstantesVisado.PODERDANTE))
 				{
 					codSol = tmp.getCodSoli();
+					logger.debug("Busqueda-[Poderdante]-solicitud: "+codSol);
 					lstSolicitudes.add(codSol);
 				}
 			}
 			
-			logger.info("Filtro por nro documento poderdante: " + getNroDOIPoderdante());
+			
 			for (; ind <= lstSolicitudes.size() - 1; ind++) 
 			{
 				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
@@ -2013,7 +2006,7 @@ public class SeguimientoMB
 			try {
 				lstSolNivel = busqSolNivDAO.buscarDinamico(filtro);
 			} catch (Exception e) {
-				logger.info("Error al buscar los estados de los niveles en las solicitudes");
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"los estados de los niveles en las solicitudes: ",e);
 			}
 			
 			lstSolicitudesSelected.clear();
@@ -2061,7 +2054,7 @@ public class SeguimientoMB
 			try {
 				lstHistorial = busqHisDAO.buscarDinamico(filtro);
 			} catch (Exception e) {
-				logger.info("Error al buscar en historial de solicitudes");
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"el historial de las solicitudes",e);
 			}
 			
 			lstSolicitudesSelected.clear();
@@ -2100,7 +2093,7 @@ public class SeguimientoMB
 			try {
 				lstHistorial = busqHisDAO.buscarDinamico(filtro);
 			} catch (Exception e) {
-				logger.info("Error al buscar en historial de solicitudes");
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"el historial de las solicitudes",e);
 			}
 			
 			lstSolicitudesSelected.clear();
@@ -2193,8 +2186,7 @@ public class SeguimientoMB
 		try {
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"las solicitudes: " + ex);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"las solicitudes en la Bandeja de Seguimiento: ",ex);
 		}
 
 		if (solicitudes.size() == 0) 
@@ -2246,8 +2238,7 @@ public class SeguimientoMB
 		try {
 			lstAgrpPerTMP = service.buscarDinamico(filtro.addOrder(Order.desc("codSoli")));
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug("error al obtener la lista de revocados "+  e.toString());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la lista de AgrupPersonas -solicitudes",e);
 		}
 		
 		List<String> tmpAgrupSol = new ArrayList<String>();
@@ -2278,8 +2269,7 @@ public class SeguimientoMB
 		try {
 			lstSolNivTMP = service.buscarDinamico(filtro);
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.info("error al obtener la lista de solicitudes x nivel "+  e.toString());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la lista de Solicitudes por Nivel",e);
 		}
 		
 		List<String> tmpSol = new ArrayList<String>();
@@ -2308,7 +2298,7 @@ public class SeguimientoMB
 		try {
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
 		} catch (Exception ex) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al busquedaSolicitudxCodigo: "+ ex.getStackTrace());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al busquedaSolicitudxCodigo: ",ex);
 		}
 
 		if (solicitudes.size() == 0) 
@@ -2338,7 +2328,7 @@ public class SeguimientoMB
 		try {
 			lstHistorial = busqHisDAO.buscarDinamico(filtro);
 		} catch (Exception e) {
-			logger.debug("Error al buscar en historial de solicitudes");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"el historial de solicitudes: ",e);
 		}
 		
 		lstSolicitudesSelected.clear();
@@ -2352,7 +2342,7 @@ public class SeguimientoMB
 			try {
 				lstSolNivel = busqSolNivDAO.buscarDinamico(filtro2);
 			} catch (Exception e) {
-				logger.debug("Error al buscar los estados de los niveles en las solicitudes");
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"los estados de los nivel en las solicitudes: ",e);
 			}
 			
 			for (TiivsSolicitudNivel tmp: lstSolNivel)
@@ -2391,7 +2381,7 @@ public class SeguimientoMB
 		try {
 			lstHistorial = busqHisDAO.buscarDinamico(filtro);
 		} catch (Exception e) {
-			logger.debug("Error al buscar en historial de solicitudes");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"el historial de solicitudes en validarSolicitudEnRevision(): ",e);
 		}
 		
 		lstSolicitudesSelected.clear();
@@ -2427,7 +2417,7 @@ public class SeguimientoMB
 		try {
 			lstHistorial = busqHisDAO.buscarDinamico(filtro);
 		} catch (Exception e) {
-			logger.debug("Error al buscar en historial de solicitudes");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"el historial de solicitudes en validarSolicitudRevocada(): ",e);
 		}
 		
 		lstSolicitudesSelected.clear();
@@ -2477,7 +2467,7 @@ public class SeguimientoMB
 				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"estados es:["+tmpLista.size()+"].");
 			}
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"los codigos de estados:"+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"los codigos de estados:",e);
 		}
 		
 		if (tmpLista.size()>0)
@@ -2510,7 +2500,7 @@ public class SeguimientoMB
 		try {
 			tmpLista = busDAO.buscarDinamico(filtro);
 		} catch (Exception e) {
-			logger.debug("Error al buscar codigos de estados");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la lista de Estados por codigo: ",e);
 		}
 		
 		if (tmpLista.size()>0)
@@ -2628,9 +2618,8 @@ public class SeguimientoMB
 				lstTmp = ofiDAO.buscarDinamico(filtroOfic);
 				combosMB.setLstOficina(ofiDAO.buscarDinamico(filtroOfic));
 				combosMB.setLstOficina1(ofiDAO.buscarDinamico(filtroOfic));
-
 			} catch (Exception exp) {
-				logger.debug("No se pudo encontrar la oficina");
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la lista de Oficinas: ",exp);
 			}
 
 			if (lstTmp.size() == 1) {
@@ -2647,7 +2636,7 @@ public class SeguimientoMB
 			try {
 				combosMB.setLstTerritorio(terrDAO.buscarDinamico(filtroTerr));
 			} catch (Exception e1) {
-				logger.debug("Error al cargar el listado de territorios");
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la lista de Territorios: ",e1);
 			}
 
 			// Cargar combos de oficina
@@ -2659,7 +2648,7 @@ public class SeguimientoMB
 				combosMB.setLstOficina1(ofiDAO.buscarDinamico(filtroOfic));
 
 			} catch (Exception exp) {
-				logger.debug("No se pudo encontrar la oficina");
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la lista de Oficinas: ",exp);
 			}
 		}
 	}
@@ -2676,16 +2665,13 @@ public class SeguimientoMB
 	{
 		String resultado="";
 		if (codigo!= null) {
-			for (TipoDocumento tmp: combosMB.getLstTipoDocumentos())
-			{
-				if (codigo.equalsIgnoreCase(tmp.getCodTipoDoc())) 
-				{
+			for (TipoDocumento tmp: combosMB.getLstTipoDocumentos()){
+				if (codigo.equalsIgnoreCase(tmp.getCodTipoDoc())) {
 					resultado = tmp.getDescripcion();
 					break;
 				}
 			}
 		}
-		
 		return resultado;
 	}
 	
@@ -2693,23 +2679,19 @@ public class SeguimientoMB
 	{
 		String resultado="";
 		if (codigo!= null) {
-			for (TiivsOperacionBancaria tmp: combosMB.getLstOpeBancaria())
-			{
-				if (codigo.equalsIgnoreCase(tmp.getCodOperBan())) 
-				{
+			for (TiivsOperacionBancaria tmp: combosMB.getLstOpeBancaria()){
+				if (codigo.equalsIgnoreCase(tmp.getCodOperBan())) {
 					resultado = tmp.getDesOperBan();
 					break;
 				}
 			}
 		}
-		
 		return resultado;
 	}
 	
 	private void setearTextoTotalResultados(String cadena, int total) {
 		if (total == 1) {
-			setTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS
-					+ total + ConstantesVisado.MSG_REGISTRO);
+			setTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS+ total + ConstantesVisado.MSG_REGISTRO);
 		} else {
 			setTextoTotalResultados(cadena);
 		}
@@ -2766,7 +2748,7 @@ public class SeguimientoMB
 		try {
 			oficinas = oficinaDAO.buscarDinamico(filtro);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la lista de Oficinas en completeCodOficina: ",e);
 		}
 
 		for (TiivsOficina1 oficina : oficinas) 
@@ -2789,22 +2771,15 @@ public class SeguimientoMB
 	public List<TiivsOficina1> completeNomOficina(String query) 
 	{	
 		List<TiivsOficina1> results = new ArrayList<TiivsOficina1>();
-
-		for (TiivsOficina1 oficina : combosMB.getLstOficina1()) 
-		{
-			if (oficina.getCodOfi() != null) 
-			{
-				String texto = oficina.getDesOfi();
-				
-				if (texto.contains(query.toUpperCase())) 
-				{
+		for (TiivsOficina1 oficina : combosMB.getLstOficina1()) {
+			if (oficina.getCodOfi() != null) {
+				String texto = oficina.getDesOfi();				
+				if (texto.contains(query.toUpperCase())) {
 					oficina.setNombreDetallado(oficina.getCodOfi()+"-"+oficina.getDesOfi());
-					
 					results.add(oficina);
 				}
 			}
 		}
-
 		return results;
 	}
 	
@@ -2837,52 +2812,41 @@ public class SeguimientoMB
 						//&& pers.getApePat().toUpperCase() != ""
 						//&& pers.getApeMat().toUpperCase() != ""
 					{
-						
 						String nombreCompletoMayuscula = "".concat(pers.getNombre()!=null?pers.getNombre().toUpperCase():"")
 								.concat(" ").concat(pers.getApePat()!=null?pers.getApePat().toUpperCase():"")
 								.concat(" ").concat(pers.getApeMat()!=null?pers.getApeMat().toUpperCase():"");
 								/*pers.getNombre().toUpperCase()+ " " 
 								+ pers.getApePat().toUpperCase() + " "
 								+ pers.getApeMat().toUpperCase();*/
-
 						String nombreCompletoMayusculaBusqueda = "".concat(pers.getApePat()!=null?pers.getApePat().toUpperCase():"")
 								.concat(" ").concat(pers.getApeMat()!=null?pers.getApeMat().toUpperCase():"")
 								.concat(" ").concat(pers.getNombre()!=null?pers.getNombre().toUpperCase():"");
 								/*pers.getApePat().toUpperCase()+ " "
 								+ pers.getApeMat().toUpperCase()
 								+ " " + pers.getNombre().toUpperCase();*/
-
-						if (nombreCompletoMayusculaBusqueda.contains(query
-								.toUpperCase())) {
-
+						if (nombreCompletoMayusculaBusqueda.contains(query.toUpperCase())) {
 							pers.setNombreCompletoMayuscula(nombreCompletoMayuscula);
-
 							lstTiivsPersonaResultado.add(pers);
 						}
 					}
 				//}
-				
 			}
 		}
-
 		return lstTiivsPersonaResultado;
 	}
 	
 	public void buscarOficinaPorCodigo(ValueChangeEvent e) 
 	{
-		logger.debug("Buscando oficina por codigo: " + e.getNewValue());
-		
+		logger.debug("Buscando oficina por codigo: " + e.getNewValue());		
 		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
-		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,
-				e.getNewValue()));
+		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,e.getNewValue()));
 
 		List<TiivsOficina1> lstTmp = new ArrayList<TiivsOficina1>();
-
 		try {
 			lstTmp = ofiDAO.buscarDinamico(filtroOfic);
 		} catch (Exception exp) {
-			logger.debug("No se pudo encontrar el nombre de la oficina");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"el nombre de la oficina por codigo: ",exp);
 		}
 		
 		if (lstTmp.size() == 1) 
@@ -2895,22 +2859,16 @@ public class SeguimientoMB
 	public String buscarDesTerritorio(String codigoTerritorio) 
 	{
 		String resultado = "";
-		//logger.debug("Buscando Territorio por codigo: " + codigoTerritorio);
-		// System.out.println("Buscando Territorio por codigo: " +
-		// codigoTerritorio);
-
 		GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroTerr = Busqueda.forClass(TiivsTerritorio.class);
-		filtroTerr.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_TERRITORIO,
-				codigoTerritorio));
+		filtroTerr.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_TERRITORIO,codigoTerritorio));
 
 		List<TiivsTerritorio> lstTmp = new ArrayList<TiivsTerritorio>();
-
 		try {
 			lstTmp = terrDAO.buscarDinamico(filtroTerr);
 		} catch (Exception exp) {
-			logger.debug("No se pudo encontrar el nombre del territorio");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la descripcion de territorios: ",exp);
 		}
 
 		if (lstTmp.size() == 1) {
@@ -2921,62 +2879,51 @@ public class SeguimientoMB
 	
 	/*Probar cuando la tabla miembro tenga el registro 0237 (con cualquiera)*/
 	public TiivsTerritorio buscarTerritorioPorOficina(String codOficina)
-	{   TiivsTerritorio terrTMP = new TiivsTerritorio();
-		try {
+	{   
+		TiivsTerritorio terrTMP = new TiivsTerritorio();
+		try {			
+			int i=0;
+			int j=0;
+			String codTerr="";
+			String desTerr="";
 			
-		
-		int i=0;
-		int j=0;
-		String codTerr="";
-		String desTerr="";
-		
-		
-		for (;i<combosMB.getLstOficina().size();i++)
-		{
-			if (combosMB.getLstOficina().get(i).getCodOfi().trim().equals(codOficina))
-			{
-				codTerr=combosMB.getLstOficina().get(i).getTiivsTerritorio().getCodTer();
-				break;
-			}
-		}
-		
-		logger.info("Cod Territorio encontrado:" + codTerr);
-		
-		if (codTerr.length()>0)
-		{
-			for (;j<combosMB.getLstTerritorio().size();j++)
-			{
-				if (combosMB.getLstTerritorio().get(j).getCodTer().equals(codTerr))
-				{
-					desTerr=combosMB.getLstTerritorio().get(j).getDesTer();
+			for (;i<combosMB.getLstOficina().size();i++){
+				if (combosMB.getLstOficina().get(i).getCodOfi().trim().equals(codOficina)){
+					codTerr=combosMB.getLstOficina().get(i).getTiivsTerritorio().getCodTer();
 					break;
 				}
 			}
+			logger.info("Cod Territorio encontrado:" + codTerr);
+			
+			if (codTerr.length()>0) {
+				for (;j<combosMB.getLstTerritorio().size();j++){
+					if (combosMB.getLstTerritorio().get(j).getCodTer().equals(codTerr)){
+						desTerr=combosMB.getLstTerritorio().get(j).getDesTer();
+						break;
+					}
+				}
 						
-			terrTMP.setCodTer(codTerr);
-			terrTMP.setDesTer(desTerr);
-		}
+				terrTMP.setCodTer(codTerr);
+				terrTMP.setDesTer(desTerr);
+			}
+			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"el territorioPorOficina: ",e);
 		}
 		return terrTMP;
 	}
 	
 	public void buscarOficinaPorNombre(ValueChangeEvent e) 
 	{
-		logger.debug("Buscando oficina por nombre: " + e.getNewValue());
-		
 		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
-		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,
-				e.getNewValue()));
+		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,e.getNewValue()));
 
 		List<TiivsOficina1> lstTmp = new ArrayList<TiivsOficina1>();
-
 		try {
 			lstTmp = ofiDAO.buscarDinamico(filtroOfic);
 		} catch (Exception exp) {
-			logger.debug("No se pudo encontrar el codigo de la oficina");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"el buscarOficinaPorNombre(): ",exp);
 		}
 
 		if (lstTmp.size() == 1) {
@@ -2986,8 +2933,8 @@ public class SeguimientoMB
 	}
 	
 	public void obtenerHistorialSolicitud(){
-		logger.info("Obteniendo Historial ");
-		logger.info("Codigo de solicitud : " + selectedSolicitud.getCodSoli());
+		logger.info("=== obtenerHistorialSolicitud() ===");
+		logger.info("[Obt_Historial]-CodSol:" + selectedSolicitud.getCodSoli());
 		
 		String sCodSolicitud=selectedSolicitud.getCodSoli();
 		
@@ -3000,12 +2947,12 @@ public class SeguimientoMB
 
 		try {
 			lstHist = histDAO.buscarDinamico(filtroHist);
+			if(lstHist!=null){
+				logger.debug("Numero de registros historial encontrados:"+lstHist.size());
+			}
 		} catch (Exception exp) {
-			logger.debug("No se pudo encontrar el historial de la solicitud");			
-			exp.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+" el Historial de la Solicitud ",exp);
 		}
-				
-		logger.info("Numero de registros encontrados:"+lstHist.size());
 		
 		if(lstHist!=null && lstHist.size()>0){
 			lstSeguimientoDTO = new ArrayList<SeguimientoDTO>();
@@ -3048,11 +2995,9 @@ public class SeguimientoMB
 				seg.setMovimiento(h.getId().getMovimiento());
 				lstSeguimientoDTO.add(seg);				
 			}
-		}
-		
+		}		
 		
 	}
-	
 	
 	
 	public List<TiivsSolicitud> getSolicitudes() {
