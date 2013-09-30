@@ -17,6 +17,7 @@ public class Persona {
 	private String fechaNac;
 	private String telefono;
 	private String email;
+	private String codCentral;
 
 	/**
 	 * @return the id
@@ -162,6 +163,14 @@ public class Persona {
 	 */
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
+	}
+
+	public String getCodCentral() {
+		return codCentral;
+	}
+
+	public void setCodCentral(String codCentral) {
+		this.codCentral = codCentral;
 	}
 	
 }
