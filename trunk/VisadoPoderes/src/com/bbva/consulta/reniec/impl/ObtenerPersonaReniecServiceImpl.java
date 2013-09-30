@@ -146,7 +146,6 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 
 			BBVA_RENIEC_WSDLSOAP_HTTP_ServiceLocator loc = new BBVA_RENIEC_WSDLSOAP_HTTP_ServiceLocator();
 			
-			//TODO [RENIEC] Cambiar valor
 			BBVA_RENIEC_WSDLPortType port= loc.getSOAP_HTTP_Port();
 			//BBVA_RENIEC_WSDLPortType port = loc.getSOAP_HTTP_Port(new URL(getVvUrl()));
 			
