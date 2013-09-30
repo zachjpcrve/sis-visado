@@ -104,7 +104,7 @@
 								<h:outputText styleClass="outputText" id="txtTipoSol" value="T. de Solicitud:" />
 									
 								<p:selectCheckboxMenu id="scmTSolicitud" label="--TODOS--" value="#{seguimientoMB.lstTipoSolicitudSelected}" 
-											panelStyle="width:300px;" style="width:167px;" scrollHeight="250">  
+											panelStyle="width:360px;" style="width:170px;" scrollHeight="250">  
 								      <f:selectItems value="#{seguimientoMB.combosMB.tiposSolicitud}" />  
 								 </p:selectCheckboxMenu>
 									
@@ -171,8 +171,8 @@
 								<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstNivel"  />	
 								<p:tooltip for="toolEstNivel" value="Estados del Nivel" showEffect="fade" hideEffect="fade" />	
 								<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio:" />
-								<p:selectCheckboxMenu id="scmEstudio" label="--TODOS--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:120px;" 
-											style="width:160px;" scrollHeight="100">  
+								<p:selectCheckboxMenu id="scmEstudio" label="--TODOS--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:170px;" 
+											style="width:170px;" scrollHeight="100">  
 									        <f:selectItems value="#{consultarSolicitudMB.combosMB.estudios}" />  
 								</p:selectCheckboxMenu>  
 								<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstudio"/>
