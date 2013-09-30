@@ -2,12 +2,9 @@ package com.hildebrando.visado.filter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import javax.faces.context.FacesContext;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -18,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.myfaces.context.servlet.RequestHeaderMap;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -26,7 +22,6 @@ import com.bbva.persistencia.generica.dao.SeguridadDao;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeCargo;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeOficina;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
-import com.grupobbva.seguridad.client.webservice.domain.Opcion;
 import com.hildebrando.visado.dto.MiembroDto;
 
 
@@ -40,22 +35,20 @@ public class FiltroUpdUsuario implements Filter {
      * Default constructor. 
      */
     public FiltroUpdUsuario() {
-        // TODO Auto-generated constructor stub
+       
     }
 
 	/**
 	 * @see Filter#destroy()
 	 */
 	public void destroy() {
-		// TODO Auto-generated method stub
+		
 	}
 
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response,  FilterChain chain) throws IOException, ServletException {
-		// TODO Auto-generated method stub
-		// place your code here
 		HttpSession sesion = ((HttpServletRequest)request).getSession();
 		String explorador="";
 		try {
@@ -154,9 +147,8 @@ public class FiltroUpdUsuario implements Filter {
 			
 	
 		} catch (Exception e) {
-			e.printStackTrace();			
+			logger.error(e);			
 		}				
-		// pass the request along the filter chain
 		chain.doFilter(request, response);
 	}
 
@@ -164,7 +156,7 @@ public class FiltroUpdUsuario implements Filter {
 	 * @see Filter#init(FilterConfig)
 	 */
 	public void init(FilterConfig fConfig) throws ServletException {
-		// TODO Auto-generated method stub
+		
 	}
 
 	
