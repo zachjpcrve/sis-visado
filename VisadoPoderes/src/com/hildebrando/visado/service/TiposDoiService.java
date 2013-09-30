@@ -25,9 +25,7 @@ public class TiposDoiService {
 		try {
 			service.insertarMerge(documento);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : registrar: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : registrar: "+ ex.getLocalizedMessage());
 		}
 
 	}
@@ -64,9 +62,7 @@ public class TiposDoiService {
 				}*/
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : listarDocumentos: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : listarDocumentos: "+ ex.getLocalizedMessage());
 		}
 		return documentos;
 	}
@@ -90,9 +86,7 @@ public class TiposDoiService {
 			parse = (List<E>) secuencial;
 			contador = parse.get(0).toString();
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : obtenerMaximo: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : obtenerMaximo: "+ ex.getLocalizedMessage());
 		}
 
 		return contador;
@@ -111,9 +105,7 @@ public class TiposDoiService {
 					"id.codMult",
 					ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOCUMENTO)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : cargarComboTipoDocumento: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : cargarComboTipoDocumento: "+ ex.getLocalizedMessage());
 		}
 		return documentos;
 	}
@@ -133,9 +125,7 @@ public class TiposDoiService {
 					Restrictions.eq("id.codMult", codMultitabla)).add(
 					Restrictions.eq("id.codElem", codElemento)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : editarDocumento: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : editarDocumento: ",ex);
 		}
 		return documentoEditar;
 	}
@@ -156,8 +146,7 @@ public class TiposDoiService {
 		try {
 			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA
-					+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas(obtenerCodPersonaJuridica): ",e);
 		}
 
 		for (TiivsMultitabla multi : listaMultiTabla) {
