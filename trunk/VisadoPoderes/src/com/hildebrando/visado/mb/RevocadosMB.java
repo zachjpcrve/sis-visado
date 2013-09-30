@@ -25,6 +25,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.net.ftp.FTPClient;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -165,6 +166,9 @@ public class RevocadosMB {
 	private String sAliasTemporal;
 	private Integer flagLinkRevocados;
 	String cadenaEscanerFinal = "";
+	
+	@ManagedProperty(value = "#{visadoDocumentosMB}")
+	private VisadoDocumentosMB visadoDocumentosMB;
 	
 	public UploadedFile getFileUpload() {
 		return fileUpload;
@@ -1390,9 +1394,17 @@ public class RevocadosMB {
 		setFlagGuardar(false);
 		
 		// Se agregaron lineas
-		flagLinkRevocados = 0;
-		sAliasTemporal = null;
-		aliasCortoDocumento = null;
+		String extension = null;
+		if(revocadoEdit.getAliasArchivo()!=null){
+			extension = revocadoEdit.getAliasArchivo().substring(revocadoEdit.getAliasArchivo().lastIndexOf("."));
+			flagLinkRevocados = 1;
+			sAliasTemporal = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA + extension;
+			aliasCortoDocumento = revocadoEdit.getAliasArchivo();	
+		}else{
+			flagLinkRevocados = 0;
+			sAliasTemporal = null;
+			aliasCortoDocumento = null;
+		}
 	}
 	
 	public void editPendRevocadoNuevo() {
@@ -1415,6 +1427,7 @@ public class RevocadosMB {
 		sAliasTemporal = null;
 		aliasCortoDocumento = null;
 
+		visadoDocumentosMB.setDocumentosLeer(ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA + ConstantesVisado.EXTENSION_PDF);
 	}
 	
 	public void editActRevocado() {
@@ -1423,9 +1436,20 @@ public class RevocadosMB {
 		personaClientesActivoEdit.add(revocadoEdit);
 		
 		// Se agregan lineas
-		sAliasTemporal = null;
+		String extension = null;
+		if(revocadoEdit.getAliasArchivo()!=null){
+			extension = revocadoEdit.getAliasArchivo().substring(revocadoEdit.getAliasArchivo().lastIndexOf("."));
+			flagLinkRevocados = 1;
+			sAliasTemporal = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA + extension;
+			aliasCortoDocumento = revocadoEdit.getAliasArchivo();	
+		}else{
+			flagLinkRevocados = 0;
+			sAliasTemporal = null;
+			aliasCortoDocumento = null;
+		}
+		/*sAliasTemporal = null;
 		aliasCortoDocumento = null;
-		flagLinkRevocados = 0;
+		flagLinkRevocados = 0;*/
 	}
 	
 	public void obtenerPersonaSeleccionada() {
@@ -1528,6 +1552,9 @@ public class RevocadosMB {
 		
 		objTiivsPersonaBusquedaDlg= new TiivsPersona();
 		objTiivsPersonaAgregar = new TiivsPersona();
+		fileUpload = null;
+		aliasCortoDocumento = null;
+		sAliasTemporal = null;
 		
 		//objTiivsPersonaBusquedaDlg.setTipDoi("");
 		//objTiivsPersonaBusquedaDlg.setNumDoi("");
@@ -2857,53 +2884,130 @@ public class RevocadosMB {
 	private boolean cargarDocumentoRevocatoria(){
 		logger.info("=== cargarDocumentoRevocatoria() ===");
 		logger.info("fileUpload: " + fileUpload);
+		byte fileBytes[] = null;
+		File fichTemp = null;
+		FileOutputStream canalSalida = null;
+		String sUbicacionTemporal = "";
+		sUbicacionTemporal = Utilitarios
+				.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+				+ File.separator;
+		
+		TiivsParametros parametro = obtenerParametro();
+		boolean exito = true;
+		
 		if(fileUpload!=null){
 			aliasCortoDocumento = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA;
 			String extension = fileUpload.getFileName().substring(getFileUpload().getFileName().lastIndexOf("."));
 			sAliasTemporal = aliasCortoDocumento + extension;
-			
-			logger.info("aliasCortoDocumento: " + aliasCortoDocumento);
-			logger.info("sAliasTemporal: " + sAliasTemporal);
-			
-			byte fileBytes[] = getFileUpload().getContents();
-			File fichTemp = null;
-			String sUbicacionTemporal = "";
-			FileOutputStream canalSalida = null;
-			
+			fileBytes = getFileUpload().getContents();
 			try {
-				//Obteniendo ubicación del file server			
-				sUbicacionTemporal = Utilitarios
-						.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
-						+ File.separator;
-				
 				File fDirectory = new File(sUbicacionTemporal);
-				fDirectory.mkdirs();	
-				if(aliasCortoDocumento.equals("")){
+				fDirectory.mkdirs();
+				if (aliasCortoDocumento.equals("")) {
 					aliasCortoDocumento = "temp";
 				} else {
 					aliasCortoDocumento = aliasCortoDocumento + "_";
 				}
 				
-				fichTemp = File.createTempFile(aliasCortoDocumento, extension, new File(sUbicacionTemporal));
+				fichTemp = File.createTempFile(aliasCortoDocumento, extension,
+						new File(sUbicacionTemporal));
 				
 				aliasCortoDocumento = fichTemp.getName();
 				logger.debug("  NombreArchivoTEMP: " + aliasCortoDocumento);
-				
+
 				canalSalida = new FileOutputStream(fichTemp);
 				canalSalida.write(fileBytes);
-				
+
 				canalSalida.flush();
 				canalSalida.close();
 				return true;
+			} catch (IOException e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION
+						+ "IO Exception:" + e);
+				e.printStackTrace();
+			}
+		}else{
+			if(aliasCortoDocumento!=null && sAliasTemporal!=null){
+				sUbicacionTemporal = Utilitarios
+						.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+						+ File.separator;
+				String ruta_files = sUbicacionTemporal + File.separator + 
+									ConstantesVisado.FILES + File.separator;
 				
-			} catch (Exception e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IO Exception:"+e);
-				return false;
+				// Instanciamos la conexión por FTP con el file server
+				FTPClient cliente=new FTPClient();
+				try {
+					cliente.connect(parametro.getServer());
+				    boolean login=cliente.login(parametro.getLoginServer(),parametro.getPassServer());
+				    if(login){
+				    	logger.info("+++ Conexión file server exitosa ");
+				    	cliente.changeWorkingDirectory(parametro.getCarpetaRemota()); //nos movemos dentro del arbol de directorios
+				    	FileInputStream fis = new FileInputStream(new File(ruta_files + aliasCortoDocumento)); 
+				    	cliente.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
+				    	boolean res = cliente.storeFile(aliasCortoDocumento, fis );
+				    	if(!res){
+			    			logger.error("+++ ERROR moviendo archivo: " + aliasCortoDocumento);
+			    			return false;
+			    		}
+				    	fis.close();
+				    	eliminarTemporal(ruta_files);
+				    	/*for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){
+				    		FileInputStream fis = new FileInputStream(new File(sUbicacionTemporal + anexo.getAliasTemporal())); 
+				    		cliente.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
+				    		boolean res = cliente.storeFile(anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo(), fis );
+				    		if(!res){
+				    			logger.error("+++ ERROR moviendo archivo: " + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
+				    			return false;
+				    		}
+				    		fis.close();
+						}*/
+				    	
+				    }
+				} catch (Exception e) {
+					exito = false;
+					logger.error("+++ERROR al instanciar FTP: " + e.getMessage());
+				} finally{
+					try {
+						if(cliente!=null){
+							cliente.logout();
+							cliente.disconnect();	
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+			       
+				}
 			}
 		}
-		//org.primefaces.event.FileUploadEvent event
+		logger.info("aliasCortoDocumento: " + aliasCortoDocumento);
+		logger.info("sAliasTemporal: " + sAliasTemporal);
 		logger.info("=== termina metodo cargarDocumentoRevocatoria() ===");
-		return false;
+		return exito;
+	}
+	private void eliminarTemporal(String ruta_temporal){
+		if(ruta_temporal!=null){
+			File file = new File(ruta_temporal + aliasCortoDocumento);
+			if(file.delete()){
+				logger.info("Se eliminó correctamente el archivo: " + aliasCortoDocumento);
+			}else{
+				logger.error("+++ Problemas al eliminar archivo: " + aliasCortoDocumento);
+			}
+		}
+	}
+	
+	private TiivsParametros obtenerParametro(){
+		GenericDao<TiivsParametros, Object> multiDAO = (GenericDao<TiivsParametros, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsParametros.class);
+		List<TiivsParametros> parametros = new ArrayList<TiivsParametros>();
+		try {
+			parametros = multiDAO.buscarDinamico(filtro);
+			if(parametros.size()>0){
+				return parametros.get(0);
+			}
+		} catch (Exception e) {
+			logger.error("+++ERROR obteniendo parametros: " + e.getMessage());
+		}	
+		return null;
 	}
 	
 	 public void handleFileUpload(FileUploadEvent event) {  
@@ -2934,76 +3038,33 @@ public class RevocadosMB {
 		}
 		logger.info("=== fin de actualizarArchivo() === ");
 	 }
-	
-	
-	/**
-	 * Metodo que se encarga de adjuntar y asociar el archivo 
-	 * seleccionado a la lista de documentos requeridos por 
-	 * tipo de solicitud en la aplicacion
-	 * **/
-	public void agregarDocumentoRevocatoria() {
-		try{
-			logger.info("=== agregarDocumentoRevocatoria() ===");
-			aliasCortoDocumento = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA;
-			sAliasTemporal = cargarUnicoPDF(aliasCortoDocumento);
-
-			if (sAliasTemporal == null || sAliasTemporal.trim() == "") {
-				logger.debug("El sAliasTemporal es nulo o vacio.");
-				return;
-			}
-
-			String sExtension = sAliasTemporal.substring(sAliasTemporal
-					.lastIndexOf("."));
-			aliasCortoDocumento += sExtension;
-
-			logger.info("[Adjuntar]-aliasArchivo: " + aliasCortoDocumento);
-			logger.info("[Adjuntar]-aliasArchivoTemporal: " + sAliasTemporal);
-
-			//AGREGAR NUEVO CAMPO EN LA TABLA REVOCATORIA QUE GUARDE EL NOMBRE DEL ARCHIVO TEMPORAL
-			
-		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al agregarDocumentoRevocatoria():"+e);
-		}	
-	}
-	
-	/**
-	 * Metodo que se encarga de cargar los archivos .PDF hacia el FileServer
-	 * @return boolean true/false Indica el exito de la operacion
-	 * */
-	public boolean cargarArchivosFileServer(){			
-		logger.info("========= cargarArchivosFileServer() ========");		
-		boolean exito = true;
-				
-		String ubicacionFinal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)  + File.separator;		
-		String sUbicacionTemporal = ubicacionFinal + ConstantesVisado.FILES + File.separator;
-				
-		logger.info("[CARGAR-FILESERVER]-Ubicacion final "+ ubicacionFinal);
-		logger.info("[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);		
+	 
+	 /*
+	  * Metodo que actualiza la lista de documentos, este método es indirectamente
+	  * invocado desde el applet
+	  * */
+	 public void actualizarDocumentosRevocados(ActionEvent ae){
+		logger.info("====== actualizarDocumentosRevocados =====");
+		logger.info("[Applet-Actualizar]-Documentos LEIDOS: " + visadoDocumentosMB.getDocumentosLeidos());
+		logger.info("[Applet-Actualizar]-Documentos CARGADOS: " + visadoDocumentosMB.getDocumentosCargados());
+		 
+		String []aDocumentosLeidos = visadoDocumentosMB.getDocumentosLeidos().split(",");
+		String []aDocumentosCargados = visadoDocumentosMB.getDocumentosCargados().split(",");
 		
-		//sAliasTemporal
-		File srcFile = new File(sUbicacionTemporal + sAliasTemporal);	
-		
-		/*for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){		
-			logger.debug("======== Mover archivo ========");
-			File srcFile = new File(sUbicacionTemporal + anexo.getAliasTemporal());	
-			logger.debug("srcFile:"+sUbicacionTemporal + anexo.getAliasTemporal());
-			File destFile = new File(ubicacionFinal + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
-			logger.debug("destFile:"+ubicacionFinal + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
-			try {
-				FileUtils.copyFile(srcFile, destFile);
-				logger.debug("Despues de mover el archivo ...");
-			} catch (IOException e) {
-				logger.error("Error al mover el archivo al fileServer", e);
-			} catch (Exception ex) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al mover archivo al fileServer:" + ex);
+		//Actualiza lista de documentos		
+		if(aDocumentosLeidos.length == aDocumentosCargados.length){
+			//sAliasTemporal
+			String extension = null;
+			logger.info("[Applet-Actualizar]-TAMANIO ARCHIVOS: " + aDocumentosCargados.length);
+			for(String archivo:aDocumentosCargados){
+				aliasCortoDocumento = archivo;
+				extension = archivo.substring(archivo.lastIndexOf("."));
 			}
-			if(!destFile.isFile() && destFile.length()>0){
-				exito = false;
-			}
-		}*/
-		logger.debug("exito:"+exito);
-		return exito;		
-	}
+			sAliasTemporal = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA + extension;
+			flagLinkRevocados = 1;
+		}
+	 }
+	
 	
 	public String descargarDocumento() {
 		logger.debug("=== inicia descargarDocumento() ====");
@@ -3607,5 +3668,13 @@ public class RevocadosMB {
 
 	public void setCadenaEscanerFinal(String cadenaEscanerFinal) {
 		this.cadenaEscanerFinal = cadenaEscanerFinal;
+	}
+	
+	public VisadoDocumentosMB getVisadoDocumentosMB() {
+		return visadoDocumentosMB;
+	}
+
+	public void setVisadoDocumentosMB(VisadoDocumentosMB visadoDocumentosMB) {
+		this.visadoDocumentosMB = visadoDocumentosMB;
 	}
 }

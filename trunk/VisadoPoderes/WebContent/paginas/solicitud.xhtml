@@ -415,8 +415,10 @@
 																				applet = this.document
 																						.getElementById('appletVisor');
 																				//applet.actualizar();
-																				applet
-																						.actualizarConPermisos();
+																				/*applet
+																						.actualizarConPermisos();*/
+																				   applet.		
+																					     actualizarConPermisosFTP();
 																				return false;
 																			}
 
@@ -461,6 +463,15 @@
 																				value="#{visadoDocumentosMB.carpetaClienteLog}" />
 																			<param name="url_server"
 																				value="#{visadoDocumentosMB.urlCarga}" />
+																			<param name="urlTemporal"
+																				value="#{visadoDocumentosMB.urlTemporal}" />
+																			<param name="host"
+																				value="#{visadoDocumentosMB.host}" />
+																			<param name="user"
+																				value="#{visadoDocumentosMB.user}" />
+																			<param name="pass"
+																				value="#{visadoDocumentosMB.pass}" />
+																					
 																		</applet>
 																	</h:panelGroup> <h:inputHidden id="idDocumentosLeidos"
 																		value="#{visadoDocumentosMB.documentosLeidos}" /> <h:inputHidden

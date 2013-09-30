@@ -1,5 +1,6 @@
 package com.hildebrando.visado.mb;
 
+import java.io.File;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -41,6 +42,7 @@ public class VisadoDocumentosMB {
 	private String directory="";
 	private String carpetaClienteLog=ConstantesVisado.CARPETA_LOG_CLIENTE;
 	private String urlCarga="";
+	private String urlTemporal = "";
 	
 	public VisadoDocumentosMB(){
 		iniciarlizarParametros();
@@ -69,6 +71,7 @@ public class VisadoDocumentosMB {
 			user = param.getLoginServer();
 			pass = param.getPassServer();
 			directory = param.getCarpetaRemota();
+			urlTemporal = directory + ConstantesVisado.FILES + File.separator;
 			
 			logger.info("[PARAMETROS_BD]-pathCliente:" + pathCliente);
 			logger.info("[PARAMETROS_BD]-host:" + host);
@@ -197,13 +200,14 @@ public class VisadoDocumentosMB {
 	public void setUrlCarga(String urlCarga) {
 		this.urlCarga = urlCarga;
 	}
-	
-	
 
-	
-	
-	
-	
+	public String getUrlTemporal() {
+		return urlTemporal;
+	}
+
+	public void setUrlTemporal(String urlTemporal) {
+		this.urlTemporal = urlTemporal;
+	}
 	
 	
 }
