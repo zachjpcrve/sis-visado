@@ -163,7 +163,7 @@
 					<p:commandButton id="idEditPend"
 						action="#{revocadosMB.editPendRevocado}"
 						rendered="#{revocado.flagEditPend}" icon="ui-icon-pencil"
-						update=":frmPendEdit:dtClientes" title="Editar Combinación"
+						update=":frmPendEdit:gridApodPod4,:frmPendEdit:pnlNuevo,:frmPendEdit:dtClientes" title="Editar Combinación"
 						oncomplete="dlgApoPodPendEdit.show();">
 						<f:setPropertyActionListener target="#{revocadosMB.revocadoEdit}"
 							value="#{revocado}"></f:setPropertyActionListener>
@@ -172,7 +172,7 @@
 					<p:commandButton id="idEditAct"
 						action="#{revocadosMB.editActRevocado}"
 						rendered="#{revocado.flagEditAct}" icon="ui-icon-pencil"
-						update=":frmActEdit:dtClientes" title="Editar Combinación"
+						update=":frmPendEdit:gridApodPod4,:frmPendEdit:pnlNuevo,:frmActEdit:dtClientes" title="Editar Combinación"
 						oncomplete="dlgApoPodActEdit.show();">
 						<f:setPropertyActionListener target="#{revocadosMB.revocadoEdit}"
 							value="#{revocado}"></f:setPropertyActionListener>
@@ -387,6 +387,7 @@
 					<p:spacer width="10" height="20" />
 
 					<p:fileUpload id="idfileUpload" mode="advanced"  
+									value="#{revocadosMB.fileUpload}"
 									sizeLimit="100000" update=":frmPendEdit:gridApodPod4"
 									showButtons="false"
 									auto="true"
@@ -405,7 +406,7 @@
 						</c:if>
 						<c:if test="#{revocadosMB.flagLinkRevocados==1}">
 							<h:commandLink id="downloadLink"
-									action="#{revocadosMB.descargarDocumento}" immediate="true"
+									action="#{revocadosMB.descargarDocumento}" immediate="true" 
 							>	
 							<h:outputText value="#{revocadosMB.sAliasTemporal}" />																			
 									<f:param name="nombreArchivo" value="#{revocadosMB.aliasCortoDocumento}"/>
@@ -419,10 +420,91 @@
 									onclick="return invocarEscaner('#{revocadosMB.cadenaEscanerFinal}');">
 					</p:commandButton> 
 					<p:commandButton value="Actualizar" id="btnActualizar"
-									 actionListener="#{revocadosMB.actualizarArchivo}"
-									 update=":frmPendEdit:gridApodPod4"
-									 ajax="true"
-									 />	
+									 onclick="return appletActualizar ();"
+									 />	<h:panelGroup
+																		id="idVisorApplet">
+
+																		<script type="text/javascript" language="javascript">
+																			function actualizarDocumentos(
+																					documentosLeidos,
+																					documentosCargados) {
+																				this.document
+																						.getElementById('frmPendEdit:idDocumentosLeidos').value = documentosLeidos;
+																				this.document
+																						.getElementById('frmPendEdit:idDocumentosCargados').value = documentosCargados;
+																				actDocumentos();
+																			}
+
+																			function appletActualizar() {
+																				applet = this.document
+																						.getElementById('appletVisor');
+																				//applet.actualizar();
+																				/*applet
+																						.actualizarConPermisos();*/
+																				   applet.		
+																					     actualizarConPermisosFTP();
+																				return false;
+																			}
+
+																			function appletEliminarDocumento() {
+																				codigoDocumento = this.document
+																						.getElementById('frmPendEdit:idCodigoDocumentoSelected').value;
+																				applet = this.document
+																						.getElementById('appletVisor');
+																				//applet.eliminarDocumento(codigoDocumento);
+																				applet
+																						.eliminarDocumentoConPermisos(codigoDocumento);
+																				return false;
+																			}
+																			
+																			function appletDeleteFilesAndRedirect(){																																								 
+																				redirect = this.document.getElementById('formRegistroToolBar:idResultRegistro').value;																																							
+																				//Si redirect no esta vacio entonces se realizó el registro de forma correcta
+																				if(redirect.length>0){
+																					applet = this.document.getElementById('appletVisor');																					
+																					try{
+																						applet.eliminarDocumentosConPermisos();
+																					}
+																					catch(err){}																					
+																					document.getElementById('frmPendEdit:btnRedirecionar').click()
+																				} 
+																			}
+																		</script>
+
+
+																		<!-- Applet Size: width='93px';height='24px  -->
+																		<applet name="appletVisor" id="appletVisor"
+																			code="com.hildebrando.visado.applet.AgregarDocumentos.class"
+																			archive="../../uploadFilesApplet.jar" width='1px'
+																			height='1px' mayscript="mayscript">
+																			<param name="path_cliente"
+																				value="#{visadoDocumentosMB.pathCliente}" />
+																			<param name="documentos_leer"
+																				value="#{visadoDocumentosMB.documentosLeer}" />
+																			<param name="directory"
+																				value="#{visadoDocumentosMB.directory}" />
+																			<param name="carpeta_cliente_log"
+																				value="#{visadoDocumentosMB.carpetaClienteLog}" />
+																			<param name="url_server"
+																				value="#{visadoDocumentosMB.urlCarga}" />
+																			<param name="urlTemporal"
+																				value="#{visadoDocumentosMB.urlTemporal}" />
+																			<param name="host"
+																				value="#{visadoDocumentosMB.host}" />
+																			<param name="user"
+																				value="#{visadoDocumentosMB.user}" />
+																			<param name="pass"
+																				value="#{visadoDocumentosMB.pass}" />
+																					
+																		</applet>
+																	</h:panelGroup> 
+																	<h:inputHidden id="idDocumentosLeidos"
+																		value="#{visadoDocumentosMB.documentosLeidos}" /> <h:inputHidden
+																		id="idDocumentosCargados"
+																		value="#{visadoDocumentosMB.documentosCargados}" />
+																	<p:remoteCommand name="actDocumentos" update=":frmPendEdit:gridApodPod4,:frmPendEdit:pnlNuevo,:frmPendEdit:idVisorApplet"
+																		process="@form"
+																		actionListener="#{revocadosMB.actualizarDocumentosRevocados}" />
 				</h:panelGrid>
 
 
@@ -804,7 +886,7 @@
 					 <td style="width:50px"><p:outputLabel value="Estado:" /></td>
 					 <td><h:outputText value="#{revocadosMB.revocadoVer.estado}"></h:outputText></td>
 					 <td colspan="20" align="right"><c:if test="#{revocadosMB.flagLinkRevocados==1}">
-							<h:commandLink id="downloadLinkVerRevocado"
+							<h:commandLink id="downloadLink"
 									action="#{revocadosMB.descargarDocumento}" immediate="true"
 							>	
 							<h:outputText value="#{revocadosMB.sAliasTemporal}" />																			
