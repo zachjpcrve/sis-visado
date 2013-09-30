@@ -136,7 +136,7 @@ public class CombosMB{
 		try {
 			lstMultitabla = multiDAO.buscarDinamico(filtroMultitabla);
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de multitablas: "+e);
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de multitablas: ",e);
 		}
 	}
 
@@ -261,13 +261,10 @@ public class CombosMB{
 					tmpTipoDoc.setCodTipoDoc(res.getId().getCodElem());
 					tmpTipoDoc.setDescripcion(res.getValor1().toUpperCase());
 					lstTipoDocumentosExtra2.add(tmpTipoDoc);
-				}				
-				
-
-				//logger.debug("Tamanio lista de tipos de documento: "+ lstTipoDocumentos.size());
+				}
 			}
-			
 		}
+		
 		if(lstTipoDocumentosExtra.size()!=0)
 			lstTipoDocumentos.add(lstTipoDocumentosExtra.get(0));
 		/*for (int i= 0 ; i< lstTipoDocumentosExtra2.size(); i++){
@@ -297,12 +294,13 @@ public class CombosMB{
 			filtro.addOrder(Order.asc("valor1"));
 			
 			tmpLista=service.buscarDinamico(filtro);
+			if(tmpLista!=null){
+				logger.debug("Tamanio lista de tipo de documentos: " + tmpLista.size());
+			}
 		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de tipos de documento: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de tipos de documento: ",e);
 		}
 		
-		logger.debug("Tamanio lista de tipo de documentos: " + tmpLista.size());
-				
 		for (TiivsMultitabla tmp: tmpLista)
 		{
 			TipoDocumento doc = new TipoDocumento();
@@ -317,8 +315,7 @@ public class CombosMB{
 	public void obtenerClasificacionPersona()
 	{
 		List<TiivsMultitabla> tmpLista = new ArrayList<TiivsMultitabla>();
-		//List<ComboDto> tmpClas = new ArrayList<ComboDto>();
-				
+		//List<ComboDto> tmpClas = new ArrayList<ComboDto>();				
 		try {
 			GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
@@ -328,7 +325,7 @@ public class CombosMB{
 			
 			tmpLista=service.buscarDinamico(filtro);
 		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de clasificacion de personas: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de clasificacion de personas: ",e);
 		}
 		
 		for (TiivsMultitabla tmp: tmpLista)
@@ -386,8 +383,7 @@ public class CombosMB{
 				}
 			}
 		} catch (Exception e) {
-
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION,e);
 		}
 		
 		
@@ -433,7 +429,7 @@ public class CombosMB{
 		filtroMiembro.add(Restrictions.eq("tiivsGrupo.codGrupo", ConstantesVisado.CODIGO_GRUPO_ABOGADOS));
 		lstAbogados=serviceMiembro.buscarDinamico(filtroMiembro);
 		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de abogados - miembro: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de abogados - miembro: ",e);
 		}
 		
 		// Carga combo de Operacion Bancaria
@@ -445,7 +441,7 @@ public class CombosMB{
 				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstOpeBancaria es:["+lstOpeBancaria.size()+"].");
 			}			
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de operaciones bancarias: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de operaciones bancarias: ",e);
 		}
        
         for (TiivsOperacionBancaria tmpLista: lstOpeBancaria)
@@ -472,7 +468,7 @@ public class CombosMB{
 				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstTipoSolicitud es:["+lstTipoSolicitud.size()+"].");
 			}
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de solicitud: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de solicitud: ",e);
 		}
 		
 		int x = 0;
@@ -488,8 +484,7 @@ public class CombosMB{
 		try {
 			lstTerritorio = terrDAO.buscarDinamico(filtroTerr);
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de territorios :"+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de territorios :",e);
 		}
 		
 		for (TiivsTerritorio tmpLista: lstTerritorio)
@@ -519,8 +514,7 @@ public class CombosMB{
 				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"Oficinas es: [" +lstOficina.size()+"].");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de oficinas: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de oficinas: ",e);
 		}
 		
 		for (TiivsOficina1 tmpLista: lstOficina1)
@@ -543,10 +537,8 @@ public class CombosMB{
 		
 		try {
 			lstSolOperBan = operBanDAO.buscarDinamico(filtroOperBan);
-			//logger.debug("TAMANIOO DE LAS OPERACIONES BANCARIAS POR SOLICITUD EN EL COMBOMB " +lstSolOperBan.size());
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de persona: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de persona: ",e);
 		}
 		
 		// Carga combo Nivel
@@ -556,9 +548,8 @@ public class CombosMB{
 		try {
 			lstNivel = nivelDAO.buscarDinamico(filtroNivel);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de niveles :"+e);
+		} catch (Exception e) {			
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de niveles :",e);
 		}
 		
 		int w = 0;
@@ -578,7 +569,7 @@ public class CombosMB{
 		try {
 			lstEstudio = estudioDAO.buscarDinamico(filtroEstudio);
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de estudios: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de estudios: ",e);
 		}
 
 		int j = 0;
@@ -595,7 +586,7 @@ public class CombosMB{
 		try {
 			lstTiempo = tDAO.buscarDinamico(filtroTiempo);
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de anio, mes y dia: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de anio, mes y dia: ",e);
 		}	
 		
 		// Carga data de Solicitud Nivel
