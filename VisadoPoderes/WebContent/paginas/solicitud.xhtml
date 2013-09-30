@@ -131,7 +131,7 @@
 																<td style="font-size: 0.9em">
 																	<p:autoComplete id="acNomOFina" value="#{solicitudRegMB.oficina}"
 																		completeMethod="#{solicitudRegMB.completeNomOficina}" var="ofi"
-																		converter="oficinaConverter" size="24" 
+																		converter="oficinaConverter" size="40" 
 																		itemLabel="#{ofi.descripcionMostrar}" itemValue="#{ofi}" 
 																		rendered="#{consultarSolicitudMB.flagMostrarACOficina}"/>
 																		
@@ -886,7 +886,7 @@
 								<p:selectOneMenu id="cboTipoDoi"
 									value="#{solicitudRegMB.objTiivsPersonaBusqueda.tipDoi}"
 									valueChangeListener="#{solicitudRegMB.cambiarRazonSocial}"																	
-									style="width:150px;">										 
+									style="width:180px;">										 
 									<p:ajax  update=":formRegistrar:pnlNuevo, :formRegistrar:inputHidden" event="change" />								
 									<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 									<f:selectItems
@@ -925,7 +925,7 @@
 							<p:selectOneMenu id="cboTipoDoi2"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.tipDoi}"
 								valueChangeListener="#{solicitudRegMB.cambiarRazonSocial}"
-								style="width:150px;">
+								style="width:180px;">
 								<p:ajax  update=":formRegistrar:pnlNuevo,:formRegistrar:inputHidden" event="change" />
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
 								<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="lOf"
@@ -951,7 +951,7 @@
 						<h:panelGrid columns="5" cellspacing="0" cellpadding="2">
 								<h:outputText id="outCodCentral" value="Código Central:" />
 								<h:inputText styleClass="inputTextPopup" id="txtCodCentral"
-									size="9" maxlength="8"
+									size="15" maxlength="8"
 									onkeypress="return validaNumero(event,'0',this,'0');"
 									onblur="validaNumero(event,'0',this,'1');"
 									value="#{solicitudRegMB.objTiivsPersonaResultado.codCen}" />
@@ -967,10 +967,10 @@
 										value="#{solicitudRegMB.objTiivsPersonaResultado.apePat}" />
 									<p:graphicImage value="/resources/images/pregunta.jpg"
 										id="tooltxtApellidoPaterno" />
-									<p:tooltip for="tooltxtApellidoPaterno" value="Ap.Paterno"
+									<p:tooltip for="tooltxtApellidoPaterno" value=" Ap.Paterno"
 										showEffect="slide" />
 								
-									<h:outputText id="outApMaterno" value="Ap.Materno:" />
+									<h:outputText id="outApMaterno" value=" Ap.Materno:" />
 									<h:inputText styleClass="inputTextPopup" id="txtApellidoMaterno"
 										size="30" maxlength="25"
 										value="#{solicitudRegMB.objTiivsPersonaResultado.apeMat}" />
@@ -979,7 +979,7 @@
 									<p:tooltip for="tooltxtApellidoMaterno" value="Ap.Materno"
 										showEffect="slide" />
 										
-									<h:outputText id="outNombres" value="Nombres:" />
+									<h:outputText id="outNombres" value=" Nombres:" />
 									<h:inputText styleClass="inputTextPopup" id="txtNombres"
 										size="17" maxlength="25"
 										value="#{solicitudRegMB.objTiivsPersonaResultado.nombre}" />
