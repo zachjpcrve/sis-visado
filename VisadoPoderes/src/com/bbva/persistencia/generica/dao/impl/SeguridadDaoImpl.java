@@ -65,7 +65,7 @@ public abstract class SeguridadDaoImpl<K, T extends Serializable>
 		 		" OR (TRIM(m.cod_miembro)= '"+oficinaId+"' AND TRIM(m.criterio) = 'T030003')"	+
 		 		" AND ACTIVO = 1 ";
 		
-		logger.info("Sql: "+sql);		
+		//logger.info("Sql: "+sql);		
 		
 		List<MiembroDto> listaMiembro=new ArrayList<MiembroDto>();
 		MiembroDto nuevo;
@@ -76,7 +76,7 @@ public abstract class SeguridadDaoImpl<K, T extends Serializable>
 				}});
 
 				if(listResult.size()>0){
-					logger.info("Se ha encontrado: ["+listResult.size()+"] resultados.");
+					//logger.info("Se ha encontrado: ["+listResult.size()+"] resultados.");
 					for(int i=0;i<=listResult.size()-1;i++){
 						Object[] row =  (Object[]) listResult.get(i);
 						nuevo = new MiembroDto();
