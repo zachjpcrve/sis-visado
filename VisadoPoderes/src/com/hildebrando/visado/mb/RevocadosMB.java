@@ -309,6 +309,23 @@ public class RevocadosMB {
 									tiivsRevocado.setsDesctipPartic(descTipPart);
 									apoderados.add(tiivsRevocado);
 								}
+								
+								if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
+									
+									String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
+									String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
+									
+									nombreCompletoApoderados = nombreCompletoApoderados
+																	+ " " + descDoiApod
+																	+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
+																  + " - " + (tiivsRevocado.getTiivsPersona().getApePat()==null?"":tiivsRevocado.getTiivsPersona().getApePat()) 
+																	+ " " + (tiivsRevocado.getTiivsPersona().getApeMat()==null?"":tiivsRevocado.getTiivsPersona().getApeMat())
+																	+ " " + (tiivsRevocado.getTiivsPersona().getNombre()==null?"":tiivsRevocado.getTiivsPersona().getNombre()) + "\n";
+									
+									tiivsRevocado.setsDesctipDoi( descDoiApod);
+									tiivsRevocado.setsDesctipPartic(descTipPart);
+									apoderados.add(tiivsRevocado);
+								}
 									
 								if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 								
@@ -654,7 +671,7 @@ public class RevocadosMB {
 		
 		if (tipoBusqueda.equals("tipoRegistro"))
 		{
-			if (filtro.equals(ConstantesVisado.APODERADO))
+			if (filtro.equals(ConstantesVisado.APODERADO) || filtro.equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO))
 			{
 				resultado="Apoderado";
 			}
@@ -1999,6 +2016,26 @@ public class RevocadosMB {
 //						apoderados.add(apoderado);
 						apoderados.add(tiivsRevocado);
 					}
+					
+					if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO))
+					{
+//						apoderado= new TiivsPersona();
+//						apoderado = tiivsRevocado.getTiivsPersona();
+						
+						
+						String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
+						String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
+						
+
+//						apoderado.setsDesctipDoi( descDoiApod);
+//						apoderado.setsDesctipPartic(descTipPart);
+						
+						tiivsRevocado.setsDesctipDoi( descDoiApod);
+						tiivsRevocado.setsDesctipPartic(descTipPart);
+						
+//						apoderados.add(apoderado);
+						apoderados.add(tiivsRevocado);
+					}
 						
 					if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE))
 					{
@@ -2079,6 +2116,26 @@ public class RevocadosMB {
 				for(TiivsRevocado tiivsRevocado:tiivsrevocados2)
 				{
 						if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO))
+						{
+//							apoderado= new TiivsPersona();
+//							apoderado = tiivsRevocado.getTiivsPersona();
+							
+							
+							String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
+							String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
+							
+
+//							apoderado.setsDesctipDoi( descDoiApod);
+//							apoderado.setsDesctipPartic(descTipPart);
+							
+							tiivsRevocado.setsDesctipDoi( descDoiApod);
+							tiivsRevocado.setsDesctipPartic(descTipPart);
+							
+//							apoderados.add(apoderado);
+							apoderados.add(tiivsRevocado);
+						}
+						
+						if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO))
 						{
 //							apoderado= new TiivsPersona();
 //							apoderado = tiivsRevocado.getTiivsPersona();

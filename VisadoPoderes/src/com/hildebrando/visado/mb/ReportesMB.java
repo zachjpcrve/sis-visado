@@ -1034,6 +1034,10 @@ public class ReportesMB {
 						{
 							lstApoderdantes.add(d.getTiivsPersona());
 						}
+						else if(d.getTipPartic().trim().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO))
+						{
+							lstApoderdantes.add(d.getTiivsPersona());
+						}
 					    
 					    agrupacionSimpleDto = new AgrupacionSimpleDto();
 						agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(tmpSol.getCodSoli(), x.getId().getNumGrupo()));
