@@ -341,7 +341,7 @@ public class JasperController {
     private String obtenerEstadoAgrupaciones(List<AgrupacionSimpleDto> agrupaciones){
     	//Obtenemos los revocados
 //    	RevocadosMB revocados = new RevocadosMB();
-//    	System.out.println("+++ revocados: " + revocados);
+//    	logger.debug("+++ revocados: " + revocados);
     	/*revocados.buscarRevocado();
     	List<Revocado> listaRevocados = revocados.getRevocados();
     	
@@ -431,7 +431,7 @@ public class JasperController {
 			}
 			
 		} catch (Exception e) {
-			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR,e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR,e);
 			revocados = null;
 		}
     	
