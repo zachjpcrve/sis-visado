@@ -72,7 +72,7 @@ public boolean validarEstudio(){
 			if (estudio.getDesEstudio().isEmpty() == false) {
 				if(estudio.getCosto() >= 0.0){
 					//if(estudio.getCosto().intValue())
-					//System.out.println(" estudio.getCosto().intValue() " + estudio.getCosto().intValue());
+					//logger.debug(" estudio.getCosto().intValue() " + estudio.getCosto().intValue());
 					if(isbEditar() == false){
 						if(isNombreRegistrado(estudio) == false){
 							estudioService.registrar(estudio);
