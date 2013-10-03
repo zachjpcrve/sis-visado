@@ -202,9 +202,9 @@ public class SeguridadMB {
 			
 			
 			/*
-			System.out.println("Codcargo: "+usuarioIILD.getId().getCodcargo());
-			System.out.println("Codofi: "+usuarioIILD.getId().getCodofi());
-			System.out.println("Codusu: "+usuarioIILD.getId().getCodusu());
+			logger.debug("Codcargo: "+usuarioIILD.getId().getCodcargo());
+			logger.debug("Codofi: "+usuarioIILD.getId().getCodofi());
+			logger.debug("Codusu: "+usuarioIILD.getId().getCodusu());
 		*/	
         /*	request.getSession(true).setAttribute("USUARIO_SESION", usuario);
         	request.getSession(true).setAttribute("nombreUsuario", usuario.getNombre());
