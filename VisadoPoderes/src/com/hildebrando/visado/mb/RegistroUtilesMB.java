@@ -167,7 +167,7 @@ public class RegistroUtilesMB {
 	  * @return Tipo de comisión de la comisión
 	  */
 	public String obtenerTipoComision(TiivsSolicitud solicitud){
-		
+		logger.debug("=== obtenerTipoComision() ===");
 		String sTipoComision=null; //Almacena el tipo de comision que se debe aplicar
 					
 		Double dMontoLimite;
@@ -176,7 +176,7 @@ public class RegistroUtilesMB {
 					ConstantesVisado.CODIGO_MULTITABLA_COMISION,
 					ConstantesVisado.CODIGO_CAMPO_COMISION_X).getValor2();	
 			dMontoLimite = Double.valueOf(sMontoLimite);
-				
+			logger.debug("[obtTipComision]-montoLimite:"+dMontoLimite);
 			//Obtenemos el listado de poderdantes de una solicitud
 			List<TiivsAgrupacionPersona> lstPoderdantes;
 			lstPoderdantes = getPoderdantesFromSolicitud(solicitud);//From consulta sql		
@@ -198,7 +198,6 @@ public class RegistroUtilesMB {
 					} else {
 						// Regla no permitida
 						logger.info("Regla no permitida");
-						logger.debug("Regla no permitida");
 						sTipoComision = null;
 					}
 				}				
@@ -208,7 +207,12 @@ public class RegistroUtilesMB {
 		
 		}
 		catch(Exception e){
-			logger.error("No se pudo calcular la comisión: "+e);							
+			logger.error("No se pudo calcular la comision: ",e);							
+		}
+		if(sTipoComision!=null){
+			logger.debug("[obtTipComision]-sTipoComision:"+sTipoComision);
+		}else{
+			logger.debug("[obtTipComision]-sTipoComision es NULL");
 		}
 		return sTipoComision;
 	}
@@ -287,7 +291,7 @@ public class RegistroUtilesMB {
 			TiivsMultitablaId tablaId = new TiivsMultitablaId(codigoMultitablaMoneda, codigoCampo);			
 			resultMultiTabla = multiTablaDAO.buscarById(TiivsMultitabla.class,tablaId);
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en resultMultiTabla: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en resultMultiTabla: ",e);
 		}
 		return resultMultiTabla;
 	}
@@ -319,13 +323,12 @@ public class RegistroUtilesMB {
 	  */
 	private List<TiivsAgrupacionPersona> getPoderdantesFromSolicitud(
 			TiivsSolicitud solicitud) {
-
+		logger.debug("=== getPoderdantesFromSolicitud() ===");
 		List<TiivsAgrupacionPersona> lstPoderdantes = new ArrayList<TiivsAgrupacionPersona>();
 			
 		Set<TiivsSolicitudAgrupacion> setSolicitudAgrupacion;
 		setSolicitudAgrupacion = solicitud.getTiivsSolicitudAgrupacions();
-
-		logger.info("solicitud.getTiivsSolicitudAgrupacions()" + solicitud.getTiivsSolicitudAgrupacions().size());
+		logger.info("[getPoderdSolic]-Agrupaciones tamanhio: " + solicitud.getTiivsSolicitudAgrupacions().size());
 		
 		Iterator itAgrupacion = setSolicitudAgrupacion.iterator();
 
@@ -335,20 +338,23 @@ public class RegistroUtilesMB {
 			Set<TiivsAgrupacionPersona> setAgruPersona;
 			setAgruPersona = valueAgrupacion.getTiivsAgrupacionPersonas();
 			
-			logger.info("valueAgrupacion.getTiivsAgrupacionPersonas()" + valueAgrupacion.getTiivsAgrupacionPersonas().size());
+			logger.info("[getPoderdSolic]-valueAgrupacion.getTiivsAgrupacionPersonas(): " + valueAgrupacion.getTiivsAgrupacionPersonas().size());
 			
 			Iterator itAgruPersona = setAgruPersona.iterator();
 
 			while (itAgruPersona.hasNext()){
 				TiivsAgrupacionPersona valueAgruPersona = (TiivsAgrupacionPersona) itAgruPersona.next();
-				
+				logger.debug("[getPoderdSolic]-TipParticip: "+valueAgruPersona.getTipPartic());
 				if (valueAgruPersona.getTipPartic().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_PODERDANTE)) 
 				{
 					lstPoderdantes.add(valueAgruPersona);
+					logger.debug("->Se agrega TiParticip: "+valueAgruPersona.getTipPartic());
 				}
 			}
 		}
-
+		if(lstPoderdantes!=null){
+			logger.debug("[getPoderdSolic]-Se han obtenido:["+lstPoderdantes+"] poderdantes.");
+		}		
 		return lstPoderdantes;		
 	}	
 		
@@ -450,13 +456,15 @@ public class RegistroUtilesMB {
 	 * @param tipo de comisión 
 	 * */
 	public Double obtenerComision(String sTipoComision) {
+		logger.debug("=== obtenerComision() ==== ");
+		logger.debug("[obtenTipComision]-tipo:"+sTipoComision);
 		TiivsMultitabla multi = getRowFromMultitabla(ConstantesVisado.CODIGO_MULTITABLA_COMISION,sTipoComision);
 		Double comision;
 		try {
 			if(multi!=null){
 				comision = Double.valueOf(multi.getValor2());
 			} else {
-				logger.info("Registro no encontrado para el tipo de comisión: " + sTipoComision);
+				logger.info("Registro no encontrado para el tipo de comision: " + sTipoComision);
 				comision = new Double(0);
 			}
 		} catch (Exception e){
