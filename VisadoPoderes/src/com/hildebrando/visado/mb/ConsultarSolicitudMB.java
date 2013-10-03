@@ -1948,7 +1948,7 @@ public class ConsultarSolicitudMB {
 					this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
 					this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 					
-					System.out.println("this.solicitudRegistrarT.getTiivsEstudio() "+this.solicitudRegistrarT.getTiivsEstudio().toString());
+					logger.debug("this.solicitudRegistrarT.getTiivsEstudio() "+this.solicitudRegistrarT.getTiivsEstudio().toString());
 					try {
 						if(this.solicitudRegistrarT.getTiivsEstudio().getCodEstudio()==null){
 							this.solicitudRegistrarT.setTiivsEstudio(null);
@@ -2015,9 +2015,9 @@ public class ConsultarSolicitudMB {
 				if (solicitud.getImporte() >= lstNiveles.get(0).getRangoInicio()) 
 				{
 					logger.info("Paso Nivel " + lstNiveles.get(0).getDesNiv());
-					 System.out.println("a"+ lstNiveles.get(0).getDesNiv());
-					 System.out.println("this.solicitudRegistrarT.getImporte() !"+ this.solicitudRegistrarT.getImporte());
-					 System.out.println("lstNiveles.get(lstNiveles.size() - 1).getRangoFin() !"+ lstNiveles.get(lstNiveles.size() - 1).getRangoFin());
+					logger.debug("a"+ lstNiveles.get(0).getDesNiv());
+					logger.debug("this.solicitudRegistrarT.getImporte() !"+ this.solicitudRegistrarT.getImporte());
+					logger.debug("lstNiveles.get(lstNiveles.size() - 1).getRangoFin() !"+ lstNiveles.get(lstNiveles.size() - 1).getRangoFin());
 					if (this.solicitudRegistrarT.getImporte() > lstNiveles.get(lstNiveles.size() - 1).getRangoFin()) 
 					{    logger.info("DATA INCONCISTENTE, EL RANGO FINAL DE TODOS LOS NIVELES , NO DEBE SER MENOR AL RANGO DE INICIO.");
 						 lstCodNivel=null;
@@ -3072,7 +3072,8 @@ public class ConsultarSolicitudMB {
 				for (TiivsAgrupacionPersona b :x.getTiivsAgrupacionPersonas()) 
 				{ 
 					for (TiivsAgrupacionPersona bd: tmpListBD)
-					{System.out.println("b.getCodSoli() " +b.getCodSoli() + " b.getNumGrupo() "+b.getNumGrupo());
+					{
+						logger.debug("b.getCodSoli() " +b.getCodSoli() + " b.getNumGrupo() "+b.getNumGrupo());
 						if (!b.getCodSoli().equals(bd.getCodSoli()) && b.getNumGrupo().equals(bd.getNumGrupo()))
 						{
 							logger.info("Eliminando grupo Nro: " + b.getNumGrupo() + " de la solicitud: " + b.getCodSoli());
@@ -3921,20 +3922,20 @@ public class ConsultarSolicitudMB {
 			for (TiivsSolicitudOperban x : lstSolicBancarias) {
 				index++;
 				if (x.getId().getCodOperBan().equals(objSolicBancaria.getId().getCodOperBan())){
-					System.out.println("x.getMoneda().trim() " +x.getId().getMoneda().trim());
-					System.out.println("objSolicBancaria.getMoneda().trim()) " +objSolicBancaria.getId().getMoneda().trim());
+					logger.debug("x.getMoneda().trim() " +x.getId().getMoneda().trim());
+					logger.debug("objSolicBancaria.getMoneda().trim()) " +objSolicBancaria.getId().getMoneda().trim());
 					
 					if(x.getId().getMoneda().trim().equals(objSolicBancaria.getId().getMoneda().trim())) {
 						conunt++;
 						logger.info("conunt "+conunt);
-						System.out.println("x.getMoneda() " +x.getId().getMoneda());
-						System.out.println("objSolicBancaria.getMoneda() " + objSolicBancaria.getId().getMoneda());
+						logger.debug("x.getMoneda() " +x.getId().getMoneda());
+						logger.debug("objSolicBancaria.getMoneda() " + objSolicBancaria.getId().getMoneda());
 						
-							System.out.println("lo deja ");
+						logger.debug("lo deja ");
 							break;
 						
 				}/*else if(!x.getMoneda().trim().equals(objSolicBancaria.getMoneda().trim())) {
-					System.out.println(" no lo deja ");
+					logger.debug(" no lo deja ");
 					sMensaje = "Tipo de Operación con la misma moneda ya registrado, Ingrese otra moneda";
 					Utilitarios.mensajeInfo("", sMensaje);
 					result = false;
@@ -4542,8 +4543,8 @@ public class ConsultarSolicitudMB {
 			}
 			else{
 			for (TiivsPersona x : lstTiivsPersona) {
-				System.out.println("x.getCodPer() " +x.getCodPer());
-				System.out.println("objTiivsPersonaResultado.getCodPer() " +objTiivsPersonaResultado.getCodPer());
+				logger.debug("x.getCodPer() " +x.getCodPer());
+				logger.debug("objTiivsPersonaResultado.getCodPer() " +objTiivsPersonaResultado.getCodPer());
 				
 				
 				if(x.getTipDoi().equals(objTiivsPersonaResultado.getTipDoi())
