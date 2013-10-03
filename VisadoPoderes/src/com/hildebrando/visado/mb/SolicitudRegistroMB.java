@@ -25,6 +25,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
@@ -37,8 +38,14 @@ import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.common.util.EstilosNavegador;
 import com.bbva.consulta.host.impl.ObtenerDatosVoucherDUMMY;
+import com.bbva.consulta.pea.ObtenerDatosPersonaPEAService;
+import com.bbva.consulta.pea.impl.ObtenerDatosPersonaPEAServiceDummy;
+import com.bbva.consulta.pea.impl.ObtenerDatosPersonaPEAServiceImpl;
+import com.bbva.consulta.reniec.ObtenerPersonaReniecService;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
+import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecServiceImpl;
 import com.bbva.consulta.reniec.util.BResult;
+import com.bbva.consulta.reniec.util.Constantes;
 import com.bbva.consulta.reniec.util.Persona;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
@@ -339,7 +346,7 @@ public class SolicitudRegistroMB {
 				}
 				catch (Exception e) 
 				{
-					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de datos de Clasificacion de personas: "+e);
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de datos de Clasificacion de personas: ",e);
 				}
 				
 				for (TiivsMultitabla mult: lstTmpMult)
@@ -374,7 +381,7 @@ public class SolicitudRegistroMB {
 				}
 				catch (Exception e) 
 				{
-					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de datos de Clasificacion de personas: "+e);
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de datos de Clasificacion de personas: ",e);
 				}
 				
 				for (TiivsMultitabla mult: lstTmpMult)
@@ -404,14 +411,13 @@ public class SolicitudRegistroMB {
 		String sNombreTemporal = "";
 		FileOutputStream canalSalida = null;
 		
-		try {
-			
+		try {			
 			//Obteniendo ubicación del file server			
 			sUbicacionTemporal = Utilitarios
 					.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
 					+ File.separator + ConstantesVisado.FILES + File.separator;			
 			
-			logger.debug(" -> Ubicacion Temporal:"+ sUbicacionTemporal);
+			logger.debug("[cargarUnicoPDF]-Ubicacion Temp:"+ sUbicacionTemporal);
 			
 			File fDirectory = new File(sUbicacionTemporal);
 			fDirectory.mkdirs();	
@@ -428,28 +434,35 @@ public class SolicitudRegistroMB {
 			
 			sNombreTemporal = fichTemp.getName();
 									
-			logger.debug("  NombreArchivoTEMP: " + sNombreTemporal);
+			logger.debug("[cargarUnicoPDF]-sNombreArchivoTemporal: " + sNombreTemporal);
 			
 			canalSalida = new FileOutputStream(fichTemp);
 			canalSalida.write(fileBytes);
 			
 			canalSalida.flush();
+			
 			return sNombreTemporal;
 
 		} catch (IOException e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IO Exception:"+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IO Exception al adjuntar:",e);
 			String sMensaje = "Se produjo un error al adjuntar fichero";
 			Utilitarios.mensajeInfo("", sMensaje);
 			return "";
-		} finally {
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al adjuntar:",e);
+			String sMensaje = "Se produjo un error al adjuntar fichero";
+			Utilitarios.mensajeInfo("", sMensaje);
+			return "";
+		} 
+		finally {
 			if(fichTemp!=null){
-				fichTemp.deleteOnExit(); // Delete the file when the JVM terminates
+				fichTemp.deleteOnExit();
 			}
 			if (canalSalida != null) {
 				try {
 					canalSalida.close();
 				} catch (IOException x) {
-					// handle error
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION,x);
 				}
 			}
 		}
@@ -457,7 +470,7 @@ public class SolicitudRegistroMB {
 
 	/**
 	 * Metodo encargado de listar los documentos de visado por tipo de solicitud
-	 * en base al item seleccionado. Muestra los documetos obligatorios y 
+	 * en base al item seleccionado. Muestra los documentos obligatorios y 
 	 * opcionales según sea el caso.
 	 * @param e Evento de seleccion del tipo {@link ValueChangeEvent}
 	 * **/
@@ -478,10 +491,8 @@ public class SolicitudRegistroMB {
 			actualizarListadoDocumentos();
 			
 		} catch (Exception ex) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al cargar el listado de documentos por tipo de soliciitud" +ex);
-			ex.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al cargar el listado de documentos por tipo de soliciitud" ,ex);
 		}
-		
 			
 		// 120913
 		visadoDocumentosMB.setDocumentosLeer(VisadoDocumentosMB.armaTramaDocumentosALeer(lstTipoSolicitudDocumentos));
@@ -523,7 +534,7 @@ public class SolicitudRegistroMB {
 				aliasFilesToDelete.add(a.getAliasTemporal());
 			}
 		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al addArchivosTemporalesToDelete():"+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al addArchivosTemporalesToDelete():",e);
 		}
 	}
 
@@ -533,35 +544,63 @@ public class SolicitudRegistroMB {
 		bBooleanPopup=false;
 	}
 
+	/**
+	 * Metodo encargado de realizar la busqueda de clientes/no clientes en diferentes 
+	 * fuentes para su registro en la solicitud de visado. Se consulta a la BD Local, 
+	 * si no hubieran resultados se consulta a Reniec.
+	 * **/
 	public void buscarPersona() {
-		logger.info("=== buscarPersona() ===");
+		logger.info("=== buscarPersona():MEJORADO ===");
 		logger.info("[BUSQ_PERS]-TipoDoi:"+ objTiivsPersonaBusqueda.getTipDoi());
 		logger.info("[BUSQ_PERS]-NroDoi:"+ objTiivsPersonaBusqueda.getNumDoi());
+		
 		try {
 			List<TiivsPersona> lstTiivsPersonaLocal = new ArrayList<TiivsPersona>();
 			//Se realiza la busqueda en BD Local
 			lstTiivsPersonaLocal = this.buscarPersonaLocal();
 			
-			List<TiivsPersona> lstTiivsPersonaReniec = new ArrayList<TiivsPersona>();
+			List<TiivsPersona> lstTiivsPersonaHost = new ArrayList<TiivsPersona>();
+			List<TiivsPersona> lstTiivsPersonaReniec = new ArrayList<TiivsPersona>();			
 			if (lstTiivsPersonaLocal.size() == 0) {
-				//Se realiza la busqueda mediente servicio de RENIEC
-				lstTiivsPersonaReniec = this.buscarPersonaReniec();
-				if (lstTiivsPersonaReniec.size() == 0) {
-					objTiivsPersonaResultado = new TiivsPersona();
-					this.bBooleanPopup = false;
-					 Utilitarios.mensajeInfo("INFO",ConstantesVisado.MENSAJE.NO_RESULTADOS+"para la busqueda.");
-				} else if (lstTiivsPersonaReniec.size() == 1) {
-					objTiivsPersonaResultado = lstTiivsPersonaReniec.get(0);
-					this.bBooleanPopup = false;
-				} else if (lstTiivsPersonaReniec.size() > 1) {
-					this.bBooleanPopup = true;
-					lstTiivsPersonaResultado = lstTiivsPersonaReniec;
+				logger.debug("1.NO HAY PERSONA LOCAL");				
+				//Se realizara la busqueda mediante el servicio PEA (HOST)
+				lstTiivsPersonaHost = this.buscarPersonaHost();
+				if(lstTiivsPersonaHost.size()==0){
+					logger.debug("2.NO HAY PERSONA HOST");				
+					//Se realiza la busqueda mediente servicio de RENIEC
+					lstTiivsPersonaReniec = this.buscarPersonaReniec();
+					if (lstTiivsPersonaReniec.size() == 0) {
+						logger.debug("3.NO HAY PERSONA RENIEC");
+						objTiivsPersonaResultado = new TiivsPersona();
+						this.bBooleanPopup = false;
+						 Utilitarios.mensajeInfo("INFO",ConstantesVisado.MENSAJE.NO_RESULTADOS+"para la busqueda.");
+					} else if (lstTiivsPersonaReniec.size() == 1) {
+						logger.debug("3.b -> EXISTE EN RENIEC 1 PERSONA");	
+						objTiivsPersonaResultado = lstTiivsPersonaReniec.get(0);
+						this.bBooleanPopup = false;
+					} else if (lstTiivsPersonaReniec.size() > 1) {
+						logger.debug("3.c EXISTE EN RENIEC MAS DE 1 PERSONA");
+						this.bBooleanPopup = true;
+						lstTiivsPersonaResultado = lstTiivsPersonaReniec;
+					}
+					
+				}else if(lstTiivsPersonaHost.size()==1){
+					logger.debug("2.b -> EXISTE EN HOST 1 PERSONA");	
+					objTiivsPersonaResultado = lstTiivsPersonaHost.get(0);
+					bBooleanPopup = false;
+				}else if(lstTiivsPersonaHost.size()>1){
+					logger.debug("2.c -> EXISTE EN HOST MAS DE 1 PERSONA");	
+					lstTiivsPersonaResultado = lstTiivsPersonaHost;
+					bBooleanPopup = true;
 				}
+				
 			} else if (lstTiivsPersonaLocal.size() == 1) {
+				logger.debug("1.b -> EXISTE EN LOCAL 1 PERSONA");	
 				logger.info(ConstantesVisado.MENSAJE.SI_RESULTADOS+"lstTiivsPersonaLocal:  "+ lstTiivsPersonaLocal.size());
 				this.bBooleanPopup = false;
 				objTiivsPersonaResultado = lstTiivsPersonaLocal.get(0);
 			} else if (lstTiivsPersonaLocal.size() > 1) {
+				logger.debug("1.c -> EXISTE EN LOCAL MAS DE 1 PERSONA");
 				this.bBooleanPopup = true;
 				lstTiivsPersonaResultado = lstTiivsPersonaLocal;
 
@@ -571,9 +610,10 @@ public class SolicitudRegistroMB {
 				this.bBooleanPopup = true;
 			}
 		
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			Utilitarios.mensajeError("ERROR", e.getMessage());
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la persona (Local/Reniec)");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la persona (Local/Host/Reniec): ",e);
 		}
 	}
 
@@ -593,47 +633,162 @@ public class SolicitudRegistroMB {
 		objTiivsPersonaResultado.setEmail("");
 		objTiivsPersonaResultado.setNumCel("");
 	}
-
+	
+	public List<TiivsPersona> buscarPersonaHost() throws Exception {
+		logger.debug("==== inicia buscarPersonaHost() ==== ");
+		List<TiivsPersona> lstTiivsPers = new ArrayList<TiivsPersona>();
+		try{
+			String enableServicio = Utilitarios.getPropiedad("enableServPEA");
+			//Se valida la habilitacion de la consulta al servicio PEA - HOST
+			if(enableServicio.equalsIgnoreCase("true")){
+				logger.debug("= La consulta al servicio PEA-HOST esta habilitado.");
+				BResult resultado = null;
+				TiivsPersona objPersonaHost = null;
+				Persona pers = null;
+				
+				if (objTiivsPersonaBusqueda.getNumDoi() != null) {
+					logger.debug("[HOST]-NumeroDOI:"+ objTiivsPersonaBusqueda.getNumDoi());
+					logger.debug("[HOST]-TipoDoi:"+objTiivsPersonaBusqueda.getTipDoi());
+					//Leyendo parametros desde el properties
+					String busqServDummy = Utilitarios.getPropiedad("busqServDummy");
+					String usuConsHost = Utilitarios.getPropiedad("usuConsHost");
+					String urlServicio = Utilitarios.getPropiedad("urlServHost");
+					logger.debug("[HOST]-URL:"+urlServicio);				
+					logger.debug("Realizar la consulta en el servicio DUMMY: "+busqServDummy);
+					//Validando si se consultara el servicio DUMMY
+					if(busqServDummy.equalsIgnoreCase("true")){
+						ObtenerDatosPersonaPEAService hostServiceDummy = new ObtenerDatosPersonaPEAServiceDummy();
+						resultado = hostServiceDummy.obtenerDatosGeneralesPEA1(usuConsHost, objTiivsPersonaBusqueda.getTipDoi(), objTiivsPersonaBusqueda.getNumDoi(), urlServicio);
+					}else{
+						ObtenerDatosPersonaPEAService hostService = new ObtenerDatosPersonaPEAServiceImpl();
+						resultado = hostService.obtenerDatosGeneralesPEA1(usuConsHost, objTiivsPersonaBusqueda.getTipDoi(), objTiivsPersonaBusqueda.getNumDoi(), urlServicio);
+					}
+					//resultado = hostServiceDummy.obtenerDatosGeneralesPEA1(usuConsulta, objTiivsPersonaBusqueda.getTipDoi(), objTiivsPersonaBusqueda.getNumDoi(), urlServicio);
+					if(resultado!=null){
+						logger.debug("[HOST RPTA]-code:"+resultado.getCode());
+						//Se valida la respuesta: EXITO
+						if(resultado.getCode()== 0 ){
+							if(resultado.getObject()!=null){
+								logger.debug("== Se recupera la persona de Host ==");
+								pers = (Persona) resultado.getObject();
+								objPersonaHost= new TiivsPersona();
+								if(pers.getNombre()!=null){
+									objPersonaHost.setNombre(pers.getNombre());
+									logger.debug("[HOST RPTA]-Nombre:"+objPersonaHost.getNombre());
+								}
+								if(pers.getApellidoPaterno()!=null){
+									objPersonaHost.setApePat(pers.getApellidoPaterno());
+									logger.debug("[HOST RPTA]-Apepat:"+objPersonaHost.getApePat());
+								}
+								if(pers.getApellidoMaterno()!=null){
+									objPersonaHost.setApeMat(pers.getApellidoMaterno());
+									logger.debug("[HOST RPTA]-Apemat:"+objPersonaHost.getApeMat());
+								}
+								if(pers.getNumerodocIdentidad()!=null){
+									objPersonaHost.setNumDoi(pers.getNumerodocIdentidad());
+									logger.debug("[HOST RPTA]-DocIdentidad:"+objPersonaHost.getNumDoi());
+								}else{
+									objPersonaHost.setNumDoi(objTiivsPersonaBusqueda.getNumDoi());
+								}
+								if(pers.getTelefono()!=null){
+									objPersonaHost.setNumCel(pers.getTelefono());
+									logger.debug("[HOST RPTA]-Telefono:"+objPersonaHost.getNumCel());
+								}else{
+									objPersonaHost.setNumCel("");
+								}
+								if(pers.getCodCentral()!=null){
+									objPersonaHost.setCodCen(pers.getCodCentral());
+									logger.debug("[HOST RPTA]-CodCentral:"+objPersonaHost.getCodCen());
+								}
+								
+								objPersonaHost.setTipDoi(objTiivsPersonaBusqueda.getTipDoi());
+								objPersonaHost.setCodCen(objTiivsPersonaBusqueda.getCodCen());
+								
+								lstTiivsPers.add(objPersonaHost);
+								
+								logger.debug("== despues de poblar el objeto Persona ==");
+							}
+							
+						}else if(resultado.getCode() == 900){
+							logger.debug("[900]-No hay resultados para esta consulta en HOST");
+						}else{
+							logger.debug("[GENERICO]-No hay resultados para esta consulta en HOST");
+						}
+					}else{
+						logger.debug("El resultado HOST es nulo");
+					}				
+				}
+				logger.debug("==== saliendo de buscarPersonaHOST() ==== ");
+			}
+			
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al buscarPersonaHOST: ",e);
+		}
+		return lstTiivsPers;
+	}
 	public List<TiivsPersona> buscarPersonaReniec() throws Exception {
 		logger.debug("==== inicia buscarPersonaReniec() ==== ");
 		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
 		try{
-			BResult resultado = null;
-			TiivsPersona objPersona = null;
-			Persona persona = null;
-			if (objTiivsPersonaBusqueda.getNumDoi() != null) {
-				logger.info("[RENIEC]-DNI:"+ objTiivsPersonaBusqueda.getNumDoi());
-
-//				ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
-				ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
-				
-				resultado = reniecService.devolverPersonaReniecDNI("P013371", "0553",objTiivsPersonaBusqueda.getNumDoi());
-				logger.debug("[RENIEC]-resultado: "+resultado.getCode());
-				
-				if (resultado.getCode() == 0) {
+			String enableServReniec = Utilitarios.getPropiedad("enableServReniec");
+			//Se valida la habilitacion de la consulta al servicio RENIEC
+			if(enableServReniec.equalsIgnoreCase("true")){
+				BResult resultado = null;
+				TiivsPersona objPersona = null;
+				Persona persona = null;
+				if (objTiivsPersonaBusqueda.getNumDoi() != null) {
+					logger.info("[RENIEC]-DNI:"+ objTiivsPersonaBusqueda.getNumDoi());
+					//Leyendo parametros desde el properties
+					String busqServReniecDummy = Utilitarios.getPropiedad("busqServReniecDummy");
+					String usuConsReniec = Utilitarios.getPropiedad("usuConsReniec");
+					String centroConsulta =Utilitarios.getPropiedad("centroConsulta");
+					logger.debug("[RENIEC]-busqServReniecDummy:"+busqServReniecDummy);
+					logger.debug("[RENIEC]-usuConsulta:"+usuConsReniec);
+					logger.debug("[RENIEC]-centroConsulta:"+centroConsulta);
 					
-					persona = (Persona) resultado.getObject();
-					logger.info("PERSONA : " + persona.getNombreCompleto()
-							+ "\nDNI: " + persona.getNumerodocIdentidad());
-					objPersona = new TiivsPersona();
-					objPersona.setNumDoi(persona.getNumerodocIdentidad());
-					objPersona.setNombre(persona.getNombre());
-					objPersona.setApePat(persona.getApellidoPaterno());
-					objPersona.setApeMat(persona.getApellidoMaterno());
-					objPersona.setTipDoi(objTiivsPersonaBusqueda.getTipDoi());
-					objPersona.setCodCen(objTiivsPersonaBusqueda.getCodCen());
+					if(busqServReniecDummy.equalsIgnoreCase("true")){
+						ObtenerPersonaReniecDUMMY reniecServiceDummy = new ObtenerPersonaReniecDUMMY();
+						resultado = reniecServiceDummy.devolverPersonaReniecDNI(usuConsReniec, centroConsulta,objTiivsPersonaBusqueda.getNumDoi());
+					}else{
+						ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
+						resultado = reniecService.devolverPersonaReniecDNI(usuConsReniec, centroConsulta,objTiivsPersonaBusqueda.getNumDoi());
+					}
+					logger.debug("[RENIEC]-resultado: "+resultado.getCode());
 					
-					lstTiivsPersona.add(objPersona);
+					if (resultado.getCode() == 0) {
+						if(resultado.getObject()!=null){
+							persona = (Persona) resultado.getObject();
+							logger.info("[RENIEC -RPTA]-Nombre Completo:" + persona.getNombreCompleto());
+							logger.info("[RENIEC -RPTA]-NumeroDocIdentidad:" + persona.getNumerodocIdentidad());
+									
+							objPersona = new TiivsPersona();
+							objPersona.setNumDoi(persona.getNumerodocIdentidad());
+							objPersona.setNombre(persona.getNombre());
+							objPersona.setApePat(persona.getApellidoPaterno());
+							objPersona.setApeMat(persona.getApellidoMaterno());
+							objPersona.setTipDoi(objTiivsPersonaBusqueda.getTipDoi());
+							objPersona.setCodCen(objTiivsPersonaBusqueda.getCodCen());
+							
+							lstTiivsPersona.add(objPersona);
+						}
+					}
 				}
+				logger.debug("==== saliendo de buscarPersonaReniec() ==== ");
 			}
-			logger.debug("==== saliendo de buscarPersonaReniec() ==== ");
+			
 		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al buscaar en Reniec: ",e);
 		}
 		return lstTiivsPersona;
 		
 	}
-
+	
+	/**
+	 * Se encarga de realizar busqueda de una persona en la BD Local (VISPOD).
+	 * @param getTipDoi Tipo de Documento
+	 * @param getNumDoi Numero de Documento
+	 * @return lstTiivsPersona Representa una lista de <code>TiivsPersona</code>
+	 * **/
 	public List<TiivsPersona> buscarPersonaLocal() throws Exception {
 		logger.info("=== buscarPersonaLocal() ===");
 		boolean busco = false;
@@ -691,7 +846,7 @@ public class SolicitudRegistroMB {
 	public boolean validarPersonaEnListaDeAgrupaciones(){
 		logger.info("=== validarPersonaEnListaDeAgrupaciones() ===");
 		boolean retorno = false;
-		logger.info("=== lstTiivsAgrupacionPersonas  ==="+lstTiivsAgrupacionPersonas.size());
+		logger.info("lstTiivsAgrupacionPersonas: "+lstTiivsAgrupacionPersonas.size());
 		for (TiivsAgrupacionPersona x : lstTiivsAgrupacionPersonas) {
 			logger.debug("x.getCodPer() " +x.getCodPer());
 			logger.debug("objTiivsPersonaResultado.getTipPartic() " +objTiivsPersonaResultado.getTipPartic());
@@ -741,7 +896,7 @@ public class SolicitudRegistroMB {
 				try {
 					lstTiivsPersona = service.buscarDinamico(filtro);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al buscar lstTiivsPersona:",e);
 				}
 				
 				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
@@ -759,7 +914,7 @@ public class SolicitudRegistroMB {
                try {
 				lstTiivsPersona = service.buscarDinamico(filtro);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al buscar Personas en validarbuscarPersonaLocal():",e);
 			}
 				/*for (TiivsPersona tiivsPersona : lstTiivsPersona) {
 					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
@@ -790,7 +945,7 @@ public class SolicitudRegistroMB {
 	}
 
 	public Set<TiivsSolicitudAgrupacion> agregarSolicitudArupacion(TiivsSolicitud solicitud,  int iNumGrupo, Set<TiivsAgrupacionPersona> lstTiivsAgrupacionPersonas) {
-		logger.info("iNumGrupo : " + iNumGrupo);
+		logger.info("[AgregSolAgrupac]-iNumGrupo : " + iNumGrupo);
 
 		Set<TiivsSolicitudAgrupacion> lstSolicitudArupacion = new HashSet<TiivsSolicitudAgrupacion>();
 		lstSolicitudArupacion =solicitud.getTiivsSolicitudAgrupacions();
@@ -803,13 +958,13 @@ public class SolicitudRegistroMB {
 		tiivsSolicitudAgrupacion.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO);
 
 		lstSolicitudArupacion.add(tiivsSolicitudAgrupacion);
-		logger.info("TAMANIO DE LA SOLICI AGRUPA " + lstSolicitudArupacion.size());
+		logger.info("[AgregSolAgrupac]-lstSolicitudArupacion tamanhio: " + lstSolicitudArupacion.size());
 		return lstSolicitudArupacion;
 	}
 
 	public void agregarPersona() 
 	{
-		logger.info("****************** agregarPersona ********************");
+		logger.info("========= agregarPersona():INICIO ======");
 		if (validarPersona()) {
 			if (validarRegistroDuplicado()) 
 			{
@@ -866,10 +1021,10 @@ public class SolicitudRegistroMB {
 															
 					flagUpdatePersona = false;
 				}
-				logger.info("Tamanio de la lista lstTiivsPersona " +lstTiivsPersona.size());
-				logger.info("Tamanio de la lista PersonaResultado " +lstTiivsPersonaResultado.size());
+				logger.info("[AgregPersona]-Tamanio lista lstTiivsPersona:" +lstTiivsPersona.size());
+				logger.info("[AgregPersona]-Tamanio lista PersonaResultado " +lstTiivsPersonaResultado.size());
 				personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
-				logger.info("tamanio de personaDataModal  en el metodo agregar ::::: " +personaDataModal.getRowCount());
+				logger.info("[AgregPersona]-Tamanio personaDataModal: " +personaDataModal.getRowCount());
 				objTiivsPersonaResultado = new TiivsPersona();
 				objTiivsPersonaBusqueda = new TiivsPersona();
 				objTiivsPersonaSeleccionado = new TiivsPersona();
@@ -881,7 +1036,7 @@ public class SolicitudRegistroMB {
 		}
 	}
 	private TiivsPersona actualizarPersona(TiivsPersona persona) {
-		logger.info("********actualizarPersona******************");
+		logger.info("==== actualizarPersona =====");
 		TiivsPersona personaRetorno = new TiivsPersona();
 		
 		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit
@@ -892,7 +1047,7 @@ public class SolicitudRegistroMB {
 			persona.setFechaRegistro(new Timestamp(new Date().getTime()));
 			personaRetorno=servicePers.insertarMerge(persona);
 			
-			logger.info("Codigo de la persona a Insertar : "+personaRetorno.getCodPer());
+			logger.info("[actPersona]-CodPersona a grabar: "+personaRetorno.getCodPer());
 						
 			persona.setCodPer(personaRetorno.getCodPer());
 			persona.setCodCen(personaRetorno.getCodCen());
@@ -905,7 +1060,7 @@ public class SolicitudRegistroMB {
 			persona.setEmail(personaRetorno.getEmail());
 			
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR,e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al actualizarPersona(): ",e);
 		}
 		return persona;
 	}
@@ -969,8 +1124,8 @@ public class SolicitudRegistroMB {
 	}
 */
 	public boolean validarRegistroDuplicado() {
-		logger.info("******************************* validarRegistroDuplicado ******************************* "
-				+ objTiivsPersonaResultado.getNumDoi());
+		logger.info("====== validarRegistroDuplicado ======");
+		logger.debug("[validRegDuplic]-NumDoi:"+objTiivsPersonaResultado.getNumDoi());
 		boolean bResult = true;
 		String sMensaje = "";
 		for (TipoDocumento c : combosMB.getLstTipoDocumentos()) {
@@ -996,7 +1151,7 @@ public class SolicitudRegistroMB {
 			
 			//if(objTiivsPersonaResultado.getTipDoi())
 		}
-
+		logger.info("[validRegDuplic]-bResult:"+bResult);
 		return bResult;
 	}
 
@@ -1045,11 +1200,11 @@ public class SolicitudRegistroMB {
 	}
 
 	public boolean validarPersona() {
-		logger.info("******************************* validarPersona ******************************* "
+		logger.info("===== validarPersona ======= "
 				+ objTiivsPersonaResultado.getTipPartic());
 		boolean bResult = true;
 		String sMensaje = "";
-		logger.info("objTiivsPersonaResultado.getClasifPer() "+ objTiivsPersonaResultado.getClasifPer());
+		logger.info("[validaPersona]-Clasificacion:"+ objTiivsPersonaResultado.getClasifPer());
 		
 		if (objTiivsPersonaResultado.getTipDoi().equals("")) {
 			sMensaje = "Seleccione el Tipo de Documento";
@@ -1131,8 +1286,8 @@ public class SolicitudRegistroMB {
 			
 				
 			for (TiivsPersona x : lstTiivsPersona) {
-				logger.debug("x.getCodPer() " +x.getCodPer());
-				logger.debug("objTiivsPersonaResultado.getCodPer() " +objTiivsPersonaResultado.getCodPer());
+				logger.debug("[validaPersona]-CodigoPers:" +x.getCodPer() + "  TipoDoi:"+x.getTipDoi());
+				logger.debug("[validaPersona]-objTiivsPersonaResultado.getCodPer():" +objTiivsPersonaResultado.getCodPer());
 				
 				
 				if(x.getTipDoi().equals(objTiivsPersonaResultado.getTipDoi())
@@ -1154,7 +1309,7 @@ public class SolicitudRegistroMB {
 			
 		}
 		
-		logger.info("bResult " +bResult);
+		logger.info("[validaPersona]-bResult:" +bResult);
 
 		return bResult;
 
@@ -1248,10 +1403,10 @@ public class SolicitudRegistroMB {
 		
 	  }
 	public boolean validarAgregarAgrupacion(){
-		boolean returno=true;
-		logger.info("***************************** validarAgregarAgrupacion ***************************************");
+		boolean returno=true;		
 		String mensaje="Por lo menos ingrese un Poderdante o Apoderado";
 		if(lstTiivsPersona.size()==0){
+			logger.info("validarAgregarAgrupacion:"+mensaje);
 			returno=false;
 			Utilitarios.mensajeInfo("", mensaje);
 		}
@@ -1344,7 +1499,7 @@ public class SolicitudRegistroMB {
 			  AgrupacionSimpleDto agrupacionSimpleDto =null;
 			for (TiivsSolicitudAgrupacion x : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				lstTiivsAgrupacionPersonas=x.getTiivsAgrupacionPersonas();
-				System.out.println(" lstTiivsAgrupacionPersonas " +lstTiivsAgrupacionPersonas.size());
+				logger.debug(" lstTiivsAgrupacionPersonas " +lstTiivsAgrupacionPersonas.size());
 				for (TiivsAgrupacionPersona c : lstTiivsAgrupacionPersonas) {
 					   agrupacionSimpleDto =new AgrupacionSimpleDto();
 					   agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(c.getCodSoli(), c.getNumGrupo()));
@@ -1438,7 +1593,7 @@ public class SolicitudRegistroMB {
 		
 		}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en validarSiAgrupacionEstaRevocada(): ",e);
 		}
 		return retorno;
 	}
@@ -1830,7 +1985,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				}
 			}
 		}catch(Exception e){
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al establecerTipoSolicitud(): "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al establecerTipoSolicitud(): ",e);
 		}
 	}
 
@@ -2002,19 +2157,19 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			for (TiivsSolicitudOperban x : lstSolicBancarias) {
 				index++;
 				if (x.getId().getCodOperBan().equals(objSolicBancaria.getId().getCodOperBan())){
-					//System.out.println("x.getMoneda().trim() " +x.getId().getMoneda().trim());
-					//System.out.println("objSolicBancaria.getMoneda().trim()) " +objSolicBancaria.getId().getMoneda().trim());
+					//logger.debug("x.getMoneda().trim() " +x.getId().getMoneda().trim());
+					//logger.debug("objSolicBancaria.getMoneda().trim()) " +objSolicBancaria.getId().getMoneda().trim());
 					
 					if(x.getId().getMoneda().trim().equals(objSolicBancaria.getId().getMoneda().trim())) {
 						conunt++;
 						//logger.info("conunt "+conunt);
-						//System.out.println("x.getMoneda() " +x.getId().getMoneda());
-						//System.out.println("objSolicBancaria.getMoneda() " + objSolicBancaria.getId().getMoneda());
+						//logger.debug("x.getMoneda() " +x.getId().getMoneda());
+						//logger.debug("objSolicBancaria.getMoneda() " + objSolicBancaria.getId().getMoneda());
 						
 							break;
 						
 				}/*else if(!x.getMoneda().trim().equals(objSolicBancaria.getMoneda().trim())) {
-					System.out.println(" no lo deja ");
+					logger.debug(" no lo deja ");
 					sMensaje = "Tipo de Operación con la misma moneda ya registrado, Ingrese otra moneda";
 					Utilitarios.mensajeInfo("", sMensaje);
 					result = false;
@@ -2038,8 +2193,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("+++ Falló al obtener Operación", e);
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener OperacionBancaria: ", e);
 		}		
 		return false;
 	}
@@ -2048,18 +2202,18 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	double valorFinal = 0;
 	int item = 0;
 	String AntiguoValorDelTipoCambio =null;
+	
 	public void validarTipoCambioDisabled(ValueChangeEvent e){
 		if(e.getNewValue()!=null){
-		logger.info(" validarTipoCambioDisabled " +e.getNewValue());
-		AntiguoValorDelTipoCambio=(String) e.getOldValue();
-		if (e.getNewValue().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
-			this.objSolicBancaria.setTipoCambio(0.0);
-			bBooleanPopupTipoCambio=true;
-		}else{
-			//this.objSolicBancaria.setTipoCambio(0.0);
-			bBooleanPopupTipoCambio=false;
-		
-		}
+			logger.info(" validarTipoCambioDisabled " +e.getNewValue());
+			AntiguoValorDelTipoCambio=(String) e.getOldValue();
+			if (e.getNewValue().equals(ConstantesVisado.MONEDAS.COD_SOLES)) {
+				this.objSolicBancaria.setTipoCambio(0.0);
+				bBooleanPopupTipoCambio=true;
+			}else{
+				//this.objSolicBancaria.setTipoCambio(0.0);
+				bBooleanPopupTipoCambio=false;			
+			}
 		}
 	}
 	
@@ -2408,14 +2562,15 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
           this.objSolicitudOperacionCapturado=new TiivsSolicitudOperban();
           this.objSolicitudOperacionCapturado.setId(new TiivsSolicitudOperbanId());
           this.valorFinal=0;
-          this.llamarComision();
-        
+          this.llamarComision();        
 		}
-
 	}
 
+	/**
+	 * Se encarga de limpiar las operaciones bancarias
+	 * **/
 	public void limpiarListaSolicitudesBancarias() {
-		logger.info("**************************** limpiarListaSolicitudesBancarias ****************************");
+		logger.info("==== limpiarListaSolicitudesBancarias() ====");
 		this.objSolicBancaria=new TiivsSolicitudOperban();
 		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
 		this.objSolicBancaria.setTipoCambio(0.00);
@@ -2440,10 +2595,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		// String valor = Utilitarios.capturarParametro("objOperacion");
 		// logger.info("CODIGO DE OPERACION "+valor);
 		
-		
 		logger.info(objSolicitudOperacionCapturado.getImporte());
-		lstSolicBancarias.remove(objSolicitudOperacionCapturado);
-		
+		lstSolicBancarias.remove(objSolicitudOperacionCapturado);		
 		
 		for (TiivsSolicitudOperban x : lstSolicBancarias) {
 			if(x.getId().getMoneda().trim().equals(ConstantesVisado.MONEDAS.COD_SOLES)){
@@ -2458,7 +2611,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}
 		
 		if (icontDolares == 0 && icontEuros == 0 && icontSoles > 0) {
-			//ONLI SOLES
+			//SOLO SOLES
 			for (TiivsSolicitudOperban x : lstSolicBancarias) {
 				valorFinal=valorFinal+x.getImporte();
 				this.solicitudRegistrarT.setImporte(valorFinal);
@@ -2467,7 +2620,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
         	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 		}
 		if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) {
-			//ONLI DOLARES
+			//SOLO DOLARES
 			for (TiivsSolicitudOperban x : lstSolicBancarias) {
 				valorFinal=valorFinal+x.getImporte();
 				this.solicitudRegistrarT.setImporte(valorFinal);
@@ -2476,7 +2629,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
         	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_DOLAR);
 		}
 		if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) {
-			//ONLI EUROS
+			//SOLO EUROS
 			for (TiivsSolicitudOperban x : lstSolicBancarias) {
 				valorFinal=valorFinal+x.getImporte();
 				this.solicitudRegistrarT.setImporte(valorFinal);
@@ -2496,14 +2649,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
         	this.solicitudRegistrarT.setMoneda(ConstantesVisado.MONEDAS.COD_SOLES);
 		}
 
-		
 		this.limpiarOperacionesBancarias();
         this.llamarComision();
-		
-
-	     
-
 	}
+	
 	public void limpiarOperacionesBancarias(){
 		icontDolares=0;icontEuros=0;icontSoles=0;valorFinal=0;
 		  objSolicBancaria=new TiivsSolicitudOperban();
@@ -2515,10 +2664,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		  this.objSolicitudOperacionCapturado=new TiivsSolicitudOperban();
 		  this.objSolicitudOperacionCapturado.setId(new TiivsSolicitudOperbanId());
 		  this.valorFinal=0.0;
+		  
 		  if(lstSolicBancarias.size()==0){
-				this.solicitudRegistrarT.setsImporteMoneda(valorFinal+"");
-		  	this.solicitudRegistrarT.setMoneda(null);
-			}
+			  this.solicitudRegistrarT.setsImporteMoneda(valorFinal+"");
+			  this.solicitudRegistrarT.setMoneda(null);
+		  }
 	}
 
 	public void eliminarArupacion() {
@@ -2536,9 +2686,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				break;
 			}
 		}
+		
 		//numGrupo--;
-		
-		
 	/*	 for (TiivsPersona objTiivsPersonaResultado : lstTiivsPersona) {
 			  if(objTiivsPersonaResultado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 				  lstPoderdantes.add(objTiivsPersonaResultado);}
@@ -2566,8 +2715,6 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		logger.info("Tamanio de la lista Solicitud Agrupacion : "+ lstSolicitudAgrupacion.size());
 		this.llamarComision();
 		this.objAgrupacionSimpleDtoCapturado = new AgrupacionSimpleDto();
-		
-		
 	}
 
 	public void verAgrupacion() {
@@ -2596,8 +2743,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}
 
 				  
-		/**Recien se empieza a llenar la lista de Persona */
-		
+		/**Recien se empieza a llenar la lista de Persona */		
 		setLstTiivsPersona(objAgrupacionSimpleDtoCapturado.getLstPersonas());
 		
 		/*for (AgrupacionSimpleDto dd: this.solicitudRegistrarTCopia.getLstAgrupacionSimpleDto()) {
@@ -2616,7 +2762,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		//return  "/faces/paginas/solicitudEdicion.xhtml";
 		return "";
 	}
-/*	public void verEditarAgrupacion(){
+
+	/*	public void verEditarAgrupacion(){
 		logger.info("********************** verEditarAgrupacion *********************************** ");
 		logger.info("this.getCodSoli  "+ this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
 		logger.info("this.getNumGrupo  "+ this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
@@ -2637,8 +2784,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		setLstTiivsPersona(this.objAgrupacionSimpleDtoCapturado.getLstPersonas());
 		flagUpdatePoderdanteApoderados=true;
 	}
-	*/
-	
+	*/	
 	
 	int y=0;
 	public void obtenerAccionAgregarOperacionBancaria() {
@@ -2732,13 +2878,17 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		this.flagUpdateOperacionSolcAgrupac = true;
 	}
 
+	/**
+	 * Metodo encargado de calcular la comision, primero se obtiene el 
+	 * tipo de comision y después el monto.
+	 * **/
 	public void llamarComision() {
-		logger.info("=== llamarComision() ===");
+		logger.info("=== llamarComision():INICIO ===");
 		this.solicitudRegistrarT.setTipoComision(objRegistroUtilesMB.obtenerTipoComision(this.solicitudRegistrarT));
 		this.solicitudRegistrarT.setComision(objRegistroUtilesMB.obtenerComision(solicitudRegistrarT.getTipoComision()));
-		logger.info(" TipoComision: " + this.solicitudRegistrarT.getTipoComision());
-		logger.info(" Comision : " + this.solicitudRegistrarT.getComision());
-
+		logger.info("[llamarComision]-TipoComision: " + this.solicitudRegistrarT.getTipoComision());
+		logger.info("[llamarComision]-Comision : " + this.solicitudRegistrarT.getComision());
+		logger.info("=== llamarComision():FIN ===");
 	}
 
 	@SuppressWarnings({ "unused", "unchecked" })
@@ -2756,7 +2906,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		establecerTipoSolicitud();
 		
-		logger.info("*********************** registrarSolicitud ************************");
+		logger.info(" =========== registrarSolicitud [v2] ===========");
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
         GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -2802,11 +2952,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			}else{
 				this.solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_INACTIVO);
 			}
-			
+			logger.debug("[REGISTR_SOLIC]-flagExoneraComision: "+this.solicitudRegistrarT.getExoneraComision());
 			
 			this.limpiarAgrupacionesVacias();
 
-			logger.info("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : "+ solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
+			if(solicitudRegistrarT.getTiivsSolicitudAgrupacions()!=null){
+				logger.info("[REGISTR_SOLIC]-AgrupacionPersona-tamanhio:"+ solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());	
+			}
 			
 			boolean esValido = false;
 			if(!this.sEstadoSolicitud.equals("BORRADOR")){ 	//Validacion para envio de solicitud a SSJJ
@@ -2825,29 +2977,28 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 					/*** REALIZAR VALIDACION DE COBRO DE COMISIONES ***/
 					if(validarCobroComisiones()){
-						logger.info("Solicitud con validación de cobro de comisiones restrictiva");
+						logger.info("[REGISTR_SOLIC]-Solicitud con validacion de cobro de comisiones restrictiva");
 						return;
 					}
 					this.enviarSolicitudSSJJ();
-					logger.info("Estudio: "+solicitudRegistrarT.getTiivsEstudio().getCodEstudio());					
 				}
 				
 				SolicitudDao<TiivsPersona, Object> servicePK = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 				String sCodigoSol = servicePK.obtenerPKNuevaSolicitud();
-				logger.debug("[REGISTR_SOLIC]-sCodigoSol " + sCodigoSol);
+				logger.debug("[REGISTR_SOLIC]-sCodigoSolicitud:" + sCodigoSol);
 				this.solicitudRegistrarT.setCodSoli(sCodigoSol);
 		
-		
+				//Registrando las Agrupaciones
 				for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 					  //x.setTiivsSolicitud(this.solicitudRegistrarT);
 					  x.getId().setCodSoli(sCodigoSol);
 					  for (TiivsAgrupacionPersona a : x.getTiivsAgrupacionPersonas()) {
 						a.setCodSoli(x.getId().getCodSoli());
 						a.setNumGrupo(x.getId().getNumGrupo());
-						a.setIdAgrupacion(null);//para que la bd asigne id agrupacion
+						a.setIdAgrupacion(null);//Para que la BD asigne IdAgrupacion
 					}
 				}
-				
+				//Registrando el Historial de la Solicitud
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT); //INSERTA LA SOLICITUD
 				TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 				  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),1+""));
@@ -2859,29 +3010,31 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				  
 				  serviceHistorialSolicitud.insertar(objHistorial);
 				  
+				//Registrando la lista de Documentos (Anexos)
 				if(this.lstAnexoSolicitud!=null){
 					logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+" de Anexos es:"+this.lstAnexoSolicitud.size());
 				}
 				for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
 					  n.getId().setCodSoli(solicitudRegistrarT.getCodSoli());
-					  logger.debug("[ANEXO]-Id:"+n.getId() + "  Alias:"+n.getAliasArchivo()+"  AliasTemp:"+n.getAliasTemporal());
+					  logger.debug("[REGISTR_SOLIC][Anexo]-Id:"+n.getId().getCodDoc() + "  Alias:"+n.getAliasArchivo()+"  AliasTemp:"+n.getAliasTemporal() + "  Hora:"+new Date());
 					  serviceAnexos.insertar(n);
 				}
 				 
-				
+				//Registrando las Operaciones Bancarias
 				for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
-					logger.info("[REGISTR_SOLIC]-OperacionBancaria-id: "+ a.getId().getCodOperBan());
+					logger.info("[REGISTR_SOLIC]-OperacionBancaria-codOper:"+ a.getId().getCodOperBan() + "   nombreOper:"+a.getTiivsOperacionBancaria().getDesOperBan());
 					a.getId().setCodSoli(this.solicitudRegistrarT.getCodSoli());
-					logger.info("[REGISTR_SOLIC]-CodSolicitud: "+ a.getId().getCodSoli());
-					 serviceSoli.insertar(a);
+					serviceSoli.insertar(a);
 				}
 				
 				 //Carga ficheros al File Server
-				  boolean bRet = cargarArchivosFileServer();
-				  logger.info("[REGISTR_SOLIC]-Resultado de carga de archivos al FileServer:" + bRet);
-				  //Elimina archivos temporales
-				  eliminarArchivosTemporales();
-				  
+				boolean bRet = cargarArchivosFileServer();
+				logger.info("[REGISTR_SOLIC]-Resultado de carga de archivos al FileServer:" + bRet);
+				//Elimina archivos temporales
+				eliminarArchivosTemporales();
+				
+				//Verificado el resultado y haciendo el redirect correcto.
+				logger.info("[REGISTR_SOLIC]-sEstadoSolicitud: "+this.sEstadoSolicitud);
 				if (objResultado.getCodSoli() != "" || objResultado != null) {
 					if (this.sEstadoSolicitud.equals("BORRADOR")) {
 						mesajeConfirmacion = "Se registró correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
@@ -2891,9 +3044,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 											objResultado.getCodSoli() + "\n" + mesajeValidacionHost;
 						actualizarBandeja=true;
 					}
+					logger.debug("[REGISTR_SOLIC]-msjConfirmacion:"+mesajeConfirmacion);
 					//redirect = "/faces/paginas/bandejaSeguimiento.xhtml";					
 					this.redirect = consultarSolicitudMB.redirectDetalleSolicitud(objResultado.getCodSoli());					
 				} else {
+					logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar la solicitud.");
 					mensaje = "Error al generar la Solicitud ";
 					Utilitarios.mensajeInfo("INFO", mensaje);
 				}
@@ -2910,8 +3065,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			}
 		} catch (Exception e) {
 			this.redirect="";
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e);
-			Utilitarios.mensajeError("ERROR", "Ocurrió un Error al grabar la Solicitud");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al registrar la solicitud: ",e);
+			Utilitarios.mensajeError("ERROR", "Ha ocurrido un error al grabar la Solicitud");
 
 		}
 		logger.info("Redirec:" + this.redirect);
@@ -2919,10 +3074,14 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 	}
 	
+	/** Metodo encargado de leer los valores parametrizados en la multitabla (T18), 
+	 * para hacer o no la validacion de Comision.
+	 * @return restrictivo Indicador para realizar la validacion booleano: true/false
+	 * **/
 	private boolean validarCobroComisiones(){
 		boolean restrictivo = false;
 		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		
+		logger.debug("ExoneraFlagComision():"+isbFlagComision());
 		//Si no esta exonerado a comision
 		if(!isbFlagComision()){
 			Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
@@ -2936,19 +3095,33 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					validacionVoucher = comisiones.get(0);
 				}
 				if(validacionVoucher!=null){
+					logger.debug("[Parametria]-validacionVoucher.getId().getCodElem():"+validacionVoucher.getId().getCodElem());
+					logger.debug("[Parametria]-validacionVoucher-valor1:"+validacionVoucher.getValor1());
+					logger.debug("[Parametria]-validacionVoucher-valor2:"+validacionVoucher.getValor2());
+					logger.debug("[Parametria]-validacionVoucher-valor3:"+validacionVoucher.getValor3());
 					if(validacionVoucher.getId().getCodElem().compareTo(ConstantesVisado.VALIDACION_INACTIVA)==0){
+						logger.info("No se validara contra el servicio de Comision, ya que no esta habilitado.");
 						restrictivo = false;
 					}else{
+						logger.debug("Se validara contra el servicio de Comision (Advertencia / Restrictivo)");
 						restrictivo = validaComision(validacionVoucher.getId().getCodElem(), validacionVoucher);
 					}
 				}
 			} catch (Exception e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e);
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"en validarCobroComisiones(): ",e);
 			}	
 		}
 		return restrictivo;
 	}
 	
+	/**
+	 * Metodo encargado de obtener los datos del pago de comision desde Host y realizar 
+	 * la validacion respectiva del Monto/Nro Voucher y mostrar el mensaje de 
+	 * validación como Advertencia o Restrictiva.
+	 * @param tipoValidacion Representa el tipo de validacion a realizar
+	 * @param validacionVoucher Valor del multitabla  del tipo {@link TiivsMultitabla}
+	 * @return flagValida Indicador de validacion del tipo booleano: true/false
+	 * **/
 	private boolean validaComision(String tipoValidacion, TiivsMultitabla validacionVoucher){
 		boolean flagValida = true;
 		BResult resultado = null;
@@ -2957,36 +3130,58 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		try {
 			resultado = voucherService.obtenerDatosVoucher(solicitudRegistrarT.getNroVoucher());
 			//Inserta en tabla VISPOD el voucher obtenido de Host
-			insertarVoucher(resultado);
+			if(resultado.getCode()==Integer.parseInt(Constantes.VOUCHER_EXITO)){
+				logger.debug("Se debe registrar el NroVoucher que si existe en Host");
+				insertarVoucher(resultado);
+			}			
+			
+			logger.debug("[ValidaComision]-tipoValidacion: "+tipoValidacion);
+			logger.debug("[ValidaComision]-solicitudRegistrarT.getComision():"+solicitudRegistrarT.getComision());
+			
 			if(tipoValidacion!=null && tipoValidacion.compareTo(ConstantesVisado.ACTIVA_ADVERTENCIA)==0){
 				flagValida = false;
 				if(resultado.getObject()!=null){
 					voucherHost = (TiivsHostVoucher) resultado.getObject();
+					logger.debug("[Advertencia]-ANTES-voucherMontoHost:"+Double.valueOf(voucherHost.getMontoComision()));
+					
 					if(voucherHost.getMontoComision()!=null &&
 							Double.valueOf(voucherHost.getMontoComision()).compareTo(solicitudRegistrarT.getComision())!=0){
-//						Utilitarios.mensajeInfo("INFO", validacionVoucher.getValor3());	
+						//Utilitarios.mensajeInfo("INFO", validacionVoucher.getValor3());	
+						logger.debug("[Advertencia]-voucherMontoHost: "+Double.valueOf(voucherHost.getMontoComision()));
 						mesajeValidacionHost = validacionVoucher.getValor3();
+						logger.debug("[Advertencia]-mensaje: "+mesajeValidacionHost);
+						
 					}
+					
 				}
 			}else if (tipoValidacion!=null && tipoValidacion.compareTo(ConstantesVisado.ACTIVA_RESTRICTIVA)==0){
 				flagValida = false;
 				if(resultado.getObject()!=null){
 					voucherHost = (TiivsHostVoucher) resultado.getObject();
+					logger.debug("[Restrictiva]-ANTES-voucherMontoHost:"+Double.valueOf(voucherHost.getMontoComision()));
 					if(voucherHost.getMontoComision()!=null &&
 							Double.valueOf(voucherHost.getMontoComision()).compareTo(solicitudRegistrarT.getComision())!=0){
 						flagValida = true;
+						logger.debug("[Restrictiva]-voucherMontoHost:"+Double.valueOf(voucherHost.getMontoComision()));
 //						Utilitarios.mensajeError("ERROR", validacionVoucher.getValor3());	
 						mesajeConfirmacion = validacionVoucher.getValor3();
+						logger.debug("[Restrictiva]-mensaje:"+mesajeConfirmacion);
 						Utilitarios.mensajeError("ERROR", mesajeConfirmacion);
 					}
 				}
 			}
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"en validaComision():",e);
 		}
+		logger.debug("[ValidaComision]-flagValida: "+flagValida);
 		return flagValida;
 	}
 	
+	/**
+	 * Metodo encargado de insertar la información del Voucher recuperado de Host 
+	 * mediante un servicio web en la BD local de Visado.
+	 * @param result Representa el objeto VoucherHost del tipo {@link BResult}
+	 * **/
 	private void insertarVoucher(BResult result){
 		GenericDao<TiivsHostVoucher, Object> service = (GenericDao<TiivsHostVoucher, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		if(result!=null && result.getObject()!=null){
@@ -2997,7 +3192,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				voucher.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO);
 				service.insertar(voucher);
 			} catch (Exception e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+e);
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al guardar el NroVoucher-Host",e);
 			}
 		}
 	}
@@ -3014,9 +3209,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	 * */
 	public void enviarSolicitudSSJJ() {
 		Timestamp time = new Timestamp(objRegistroUtilesMB.obtenerFechaRespuesta().getTime());
-		logger.info("[EnviarSSJJ]-FechaRespuesta : " + time);
+		logger.info("\t[enviarSolicitudSSJJ]-FechaRespuesta: " + time);
 		String sCodigoEstudio = objRegistroUtilesMB.obtenerEstudioMenorCarga();
-		logger.info("[EnviarSSJJ]-CodEstudio-menorCarga: +  " + sCodigoEstudio);
+		logger.info("\t[enviarSolicitudSSJJ]-CodEstudioMenorCarga:+  " + sCodigoEstudio);
 		for (TiivsEstudio x : combosMB.getLstEstudio()) {
 			if (x.getCodEstudio().equals(sCodigoEstudio)) {
 				this.solicitudRegistrarT.setTiivsEstudio(x);
@@ -3034,16 +3229,17 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}
 	
 	/**
-	 * Metodo que se encarga de la validacion del nro de voucher ingresado 
-	 * al registrar una solicitud de visado
-	* */
-	
+	 * Metodo que se encarga de la validacion del Nro de Voucher ingresado en el 
+	 * formulario de registro de solicitud contra la informacion de BD Local 
+	 * @return booleano Indica si ya existe el NroVoucher en BD. true/false
+	* */	
 	@SuppressWarnings({ "unchecked", "null" })
 	public boolean validarNroVoucher() throws Exception {
 		boolean booleano = true;
 		if (!this.sEstadoSolicitud.equals("BORRADOR")) {
 			String mensaje = "Ingrese un Nro de Vourcher no registrado ";
 			Busqueda filtroNroVoucher = Busqueda.forClass(TiivsSolicitud.class);
+			//Se consulta las solicitudes con estado: 0001
 			filtroNroVoucher.add(Restrictions.not(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)));
 			GenericDao<TiivsSolicitud, String> serviceNroVoucher = (GenericDao<TiivsSolicitud, String>) SpringInit
 					.getApplicationContext().getBean("genericoDao");
@@ -3054,6 +3250,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					if (a != null || !a.equals("")) {
 						if (a.getNroVoucher() != (null)) {
 							if (a.getNroVoucher().equals(this.solicitudRegistrarT.getNroVoucher())) {
+								logger.debug("\tvalidarNroVoucher:Ya existe una solicitud con el NroVoucher: "+this.solicitudRegistrarT.getNroVoucher());
 								booleano = false;
 								Utilitarios.mensajeInfo("INFO", mensaje);
 								break;
@@ -3176,11 +3373,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	 * @return true/false Respuesta de validacion
 	 * */
 	private boolean validarEnvioSolicitud() throws Exception {		
-		  
+		logger.debug("=== validarEnvioSolicitud() ===");  
 		boolean retorno = true;
 		String mensaje = "";
 		
-		logger.info("[VALIDA_ENV_SOLIC]-Oficina:"+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
 		//Validacion de oficina
 		if (solicitudRegistrarT.getTiivsOficina1() == null) {
 			mensaje = "Ingrese una Oficina";
@@ -3195,6 +3391,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
+		logger.info("Valida[EnvioSolicitud]-CodOficina:"+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
 		
 		//Validacion de numero de voucher
 				if (solicitudRegistrarT.getNroVoucher()==null){
@@ -3212,9 +3409,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						Utilitarios.mensajeInfo("INFO", mensaje);
 					}
 				 else {
+					logger.info("Valida[EnvioSolicitud]-NroVoucher:"+solicitudRegistrarT.getNroVoucher());
 					retorno =this.validarNroVoucher();
 				 }
-				 
+		//Validacion de Agrupaciones: Apoderado / Poderante		 
 		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
 			mensaje = "Ingrese la sección Apoderado y Poderdante";
 			retorno = false;
@@ -3222,12 +3420,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}else{
 			Set<TiivsAgrupacionPersona> lstAgrupacionPersona=null;
 			int conuntNumAgru=0;
+			logger.info("Valida[EnvioSolicitud]-[Agrupaciones]size:"+solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
 			
 			for (TiivsSolicitudAgrupacion a : solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 				conuntNumAgru=a.getId().getNumGrupo();
-				logger.info("conuntNumAgru : " +conuntNumAgru);
+				logger.info("\t[Agrupaciones]-NroAgrup: " +conuntNumAgru);
 				lstAgrupacionPersona=a.getTiivsAgrupacionPersonas();
-				logger.info("lstAgrupacionPersona : " +lstAgrupacionPersona.size());
+				logger.info("\t[Agrupaciones]-ListaAgrupPers: " +lstAgrupacionPersona.size());
 				int contPoderdante=0, contApoderado=0;
 				for (TiivsAgrupacionPersona xa : lstAgrupacionPersona) {
 					if(xa.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
@@ -3246,71 +3445,69 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					break;
 					
 				}
-				logger.info("contPoderdante : " +contPoderdante);
-				logger.info("contApoderado : " +contApoderado);
-			}
-			
+				logger.info("\t[Agrupaciones]-CantPoderdante:" +contPoderdante);
+				logger.info("\t[Agrupaciones]-CantApoderado:" +contApoderado);
+			}			
 		}
+		//Validacion de Tipo de Solicitud
 		if (solicitudRegistrarT.getTiivsTipoSolicitud() == (null)) {
 			mensaje = "Seleccione el Tipo de Solicitud ";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
-		
+		//Validacion de documentos adjuntos y obligatorios
 		if (this.lstAnexoSolicitud.size() == 0) {
 			mensaje = "Ingrese los documentos Obligatorios";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
-		
-		for(TiivsTipoSolicDocumento docRequerido :  lstTipoSolicitudDocumentos){
-			if(docRequerido.getObligatorio().equals("1")){
-				mensaje = "Ingrese los documentos Obligatorios";
-				retorno = false;
-				Utilitarios.mensajeInfo("INFO", mensaje);
-				break;
+		if(lstTipoSolicitudDocumentos!=null){
+			for(TiivsTipoSolicDocumento docRequerido :  lstTipoSolicitudDocumentos){
+				if(docRequerido.getObligatorio().equals("1")){
+					mensaje = "Ingrese los documentos Obligatorios";
+					retorno = false;
+					Utilitarios.mensajeInfo("INFO", mensaje);
+					break;
+				}
 			}
 		}
-
+		
+		//Validacion de Operacion Bancaria
 		if (this.lstSolicBancarias.size() == 0) {
-
 			mensaje = "Ingrese al menos una Operación Bancaria";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
-		
-			
-		
+		logger.debug("Valida[EnvioSolicitud]-retorno:"+retorno);
 		return retorno;
 	}
 
 	public String prepararURLEscaneo() {			
-		logger.info("***********prepararURLEscaneo***************");
-		
+		logger.info("== prepararURLEscaneo ==");		
 		String sCadena = "";		
 		try{				
 			pdfViewerMB = new PDFViewerMB();	
 			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID());			
 		}catch(Exception e){
-			logger.error("Error al obtener parámetros de APPLET",e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener parametros " +
+					"de configuracion para el APINAE: ",e);
 		}
 		return sCadena;
-		
 	}
 	
 	/**
 	 * Metodo que se encarga de cargar los archivos .PDF hacia el FileServer
 	 * @return boolean true/false Indica el exito de la operacion
 	 * */
-	/*public boolean cargarArchivosFileServer(){			
+	public boolean cargarArchivosFileServer(){			
 		logger.info("========= cargarArchivosFileServer() ========");		
 		boolean exito = true;
 				
 		String ubicacionFinal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)  + File.separator;		
 		String sUbicacionTemporal = ubicacionFinal + ConstantesVisado.FILES + File.separator;
 				
-		logger.info("[CARGAR-FILESERVER]-Ubicacion final "+ ubicacionFinal);
-		logger.info("[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);		
+		logger.info("[CARGAR-FILESERVER]-Ubicacion temporal: "+ sUbicacionTemporal);
+		logger.info("[CARGAR-FILESERVER]-Ubicacion final: "+ ubicacionFinal);
 		if(lstAnexoSolicitud!=null){
 			logger.debug("[CARGAR-FILESERVER]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
 		}
@@ -3326,18 +3523,18 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			} catch (IOException e) {
 				logger.error("Error al mover el archivo al fileServer", e);
 			} catch (Exception ex) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al mover archivo al fileServer:" + ex);
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al mover archivo al fileServer:" , ex);
 			}
 			if(!destFile.isFile() && destFile.length()>0){
 				exito = false;
 			}
 		}
-		logger.debug("exito:"+exito);
+		logger.debug("[CARGAR-FILESERVER]-exito:"+exito);
 		return exito;		
-	}*/
+	}
 	
-	public boolean cargarArchivosFileServer(){			
-		logger.info("========= cargarArchivosFileServer() ========");		
+	public boolean cargarArchivosFileServerNuevo(){			
+		logger.info("========= cargarArchivosFileServer():NUEVO ========");		
 		boolean exito = true;
 		TiivsParametros parametro = obtenerParametro();
 		
@@ -3346,21 +3543,25 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		String sUbicacionTemporal = null;
 		
 		if(lstAnexoSolicitud!=null){
-			logger.debug("[CARGAR-FILESERVER]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
+			logger.debug("NUEVO-[CARGAR-FILESERVER]-lstAnexoSolicitud-size:"+lstAnexoSolicitud.size());
 		}
 		if(parametro!=null){
 			try {
 				ubicacionFinal = parametro.getCarpetaRemota(); //+ File.separator;
 				sUbicacionTemporal = ubicacionFinal + ConstantesVisado.FILES + File.separator;
 				
-				logger.info("[CARGAR-FILESERVER]-Ubicacion final "+ ubicacionFinal);
-				logger.info("[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);		
+				logger.info("NUEVO-[CARGAR-FILESERVER]-Ubicacion final "+ ubicacionFinal);
+				logger.info("NUEVO-[CARGAR-FILESERVER]-Ubicacion temporal "+ sUbicacionTemporal);		
 				
 				// Instanciamos la conexión por FTP con el file server
 				FTPClient cliente=new FTPClient();
 				try {
+					logger.debug("parametro.getServer(): "+parametro.getServer());
+					logger.debug("parametro.getLoginServer(): "+parametro.getLoginServer());
+					logger.debug("parametro.getPassServer(): "+parametro.getPassServer());
 					cliente.connect(parametro.getServer());
 				    boolean login=cliente.login(parametro.getLoginServer(),parametro.getPassServer());
+				    logger.debug("login:"+login);
 				    if(login){
 				    	logger.info("+++ Conexión file server exitosa ");
 				    	cliente.changeWorkingDirectory(parametro.getCarpetaRemota()); //nos movemos dentro del arbol de directorios
@@ -3368,8 +3569,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				    		FileInputStream fis = new FileInputStream(new File(sUbicacionTemporal + anexo.getAliasTemporal())); 
 				    		cliente.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
 				    		boolean res = cliente.storeFile(anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo(), fis );
+				    		logger.debug("NUEVO -> "+res);
 				    		if(!res){
-				    			logger.error("+++ ERROR moviendo archivo: " + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
+				    			logger.error("NUEVO +++ ERROR moviendo archivo: " + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
 				    			return false;
 				    		}
 				    		fis.close();
@@ -3377,7 +3579,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				    }
 				} catch (Exception e) {
 					exito = false;
-					logger.error("+++ERROR al instanciar FTP: " + e.getMessage());
+					logger.error("+++ERROR al instanciar FTP: ", e);
 				} finally{
 					cliente.logout();
 			        cliente.disconnect();
@@ -3401,7 +3603,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				return parametros.get(0);
 			}
 		} catch (Exception e) {
-			logger.error("+++ERROR obteniendo parametros: " + e.getMessage());
+			logger.error("+++ERROR obteniendo parametros: " , e);
 		}	
 		return null;
 	}
@@ -3437,12 +3639,15 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}
 				
 	/**
-	 * Metod que se encargar de limpiar los documentos temporales que ya no
+	 * Metodo que se encargar de limpiar los documentos temporales que ya no
 	 * son necesarios almacenar en el directorio de visado.
 	 * **/
 	public void eliminarArchivosTemporales() {	
-		logger.info("************ eliminarArchivosTemporales() **************");
-		logger.info("Archivos a eliminar:" + aliasFilesToDelete.size()); 	
+		
+		if(aliasFilesToDelete!=null){
+			logger.info("==== eliminarArchivosTemporales() ====");
+			logger.info("Archivos a eliminar:" + aliasFilesToDelete.size()); 
+		}	
 		File fileToDelete = null;
 		
 		String sUbicacionTemporal = Utilitarios
@@ -3450,7 +3655,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				+ File.separator + ConstantesVisado.FILES + File.separator;
 		
 		for(String sfile : aliasFilesToDelete){
-			logger.debug("borrar archivo: " + sUbicacionTemporal + sfile);
+			logger.debug("Borrar archivo: " + sUbicacionTemporal + sfile);
 			fileToDelete = new File(sUbicacionTemporal + sfile);
 			if(fileToDelete.delete()){
 				logger.debug("Se ha BORRADO el archivo temporal :" + sfile);
@@ -3464,7 +3669,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}		
 	
 	public void cambiarRazonSocial(ValueChangeEvent e){		
-		logger.info("************cambiarRazonSocial()*¨**************");
+		logger.info("==== cambiarRazonSocial()=====");
 		String codTipoDocumento = (String) e.getNewValue();
 		if (codTipoDocumento!=null && codTipoDocumento.equals(this.codigoRazonSocial)) {//CODIGO RAZONSOCIAL
 			this.mostrarRazonSocial = true;
@@ -3491,7 +3696,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			 patter=listaMultiTabla.get(0).getValor4();
 			logger.info("patter : "+patter);
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas: " + e);
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas: " , e);
 		}
 		
 		
@@ -3500,8 +3705,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	public String descargarDocumento() {
 		logger.debug("=== inicia descargarDocumento() ====");
 		HttpServletResponse response = (HttpServletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		
+				.getCurrentInstance().getExternalContext().getResponse();		
 		
 		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		
@@ -3514,14 +3718,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		String outputFileName = rutaDocumento;
 		
 		File outputPDF = new File(outputFileName);
-
-		// Get ready to return pdf to user
 		BufferedInputStream input = null;
 		BufferedOutputStream output = null;
 		try {
-			// Open file.
 			input = new BufferedInputStream(new FileInputStream(outputPDF),10240);
-
 			// Return PDF to user
 			// Init servlet response.
 			response.reset();
@@ -3540,24 +3740,20 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			// Finalize task.
 			output.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:"+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:",e);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento:"+ex);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento:",ex);
 		} 
 		finally {
 			try {
 				output.close();
 			} catch (IOException e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento:"+e);
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento:",e);
 			}
 			try {
 				input.close();
 			} catch (IOException e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:"+e);
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:",e);
 			}
 		}
 		FacesContext.getCurrentInstance().responseComplete();
@@ -3594,7 +3790,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			}
 			
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " , e);
 		}
 	}
 	
@@ -3615,7 +3811,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				}
 			}
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " , e);
 		}
 	}
 	
@@ -3639,7 +3835,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				}
 			}
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " , e);
 		}
 	}
 	
@@ -3664,7 +3860,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				}
 			}
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " , e);
 		}
 	}
 	
