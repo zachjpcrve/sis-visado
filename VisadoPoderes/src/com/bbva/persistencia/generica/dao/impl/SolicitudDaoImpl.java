@@ -359,13 +359,13 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	{
 		
 		GenericDao<TiivsSolicitudOperban, String> service = (GenericDao<TiivsSolicitudOperban, String>) SpringInit.getApplicationContext().getBean("genericoDao");
-		logger.info(" solicitud.getCodSoli() " +solicitud.getCodSoli());
+		logger.info("[SolicitudDAO-OperBancaria]-codSolicitud:" +solicitud.getCodSoli());
 		Busqueda filtro = Busqueda.forClass(TiivsSolicitudOperban.class);
 		filtro.add(Restrictions.eq("id.codSoli", solicitud.getCodSoli()));
 		List<TiivsSolicitudOperban> lstOperacionesBancarias_2 = new ArrayList<TiivsSolicitudOperban>();
 		lstOperacionesBancarias_2 = service.buscarDinamico(filtro);
 		 for (TiivsSolicitudOperban x : service.buscarDinamico(filtro)) {
-			logger.info(" x.getMoneda() " +x.getId().getMoneda());
+			logger.info("\tx.getMoneda(): " +x.getId().getMoneda());
 		}
 		return lstOperacionesBancarias_2 ;
 	}
