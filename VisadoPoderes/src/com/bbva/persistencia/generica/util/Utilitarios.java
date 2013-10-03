@@ -122,7 +122,7 @@ public class Utilitarios {
 	
 	public static int buscarAnioxCodigo(int codigo)
 	{
-		System.out.println("Buscando codigo: " + codigo);
+		log.debug("Buscando codigo: " + codigo);
 		
 		int pAnio=0;
 		
@@ -146,7 +146,7 @@ public class Utilitarios {
 			}
 		}
 		
-		System.out.println("Resultado: " + pAnio);
+		log.debug("Resultado: " + pAnio);
 		
 		return pAnio;
 	}
