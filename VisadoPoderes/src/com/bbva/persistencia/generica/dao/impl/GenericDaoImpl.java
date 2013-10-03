@@ -35,7 +35,6 @@ public abstract class GenericDaoImpl<K, T extends Serializable>
 			cnx = hibernateSession.getSessionFactory().openStatelessSession().connection();
 		} catch (Exception e) {
 			e.printStackTrace();
-			//System.out.println(e.getCause());
 			throw new Exception(e);
 		}
 		return cnx;
