@@ -512,6 +512,9 @@ public class SeguimientoMB
 		String cadena="";
 		
 		// Se obtiene y setea la descripcion del Estado en la grilla
+		if(solicitudes!=null){
+			logger.debug("[ActDatosGrilla]-Hay  "+solicitudes.size() +" solicitudes como resultado.");
+		}
 		for (TiivsSolicitud tmpSol : solicitudes) 
 		{
 			if (tmpSol.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
@@ -534,6 +537,7 @@ public class SeguimientoMB
 			if (tmpSol.getEstado() != null) {
 				String estado=buscarEstadoxCodigo(tmpSol.getEstado().trim());
 				tmpSol.setTxtEstado(estado);
+				logger.debug("[ActDatosGrilla]-TxtEstado:"+tmpSol.getTxtEstado());
 			}
 			
 			// Se obtiene la moneda y se coloca las iniciales en la columna Importe Total
@@ -629,6 +633,7 @@ public class SeguimientoMB
 		    }
 		    
 		    tmpSol.setTxtPoderdante(cadena);
+		    logger.debug("[ActDatosGrilla]-TxtPoderdante:"+tmpSol.getTxtPoderdante());
 			
 			// Cargar data de apoderados
 			cadena="";
@@ -653,7 +658,7 @@ public class SeguimientoMB
 		    }
 			
 			tmpSol.setTxtApoderado(cadena);
-			
+			logger.debug("[ActDatosGrilla]-TxtApoderado:"+tmpSol.getTxtApoderado());
 			//Carga las operaciones bancarias asociadas a una solicitud
 			cadena="";
 			for (TiivsSolicitudOperban tmp: combosMB.getLstSolOperBan())
@@ -663,8 +668,8 @@ public class SeguimientoMB
 					cadena +=  devolverDesOperBan(tmp.getId().getCodOperBan())  + ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
 				}
 			}
-			
 			tmpSol.setTxtOpeBan(cadena);
+			logger.debug("[ActDatosGrilla]-TxtOpeBan:"+tmpSol.getTxtOpeBan());
 			
 			//Ordenar niveles
 			String cadNiveles = "";
@@ -1638,7 +1643,7 @@ public class SeguimientoMB
 		// 1. Filtro por codigo de solicitud (funciona)
 		if (getCodSolicitud().compareTo("") != 0) 
 		{
-			logger.info("Filtro por codigo de solicitud: " + getCodSolicitud());
+			logger.debug("[Seguimiento-busqSolicit]-CodSolicitud:"+getCodSolicitud());
 			String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getCodSolicitud().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
 			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_COD_SOLICITUD,"%"+filtroNuevo));
 		}
@@ -1661,27 +1666,27 @@ public class SeguimientoMB
 		{
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
 			{
-				logger.info("Filtro por importe: " + getIdImporte());
+				logger.debug("[Seguimiento-busqSolicit]-IdImporte:"+getIdImporte());
 				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_CINCUENTA)));
 			}
 
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE)) 
 			{
-				logger.info("Filtro por importe: " + getIdImporte());
+				logger.debug("[Seguimiento-busqSolicit]-IdImporte:"+getIdImporte());
 				filtroSol.add(Restrictions.gt(ConstantesVisado.CAMPO_IMPORTE,ConstantesVisado.VALOR_RANGO_CINCUENTA));
 				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_IMPORTE,ConstantesVisado.VALOR_RANGO_CIENTO_VEINTE));
 			}
 
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA)) 
 			{
-				logger.info("Filtro por importe: " + getIdImporte());
+				logger.debug("[Seguimiento-busqSolicit]-IdImporte:"+getIdImporte());
 				filtroSol.add(Restrictions.gt(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_CIENTO_VEINTE)));
 				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_DOSCIENTOS_CINCUENTA)));
 			}
 
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA)) 
 			{
-				logger.info("Filtro por importe: " + getIdImporte());
+				logger.debug("[Seguimiento-busqSolicit]-IdImporte:"+getIdImporte());
 				filtroSol.add(Restrictions.gt(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_DOSCIENTOS_CINCUENTA)));
 			}
 		}
@@ -1827,7 +1832,7 @@ public class SeguimientoMB
 		// 11. Filtro por numero de documento de apoderado (funciona)
 		if (getNroDOIApoderado().compareTo("") != 0) 
 		{
-			logger.debug("[Filtro]-getNroDOIApoderado(): "+getNroDOIApoderado());
+			logger.debug("[Seguimiento-busqSolicit]-getNroDOIApoderado:"+getNroDOIApoderado());
 			String codSol="";
 			int ind=0;
 			List<String> lstSolicitudes = new ArrayList<String>();
@@ -1891,7 +1896,7 @@ public class SeguimientoMB
 		// 13. Filtro por numero de documento de poderdante (funciona)
 		if (getNroDOIPoderdante().compareTo("") != 0) 
 		{
-			logger.info("[Filtro]-getNroDOIPoderdante():" + getNroDOIPoderdante());
+			logger.debug("[Seguimiento-busqSolicit]-getNroDOIPoderdante:"+getNroDOIPoderdante());
 			String codSol="";
 			int ind=0;
 			List<String> lstSolicitudes = new ArrayList<String>();
@@ -2234,6 +2239,7 @@ public class SeguimientoMB
 				}
 				else
 				{
+					//02/10/2013
 					String apoderado[] = {ConstantesVisado.APODERADO, ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO};
 					filtro.add(Restrictions.in(ConstantesVisado.CAMPO_TIPO_PARTIC,apoderado));
 				}
@@ -2294,7 +2300,7 @@ public class SeguimientoMB
 	public void busquedaSolicitudxCodigo(String codigo) 
 	{
 		logger.info("==== busquedaSolicitudxCodigo() =====");
-		
+		logger.debug("[BandejaSeg-buscarSolicitudCod]-codigo:"+codigo);
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
 		filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, codigo));
@@ -2308,12 +2314,14 @@ public class SeguimientoMB
 
 		if (solicitudes.size() == 0) 
 		{
+			logger.debug("[BandejaSeg-buscarSolicitudCod]-rpta:"+ConstantesVisado.MSG_TOTAL_SIN_REGISTROS);
 			setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_SIN_REGISTROS,solicitudes.size());
 			setNoHabilitarExportar(true);
 		} 
 		else 
 		{
 			setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + solicitudes.size() + ConstantesVisado.MSG_REGISTROS,solicitudes.size());
+			logger.debug("[BandejaSeg-buscarSolicitudCod]-rpta:"+ConstantesVisado.MSG_TOTAL_REGISTROS+"encontrados:["+solicitudes.size()+"]");
 			actualizarDatosGrilla();
 			setNoHabilitarExportar(false);
 		}
