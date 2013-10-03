@@ -40,7 +40,7 @@
         <property name="fechaRegistro" type="java.sql.Timestamp">
             <column name="FECHA_REGISTRO" />
         </property>
-        <set name="tiivsRevocados" table="TIIVS_REVOCADO" inverse="true" lazy="true" fetch="select">
+        <set name="tiivsRevocados" table="TIIVS_REVOCADO" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="COD_PER" precision="8" scale="0" />
             </key>
@@ -48,7 +48,7 @@
         </set>
         <set name="tiivsAgrupacionPersonas" table="TIIVS_AGRUPACION_PERSONA"  inverse="true" lazy="false" fetch="select">
             <key>
-                <column name="COD_PER" precision="22" scale="0" />
+                <column name="COD_PER" precision="8" scale="0" />
             </key>
             <one-to-many class="com.hildebrando.visado.modelo.TiivsAgrupacionPersona" />
         </set>

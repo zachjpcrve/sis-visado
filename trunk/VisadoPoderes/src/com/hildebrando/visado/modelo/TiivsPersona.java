@@ -49,7 +49,7 @@ public class TiivsPersona implements java.io.Serializable {
 	public TiivsPersona(int codPer, String codCen, String tipDoi,
 			String numDoi, String nombre, String apePat, String apeMat,
 			String numCel, String email, String usuarioRegistro,
-			Timestamp fechaRegistro, Set<TiivsAgrupacionPersona> tiivsAgrupacionPersonas) {
+			Timestamp fechaRegistro, Set tiivsRevocados, Set<TiivsAgrupacionPersona> tiivsAgrupacionPersonas) {
 		this.codPer = codPer;
 		this.codCen = codCen;
 		this.tipDoi = tipDoi;
@@ -61,6 +61,7 @@ public class TiivsPersona implements java.io.Serializable {
 		this.email = email;
 		this.usuarioRegistro = usuarioRegistro;
 		this.fechaRegistro = fechaRegistro;
+		this.tiivsRevocados = tiivsRevocados;
 		this.tiivsAgrupacionPersonas = tiivsAgrupacionPersonas;
 	}
 
@@ -224,7 +225,7 @@ public class TiivsPersona implements java.io.Serializable {
 		this.tiivsRevocados = tiivsRevocados;
 	}
 
-	@Override
+	/*@Override
 	public String toString() {
 		return "TiivsPersona [codPer=" + this.codPer + ", codCen="
 				+ this.codCen + ", tipDoi=" + this.tipDoi + ", numDoi="
@@ -238,10 +239,10 @@ public class TiivsPersona implements java.io.Serializable {
 				+ this.sDesctipPartic + ", sDescclasifPer="
 				+ this.sDescclasifPer + ", sDesctipDoi=" + this.sDesctipDoi
 				+ ", nombreCompletoMayuscula=" + this.nombreCompletoMayuscula
-				+ ", tiivsRevocados=" + this.tiivsRevocados
+				//+ ", tiivsRevocados=" + this.tiivsRevocados
 				+ ", tiivsAgrupacionPersonas=" + this.tiivsAgrupacionPersonas
 				+ "]";
-	}
+	}*/
 
 	public void setIdAgrupacion(Integer idAgrupacion) {
 		this.idAgrupacion = idAgrupacion;
