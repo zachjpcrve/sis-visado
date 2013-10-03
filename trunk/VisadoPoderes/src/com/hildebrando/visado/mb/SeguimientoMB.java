@@ -220,6 +220,7 @@ public class SeguimientoMB
 					}
 				}
 			}
+
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: ",e);
 		}
@@ -597,6 +598,9 @@ public class SeguimientoMB
 							lstPoderdantes.add(d.getTiivsPersona());
 					    }
 						else if(d.getTipPartic().trim().equals(ConstantesVisado.APODERADO))
+						{
+							lstApoderdantes.add(d.getTiivsPersona());
+						}else if(d.getTipPartic().trim().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO))
 						{
 							lstApoderdantes.add(d.getTiivsPersona());
 						}
@@ -2230,7 +2234,8 @@ public class SeguimientoMB
 				}
 				else
 				{
-					filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_TIPO_PARTIC,ConstantesVisado.APODERADO));
+					String apoderado[] = {ConstantesVisado.APODERADO, ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO};
+					filtro.add(Restrictions.in(ConstantesVisado.CAMPO_TIPO_PARTIC,apoderado));
 				}
 			}
 		}
@@ -2812,6 +2817,7 @@ public class SeguimientoMB
 						//&& pers.getApePat().toUpperCase() != ""
 						//&& pers.getApeMat().toUpperCase() != ""
 					{
+						
 						String nombreCompletoMayuscula = "".concat(pers.getNombre()!=null?pers.getNombre().toUpperCase():"")
 								.concat(" ").concat(pers.getApePat()!=null?pers.getApePat().toUpperCase():"")
 								.concat(" ").concat(pers.getApeMat()!=null?pers.getApeMat().toUpperCase():"");
@@ -2830,8 +2836,10 @@ public class SeguimientoMB
 						}
 					}
 				//}
+				
 			}
 		}
+
 		return lstTiivsPersonaResultado;
 	}
 	
@@ -2995,9 +3003,11 @@ public class SeguimientoMB
 				seg.setMovimiento(h.getId().getMovimiento());
 				lstSeguimientoDTO.add(seg);				
 			}
-		}		
+		}
+		
 		
 	}
+	
 	
 	
 	public List<TiivsSolicitud> getSolicitudes() {

@@ -1879,7 +1879,7 @@ public class ConsultarSolicitudMB {
 	                    	 Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 						} else if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)
 								  && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
-						    	 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+							 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
 	                    	 solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 	                    	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 	                    	 this.registrarHistorial(solicitudRegistrarT);
@@ -2141,7 +2141,7 @@ public class ConsultarSolicitudMB {
 				|| this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02))) 
 		{
 			logger.info("*********************** actualizarEstadoEjecutadoSolicitud **************************");
-			
+
 			this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02);
 			this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 			this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_EJECUTADO_T02);
@@ -2659,6 +2659,8 @@ public class ConsultarSolicitudMB {
 					}else if(xa.getTipPartic().equals(ConstantesVisado.APODERADO)){
 						contApoderado++;
 						
+					}else if(xa.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
+						contApoderado++;
 					}
 				}
 				if(contPoderdante==0||contApoderado==0){
@@ -3411,6 +3413,10 @@ public class ConsultarSolicitudMB {
 				if (n.getTipPartic().equals(ConstantesVisado.APODERADO)) {
 					lstApoderdantes.add(n);
 					logger.info(" apoderado : " + n.getCodPer());
+				}
+				if (n.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)) {
+					lstApoderdantes.add(n);
+					logger.info(" apoderado-heredero : " + n.getCodPer());
 				}
 
 			}

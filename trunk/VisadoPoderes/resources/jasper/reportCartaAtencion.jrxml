@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="542" pageHeight="795" columnWidth="502" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.3995221406291998"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="130"/>
+	<property name="ireport.y" value="86"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -53,39 +53,14 @@
 		</band>
 	</title>
 	<detail>
-		<band height="53">
-			<subreport>
-				<reportElement isPrintRepeatedValues="false" x="21" y="5" width="470" height="43" isPrintWhenDetailOverflows="true"/>
-				<subreportParameter name="PARAM_INSTRUCCION">
-					<subreportParameterExpression><![CDATA[$F{instrucciones}]]></subreportParameterExpression>
-				</subreportParameter>
-				<dataSourceExpression><![CDATA[$F{lstOperacionesDS}]]></dataSourceExpression>
-				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "reportCartaAtencion_subreportOperaciones.jasper"]]></subreportExpression>
-			</subreport>
-			<rectangle>
-				<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="17" y="2" width="474" height="50" isPrintWhenDetailOverflows="true"/>
-			</rectangle>
-		</band>
-		<band height="61">
+		<band height="40">
 			<rectangle>
 				<reportElement stretchType="RelativeToBandHeight" x="17" y="1" width="474" height="34" isPrintWhenDetailOverflows="true"/>
 			</rectangle>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" isPrintRepeatedValues="false" x="26" y="4" width="459" height="26" isPrintWhenDetailOverflows="true"/>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="22" y="5" width="459" height="26" isPrintWhenDetailOverflows="true"/>
 				<textElement markup="html"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{instrucciones}!=null?$F{instrucciones}:" "]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement mode="Transparent" x="17" y="39" width="114" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
-				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Fecha de Aprobación:]]></text>
-			</staticText>
-			<textField pattern="dd/MM/yyyy">
-				<reportElement x="131" y="39" width="167" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{fechaHistorial}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -111,9 +86,21 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="116">
+		<band height="159">
 			<staticText>
-				<reportElement x="33" y="28" width="452" height="80"/>
+				<reportElement mode="Transparent" x="22" y="7" width="114" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de Aprobación:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="139" y="7" width="167" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{fechaHistorial}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="33" y="69" width="452" height="80"/>
 				<textElement verticalAlignment="Top" rotation="None">
 					<font size="10" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single" tabStopWidth="5"/>
@@ -123,7 +110,7 @@ Generado este documento no procede reimpresión
 Tener en cuenta que la presente aprobación se ejecuta desde la fecha de aprobación hasta los 7 días siguientes. Transcurrido este plazo deberá presentar nuevamente su solicitud.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="26" y="28" width="5" height="80"/>
+				<reportElement x="26" y="69" width="5" height="80"/>
 				<textElement/>
 				<text><![CDATA[-
 
@@ -131,7 +118,7 @@ Tener en cuenta que la presente aprobación se ejecuta desde la fecha de aprobac
 -]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="22" y="2" width="159" height="20"/>
+				<reportElement x="22" y="43" width="159" height="20"/>
 				<textElement>
 					<font isBold="false"/>
 				</textElement>
