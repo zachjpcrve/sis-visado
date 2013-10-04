@@ -2155,7 +2155,7 @@ public class SeguimientoMB
 			try {
 				lstRev = busqSolAgrp.buscarDinamico(filtro);
 			} catch (Exception e) {
-				logger.info("Error al buscar en solicitud agrupacion");
+				logger.info("Error al buscar en solicitud agrupacion",e);
 			}
 			
 			lstSolicitudesSelected.clear();
@@ -2811,6 +2811,9 @@ public class SeguimientoMB
 		Busqueda filtro = Busqueda.forClass(TiivsPersona.class);
 		try {
 			lstTiivsPersonaBusqueda = service.buscarDinamico(filtro);
+			if(lstTiivsPersonaBusqueda!=null){
+				logger.debug("[completePersona]-Se han encontrado: "+lstTiivsPersonaBusqueda.size()+" personas.");
+			}
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de Personas,",e);
 		}
@@ -2821,7 +2824,7 @@ public class SeguimientoMB
 			{	
 				//if (pers.getApePat()!=null && pers.getApeMat()!=null)
 				//{
-					if (pers.getNombre() != null)
+					if (pers.getNombre() != null || pers.getApePat()!=null)
 						//&& pers.getApePat().toUpperCase() != ""
 						//&& pers.getApeMat().toUpperCase() != ""
 					{
