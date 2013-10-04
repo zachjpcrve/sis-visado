@@ -635,19 +635,20 @@ public class ConsultarSolicitudMB {
 	}
 
 	public String redirectDetalleSolicitud() {
-		logger.info(" **** redirectDetalleSolicitud ***");
+		logger.info(" ===== redirectDetalleSolicitud ()====");
 		obtenerSolicitud(Utilitarios.capturarParametro("prm_codSoli"));
 		return getRedirectDetalleSolicitud();
 	}
 	
 	public String redirectDetalleSolicitud(String codigoSolicitud) {
-		logger.info(" **** redirectDetalleSolicitud ***");		
+		logger.info(" ===== redirectDetalleSolicitud(s) ====");
+		logger.debug("[redirectDetallSol]-codigoSolicitud:"+codigoSolicitud);
 		obtenerSolicitud(codigoSolicitud);		
 		return getRedirectDetalleSolicitud();
 	}
 	
 	private String getRedirectDetalleSolicitud(){
-		logger.info("Estado de la solicitud :: " +this.solicitudRegistrarT.getEstado());
+		logger.info("[getRedirecDetSol]-Estado de la solicitud :: " +this.solicitudRegistrarT.getEstado());
 		String redirect = "";		
 		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)) {
 			redirect = "/faces/paginas/solicitudEdicion.xhtml";
@@ -658,6 +659,7 @@ public class ConsultarSolicitudMB {
 		/*** SE MUEVEN LAS 2 LINEAS DE ABAJO, ORIGINALMENTE ESTABAN DENTRO DEL ELSE ***/
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		request.getSession(true).setAttribute("SOLICITUD_TEMP", solicitudRegistrarT);
+		logger.debug("[getRedirecDetSol]-redirect: "+redirect);
 		return redirect;
 	}
 
@@ -748,30 +750,31 @@ public class ConsultarSolicitudMB {
 	public void obtenerSolicitud(String codigoSolicitud)
 	{
 		try {
+			logger.debug("==== obtenerSolicitud(s):INICIO ==== ");
 			lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 			listaTemporalSolicitudAgrupacionesBorradores=new ArrayList<TiivsSolicitudAgrupacion>();
 			
 			TiivsSolicitud solicitud;
-			logger.info("DetalleSolicitud-[codigoSolicitud]: " + codigoSolicitud);
+			logger.info("[obtenerSolic]-codSol: " + codigoSolicitud);
 			solicitud = new TiivsSolicitud();
 			solicitud.setCodSoli(codigoSolicitud);
 			
 			SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 			solicitudRegistrarT = solicitudService.obtenerTiivsSolicitud(solicitud);
-			
+			//Estado
 			solicitudRegistrarT.setDescEstado(Utilitarios.obternerDescripcionEstado(solicitudRegistrarT.getEstado()));
 						
 			lstSolicBancarias = solicitudService.obtenerListarOperacionesBancarias(solicitud);
-			// BY SAMIRA 
+			// Por SAMIRA 
 			solicitudRegistrarT.setLstSolicBancarias(lstSolicBancarias);
 			lstSolicBancariasCopia = new ArrayList<TiivsSolicitudOperban>();
 			lstSolicBancariasCopia.addAll(solicitudService.obtenerListarOperacionesBancarias(solicitud));
 						
 			if(lstSolicBancariasCopia!=null)
 			{
-				logger.info(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstSolicBancariasCopia es: ["+lstSolicBancariasCopia.size()+"].");	
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstSolicBancariasCopia es: ["+lstSolicBancariasCopia.size()+"].");	
 			}
-			
+			//Exonera comision
 			if(solicitudRegistrarT.getExoneraComision()!=null
 					&& solicitudRegistrarT.getExoneraComision().compareTo("1")==0){
 				this.setbFlagComision(true);
@@ -781,9 +784,10 @@ public class ConsultarSolicitudMB {
 			
 			//FIN  BY SAMIRA 
 			int y = 0;
-			
+			//Operacion bancaria - Solicitud
 			for (TiivsSolicitudOperban f : lstSolicBancarias) 
-			{ logger.info("id moneda .::: " +f.getId().getMoneda());
+			{ 
+				logger.info("SolOperBanc-Moneda: " +f.getId().getMoneda());
 				if (f.getId().getMoneda() != null) 
 				{
 					y++;
@@ -793,28 +797,23 @@ public class ConsultarSolicitudMB {
 					if (f.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_SOLES)) 
 					{
 						f.setImporteSoles(f.getImporte());
-						f.setTipoCambio(0.0);
-						
+						f.setTipoCambio(0.0);						
 					}
 					if (f.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_DOLAR)) 
 					{
-						f.setImporteSoles(f.getTipoCambio() * f.getImporte());
-						
+						f.setImporteSoles(f.getTipoCambio() * f.getImporte());						
 					}
 					if (f.getId().getMoneda().equals(ConstantesVisado.MONEDAS.COD_EUROS)) 
 					{
-						f.setImporteSoles(f.getTipoCambio() * f.getImporte());
-						
+						f.setImporteSoles(f.getTipoCambio() * f.getImporte());						
 					}
 				}
 			}
-			
-			if (solicitudRegistrarT.getTiivsOficina1()!=null)
-			{
+			//Oficina
+			if (solicitudRegistrarT.getTiivsOficina1()!=null){
 				setOficina(solicitudRegistrarT.getTiivsOficina1());
 			}
-			
-			
+			//Importes
 			obtenerImporteTotalxSolicitud(lstSolicBancarias);
 			
 			//this.lstAnexosSolicitudes = solicitudService.obtenerListarAnexosSolicitud(solicitud);			
@@ -822,10 +821,10 @@ public class ConsultarSolicitudMB {
 			if(lstAnexoSolicitud!=null){
 				logger.info(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"documentos(Anexos) es:[" + this.lstAnexoSolicitud.size()+"]");
 			}
-			
+			//Tipo de Solicitud
 			this.iTipoSolicitud =solicitudRegistrarT.getTiivsTipoSolicitud().getCodTipSolic(); 
 			
-			//descargar anexos
+			//Descargar Anexos
 			descargarAnexosFileServer();						
 			
 			boolean isEditar=false;
@@ -836,6 +835,7 @@ public class ConsultarSolicitudMB {
 				isEditar=false;
 				bBooleanPopup=false;
 			}
+			//Documentos
 			llenarListaDocumentosSolicitud(isEditar);
 			
 			if(lstAnexoSolicitud!=null){
@@ -844,14 +844,12 @@ public class ConsultarSolicitudMB {
 			
 			solicitudRegistrarT.setLstDocumentos(lstdocumentos); //Para reportes
 			//solicitudRegistrarTCopia=new TiivsSolicitud(); //06-05-2013 Se comenta por falta de uso Incidencia 259
-			//solicitudRegistrarTCopia=this.solicitudRegistrarT;
-		
+			//solicitudRegistrarTCopia=this.solicitudRegistrarT;		
 			
 		   listaSolicitudAgrupacionesCopia=new ArrayList<TiivsSolicitudAgrupacion>();
 		   listaSolicitudAgrupacionesCopia.addAll(this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) ;
 		   
-		   armaAgrupacionSimple();
-		   
+		   armaAgrupacionSimple();		   
 		   		   		   
 		   solicitudRegistrarT.setLstAgrupacionSimpleDto(lstAgrupacionSimpleDto); //reporte
 		   
@@ -891,12 +889,12 @@ public class ConsultarSolicitudMB {
 			actualizarClasificacion();
 			
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION +"al recuperar el Detalle Solicitud:",e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION +"al recuperar el Detalle Solicitud: ",e);
 		}
+		logger.debug("==== obtenerSolicitud(s):FIN ==== ");
 	}
 	
 	private void armaAgrupacionSimple() {
-		
 		
 		List<TiivsPersona> lstPoderdantes = null;
 		List<TiivsPersona> lstApoderdantes = null;
@@ -4826,7 +4824,7 @@ public class ConsultarSolicitudMB {
 	
 	public void obtenerImporteTotalxSolicitud(List<TiivsSolicitudOperban> lstOperBan)
 	{
-		logger.info(" ************************** obtenerImporteTotalxSolicitud  ****************************** ");
+		logger.info(" ===== obtenerImporteTotalxSolicitud() ===  ");
 
 		for (TiivsSolicitudOperban x : lstOperBan) 
 		{
