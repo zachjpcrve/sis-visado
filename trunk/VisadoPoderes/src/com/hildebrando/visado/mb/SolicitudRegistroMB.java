@@ -286,7 +286,7 @@ public class SolicitudRegistroMB {
 	}
 	
 	public void eliminarPersona() {
-		logger.info("**************************** eliminarPersona ****************************");
+		logger.info("===== eliminarPersona ======");
 		logger.info("Codigo de la persona capturada a Eliminar " +objTiivsPersonaCapturado.getCodPer());
 		logger.info(" Lista de las Personas Antes de Remover " +lstTiivsPersona.size());
 		logger.info(" TipoParticipe: " +objTiivsPersonaCapturado.getTipPartic());
@@ -398,7 +398,7 @@ public class SolicitudRegistroMB {
 	}
 	
 	public String cargarUnicoPDF(String aliasArchivo) {
-		logger.debug("== inicia cargarUnicoPDF()====");
+		logger.debug("== inicia cargarUnicoPDF()-adjuntar ====");
 		if(fileUpload == null){
 			Utilitarios.mensajeInfo("", "No se ha seleccionado ningún archivo");
 			return "";
@@ -1597,47 +1597,47 @@ public class SolicitudRegistroMB {
 		}
 		return retorno;
 	}
+	/**
+	 * Metodo encargado de agregar las agrupaciones de personas desde el popup
+	 * de busqueda cliente/no cliente, hacia la grilla de apoderado/poderdante.
+	 * Tambien se verifica que se cumpla con la validacion antes de agregar.
+	 * **/
 	public void agregarAgrupacion() {
 		if (validarAgregarAgrupacion()) {
-		
-			logger.info("***************************** agregarAgrupacion ***************************************");
-			
-						
-			
+			logger.debug("==== agregarAgrupacion() ====");
 			lstTiivsAgrupacionPersonas = this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas();
 			
 			if (lstTiivsAgrupacionPersonas == null){
 				lstTiivsAgrupacionPersonas=new HashSet<TiivsAgrupacionPersona>();
 			}
-			
-			logger.info("lstTiivsAgrupacionPersonas: inicio " + lstTiivsAgrupacionPersonas.size());
+			logger.debug("[agregAgrupPers]-ListaAgrup (Inicio) size: " + lstTiivsAgrupacionPersonas.size());
 			
 			limpiarAgrupacionesVacias();			
 
 			List<TiivsPersona> lstPoderdantes = new ArrayList<TiivsPersona>();
 			List<TiivsPersona> lstApoderdantes = new ArrayList<TiivsPersona>();
 
-			logger.debug("lstTiivsPersona " +lstTiivsPersona.size());
+			logger.debug("[agregAgrupPers]-lstTiivsPersona: " +lstTiivsPersona.size());
 
 			for (TiivsPersona n : lstTiivsPersona) {
 				if (n.getTipPartic().equals(ConstantesVisado.PODERDANTE)) {
 					lstPoderdantes.add(n);
-					logger.info(" poderdante : " + n.getCodPer());
+					logger.info("[agregAgrupPers]-Pers-CodPoderdante: " + n.getCodPer());
 				}
 				if (n.getTipPartic().equals(ConstantesVisado.APODERADO)) {
 					lstApoderdantes.add(n);
-					logger.info(" apoderado : " + n.getCodPer());
+					logger.info("[agregAgrupPers]-Pers-CodApoderado: " + n.getCodPer());
 				}
 				//SE AGREGO IF DE HEREDEROS
 				if (n.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)) {
 					lstApoderdantes.add(n);
-					logger.info(" heredero : " + n.getCodPer());
+					logger.info("[agregAgrupPers]-Pers-Heredero :" + n.getCodPer());
 				}
 			}
 			
 			this.llamarComision();
 			
-			logger.info("lstTiivsAgrupacionPersonas: fin " + lstTiivsAgrupacionPersonas.size());
+			logger.info("[agregAgrupPers]-ListaAgrup (Fin) size: " + lstTiivsAgrupacionPersonas.size());
 			String estadoRevocado=null;
 			if(validarSiAgrupacionEstaRevocada()){
 				/** Se revocara la Combinacion**/
@@ -1647,11 +1647,8 @@ public class SolicitudRegistroMB {
 				estadoRevocado=null;
 			}
 			this.armaAgrupacionSimple();
-
-		}
-		
-		this.tiivsSolicitudAgrupacionCapturado = null;
-		
+		}		
+		this.tiivsSolicitudAgrupacionCapturado = null;		
 	}
 
 	private void limpiarAgrupacionesVacias() {
@@ -1665,9 +1662,7 @@ public class SolicitudRegistroMB {
 		this.solicitudRegistrarT.getTiivsSolicitudAgrupacions().removeAll(lstSolAgruToRemove);		
 	}
 
-private void armaAgrupacionSimple() {
-		
-		
+	private void armaAgrupacionSimple() {
 		List<TiivsPersona> lstPoderdantes = null;
 		List<TiivsPersona> lstApoderdantes = null;
 		AgrupacionSimpleDto agrupacionSimpleDto  =null; ;
@@ -1713,44 +1708,45 @@ private void armaAgrupacionSimple() {
 			   
 			   
 		   }
-		
-			logger.info("Lista Poderdantes: " + lstPoderdantes.size());
-		   logger.info("Lista Apoderados: " + lstApoderdantes.size());
-		
+		logger.info("Lista Poderdantes: " + lstPoderdantes.size());
+		logger.info("Lista Apoderados: " + lstApoderdantes.size());
 	}
-public String obtenerDescripcionDocumentos(String idTipoDocumentos) {
-	String descripcion = "";
-	for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
-		if (z.getCodTipoDoc().trim().equals(idTipoDocumentos)) {
-			descripcion = z.getDescripcion();
-			break;
+	
+	public String obtenerDescripcionDocumentos(String idTipoDocumentos) {
+		String descripcion = "";
+		for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
+			if (z.getCodTipoDoc().trim().equals(idTipoDocumentos)) {
+				descripcion = z.getDescripcion();
+				break;
+			}
 		}
+		return descripcion;
 	}
-	return descripcion;
-}
-public String obtenerDescripcionClasificacion(String idTipoClasificacion) {
-	String descripcion = "";
-	for (ComboDto z : combosMB.getLstClasificacionPersona()) {
-		if (z.getKey().trim().equals(idTipoClasificacion)) {
-			descripcion = z.getDescripcion();
-			break;
+	
+	public String obtenerDescripcionClasificacion(String idTipoClasificacion) {
+		String descripcion = "";
+		for (ComboDto z : combosMB.getLstClasificacionPersona()) {
+			if (z.getKey().trim().equals(idTipoClasificacion)) {
+				descripcion = z.getDescripcion();
+				break;
+			}
 		}
+		return descripcion;
 	}
-	return descripcion;
-}
 
-public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
-	String descripcion = "";
-	for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
-		if (z.getKey().trim().equals(idTipoTipoRegistro)) {
-			descripcion = z.getDescripcion();
-			break;
+	public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
+		String descripcion = "";
+		for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+			if (z.getKey().trim().equals(idTipoTipoRegistro)) {
+				descripcion = z.getDescripcion();
+				break;
+			}
 		}
+		return descripcion;
 	}
-	return descripcion;
-}
+	
 	public String instanciarSolicitudRegistro() {
-		logger.info("********************** instanciarSolicitudRegistro *********************");
+		logger.info("========= instanciarSolicitudRegistro ==========");
 		sEstadoSolicitud = "BORRADOR";
 		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
 		lstTiivsSolicitudAgrupacion = new HashSet<TiivsSolicitudAgrupacion>();
@@ -1762,16 +1758,19 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		String grupoAdm = (String) Utilitarios.getObjectInSession("GRUPO_ADM");
 		String grupoOfi = (String) Utilitarios.getObjectInSession("GRUPO_OFI");
 
-		logger.debug("********grupoAdm ****** " + grupoAdm
-				+ "  ******* grupoOfi ******** " + grupoOfi);
+		if(grupoAdm!=null){
+			logger.debug("[instSolReg]-grupoAdm: " + grupoAdm);
+		}if(grupoOfi!=null){
+			logger.debug("[instSolReg]-grupoAdm: " + grupoAdm);
+		}
 		// if (grupoAdm == null && grupoOfi!= null) {
 		IILDPeUsuario usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		
 		if (usuario!=null)
 		{
-			logger.debug("Usuario Sesion:" + usuario.getNombre());
-			logger.debug("CodigoOficina: " + usuario.getBancoOficina().getCodigo().trim());
-			logger.debug("DescripcionOficina: "+ usuario.getBancoOficina().getDescripcion().trim());
+			logger.debug("[instSolReg]-Usuario Sesion:" + usuario.getNombre());
+			logger.debug("[instSolReg]-CodOficina: " + usuario.getBancoOficina().getCodigo().trim());
+			logger.debug("[instSolReg]-Oficina: "+ usuario.getBancoOficina().getDescripcion().trim());
 		}
 		
 		TiivsOficina1 oficina = new TiivsOficina1();
@@ -2906,7 +2905,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		establecerTipoSolicitud();
 		
-		logger.info(" =========== registrarSolicitud [v2] ===========");
+		logger.info(" =========== registrarSolicitud [v3] ===========");
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
         GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -2946,7 +2945,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					} 
 				}
 			}
-			
+			logger.debug("[REGISTR_SOLIC]-isbFlagComision:"+isbFlagComision());
 			if(isbFlagComision()){
 				this.solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_ACTIVO);
 			}else{
@@ -3668,10 +3667,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		aliasFilesToDelete = new ArrayList<String>();		
 	}		
 	
-	public void cambiarRazonSocial(ValueChangeEvent e){		
-		logger.info("==== cambiarRazonSocial()=====");
+	public void cambiarRazonSocial(ValueChangeEvent e){
 		String codTipoDocumento = (String) e.getNewValue();
 		if (codTipoDocumento!=null && codTipoDocumento.equals(this.codigoRazonSocial)) {//CODIGO RAZONSOCIAL
+			logger.info("==== cambiarRazonSocial()=====");
 			this.mostrarRazonSocial = true;
 			objTiivsPersonaResultado.setTipDoi(this.codigoRazonSocial);
 			objTiivsPersonaResultado.setApeMat("");
@@ -3679,13 +3678,17 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		} else {
 			this.mostrarRazonSocial = false;
 			objTiivsPersonaResultado.setTipDoi("");
-		}	
+		}
+		//03-10 Se valida que exista un codigo
+		if(codTipoDocumento!=null){
+			this.obterPatterDelTipoDocumento(codTipoDocumento);
+		}
 		
-		this.obterPatterDelTipoDocumento(codTipoDocumento);
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void obterPatterDelTipoDocumento(String codTipoDocumento){
+		logger.debug("[obterPatterTipDoc]-codTipoDocumento: "+codTipoDocumento);
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
 		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC));
@@ -3693,10 +3696,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
 		try {
 			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
-			 patter=listaMultiTabla.get(0).getValor4();
-			logger.info("patter : "+patter);
+			if(listaMultiTabla!=null){
+				logger.debug("[obterPatterTipDoc]-listaMultiTabla recuperado: "+listaMultiTabla.size());
+			}
+			patter=listaMultiTabla.get(0).getValor4();
+			logger.info("[obterPatterTipDoc]-pattern: "+patter);
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas: " , e);
+			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas: ", e);
 		}
 		
 		
