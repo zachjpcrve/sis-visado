@@ -1734,17 +1734,16 @@ public class SolicitudRegistroMB {
 		return descripcion;
 	}
 
-	public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
-		String descripcion = "";
-		for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
-			if (z.getKey().trim().equals(idTipoTipoRegistro)) {
-				descripcion = z.getDescripcion();
-				break;
-			}
+public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
+	String descripcion = "";
+	for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+		if (z.getKey().trim().equals(idTipoTipoRegistro)) {
+			descripcion = z.getDescripcion();
+			break;
 		}
-		return descripcion;
 	}
-	
+	return descripcion;
+}
 	public String instanciarSolicitudRegistro() {
 		logger.info("========= instanciarSolicitudRegistro ==========");
 		sEstadoSolicitud = "BORRADOR";
@@ -2946,11 +2945,19 @@ public class SolicitudRegistroMB {
 				}
 			}
 			logger.debug("[REGISTR_SOLIC]-isbFlagComision:"+isbFlagComision());
-			if(isbFlagComision()){
+			/*if(isbFlagComision()){
+				this.solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_ACTIVO);
+			}else{
+				this.solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_INACTIVO);
+			}*/
+			if(this.solicitudRegistrarT.getExoneraComision()!=null &&
+					(this.solicitudRegistrarT.getExoneraComision().compareToIgnoreCase("true")==0
+					|| this.solicitudRegistrarT.getExoneraComision().compareToIgnoreCase("1")==0)){
 				this.solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_ACTIVO);
 			}else{
 				this.solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_INACTIVO);
 			}
+			
 			logger.debug("[REGISTR_SOLIC]-flagExoneraComision: "+this.solicitudRegistrarT.getExoneraComision());
 			
 			this.limpiarAgrupacionesVacias();
