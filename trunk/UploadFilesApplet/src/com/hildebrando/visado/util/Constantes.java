@@ -22,6 +22,9 @@ public class Constantes {
 	public static final String FORMATO_RUTA_LOG = "Log\\";
 	public static final String FORMATO_ARCHIVO_GENERAR_LOG = "log"; //txt
 	public static final String FORMATO_NOMBRE_ARCHIVO_LOG = "log_Visado";
+	public static final String ERROR = "ERROR ";
+	public static final String INFO = "INFO ";
+	public static final String DEBUG = "DEBUG ";
 	
 	public static final String MSJ_ARCHIVO_EXISTS = "El archivo ya existe, se escribiran los mensajes";
 	public static final String MSJ_ARCHIVO_NO_EXISTS = "El archivo no existe, se procedera a crearlo";
