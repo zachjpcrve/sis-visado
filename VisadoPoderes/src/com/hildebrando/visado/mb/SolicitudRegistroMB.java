@@ -3383,6 +3383,32 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		boolean retorno = true;
 		String mensaje = "";
 		
+		//04-10 Validacion ingreso NroVoucher si check "Exonerado PagComis" no es marcado.
+		logger.debug("Valida[EnvioSolicitud]-getExoneraComision: "+solicitudRegistrarT.getExoneraComision());
+		
+		if(solicitudRegistrarT.getExoneraComision().equalsIgnoreCase("0")){			
+			logger.debug("Valida[EnvioSolicitud]-Se valida que se ingrese Nro Voucher.");
+			//Validacion de numero de voucher
+			if (solicitudRegistrarT.getNroVoucher()==null){
+				mensaje = "Ingrese el Nro Voucher";
+				retorno = false;
+				Utilitarios.mensajeInfo("INFO", mensaje);
+			}else if (solicitudRegistrarT.getNroVoucher().equals("")){
+				mensaje = "Ingrese el Nro Voucher";
+				retorno = false;
+				Utilitarios.mensajeInfo("INFO", mensaje);
+			}else if (solicitudRegistrarT.getNroVoucher().length() < 11) {
+				mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
+				retorno = false;
+				Utilitarios.mensajeInfo("INFO", mensaje);
+			}else {
+				logger.info("Valida[EnvioSolicitud]-NroVoucher:"+solicitudRegistrarT.getNroVoucher());
+				retorno =this.validarNroVoucher();
+			}			
+		}else{
+			logger.debug("Valida[EnvioSolicitud]-No se valida el ingreso de Nro Voucher porque el check no esta marcado.");
+		}
+				
 		//Validacion de oficina
 		if (solicitudRegistrarT.getTiivsOficina1() == null) {
 			mensaje = "Ingrese una Oficina";
@@ -3399,25 +3425,6 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}
 		logger.info("Valida[EnvioSolicitud]-CodOficina:"+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
 		
-		//Validacion de numero de voucher
-				if (solicitudRegistrarT.getNroVoucher()==null){
-					mensaje = "Ingrese el Nro Voucher";
-					retorno = false;
-					Utilitarios.mensajeInfo("INFO", mensaje);
-			      }
-				else if (solicitudRegistrarT.getNroVoucher().equals("")){
-						mensaje = "Ingrese el Nro Voucher";
-						retorno = false;
-						Utilitarios.mensajeInfo("INFO", mensaje);
-				 }else if (solicitudRegistrarT.getNroVoucher().length() < 11) {
-						mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
-						retorno = false;
-						Utilitarios.mensajeInfo("INFO", mensaje);
-					}
-				 else {
-					logger.info("Valida[EnvioSolicitud]-NroVoucher:"+solicitudRegistrarT.getNroVoucher());
-					retorno =this.validarNroVoucher();
-				 }
 		//Validacion de Agrupaciones: Apoderado / Poderante		 
 		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
 			mensaje = "Ingrese la sección Apoderado y Poderdante";
