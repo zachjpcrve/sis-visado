@@ -60,7 +60,7 @@ public class Utiles {
 				objPrintWriter = new PrintWriter(objFileWriter);
 				String descMensaje = sdfHora.format(objCalendar.getTime())
 						+ " - " + tipoMsj.toUpperCase() + " : "
-						+ mensaje.toUpperCase();
+						+ mensaje;
 				System.out.println("descMensaje: "+descMensaje);
 				objPrintWriter.println(descMensaje);
 
@@ -75,7 +75,7 @@ public class Utiles {
 					objPrintWriter.println("");
 					String descMensaje = sdfHora.format(objCalendar.getTime())
 							+ " - " + tipoMsj.toUpperCase()+" : "
-							+ mensaje.toUpperCase();
+							+ mensaje;
 					objPrintWriter.println(descMensaje);
 				}
 			}
