@@ -68,19 +68,19 @@ public class ClienteFTP {
     
 
     public void upLoadFiles(String file, String ruta) {
-    	Utiles.escribirEnLog(Constantes.INFO,"== upLoadFiles(f,s):Inicio ==", null);
+    	Utiles.escribirEnLog(Constantes.INFO,"== upLoadFiles(f,s):Inicio ==", "");
     	FileInputStream fis = null;
         try {
-        	System.out.println("\tArchivo:"+file+"  Ruta:"+ruta);
-            fis = new FileInputStream(file);
+        	Utiles.escribirEnLog(Constantes.INFO,"\tArchivo:"+file+"  Ruta:"+ruta, "");
+        	fis = new FileInputStream(file);
             ftpCliente.setFileType(FTP.BINARY_FILE_TYPE);
             ftpCliente.setFileTransferMode(FTP.BINARY_FILE_TYPE);
             ftpCliente.enterLocalPassiveMode();
             ftpCliente.storeFile(file, fis);
         } catch (IOException e) {
-        	Utiles.escribirEnLog(Constantes.ERROR,Constantes.MSJ_OCURRE_EXCEPCION+"IO en upLoadFiles:"+e, null);
+        	Utiles.escribirEnLog(Constantes.ERROR,Constantes.MSJ_OCURRE_EXCEPCION+"IO en upLoadFiles:"+e, "");
         } catch(Exception exc){
-        	Utiles.escribirEnLog(Constantes.ERROR,Constantes.MSJ_OCURRE_EXCEPCION+"en upLoadFiles:"+exc, null);
+        	Utiles.escribirEnLog(Constantes.ERROR,Constantes.MSJ_OCURRE_EXCEPCION+"en upLoadFiles:"+exc, "");
         } 
         finally {
             try {
@@ -89,15 +89,15 @@ public class ClienteFTP {
                 }
                 // ftpCliente.disconnect();
             } catch (IOException e) {
-            	Utiles.escribirEnLog(Constantes.ERROR,Constantes.MSJ_OCURRE_EXCEPCION+"IO en upLoadFiles:"+e, null);
+            	Utiles.escribirEnLog(Constantes.ERROR,Constantes.MSJ_OCURRE_EXCEPCION+"IO en upLoadFiles:"+e, "");
             }
         }
-        Utiles.escribirEnLog(Constantes.INFO,"== upLoadFiles(f,s):Fin ==", null);
+        Utiles.escribirEnLog(Constantes.INFO,"== upLoadFiles(f,s):Fin ==", "");
     }
     
   //Metodo que se agrega para subir archivos por FTP
     public String uploadFiles(List<File> listaFile){
-    	Utiles.escribirEnLog(Constantes.INFO,"\t===== uploadFiles(l):Inicio =====", null);
+    	Utiles.escribirEnLog(Constantes.INFO,"\t===== uploadFiles(l):Inicio =====", "");
     	String archivosSubidos = "";
     	Integer contador = 0;
     	String nombreTemporal = null;
@@ -105,23 +105,29 @@ public class ClienteFTP {
             ftpCliente.connect(this.host);
             this.login = ftpCliente.login(this.username, this.password);
             if (this.login) {
-            	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-Login exitoso", null);
-            	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-directorio:"+directorio, null);
+            	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-Login exitoso.", "");
+            	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-directorio: "+directorio, "");
                 
+            	//04-10-2013 
+            	//TEST: Se agrega directorio '/files/'
+            	//PROD: Se agrega directorio: '/documentos/files/'
+            	directorio="/files/";
+            	
+            	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-directorio nuevo: "+directorio, "");
                 boolean resCambDirect = ftpCliente.changeWorkingDirectory(directorio);
-                Utiles.escribirEnLog(Constantes.INFO,"resCambDirect:"+resCambDirect, null);
+                Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-resultado CambioDirectorio: "+resCambDirect, "");
                 
                 if(listaFile!=null){
-                	System.out.println("\t[uploadFiles]-listaSize:"+listaFile.size());
+                	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-listaArchivos Size:"+listaFile.size(), "");
                 }
                 for(File file:listaFile){
                 	contador++;
                 	FileInputStream fis = new FileInputStream(file);
                 	ftpCliente.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
                 	nombreTemporal= createNameFile(file);
-                	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-nombreTemporal:" + nombreTemporal, null);
+                	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-nombreTemporal:" + nombreTemporal, "");
                 	boolean res = ftpCliente.storeFile(nombreTemporal, fis );
-                	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-resultado:" + res, null);
+                	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-resultado:" + res, "");
                 	fis.close();
                 	
                 	if(contador<listaFile.size()){
@@ -131,22 +137,26 @@ public class ClienteFTP {
                 	}
                 }
             } else {
-                System.out.println("\t[uploadFiles]-No se pudo loguear correctamente");
+            	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-No se pudo loguear correctamente", "");
             }
         } catch (IOException e) {
-            System.out.println("\t[uploadFiles]-Error al conectarse al FTP debido a: " + e.getMessage());
+        	Utiles.escribirEnLog(Constantes.ERROR,"\t[uploadFiles]-Error IO al conectarse al FTP debido a: " + e.getMessage(), "");
             e.printStackTrace();
-        } finally{
+        } catch (Exception ex) {
+        	Utiles.escribirEnLog(Constantes.ERROR,"\t[uploadFiles]-Error al conectarse al FTP debido a: " + ex, "");
+            ex.printStackTrace();
+        } 
+    	finally{
         	try {
         		if(ftpCliente!=null){
         			ftpCliente.logout();
     				ftpCliente.disconnect();	
         		}
 			} catch (IOException e) {
-				System.out.println("\t[uploadFiles]-Fallo al desconectar FTP:"+e);
+				Utiles.escribirEnLog(Constantes.ERROR,"\t[uploadFiles]-Fallo al desconectar FTP:"+e, "");
 			}
         }
-    	System.out.println("\t===== uploadFiles(l):Fin ====="); 
+    	Utiles.escribirEnLog(Constantes.INFO,"\t===== uploadFiles(l):Fin =====", "");
     	return archivosSubidos;
     }
     
@@ -158,57 +168,56 @@ public class ClienteFTP {
     		String nombre =  nombreArchivo + "_" + fecha + extension;
     		return nombre;
     	}else{
-    		System.out.println("[createNameFile]-El archivo es nulo");
+    		Utiles.escribirEnLog(Constantes.DEBUG, "[createNameFile]-El archivo es nulo", "");
     	}
     	return null;
     }
     
     public void renombrarArchivo(String nuevoNombre, String antiguoNombre) {
-    	System.out.println("=== renombrarArchivo:Inicio ===");
-        try {
-        	System.out.println("[Nombre]-Antiguo:"+antiguoNombre + "   Nuevo:"+nuevoNombre);
-            ftpCliente.rename(antiguoNombre, nuevoNombre);
+    	Utiles.escribirEnLog(Constantes.DEBUG, "=== renombrarArchivo:Inicio ===", "");
+    	try {
+    		Utiles.escribirEnLog(Constantes.DEBUG, "[Nombre]-Antiguo:"+antiguoNombre + "   Nuevo:"+nuevoNombre, "");
+        	ftpCliente.rename(antiguoNombre, nuevoNombre);
             ftpCliente.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Ha ocurrido una IOException en renombrarArchivo:"+e);
+            Utiles.escribirEnLog(Constantes.ERROR, Constantes.MSJ_OCURRE_EXCEPCION+"IO al renombrarArchivo: "+e, "");
         } catch(Exception exc){
         	exc.printStackTrace();
-        	System.out.println("Ha ocurrido una Exception en renombrarArchivo:"+exc);
+        	Utiles.escribirEnLog(Constantes.ERROR, Constantes.MSJ_OCURRE_EXCEPCION+" al renombrarArchivo: "+exc, "");
         }
-        System.out.println("== renombrarArchivo:Fin ==");
+    	Utiles.escribirEnLog(Constantes.DEBUG, "== renombrarArchivo:Fin ==", "");
     }
     
     public void upLoadOneFiles(String file, String ruta) {
-    	System.out.println("==== upLoadOneFiles():Inicio ====");
-        FileInputStream fis = null;
-        System.out.println("[upLoadOneFiles]-Ruta: " + ruta);
+    	Utiles.escribirEnLog(Constantes.DEBUG, "==== upLoadOneFiles():Inicio ====", "");
+    	FileInputStream fis = null;
+    	Utiles.escribirEnLog(Constantes.DEBUG, "[upLoadOneFiles]-Ruta: " + ruta, "");
         try {
             fis = new FileInputStream(ruta);
             ftpCliente.setFileType(FTP.BINARY_FILE_TYPE);
             ftpCliente.setBufferSize(4096);
             ftpCliente.setFileTransferMode(FTP.BINARY_FILE_TYPE);
             ftpCliente.storeFile(file, fis);
-            System.out.println("[upLoadOneFiles]-file:"+file);
-
+            Utiles.escribirEnLog(Constantes.INFO, "[upLoadOneFiles]-file:"+file, "");
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("[upLoadOneFiles]-Ha ocurrido un IOException:"+e);
+            Utiles.escribirEnLog(Constantes.ERROR, Constantes.MSJ_OCURRE_EXCEPCION+"IO en upLoadOneFiles(f,r): "+e, "");
         }catch(Exception ex){
         	ex.printStackTrace();
-        	System.out.println("[upLoadOneFiles]-Ha ocurrido una Exception:"+ex);
+        	Utiles.escribirEnLog(Constantes.ERROR, Constantes.MSJ_OCURRE_EXCEPCION+" en upLoadOneFiles(f,r): "+ex, "");
         } 
         finally {
             try {
                 if (fis != null) {
                     fis.close();
                 }
-//               ftpCliente.disconnect();
+                //ftpCliente.disconnect();
             } catch (IOException e2) {
                 e2.printStackTrace();
-                System.out.println("[upLoadOneFiles]-Ha ocurrido un IOException e2:"+e2);
+                Utiles.escribirEnLog(Constantes.ERROR, Constantes.MSJ_OCURRE_EXCEPCION+" en upLoadOneFiles(f,r) finally: "+e2, "");
             }
         }
-        System.out.println("==== upLoadOneFiles():Fin ====");
+        Utiles.escribirEnLog(Constantes.DEBUG, "==== upLoadOneFiles():Fin ====", "");
     }
 }
