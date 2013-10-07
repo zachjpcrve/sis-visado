@@ -537,7 +537,7 @@ public class SeguimientoMB
 			if (tmpSol.getEstado() != null) {
 				String estado=buscarEstadoxCodigo(tmpSol.getEstado().trim());
 				tmpSol.setTxtEstado(estado);
-				logger.debug("[ActDatosGrilla]-TxtEstado:"+tmpSol.getTxtEstado());
+				//logger.debug("[ActDatosGrilla]-TxtEstado:"+tmpSol.getTxtEstado());
 			}
 			
 			// Se obtiene la moneda y se coloca las iniciales en la columna Importe Total
@@ -633,7 +633,7 @@ public class SeguimientoMB
 		    }
 		    
 		    tmpSol.setTxtPoderdante(cadena);
-		    logger.debug("[ActDatosGrilla]-TxtPoderdante:"+tmpSol.getTxtPoderdante());
+		    //logger.debug("[ActDatosGrilla]-TxtPoderdante:"+tmpSol.getTxtPoderdante());
 			
 			// Cargar data de apoderados
 			cadena="";
@@ -658,7 +658,7 @@ public class SeguimientoMB
 		    }
 			
 			tmpSol.setTxtApoderado(cadena);
-			logger.debug("[ActDatosGrilla]-TxtApoderado:"+tmpSol.getTxtApoderado());
+			//logger.debug("[ActDatosGrilla]-TxtApoderado:"+tmpSol.getTxtApoderado());
 			//Carga las operaciones bancarias asociadas a una solicitud
 			cadena="";
 			for (TiivsSolicitudOperban tmp: combosMB.getLstSolOperBan())
@@ -669,7 +669,7 @@ public class SeguimientoMB
 				}
 			}
 			tmpSol.setTxtOpeBan(cadena);
-			logger.debug("[ActDatosGrilla]-TxtOpeBan:"+tmpSol.getTxtOpeBan());
+			//logger.debug("[ActDatosGrilla]-TxtOpeBan:"+tmpSol.getTxtOpeBan());
 			
 			//Ordenar niveles
 			String cadNiveles = "";
@@ -2192,20 +2192,29 @@ public class SeguimientoMB
 		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 		
 		// Buscar solicitudes de acuerdo a criterios seleccionados
+		logger.debug("[Seguimiento-busqSolicit]-antes de hacer el query.");
 		try {
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
 		} catch (Exception ex) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"las solicitudes en la Bandeja de Seguimiento: ",ex);
 		}
-
+		logger.debug("[Seguimiento-busqSolicit]-despues de hacer el query.");
+		if(solicitudes!=null){
+			logger.debug("[Seguimiento-busqSolicit]-No es null");
+		}else{
+			logger.debug("[Seguimiento-busqSolicit]-Es null");
+		}
+		
 		if (solicitudes.size() == 0) 
 		{
 			setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_SIN_REGISTROS,solicitudes.size());
 			setNoHabilitarExportar(true);
+			logger.debug("[Seguimiento-busqSolicit]-"+ConstantesVisado.MSG_TOTAL_SIN_REGISTROS+": ["+solicitudes.size()+"]");
 		} 
 		else 
 		{
 			setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + solicitudes.size() + ConstantesVisado.MSG_REGISTROS,solicitudes.size());
+			logger.debug("[Seguimiento-busqSolicit]-"+ConstantesVisado.MSG_TOTAL_REGISTROS +"encontrados: "+solicitudes.size());
 			actualizarDatosGrilla();
 			setNoHabilitarExportar(false);
 		}
