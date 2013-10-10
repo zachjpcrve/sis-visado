@@ -44,6 +44,9 @@ public class ConstantesVisado {
 	public static final String ACTIVA_ADVERTENCIA = "0002";
 	public static final String ACTIVA_RESTRICTIVA = "0003";
 	
+	public static final String TRUE = "true";
+	public static final String FALSE = "false";
+	
 	public static final String NOMBRE_ARCHIVO_REVOCATORIA = "SUSTREVOC"; //  SUSTENTO_DE_REVOCACION  DOREV
 	
 	public static final java.lang.String ID_RANGO_IMPORTE_MENOR_CINCUENTA = "0001";
@@ -78,6 +81,10 @@ public class ConstantesVisado {
 	public static final java.lang.String VALOR_TIPO_DOCUMENTO_OTROS="Otros";
 	public static final java.lang.String PREFIJO_OTROS="O";
 	public static final java.lang.String FILES="files";
+	//Se agregan 2 lineas de abajo
+	public static final java.lang.String DOCUMENTOS="documentos";
+	public static final java.lang.String VISADO="visado";
+	
 	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_RESPONSABLE="R";
 	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_DELEGADO="D";
 	public static final java.lang.String PREFIJO_NOMBRE_SOLICITUD_VISADO="SolVisado";

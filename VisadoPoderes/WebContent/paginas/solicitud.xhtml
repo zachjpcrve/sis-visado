@@ -220,12 +220,23 @@
 															
 															<c:if test="${solicitudRegMB.bComision}">
 																<tr>
-																	<td colspan="12">
-																		<p:selectBooleanCheckbox value="#{solicitudRegMB.solicitudRegistrarT.exoneraComision}" immediate="false"/>  #{solicitudRegMB.descripcionComision}
-																	</td>
-																</tr>
-																<tr>
-																	<td colspan="12"><h:outputText value="#{solicitudRegMB.glosaComision}" /></td>
+																    <td colspan="12">
+																	   <table>
+																	     <tr>
+																	      <td style="width:25px;">
+																			<p:selectBooleanCheckbox value="#{solicitudRegMB.bFlagComision}" >
+																				<p:ajax listener="#{solicitudRegMB.setearComision}" />
+																			</p:selectBooleanCheckbox>
+																		  </td>
+																		  <td colspan="11">
+																			<label>#{solicitudRegMB.descripcionComision}</label>
+																		  </td>
+																	     </tr>
+																	     <tr>
+																			<td colspan="12"><h:outputText value="#{solicitudRegMB.glosaComision}" /></td>
+																		 </tr>
+																	   </table>
+																	 </td>
 																</tr>
 															</c:if>
 

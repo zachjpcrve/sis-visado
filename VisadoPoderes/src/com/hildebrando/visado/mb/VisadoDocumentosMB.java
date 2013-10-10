@@ -71,7 +71,13 @@ public class VisadoDocumentosMB {
 			user = param.getLoginServer();
 			pass = param.getPassServer();
 			directory = param.getCarpetaRemota();
-			urlTemporal = directory + ConstantesVisado.FILES + File.separator;
+			
+			String rutaPrincipal = obtenerRutaPrincipal(directory);
+			if(rutaPrincipal.compareTo(ConstantesVisado.DOCUMENTOS)==0){
+				urlTemporal = File.separator + ConstantesVisado.FILES + File.separator;
+			}else if(rutaPrincipal.compareTo(ConstantesVisado.VISADO)==0){
+				urlTemporal = directory + ConstantesVisado.DOCUMENTOS + File.separator + ConstantesVisado.FILES + File.separator;	
+			}
 			
 			logger.info("[PARAMETROS_BD]-pathCliente:" + pathCliente);
 			logger.info("[PARAMETROS_BD]-host:" + host);
@@ -81,6 +87,16 @@ public class VisadoDocumentosMB {
 			
 		}		
 		this.urlCarga = armaUrlCarga();
+	}
+	
+	private String obtenerRutaPrincipal(String directorio){
+		if(directorio!=null){
+			String[] cadenas = directorio.split(ConstantesVisado.SLASH);
+			if(cadenas.length>0){
+				return cadenas[cadenas.length-1];
+			}
+		}
+		return null;
 	}
 	
 	private String armaUrlCarga() {
