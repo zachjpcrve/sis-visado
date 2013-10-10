@@ -111,9 +111,9 @@ public class ClienteFTP {
             	//04-10-2013 
             	//TEST: Se agrega directorio '/files/'
             	//PROD: Se agrega directorio: '/documentos/files/'
-            	directorio="/files/";
+            	//directorio="/files/";
             	
-            	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-directorio nuevo: "+directorio, "");
+            	//Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-directorio nuevo: "+directorio, "");
                 boolean resCambDirect = ftpCliente.changeWorkingDirectory(directorio);
                 Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-resultado CambioDirectorio: "+resCambDirect, "");
                 
