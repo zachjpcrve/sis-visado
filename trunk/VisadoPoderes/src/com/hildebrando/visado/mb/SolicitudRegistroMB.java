@@ -2950,13 +2950,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			}else{
 				this.solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_INACTIVO);
 			}*/
-			if(this.solicitudRegistrarT.getExoneraComision()!=null &&
-					(this.solicitudRegistrarT.getExoneraComision().compareToIgnoreCase("true")==0
-					|| this.solicitudRegistrarT.getExoneraComision().compareToIgnoreCase("1")==0)){
-				this.solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_ACTIVO);
-			}else{
-				this.solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_INACTIVO);
-			}
+			
 			
 			logger.debug("[REGISTR_SOLIC]-flagExoneraComision: "+this.solicitudRegistrarT.getExoneraComision());
 			
@@ -3004,6 +2998,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						a.setIdAgrupacion(null);//Para que la BD asigne IdAgrupacion
 					}
 				}
+				
 				//Registrando el Historial de la Solicitud
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT); //INSERTA LA SOLICITUD
 				TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
@@ -3080,6 +3075,18 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 
 	}
 	
+	public void setearComision(){
+		logger.info("================================== setearComision ==================================");
+		logger.debug("exonera comision: " + bFlagComision);
+		if(solicitudRegistrarT!=null){
+			if(bFlagComision){
+				solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_ACTIVO);
+			}else{
+				solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_INACTIVO);
+			}
+		}
+	}
+	
 	/** Metodo encargado de leer los valores parametrizados en la multitabla (T18), 
 	 * para hacer o no la validacion de Comision.
 	 * @return restrictivo Indicador para realizar la validacion booleano: true/false
@@ -3087,8 +3094,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	private boolean validarCobroComisiones(){
 		boolean restrictivo = false;
 		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		logger.debug("ExoneraFlagComision():"+isbFlagComision());
+		logger.debug("ExoneraFlagComision():" + solicitudRegistrarT.getExoneraComision());
 		//Si no esta exonerado a comision
+		/*if(solicitudRegistrarT.getExoneraComision()!=null &&
+				(solicitudRegistrarT.getExoneraComision().equalsIgnoreCase("0")
+						|| solicitudRegistrarT.getExoneraComision().compareTo(ConstantesVisado.FALSE)==0)){*/
 		if(!isbFlagComision()){
 			Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
 			filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_VALIDACION_COMISION));
@@ -3386,7 +3396,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		//04-10 Validacion ingreso NroVoucher si check "Exonerado PagComis" no es marcado.
 		logger.debug("Valida[EnvioSolicitud]-getExoneraComision: "+solicitudRegistrarT.getExoneraComision());
 		
-		if(solicitudRegistrarT.getExoneraComision().equalsIgnoreCase("0")){			
+		if(!isbFlagComision()){			
 			logger.debug("Valida[EnvioSolicitud]-Se valida que se ingrese Nro Voucher.");
 			//Validacion de numero de voucher
 			if (solicitudRegistrarT.getNroVoucher()==null){

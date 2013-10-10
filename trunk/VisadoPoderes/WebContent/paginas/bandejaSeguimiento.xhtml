@@ -110,20 +110,29 @@
 									
 								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTSolicitud" />
 								<p:tooltip for="tooltxtTSolicitud" value="Tipo de Solicitud" showEffect="fade" hideEffect="fade" />  
-								
 									
-								<h:outputText styleClass="outputText" id="txtTipoFecha" value="Tipo Fecha:" />
+								<h:outputText styleClass="outputText" id="txtTipoOpe" value="T. de Operación:" />
+								<p:selectOneMenu value="#{seguimientoMB.idOpeBan}" id="somTipoOpe" style="width:167px;">
+											<f:selectItem itemLabel="--TODOS--" itemValue="" />
+											<f:selectItems value="#{seguimientoMB.combosMB.lstOpeBancaria}" var="tipoOpe"
+												itemValue="#{tipoOpe.codOperBan}" itemLabel="#{tipoOpe.desOperBan}" />
+								</p:selectOneMenu>
+								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTOperacion" />
+								<p:tooltip for="tooltxtTOperacion" value="Tipo de Operación" showEffect="fade" hideEffect="fade" />
+									
+							</h:panelGrid>
+							
+							<h:panelGrid columns="12"> 
+	 							<h:outputText styleClass="outputText" id="txtTipoFecha" value="Tipo Fecha:" />
 								<p:selectOneMenu value="#{seguimientoMB.idTiposFecha}" id="somTiposFecha" style="width:120px;">
 										<f:selectItem itemLabel="--SELECCIONE--" itemValue="" />
 										<f:selectItems value="#{seguimientoMB.combosMB.lstTiposFecha}" var="tipoFec"
 												itemValue="#{tipoFec.codigoTipoFecha}" itemLabel="#{tipoFec.descripcion}" />
 								</p:selectOneMenu>
-									
 								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTFecha" />
 								<p:tooltip for="tooltxtTFecha" value="Tipo de Fecha" showEffect="fade" hideEffect="fade" />
-							</h:panelGrid>
+														
 							
-							<h:panelGrid columns="12"> 
 								<h:outputText styleClass="outputText" id="txtFechaInicio" value="Fecha de Inicio:" />
 								<p:calendar  id="calFecIni" disabled="#{seguimientoMB.noMostrarFechas}"
 											pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaInicio}" 
@@ -137,15 +146,8 @@
 											pattern="dd/MM/yyyy" value="#{seguimientoMB.fechaFin}"
 											showOn="button" maxlength="10" size="21" locale="es"/>
 								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtFecFin" />
-								<p:tooltip for="tooltxtFecFin" value="Fecha de Fin" showEffect="fade" hideEffect="fade" />  
-								<h:outputText styleClass="outputText" id="txtTipoOpe" value="T. de Operación:" />
-								<p:selectOneMenu value="#{seguimientoMB.idOpeBan}" id="somTipoOpe" style="width:167px;">
-											<f:selectItem itemLabel="--TODOS--" itemValue="" />
-											<f:selectItems value="#{seguimientoMB.combosMB.lstOpeBancaria}" var="tipoOpe"
-												itemValue="#{tipoOpe.codOperBan}" itemLabel="#{tipoOpe.desOperBan}" />
-								</p:selectOneMenu>
-								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTOperacion" />
-								<p:tooltip for="tooltxtTOperacion" value="Tipo de Operación" showEffect="fade" hideEffect="fade" />  
+								<p:tooltip for="tooltxtFecFin" value="Fecha de Fin" showEffect="fade" hideEffect="fade" />
+								  
 							</h:panelGrid>
 							
 							<h:panelGrid columns="15"> 

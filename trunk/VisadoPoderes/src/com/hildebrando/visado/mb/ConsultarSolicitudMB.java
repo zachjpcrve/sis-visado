@@ -38,8 +38,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.common.util.EstilosNavegador;
+import com.bbva.consulta.host.impl.ObtenerDatosVoucherDUMMY;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
 import com.bbva.consulta.reniec.util.BResult;
+import com.bbva.consulta.reniec.util.Constantes;
 import com.bbva.consulta.reniec.util.Persona;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
@@ -205,6 +207,7 @@ public class ConsultarSolicitudMB {
 	private String descripcionComision;
 	private String glosaComision;
 	
+	private String mesajeValidacionHost = "";
 	private TiivsHostVoucher objVoucher;
 	
 	public ConsultarSolicitudMB() {		
@@ -2594,13 +2597,38 @@ public class ConsultarSolicitudMB {
 		return retorno;
 	}
 	
-	private boolean validarEnvioSolicitud() throws Exception {
-		
-		  
+	private boolean validarEnvioSolicitud() throws Exception {  
 		boolean retorno = true;
 		String mensaje = "";
 		
 		logger.info("solicitudRegistrarT.getTiivsOficina1() "+solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+		
+		//09-10 Validacion ingreso NroVoucher si check "Exonerado PagComis" no es marcado.
+		logger.debug("Valida[EnvioSolicitud]-getExoneraComision: " + bFlagComision);
+				
+		if (!isbFlagComision()) {
+			logger.debug("Valida[EnvioSolicitud]-Se valida que se ingrese Nro Voucher.");
+			// Validacion de numero de voucher
+			if (solicitudRegistrarT.getNroVoucher() == null) {
+				mensaje = "Ingrese el Nro Voucher";
+				retorno = false;
+				Utilitarios.mensajeInfo("INFO", mensaje);
+			} else if (solicitudRegistrarT.getNroVoucher().equals("")) {
+				mensaje = "Ingrese el Nro Voucher";
+				retorno = false;
+				Utilitarios.mensajeInfo("INFO", mensaje);
+			} else if (solicitudRegistrarT.getNroVoucher().length() < 11) {
+				mensaje = "Ingrese Nro Voucher correcto de 11 digitos";
+				retorno = false;
+				Utilitarios.mensajeInfo("INFO", mensaje);
+			} else {
+				logger.info("Valida[EnvioSolicitud]-NroVoucher:"
+						+ solicitudRegistrarT.getNroVoucher());
+				retorno = this.validarNroVoucher();
+			}
+		} else {
+			logger.debug("Valida[EnvioSolicitud]-No se valida el ingreso de Nro Voucher porque el check no esta marcado.");
+		}
 		
 		//Validacion de oficina
 		if (solicitudRegistrarT.getTiivsOficina1() == null) {
@@ -2618,7 +2646,7 @@ public class ConsultarSolicitudMB {
 		}
 		
 		//Validacion de numero de voucher
-		if (solicitudRegistrarT.getNroVoucher()==null){
+		/*if (solicitudRegistrarT.getNroVoucher()==null){
 			mensaje = "Ingrese el Nro Voucher";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
@@ -2634,7 +2662,7 @@ public class ConsultarSolicitudMB {
 			}
 		 else {
 			retorno =this.validarNroVoucher();
-		    }
+		    }*/
 				 
 		if (solicitudRegistrarT.getTiivsSolicitudAgrupacions().size() == 0) {
 			mensaje = "Ingrese la sección Apoderado y Poderdante";
@@ -2915,6 +2943,11 @@ public class ConsultarSolicitudMB {
 			{
 				if (!this.sEstadoSolicitud.equals("BORRADOR"))  //ssjj
 				{
+					/*** REALIZAR VALIDACION DE COBRO DE COMISIONES ***/
+					if(validarCobroComisiones()){
+						logger.info("[REGISTR_SOLIC]-Solicitud con validacion de cobro de comisiones restrictiva");
+						return;
+					}
 					this.enviarSolicitudSSJJ();
 					logger.info("ESTUDIOOOO : " +solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
 					actualizarBandeja=true;
@@ -2995,7 +3028,8 @@ public class ConsultarSolicitudMB {
 					} 
 					else //Enviar solicitud
 					{
-						mesajeConfirmacion = "Se envió a SSJJ correctamente la Solicitud con codigo : " + objResultado.getCodSoli();
+						mesajeConfirmacion = "Se envió a SSJJ correctamente la Solicitud con codigo : "+ 
+								objResultado.getCodSoli() + "\n" + mesajeValidacionHost;
 						actualizarBandeja=true;						
 					}
 					
@@ -3026,10 +3060,159 @@ public class ConsultarSolicitudMB {
 			logger.error("Throwable ::: "+ConstantesVisado.MENSAJE.OCURRE_EXCEPCION,t);
 		}				
 	}
+	
+	/** Metodo encargado de leer los valores parametrizados en la multitabla (T18), 
+	 * para hacer o no la validacion de Comision.
+	 * @return restrictivo Indicador para realizar la validacion booleano: true/false
+	 * **/
+	private boolean validarCobroComisiones(){
+		boolean restrictivo = false;
+		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		logger.debug("ExoneraFlagComision():" + solicitudRegistrarT.getExoneraComision());
+		//Si no esta exonerado a comision
+		/*if(solicitudRegistrarT.getExoneraComision()!=null &&
+				(solicitudRegistrarT.getExoneraComision().equalsIgnoreCase("0")
+						|| solicitudRegistrarT.getExoneraComision().compareTo(ConstantesVisado.FALSE)==0)){*/
+		if(!isbFlagComision()){
+			Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+			filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_VALIDACION_COMISION));
+			filtroMultitabla.add(Restrictions.eq("valor2",ConstantesVisado.VALOR2_ESTADO_ACTIVO));
+			TiivsMultitabla validacionVoucher = null;
+			
+			try {
+				List<TiivsMultitabla> comisiones = service.buscarDinamico(filtroMultitabla);
+				if(comisiones.size()>0){
+					validacionVoucher = comisiones.get(0);
+				}
+				if(validacionVoucher!=null){
+					logger.debug("[Parametria]-validacionVoucher.getId().getCodElem():"+validacionVoucher.getId().getCodElem());
+					logger.debug("[Parametria]-validacionVoucher-valor1:"+validacionVoucher.getValor1());
+					logger.debug("[Parametria]-validacionVoucher-valor2:"+validacionVoucher.getValor2());
+					logger.debug("[Parametria]-validacionVoucher-valor3:"+validacionVoucher.getValor3());
+					if(validacionVoucher.getId().getCodElem().compareTo(ConstantesVisado.VALIDACION_INACTIVA)==0){
+						logger.info("No se validara contra el servicio de Comision, ya que no esta habilitado.");
+						restrictivo = false;
+					}else{
+						logger.debug("Se validara contra el servicio de Comision (Advertencia / Restrictivo)");
+						restrictivo = validaComision(validacionVoucher.getId().getCodElem(), validacionVoucher);
+					}
+				}
+			} catch (Exception e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"en validarCobroComisiones(): ",e);
+			}	
+		}
+		return restrictivo;
+	}
+	
+	/**
+	 * Metodo encargado de obtener los datos del pago de comision desde Host y realizar 
+	 * la validacion respectiva del Monto/Nro Voucher y mostrar el mensaje de 
+	 * validación como Advertencia o Restrictiva.
+	 * @param tipoValidacion Representa el tipo de validacion a realizar
+	 * @param validacionVoucher Valor del multitabla  del tipo {@link TiivsMultitabla}
+	 * @return flagValida Indicador de validacion del tipo booleano: true/false
+	 * **/
+	private boolean validaComision(String tipoValidacion, TiivsMultitabla validacionVoucher){
+		boolean flagValida = true;
+		BResult resultado = null;
+		ObtenerDatosVoucherDUMMY voucherService = new ObtenerDatosVoucherDUMMY();
+		TiivsHostVoucher voucherHost = null;
+		try {
+			resultado = voucherService.obtenerDatosVoucher(solicitudRegistrarT.getNroVoucher());
+			//Inserta en tabla VISPOD el voucher obtenido de Host
+			if(resultado.getCode()==Integer.parseInt(Constantes.VOUCHER_EXITO)){
+				logger.debug("Se debe registrar el NroVoucher que si existe en Host");
+				insertarVoucher(resultado);
+			}			
+			
+			logger.debug("[ValidaComision]-tipoValidacion: "+tipoValidacion);
+			logger.debug("[ValidaComision]-solicitudRegistrarT.getComision():"+solicitudRegistrarT.getComision());
+			
+			if(tipoValidacion!=null && tipoValidacion.compareTo(ConstantesVisado.ACTIVA_ADVERTENCIA)==0){
+				flagValida = false;
+				if(resultado.getObject()!=null){
+					voucherHost = (TiivsHostVoucher) resultado.getObject();
+					logger.debug("[Advertencia]-ANTES-voucherMontoHost:"+Double.valueOf(voucherHost.getMontoComision()));
+					
+					if(voucherHost.getMontoComision()!=null &&
+							Double.valueOf(voucherHost.getMontoComision()).compareTo(solicitudRegistrarT.getComision())!=0){
+						//Utilitarios.mensajeInfo("INFO", validacionVoucher.getValor3());	
+						logger.debug("[Advertencia]-voucherMontoHost: "+Double.valueOf(voucherHost.getMontoComision()));
+						mesajeValidacionHost = validacionVoucher.getValor3();
+						logger.debug("[Advertencia]-mensaje: "+mesajeValidacionHost);
+						
+					}
+					
+				}
+			}else if (tipoValidacion!=null && tipoValidacion.compareTo(ConstantesVisado.ACTIVA_RESTRICTIVA)==0){
+				flagValida = false;
+				if(resultado.getObject()!=null){
+					voucherHost = (TiivsHostVoucher) resultado.getObject();
+					logger.debug("[Restrictiva]-ANTES-voucherMontoHost:"+Double.valueOf(voucherHost.getMontoComision()));
+					if(voucherHost.getMontoComision()!=null &&
+							Double.valueOf(voucherHost.getMontoComision()).compareTo(solicitudRegistrarT.getComision())!=0){
+						flagValida = true;
+						logger.debug("[Restrictiva]-voucherMontoHost:"+Double.valueOf(voucherHost.getMontoComision()));
+//						Utilitarios.mensajeError("ERROR", validacionVoucher.getValor3());	
+						mesajeConfirmacion = validacionVoucher.getValor3();
+						logger.debug("[Restrictiva]-mensaje:"+mesajeConfirmacion);
+						Utilitarios.mensajeError("ERROR", mesajeConfirmacion);
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"en validaComision():",e);
+		}
+		logger.debug("[ValidaComision]-flagValida: "+flagValida);
+		return flagValida;
+	}
+	
+	/**
+	 * Metodo encargado de insertar la información del Voucher recuperado de Host 
+	 * mediante un servicio web en la BD local de Visado.
+	 * @param result Representa el objeto VoucherHost del tipo {@link BResult}
+	 * **/
+	private void insertarVoucher(BResult result){
+		GenericDao<TiivsHostVoucher, Object> service = (GenericDao<TiivsHostVoucher, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroNroVoucher = Busqueda.forClass(TiivsHostVoucher.class);
+		//Se consulta las solicitudes con estado: 0001
+		filtroNroVoucher.add(Restrictions.eq("nroVoucher", solicitudRegistrarT.getNroVoucher()));
+		try {
+			List<TiivsHostVoucher> vouchers = service.buscarDinamico(filtroNroVoucher);
+			if(vouchers.size()==0){
+				if(result!=null && result.getObject()!=null){
+					TiivsHostVoucher voucher = (TiivsHostVoucher) result.getObject();
+					try {
+						voucher.setUsuarioRegistro(this.usuario.getUID());
+						voucher.setFechaRegistro(new Timestamp(new Date().getTime()));
+						voucher.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO);
+						service.insertar(voucher);
+					} catch (Exception e) {
+						logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al guardar el NroVoucher-Host",e);
+					}
+				}	
+			}
+		} catch (Exception e1) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al guardar el NroVoucher-Host",e1);
+			e1.printStackTrace();
+		}
+	}
 		
 	public String redireccionar(){
 		Utilitarios.mensajeInfo("INFO", mesajeConfirmacion);
 		return redirect;
+	}
+	
+	public void setearComision(){
+		logger.info("================================== setearComision ==================================");
+		logger.debug("exonera comision: " + bFlagComision);
+		if(solicitudRegistrarT!=null){
+			if(bFlagComision){
+				solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_ACTIVO);
+			}else{
+				solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_INACTIVO);
+			}
+		}
 	}
 	
 	private void eliminaAnexosAnterioresMenos(TiivsSolicitud solicitudRegistrarT2, List<TiivsAnexoSolicitud> lstAnexoSolicitud2) throws Exception {
