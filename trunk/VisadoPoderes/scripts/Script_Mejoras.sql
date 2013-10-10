@@ -96,3 +96,9 @@ insert into VISPOD.TTIVS_PARAMETROS (ID_PARAM,ID_EMPRESA,ID_SISTEMA,RUTA_FICHERO
 values 
 ('1','1','98','D:\VisadoPoderes\Escaneados','118.180.36.125','ftpvispod','ftpvispod','/mnt/compartido/visado/documentos/','http://tbalanceador/NAEWeb/pages/escaner/InvocaEscaner.xhtml','P014773','D:\VisadoPoderes\');
 
+-- CONFIGURACION DE ESTADOS PARA MOSTRAR EN COMBO DE ESTADOS EN LA BANDEJA DE SOLICITUDES
+UPDATE VISPOD.TIIVS_MULTITABLA
+SET VALOR3 = 'F'
+WHERE COD_MULT = 'T02'
+AND COD_ELEM NOT IN ('0014', '0016', '0018', '0019', '0020');
+

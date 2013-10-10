@@ -374,6 +374,7 @@ public class CombosMB{
 		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
 		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
 		filtro.add(Restrictions.eq("valor2", "1"));
+		filtro.add(Restrictions.eq("valor3", ConstantesVisado.FLUJO_ESTADO)); //2013/10/10
 		List<TiivsMultitabla> tmpEstado = new ArrayList<TiivsMultitabla>();
 		try {
 			tmpEstado = service.buscarDinamico(filtro);

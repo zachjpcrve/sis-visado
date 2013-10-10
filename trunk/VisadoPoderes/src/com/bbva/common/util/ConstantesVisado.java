@@ -47,6 +47,8 @@ public class ConstantesVisado {
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
 	
+	public static final String FLUJO_ESTADO = "F";
+	
 	public static final String NOMBRE_ARCHIVO_REVOCATORIA = "SUSTREVOC"; //  SUSTENTO_DE_REVOCACION  DOREV
 	
 	public static final java.lang.String ID_RANGO_IMPORTE_MENOR_CINCUENTA = "0001";

@@ -128,6 +128,8 @@ public class SeguimientoMB
 	private String tipoRegistro;
 	private String poderdante;
 	private String apoderdante;
+	private String sentenciaOficina = null;
+	
 	
 	public SeguimientoMB()
 	{
@@ -1828,137 +1830,102 @@ public class SeguimientoMB
 					filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
 				}			
 			}else{
-				filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
-				filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, getOficina()));
+				if(sentenciaOficina!=null){
+					filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
+					String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + sentenciaOficina.concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
+					filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
+					sentenciaOficina = null;
+				}
 			}
 		}
 		// 11. Filtro por numero de documento de apoderado (funciona)
 		if (getNroDOIApoderado().compareTo("") != 0) 
 		{
 			logger.debug("[Seguimiento-busqSolicit]-getNroDOIApoderado:"+getNroDOIApoderado());
-			String codSol="";
-			int ind=0;
 			List<String> lstSolicitudes = new ArrayList<String>();
+			String[] tipPartic = {ConstantesVisado.APODERADO, ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO};
 			
-			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
-			{
-				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIApoderado()) && tmp.getTipPartic().equals(ConstantesVisado.APODERADO))
-				{
-					codSol = tmp.getCodSoli();
-					logger.debug("Busqueda-[Apoderado]-solicitud:"+codSol);
-					lstSolicitudes.add(codSol);
-				}
+			GenericDao<TiivsAgrupacionPersona, Object> agrupacDAO = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsAgrupacionPersona.class);
+			filtro.createAlias("tiivsPersona", "p");
+			filtro.add(Restrictions.eq("p.numDoi", getNroDOIApoderado()));
+			filtro.add(Restrictions.in("tipPartic", tipPartic));
+			try {
+				List<TiivsAgrupacionPersona> agrupacionesPersona = agrupacDAO.buscarDinamico(filtro);
+				if(agrupacionesPersona.size()>0){
+					for (TiivsAgrupacionPersona tmp: agrupacionesPersona){
+						lstSolicitudes.add(tmp.getCodSoli());
+					}
+				}	
+				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
+			} catch (Exception e) {
+				logger.error("Error consultando doi de apoderado " + e );
+				e.printStackTrace();
 			}
-			
-			for (; ind <= lstSolicitudes.size() - 1; ind++) 
-			{
-				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
-			}
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 		}
 
 		// 12. Filtro por nombre de apoderado (funciona)
 		if (objTiivsPersonaBusquedaNomApod!=null) 
 		{
-			/*String codSol="";
-			int ind=0;
-			List<String> lstSolicitudes = new ArrayList<String>();
-			
-			for (TiivsAgrupacionPersona tmp: obtenerSolicitudesxFiltroPersonas())
-			{
-				if ((tmp.getTiivsPersona().getNombre().toUpperCase().indexOf(getTxtNomApoderado().toUpperCase())!=-1  
-					|| tmp.getTiivsPersona().getApeMat().toUpperCase().indexOf(getTxtNomApoderado().toUpperCase())!=-1 
-					|| tmp.getTiivsPersona().getApePat().toUpperCase().indexOf(getTxtNomApoderado().toUpperCase())!=-1)
-					
-					&& tmp.getTipPartic().equals(ConstantesVisado.APODERADO))
-				{
-					codSol = tmp.getCodSoli();
-					lstSolicitudes.add(codSol);
-				}
-			}
-			
-			logger.info("Filtro por apoderado: " + getTxtNomApoderado());
-			for (; ind <= lstSolicitudes.size() - 1; ind++) 
-			{
-				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
-			}*/
-			
 			logger.info("Filtro por apoderado: " + objTiivsPersonaBusquedaNomApod.getNombreCompletoMayuscula());
 			List<String> lstSolicitudes = new ArrayList<String>();
 			int ind=0;
 			lstSolicitudes = obtenerSolicitudesxFiltroPersonas(objTiivsPersonaBusquedaNomApod,ConstantesVisado.CAMPO_APODERADO);
 			
-			for (; ind <= lstSolicitudes.size() - 1; ind++) 
-			{
-				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
+			if(lstSolicitudes.size()>0){
+				for (; ind <= lstSolicitudes.size() - 1; ind++) 
+				{
+					logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
+				}
+				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudes));	
+			}else{
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, null));
 			}
-			
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 		}
 		
 		// 13. Filtro por numero de documento de poderdante (funciona)
 		if (getNroDOIPoderdante().compareTo("") != 0) 
 		{
 			logger.debug("[Seguimiento-busqSolicit]-getNroDOIPoderdante:"+getNroDOIPoderdante());
-			String codSol="";
-			int ind=0;
 			List<String> lstSolicitudes = new ArrayList<String>();
+			String[] tipPartic = {ConstantesVisado.PODERDANTE};
 			
-			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
-			{
-				if (tmp.getTiivsPersona().getNumDoi().equals(getNroDOIPoderdante()) && tmp.getTipPartic().equals(ConstantesVisado.PODERDANTE))
-				{
-					codSol = tmp.getCodSoli();
-					logger.debug("Busqueda-[Poderdante]-solicitud: "+codSol);
-					lstSolicitudes.add(codSol);
-				}
+			GenericDao<TiivsAgrupacionPersona, Object> agrupacDAO = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsAgrupacionPersona.class);
+			filtro.createAlias("tiivsPersona", "p");
+			filtro.add(Restrictions.eq("p.numDoi", getNroDOIPoderdante()));
+			filtro.add(Restrictions.in("tipPartic", tipPartic));
+			try {
+				List<TiivsAgrupacionPersona> agrupacionesPersona = agrupacDAO.buscarDinamico(filtro);
+				if(agrupacionesPersona.size()>0){
+					for (TiivsAgrupacionPersona tmp: agrupacionesPersona){
+						lstSolicitudes.add(tmp.getCodSoli());
+					}
+				}	
+				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
+			} catch (Exception e) {
+				logger.error("Error consultando doi de poderdante " + e );
+				e.printStackTrace();
 			}
-			
-			
-			for (; ind <= lstSolicitudes.size() - 1; ind++) 
-			{
-				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
-			}
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 		}
 
 		// 14. Filtro por nombre de poderdante (funciona)
 		if (objTiivsPersonaBusquedaNomPoder!=null) 
 		{
-			/*String codSol="";
-			int ind=0;
-			List<String> lstSolicitudes = new ArrayList<String>();
-			
-			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
-			{
-				if ((tmp.getTiivsPersona().getNombre().toUpperCase().indexOf(getTxtNomPoderdante().toUpperCase())!=-1  
-					|| tmp.getTiivsPersona().getApeMat().toUpperCase().indexOf(getTxtNomPoderdante().toUpperCase())!=-1 
-					|| tmp.getTiivsPersona().getApePat().toUpperCase().indexOf(getTxtNomPoderdante().toUpperCase())!=-1)
-					
-					&& tmp.getTipPartic().equals(ConstantesVisado.PODERDANTE))
-				{
-					codSol = tmp.getCodSoli();
-					lstSolicitudes.add(codSol);
-				}
-			}
-			
-			logger.info("Filtro por poderdante: " + getTxtNomPoderdante());
-			for (; ind <= lstSolicitudes.size() - 1; ind++) 
-			{
-				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
-			}*/
-			
 			logger.info("Filtro por poderdante: " + objTiivsPersonaBusquedaNomPoder.getNombreCompletoMayuscula());
 			List<String> lstSolicitudes = new ArrayList<String>();
 			int ind=0;
 			lstSolicitudes = obtenerSolicitudesxFiltroPersonas(objTiivsPersonaBusquedaNomPoder,ConstantesVisado.CAMPO_PODERDANTE);
 			
-			for (; ind <= lstSolicitudes.size() - 1; ind++) 
-			{
-				logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
+			if(lstSolicitudes.size()>0){
+				for (; ind <= lstSolicitudes.size() - 1; ind++){
+					logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
+				}
+				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
+			}else{
+				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, null));
 			}
 			
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 		}
 
 		// 15. Filtro por nivel (funciona)
@@ -2795,6 +2762,7 @@ public class SeguimientoMB
 	
 	public List<TiivsOficina1> completeNomOficina(String query) 
 	{	
+		sentenciaOficina = query;
 		List<TiivsOficina1> results = new ArrayList<TiivsOficina1>();
 		for (TiivsOficina1 oficina : combosMB.getLstOficina1()) {
 			if (oficina.getCodOfi() != null) {
