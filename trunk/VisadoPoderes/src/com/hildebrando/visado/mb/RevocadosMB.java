@@ -25,6 +25,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -2949,7 +2950,6 @@ public class RevocadosMB {
 				.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
 				+ File.separator;
 		
-		TiivsParametros parametro = obtenerParametro();
 		boolean exito = true;
 		
 		if(fileUpload!=null){
@@ -2979,60 +2979,28 @@ public class RevocadosMB {
 				canalSalida.close();
 				return true;
 			} catch (IOException e) {
+				exito = false;
 				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION
 						+ "IO Exception:" + e);
+				
 				e.printStackTrace();
 			}
 		}else{
 			if(aliasCortoDocumento!=null && sAliasTemporal!=null){
-				sUbicacionTemporal = Utilitarios
-						.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
-						+ File.separator;
-				String ruta_files = sUbicacionTemporal + File.separator + 
-									ConstantesVisado.FILES + File.separator;
+				String ruta_files = sUbicacionTemporal + ConstantesVisado.FILES + File.separator;  
 				
-				// Instanciamos la conexión por FTP con el file server
-				FTPClient cliente=new FTPClient();
+				File srcFile = new File(ruta_files + aliasCortoDocumento);
+				File destFile = new File(sUbicacionTemporal + aliasCortoDocumento);
+				
 				try {
-					cliente.connect(parametro.getServer());
-				    boolean login=cliente.login(parametro.getLoginServer(),parametro.getPassServer());
-				    if(login){
-				    	logger.info("+++ Conexión file server exitosa ");
-				    	cliente.changeWorkingDirectory(parametro.getCarpetaRemota()); //nos movemos dentro del arbol de directorios
-				    	FileInputStream fis = new FileInputStream(new File(ruta_files + aliasCortoDocumento)); 
-				    	cliente.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-				    	boolean res = cliente.storeFile(aliasCortoDocumento, fis );
-				    	if(!res){
-			    			logger.error("+++ ERROR moviendo archivo: " + aliasCortoDocumento);
-			    			return false;
-			    		}
-				    	fis.close();
-				    	eliminarTemporal(ruta_files);
-				    	/*for(TiivsAnexoSolicitud anexo : lstAnexoSolicitud){
-				    		FileInputStream fis = new FileInputStream(new File(sUbicacionTemporal + anexo.getAliasTemporal())); 
-				    		cliente.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-				    		boolean res = cliente.storeFile(anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo(), fis );
-				    		if(!res){
-				    			logger.error("+++ ERROR moviendo archivo: " + anexo.getId().getCodSoli() + "_" + anexo.getAliasArchivo());
-				    			return false;
-				    		}
-				    		fis.close();
-						}*/
-				    	
-				    }
-				} catch (Exception e) {
+					FileUtils.copyFile(srcFile, destFile);
+					logger.debug("Despues de mover el archivo de revocados ...");
+					eliminarTemporal(ruta_files);
+				} catch (IOException e) {
 					exito = false;
-					logger.error("+++ERROR al instanciar FTP: " + e.getMessage());
-				} finally{
-					try {
-						if(cliente!=null){
-							cliente.logout();
-							cliente.disconnect();	
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-			       
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION
+							+ "IO Exception:" + e);
+					e.printStackTrace();
 				}
 			}
 		}
@@ -3041,6 +3009,7 @@ public class RevocadosMB {
 		logger.info("=== termina metodo cargarDocumentoRevocatoria() ===");
 		return exito;
 	}
+	
 	private void eliminarTemporal(String ruta_temporal){
 		if(ruta_temporal!=null){
 			File file = new File(ruta_temporal + aliasCortoDocumento);
@@ -3107,6 +3076,7 @@ public class RevocadosMB {
 		 
 		String []aDocumentosLeidos = visadoDocumentosMB.getDocumentosLeidos().split(",");
 		String []aDocumentosCargados = visadoDocumentosMB.getDocumentosCargados().split(",");
+		fileUpload = null;
 		
 		//Actualiza lista de documentos		
 		if(aDocumentosLeidos.length == aDocumentosCargados.length){
@@ -3122,6 +3092,80 @@ public class RevocadosMB {
 		}
 	 }
 	
+	
+	public String descargarDocumentoTemporal() {
+		logger.debug("=== inicia descargarDocumentoTemporal() ====");
+		HttpServletResponse response = (HttpServletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		
+		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		
+		String nombreDocumento = params.get("nombreArchivo");
+		logger.debug("[DESCARG_DOC]-nombreDocumento: "+nombreDocumento);
+		String rutaDocumento = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+				+ File.separator + ConstantesVisado.FILES + File.separator + nombreDocumento;
+		
+		if(revocadoEdit!=null){
+			rutaDocumento = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+					+ File.separator + nombreDocumento;
+		}
+		
+		logger.debug("[DESCARG_DOC]-rutaDocumento: "+rutaDocumento);
+		String outputFileName = rutaDocumento;
+		
+		File outputPDF = new File(outputFileName);
+
+		// Get ready to return pdf to user
+		BufferedInputStream input = null;
+		BufferedOutputStream output = null;
+		try {
+			// Open file.
+			input = new BufferedInputStream(new FileInputStream(outputPDF),10240);
+
+			// Return PDF to user
+			// Init servlet response.
+			response.reset();
+			response.setHeader("Content-Type", "application/pdf");
+			response.setHeader("Content-Length",String.valueOf(outputPDF.length()));
+			response.setHeader("Content-Disposition", "attachment; filename=\""+ nombreDocumento + "\"");
+			output = new BufferedOutputStream(response.getOutputStream(), 10240);
+
+			// Write file contents to response.
+			byte[] buffer = new byte[10240];
+			int length;
+			while ((length = input.read(buffer)) > 0) {
+				output.write(buffer, 0, length);
+			}
+			logger.debug("finalizando OK");
+			// Finalize task.
+			output.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:"+e);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento:"+ex);
+		} 
+		finally {
+			try {
+				output.close();
+			} catch (IOException e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento:"+e);
+				e.printStackTrace();
+			}
+			try {
+				input.close();
+			} catch (IOException e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:"+e);
+				e.printStackTrace();
+			}
+		}
+		FacesContext.getCurrentInstance().responseComplete();
+		
+		logger.debug("=== saliendo de descargarDocumento() ====");
+		
+		return "";		
+	}
 	
 	public String descargarDocumento() {
 		logger.debug("=== inicia descargarDocumento() ====");
@@ -3191,6 +3235,7 @@ public class RevocadosMB {
 		
 		return "";		
 	}
+
 	
 	public String cargarUnicoPDF(String aliasArchivo) {
 		logger.debug("== inicia cargarUnicoPDF()====");

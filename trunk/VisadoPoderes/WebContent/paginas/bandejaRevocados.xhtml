@@ -406,7 +406,7 @@
 						</c:if>
 						<c:if test="#{revocadosMB.flagLinkRevocados==1}">
 							<h:commandLink id="downloadLink"
-									action="#{revocadosMB.descargarDocumento}" immediate="true" 
+									action="#{revocadosMB.descargarDocumentoTemporal}" immediate="true" 
 							>	
 							<h:outputText value="#{revocadosMB.sAliasTemporal}" />																			
 									<f:param name="nombreArchivo" value="#{revocadosMB.aliasCortoDocumento}"/>
