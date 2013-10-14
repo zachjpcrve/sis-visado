@@ -963,7 +963,8 @@ public class Utilitarios {
 
 	public static String modificarExtension(String nombre) {		
 		if(nombre!=null && nombre.length()>2){ //nombre.PDF
-			String ext = nombre.substring(nombre.lastIndexOf("."), nombre.length()).toLowerCase();//.PDF
+//			String ext = nombre.substring(nombre.lastIndexOf("."), nombre.length()).toLowerCase();//.PDF
+			String ext = nombre.substring(nombre.lastIndexOf("."), nombre.length());
 			nombre = nombre.substring(0, nombre.lastIndexOf(".")) + ext;//nombre.pdf
 		}
 		return nombre;
