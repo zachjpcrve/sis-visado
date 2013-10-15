@@ -17,9 +17,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 
 import org.apache.log4j.Logger;
@@ -68,6 +70,16 @@ import com.hildebrando.visado.service.NivelService;
 @SessionScoped
 public class SeguimientoMB 
 {
+	List<TiivsOficina1> listaOficinasValidar ;//= new ArrayList<TiivsOficina1>();
+	
+    public List<TiivsOficina1> getListaOficinasValidar() {
+		return this.listaOficinasValidar;
+	}
+
+	public void setListaOficinasValidar(List<TiivsOficina1> listaOficinasValidar) {
+		this.listaOficinasValidar = listaOficinasValidar;
+	}
+
 	@ManagedProperty(value = "#{pdfViewerMB}")
 	private PDFViewerMB pdfViewerMB;
 	private List<TiivsSolicitud> solicitudes;
@@ -1785,6 +1797,9 @@ public class SeguimientoMB
 				}
 			}
 		}
+		
+		
+		
 
 		// 6. Filtro por operacion bancaria (funciona)
 		if (getIdOpeBan().compareTo("") != 0) 
@@ -1820,7 +1835,10 @@ public class SeguimientoMB
 
 		// 8. Filtro por nombre de oficina (funciona)
 		if (!PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
-		{
+		{   
+			if(listaOficinasValidar!=null){
+				if(listaOficinasValidar.size()!=0){
+			// LISTA OFICINAS
 			if (getOficina() != null) 
 			{
 				if(getOficina().getDesOfi()!=null){
@@ -1837,6 +1855,18 @@ public class SeguimientoMB
 					sentenciaOficina = null;
 				}
 			}
+			
+			}else{
+				
+				if(listaOficinasValidar.size()==0){
+					 FacesContext facesContext = FacesContext.getCurrentInstance();
+						FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No es una oficina valida", "No es una oficina valida");  
+					    facesContext.addMessage(":frm:pnlBndSol:idMsmBndSolicitud", msg);    
+				}
+				
+				
+			}
+		  }
 		}
 		// 11. Filtro por numero de documento de apoderado (funciona)
 		if (getNroDOIApoderado().compareTo("") != 0) 
@@ -2756,7 +2786,16 @@ public class SeguimientoMB
 
 			}
 		}
-
+		
+	if(results.size()==0){
+		    FacesContext facesContext = FacesContext.getCurrentInstance();
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No es una oficina valida", "No es una oficina valida");  
+		    facesContext.addMessage(":frm:pnlBndSol:idMsmBndSolicitud", msg); 
+		listaOficinasValidar=new ArrayList<TiivsOficina1>();
+		listaOficinasValidar.addAll(results);
+		
+		
+	}
 		return results;
 	}
 	
@@ -2773,6 +2812,16 @@ public class SeguimientoMB
 				}
 			}
 		}
+		
+		if(results.size()==0){
+		 FacesContext facesContext = FacesContext.getCurrentInstance();
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No es una oficina valida", "No es una oficina valida");  
+		    facesContext.addMessage(":frm:pnlBndSol:idMsmBndSolicitud", msg);    
+		
+		
+		}
+		listaOficinasValidar=new ArrayList<TiivsOficina1>();
+		listaOficinasValidar.addAll(results);
 		return results;
 	}
 	
