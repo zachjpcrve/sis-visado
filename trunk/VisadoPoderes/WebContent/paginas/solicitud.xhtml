@@ -911,7 +911,7 @@
 									showEffect="slide" />
 								<h:outputText id="outDoi" value="DOI:" />
 								<h:inputText id="inpDoitxt" styleClass="inputTextPopup"
-									size="12"
+									size="20"
 									value="#{solicitudRegMB.objTiivsPersonaBusqueda.numDoi}"
 									maxlength="12"
 									onkeypress="return validaNumeroPorTipoDoi(event,'0',this,'0');"
@@ -942,6 +942,7 @@
 								<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="lOf"
 									itemValue="#{lOf.codTipoDoc}" itemLabel="#{lOf.descripcion}" />
 							</p:selectOneMenu>
+							
 							<p:graphicImage value="/resources/images/pregunta.jpg"
 								id="toolcboTipoDoi2" />
 							<p:tooltip for="toolcboTipoDoi2" value="Tipo DOI/Código Central"
@@ -949,7 +950,7 @@
 						
 							<h:outputText id="outNumDoiBusqueda" value="Num. DOI:" />
 							<h:inputText styleClass="inputText" id="txtNumDoiBusqueda"
-								size="12" maxlength="11"
+								size="20" maxlength="11"
 								onkeypress="return validaNumeroPorTipoDoi(event,'0',this,'0');"
 								onblur="validaNumeroPorTipoDoi(event,'0',this,'1');"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.numDoi}" />
