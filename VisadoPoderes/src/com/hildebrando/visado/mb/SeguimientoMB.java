@@ -675,7 +675,11 @@ public class SeguimientoMB
 			//logger.debug("[ActDatosGrilla]-TxtApoderado:"+tmpSol.getTxtApoderado());
 			//Carga las operaciones bancarias asociadas a una solicitud
 			cadena="";
-			for (TiivsSolicitudOperban tmp: combosMB.getLstSolOperBan())
+			
+			
+			listarOperacionesBancarias();
+			
+			for (TiivsSolicitudOperban tmp: lstSolOperBan)
 			{
 				if (tmp.getId().getCodSoli().equals(tmpSol.getCodSoli()))
 				{
@@ -2195,7 +2199,7 @@ public class SeguimientoMB
 		logger.debug("[Seguimiento-busqSolicit]-antes de hacer el query.");
 		try {
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
-		} catch (Exception ex) {
+        } catch (Exception ex) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"las solicitudes en la Bandeja de Seguimiento: ",ex);
 		}
 		logger.debug("[Seguimiento-busqSolicit]-despues de hacer el query.");
@@ -2215,9 +2219,39 @@ public class SeguimientoMB
 		{
 			setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + solicitudes.size() + ConstantesVisado.MSG_REGISTROS,solicitudes.size());
 			logger.debug("[Seguimiento-busqSolicit]-"+ConstantesVisado.MSG_TOTAL_REGISTROS +"encontrados: "+solicitudes.size());
+			
+			
+			
+			//listarOperacionesBancarias();
 			actualizarDatosGrilla();
 			setNoHabilitarExportar(false);
 		}
+	}
+	List<TiivsSolicitudOperban> lstSolOperBan;
+	
+	public List<TiivsSolicitudOperban> getLstSolOperBan() {
+		return this.lstSolOperBan;
+	}
+
+	public void setLstSolOperBan(List<TiivsSolicitudOperban> lstSolOperBan) {
+		this.lstSolOperBan = lstSolOperBan;
+	}
+
+	
+	public List<TiivsSolicitudOperban> listarOperacionesBancarias(){
+	// Carga data de Operaciones Bancarias por Solicitud
+			GenericDao<TiivsSolicitudOperban, Object> operBanDAO = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroOperBan = Busqueda.forClass(TiivsSolicitudOperban.class);
+			filtroOperBan.addOrder(Order.asc(ConstantesVisado.CAMPO_ID_CODIGO_SOLICITUD_ALIAS));
+			
+			lstSolOperBan =new ArrayList<TiivsSolicitudOperban>();
+			
+			try {
+				 lstSolOperBan = operBanDAO.buscarDinamico(filtroOperBan);
+			} catch (Exception e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de persona: ",e);
+			}
+			return lstSolOperBan;
 	}
 	
 	public List<String> obtenerSolicitudesxFiltroPersonas(TiivsPersona filtroPer, String tipo)
