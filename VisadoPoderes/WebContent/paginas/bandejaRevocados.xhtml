@@ -405,12 +405,10 @@
 							<p:outputLabel id="lblFile" value="#{revocadosMB.sAliasTemporal}" />
 						</c:if>
 						<c:if test="#{revocadosMB.flagLinkRevocados==1}">
-							<h:commandLink id="downloadLink"
-									action="#{revocadosMB.descargarDocumentoTemporal}" immediate="true" 
-							>	
-							<h:outputText value="#{revocadosMB.sAliasTemporal}" />																			
-									<f:param name="nombreArchivo" value="#{revocadosMB.aliasCortoDocumento}"/>
-							</h:commandLink>
+							<h:outputLink onclick="window.open('../../files/#{revocadosMB.aliasCortoDocumento}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
+									<h:outputText value="#{revocadosMB.sAliasTemporal}" />
+							</h:outputLink>
+							
 						</c:if>
 					</h:panelGrid>
 					
@@ -886,12 +884,9 @@
 					 <td style="width:50px"><p:outputLabel value="Estado:" /></td>
 					 <td><h:outputText value="#{revocadosMB.revocadoVer.estado}"></h:outputText></td>
 					 <td colspan="20" align="right"><c:if test="#{revocadosMB.flagLinkRevocados==1}">
-							<h:commandLink id="downloadLink"
-									action="#{revocadosMB.descargarDocumento}" immediate="true"
-							>	
-							<h:outputText value="#{revocadosMB.sAliasTemporal}" />																			
-									<f:param name="nombreArchivo" value="#{revocadosMB.aliasCortoDocumento}"/>
-							</h:commandLink>
+							<h:outputLink onclick="window.open('../documentos/#{revocadosMB.aliasCortoDocumento}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
+									<h:outputText value="#{revocadosMB.sAliasTemporal}" />
+							</h:outputLink>
 					</c:if></td>
 					</tr>
 				  </table>
