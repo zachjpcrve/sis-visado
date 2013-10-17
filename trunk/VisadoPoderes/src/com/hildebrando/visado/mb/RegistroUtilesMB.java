@@ -245,6 +245,8 @@ public class RegistroUtilesMB {
 		if(iHoraActual <= iHoraCorte ){ //Si hora actual es menor igual a la hora de corte	
 			logger.info("Hora es menor o igual que la fecha de corte");
 			fechaRetorno = fechaActual.getTime();	 //Retornamos la fecha actual
+			fechaActual.add(Calendar.DATE, -1);
+			fechaRetorno = obtenSiguienteDiaHabil(fechaActual);
 		} else {
 			logger.info("Hora es mayor a la hora de corte, se obtendrá siguiente fecha");
 			fechaRetorno = obtenSiguienteDiaHabil(fechaActual);
