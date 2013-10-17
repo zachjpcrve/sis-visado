@@ -226,8 +226,7 @@ public class RevocadosMB {
 		try {
 			lstRevocadosPre = service.buscarDinamico(filtro.addOrder(Order.desc("codAgrup")).addOrder(Order.desc("fechaRevocatoria")));
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug("error al obtener la lista de revocados "+  e.toString());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar lstRevocadosPre:",  e);
 		}
 		
 		List<Integer> tmpAgrup = new ArrayList<Integer>();
@@ -249,8 +248,7 @@ public class RevocadosMB {
 		try {
 			tiivsrevocados = serviceRev.buscarDinamico(filtroRev.addOrder(Order.desc("codAgrup")).addOrder(Order.desc("fechaRevocatoria")));
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug("error al obtener la lista final de revocados "+  e.toString());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar la lista final de revocados:",  e);
 		}
 		
 		if (tiivsrevocados.size()>0)
@@ -393,10 +391,7 @@ public class RevocadosMB {
 						estado="";
 					
 					} catch(Exception e){
-						
-						logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR,e);
-//						e.printStackTrace();
-											
+						logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR,e);
 					}
 				}
 				
@@ -439,7 +434,9 @@ public class RevocadosMB {
 		try {
 			stream = new FileInputStream(rutaArchivoExcel);
 		} catch (FileNotFoundException e) {
-			logger.debug("Error al obtener archivo excel debido a: " + e.getMessage());
+			logger.error("Error al obtener archivo excel debido a: " , e);
+		}catch(Exception e){
+			logger.error("Error al obtener archivo excel : " , e);
 		}
 		
 		if (stream!=null)
@@ -740,7 +737,9 @@ public class RevocadosMB {
 	{
 		int tamanioApod = revocadoEdit.getApoderados().size();
 		int tamanioPoder = revocadoEdit.getPoderdantes().size();
-		
+		logger.debug("====revocarApodPod() == ");
+		logger.debug("tamanioApod:"+tamanioApod);
+		logger.debug("tamanioPoder:"+tamanioPoder);
 		if (tamanioApod>0 && tamanioPoder>0)
 		{
 			try {
@@ -836,10 +835,10 @@ public class RevocadosMB {
 					for (ComboDto m : listaNum_ListaPersonas) {
 						if(m.getListaPersonas().size()==lstRevocadosComboDto.size()){
 						    for (ComboDto comboDto : m.getListaPersonas()) {
-								System.out.println("###### comboDto.getKey()  " +  comboDto.getKey() +" %%%%% " +comboDto.getDescripcion() );
+								logger.debug("###### comboDto.getKey()  " +  comboDto.getKey() +" %%%%% " +comboDto.getDescripcion() );
 							}
 							for (ComboDto comboDto : lstRevocadosComboDto) {
-								System.out.println("&&&&&&& comboDto.getKey()  " +  comboDto.getKey() +" T_T " +comboDto.getDescripcion() );
+								logger.debug("&&&&&&& comboDto.getKey()  " +  comboDto.getKey() +" T_T " +comboDto.getDescripcion() );
 							}
 							i = 0;
 							for (ComboDto an : m.getListaPersonas()) {
@@ -872,18 +871,14 @@ public class RevocadosMB {
 			Utilitarios.mensajeInfo("INFO", "La Revocación fue ejecutada, correctamente");
 			buscarRevocado();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en revocados:",  e);
 			}
 		}	
-		else
-		{
+		else{
 			bBooleanPopup=false;
-			
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "No se puede revocar, debe completar los datos de representado y/o representante!","");
 			FacesContext.getCurrentInstance().addMessage("msmGrowlPopup", msg);
-			
-			logger.debug("No se grabó la combinacion de revocados");
-			
+			logger.debug("No se grabo la combinacion de revocados");
 			buscarRevocado();
 		}
 	}
@@ -905,7 +900,7 @@ public class RevocadosMB {
 	public void actualizarEstadoA_Revocado_SolicitudAgrupacion(List<TiivsSolicitudAgrupacionId> listaTiivsSolicitudAgrupacionId) throws Exception{
 		
 		for (TiivsSolicitudAgrupacionId x : listaTiivsSolicitudAgrupacionId) {
-			System.out.println(x.toString());
+			logger.debug(x.toString());
 		}
 		if(listaTiivsSolicitudAgrupacionId.size()>0){
 		List<TiivsSolicitudAgrupacion> listaTiivsSolicitudAgrupacion=new ArrayList<TiivsSolicitudAgrupacion>();
@@ -934,7 +929,7 @@ public class RevocadosMB {
 	
 	//@Samira 09/03/2012
 	public void actualizarEstadoSolicitudes(List<String> solicitudes) throws Exception{
-		logger.info("**** actualizarEstadoSolicitudes ****");
+		logger.info("===== actualizarEstadoSolicitudes() ====");
 
 		 /**Insertando la GLosa La solicitud ha sido revocada ... desde base de datos*/
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -990,10 +985,8 @@ public class RevocadosMB {
 		if(listaTiivsSolicitudRechazdas.size()>0||listaTiivsSolicitudImprocedentes.size()>0){
 			Utilitarios.mensajeInfo("INFO", "La(s) Solicitud(es) Revocada(s) es(son) : "+codigoRetorno);
 		}else{
-			Utilitarios.mensajeInfo("INFO", "La Revocación fue ejecutada, correctamente");
+			Utilitarios.mensajeInfo("INFO", "La Revocación fue ejecutada correctamente ..");
 		}
-		
-		
 	}
 	
 	public void registraSolicitudHistorial (TiivsSolicitud solicitudModificado) throws Exception
@@ -1520,20 +1513,15 @@ public class RevocadosMB {
 				personaDataModal = new PersonaDataModal(lstTiivsPersonaLocal);
 			} else {
 				this.bBooleanPopup = true;
-			}
-		
+			}		
 		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al buscarPersona():",  e);
 			Utilitarios.mensajeError("ERROR", e.getMessage());
-			e.printStackTrace();
 		}
-		
-		
 	}
 	
-	public void deleteCombinacion(ActionEvent event){
-		
+	public void deleteCombinacion(ActionEvent event){		
 		logger.info("********************** deleteCombinacion *********************************** ");
-		
 		List<TiivsRevocado> tiivsrevocados= new ArrayList<TiivsRevocado>();
 		List<TiivsRevocado> tiivsrevocados2= new ArrayList<TiivsRevocado>();
 		
@@ -1547,14 +1535,12 @@ public class RevocadosMB {
 			
 			for(TiivsRevocado revocado:tiivsrevocados){
 				service.eliminar(revocado);
-			}
-			
+			}			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al deleteCombinacion():",  e);
 		}
 		
 		buscarRevocado();
-		
 	}
 	
 	public void limpiarCriteriosBusqueda() {
@@ -1617,7 +1603,7 @@ public class RevocadosMB {
 			try {
 				tiivsrevocados = service.buscarDinamico(filtro.add(Restrictions.eq("codAgrup", Integer.parseInt(personaClientesPendEdit.get(0).getCodAgrupacion()))));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar tiivsrevocados:",  e);
 			}
 			
 			
@@ -1631,10 +1617,8 @@ public class RevocadosMB {
 			try {
 				service.insertar(tiivsRevocadoAux);
 				tiivsrevocados = service.buscarDinamico(filtro.add(Restrictions.eq("codAgrup", Integer.parseInt(personaClientesPendEdit.get(0).getCodAgrupacion()))));
-				
 			} catch (Exception e) {
-				
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar tiivsrevocados2:",  e);
 			}
 					
 			List<TiivsRevocado> apoderados= new ArrayList<TiivsRevocado>();
@@ -1757,6 +1741,7 @@ public class RevocadosMB {
 	@SuppressWarnings("unchecked")
 	public void guardarApodPod(ActionEvent actionEvent)
 	{	
+		logger.info("=== guardarApodPod() ====");
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		int flag=0;
 		logger.info("personaClientesPendEdit.size :::: " +personaClientesPendEdit.size());
@@ -1766,12 +1751,16 @@ public class RevocadosMB {
 		{	
 			int tamanioApod = revocado.getApoderados().size();
 			int tamanioPode = revocado.getPoderdantes().size();
+			logger.debug("tamanioApod:"+tamanioApod);
+			logger.debug("tamanioPode:"+tamanioPode);
 			
 			if (tamanioApod>0 && tamanioPode>0)
 			{
 //				for(TiivsPersona tiivsPersona:revocado.getApoderados()){
 				if(aliasCortoDocumento!=null){
+					logger.debug("aliasCortoDocumento:"+aliasCortoDocumento);
 					boolean flagArchivo = cargarDocumentoRevocatoria();
+					logger.debug("flagArchivo: "+flagArchivo);
 					if(!flagArchivo){
 						flag=-1;
 						break;
@@ -1797,11 +1786,13 @@ public class RevocadosMB {
 					
 					try {
 //						service.save(tiivsRevocadoAux);
+						logger.debug("[REG-tiivsRevocado(Apod)]-codRevocado:"+tiivsRevocado.getCodRevocado());
+						logger.debug("[REG-tiivsRevocado(Apod)]-codAgrup:"+tiivsRevocado.getCodAgrup());
+						logger.debug("[REG-tiivsRevocado(Apod)]-aliasArchivo:"+tiivsRevocado.getAliasArchivo());
 						service.save(tiivsRevocado);
 						flag=1;
 					} catch (Exception e) {
-						//e.printStackTrace();
-						logger.error("error al guardar revocado");
+						logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al guardar Revocado(Apoderados)",e);
 					}
 				}
 				
@@ -1826,16 +1817,22 @@ public class RevocadosMB {
 					
 					try {
 //						service.save(tiivsRevocadoAux);
+						logger.debug("[REG-tiivsRevocado(Poderd)]-codRevocado:"+tiivsRevocado.getCodRevocado());
+						logger.debug("[REG-tiivsRevocado(Poderd)]-codAgrup:"+tiivsRevocado.getCodAgrup());
+						logger.debug("[REG-tiivsRevocado(Poderd)]-aliasArchivo:"+tiivsRevocado.getAliasArchivo());
+						
 						service.save(tiivsRevocado);
 						flag=1;
 					} catch (Exception e) {
-						//e.printStackTrace();
-						logger.error("error al guardar revocado");
+						logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al guardar Revocado(Poderdantes)",e);
 					}
 				}	
+			}else{
+				logger.debug("No hay mas de (1) apod/poderd. para hacer el registro de revocados");
 			}
 		}
 		
+		logger.debug("[REG-Revocados]-flag"+flag);
 		if(flag==1)
 		{
 			//Utilitarios.mensajeInfo("Guardado!", "Registros agregados correctamente!");
@@ -1888,20 +1885,14 @@ public class RevocadosMB {
 		try {
 			tiivsrevocados = service.buscarDinamico(filtro.addOrder(Order.desc("codAgrup")));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener el getMaximoCodAgrupacion(): ",e);
 		}
 		
-		if(tiivsrevocados.size() > 0){
-			
+		if(tiivsrevocados.size() > 0){			
 			return tiivsrevocados.get(0).getCodAgrup();
-			
 		}else{
-			
 			return 0;
-			
 		}
-		
-		
 	}
 	
 	
@@ -1979,7 +1970,7 @@ public class RevocadosMB {
 							
 				tiivsrevocados2 = service.buscarDinamico(filtro2.add(Restrictions.eq("codAgrup", Integer.parseInt(codAgrup))));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al eliminar tiivsrevocados2:",  e);
 			}
 			
 //			List<TiivsPersona> apoderados= new ArrayList<TiivsPersona>();
@@ -2020,7 +2011,7 @@ public class RevocadosMB {
 //						apoderado= new TiivsPersona();
 //						apoderado = tiivsRevocado.getTiivsPersona();
 						
-						
+
 						String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
 						String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
 						
@@ -2104,7 +2095,7 @@ public class RevocadosMB {
 								
 					tiivsrevocados2 = service.buscarDinamico(filtro2.add(Restrictions.eq("codAgrup", Integer.parseInt(codAgrup))));
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar eliminar tiivsrevocados2:",  e);
 				}
 							
 				List<TiivsRevocado> apoderados= new ArrayList<TiivsRevocado>();
@@ -2393,7 +2384,7 @@ public class RevocadosMB {
 		return lstTiivsPersona;
 	}
 	public void inactivarCombinacion(ActionEvent actionEvent) {
-   logger.info( " ********* Iniciando inactivarCombinacion *****************");
+		logger.info( " ==== inactivarCombinacion() ====");
 		List<TiivsMultitabla> tiivsMultitablas2 = new ArrayList<TiivsMultitabla>();
 		
 		GenericDao<TiivsMultitabla, Object> service3 = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -2404,41 +2395,28 @@ public class RevocadosMB {
 		try {
 			tiivsMultitablas2 = service3.buscarDinamico(filtro4);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la multitabla de estados: ",e);
 		}
 		
-		//aqui lo inactivamos
+		//Empieza la inactivacion
 		List<TiivsRevocado> tiivsrevocados = new ArrayList<TiivsRevocado>();
-		
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		
 		Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
 		filtro.add(Restrictions.eq("codAgrup", Integer.parseInt(revocadoEdit.getCodAgrupacion())));
-		
 		//String estadoInactivo = getValor1(ConstantesVisado.ESTADOS.ESTADO_INACTIVO_REVOCADO,tiivsMultitablas2);
-		
 		try {
 			tiivsrevocados = service.buscarDinamico(filtro);
-			
 			for(TiivsRevocado  tiivsRevocado:tiivsrevocados){
-				
 				tiivsRevocado.setEstado(ConstantesVisado.ESTADOS.ESTADO_INACTIVO_REVOCADO);
-				
 				service.modificar(tiivsRevocado);
 			}
-			
-
-			logger.debug("exitoso al inactivar revocados!");
-		 Utilitarios.mensajeInfo("Info", "Se inactivo correctamente");
-			
+			logger.debug("Se ha inactivado correctamente!");
+			Utilitarios.mensajeInfo("Info", "Se ha inactivado correctamente");			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-
-			logger.debug("error al inactivar revocados!" + e.toString());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al inactivar Revocados: ",e);
 		}
 		
 		buscarRevocado();
-		
 	}
 	
 	public List<TiivsPersona> completePersona(String query) 
@@ -2451,7 +2429,7 @@ public class RevocadosMB {
 		try {
 			lstTiivsPersonaBusqueda = service.buscarDinamico(filtro);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"las Personas: ",e);
 		}
 
 		for (TiivsPersona pers : lstTiivsPersonaBusqueda) 
@@ -2553,7 +2531,7 @@ public class RevocadosMB {
 				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"revocados es:["+lstRevocadosPre.size()+"].");
 			}
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"Revocados:"+ e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"Revocados:", e);
 		}
 		
 		List<Integer> tmpAgrup = new ArrayList<Integer>();
@@ -2576,8 +2554,7 @@ public class RevocadosMB {
 		try {
 			tiivsrevocados = serviceRev.buscarDinamico(filtroRev);
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug("error al obtener la lista final de revocados "+  e.toString());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener la lista final de revocados: ",e);
 		}
 				
 		if (tiivsrevocados.size()>0)
@@ -2618,9 +2595,7 @@ public class RevocadosMB {
 					
 					try{
 						
-					
 						for(TiivsRevocado tiivsRevocado:tiivsrevocados){
-							
 
 							if(tiivsRevocado.getCodAgrup().compareTo(tiivsRevocado2)==0){
 
@@ -2630,8 +2605,7 @@ public class RevocadosMB {
 								
 								if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.APODERADO)){
 									
-	//								TiivsPersona apoderado;
-									
+	//								TiivsPersona apoderado;									
 	//								apoderado = new TiivsPersona();
 	//								apoderado = tiivsRevocado.getTiivsPersona();
 									
@@ -2651,61 +2625,34 @@ public class RevocadosMB {
 	//								apoderado.setsDesctipDoi( descDoiApod);
 	//								apoderado.setsDesctipPartic(descTipPart);								
 									tiivsRevocado.setsDesctipDoi( descDoiApod);
-									tiivsRevocado.setsDesctipPartic(descTipPart);
-									
+									tiivsRevocado.setsDesctipPartic(descTipPart);									
 	//								apoderados.add(apoderado);
 									apoderados.add(tiivsRevocado);
 								}
 								
 								if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO)){
 
-									String descDoiApod = getValor1(
-											tiivsRevocado.getTiivsPersona()
-													.getTipDoi(),
-											listDocumentos);
-									String descTipPart = getValor1(
-											tiivsRevocado.getTipPartic(),
-											listTipoRegistro);
+									String descDoiApod = getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
+									String descTipPart = getValor1(tiivsRevocado.getTipPartic(),listTipoRegistro);
 									
 									aliasArchivo = tiivsRevocado.getAliasArchivo();
 
 									nombreCompletoApoderados = nombreCompletoApoderados
-											+ " "
-											+ descDoiApod
-											+ ":"
-											+ tiivsRevocado.getTiivsPersona()
-													.getNumDoi()
-											+ " - "
-											+ (tiivsRevocado.getTiivsPersona()
-													.getApePat() == null ? ""
-													: tiivsRevocado
-															.getTiivsPersona()
-															.getApePat())
-											+ " "
-											+ (tiivsRevocado.getTiivsPersona()
-													.getApeMat() == null ? ""
-													: tiivsRevocado
-															.getTiivsPersona()
-															.getApeMat())
-											+ " "
-											+ (tiivsRevocado.getTiivsPersona()
-													.getNombre() == null ? ""
-													: tiivsRevocado
-															.getTiivsPersona()
-															.getNombre())
+											+ " "+ descDoiApod+ ":"+ tiivsRevocado.getTiivsPersona().getNumDoi()
+											+ " - "	+ (tiivsRevocado.getTiivsPersona().getApePat() == null ? "": tiivsRevocado.getTiivsPersona().getApePat())
+											+ " "+ (tiivsRevocado.getTiivsPersona().getApeMat() == null ? "": tiivsRevocado.getTiivsPersona().getApeMat())
+											+ " "+ (tiivsRevocado.getTiivsPersona().getNombre() == null ? "": tiivsRevocado.getTiivsPersona().getNombre())
 											+ "\n";
 
 									tiivsRevocado.setsDesctipDoi(descDoiApod);
-									tiivsRevocado
-											.setsDesctipPartic(descTipPart);
+									tiivsRevocado.setsDesctipPartic(descTipPart);
 
 									apoderados.add(tiivsRevocado);
 								}
 									
 								if(tiivsRevocado.getTipPartic().equals(ConstantesVisado.PODERDANTE)){
 									
-	//								TiivsPersona poderdante;
-									
+	//								TiivsPersona poderdante;									
 	//								poderdante = new TiivsPersona();
 	//								poderdante = tiivsRevocado.getTiivsPersona();
 									aliasArchivo = tiivsRevocado.getAliasArchivo();
@@ -2750,7 +2697,7 @@ public class RevocadosMB {
 						revocado.setPoderdantes(poderdantes);
 						
 						
-						if(estado.compareTo("Activo")==0){
+						if(estado.compareTo(ConstantesVisado.ESTADOS.ESTADO_ACTIVO)==0){
 							revocado.setFlagEditAct(true);
 							revocado.setFlagEditPend(false);
 							revocado.setFlagDelete(false);
@@ -2762,7 +2709,7 @@ public class RevocadosMB {
 							revocado.setFlagDelete(true);
 						}
 						
-						if(estado.compareTo("Inactivo")==0){
+						if(estado.compareTo(ConstantesVisado.ESTADOS.ESTADO_DESACTIVO)==0){
 							revocado.setFlagEditPend(false);
 							revocado.setFlagEditAct(false);
 							revocado.setFlagDelete(false);
@@ -2780,39 +2727,30 @@ public class RevocadosMB {
 						estado="";
 					
 					} catch(Exception e){
-						
-						logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR,e);
-//						e.printStackTrace();
-											
+						logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en Revocados: ",e);
 					}
 				}
 				
 			}
-			
 			
 		}
 		bBooleanPopup=false;
 	}
 	
 	public List<Integer> obtenerListCodAgrupacion(){
-		
-		 List<Integer> listCodAgrup= new ArrayList<Integer>();
+		List<Integer> listCodAgrup= new ArrayList<Integer>();
 		GenericDao<TiivsRevocado, Object> service = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro2 = Busqueda.forClass(TiivsRevocado.class).setProjection(Projections.distinct(Projections.property("codAgrup")));
-		
 		try {
 			listCodAgrup = service.buscarDinamicoInteger(filtro2.addOrder(Order.desc("codAgrup")));
 		} catch (Exception e) {
-			
-			logger.debug("error al obtener la lista de cod de agrupacion "+  e.toString());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener la lista de cod de agrupacion: ",e);
 		}
-		
 		return listCodAgrup;
-		
 	}
 	
 	public void cambiarRazonSocial(ValueChangeEvent e){		
-		logger.info("************cambiarRazonSocial()*¨**************");
+		logger.info("==== cambiarRazonSocial()=======");
 		String codTipoDocumento = (String) e.getNewValue();
 		if (codTipoDocumento!=null && codTipoDocumento.equals(this.codigoRazonSocial)) {//CODIGO RAZONSOCIAL
 			this.mostrarRazonSocial = true;
@@ -2822,9 +2760,11 @@ public class RevocadosMB {
 		} else {
 			this.mostrarRazonSocial = false;
 			objTiivsPersonaAgregar.setTipDoi("");
-		}	
-		
-		this.obterPatterDelTipoDocumento(codTipoDocumento);
+		}
+		//15-10 Se agrega que el tipo Doi no sea nulo
+		if(codTipoDocumento!=null){
+			this.obterPatterDelTipoDocumento(codTipoDocumento);	
+		}
 	}
 	
 	private void obtenCodRazonSocial() {
@@ -2854,10 +2794,8 @@ public class RevocadosMB {
 					}
 				}
 			}
-
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT
-					+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"de multitablas: " , e);
 		}
 	}
 	
@@ -2887,7 +2825,7 @@ public class RevocadosMB {
 				}
 			}
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " , e);
 		}
 	}
 	
@@ -2924,13 +2862,11 @@ public class RevocadosMB {
 		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
 		try {
 			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
-			 patter=listaMultiTabla.get(0).getValor4();
-			logger.info("patter : "+patter);
+			patter=listaMultiTabla.get(0).getValor4();
+			logger.info("[obterPatterTipDoc]-pattern: "+patter);
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+ "de multitablas: " , e);
 		}
-		
- 		
 	}
 	
 	private String getValor1(String codElem, List<TiivsMultitabla> multitabla){
@@ -2944,7 +2880,7 @@ public class RevocadosMB {
 	
 	private boolean cargarDocumentoRevocatoria(){
 		logger.info("=== cargarDocumentoRevocatoria() ===");
-		logger.info("fileUpload: " + fileUpload);
+		logger.info("[CargarDocRev]-fileUpload: " + fileUpload);
 		byte fileBytes[] = null;
 		File fichTemp = null;
 		FileOutputStream canalSalida = null;
@@ -2952,7 +2888,7 @@ public class RevocadosMB {
 		sUbicacionTemporal = Utilitarios
 				.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
 				+ File.separator;
-		
+		logger.debug("[CargarDocRev]-sUbicacionTemporal: "+sUbicacionTemporal);
 		boolean exito = true;
 		
 		if(fileUpload!=null){
@@ -2973,7 +2909,7 @@ public class RevocadosMB {
 						new File(sUbicacionTemporal));
 				
 				aliasCortoDocumento = fichTemp.getName();
-				logger.debug("  NombreArchivoTEMP: " + aliasCortoDocumento);
+				logger.debug("[CargarDocRev]-NombreArchivoTEMP: " + aliasCortoDocumento);
 
 				canalSalida = new FileOutputStream(fichTemp);
 				canalSalida.write(fileBytes);
@@ -2983,14 +2919,15 @@ public class RevocadosMB {
 				return true;
 			} catch (IOException e) {
 				exito = false;
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION
-						+ "IO Exception:" + e);
-				
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IO Exception:" , e);
+			} catch (Exception e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "al CargarDocRev:" , e);
 			}
 		}else{
 			if(aliasCortoDocumento!=null && sAliasTemporal!=null){
 				String ruta_files = sUbicacionTemporal + ConstantesVisado.FILES + File.separator;  
+				logger.debug("[CargarDocRev]-ruta_files: "+ruta_files);
+				logger.debug("[CargarDocRev]-sUbicacionTemporal: "+sUbicacionTemporal);
 				
 				File srcFile = new File(ruta_files + aliasCortoDocumento);
 				File destFile = new File(sUbicacionTemporal + aliasCortoDocumento);
@@ -3001,14 +2938,12 @@ public class RevocadosMB {
 					eliminarTemporal(ruta_files);
 				} catch (IOException e) {
 					exito = false;
-					logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION
-							+ "IO Exception:" + e);
-					e.printStackTrace();
-				}
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al mover archivo revocados a carpeta: " ,e);
+				} 
 			}
 		}
-		logger.info("aliasCortoDocumento: " + aliasCortoDocumento);
-		logger.info("sAliasTemporal: " + sAliasTemporal);
+		logger.info("[CargarDocRev]-aliasCortoDocumento: " + aliasCortoDocumento);
+		logger.info("[CargarDocRev]-sAliasTemporal: " + sAliasTemporal);
 		logger.info("=== termina metodo cargarDocumentoRevocatoria() ===");
 		return exito;
 	}
@@ -3034,15 +2969,20 @@ public class RevocadosMB {
 				return parametros.get(0);
 			}
 		} catch (Exception e) {
-			logger.error("+++ERROR obteniendo parametros: " + e.getMessage());
+			logger.error("+++ERROR obteniendo parametros: " , e);
 		}	
 		return null;
 	}
 	
 	 public void handleFileUpload(FileUploadEvent event) {  
-		logger.info("=== handleFileUpload() === " + event.getFile().getFileName()); 
+		logger.info("=== handleFileUpload() === ");
+		logger.debug("event.getFile().getFileName():"+event.getFile().getFileName());
+		logger.debug("event.getFile().getSize():"+event.getFile().getSize());
+		logger.debug("event.getFile().getContentType():"+event.getFile().getContentType());
+		
 	    FacesMessage msg = new FacesMessage("Archivo", event.getFile().getFileName() + " almacenado correctamente.");  
 	    FacesContext.getCurrentInstance().addMessage(null, msg);  
+	    
 	    setFileUpload(event.getFile());
 	     
 	    aliasCortoDocumento = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA;
@@ -3064,6 +3004,7 @@ public class RevocadosMB {
 			String extension = revocadoEdit.getAliasArchivo().substring(revocadoEdit.getAliasArchivo().lastIndexOf("."));	
 			aliasCortoDocumento = revocadoEdit.getAliasArchivo();
 			sAliasTemporal = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA + extension;
+			logger.debug("[actArchivo]-sAliasTemporal: "+sAliasTemporal);
 		}
 		logger.info("=== fin de actualizarArchivo() === ");
 	 }
@@ -3074,8 +3015,8 @@ public class RevocadosMB {
 	  * */
 	 public void actualizarDocumentosRevocados(ActionEvent ae){
 		logger.info("====== actualizarDocumentosRevocados =====");
-		logger.info("[Applet-Actualizar]-Documentos LEIDOS: " + visadoDocumentosMB.getDocumentosLeidos());
-		logger.info("[Applet-Actualizar]-Documentos CARGADOS: " + visadoDocumentosMB.getDocumentosCargados());
+		logger.info("[Applet-ActualRevocad]-Documentos LEIDOS: " + visadoDocumentosMB.getDocumentosLeidos());
+		logger.info("[Applet-ActualRevocad]-Documentos CARGADOS: " + visadoDocumentosMB.getDocumentosCargados());
 		 
 		String []aDocumentosLeidos = visadoDocumentosMB.getDocumentosLeidos().split(",");
 		String []aDocumentosCargados = visadoDocumentosMB.getDocumentosCargados().split(",");
@@ -3085,7 +3026,7 @@ public class RevocadosMB {
 		if(aDocumentosLeidos.length == aDocumentosCargados.length){
 			//sAliasTemporal
 			String extension = null;
-			logger.info("[Applet-Actualizar]-TAMANIO ARCHIVOS: " + aDocumentosCargados.length);
+			logger.info("[Applet-ActualRevocad]-Tamanio archivos:" + aDocumentosCargados.length);
 			for(String archivo:aDocumentosCargados){
 				aliasCortoDocumento = archivo;
 				extension = archivo.substring(archivo.lastIndexOf("."));
@@ -3222,45 +3163,36 @@ public class RevocadosMB {
 		BufferedInputStream input = null;
 		BufferedOutputStream output = null;
 		try {
-			// Open file.
 			input = new BufferedInputStream(new FileInputStream(outputPDF),10240);
 
-			// Return PDF to user
-			// Init servlet response.
 			response.reset();
 			response.setHeader("Content-Type", "application/pdf");
 			response.setHeader("Content-Length",String.valueOf(outputPDF.length()));
 			response.setHeader("Content-Disposition", "attachment; filename=\""+ nombreDocumento + "\"");
 			output = new BufferedOutputStream(response.getOutputStream(), 10240);
 
-			// Write file contents to response.
 			byte[] buffer = new byte[10240];
 			int length;
 			while ((length = input.read(buffer)) > 0) {
 				output.write(buffer, 0, length);
 			}
 			logger.debug("finalizando OK");
-			// Finalize task.
 			output.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:"+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento: ",e);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento:"+ex);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento: ",ex);
 		} 
 		finally {
 			try {
 				output.close();
 			} catch (IOException e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento:"+e);
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento: ",e);
 			}
 			try {
 				input.close();
 			} catch (IOException e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:"+e);
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento: ",e);
 			}
 		}
 		FacesContext.getCurrentInstance().responseComplete();
@@ -3272,7 +3204,7 @@ public class RevocadosMB {
 	
 //	public void descargarDocumento() {
 	public String descargarDocumento() {
-		logger.debug("=== inicia descargarDocumento() ====");
+		logger.debug("=== inicia descargarDocumento()-Revocados ====");
 		HttpServletResponse response = (HttpServletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		
@@ -3289,16 +3221,11 @@ public class RevocadosMB {
 		String outputFileName = rutaDocumento;
 		
 		File outputPDF = new File(outputFileName);
-
-		// Get ready to return pdf to user
 		BufferedInputStream input = null;
 		BufferedOutputStream output = null;
 		try {
-			// Open file.
 			input = new BufferedInputStream(new FileInputStream(outputPDF),10240);
 
-			// Return PDF to user
-			// Init servlet response.
 			response.reset();
 			response.setHeader("Content-Type", "application/pdf");
 			response.setHeader("Content-Length",String.valueOf(outputPDF.length()));
@@ -3306,34 +3233,28 @@ public class RevocadosMB {
 			response.setHeader("Content-Disposition", "attachment; filename=\""+ aliasCortoDocumento + "\"");
 			output = new BufferedOutputStream(response.getOutputStream(), 10240);
 
-			// Write file contents to response.
 			byte[] buffer = new byte[10240];
 			int length;
 			while ((length = input.read(buffer)) > 0) {
 				output.write(buffer, 0, length);
 			}
-			logger.debug("finalizando OK");
-			// Finalize task.
+			logger.debug("[DescargDoc-Revoc]-finalizando OK OK");
 			output.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:"+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:",e);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento:"+ex);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "general al descargarDocumento:",ex);
 		} 
 		finally {
 			try {
 				output.close();
 			} catch (IOException e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento:"+e);
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 2 al descargarDocumento: ",e);
 			}
 			try {
 				input.close();
 			} catch (IOException e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:"+e);
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento: ",e);
 			}
 		}
 		FacesContext.getCurrentInstance().responseComplete();
@@ -3345,7 +3266,7 @@ public class RevocadosMB {
 
 	
 	public String cargarUnicoPDF(String aliasArchivo) {
-		logger.debug("== inicia cargarUnicoPDF()====");
+		logger.debug("== inicia cargarUnicoPDF()-Revocados ====");
 		if(fileUpload == null){
 			Utilitarios.mensajeInfo("", "No se ha seleccionado ningún archivo");
 			return "";
@@ -3359,13 +3280,11 @@ public class RevocadosMB {
 		FileOutputStream canalSalida = null;
 		
 		try {
-			
 			//Obteniendo ubicación del file server			
 			sUbicacionTemporal = Utilitarios
 					.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
 					+ File.separator + ConstantesVisado.FILES + File.separator;			
-			
-			logger.debug(" -> Ubicacion Temporal:"+ sUbicacionTemporal);
+			logger.debug("[cargarUnicoPDFRevoc]-Ubicacion Temporal:"+ sUbicacionTemporal);
 			
 			File fDirectory = new File(sUbicacionTemporal);
 			fDirectory.mkdirs();	
@@ -3382,28 +3301,35 @@ public class RevocadosMB {
 			
 			sNombreTemporal = fichTemp.getName();
 									
-			logger.debug(" NombreArchivoTEMP: " + sNombreTemporal);
+			logger.debug("[cargarUnicoPDFRevoc]-NombreArchivoTEMP: " + sNombreTemporal);
 			
 			canalSalida = new FileOutputStream(fichTemp);
 			canalSalida.write(fileBytes);
 			
 			canalSalida.flush();
+			
 			return sNombreTemporal;
 
 		} catch (IOException e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IO Exception:"+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IO Exception-Revocados: ",e);
 			String sMensaje = "Se produjo un error al adjuntar fichero";
 			Utilitarios.mensajeInfo("", sMensaje);
 			return "";
-		} finally {
+		} catch(Exception ex){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"Revocados: ",ex);
+			String sMensaje = "Se produjo un error al adjuntar fichero.";
+			Utilitarios.mensajeInfo("", sMensaje);
+			return "";
+		}
+		finally {
 			if(fichTemp!=null){
-				fichTemp.deleteOnExit(); // Delete the file when the JVM terminates
+				fichTemp.deleteOnExit();
 			}
 			if (canalSalida != null) {
 				try {
 					canalSalida.close();
 				} catch (IOException x) {
-					// handle error
+					logger.error("Error: ",x);
 				}
 			}
 		}
@@ -3437,12 +3363,10 @@ public class RevocadosMB {
 	}
 
 	public String editar() {
-		//System.out.print("editar");
 		return "/faces/paginas/registrarRevocado.xhtml";
 	}
 
 	public String guardar() {
-		//System.out.print("guardar");
 		return "/faces/paginas/bandejaRevocados.xhtml";
 	}	
 
