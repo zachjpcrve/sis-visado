@@ -3040,6 +3040,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					if (this.sEstadoSolicitud.equals("BORRADOR")) {
 						mesajeConfirmacion = "Se registró correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
 						actualizarBandeja=true;
+						Utilitarios.mensajeInfo("INFO", mesajeConfirmacion);
 					} else {
 						mesajeConfirmacion = "Se envió a SSJJ correctamente la Solicitud con codigo : "+ 
 											objResultado.getCodSoli() + "\n" + mesajeValidacionHost;
