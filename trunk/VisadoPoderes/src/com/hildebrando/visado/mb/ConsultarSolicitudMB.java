@@ -2977,8 +2977,7 @@ public class ConsultarSolicitudMB {
 				logger.info("[REGISTR_SOLIC]-Resultado de carga de archivos al FileServer:" + bRet);
 				// Elimina archivos temporales
 				eliminarArchivosTemporales();
-                /*** look */
-			
+             
 				//Eliminar tabla de anexos anteriores menos el listado: lstAnexoSolicitud
 				eliminaAnexosAnterioresMenos(solicitudRegistrarT,lstAnexoSolicitud);
 				
@@ -3046,27 +3045,6 @@ public class ConsultarSolicitudMB {
 
 				logger.info("objResultado.getCodSoli(); " + objResultado.getCodSoli());
 				logger.info("this.solicitudRegistrarT.importe : " + this.solicitudRegistrarT.getImporte());
-				
-				//Verificado el resultado y haciendo el redirect correcto.
-				logger.info("[REGISTR_SOLIC]-sEstadoSolicitud: "+this.sEstadoSolicitud);
-				if (objResultado.getCodSoli() != "" || objResultado != null) {
-					if (this.sEstadoSolicitud.equals("BORRADOR")) {
-						mesajeConfirmacion = "Se registró correctamente la Solicitud con codigo : "+ objResultado.getCodSoli() + " en Borrador";
-						actualizarBandeja=true;
-					} else {
-						mesajeConfirmacion = "Se envió a SSJJ correctamente la Solicitud con codigo : "+ 
-											objResultado.getCodSoli() + "\n" + mesajeValidacionHost;
-						actualizarBandeja=true;
-					}
-					logger.debug("[REGISTR_SOLIC]-msjConfirmacion:"+mesajeConfirmacion);
-					//redirect = "/faces/paginas/bandejaSeguimiento.xhtml";					
-					this.redirect = this.redirectDetalleSolicitud(objResultado.getCodSoli());					
-				} else {
-					logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar la solicitud.");
-					mensaje = "Error al generar la Solicitud ";
-					Utilitarios.mensajeInfo("INFO", mensaje);
-				}
-				/*** Fin look*/
 				
 				if (actualizarBandeja)
 				{
