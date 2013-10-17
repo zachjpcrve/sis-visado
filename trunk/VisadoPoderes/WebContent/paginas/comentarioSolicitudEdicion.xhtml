@@ -27,7 +27,8 @@
 
 <script type="text/javascript" language="javascript">
 	function appletDeleteFilesAndRedirect(){																																								 
-		redirect = this.document.getElementById('formSolicitudRegistro:idResultRegistro').value;																																							
+		redirect = this.document.getElementById('formSolicitudRegistro:idResultRegistro').value;
+																																								
 		//Si redirect no esta vacio entonces se realizó el registro de forma correcta
 		if(redirect.length>0){
 			document.getElementById('formSolicitudRegistro:btnRedirecionar').click()
@@ -50,7 +51,7 @@
 					update=":formSolicitudRegistro, :formSolicitudRegistro:idGrowlSolicitudRegistro"
 						icon="ui-icon-document" action="#{consultarSolicitudMB.registrarSolicitud}" actionListener="#{consultarSolicitudMB.registrarSolicitudBorrador}"/>
 					<p:commandButton value="Enviar" id="btnEnviar3"  
-						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>
+						icon="ui-icon-document" update=":formSolicitudRegistro:idGrowlSolicitudRegistro" onclick="confirmation.show()"/>
 					<p:commandButton value="Imprimir" id="btnImprimir3"
 						icon="ui-icon-document" />
 						
@@ -65,14 +66,13 @@
 		
 		
 		<h:form id="formSolicitudRegistro">
-		  <h:inputHidden id="idResultRegistro" value="#{solicitudRegMB.redirect}" />
+		  <h:inputHidden id="idResultRegistro" value="#{consultarSolicitudMB.redirect}" />
 			
 		  <div style="visibility: hidden;">
 				<p:commandButton style="width:0;height:0" value=""
 					id="btnRedirecionar" icon="ui-icon-document"
-					update=":formSolicitudRegistro:idGrowlSolicitudRegistro,
-					        :formSolicitudRegistro:idCodigoSolicitud" 
-					action="#{solicitudRegMB.redireccionar}" ajax="false">
+					update=":formSolicitudRegistro:idGrowlSolicitudRegistro" 
+					action="#{consultarSolicitudMB.redireccionar}" ajax="false">
 				</p:commandButton>
 		  </div>		
 		<p:growl id="idGrowlSolicitudRegistro" sticky="true" />	
@@ -88,15 +88,21 @@
 			<p:remoteCommand name="actualizarEditor" update=":formSolicitudRegistro:editor" />
 			
 		</h:form>
+		
+            <p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"
+			header="Confirmación" severity="alert" widgetVar="confirmation">
 
-   <p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"  
-                header="Confirmación" severity="alert" widgetVar="confirmation" >  
-                  
-        <p:commandButton id="confirm" value="Si" update=":formSolicitudRegistro" oncomplete="confirmation.hide(); appletDeleteFilesAndRedirect();"   
-             action="#{consultarSolicitudMB.registrarSolicitud}" actionListener="#{consultarSolicitudMB.registrarSolicitudEnviado}" />  
-        <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
-    
-    </p:confirmDialog> 
+			<h:form id="formRegistroConfirmDialog">
+				<p:commandButton id="confirm" value="Si"
+								update=":formSolicitudRegistro:idGrowlSolicitudRegistro,
+				        					:formSolicitudRegistro:idResultRegistro"
+								oncomplete="confirmation.hide(); appletDeleteFilesAndRedirect();"
+								action="#{consultarSolicitudMB.registrarSolicitud}" ajax="true"
+								actionListener="#{consultarSolicitudMB.registrarSolicitudEnviado}" />
+				<p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+			</h:form>
+		</p:confirmDialog> 
+
 
 
 
