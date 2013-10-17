@@ -1317,7 +1317,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			if (cadEstudio.compareTo("")!=0)
 			{
 				logger.info("Buscando por estudio: " + cadEstudio );
-				sWhere += " and so.cod_estudio in (" + cadEstudio + ") ";
+				//sWhere += " and so.cod_estudio in (" + cadEstudio + ") ";
 			}
 			
 			if (anio!=0)
@@ -1352,7 +1352,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					"join VISPOD.tiivs_estudio es on so.cod_estudio = es.cod_estudio " +
 					"left join VISPOD.tiivs_hist_solicitud hst on so.cod_soli = hst.cod_soli " +
 					"join VISPOD.tiivs_miembro m on hst.reg_usuario = m.cod_miembro " +
-					"where hst.estado in ('0003','0009','0004') and hst.reg_abogado is not null " + sWhere +
+					//"where hst.estado in ('0003','0009','0004') and hst.reg_abogado is not null " + sWhere +
 					//"where hst.estado in ('0003','0009','0004') " + sWhere +
 					"order by so.cod_estudio) A "  +
 					"group by DES_ESTUDIO,dia_atencion,filtro,costo " +
@@ -1558,7 +1558,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			    	 objAgrp.setSubTotalMes(suma);
 			    	 objAgrp.setHonorarios(objAgrp.getSubTotalMes()*objAgrp.getCosto());
 			    	 objAgrp.setImpuesto(Utilitarios.redondear(objAgrp.getHonorarios()*(impuesto/100)));
-			    	 objAgrp.setgTotal(objAgrp.getHonorarios()+objAgrp.getImpuesto());
+			    	 objAgrp.setgTotal(Math.round(objAgrp.getHonorarios()+objAgrp.getImpuesto()*100)/100);
 					
 					 //Agregar agrupacion
 				     String id = String.valueOf(i);
