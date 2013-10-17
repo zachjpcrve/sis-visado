@@ -272,7 +272,7 @@
 						<p:selectOneMenu id="cboTipoDoi"
 							value="#{revocadosMB.objTiivsPersonaBusquedaDlg.tipDoi}"
 							valueChangeListener="#{revocadosMB.cambiarRazonSocial}"	
-							style="width: 120px">
+							style="width: 180px">
 							<p:ajax  update=":frmPendEdit:pnlNuevo, :frmPendEdit:inputHidden" event="change" />
 							<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 							<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
@@ -280,7 +280,7 @@
 						</p:selectOneMenu>
 	
 						<h:outputLabel value="Nro*: " style="color:red"/>
-						<p:inputText id="txtNumDoi" styleClass="inputText" maxlength="12"
+						<p:inputText id="txtNumDoi" styleClass="inputText" size="15" maxlength="12"
 							value="#{revocadosMB.objTiivsPersonaBusquedaDlg.numDoi}"
 							onkeypress="return validaNumero(event,'0',this,'0');"
 							onblur="validaNumero(event,'0',this,'1');">
@@ -301,7 +301,10 @@
 						<h:outputLabel value="T.DOI/ C.Central*: " style="color:red"/>
 						<p:selectOneMenu id="cboTipoDoi2"
 							value="#{revocadosMB.objTiivsPersonaAgregar.tipDoi}"
-							style="width: 120px">
+							valueChangeListener="#{revocadosMB.cambiarRazonSocial}"	
+							style="width: 180px">
+							<!-- 15-10 Se agrega changeListener -->
+							<p:ajax  update=":frmPendEdit:pnlNuevo, :frmPendEdit:inputHidden" event="change" />
 							<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 							<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 								itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
@@ -318,7 +321,7 @@
 						<h:outputLabel value="C. Central: " />
 						<p:inputText styleClass="inputText" id="txtcentral"
 							value="#{revocadosMB.objTiivsPersonaAgregar.codCen}"
-							maxlength="13"
+							maxlength="13" size="25"
 							onkeypress="return validaNumero(event,'0',this,'0');"
 							onblur="validaNumero(event,'0',this,'1');" />
 	
@@ -328,11 +331,11 @@
 	
 						<h:outputText id="outApPaterno" value="Ap.Paterno:" />
 						<p:inputText styleClass="inputTextPopup" id="txtApellidoPaterno"
-							size="25" value="#{revocadosMB.objTiivsPersonaAgregar.apePat}" />
+							size="30" value="#{revocadosMB.objTiivsPersonaAgregar.apePat}" />
 	
 						<h:outputText id="outApMaterno" value="Ap.Materno:" />
 						<p:inputText styleClass="inputTextPopup" id="txtApellidoMaterno"
-							size="25" value="#{revocadosMB.objTiivsPersonaAgregar.apeMat}" />
+							size="30" value="#{revocadosMB.objTiivsPersonaAgregar.apeMat}" />
 	
 						<h:outputText id="outNombres" value="Nombres:" />
 						<p:inputText styleClass="inputTextPopup" id="txtNombres" size="25"
@@ -388,14 +391,15 @@
 
 					<p:fileUpload id="idfileUpload" mode="advanced"  
 									value="#{revocadosMB.fileUpload}"
-									sizeLimit="100000" update=":frmPendEdit:gridApodPod4"
+									update=":frmPendEdit:gridApodPod4"
 									showButtons="false"
 									auto="true"
-									label="Examinar"
+									label="Examinar"  
+									invalidSizeMessage="El tamaño del archivo es inválido"
 									widgetVar="fileuplaod_wgt"
 									invalidFileMessage="Formato inválido"
 									fileUploadListener="#{revocadosMB.handleFileUpload}"
-									allowTypes="/(\.|\/)(pdf)$/" /> 
+									allowTypes="/(\.|\/)(pdf|PDF)$/" /> 
 								<p:growl id="fileDoc" showDetail="true" />
 						
 					<p:spacer width="10" height="20" />
@@ -408,6 +412,8 @@
 					       <a href="#" onclick="exportarRevocado('#{revocadosMB.aliasCortoDocumento}', '0');">#{revocadosMB.sAliasTemporal}</a>
 					    </c:if>
 					</h:panelGrid>
+					
+					
 					
 					<p:spacer width="10" height="20" />
 					<p:commandButton id="btnEscanear"
