@@ -2,6 +2,7 @@ package com.hildebrando.visado.controller;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -99,4 +101,55 @@ public class FileTransferController {
 		return result;
 	}
 	
+	/****
+	  * 
+	  * @param ubicacionLocal
+	  * @param ubicacion 0:FILES 1:DOCUMENTOS
+	  * @return
+	  */
+	@RequestMapping(value = "/descargarDocumento", method = RequestMethod.POST)
+	public @ResponseBody String descargarDocumento(HttpServletResponse response, HttpServletRequest request) throws Exception {
+		String ubicacionLocal = request.getParameter("jfNombreReporte");
+		String ubicacion = request.getParameter("jfNombreExtension");
+		logger.debug("==== INICIA descargarDocumento()===");
+		logger.debug("[descargarArchivo]-ubicacionLocal:" + ubicacionLocal);
+		logger.debug("[descargarArchivo]-ubicacion:" + ubicacion);
+
+		String sUbicacionTemporal;
+		String rutaArchivoProyecto = request.getRealPath(File.separator) + File.separator + ConstantesVisado.FILES + File.separator; 
+		logger.debug("[descargarArchivo]-rutaArchivoProyecto:" + rutaArchivoProyecto);
+
+		if (ubicacion.compareTo("0") == 0) {
+			sUbicacionTemporal = Utilitarios
+					.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+					+ File.separator + ConstantesVisado.FILES + File.separator;
+		} else {
+			sUbicacionTemporal = Utilitarios
+					.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+					+ File.separator;
+		}
+
+		// Archivo a descargar
+		File fichTemp = new File(sUbicacionTemporal + ubicacionLocal);
+		logger.debug("+++ existe archivo: " + fichTemp.exists());
+		// Si existe el archivo
+		if (fichTemp.exists()) {
+			File rutaProyecto = new File(rutaArchivoProyecto);
+			if(!rutaProyecto.exists()){
+				rutaProyecto.mkdirs();
+			}
+			File destFile = new File(rutaArchivoProyecto + ubicacionLocal);
+			try {
+				// Copia los archivos del File server a la carpeta temporal
+				FileUtils.copyFile(fichTemp, destFile);
+				logger.debug("+++ Termina de copiar archivo");
+			} catch (IOException e) {
+				logger.error("Error al descargar archivo: " + ubicacionLocal, e);
+				e.printStackTrace();
+			}
+		}
+
+		logger.debug("==== SALIENDO de descargarDocumento()===");
+		return "";	
+	}
 }
