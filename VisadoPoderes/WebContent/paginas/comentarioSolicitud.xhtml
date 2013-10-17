@@ -46,7 +46,10 @@
 
 			<p:toolbar>
 		    	<p:toolbarGroup align="rigth">
-					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" update=":formSolicitudRegistro"
+					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" 
+					
+					update=":formSolicitudRegistro, :formSolicitudRegistro:idMsmSolicitudRegistro"
+					    ajax="true"
 						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"/>
 					<p:commandButton value="Enviar" id="btnEnviar3"  
 						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>					
@@ -72,11 +75,12 @@
 			<div style="visibility: hidden;">
 				<p:commandButton style="width:0;height:0" value=""
 					id="btnRedirecionar" icon="ui-icon-document"
-					update=":formSolicitudRegistro:idMsmSolicitudRegistro"
+					update=":formSolicitudRegistro:idMsmSolicitudRegistro,
+					        :formSolicitudRegistro:idCodigoSolicitud" 
 					action="#{solicitudRegMB.redireccionar}" ajax="false">
 				</p:commandButton>
 			</div>
-					
+			<p:growl id="idMsmSolicitudRegistro" sticky="true" />		
 			<p:editor id="editor" onchange="actualizarEditor();" value="#{solicitudRegMB.solicitudRegistrarT.obs}" width="400" height="400" />									
 
 			<h:panelGrid columns="1" style="margin-top:10px">
