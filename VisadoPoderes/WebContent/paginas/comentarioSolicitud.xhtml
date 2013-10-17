@@ -52,7 +52,7 @@
 					    ajax="true"
 						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"/>
 					<p:commandButton value="Enviar" id="btnEnviar3"  
-						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>					
+						icon="ui-icon-document" update=":formSolicitudRegistro:idMsmSolicitudRegistro" onclick="confirmation.show()"/>					
 						
 					<p:commandButton value="Salir" id="btnSalir3"
 						    onclick="window.location.href='./bienvenido.xhtml'"
@@ -75,8 +75,7 @@
 			<div style="visibility: hidden;">
 				<p:commandButton style="width:0;height:0" value=""
 					id="btnRedirecionar" icon="ui-icon-document"
-					update=":formSolicitudRegistro:idMsmSolicitudRegistro,
-					        :formSolicitudRegistro:idCodigoSolicitud" 
+					update=":formSolicitudRegistro:idMsmSolicitudRegistro" 
 					action="#{solicitudRegMB.redireccionar}" ajax="false">
 				</p:commandButton>
 			</div>
@@ -95,13 +94,21 @@
 		</h:form>
 		
 
-   <p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"  
-                header="Confirmación" severity="alert" widgetVar="confirmation" >  
-                  
-        <p:commandButton id="confirm" value="Si" update=":formSolicitudRegistro" oncomplete="confirmation.hide(); appletDeleteFilesAndRedirect();"   
-                    action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />  
-        <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />   
-    </p:confirmDialog> 
+   	<p:confirmDialog id="confirmDialog" message="Está seguro de enviar a SSJJ la solicitud de visado de poderes?"
+			header="Confirmación" severity="alert" widgetVar="confirmation">
+
+			<h:form id="formRegistroConfirmDialog">
+				<p:commandButton id="confirm" value="Si"
+								update=":formSolicitudRegistro:idMsmSolicitudRegistro,
+				        					:formSolicitudRegistro:idResultRegistro"
+								oncomplete="confirmation.hide(); appletDeleteFilesAndRedirect();"
+								action="#{solicitudRegMB.registrarSolicitud}" ajax="true"
+								actionListener="#{solicitudRegMB.registrarSolicitudEnviado}" />
+				<p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+			</h:form>
+		</p:confirmDialog> 
+
+
 
 	</ui:define>
 </ui:composition>
