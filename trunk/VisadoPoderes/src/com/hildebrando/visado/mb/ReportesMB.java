@@ -3302,35 +3302,35 @@ public class ReportesMB {
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_EN_REVISION_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(wb, rowT, 10, CellStyle.ALIGN_CENTER,
+			/*	Utilitarios.crearCellRPT(wb, rowT, 10, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_PRE_EJECUTADO_T02,
-						true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(wb, rowT, 11, CellStyle.ALIGN_CENTER,
+						true, true, false, HSSFColor.DARK_BLUE.index);*/
+				Utilitarios.crearCellRPT(wb, rowT, 10, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_EJECUTADO_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(wb, rowT, 12, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 11, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_PROCEDENTE_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(wb, rowT, 13, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 12, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_EN_VERIFICACION_B_T02,
 						true, true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(wb, rowT, 14, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 13, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_IMPROCEDENTE_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(wb, rowT, 15, CellStyle.ALIGN_CENTER,
+				Utilitarios.crearCellRPT(wb, rowT, 14, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_VENCIDO_T02, true,
 						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(wb, rowT, 16, CellStyle.ALIGN_CENTER,
+				/*Utilitarios.crearCellRPT(wb, rowT, 16, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.ESTADOS.ESTADO_REVOCADO_T02, true,
-						true, false, HSSFColor.DARK_BLUE.index);
-				Utilitarios.crearCellRPT(wb, rowT, 17, CellStyle.ALIGN_CENTER,
+						true, false, HSSFColor.DARK_BLUE.index);*/
+				Utilitarios.crearCellRPT(wb, rowT, 15, CellStyle.ALIGN_CENTER,
 						CellStyle.VERTICAL_CENTER,
 						ConstantesVisado.RPT_SOLICITUD_COLUMNA_TOTAL, true,
 						true, false, HSSFColor.DARK_BLUE.index);
@@ -3398,49 +3398,49 @@ public class ReportesMB {
 							false, true, HSSFColor.DARK_BLUE.index);
 
 					// Columna Pre-Ejecutado en Excel
-					Utilitarios.crearCell(wb, row, 10, CellStyle.ALIGN_LEFT,
+					/*Utilitarios.crearCell(wb, row, 10, CellStyle.ALIGN_LEFT,
 							CellStyle.VERTICAL_CENTER,
 							String.valueOf(tmp.getTotalPreEjecutado()), true,
-							false, true, HSSFColor.DARK_BLUE.index);
+							false, true, HSSFColor.DARK_BLUE.index);*/
 
 					// Columna Ejecutado en Excel
-					Utilitarios.crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,
+					Utilitarios.crearCell(wb, row, 10, CellStyle.ALIGN_LEFT,
 							CellStyle.VERTICAL_CENTER,
 							String.valueOf(tmp.getTotalEjecutado()), true,
 							false, true, HSSFColor.DARK_BLUE.index);
 
 					// Columna Procedente en Excel
-					Utilitarios.crearCell(wb, row, 12, CellStyle.ALIGN_LEFT,
+					Utilitarios.crearCell(wb, row, 11, CellStyle.ALIGN_LEFT,
 							CellStyle.VERTICAL_CENTER,
 							String.valueOf(tmp.getTotalProcedente()), true,
 							false, true, HSSFColor.DARK_BLUE.index);
 
 					// Columna En Verificacion B en Excel
-					Utilitarios.crearCell(wb, row, 13, CellStyle.ALIGN_LEFT,
+					Utilitarios.crearCell(wb, row, 12, CellStyle.ALIGN_LEFT,
 							CellStyle.VERTICAL_CENTER,
 							String.valueOf(tmp.getTotalVerificacionB()), true,
 							false, true, HSSFColor.DARK_BLUE.index);
 
 					// Columna Improcedente en Excel
-					Utilitarios.crearCell(wb, row, 14, CellStyle.ALIGN_LEFT,
+					Utilitarios.crearCell(wb, row, 13, CellStyle.ALIGN_LEFT,
 							CellStyle.VERTICAL_CENTER,
 							String.valueOf(tmp.getTotalImprocedente()), true,
 							false, true, HSSFColor.DARK_BLUE.index);
 
 					// Columna Vencido en Excel
-					Utilitarios.crearCell(wb, row, 15, CellStyle.ALIGN_LEFT,
+					Utilitarios.crearCell(wb, row, 14, CellStyle.ALIGN_LEFT,
 							CellStyle.VERTICAL_CENTER,
 							String.valueOf(tmp.getTotalVencido()), true, false,
 							true, HSSFColor.DARK_BLUE.index);
 
 					// Columna Revocado en Excel
-					Utilitarios.crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,
+					/*Utilitarios.crearCell(wb, row, 16, CellStyle.ALIGN_LEFT,
 							CellStyle.VERTICAL_CENTER,
 							String.valueOf(tmp.getTotalRevocado()), true,
-							false, true, HSSFColor.DARK_BLUE.index);
+							false, true, HSSFColor.DARK_BLUE.index);*/
 
 					// Columna Total en Excel
-					Utilitarios.crearCell(wb, row, 17, CellStyle.ALIGN_LEFT,
+					Utilitarios.crearCell(wb, row, 15, CellStyle.ALIGN_LEFT,
 							CellStyle.VERTICAL_CENTER,
 							String.valueOf(tmp.getTotalFila()), true, false,
 							true, HSSFColor.DARK_BLUE.index);
