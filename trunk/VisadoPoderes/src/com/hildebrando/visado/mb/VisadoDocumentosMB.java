@@ -76,7 +76,7 @@ public class VisadoDocumentosMB {
 			if(rutaPrincipal.compareTo(ConstantesVisado.DOCUMENTOS)==0){
 				urlTemporal = File.separator + ConstantesVisado.FILES + File.separator;
 			}else if(rutaPrincipal.compareTo(ConstantesVisado.VISADO)==0){
-				urlTemporal = directory + ConstantesVisado.DOCUMENTOS + File.separator + ConstantesVisado.FILES + File.separator;	
+				urlTemporal = File.separator + ConstantesVisado.DOCUMENTOS + File.separator + ConstantesVisado.FILES + File.separator;	
 			}
 			
 			logger.info("[PARAMETROS_BD]-pathCliente:" + pathCliente);

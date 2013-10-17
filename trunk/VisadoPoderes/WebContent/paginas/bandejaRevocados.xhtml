@@ -170,9 +170,9 @@
 					</p:commandButton>
 
 					<p:commandButton id="idEditAct"
-						action="#{revocadosMB.editActRevocado}"
+						action="#{revocadosMB.editActRevocado}" 
 						rendered="#{revocado.flagEditAct}" icon="ui-icon-pencil"
-						update=":frmPendEdit:gridApodPod4,:frmPendEdit:pnlNuevo,:frmActEdit:dtClientes" title="Editar Combinación"
+						update=":frmPendEdit:gridApodPod4,:frmPendEdit:pnlNuevo,:frmActEdit:dtClientes, :frmActEdit:pnlBotonActEdit" title="Editar Combinación"
 						oncomplete="dlgApoPodActEdit.show();">
 						<f:setPropertyActionListener target="#{revocadosMB.revocadoEdit}"
 							value="#{revocado}"></f:setPropertyActionListener>
@@ -405,11 +405,8 @@
 							<p:outputLabel id="lblFile" value="#{revocadosMB.sAliasTemporal}" />
 						</c:if>
 						<c:if test="#{revocadosMB.flagLinkRevocados==1}">
-							<h:outputLink onclick="window.open('../../files/#{revocadosMB.aliasCortoDocumento}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
-									<h:outputText value="#{revocadosMB.sAliasTemporal}" />
-							</h:outputLink>
-							
-						</c:if>
+					       <a href="#" onclick="exportarRevocado('#{revocadosMB.aliasCortoDocumento}', '0');">#{revocadosMB.sAliasTemporal}</a>
+					    </c:if>
 					</h:panelGrid>
 					
 					<p:spacer width="10" height="20" />
@@ -678,19 +675,32 @@
 			id="idDlgApoPodEdit" header="#{revocadosMB.tipoRegistro}">
 
 			<h:form id="frmActEdit">
-			<p:outputPanel id="pnlfrmActEdit"> 
-
+<!-- 			<p:outputPanel id="pnlfrmActEdit">  -->
+ 			<p:outputPanel id="pnlBotonActEdit"> 
 				<h:panelGrid columns="1" id="gridMsj">
 					<p:messages globalOnly="true" />
 				</h:panelGrid>
 
-				<h:panelGrid columns="1" id="gridBtn">
-
-					<p:commandButton id="btnInactivar" value="Inactivar"
+             
+				<table width="100%" border="0">
+				   <tr>
+					 <td>
+					 	<p:commandButton id="btnInactivar" value="Inactivar"
 						update=":frmActEdit:dtClientes, :frmConsRev:pnlTablaRevocados"
 						actionListener="#{revocadosMB.inactivarCombinacion}" ajax="true"
 						process="@form" oncomplete="dlgApoPodActEdit.hide();" />
-				</h:panelGrid>
+					 </td>
+					 <td align="right">
+					   <p:growl id="idArchivoRevocado1"></p:growl>
+					   <h:panelGrid columns="1">
+					    <c:if test="#{revocadosMB.flagLinkRevocados==1}">
+							<a href="#" onclick="exportarRevocado('#{revocadosMB.aliasCortoDocumento}', '1');">#{revocadosMB.sAliasTemporal}</a>
+						</c:if>
+					   </h:panelGrid>
+					  </td>
+					</tr>
+				  </table>
+			</p:outputPanel>
 
 				<p:outputPanel id="dtClientes">
 
@@ -808,7 +818,7 @@
 					</table>
 
 				</p:outputPanel>
-				</p:outputPanel>
+<!-- 				</p:outputPanel> -->
 			</h:form>
 			
 
@@ -878,16 +888,22 @@
 			width="#{revocadosMB.ancho_Popup_Revoc_Poder}">
 
 			<h:form id="frmApodPodVer">
-			   <p:outputPanel id="gridTitulo">
+			  <p:outputPanel id="gridTitulo">
 				  <table width="100%" border="0">
 				   <tr>
 					 <td style="width:50px"><p:outputLabel value="Estado:" /></td>
 					 <td><h:outputText value="#{revocadosMB.revocadoVer.estado}"></h:outputText></td>
-					 <td colspan="20" align="right"><c:if test="#{revocadosMB.flagLinkRevocados==1}">
-							<h:outputLink onclick="window.open('../documentos/#{revocadosMB.aliasCortoDocumento}', 'WindowName', 'dependent=yes, menubar=no, toolbar=no'); return false;" value="#"> 
-									<h:outputText value="#{revocadosMB.sAliasTemporal}" />
-							</h:outputLink>
-					</c:if></td>
+					   <td colspan="20" align="right">
+					   	 <p:growl id="idArchivoRevocado"></p:growl>
+					     <h:panelGrid columns="1">
+					   
+					     <c:if test="#{revocadosMB.flagLinkRevocados==1}">
+					       <a href="#" onclick="exportarRevocado('#{revocadosMB.aliasCortoDocumento}', '1');">#{revocadosMB.sAliasTemporal}</a>
+					      </c:if>
+					     </h:panelGrid>
+					      
+					      
+					  </td>
 					</tr>
 				  </table>
 				</p:outputPanel>

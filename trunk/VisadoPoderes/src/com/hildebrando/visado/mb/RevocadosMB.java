@@ -26,7 +26,6 @@ import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.net.ftp.FTPClient;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -56,6 +55,7 @@ import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.Estado;
 import com.hildebrando.visado.dto.Revocado;
 import com.hildebrando.visado.dto.TipoDocumento;
+import com.hildebrando.visado.ftp.ClienteFTP;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
@@ -1465,9 +1465,6 @@ public class RevocadosMB {
 			sAliasTemporal = null;
 			aliasCortoDocumento = null;
 		}
-		/*sAliasTemporal = null;
-		aliasCortoDocumento = null;
-		flagLinkRevocados = 0;*/
 	}
 	
 	public void obtenerPersonaSeleccionada() {
@@ -2605,7 +2602,7 @@ public class RevocadosMB {
 		
 		List<TiivsRevocado> apoderados;				
 		List<TiivsRevocado> poderdantes;
-		
+		String aliasArchivo = null;
 		 List<Integer>  listCodAgrup =  obtenerListCodAgrupacion();
 		
 		if(listCodAgrup != null){
@@ -2641,6 +2638,8 @@ public class RevocadosMB {
 									String descDoiApod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
 									String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
 									
+									aliasArchivo = tiivsRevocado.getAliasArchivo();
+									
 									nombreCompletoApoderados = nombreCompletoApoderados
 																	+ " " + descDoiApod
 																	+ ":" + tiivsRevocado.getTiivsPersona().getNumDoi()
@@ -2667,6 +2666,8 @@ public class RevocadosMB {
 									String descTipPart = getValor1(
 											tiivsRevocado.getTipPartic(),
 											listTipoRegistro);
+									
+									aliasArchivo = tiivsRevocado.getAliasArchivo();
 
 									nombreCompletoApoderados = nombreCompletoApoderados
 											+ " "
@@ -2707,6 +2708,7 @@ public class RevocadosMB {
 									
 	//								poderdante = new TiivsPersona();
 	//								poderdante = tiivsRevocado.getTiivsPersona();
+									aliasArchivo = tiivsRevocado.getAliasArchivo();
 									
 									String descDoiPod =  getValor1(tiivsRevocado.getTiivsPersona().getTipDoi(),listDocumentos);
 									String descTipPart =  getValor1(tiivsRevocado.getTipPartic(), listTipoRegistro);
@@ -2739,6 +2741,7 @@ public class RevocadosMB {
 						revocado.setFechaRegistro(fecha);
 						revocado.setEstado(estado);
 						revocado.setCorrelativo(String.valueOf(numCorrelativo));
+						revocado.setAliasArchivo(aliasArchivo);
 						
 						revocado.setNombreCompletoApoderados(nombreCompletoApoderados.trim());
 						revocado.setApoderados(apoderados);
@@ -3092,8 +3095,108 @@ public class RevocadosMB {
 		}
 	 }
 	
+	 /****
+	  * 
+	  * @param ubicacionLocal
+	  * @param ubicacion 0:FILES 1:DOCUMENTOS
+	  * @return
+	  */
+	 public boolean descargarDocumento(String ubicacionLocal, String ubicacion) {
+			logger.debug("==== INICIA descargarDocumento()===");
+			logger.debug("[descargarArchivo]-ubicacionLocal:"+ubicacionLocal);
+			logger.debug("[descargarArchivo]-ubicacion:"+ubicacion);
+			/*String urlServer="";
+			String server="";
+			String loginServer="";
+			String passServer="";
+			String carpetaRemota="";
+			String rutaResultante="";*/
+			boolean iRet = true; 
+			
+			String sUbicacionTemporal;
+			String rutaArchivoProyecto = Utilitarios.getProjectPath() + File.separator + ConstantesVisado.FILES + File.separator;
+			
+			if(ubicacion.compareTo("0")==0){
+				sUbicacionTemporal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER) + File.separator + ConstantesVisado.FILES + File.separator;
+			} else {
+				sUbicacionTemporal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER) + File.separator;
+			}
+			
+			//Archivo a descargar
+			File fichTemp = new File(sUbicacionTemporal	+ ubicacionLocal);
+			
+			//Si existe el archivo
+			if(fichTemp.exists()){
+				File destFile = new File(rutaArchivoProyecto + ubicacionLocal);
+				try {
+					//Copia los archivos del File server a la carpeta temporal
+					FileUtils.copyFile(fichTemp, destFile);
+				} catch (IOException e) {
+					logger.error("Error al descargar archivo: "	+ ubicacionLocal ,e);
+					e.printStackTrace();
+				}
+			}
+			
+			/*TiivsParametros parametros = obtenerParametro();
+			int iResultCargaParametros = 0;
+			if (parametros != null) {
+				urlServer = ConstantesVisado.PROTOCOLO_FTP
+						+ ConstantesVisado.DOS_PUNTOS.trim() + File.separator
+						+ File.separator + parametros.getLoginServer()
+						+ ConstantesVisado.DOS_PUNTOS.trim()
+						+ parametros.getPassServer() + ConstantesVisado.ARROBA
+						+ parametros.getServer() + File.separator
+						+ parametros.getCarpetaRemota();
+
+				server = parametros.getServer();
+				loginServer = parametros.getLoginServer();
+				passServer = parametros.getPassServer();
+				carpetaRemota = parametros.getCarpetaRemota();
+				iResultCargaParametros = 1;
+				
+				String rutaPrincipal = obtenerRutaPrincipal(parametros.getCarpetaRemota());
+				if(rutaPrincipal.compareTo(ConstantesVisado.DOCUMENTOS)==0){
+					carpetaRemota = File.separator + ConstantesVisado.FILES + File.separator;
+				}else if(rutaPrincipal.compareTo(ConstantesVisado.VISADO)==0){
+					carpetaRemota = File.separator + ConstantesVisado.DOCUMENTOS + File.separator + ConstantesVisado.FILES + File.separator;	
+				}
+
+			}
+			
+			logger.debug(" -- Parametros BD-FTP --");
+			logger.debug("\tDir Server: " + urlServer);
+			logger.debug("\tDir Local: " + dirLocal);
+			logger.debug("\tServer: " + server);
+			logger.debug("\tLogin Server:_" + loginServer + "Pass: " + passServer);
+			logger.debug("\tCarpeta Remota: " + carpetaRemota);		
+			
+			if(iResultCargaParametros == 0){
+				logger.debug("No se ha logrado cargar los parámetros de conexión al FTP");
+				iRet = false;
+			} else {			
+				ClienteFTP cliente = null;
+				try {
+					cliente = new ClienteFTP(server, loginServer, passServer);
+					cliente.setDirectorio(carpetaRemota);
+				} catch (IOException e1) {
+					logger.error("Error al instanciar clienteFTP ",e1);			
+				}
+				if (cliente!=null){
+					if(ubicacion.compareTo("0")==0){
+						rutaResultante = ConstantesVisado.FILES;
+					}else{
+						rutaResultante = ConstantesVisado.DOCUMENTOS;
+					}
+					iRet = cliente.descargarArchivo(ubicacionLocal, rutaResultante);
+					logger.debug("[descargarArchivo]-iRet:"+iRet);
+				}			
+			}*/
+			logger.debug("==== SALIENDO de descargarDocumento()===");
+			return iRet;		
+	}
 	
 	public String descargarDocumentoTemporal() {
+//	 public void descargarDocumentoTemporal() {
 		logger.debug("=== inicia descargarDocumentoTemporal() ====");
 		HttpServletResponse response = (HttpServletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
@@ -3167,19 +3270,22 @@ public class RevocadosMB {
 		return "";		
 	}
 	
+//	public void descargarDocumento() {
 	public String descargarDocumento() {
 		logger.debug("=== inicia descargarDocumento() ====");
 		HttpServletResponse response = (HttpServletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		
-		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+//		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		
-		String nombreDocumento = params.get("nombreArchivo");
-		logger.debug("[DESCARG_DOC]-nombreDocumento: "+nombreDocumento);
+//		String nombreDocumento = params.get("nombreArchivo");
+//		logger.debug("[DESCARG_DOC]-nombreDocumento: "+nombreDocumento);
+		logger.debug("[DESCARG_DOC]-nombreDocumento: "+ aliasCortoDocumento);
 		String rutaDocumento = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
-				+ File.separator + nombreDocumento;
+//				+ File.separator + nombreDocumento;
+				+ File.separator + aliasCortoDocumento;
 		
-		logger.debug("[DESCARG_DOC]-rutaDocumento: "+rutaDocumento);
+		logger.debug("[DESCARG_DOC]-rutaDocumento: "+ rutaDocumento);
 		String outputFileName = rutaDocumento;
 		
 		File outputPDF = new File(outputFileName);
@@ -3196,7 +3302,8 @@ public class RevocadosMB {
 			response.reset();
 			response.setHeader("Content-Type", "application/pdf");
 			response.setHeader("Content-Length",String.valueOf(outputPDF.length()));
-			response.setHeader("Content-Disposition", "attachment; filename=\""+ nombreDocumento + "\"");
+//			response.setHeader("Content-Disposition", "attachment; filename=\""+ nombreDocumento + "\"");
+			response.setHeader("Content-Disposition", "attachment; filename=\""+ aliasCortoDocumento + "\"");
 			output = new BufferedOutputStream(response.getOutputStream(), 10240);
 
 			// Write file contents to response.

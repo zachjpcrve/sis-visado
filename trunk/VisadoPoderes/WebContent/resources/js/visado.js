@@ -184,3 +184,22 @@ function invocarEscaner(urlApplet){
 	winId1 = window.open(urlApplet,'NAE', "status=yes,menubar=no,scrollbars=yes,resizable=yes,toolbar=no,screenX=0,screenY=0,left=0,top=0,width=100,height=100" );
 	return false;
 }
+
+function exportarRevocado(nombrereporte, flagUbicacion){
+	var jsonFrm = {
+			jfNombreReporte : nombrereporte,
+			jfNombreExtension : flagUbicacion
+			};
+	$.ajax({
+		type: 'POST',
+		url: '../../principal/descargarDocumento.htm',
+		data: jsonFrm,
+		success: function(data) {
+			window.open('../../files/'+ nombrereporte);
+					},
+		error:function(t){
+		   		alert('Ocurrio un error en la descarga');
+				} 
+		});
+
+};
