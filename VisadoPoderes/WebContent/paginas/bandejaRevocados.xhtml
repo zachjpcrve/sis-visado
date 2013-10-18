@@ -304,7 +304,7 @@
 							valueChangeListener="#{revocadosMB.cambiarRazonSocial}"	
 							style="width: 180px">
 							<!-- 15-10 Se agrega changeListener -->
-							<p:ajax  update=":frmPendEdit:pnlNuevo, :frmPendEdit:inputHidden" event="change" />
+							<p:ajax  update=":frmPendEdit:pnlNuevo, cboTipoDoi2,  :frmPendEdit:inputHidden" event="change" />
 							<f:selectItem itemLabel="--Seleccione--" itemValue="" />
 							<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="t"
 								itemValue="#{t.codTipoDoc}" itemLabel="#{t.descripcion}" />
