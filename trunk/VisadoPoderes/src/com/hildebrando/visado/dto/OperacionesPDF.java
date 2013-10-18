@@ -6,11 +6,11 @@ public class OperacionesPDF implements Serializable{
 	private String item;
 	private String descripcion;
 	private String moneda;
-	private Double importe;
+	private String importe;
 	private Double tipoCambio;
-	private Double soles;
+	private String soles;
 	
-	public OperacionesPDF(String item, String descripcion, String moneda, Double importe, Double tipoCambio, Double soles){
+	public OperacionesPDF(String item, String descripcion, String moneda, String importe, Double tipoCambio, String soles){
 		this.item = item;
 		this.descripcion = descripcion;
 		this.moneda = moneda;
@@ -37,10 +37,10 @@ public class OperacionesPDF implements Serializable{
 	public void setMoneda(String moneda) {
 		this.moneda = moneda;
 	}
-	public Double getImporte() {
+	public String getImporte() {
 		return importe;
 	}
-	public void setImporte(Double importe) {
+	public void setImporte(String importe) {
 		this.importe = importe;
 	}
 	public Double getTipoCambio() {
@@ -49,10 +49,10 @@ public class OperacionesPDF implements Serializable{
 	public void setTipoCambio(Double tipoCambio) {
 		this.tipoCambio = tipoCambio;
 	}
-	public Double getSoles() {
+	public String getSoles() {
 		return soles;
 	}
-	public void setSoles(Double soles) {
+	public void setSoles(String soles) {
 		this.soles = soles;
 	}
 }

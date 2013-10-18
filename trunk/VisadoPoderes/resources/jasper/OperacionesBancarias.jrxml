@@ -7,9 +7,9 @@
 	<field name="item" class="java.lang.String"/>
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="moneda" class="java.lang.String"/>
-	<field name="importe" class="java.lang.Double"/>
+	<field name="importe" class="java.lang.String"/>
 	<field name="tipoCambio" class="java.lang.Double"/>
-	<field name="soles" class="java.lang.Double"/>
+	<field name="soles" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -87,7 +87,7 @@
 					<font size="8"/>
 					<paragraph rightIndent="10"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{importe}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{importe}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="340" y="3" width="92" height="20"/>
@@ -103,14 +103,14 @@
 					<font size="8"/>
 					<paragraph rightIndent="10"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{soles}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{soles}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="187" y="3" width="78" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression  class="java.lang.String"><![CDATA[$F{moneda} + "  "]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda} + "  "]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
