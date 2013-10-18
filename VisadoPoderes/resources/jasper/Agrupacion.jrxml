@@ -229,7 +229,7 @@
 								<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="65" height="20"/>
 								<textElement>
 									<font size="8"/>
@@ -256,14 +256,14 @@
 								<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
-							<textField>
+							<textField isStretchWithOverflow="true">
 								<reportElement x="0" y="0" width="31" height="20"/>
 								<textElement>
 									<font size="8"/>
 								</textElement>
 								<textFieldExpression class="java.lang.String"><![CDATA[($F{codCen}!=null?$F{codCen}:" ") + " "]]></textFieldExpression>
 							</textField>
-							<textField>
+							<textField isStretchWithOverflow="true">
 								<reportElement x="31" y="0" width="139" height="20"/>
 								<textElement>
 									<font size="8"/>
@@ -290,7 +290,7 @@
 								<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="82" height="20"/>
 								<textElement>
 									<font size="8"/>
@@ -317,7 +317,7 @@
 								<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="77" height="20"/>
 								<textElement>
 									<font size="8"/>
@@ -345,7 +345,7 @@
 								<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="64" height="20"/>
 								<textElement>
 									<font size="8"/>
@@ -372,7 +372,7 @@
 								<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
 								<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 							</box>
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="75" height="20"/>
 								<textElement>
 									<font size="8"/>

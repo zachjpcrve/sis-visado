@@ -12,10 +12,10 @@ public class SolicitudPDF implements Serializable
 	private String codSoli;
 	private String estado;
 	private String nroVoucher;
-	private Double comision;
+	private String comision;
 	private String oficina;
 	private String territorio;
-	private Double importe;
+	private String importe;
 	private String tipoServicio;
 	private String moneda;
 	private String monedaComision;
@@ -58,10 +58,10 @@ public class SolicitudPDF implements Serializable
 	public void setNroVoucher(String nroVoucher) {
 		this.nroVoucher = nroVoucher;
 	}
-	public Double getComision() {
+	public String getComision() {
 		return comision;
 	}
-	public void setComision(Double comision) {
+	public void setComision(String comision) {
 		this.comision = comision;
 	}
 	public String getOficina() {
@@ -76,10 +76,10 @@ public class SolicitudPDF implements Serializable
 	public void setTerritorio(String territorio) {
 		this.territorio = territorio;
 	}
-	public Double getImporte() {
+	public String getImporte() {
 		return importe;
 	}
-	public void setImporte(Double importe) {
+	public void setImporte(String importe) {
 		this.importe = importe;
 	}	
 		

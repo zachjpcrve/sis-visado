@@ -3,6 +3,8 @@ package com.hildebrando.visado.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -103,8 +105,8 @@ public class JasperController {
 			List<OperacionesPDF> lstOperaciones = new ArrayList<OperacionesPDF>();
 			for (TiivsSolicitudOperban op : SOLICITUD_TEMP.getLstSolicBancarias()) {
 				OperacionesPDF oper = new OperacionesPDF(op.getsItem(), op.getTiivsOperacionBancaria().getDesOperBan(),
-						op.getId().getsDescMoneda(), op.getImporte(),
-						op.getTipoCambio(), op.getImporteSoles());
+						op.getId().getsDescMoneda(), this.formatearImporte(op.getImporte()) ,
+						op.getTipoCambio(), this.formatearImporte(op.getImporteSoles()));
 				lstOperaciones.add(oper);
 			}
 
@@ -272,10 +274,10 @@ public class JasperController {
     		logger.info("Solicitidu-Estado-Agrupacion: "+estadoAgrupacion);
     		solicitudPDF.setEstado(sEstado);
     		solicitudPDF.setEstadoAgrupacion(estadoAgrupacion);
-    		solicitudPDF.setComision(SOLICITUD_TEMP.getComision());
+    		solicitudPDF.setComision(formatearImporte(SOLICITUD_TEMP.getComision()));
     		solicitudPDF.setOficina(SOLICITUD_TEMP.getTiivsOficina1().getDesOfi());
     		solicitudPDF.setTerritorio(SOLICITUD_TEMP.getTiivsOficina1().getTiivsTerritorio().getCodTer() + SOLICITUD_TEMP.getTiivsOficina1().getTiivsTerritorio().getDesTer());
-    		solicitudPDF.setImporte(SOLICITUD_TEMP.getImporte());    	
+    		solicitudPDF.setImporte(formatearImporte(SOLICITUD_TEMP.getImporte()));    	
     		solicitudPDF.setTipoServicio(SOLICITUD_TEMP.getTiivsTipoSolicitud().getDesTipServicio());
     		logger.info("Solicitidu-Moneda: "+SOLICITUD_TEMP.getMoneda());
     		if(SOLICITUD_TEMP.getMoneda().equalsIgnoreCase(ConstantesVisado.MONEDAS.COD_SOLES)){
@@ -300,9 +302,9 @@ public class JasperController {
     					op.getsItem(), 
     					op.getTiivsOperacionBancaria().getDesOperBan(), 
     					op.getId().getsDescMoneda(), 
-    					op.getImporte(),
+    					this.formatearImporte(op.getImporte()),
     					op.getTipoCambio(),
-    					op.getImporteSoles());    			
+    					this.formatearImporte(op.getImporteSoles()));    			
     			lstOperaciones.add(oper);    					    			
     		}
     		
@@ -336,6 +338,14 @@ public class JasperController {
     	logger.info("=== saliendo de generarReporteSolicitudVisado() ==");
        
         return("pdfReport");
+    }
+    
+    private String formatearImporte(Double importe){
+    	DecimalFormatSymbols simbolo=new DecimalFormatSymbols();
+	    simbolo.setDecimalSeparator('.');
+	    simbolo.setGroupingSeparator(',');
+		DecimalFormat df = new DecimalFormat("###,###.##", simbolo);
+	    return df.format(importe);
     }
     
     private String obtenerEstadoAgrupaciones(List<AgrupacionSimpleDto> agrupaciones){
