@@ -2,6 +2,7 @@ package com.bbva.persistencia.generica.dao.impl;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1376,6 +1377,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			logger.debug("---------Estudios encontrados---------");
 			
 			Object[] rowTMP = null;
+			/** Samira 18/10/2013 */
+			BigDecimal big=null;
 			
 			for(int i=0;i<=ResultList.size()-1;i++)
 			{
@@ -1558,7 +1561,10 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			    	 objAgrp.setSubTotalMes(suma);
 			    	 objAgrp.setHonorarios(objAgrp.getSubTotalMes()*objAgrp.getCosto());
 			    	 objAgrp.setImpuesto(Utilitarios.redondear(objAgrp.getHonorarios()*(impuesto/100)));
-			    	 objAgrp.setgTotal(Math.round(objAgrp.getHonorarios()+objAgrp.getImpuesto()*100)/100);
+			    	/*Redondeo del Total*/
+			    	  big = new BigDecimal(objAgrp.getHonorarios()+objAgrp.getImpuesto());
+			         big = big.setScale(2, RoundingMode.HALF_UP);
+			    	 objAgrp.setgTotal(big.doubleValue());
 					
 					 //Agregar agrupacion
 				     String id = String.valueOf(i);
