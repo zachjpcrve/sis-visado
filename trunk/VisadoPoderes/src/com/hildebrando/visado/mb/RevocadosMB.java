@@ -868,7 +868,7 @@ public class RevocadosMB {
 			/** Por ultimo modificar el estado de las combinaciones iguales, pasarlas al estado Revocados */
 			this.actualizarEstadoA_Revocado_SolicitudAgrupacion(listaTiivsSolicitudAgrupacionId);
 			bBooleanPopup=false;
-			Utilitarios.mensajeInfo("INFO", "La Revocación fue ejecutada, correctamente");
+			//Utilitarios.mensajeInfo("INFO", "La Revocación fue ejecutada, correctamente");
 			buscarRevocado();
 			} catch (Exception e) {
 				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en revocados:",  e);
