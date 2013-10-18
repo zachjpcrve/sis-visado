@@ -2059,7 +2059,7 @@ public class SeguimientoMB
 		// 19. Filtrar solicitudes con Revision (funciona)
 		if (getbRevision()) 
 		{
-			String codigoSolicEnRevision = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_EN_REVISION);
+			String codigoSolicEnRevision = /*buscarCodigoEstado(*/ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02;/*)*/
 			GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
 			filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicEnRevision));
@@ -2093,8 +2093,8 @@ public class SeguimientoMB
 		// 20. Filtrar solicitudes que se hayan Delegado (funciona)
 		if (getbDelegados()) 
 		{
-			String codigoSolicVerA = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_A);
-			String codigoSolicVerB = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_B);
+			String codigoSolicVerA = /*buscarCodigoEstado(*/ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02;// CAMPO_ESTADO_VERIFICACION_A
+			String codigoSolicVerB = /*buscarCodigoEstado(*/ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02;//CAMPO_ESTADO_VERIFICACION_B
 
 			GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
@@ -2139,7 +2139,11 @@ public class SeguimientoMB
 					lstSolicitudesSelected.add(hist.getId().getCodSoli());
 				}
 				
+				if(lstSolicitudesSelected.size()==0){
+					filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
+				}else{
 				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
+				}
 			}
 			else
 			{
@@ -2374,8 +2378,8 @@ public class SeguimientoMB
 	{
 		boolean bEncontrado=false;
 		
-		String codigoSolicVerA = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_A);
-		String codigoSolicVerB = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_VERIFICACION_B);
+		String codigoSolicVerA = /*buscarCodigoEstado(*/ConstantesVisado.CAMPO_ESTADO_VERIFICACION_A;
+		String codigoSolicVerB = /*buscarCodigoEstado(*/ConstantesVisado.CAMPO_ESTADO_VERIFICACION_B;
 
 		GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
@@ -2429,7 +2433,7 @@ public class SeguimientoMB
 	public Boolean validarSolicitudEnRevision(String codSoli)
 	{
 		boolean bEncontrado=false;
-		String codigoSolicEnRevision = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_EN_REVISION);
+		String codigoSolicEnRevision = /*buscarCodigoEstado(*/ConstantesVisado.ESTADOS.ESTADO_COD_EN_REVISION_T02;//CAMPO_ESTADO_EN_REVISION
 		GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
 		filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicEnRevision));
@@ -2465,7 +2469,7 @@ public class SeguimientoMB
 	public Boolean validarSolicitudRevocada(String codSoli)
 	{
 		boolean bEncontrado=false;
-		String codigoSolicRevocado = buscarCodigoEstado(ConstantesVisado.CAMPO_ESTADO_REVOCADO);
+		String codigoSolicRevocado = /*buscarCodigoEstado(*/ConstantesVisado.ESTADOS.ESTADO_COD_REVOCADO_T02;//CAMPO_ESTADO_REVOCADO
 		GenericDao<TiivsHistSolicitud, Object> busqHisDAO = (GenericDao<TiivsHistSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsHistSolicitud.class);
 		filtro.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,codigoSolicRevocado));
@@ -2515,7 +2519,8 @@ public class SeguimientoMB
 		GenericDao<TiivsMultitabla, Object> busDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
 		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
-		filtro.add(Restrictions.eq("id.valor1", estado));
+		filtro.add(Restrictions.eq("id.codElem", estado));
+		//filtro.add(Restrictions.eq("id.valor1", estado));
 		logger.debug("[buscarCodigoEstado]-estado:"+estado);
 		try {
 			tmpLista = busDAO.buscarDinamico(filtro);
