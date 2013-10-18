@@ -2262,26 +2262,33 @@ public class RevocadosMB {
 		logger.info("objTiivsPersonaAgregar.getTipDoi():" + objTiivsPersonaAgregar.getTipDoi().trim());
 		logger.info("ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC:" + ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC.trim());
 		
-		if(!objTiivsPersonaAgregar.getTipDoi().trim().equals(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC.trim()))
-		{	
+		/*if(!objTiivsPersonaAgregar.getTipDoi().trim().equals(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC.trim()))
+		{	*/
 			if (objTiivsPersonaAgregar.getApePat() == null ||  objTiivsPersonaAgregar.getApePat().equals("")) {
+				if(!objTiivsPersonaAgregar.getTipDoi().trim().equals(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC.trim()))
+				{
 				sMensaje = "Ingrese el Apellido Paterno";
+				}else{
+				sMensaje = "Ingrese la Razón Social";	
+				}
 				bResult = false;
 				Utilitarios.mensaje(sMensaje, "");
 			}
-			
+			if(!objTiivsPersonaAgregar.getTipDoi().trim().equals(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC.trim()))
+			{
 			if (objTiivsPersonaAgregar.getApeMat() == null  || objTiivsPersonaAgregar.getApeMat().equals("")) {
 				sMensaje = "Ingrese el Apellido Materno";
 				bResult = false;
 				Utilitarios.mensaje(sMensaje, "");
-			}	
-		}
-		
+			}
+			
+		//}
 		
 		if (objTiivsPersonaAgregar.getNombre() == null  ||  objTiivsPersonaAgregar.getNombre().equals("")) {
 			sMensaje = "Ingrese el Nombre";
 			bResult = false;
 			Utilitarios.mensaje(sMensaje, "");
+		}
 		}
 		
 		if ((objTiivsPersonaAgregar.getTipPartic() == null || objTiivsPersonaAgregar.getTipPartic().equals(""))) {
