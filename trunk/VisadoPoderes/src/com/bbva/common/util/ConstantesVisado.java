@@ -529,7 +529,7 @@ public class ConstantesVisado {
 	}
 	static public class SEGURIDAD{
 		public static final String USER_ACCESO_OK = "El usuario ha accedido correctamente al sistema.";
-		public static final String USER_NO_REGISTR = "El usuario no es encuentra registrado en el sistema.";
+		public static final String USER_NO_REGISTR = "El usuario no se encuentra registrado en el sistema.";
 		public static final String ERROR_CERRAR_SESION = "Ha ocurrido un error al intentar cerrar la sesion.";
 	}
 	static public class FERIADO{
