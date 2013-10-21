@@ -3226,7 +3226,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	 * */
 	public void enviarSolicitudSSJJ() {
 		Timestamp time = new Timestamp(objRegistroUtilesMB.obtenerFechaRespuesta().getTime());
-		logger.info("\t[enviarSolicitudSSJJ]-FechaRespuesta: " + time);
+		logger.info("\t[enviarSolicitudSSJJ]-obtenerFechaRespuesta(): " + time);
 		String sCodigoEstudio = objRegistroUtilesMB.obtenerEstudioMenorCarga();
 		logger.info("\t[enviarSolicitudSSJJ]-CodEstudioMenorCarga:+  " + sCodigoEstudio);
 		for (TiivsEstudio x : combosMB.getLstEstudio()) {
@@ -3520,7 +3520,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}
 	
 	/**
-	 * Metodo que se encarga de cargar los archivos .PDF hacia el FileServer
+	 * Metodo encargado de mover los archivos .PDF ubicados en el directorio
+	 * temporal: '/documentos/files/' al directorio '/documentos/', en donde
+	 * se le asigna el nombre asociado al N° de Solicitud. Ejm: 0000019_DOIDAPO.PDF
+	 *  el FileServer
 	 * @return boolean true/false Indica el exito de la operacion
 	 * */
 	public boolean cargarArchivosFileServer(){			
@@ -3741,34 +3744,30 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		
 		String nombreDocumento = params.get("nombreArchivo");
-		logger.debug("[DESCARG_DOC]-nombreDocumento: "+nombreDocumento);
+		logger.debug("[descDocumento]-nombreDocumento: "+nombreDocumento);
 		String rutaDocumento = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
 				+ File.separator + ConstantesVisado.FILES + File.separator + nombreDocumento;
 		
-		logger.debug("[DESCARG_DOC]-rutaDocumento: "+rutaDocumento);
+		logger.debug("[descDocumento]-rutaDocumento: "+rutaDocumento);
 		String outputFileName = rutaDocumento;
 		
 		File outputPDF = new File(outputFileName);
 		BufferedInputStream input = null;
 		BufferedOutputStream output = null;
 		try {
-			input = new BufferedInputStream(new FileInputStream(outputPDF),10240);
-			// Return PDF to user
-			// Init servlet response.
+			input = new BufferedInputStream(new FileInputStream(outputPDF),10240);			
 			response.reset();
 			response.setHeader("Content-Type", "application/pdf");
 			response.setHeader("Content-Length",String.valueOf(outputPDF.length()));
 			response.setHeader("Content-Disposition", "attachment; filename=\""+ nombreDocumento + "\"");
 			output = new BufferedOutputStream(response.getOutputStream(), 10240);
-
-			// Write file contents to response.
+			
 			byte[] buffer = new byte[10240];
 			int length;
 			while ((length = input.read(buffer)) > 0) {
 				output.write(buffer, 0, length);
 			}
-			logger.debug("finalizando OK");
-			// Finalize task.
+			logger.debug("[descDocumento]-Finalizando");			
 			output.flush();
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:",e);
@@ -3787,8 +3786,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:",e);
 			}
 		}
-		FacesContext.getCurrentInstance().responseComplete();
-		
+		FacesContext.getCurrentInstance().responseComplete();		
 		logger.debug("=== saliendo de descargarDocumento() ====");
 		
 		return "";		
