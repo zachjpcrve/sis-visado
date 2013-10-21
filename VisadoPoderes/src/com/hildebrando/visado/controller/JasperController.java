@@ -344,7 +344,7 @@ public class JasperController {
     	DecimalFormatSymbols simbolo=new DecimalFormatSymbols();
 	    simbolo.setDecimalSeparator('.');
 	    simbolo.setGroupingSeparator(',');
-		DecimalFormat df = new DecimalFormat("###,###.##", simbolo);
+		DecimalFormat df = new DecimalFormat("#,###,###.00", simbolo); 
 	    return df.format(importe);
     }
     
