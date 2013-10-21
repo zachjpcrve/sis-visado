@@ -2351,7 +2351,6 @@ public class ConsultarSolicitudMB {
 		String sUbicacionFinal;
 				
 		//Si la solicitud tiene no esta en estado REGISTRADO (Vista de solicitud) se copian la carpeta de la aplicacion;
-		
 		if(this.getSolicitudRegistrarT().getEstado().equalsIgnoreCase(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)){
 			sUbicacionTemporal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER) + File.separator + ConstantesVisado.FILES + File.separator;
 		} else {
@@ -2360,7 +2359,7 @@ public class ConsultarSolicitudMB {
 		
 		sUbicacionFinal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER) + File.separator;
 		
-		logger.debug("[Ubicacion Temporal]:" + sUbicacionTemporal);
+		logger.debug("[Ubicacion Temp]:" + sUbicacionTemporal);
 		if(lstAnexoSolicitud!=null){
 			logger.info("[FileServer]-Cantidad Anexos:" + this.lstAnexoSolicitud.size());	
 		}
@@ -2376,17 +2375,15 @@ public class ConsultarSolicitudMB {
 			if (!fichTemp.exists()) 
 			{
 				logger.debug("Archivo no existe, se descargara:" + a.getAliasArchivo());
-				
 				boolean bSaved = false;
 				try {
 					fDirectory = new File(sUbicacionTemporal);
 					if (!fDirectory.exists()) {
 						fDirectory.mkdirs();
 					}
-
 					//Crea archivo temporal
 					String fileName = a.getId().getCodSoli() + "_" + a.getAliasArchivo();
-					logger.debug("[Anexo]-fileName:"+fileName);
+					logger.debug("[Anexo-Solicitud]-nombreArchivo:"+fileName);
 					String extension = fileName.substring(fileName.lastIndexOf("."));
 					String sNombreTemporal = "";
 					String sNombrePrefijo = a.getAliasArchivo().substring(0, a.getAliasArchivo().lastIndexOf(".")) + "_";
@@ -2403,25 +2400,22 @@ public class ConsultarSolicitudMB {
 						a.setAliasTemporal(sNombreTemporal);
 					} else {
 						a.setAliasTemporal("");
-						logger.debug("Archivo no existe en el File Server");
+						logger.debug("El archivo que se intenta consultar no existe en el FileServer");
 					}
 					
 					bSaved = true;
-					
-//					PDFViewerMB pdfViewerMB = new PDFViewerMB();
-//					if (pdfViewerMB.descargarArchivo(fichTemp.getAbsolutePath(), fileName)) {
-//						a.setAliasTemporal(sNombreTemporal);
-//					} else {
-//						a.setAliasTemporal("");
-//						logger.debug("Archivo no existe en el File Server");
-//					}
-//					bSaved = true;					
-
+					/*PDFViewerMB pdfViewerMB = new PDFViewerMB();
+					 * if (pdfViewerMB.descargarArchivo(fichTemp.getAbsolutePath(), fileName)) {
+					 * a.setAliasTemporal(sNombreTemporal);
+					 * } else {
+					 * a.setAliasTemporal("");
+					 * logger.debug("Archivo no existe en el File Server");
+					 * bSaved = true;*/
 				} catch (IOException e) {
-					logger.error("Error al descargar archivo: "		+ a.getAliasArchivo(),e);
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"(IO) al descargar archivo: "+ a.getAliasArchivo(),e);
 					bSaved = false;
 				} catch (Exception e){
-					logger.error(e);
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al descargar archivo: "+ a.getAliasArchivo(),e);
 					bSaved = false;
 				}
 				finally {
@@ -2434,7 +2428,7 @@ public class ConsultarSolicitudMB {
 						logger.debug("[MODIFICAR]-a.getAliasTemporal(): "+a.getAliasTemporal());
 						anexoDAO.modificar(a);
 					} catch (Exception ex) {
-						logger.error("No se actualizara el anexo "	+ ex.getMessage());
+						logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al actualizar archivo: "+ a.getAliasArchivo(), ex);
 					}
 					iRet = iRet && true;
 				} else {
@@ -3024,6 +3018,7 @@ public class ConsultarSolicitudMB {
 						mesajeConfirmacion = "Se registró correctamente la Solicitud con codigo : " + objResultado.getCodSoli() + " en Borrador";		
 						aliasFilesToDelete = new ArrayList<String>();
 						actualizarBandeja=true;
+						//[16-10][SB] Se agrega, para mostrar mensaje al guardar 'Borrador'
 						Utilitarios.mensajeInfo("INFO", mesajeConfirmacion);
 					} 
 					else //Enviar solicitud
