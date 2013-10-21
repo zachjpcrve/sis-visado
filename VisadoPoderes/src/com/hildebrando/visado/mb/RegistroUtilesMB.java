@@ -184,6 +184,7 @@ public class RegistroUtilesMB {
 					
 			if(lstPoderdantes!=null && lstPoderdantes.size()>0){
 				if (existeFallecido(lstPoderdantes)) {
+					logger.debug("[obtTipComision]-existeFallecido.");
 					if (solicitud.getImporte() > dMontoLimite) {
 						sTipoComision = ConstantesVisado.CODIGO_CAMPO_FALLECIDO_MAYORA;
 					} else {
@@ -191,13 +192,15 @@ public class RegistroUtilesMB {
 					}
 				} else {
 					if (sonTodasNaturales(lstPoderdantes)) {
+						logger.debug("[obtTipComision]-sonTodasNaturales.");
 						sTipoComision = ConstantesVisado.CODIGO_CAMPO_PERSONA_NATURAL;
 					} 
 					else if (sonTodasJuridicas(lstPoderdantes)) {
+						logger.debug("[obtTipComision]-sonTodasJuridicas.");
 						sTipoComision = ConstantesVisado.CODIGO_CAMPO_PERSONA_JURIDICA;
 					} else {
 						// Regla no permitida
-						logger.info("Regla no permitida");
+						logger.debug("[obtTipComision]-Regla no permitida");
 						sTipoComision = null;
 					}
 				}				
@@ -224,9 +227,10 @@ public class RegistroUtilesMB {
 	 * @return fecha de respuesta
 	 * */
 	public Date obtenerFechaRespuesta(){
-		
+		logger.debug("=== obtenerFechaRespuesta():INICIO ===");
 		Date fechaRetorno;
 		String sHoraCorte = getHoraCorte();  //Para obtener hora de corte (parámetro de sistema)		
+		logger.debug("[obtFechRpta]-sHoraCorte:"+sHoraCorte);
 		String []aHora = null;		
 		try{			
 			aHora = sHoraCorte.split(":");
@@ -234,23 +238,23 @@ public class RegistroUtilesMB {
 			aHora = "00:00".split(":");
 		}
 		int iHoraCorte  =Integer.valueOf(aHora[0] + aHora[1]);
-		
+		logger.debug("[obtFechRpta]-iHoraCorte: "+iHoraCorte);
 		//Hora actual
 		Calendar fechaActual = Calendar.getInstance();	
 		int iHoraActual = Integer.valueOf(String.valueOf(fechaActual.get(Calendar.HOUR_OF_DAY))
 				+ String.valueOf(fechaActual.get(Calendar.MINUTE)));		
 		
-		logger.debug("Compara fecha:"+iHoraActual+"<"+iHoraCorte);
-		logger.info("Compara fecha:"+iHoraActual+"<"+iHoraCorte);
+		logger.info("[obtFechRpta]-Compara fecha:"+iHoraActual+"<"+iHoraCorte);
 		if(iHoraActual <= iHoraCorte ){ //Si hora actual es menor igual a la hora de corte	
-			logger.info("Hora es menor o igual que la fecha de corte");
+			logger.info("[obtFechRpta]-Hora es MENOR o IGUAL que la Hora de Corte");
 			fechaRetorno = fechaActual.getTime();	 //Retornamos la fecha actual
 			fechaActual.add(Calendar.DATE, -1);
 			fechaRetorno = obtenSiguienteDiaHabil(fechaActual);
 		} else {
-			logger.info("Hora es mayor a la hora de corte, se obtendrá siguiente fecha");
+			logger.info("[obtFechRpta]-Hora es MAYOR a la Hora de Corte, se obtendrá siguiente fecha");
 			fechaRetorno = obtenSiguienteDiaHabil(fechaActual);
 		}		
+		logger.debug("[obtFechRpta]-fechaRetorno: "+fechaRetorno);
 		return fechaRetorno;
 	}
 	
@@ -271,7 +275,7 @@ public class RegistroUtilesMB {
 			multitabla = multiTablaDAO.buscarDinamico(filtro);
 			sHoraCorte = multitabla.get(0).getValor1();
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en sHoraCorte: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en sHoraCorte: ",e);
 		}
 		return sHoraCorte;
 	}	
@@ -394,12 +398,11 @@ public class RegistroUtilesMB {
 	}
 
 	/**
-	 * Verifica si todas las personas son de tipo natural.
-	 * 
-	 * @param lista
-	 *            de personas.
-	 * @return TRUE: si todas las personas no son de tipo Juridica FALSE: si al
-	 *         menos una es Juridica
+	 * Verifica si todas las personas son de tipo natural, se consulta si 
+	 * tienen el tipo de documento diferente a RUC. 
+	 * @param lstAgrupacionPersona Lista de personas.
+	 * @return true: si todas las personas no son de tipo Juridica
+	 * false: si al menos una es Juridica
 	 */
 	private boolean sonTodasNaturales(
 			List<TiivsAgrupacionPersona> lstAgrupacionPersona) {
@@ -433,7 +436,10 @@ public class RegistroUtilesMB {
 
 	/**
 	  * Verifica si al menos una persona tiene la clasificacion
-	  * de fallecido
+	  * de 'Fallecido' en la tabla Multitabla (T013)
+	  * -CODIGO_TIPO_CLASIFICACION_FALLECIDO = 00002
+	  * @param lstAgrupacionPersona Lista de agrupacion persona
+	  * @return bRet Retorna true/false
 	  */
 	private boolean existeFallecido(
 			List<TiivsAgrupacionPersona> lstAgrupacionPersona) {
@@ -482,39 +488,48 @@ public class RegistroUtilesMB {
 	  * @return Fecha Habil
 	  */
 	private Date obtenSiguienteDiaHabil(Calendar fecha) {
-		
+		logger.debug("== obtenSiguienteDiaHabil():INICIO ==");
 		Date fechaRetorno;	
-		
+		logger.debug("[obtSiguienteDiaHabil]-fecha.DAY_OF_WEEK: "+fecha.get(Calendar.DAY_OF_WEEK));
 		fecha.add(Calendar.DATE, 1); // sumamos 1 día a la fecha			
 		if(fecha.get(Calendar.DAY_OF_WEEK)==7){ //si es sabado sumamos 2 dias a la fecha
+			logger.info("Es SABADO");
+			logger.info("[obtSiguienteDiaHabil]-Sabado se agregara (02) dias.");
 			fecha.add(Calendar.DATE, 2);
-			logger.info("Fecha:'" + fecha + "' es Sábado se obtendrá el siguiente día hábil ");
+			logger.info("[obtSiguienteDiaHabil]-Fecha:'" + fecha + "' es Sábado se obtendrá el siguiente día hábil ");
 		}		
 		if(fecha.get(Calendar.DAY_OF_WEEK)==1){ //si es Domingo sumamos 1 dia a la fecha
+			logger.info("Es DOMINGO");
 			fecha.add(Calendar.DATE, 1);
-			logger.info("Fecha:'" + fecha + "' es Domingo se obtendrá el siguiente día hábil ");
-			logger.info("Domingo se agregara 1 día");
+			logger.info("[obtSiguienteDiaHabil]-Fecha:'" + fecha + "' es Domingo se obtendrá el siguiente día hábil ");
+			logger.info("[obtSiguienteDiaHabil]-Domingo se agregara (01) dia");
 		}
 				
 		//Buscamos si la fecha es feriado
 		GenericDao<TiivsFeriado, Object> feriadoDAO = (GenericDao<TiivsFeriado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsFeriado.class);				
-		filtro.add(Restrictions.eq("indicador", 'N'));
+		filtro.add(Restrictions.eq("indicador", 'N'));//Feriado Nacional
 		filtro.add(Restrictions.eq("fecha", fecha.getTime()));
 		
 		List<TiivsFeriado> lstFeriados= new ArrayList<TiivsFeriado>();				
 		try {
-			lstFeriados = feriadoDAO.buscarDinamico(filtro);			
+			lstFeriados = feriadoDAO.buscarDinamico(filtro);	
+			if(lstFeriados!=null){
+				logger.debug("[obtSiguienteDiaHabil]-"+ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"de feriados es: "+lstFeriados.size());
+			}
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en obtener lstFeriados: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en obtener lstFeriados (N): ",e);
 		}
 		
 		if(!lstFeriados.isEmpty()){ // Si la fecha es feriado 
-			logger.info("Fecha:'" + fecha + "' es Feriado se obtendrá el siguiente día hábil ");
+			logger.info("[obtSiguienteDiaHabil]-HayFeriado-Fecha:'" + fecha + "' es Feriado se obtendra el siguiente dia habil ");
 			fechaRetorno = obtenSiguienteDiaHabil(fecha);
+			logger.debug("[obtSiguienteDiaHabil]-IF: "+fechaRetorno);
 		} else {
 			fechaRetorno = fecha.getTime();
+			logger.debug("[obtSiguienteDiaHabil]-ELSE: "+fechaRetorno);
 		}		
+		logger.debug("== obtenSiguienteDiaHabil():FIN ==");
 		return fechaRetorno;
 	}			
 	
