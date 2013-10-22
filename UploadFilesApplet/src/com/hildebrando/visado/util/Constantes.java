@@ -31,5 +31,6 @@ public class Constantes {
 	public static final String MSJ_INICIAL_APPLET = "LOG DE EVENTOS - VISADO DE PODERES";
 	public static final String MSJ_OCURRE_EXCEPCION = "Ha ocurrido una excepcion ";
 	public static final String MSJ_OCURRE_ERROR = "Ha ocurrido un error ";
+	public static final String MSJ_LISTA_ARCHIVOS = "El listado de archivos ";
     
 }
