@@ -32,7 +32,7 @@
 					<td>
 						<fieldset>
 							<legend class="fielset">CONSULTA DE REVOCADOS</legend>
-							<p:growl id="msmGrowlPopup"></p:growl>
+							<p:growl id="msmGrowlPopup" sticky="true" ></p:growl>
 
 							<h:panelGrid columns="9" style="width: 800px">
 								<h:outputLabel value="Tipo: " />
@@ -261,7 +261,7 @@
 			
 			<p:outputPanel id="pnlRegistrarPendEdit">
 				<h:panelGrid columns="1" id="gridMsj" rendered="false">
-					<p:messages globalOnly="true" />
+					<p:messages globalOnly="true"  />
 				</h:panelGrid>
 				
 				<h:inputHidden id="inputHidden" value="#{revocadosMB.patter}"></h:inputHidden>
@@ -400,7 +400,7 @@
 									invalidFileMessage="Formato inválido"
 									fileUploadListener="#{revocadosMB.handleFileUpload}"
 									allowTypes="/(\.|\/)(pdf|PDF)$/" /> 
-								<p:growl id="fileDoc" showDetail="true" />
+								<p:growl id="fileDoc" showDetail="true" for="idfileUpload" sticky="true" />
 						
 					<p:spacer width="10" height="20" />
 					
@@ -697,7 +697,7 @@
 						process="@form" oncomplete="dlgApoPodActEdit.hide();" />
 					 </td>
 					 <td align="right">
-					   <p:growl id="idArchivoRevocado1"></p:growl>
+					   <p:growl id="idArchivoRevocado1"  ></p:growl>
 					   <h:panelGrid columns="1">
 					    <c:if test="#{revocadosMB.flagLinkRevocados==1}">
 							<a href="#" onclick="exportarRevocado('#{revocadosMB.aliasCortoDocumento}', '1');">#{revocadosMB.sAliasTemporal}</a>
@@ -900,7 +900,7 @@
 					 <td style="width:50px"><p:outputLabel value="Estado:" /></td>
 					 <td><h:outputText value="#{revocadosMB.revocadoVer.estado}"></h:outputText></td>
 					   <td colspan="20" align="right">
-					   	 <p:growl id="idArchivoRevocado"></p:growl>
+					   	 <p:growl id="idArchivoRevocado" for=":frmApodPodVer:gridTitulo" ></p:growl>
 					     <h:panelGrid columns="1">
 					   
 					     <c:if test="#{revocadosMB.flagLinkRevocados==1}">
