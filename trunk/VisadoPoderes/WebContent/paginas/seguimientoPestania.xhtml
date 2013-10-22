@@ -301,7 +301,7 @@
 	                header="Confirmación" severity="alert" widgetVar="confirmation" >  
 	                  
 	        <center>
-	        <p:commandButton id="confirmSiDic" value="Si" update=":formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento :formSolicitudSeguimiento:growlSolicitudSeguimiento" oncomplete="confirmation.hide()"   
+	        <p:commandButton id="confirmSiDic" value="Si" update=":formSolicitudSeguimiento :formSolicitudSeguimiento:pnlGridformSolicitudSeguimiento :formSolicitudSeguimiento:growlSolicitudSeguimiento" oncomplete="confirmation.hide()"   
 	                    action="#{consultarSolicitudMB.dictaminarSolicitud}"  />  
 	        <p:commandButton id="declineNoDic" value="No" onclick="confirmation.hide()" type="button" />
 	        </center>   
