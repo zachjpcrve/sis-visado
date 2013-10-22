@@ -1716,7 +1716,7 @@ public class ConsultarSolicitudMB {
 				this.bMostrarGenerarRevision = false;				
 			} 
 		}
-	}
+	} 
 	/* Validar si la solicitud fue dictaminado rechazado*/
 	public boolean validarSiDictaminadoRechazado() throws Exception{
 		    boolean retorno=false;
@@ -1874,6 +1874,7 @@ public class ConsultarSolicitudMB {
 							  && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 	                    	 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
 	                    	 solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
+	                    	 this.solicitudRegistrarT.setDescEstado(this.buscarEstadoxCodigo(solicitudRegistrarT.getEstado()));
 	                    	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 	                    	 this.registrarHistorial(solicitudRegistrarT);
 	                    	 actualizarBandeja=true;
@@ -1881,6 +1882,7 @@ public class ConsultarSolicitudMB {
 						} else if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02)
 								  && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 							 solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
+							 this.solicitudRegistrarT.setDescEstado(this.buscarEstadoxCodigo(solicitudRegistrarT.getEstado()));
 	                    	 solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 	                    	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 	                    	 this.registrarHistorial(solicitudRegistrarT);
@@ -1889,6 +1891,7 @@ public class ConsultarSolicitudMB {
 						} else{
 							if(this.agregarNiveles(solicitudRegistrarT)){								
 								this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
+								this.solicitudRegistrarT.setDescEstado(this.buscarEstadoxCodigo(solicitudRegistrarT.getEstado()));
 								this.registrarHistorial(solicitudRegistrarT);
 								actualizarBandeja=true;
 								Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
@@ -1902,6 +1905,7 @@ public class ConsultarSolicitudMB {
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02)) {
 
 					this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
+					 this.solicitudRegistrarT.setDescEstado(this.buscarEstadoxCodigo(solicitudRegistrarT.getEstado()));
 					this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 					solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					this.registrarHistorial(solicitudRegistrarT);
@@ -1918,6 +1922,7 @@ public class ConsultarSolicitudMB {
                     if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)
                     		          && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
                     	 this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
+                    	 this.solicitudRegistrarT.setDescEstado(this.buscarEstadoxCodigo(solicitudRegistrarT.getEstado()));
                     	 this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));                    	 
                     	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
                     	 this.registrarHistorial(solicitudRegistrarT);
@@ -1927,13 +1932,15 @@ public class ConsultarSolicitudMB {
 					} else if(solicitudRegistrarT.getEstado().equals(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02)
           		          && PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)){
 						 this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02);
+						 this.solicitudRegistrarT.setDescEstado(this.buscarEstadoxCodigo(solicitudRegistrarT.getEstado()));
                     	 this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));                    	
                     	 this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
                     	 this.registrarHistorial(solicitudRegistrarT);
                     	 actualizarBandeja=true;
                     	 Utilitarios.mensajeInfo("INFO",	"Se dictaminó correctamente la solicitud");
 					} else {
-						if(this.agregarNiveles(solicitudRegistrarT)){							
+						if(this.agregarNiveles(solicitudRegistrarT)){	
+							this.solicitudRegistrarT.setDescEstado(this.buscarEstadoxCodigo(solicitudRegistrarT.getEstado()));
 							this.solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 							this.registrarHistorial(solicitudRegistrarT);
 							actualizarBandeja=true;
@@ -1947,6 +1954,7 @@ public class ConsultarSolicitudMB {
 				} else if (this.valorDictamen.equals(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02)) {
 
 					this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02);
+					 this.solicitudRegistrarT.setDescEstado(this.buscarEstadoxCodigo(solicitudRegistrarT.getEstado()));
 					this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 					
 					logger.debug("this.solicitudRegistrarT.getTiivsEstudio() "+this.solicitudRegistrarT.getTiivsEstudio().toString());
@@ -1954,6 +1962,7 @@ public class ConsultarSolicitudMB {
 						if(this.solicitudRegistrarT.getTiivsEstudio().getCodEstudio()==null){
 							this.solicitudRegistrarT.setTiivsEstudio(null);
 						}
+						this.solicitudRegistrarT.setDescEstado(this.buscarEstadoxCodigo(solicitudRegistrarT.getEstado()));
 						solicitudRegistrarT = serviceS.modificar(solicitudRegistrarT);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1986,6 +1995,8 @@ public class ConsultarSolicitudMB {
 				{
 					this.seguimientoMB.busquedaSolicitudxCodigo(solicitudRegistrarT.getCodSoli());
 				}
+				
+				
 
 			}
 
@@ -2351,6 +2362,7 @@ public class ConsultarSolicitudMB {
 		String sUbicacionFinal;
 				
 		//Si la solicitud tiene no esta en estado REGISTRADO (Vista de solicitud) se copian la carpeta de la aplicacion;
+		
 		if(this.getSolicitudRegistrarT().getEstado().equalsIgnoreCase(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)){
 			sUbicacionTemporal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER) + File.separator + ConstantesVisado.FILES + File.separator;
 		} else {
@@ -2359,7 +2371,7 @@ public class ConsultarSolicitudMB {
 		
 		sUbicacionFinal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER) + File.separator;
 		
-		logger.debug("[Ubicacion Temp]:" + sUbicacionTemporal);
+		logger.debug("[Ubicacion Temporal]:" + sUbicacionTemporal);
 		if(lstAnexoSolicitud!=null){
 			logger.info("[FileServer]-Cantidad Anexos:" + this.lstAnexoSolicitud.size());	
 		}
@@ -2375,15 +2387,17 @@ public class ConsultarSolicitudMB {
 			if (!fichTemp.exists()) 
 			{
 				logger.debug("Archivo no existe, se descargara:" + a.getAliasArchivo());
+				
 				boolean bSaved = false;
 				try {
 					fDirectory = new File(sUbicacionTemporal);
 					if (!fDirectory.exists()) {
 						fDirectory.mkdirs();
 					}
+
 					//Crea archivo temporal
 					String fileName = a.getId().getCodSoli() + "_" + a.getAliasArchivo();
-					logger.debug("[Anexo-Solicitud]-nombreArchivo:"+fileName);
+					logger.debug("[Anexo]-fileName:"+fileName);
 					String extension = fileName.substring(fileName.lastIndexOf("."));
 					String sNombreTemporal = "";
 					String sNombrePrefijo = a.getAliasArchivo().substring(0, a.getAliasArchivo().lastIndexOf(".")) + "_";
@@ -2400,22 +2414,25 @@ public class ConsultarSolicitudMB {
 						a.setAliasTemporal(sNombreTemporal);
 					} else {
 						a.setAliasTemporal("");
-						logger.debug("El archivo que se intenta consultar no existe en el FileServer");
+						logger.debug("Archivo no existe en el File Server");
 					}
 					
 					bSaved = true;
-					/*PDFViewerMB pdfViewerMB = new PDFViewerMB();
-					 * if (pdfViewerMB.descargarArchivo(fichTemp.getAbsolutePath(), fileName)) {
-					 * a.setAliasTemporal(sNombreTemporal);
-					 * } else {
-					 * a.setAliasTemporal("");
-					 * logger.debug("Archivo no existe en el File Server");
-					 * bSaved = true;*/
+					
+//					PDFViewerMB pdfViewerMB = new PDFViewerMB();
+//					if (pdfViewerMB.descargarArchivo(fichTemp.getAbsolutePath(), fileName)) {
+//						a.setAliasTemporal(sNombreTemporal);
+//					} else {
+//						a.setAliasTemporal("");
+//						logger.debug("Archivo no existe en el File Server");
+//					}
+//					bSaved = true;					
+
 				} catch (IOException e) {
-					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"(IO) al descargar archivo: "+ a.getAliasArchivo(),e);
+					logger.error("Error al descargar archivo: "		+ a.getAliasArchivo(),e);
 					bSaved = false;
 				} catch (Exception e){
-					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al descargar archivo: "+ a.getAliasArchivo(),e);
+					logger.error(e);
 					bSaved = false;
 				}
 				finally {
@@ -2428,7 +2445,7 @@ public class ConsultarSolicitudMB {
 						logger.debug("[MODIFICAR]-a.getAliasTemporal(): "+a.getAliasTemporal());
 						anexoDAO.modificar(a);
 					} catch (Exception ex) {
-						logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al actualizar archivo: "+ a.getAliasArchivo(), ex);
+						logger.error("No se actualizara el anexo "	+ ex.getMessage());
 					}
 					iRet = iRet && true;
 				} else {
@@ -3018,7 +3035,6 @@ public class ConsultarSolicitudMB {
 						mesajeConfirmacion = "Se registró correctamente la Solicitud con codigo : " + objResultado.getCodSoli() + " en Borrador";		
 						aliasFilesToDelete = new ArrayList<String>();
 						actualizarBandeja=true;
-						//[16-10][SB] Se agrega, para mostrar mensaje al guardar 'Borrador'
 						Utilitarios.mensajeInfo("INFO", mesajeConfirmacion);
 					} 
 					else //Enviar solicitud
