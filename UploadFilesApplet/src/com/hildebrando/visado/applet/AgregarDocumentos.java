@@ -152,10 +152,10 @@ public class AgregarDocumentos extends JApplet {
                  //clienteFTP.setDirectorio(urlTemporal);	
                  return clienteFTP.uploadFiles(ficherosLeidos);
 			} catch (Exception e) {
-				Utiles.escribirEnLog(Constantes.ERROR, "+++ Error al conectar FTP " + e.getMessage(),"");
+				Utiles.escribirEnLog(Constantes.ERROR, Constantes.MSJ_OCURRE_ERROR+"al conectar via FTP " + e,"");
 			}
         } else {
-        	Utiles.escribirEnLog(Constantes.ERROR, "Lista de archivos Nuloooo","");
+        	Utiles.escribirEnLog(Constantes.DEBUG, Constantes.MSJ_LISTA_ARCHIVOS+"(subirFTP) es nulo.","");
         }
         Utiles.escribirEnLog(Constantes.INFO, "==== subirFTP():FIN =====","");
         return null;
@@ -204,25 +204,34 @@ public class AgregarDocumentos extends JApplet {
         String sNombreDocLeidos = "";
         List<File> lstFicherosLeidos = null;
         String sPathCliente = getParameter(Constantes.PATH_CLIENTE);
-        String sDocumentosLeer = getParameter(Constantes.DOCUMENTOS_LEER);    
+        String sDocumentosLeer = getParameter(Constantes.DOCUMENTOS_LEER);   
+        
+        Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-[SIEMPRE]-sDocumentosLeer: " + sDocumentosLeer, "");
+        
         String sDocumentosCargados = "";
         Archivo archivo = new Archivo();                
         if(archivo.obtenerListaFiles(sPathCliente, sDocumentosLeer) == 1){
+        	Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-ListaDocs (App):" + sDocumentosLeer, "");
             sNombreDocLeidos = archivo.getNombreFilesReaded();
             lstFicherosLeidos = archivo.getFilesReaded();
-            Utiles.escribirEnLog(Constantes.INFO, "[actualizarFTP]-Documentos obtenidos:"+sNombreDocLeidos, "");
-            //System.out.println("[actualizarFTP]-Documentos obtenidos: " + sNombreDocLeidos);
-            Utiles.escribirEnLog(Constantes.INFO, "[actualizarFTP]-Cantidad de archivos leidos :"+lstFicherosLeidos.size(), "");
-            //System.out.println("[actualizarFTP]-Cantidad de archivos leidos : " + lstFicherosLeidos.size());
             documentosLeidos = sNombreDocLeidos;   
             ficherosLeidos = lstFicherosLeidos;  
-            Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-Cada archivo sera enviado por FTP", "");
-            //Se valida que haya lstFicherosLeidos para enviar por FTP
-            if(lstFicherosLeidos!=null && lstFicherosLeidos.size()>0){
+            
+            Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-Directorio Fuente: " + sPathCliente, "");
+            Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-Documentos obtenidos: "+sNombreDocLeidos, "");
+            Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-Cantidad de archivos leidos :"+lstFicherosLeidos.size(), "");
+           
+            
+            //Se valida que haya lstFicherosLeidos para enviar por FTP && lstFicherosLeidos.size()>0
+            if(lstFicherosLeidos!=null ){            	 
             	sDocumentosCargados = subirFTP();
-            	Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-Documentos cargados por FTP: " + sDocumentosCargados, "");
-                ejecutarFuncion("actualizarDocumentos", documentosLeidos,sDocumentosCargados);//ojo modificar java script
+            	Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-Archivos subidos por FTP: " + sDocumentosCargados, "");
+                ejecutarFuncion("actualizarDocumentos", documentosLeidos,sDocumentosCargados);//ojo modificar javascript
+            }else{
+            	Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-Es nulo o no hay ficheros:", "");
             }
+        }else{
+        	 Utiles.escribirEnLog(Constantes.INFO,"===== actualizarFTP()-es CERO =====", "");
         }
         Utiles.escribirEnLog(Constantes.INFO,"===== actualizarFTP():FIN =====", "");
     } 
@@ -442,7 +451,6 @@ public class AgregarDocumentos extends JApplet {
             getAppletContext().showDocument(new URL(ejecFuncion));
         } catch (Exception e) {    
         	Utiles.escribirEnLog(Constantes.ERROR,"[ejecutarFuncion]-Ha ocurrido una excepcion al ejecutar la funcion:" + e, "");
-            e.printStackTrace();
         }
     }
    
