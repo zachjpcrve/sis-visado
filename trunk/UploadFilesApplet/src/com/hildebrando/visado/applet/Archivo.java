@@ -57,23 +57,23 @@ public class Archivo {
     
     
     public int obtenerListaFiles(String pathCliente, String sDocumentos) {
-    	Utiles.escribirEnLog(Constantes.INFO,"==== obtenerListaFiles() =====", "");
+    	Utiles.escribirEnLog(Constantes.INFO,"==== obtenerListaFiles():INICIO =====", "");
         int result = 0;
         
         try {
             String ubicacion = pathCliente;
-            Utiles.escribirEnLog(Constantes.INFO,"[obtenerListaFiles]-Directorio Escaneados: " + ubicacion, "");
-            Utiles.escribirEnLog(Constantes.INFO,"[obtenerListaFiles]-Lista CodDocs (App):" + sDocumentos, "");
             String []aDocumentos = sDocumentos.split(Constantes.SEPARADOR);
             File file;
             for(String documento : aDocumentos){
+            	//Utiles.escribirEnLog(Constantes.INFO,"[obtenerListaFiles]-"+ubicacion+" -> "+documento, "");
                 file = new File(ubicacion + File.separator + documento);
                 if(file.exists()){
                     this.setNombreFilesReaded(this.getNombreFilesReaded() + file.getName() + Constantes.SEPARADOR);
                     this.getFilesReaded().add(file);
-                } else {
+                    Utiles.escribirEnLog(Constantes.DEBUG,"\tArchivo leido: " + file.getName(), "");
+                } /*else {
                 	Utiles.escribirEnLog(Constantes.INFO,"\tNo existe documento en carpeta 'Escaneados': " + documento, "");
-                }
+                }*/
             }
             result = 1;
         } catch(Exception e){
@@ -81,7 +81,8 @@ public class Archivo {
             new RuntimeException(e);
             result = 0;
         }          
-        Utiles.escribirEnLog(Constantes.INFO,"[obtenerListaFiles]-result:"+result, "");
+        Utiles.escribirEnLog(Constantes.DEBUG,"[obtenerListaFiles]-resultado Lectura:"+result, "");
+        Utiles.escribirEnLog(Constantes.DEBUG,"[obtenerListaFiles]:FIN ","");
         return result;
     }
 
