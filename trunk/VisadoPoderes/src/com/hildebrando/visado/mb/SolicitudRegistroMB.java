@@ -482,8 +482,17 @@ public class SolicitudRegistroMB {
 		filtroTipoSolcDoc.add(Restrictions.eq("activo",'1'));
 		filtroTipoSolcDoc.addOrder(Order.desc("obligatorio"));
 		try {
-			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);			
-			lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstDocumentosXTipoSolTemp).clone();
+			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
+			List<TiivsTipoSolicDocumento> lstTipoSolicitudDocumentos2=new ArrayList<TiivsTipoSolicDocumento>();
+										  lstTipoSolicitudDocumentos2.addAll(lstDocumentosXTipoSolTemp);
+			
+			for (TiivsTipoSolicDocumento x : (ArrayList<TiivsTipoSolicDocumento>) ( lstTipoSolicitudDocumentos2)) {
+				logger.info("x.getTiivsDocumento().getDescripcion().length() "+x.getTiivsDocumento().getDescripcion().length());
+				  x.getTiivsDocumento().setDescripcion(x.getTiivsDocumento().getDescripcion().length()<166?x.getTiivsDocumento().getDescripcion().substring(0, x.getTiivsDocumento().getDescripcion().length()):x.getTiivsDocumento().getDescripcion().substring(0, 166)   );  
+			}
+			
+			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
+			lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstTipoSolicitudDocumentos2).clone();
 			
 			logger.info("lstDocumentosXTipoSolTemp.size()" + lstDocumentosXTipoSolTemp.size());
 			logger.info("lstTipoSolicitudDocumentos.size()" + lstTipoSolicitudDocumentos.size());
