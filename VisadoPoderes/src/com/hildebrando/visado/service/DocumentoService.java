@@ -44,9 +44,7 @@ public class DocumentoService<E> {
 		try {
 			service.insertarMerge(documento);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : registrar: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : registrar: "+ ex.getLocalizedMessage());
 		}
 
 	}
@@ -70,9 +68,7 @@ public class DocumentoService<E> {
 		try {
 			service.modificar(documento);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : actualizar: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : actualizar: "+ ex.getLocalizedMessage());
 		}
 
 	}
@@ -116,9 +112,7 @@ public class DocumentoService<E> {
 			 * }
 			 */
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : listarDocumentos: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : listarDocumentos: "+ ex.getLocalizedMessage());
 		}
 		return documentos;
 	}
@@ -140,7 +134,6 @@ public class DocumentoService<E> {
 			parse = (List<E>) secuencial;
 			contador = parse.get(0).toString();
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("DocumentoService : obtenerMaximo: "
 					+ ex.getLocalizedMessage());
 		}
@@ -161,7 +154,6 @@ public class DocumentoService<E> {
 					"activo", estadoSi)));
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("DocumentoService : cargarComboTipoDocumento: "
 					+ ex.getLocalizedMessage());
 		}
@@ -177,16 +169,13 @@ public class DocumentoService<E> {
 		Busqueda filtro = Busqueda.forClass(TiivsDocumento.class);
 
 		try {
-			listaDocumentos = service.buscarDinamico(filtro/*
-															 * .add(Restrictions.
-															 * eq( "activo",
-															 * estadoSi))
-															 */);
-
+			listaDocumentos = service.buscarDinamico(filtro
+					/* * .add(Restrictions.
+					 * * eq( "activo",
+					 * * estadoSi))
+					 *  */);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : cargarComboDocumento: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : cargarComboDocumento: ", ex);
 		}
 
 		return listaDocumentos;
@@ -214,9 +203,7 @@ public class DocumentoService<E> {
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : editarDocumento: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : editarDocumento: "+ ex.getLocalizedMessage());
 		}
 		return documentoEditar;
 	}
@@ -246,9 +233,7 @@ public class DocumentoService<E> {
 			}
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : obtenerMaximo: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : obtenerMaximo: "+ ex.getLocalizedMessage());
 		}
 
 		return validacion;

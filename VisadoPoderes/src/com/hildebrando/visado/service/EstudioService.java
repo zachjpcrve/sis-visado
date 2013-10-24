@@ -51,9 +51,7 @@ public class EstudioService {
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("EstudioService : listarEstudios: "
-					+ ex.getLocalizedMessage());
+			logger.error("EstudioService : listarEstudios: "+ ex.getLocalizedMessage());
 		}
 		return estudios;
 	}
@@ -74,7 +72,6 @@ public class EstudioService {
 			parse = (List<E>) secuencial;
 			contador = parse.get(0).toString();
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("EstudioService : obtenerMaximo: "
 					+ ex.getLocalizedMessage());
 		}
@@ -95,7 +92,6 @@ public class EstudioService {
 			}
 			service.insertarMerge(estudio);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("EstudioService : registrar: "
 					+ ex.getLocalizedMessage());
 		}
@@ -112,7 +108,6 @@ public class EstudioService {
 			estudioEditar = service.buscarDinamico(filtro.add(Restrictions.eq(
 					"codEstudio", codEstudio)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("ClasificacionService : editarClasificacion: "
 					+ ex.getLocalizedMessage());
 		}

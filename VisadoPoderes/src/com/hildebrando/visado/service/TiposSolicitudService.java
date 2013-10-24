@@ -25,9 +25,7 @@ public class TiposSolicitudService {
 		try {
 			service.insertarMerge(tipoSolicitud);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : registrar: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : registrar: "+ ex.getLocalizedMessage());
 		}
 
 	}
@@ -53,7 +51,6 @@ public class TiposSolicitudService {
 			}
 		
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("DocumentoService : listarTiposSolicitud: "
 					+ ex.getLocalizedMessage());
 		}
@@ -77,7 +74,6 @@ public class TiposSolicitudService {
 			parse = (List<E>) secuencial;
 			contador = parse.get(0).toString();
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("DocumentoService : obtenerMaximo: "
 					+ ex.getLocalizedMessage());
 		}
@@ -98,7 +94,6 @@ public class TiposSolicitudService {
 					"id.codMult",
 					ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOCUMENTO)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("DocumentoService : cargarComboTipoDocumento: "
 					+ ex.getLocalizedMessage());
 		}
@@ -119,7 +114,6 @@ public class TiposSolicitudService {
 			documentoEditar = service.buscarDinamico(filtro.add(
 					Restrictions.eq("codTipSolic", codElemento)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("DocumentoService : editarDocumento: "
 					+ ex.getLocalizedMessage());
 		}

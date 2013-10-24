@@ -29,7 +29,6 @@ public class DelegadosService {
 		try {
 			niveles = service.listarNivelesDistinct();
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("DocumentoService : listarDocumentos: "
 					+ ex.getLocalizedMessage());
 		}
@@ -44,7 +43,6 @@ public class DelegadosService {
 		try {
 			miembro = service.buscarDinamico(filtro.add(Restrictions.eq("codMiembro", codRegistro)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("DelegadosService : obtenerDatosMiembro: "+ ex.getLocalizedMessage());
 		}
 		return miembro;
@@ -79,7 +77,6 @@ public class DelegadosService {
 			}
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("NivelService : obtenerMaximo: "
 					+ ex.getLocalizedMessage());
 		}
@@ -95,9 +92,7 @@ public class DelegadosService {
 			service.insertar(tiivsMiembroNivel);
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("DocumentoService : registrarAgrupacion: "
-					+ e.getLocalizedMessage());
+			logger.error("DocumentoService : registrarAgrupacion: "+ e.getLocalizedMessage());
 		}
 	}
 
@@ -118,7 +113,6 @@ public class DelegadosService {
 			grupoI = grupoI + 1;
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("NivelService : obtenerMaximo: "
 					+ ex.getLocalizedMessage());
 		}
@@ -141,7 +135,6 @@ public class DelegadosService {
 			delegadosEditar = service.buscarDinamico(filtro.add(Restrictions.eq("grupo", grupo)).add(Restrictions.eq("codNiv", codigoNivel)).add(Restrictions.eq("estadoMiembro", "1")));
 			
 		}catch(Exception ex){
-			ex.printStackTrace();
 			logger.error("DelegadosService : editarAgrupacion: "
 					+ ex.getLocalizedMessage());
 		}
@@ -162,7 +155,6 @@ public class DelegadosService {
 			logger.info("lstCodNivel.size() " +lstCodNivel.size());
 			codNivel = lstCodNivel.get(0).getCodNiv();
 		}catch(Exception ex){
-			ex.printStackTrace();
 			logger.error("DelegadosService : obtenerCodNivel: "
 					+ ex.getLocalizedMessage());
 		}
@@ -178,7 +170,6 @@ public class DelegadosService {
 			service.insertarMerge(tiivsMiembroNivel);
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("DocumentoService : actualizarAgrupacion: "
 					+ e.getLocalizedMessage());
 		}
@@ -200,7 +191,6 @@ public class DelegadosService {
 			delegadosEstado = service.buscarDinamico(filtro.add(Restrictions.eq("grupo", grupo2)).add(Restrictions.eq("codNiv", codigoNivel)));
 			
 		}catch(Exception ex){
-			ex.printStackTrace();
 			logger.error("DelegadosService : estadoAgrupacion: "
 					+ ex.getLocalizedMessage());
 		}

@@ -29,7 +29,6 @@ public class RespNivelAprobacionService {
 			nivel = service.buscarDinamico(filtro.add(Restrictions.eq("codNiv",
 					codNivel)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("RespNivelAprobacionService : obtenerDesNivel: "
 					+ ex.getLocalizedMessage());
 		}
@@ -55,7 +54,6 @@ public class RespNivelAprobacionService {
 			}
 			estado = nivel.get(0).getDesEstado();
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("RespNivelAprobacionService : obtenerDesEstado: "
 					+ ex.getLocalizedMessage());
 		}
@@ -72,7 +70,6 @@ public class RespNivelAprobacionService {
 			miembro = service.buscarDinamico(filtro.add(Restrictions.eq(
 					"codMiembro", codMiembro)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("RespNivelAprobacionService : obtenerMiembro: "
 					+ ex.getLocalizedMessage());
 		}

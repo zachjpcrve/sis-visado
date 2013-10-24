@@ -26,7 +26,6 @@ public class ComisionService {
 			comisiones = service
 					.buscarDinamico(filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_COMISION)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("DocumentoService : listarDocumentos: "
 					+ ex.getLocalizedMessage());
 		}
@@ -42,7 +41,6 @@ public class ComisionService {
 			service.modificar(comision);
 			
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("DocumentoService : Actualizar: "
 					+ e.getLocalizedMessage());
 		}

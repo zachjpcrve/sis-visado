@@ -30,7 +30,6 @@ public class NivelService {
 		try {
 			monedas = service.buscarDinamico(filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_MONEDA)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("NivelService : listarMonedas: "
 					+ ex.getLocalizedMessage());
 		}
@@ -61,7 +60,6 @@ public class NivelService {
 
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("NivelService : listarNiveles: "
 					+ ex.getLocalizedMessage());
 		}
@@ -84,7 +82,6 @@ public class NivelService {
 			parse = (List<E>) secuencial;
 			contador = parse.get(0).toString();
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("NivelService : obtenerMaximo: "
 					+ ex.getLocalizedMessage());
 		}
@@ -100,7 +97,6 @@ public class NivelService {
 			service.insertarMerge(tiivsNivel);
 			
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("NivelService : registrar: "
 					+ e.getLocalizedMessage());
 		}
@@ -122,7 +118,6 @@ public class NivelService {
 			seq = (Integer) parse.get(0);
 			seq = seq + 1;
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("NivelService : obtenerMaximo: "
 					+ ex.getLocalizedMessage());
 		}
@@ -144,7 +139,6 @@ public class NivelService {
 			rangoInicio = (Integer) parse.get(0);
 			rangoInicio = rangoInicio + 1;
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("NivelService : obtenerMaximo: "
 					+ ex.getLocalizedMessage());
 		}
@@ -166,7 +160,6 @@ public class NivelService {
 			contador = Integer.parseInt(parse.get(0).toString());
 		//	contador = (Integer) parse.get(0);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("NivelService : obtenerSecuencialNivel: "
 					+ ex.getLocalizedMessage());
 		}
@@ -183,7 +176,6 @@ public class NivelService {
 		try{
 			editarNiv = service.buscarDinamico(filtro.add(Restrictions.eq("codNiv", codNiv)));
 		}catch(Exception ex){
-			ex.printStackTrace();
 			logger.error("NivelService : editarNivel: "
 					+ ex.getLocalizedMessage());
 		}
@@ -204,7 +196,6 @@ public class NivelService {
 		try{
 			lista = service.buscarDinamico(filtro);
 		}catch(Exception ex){
-			ex.printStackTrace();
 			logger.error("NivelService : buscarNivelxCodigo: "+ ex.getLocalizedMessage());
 		}
 		
@@ -234,7 +225,6 @@ public class NivelService {
 		try{
 			lista = service.buscarDinamico(filtro.add(Restrictions.eq("desNiv", desNivel)));
 		}catch(Exception ex){
-			ex.printStackTrace();
 			logger.error("NivelService : buscarNivelxDescrip: "+ ex.getLocalizedMessage());
 		}
 		
