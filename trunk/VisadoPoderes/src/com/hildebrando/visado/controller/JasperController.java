@@ -74,7 +74,7 @@ public class JasperController {
 				lstMultitabla = multiDAO.buscarDinamico(filtroMultitabla);
 				logger.info("lstMultitabla  :::" +lstMultitabla.size());
 			} catch (Exception e1) {
-				e1.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"multitabla: ",e1);
 			}
 			String diasUtilesForEjecucion="";
 			//Se obtiene los dias utiles de la Multitabla
@@ -597,13 +597,9 @@ public class JasperController {
 			OutputStream os = response.getOutputStream();
 			os.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
-			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
-					+ "al generar el archivo: " , e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al generar el archivo: " , e);
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.info(ConstantesVisado.MENSAJE.OCURRE_ERROR
-					+ "al generar el archivo: " , e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+ "al generar el archivo: " , e);
 		}
 		return ("pdfReportObsHistorial");
 	}
