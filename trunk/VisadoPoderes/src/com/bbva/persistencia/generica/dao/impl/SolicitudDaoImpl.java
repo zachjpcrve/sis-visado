@@ -120,6 +120,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				           " from VISPOD.tiivs_solicitud_agrupacion b where b.cod_soli = a.cod_soli)";
 
 		//String codigoSol = "";
+		logger.debug("sql: "+sql);
 		List ResultList = (List) getHibernateTemplate().execute(
 				new HibernateCallback() {
 					public List doInHibernate(Session session)
@@ -141,6 +142,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<Estado> traerEstadosFlujoSolicitud() throws Exception
 	{
+		
 		List<Estado> lstEstado = new ArrayList<Estado>();
 		
 		final String sql = "select cast(codigo as varchar(4)) codigo, descripcion from( " +
@@ -384,9 +386,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	public List<SolicitudesTipoServicio> obtenerSolicitudesxTipoServicio(TiivsSolicitud solicitud, String idOpeBan,String cadTipoServ,String cadEstudio,String rangoImpG,
 			Double importeIni,Double importeFin,Date dFechaInicio, Date dFechaFin) throws Exception
 	{	
-		logger.info("***************En el obtenerSolicitudesxTipoServicio*************************");
+		logger.info("====== obtenerSolicitudesxTipoServicio()-REPORTE ===");
 		String sql ="";
-		//String sCadFecha="";
 		String sWhere="";
 		List<SolicitudesTipoServicio> tmpLista = new ArrayList<SolicitudesTipoServicio>();
 		
@@ -394,13 +395,10 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		{
 			if (solicitud.getCodSoli().trim().compareTo("")!=0)
 			{
-				logger.info("Buscando solicitudes por solicitud:" +  solicitud.getCodSoli());
-				
-				/*if (sWhere.compareTo("")!=0)
-				{
+				logger.info("[RepSolPorTipServicio]-Filtro solicitud:" +  solicitud.getCodSoli());
+				/*if (sWhere.compareTo("")!=0){
 					sWhere += " and so.cod_soli = '" + solicitud.getCodSoli() + "'";
-				}
-				else
+				}else
 				{*/
 					sWhere += " and so.cod_soli = '" + solicitud.getCodSoli() + "'";
 				//}
@@ -408,13 +406,10 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (cadTipoServ.trim().compareTo("")!=0)
 			{
-				logger.info("Buscando solicitudes por tipo de servicio: " + cadTipoServ);
-				
-				/*if (sWhere.compareTo("")!=0)
-				{
+				logger.info("[RepSolPorTipServicio]-Filtro Tipo de servicio: " + cadTipoServ);
+				/*if (sWhere.compareTo("")!=0){
 					sWhere += " and ts.cod_tip_solic in ('" + cadTipoServ + "')";
-				}
-				else
+				}else
 				{*/
 					sWhere += " and ts.cod_tip_solic in (" + cadTipoServ + ")";
 				//}
@@ -422,7 +417,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (rangoImpG.trim().compareTo("")!=0)
 			{
-				logger.info("Buscando solicitudes por importe global: " + rangoImpG);
+				logger.info("[RepSolPorTipServicio]-Filtro importe global: " + rangoImpG);
 				
 				//if (sWhere.compareTo("")!=0)
 				//{
@@ -488,8 +483,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (importeIni!=0 && importeFin != 0)
 			{
-				logger.info("Buscando solicitudes por rango importe inicio: " + importeIni);
-				logger.info("Buscando solicitudes por rango importe fin: " + importeFin);
+				logger.info("[RepSolPorTipServicio]-Filtro rango importe inicio: " + importeIni);
+				logger.info("[RepSolPorTipServicio]-Filtro rango importe fin: " + importeFin);
 				
 				/*if (sWhere.compareTo("")!=0)
 				{
@@ -503,7 +498,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (cadEstudio.trim().compareTo("")!=0)
 			{
-				logger.info("Buscando por estudio: " + cadEstudio);
+				logger.info("[RepSolPorTipServicio]-Filtro estudio: " + cadEstudio);
 				
 				/*if (sWhere.compareTo("")!=0)
 				{
@@ -522,8 +517,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				String tmpFecIni = formato.format(dFechaInicio);
 				String tmpFecFin = formato.format(dFechaFin);
 				
-				logger.info("Buscando por fecha de inicio: " + dFechaInicio);
-				logger.info("Buscando por fecha de fin: " + dFechaFin);
+				logger.info("[RepSolPorTipServicio]-Filtro fecha de inicio: " + dFechaInicio);
+				logger.info("[RepSolPorTipServicio]-Filtro fecha de fin: " + dFechaFin);
 				
 				//sCadFecha = " and so.fecha between '" + tmpFecIni + "'" + " and '" + tmpFecFin + "'" +  " ";
 				
@@ -539,7 +534,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			
 			if (solicitud.getMoneda().trim().compareTo("")!=0)
 			{
-				logger.info("Buscando por moneda: " + solicitud.getMoneda());
+				logger.info("[RepSolPorTipServicio]-Filtro moneda: " + solicitud.getMoneda());
 				
 				/*if (sWhere.compareTo("")!=0)
 				{
@@ -568,7 +563,9 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_PROCEDENTE_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02 + "'," +
 						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02 + "'," +
-						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02 + "')" ;
+						" '" + ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02 + "'," +
+						// [16-10] Se agrega estado 'Improcedente' al query
+						" '"+ConstantesVisado.ESTADOS.ESTADO_COD_IMPROCEDENTE_T02 +" ')" ;
 		//	}
 			
 			if (idOpeBan.trim().compareTo("")!=0)
@@ -633,8 +630,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					  " order by so.cod_soli";
 			}*/
 			
-			
-			logger.info("SQL : "+sql);
+			logger.info("[RepSolPorTipServicio]-query: "+sql);
 			 
 			 final String sSQL=sql;
 			
@@ -650,7 +646,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			 
 			 if(ResultList.size()>0)
 			 {
-				logger.info("ResultList.size "+ResultList.size());
+				logger.info("[RepSolPorTipServicio]-Lista resultado-size: "+ResultList.size());
 				for(int i=0;i<=ResultList.size()-1;i++)
 				{
 				    Object[] row =  (Object[]) ResultList.get(i);
@@ -662,7 +658,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				    nuevo.setTipoOperacion(row[3].toString());
 				    nuevo.setMoneda(row[4].toString());
 				    
-				    if (row[4].toString().toLowerCase().equals("soles") || row[4].toString().toLowerCase().equals("dolares"))
+				    if (row[4].toString().toLowerCase().equals(ConstantesVisado.MONEDAS.SOLES.toLowerCase()) || row[4].toString().toLowerCase().equals(ConstantesVisado.MONEDAS.DOLARES.toLowerCase()))
 				    {
 				    	nuevo.setImporte(buscarAbrevMoneda(row[4].toString()) + row[5].toString());
 				    }
@@ -677,11 +673,9 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				    tmpLista.add(nuevo);
 				}
 				
-				logger.info("Tamanio Lista "+tmpLista.size());
+				logger.info("[RepSolPorTipServicio]-Tamanio lista final:"+tmpLista.size());
 			 }
-			 
 		}
-		
 		return tmpLista;
 	}
 	
@@ -689,17 +683,17 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	{
 		String abrev="";
 		
-		if (moneda.toLowerCase().equals("soles"))
+		if (moneda.toLowerCase().equals(ConstantesVisado.MONEDAS.SOLES.toLowerCase()))
 		{
 			abrev="S/.";
 		}
 		
-		if (moneda.toLowerCase().equals("dolares"))
+		if (moneda.toLowerCase().equals(ConstantesVisado.MONEDAS.DOLARES.toLowerCase()))
 		{
 			abrev="$";
 		}
 		
-		if (moneda.toLowerCase().equals("euros"))
+		if (moneda.toLowerCase().equals(ConstantesVisado.MONEDAS.EUROS.toLowerCase()))
 		{
 			abrev="€";
 		}
@@ -710,7 +704,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	@SuppressWarnings("unchecked")
 	public List<AgrupacionPlazoDto> obtenerLiquidacion (String cadEstudio, int anio, int mes, double impuesto) throws Exception
 	{
-		logger.info("En el obtenerLiquidacion");
+		logger.info("====== obtenerLiquidacion() - REPORTE ======");
 		
 		List<Liquidacion> tmpListaAT = new ArrayList<Liquidacion>();
 		List<Liquidacion> tmpListaFT = new ArrayList<Liquidacion>();
@@ -775,7 +769,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				"order by so.cod_estudio) A "  +
 				"group by DES_ESTUDIO,dia_atencion,filtro,costo";
 			
-			 logger.info("SQL : "+sql);
+			 logger.info("[RptLiquidac]-Query : "+sql);
 			 
 			 final String sSQL=sql;
 			
@@ -1303,7 +1297,8 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 	@SuppressWarnings("unchecked")
 	public List<AgrupacionPlazoDto> obtenerLiquidacion_2 (String cadEstudio, int anio, int mes, double impuesto) throws Exception
 	{
-		logger.info("En el obtenerLiquidacion");
+		logger.info("==== obtenerLiquidacion_2 () =====");
+		
 		
 		List<AgrupacionPlazoDto> tmpLista = new ArrayList<AgrupacionPlazoDto>();
 		
@@ -1315,22 +1310,20 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 		
 		if (cadEstudio != null && anio!=0 && mes!= 0)
 		{
-			if (cadEstudio.compareTo("")!=0)
-			{
-				logger.info("Buscando por estudio: " + cadEstudio );
+			if (cadEstudio.compareTo("")!=0){
+				logger.debug("[obtRepLiquid]-cadEstudio: "+cadEstudio);
 				sWhere += " and so.cod_estudio in (" + cadEstudio + ") ";
 			}
-			
-			if (anio!=0)
-			{
-				logger.info("Buscando por anio: " + anio );
+			if (anio!=0){
+				logger.debug("[obtRepLiquid]-anio: "+anio);
 				sWhere += " and to_char(hst.fecha, 'YYYY')= '" + anio  + "' " ;
 			}
-			
-			if (mes!=0)
-			{
-				logger.info("Buscando por mes: " + mes );
-				sWhere += " and to_char(hst.fecha, 'MM')= '0" + mes  + "' " ;
+			if (mes!=0){
+				logger.debug("[obtRepLiquid]-mes: "+mes);
+				//sWhere += " and to_char(hst.fecha, 'MM')= '0" + mes  + "' " ;
+				//TODO Se ha quitado la comillas. Ejm: '010' se cambia por 010, ya que el 
+				//query no funciona cuando esta con comillas
+				sWhere += " and to_char(hst.fecha, 'MM')= 0" + mes  + " " ;
 			}
 			
 			/*sql= "SELECT des_estudio,costo,dia_atencion, filtro, COUNT(filtro) contador " + 
@@ -1359,7 +1352,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 					"group by DES_ESTUDIO,dia_atencion,filtro,costo " +
 					"order by des_estudio,filtro,dia_atencion ";
 			
-			logger.info("SQL : "+sql);
+			logger.info("[obtRepLiquid]-query: "+sql);
 			 
 			final String sSQL=sql;
 			
@@ -1374,7 +1367,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				}
 			});
 			
-			logger.debug("---------Estudios encontrados---------");
+			logger.debug("[obtRepLiquid]- ---------Estudios encontrados---------");
 			
 			Object[] rowTMP = null;
 			/** Samira 18/10/2013 */
@@ -1383,7 +1376,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			for(int i=0;i<=ResultList.size()-1;i++)
 			{
 				rowTMP =  (Object[]) ResultList.get(i);
-				logger.debug("Estudio: " + rowTMP[0].toString()); 
+				logger.debug("[obtRepLiquid]-Estudio: " + rowTMP[0].toString()); 
 			}
 
 			if(ResultList.size()>0)
@@ -1576,7 +1569,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				     }
 				}
 							 
-				logger.info("Tamanio Lista:" + tmpLista.size());
+				logger.info("[obtRepLiquid]-Tamanio Lista:" + tmpLista.size());
 				
 				AgrupacionPlazoDto subTotales=new AgrupacionPlazoDto();
 				subTotales.setsId("");
@@ -1697,7 +1690,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				subTotales.setgTotal(total);				
 				
 				tmpLista.add(subTotales);
-				logger.info("Tamanio Lista Final:" + tmpLista.size());
+				logger.info("[obtRepLiquid]-Tamanio Lista Final:" + tmpLista.size());
 			}
 		}
 		
