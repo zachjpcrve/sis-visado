@@ -37,7 +37,7 @@
 								<td><h:outputText styleClass="outputText" id="txtOficina" value="Oficina:" /></td>
 								<td><p:autoComplete id="acNomOFina" value="#{reportesMB.oficinaRPT}"
 										completeMethod="#{seguimientoMB.completeNomOficina}" style="width:300px;"
-										var="ofi" converter="oficinaConverter" size="24" 
+										var="ofi" converter="oficinaConverter" size="50" 
 										itemLabel="#{ofi.nombreDetallado}" itemValue="#{ofi}"/>
 								</td>
 							</tr>
@@ -99,7 +99,7 @@
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
 						currentPageReportTemplate="Mostrando {startRecord} de {totalRecords}" 
 						rowsPerPageTemplate="5,10,15"
-						emptyMessage="No se encontraron registros que coinciden con los criterios de b&uacute;squeda ingresados"
+						emptyMessage="No se encontraron registros que coinciden con los criterios de búsqueda ingresados"
 						styleClass="anchoGrilla">
 
 						<p:column styleClass="territorio">
