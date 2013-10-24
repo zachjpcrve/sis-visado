@@ -120,11 +120,9 @@ public class MultiTablaMB {
 		try {
 			multiTablas = multiTablaService.listarMultiTabla(codigoSubTabla, codigoElemento);
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("multiTablaMB : listarMultiTabla : "
 					+ e.getLocalizedMessage());
 		}
-
 	}
 
 	

@@ -45,7 +45,6 @@ public class EstudioMB {
 		try {
 			estudios = estudioService.listarEstudios();
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("EstudioMB : listarEstudios : "
 					+ e.getLocalizedMessage());
 		}
@@ -104,7 +103,6 @@ public boolean validarEstudio(){
 			estudio = new TiivsEstudio();
 			obtenerMaximo();
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("EstudioMB : registrar " + e.getLocalizedMessage());
 			Utilitarios.mensajeError("Error",
 					"Error al registrar el Tipo de Clasificación");
@@ -153,7 +151,6 @@ public boolean validarEstudio(){
 			
 			bEditar = true;
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("DocumentoMB : listarDocumentos: "
 					+ ex.getLocalizedMessage());
 		}
@@ -197,7 +194,6 @@ public boolean validarEstudio(){
 
 			estudio.setCodEstudio(secuencial);
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("EstudioMB : obtenerMaximo " + e.getLocalizedMessage());
 		}
 	}
