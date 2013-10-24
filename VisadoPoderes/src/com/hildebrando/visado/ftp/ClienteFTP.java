@@ -43,7 +43,7 @@ public class ClienteFTP
         			logger.debug("Login fallido.");
         		}
         } catch (IOException e) {
-        	logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al conectarse al FTP debido a: "+e);
+        	logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al conectarse al FTP debido a: ", e);
         }
 	}
 
@@ -66,7 +66,7 @@ public class ClienteFTP
 				}		
 			}
 		}catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al setDirectorio: "+e);		
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al setDirectorio: ",e);		
 		}
 	}
 
@@ -111,7 +111,6 @@ public class ClienteFTP
 			ftpCliente.storeFile(file, fis);
 			
 		} catch (IOException e) {
-            e.printStackTrace();
             logger.error(e);
         } finally {
             try 
@@ -123,7 +122,6 @@ public class ClienteFTP
                // ftpCliente.disconnect();
             } catch (IOException e) {
             	logger.error(e);
-                e.printStackTrace();
             }
         }
 	}
@@ -148,10 +146,9 @@ public class ClienteFTP
 			ftpCliente.storeFile(file, fis);
 			logger.debug("[upLoad]-storeFile");
 		} catch (IOException e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"(IOException):"+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"(IOException): ",e);
         }catch(Exception e1){
-        	logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al subir archivos al ftp:"+e1);
-        	e1.printStackTrace();
+        	logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al subir archivos al ftp: ",e1);
         } 
 		finally {
             try 
@@ -162,8 +159,7 @@ public class ClienteFTP
                 }
                 //ftpCliente.disconnect();
             } catch (IOException e) {
-                e.printStackTrace();
-                logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IOException:"+e);
+                logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IOException: ",e);
             }
         }
 		logger.debug("=== saliendo de upLoadOneFiles() ===");
@@ -181,10 +177,9 @@ public class ClienteFTP
 			ftpCliente.rename(antiguoNombre, nuevoNombre);
 			ftpCliente.disconnect();
 		} catch (IOException e) {
-            e.printStackTrace();
-            logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IOException al renombrarArchivo:"+e);
+            logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"IOException al renombrarArchivo: ",e);
         }catch(Exception e1){
-        	logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al renombrarArchivo:"+e1);
+        	logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al renombrarArchivo: ",e1);
         } 
 	}
 
@@ -246,11 +241,10 @@ public class ClienteFTP
 			
 		} catch (IOException e) {
 			iRet = false;
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en downloadFile:"+e);
-            e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en downloadFile: ",e);
         } catch(Exception e1){
         	iRet = false;
-        	logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al retrieveFile:"+e1);
+        	logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al retrieveFile: ",e1);
         }
 		finally {
             try 
@@ -260,8 +254,7 @@ public class ClienteFTP
                 	fos.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-                logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en downloadFile-IOException:"+e);
+                logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en downloadFile-IOException: ", e);
             }
         }		
 		logger.debug("[RecuperarArchivo]-iRet: "+iRet);
