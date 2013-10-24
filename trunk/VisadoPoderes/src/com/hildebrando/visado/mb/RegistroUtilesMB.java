@@ -27,6 +27,7 @@ import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
+import com.bbva.persistencia.generica.util.Utilitarios;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsEstudio;
 import com.hildebrando.visado.modelo.TiivsFeriado;
@@ -492,15 +493,15 @@ public class RegistroUtilesMB {
 		Date fechaRetorno;	
 		logger.debug("[obtSiguienteDiaHabil]-fecha.DAY_OF_WEEK: "+fecha.get(Calendar.DAY_OF_WEEK));
 		fecha.add(Calendar.DATE, 1); // sumamos 1 día a la fecha			
-		if(fecha.get(Calendar.DAY_OF_WEEK)==7){ //si es sabado sumamos 2 dias a la fecha
+		if(fecha.get(Calendar.DAY_OF_WEEK)== Integer.parseInt(Utilitarios.getPropiedad("nroDiaSab"))){ //si es sabado sumamos 2 dias a la fecha
 			logger.info("Es SABADO");
 			logger.info("[obtSiguienteDiaHabil]-Sabado se agregara (02) dias.");
-			fecha.add(Calendar.DATE, 2);
+			fecha.add(Calendar.DATE, Integer.parseInt(Utilitarios.getPropiedad("sumNDSab")));
 			logger.info("[obtSiguienteDiaHabil]-Fecha:'" + fecha + "' es Sábado se obtendrá el siguiente día hábil ");
 		}		
-		if(fecha.get(Calendar.DAY_OF_WEEK)==1){ //si es Domingo sumamos 1 dia a la fecha
+		if(fecha.get(Calendar.DAY_OF_WEEK)== Integer.parseInt(Utilitarios.getPropiedad("nroDiaDom"))){ //si es Domingo sumamos 1 dia a la fecha
 			logger.info("Es DOMINGO");
-			fecha.add(Calendar.DATE, 1);
+			fecha.add(Calendar.DATE, Integer.parseInt(Utilitarios.getPropiedad("sumNDDom")));
 			logger.info("[obtSiguienteDiaHabil]-Fecha:'" + fecha + "' es Domingo se obtendrá el siguiente día hábil ");
 			logger.info("[obtSiguienteDiaHabil]-Domingo se agregara (01) dia");
 		}
