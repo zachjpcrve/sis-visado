@@ -1387,7 +1387,7 @@ public class RevocadosMB {
 		if(revocadoVer.getAliasArchivo()!=null){
 			flagLinkRevocados = 1;
 			String extension = revocadoVer.getAliasArchivo().substring(revocadoVer.getAliasArchivo().lastIndexOf("."));
-			sAliasTemporal = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA + extension;
+			sAliasTemporal = Utilitarios.getPropiedad(ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA) + extension;
 			aliasCortoDocumento = revocadoVer.getAliasArchivo();
 		}
 	}
@@ -1409,7 +1409,7 @@ public class RevocadosMB {
 		if(revocadoEdit.getAliasArchivo()!=null){
 			extension = revocadoEdit.getAliasArchivo().substring(revocadoEdit.getAliasArchivo().lastIndexOf("."));
 			flagLinkRevocados = 1;
-			sAliasTemporal = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA + extension;
+			sAliasTemporal = Utilitarios.getPropiedad(ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA) + extension;
 			aliasCortoDocumento = revocadoEdit.getAliasArchivo();	
 		}else{
 			flagLinkRevocados = 0;
@@ -1438,7 +1438,7 @@ public class RevocadosMB {
 		sAliasTemporal = null;
 		aliasCortoDocumento = null;
 
-		visadoDocumentosMB.setDocumentosLeer(ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA + ConstantesVisado.EXTENSION_PDF);
+		visadoDocumentosMB.setDocumentosLeer(Utilitarios.getPropiedad(ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA) + ConstantesVisado.EXTENSION_PDF);
 	}
 	
 	public void editActRevocado() {
@@ -1451,7 +1451,7 @@ public class RevocadosMB {
 		if(revocadoEdit.getAliasArchivo()!=null){
 			extension = revocadoEdit.getAliasArchivo().substring(revocadoEdit.getAliasArchivo().lastIndexOf("."));
 			flagLinkRevocados = 1;
-			sAliasTemporal = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA + extension;
+			sAliasTemporal = Utilitarios.getPropiedad(ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA) + extension;
 			aliasCortoDocumento = revocadoEdit.getAliasArchivo();	
 		}else{
 			flagLinkRevocados = 0;
@@ -1544,6 +1544,7 @@ public class RevocadosMB {
 	}
 	
 	public void limpiarCriteriosBusqueda() {
+		logger.debug("==limpiarCriteriosBusqueda==");
 //		objTiivsPersonaBusquedaDlg.setCodCen("");
 //		objTiivsPersonaBusquedaDlg.setCodCen("");
 //		objTiivsPersonaAgregar.setClasifPer("");
@@ -2899,7 +2900,7 @@ public class RevocadosMB {
 		boolean exito = true;
 		
 		if(fileUpload!=null){
-			aliasCortoDocumento = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA;
+			aliasCortoDocumento = Utilitarios.getPropiedad(ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA);
 			String extension = fileUpload.getFileName().substring(getFileUpload().getFileName().lastIndexOf("."));
 			sAliasTemporal = aliasCortoDocumento + extension;
 			fileBytes = getFileUpload().getContents();
@@ -2992,7 +2993,7 @@ public class RevocadosMB {
 	    
 	    setFileUpload(event.getFile());
 	     
-	    aliasCortoDocumento = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA;
+	    aliasCortoDocumento = Utilitarios.getPropiedad(ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA);
 		String extension = fileUpload.getFileName().substring(getFileUpload().getFileName().lastIndexOf("."));
 		sAliasTemporal = aliasCortoDocumento + extension;
 			
@@ -3010,7 +3011,7 @@ public class RevocadosMB {
 			flagLinkRevocados = 1;
 			String extension = revocadoEdit.getAliasArchivo().substring(revocadoEdit.getAliasArchivo().lastIndexOf("."));	
 			aliasCortoDocumento = revocadoEdit.getAliasArchivo();
-			sAliasTemporal = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA + extension;
+			sAliasTemporal = Utilitarios.getPropiedad(ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA) + extension;
 			logger.debug("[actArchivo]-sAliasTemporal: "+sAliasTemporal);
 		}
 		logger.info("=== fin de actualizarArchivo() === ");
@@ -3038,7 +3039,7 @@ public class RevocadosMB {
 				aliasCortoDocumento = archivo;
 				extension = archivo.substring(archivo.lastIndexOf("."));
 			}
-			sAliasTemporal = ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA + extension;
+			sAliasTemporal = Utilitarios.getPropiedad(ConstantesVisado.NOMBRE_ARCHIVO_REVOCATORIA) + extension;
 			flagLinkRevocados = 1;
 		}
 	 }
@@ -3081,7 +3082,6 @@ public class RevocadosMB {
 					FileUtils.copyFile(fichTemp, destFile);
 				} catch (IOException e) {
 					logger.error("Error al descargar archivo: "	+ ubicacionLocal ,e);
-					e.printStackTrace();
 				}
 			}
 			
@@ -3358,6 +3358,7 @@ public class RevocadosMB {
 	
 	public void limpiarFiltros()
 	{
+		logger.debug("== limpiarFiltros ==");
 		setObjTiivsPersonaBusqueda(new TiivsPersona());
 		setObjTiivsPersonaBusquedaNombre(new TiivsPersona());
 		setEstadoRevocado("");
