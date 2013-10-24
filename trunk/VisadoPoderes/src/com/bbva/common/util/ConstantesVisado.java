@@ -44,12 +44,14 @@ public class ConstantesVisado {
 	public static final String ACTIVA_ADVERTENCIA = "0002";
 	public static final String ACTIVA_RESTRICTIVA = "0003";
 	
+	public static final String CODIGO_MULTITABLA_DICTAMEN_FLUJO = "T19";
+	
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
 	
 	public static final String FLUJO_ESTADO = "F";
 	
-	public static final String NOMBRE_ARCHIVO_REVOCATORIA = "SUSTREVOC"; //  SUSTENTO_DE_REVOCACION  DOREV
+	public static final String NOMBRE_ARCHIVO_REVOCATORIA = "DocSustRevocatoria"; //  SUSTENTO_DE_REVOCACION
 	
 	public static final java.lang.String ID_RANGO_IMPORTE_MENOR_CINCUENTA = "0001";
 	public static final java.lang.String ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE = "0002";
@@ -507,7 +509,7 @@ public class ConstantesVisado {
 	}
 	
 		public static final int DOCUMENTO_OBLIGATORIO = 1;
-		public static final String CARPETA_LOG_CLIENTE = "C:/Visado Poderes/log";
+		public static final String CARPETA_LOG_CLIENTE = "D:/VisadoPoderes/Log";
 		public static final String KEY_PATH_FILE_SERVER = "path_file_server";
 	
 	static public class MENSAJE_CARTA_ATENCION {
@@ -526,6 +528,9 @@ public class ConstantesVisado {
 		public static final String FECHAFIN_MENOR = "La Fecha Inicio no puede ser mayor a la Fecha Fin ";
 		public static final String OCURRE_ERROR_CONSULT = OCURRE_ERROR+"al consultar";
 		public static final String SI_RESULTADOS = "Se han encontrado resultados";
+		public static final String OCURRE_ERROR_ABRIR_ARCHIV_EXCEL = OCURRE_ERROR+"al abrir el archivo excel ";
+		public static final String FECHINICIO_DEBE_SER_MENOR_FECHFIN = "La fecha de inicio debe ser menor a la fecha de fin";
+		public static final String SE_DICTAMINO_CON_EXITO="Se dictaminó correctamente la solicitud";
 	}
 	static public class SEGURIDAD{
 		public static final String USER_ACCESO_OK = "El usuario ha accedido correctamente al sistema.";
