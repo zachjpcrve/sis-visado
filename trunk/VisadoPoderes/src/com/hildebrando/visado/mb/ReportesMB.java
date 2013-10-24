@@ -186,7 +186,6 @@ public class ReportesMB {
 				}
 			}
 		}
-
 		return impuesto;
 	}
 
@@ -195,18 +194,13 @@ public class ReportesMB {
 		logger.info("Mes seleccionado: " + getMes());
 		logger.info("Anio seleccionado: " + getAnio());
 
-		String sAnio = "";
-		
-		if (getAnio() == 0) 
-		{
+		String sAnio = "";		
+		if (getAnio() == 0){
 			sAnio = "2013"; //TODO Cambiar este dato en el archivo properties
 			setTextoAnioMes(Utilitarios.buscarMesxCodigo(getMes()) + ConstantesVisado.ESPACIO_BLANCO + sAnio);
-		} 
-		else 
-		{
+		}else {
 			setTextoAnioMes(Utilitarios.buscarMesxCodigo(getMes()) + ConstantesVisado.ESPACIO_BLANCO + Utilitarios.buscarAnioxCodigo(getAnio()));
 		}
-		
 	}
 
 	public void inicializarCampos() {
@@ -234,14 +228,13 @@ public class ReportesMB {
 
 	public String obtenerGenerador() {
 		String resultado = "";
-
 		if (usuario != null) {
 			resultado = usuario.getUID() + ConstantesVisado.GUION
 					+ usuario.getNombre() + ConstantesVisado.ESPACIO_BLANCO
 					+ usuario.getApellido1() + ConstantesVisado.ESPACIO_BLANCO
 					+ usuario.getApellido2();
 		} else {
-			logger.error("Error al obtener datos del usuario de session para mostrar en el excel");
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener datos del usuario de session para mostrar en el excel");
 		}
 		return resultado;
 	}
@@ -267,7 +260,6 @@ public class ReportesMB {
 				}
 			}
 		}
-
 		return resultado;
 	}
 
@@ -378,66 +370,62 @@ public class ReportesMB {
 	public void buscarLiquidacion() 
 	{
 		if(validarReporteLiquidacion()!=false){
+			SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
+			// Busqueda por estudio
+			String cadEstudio = "";
+			if (lstEstudioSelected.size() > 0) {
+				for (String estado : lstEstudioSelected) {
+					cadEstudio += "'" + estado + "',";
+				}
+				cadEstudio = cadEstudio.substring(0, cadEstudio.lastIndexOf(","));
+			}
+
+			// Busqueda por anio
+			int pAnio = 0;
 	
-		SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
-
-		// Busqueda por estudio
-		String cadEstudio = "";
-
-		if (lstEstudioSelected.size() > 0) {
-			for (String estado : lstEstudioSelected) {
-				cadEstudio += "'" + estado + "',";
+			if (getAnio() != 0) {
+				switch (getAnio()) {
+				case 1:
+					pAnio = 2013;
+					break;
+				case 2:
+					pAnio = 2014;
+					break;
+				case 3:
+					pAnio = 2015;
+					break;
+				case 4:
+					pAnio = 2016;
+					break;
+				case 5:
+					pAnio = 2017;
+					break;
+				case 6:
+					pAnio = 2018;
+					break;
+				default:
+					break;
+				}
 			}
-			cadEstudio = cadEstudio.substring(0, cadEstudio.lastIndexOf(","));
-		}
 
-		// Busqueda por anio
-		int pAnio = 0;
-
-		if (getAnio() != 0) {
-			switch (getAnio()) {
-			case 1:
-				pAnio = 2013;
-				break;
-			case 2:
-				pAnio = 2014;
-				break;
-			case 3:
-				pAnio = 2015;
-				break;
-			case 4:
-				pAnio = 2016;
-				break;
-			case 5:
-				pAnio = 2017;
-				break;
-			case 6:
-				pAnio = 2018;
-				break;
-			default:
-				break;
+			// Busqueda por mes
+			int mes = 0;	
+			if (getMes() != 0) {
+				mes = getMes();
 			}
-		}
+	
+			try {
+				this.lstLiquidacion = solicitudService.obtenerLiquidacion_2(cadEstudio, pAnio, mes, impuesto);
+			}catch (Exception e) {
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar lstLiquidacion: ",e);
+			}
 
-		// Busqueda por mes
-		int mes = 0;
-
-		if (getMes() != 0) {
-			mes = getMes();
-		}
-
-		try {
-			this.lstLiquidacion = solicitudService.obtenerLiquidacion_2(cadEstudio, pAnio, mes, impuesto);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		if (lstLiquidacion.size() > 1) {
-			setNoHabilitarExportar(false);
-		} else {
-			setNoHabilitarExportar(true);
-			Utilitarios.mensaje(ConstantesVisado.MENSAJE.NO_RESULTADOS, "");
-		}
+			if (lstLiquidacion.size() > 1) {
+				setNoHabilitarExportar(false);
+			} else {
+				setNoHabilitarExportar(true);
+				Utilitarios.mensaje(ConstantesVisado.MENSAJE.NO_RESULTADOS, "");
+			}
 		}
 	}
 
@@ -482,7 +470,7 @@ public class ReportesMB {
 		try {
 			this.lstRecaudacionTipoServ = solicitudService.obtenerListarRecaudacionxTipoServicio(tmpSolicitud,tmpTerr,fechaIni, fechaFin);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar lstRecaudacionTipoServ: ",e);
 		}
 
 		int iNuevoTotal = lstRecaudacionTipoServ.size() - 1;
@@ -502,16 +490,12 @@ public class ReportesMB {
 			GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit
 					.getApplicationContext().getBean("genericoDao");
 			Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
-			filtroOfic.createAlias(ConstantesVisado.NOM_TBL_TERRITORIO,
-					ConstantesVisado.ALIAS_TBL_TERRITORIO);
-			filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_TERR_ALIAS,
-					getIdTerr()));
+			filtroOfic.createAlias(ConstantesVisado.NOM_TBL_TERRITORIO,ConstantesVisado.ALIAS_TBL_TERRITORIO);
+			filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_TERR_ALIAS,getIdTerr()));
 			
 			Busqueda filtroOfic1 = Busqueda.forClass(TiivsOficina1.class);
-			filtroOfic1.createAlias(ConstantesVisado.NOM_TBL_TERRITORIO,
-					ConstantesVisado.ALIAS_TBL_TERRITORIO);
-			filtroOfic1.add(Restrictions.eq(ConstantesVisado.CAMPO_TERR_ALIAS,
-					getIdTerr()));
+			filtroOfic1.createAlias(ConstantesVisado.NOM_TBL_TERRITORIO,ConstantesVisado.ALIAS_TBL_TERRITORIO);
+			filtroOfic1.add(Restrictions.eq(ConstantesVisado.CAMPO_TERR_ALIAS,getIdTerr()));
 
 			List<TiivsOficina1> lstTmp = new ArrayList<TiivsOficina1>();
 
@@ -521,16 +505,14 @@ public class ReportesMB {
 				combosMB.setLstOficina(ofiDAO.buscarDinamico(filtroOfic));
 				filtroOfic1.addOrder(Order.asc("desOfi"));
 				combosMB.setLstOficina1(ofiDAO.buscarDinamico(filtroOfic1));
-
 			} catch (Exception exp) {
-				logger.error("No se pudo encontrar la oficina");
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la oficina: ",exp);
 			}
 
 			if (lstTmp.size() > 0) {
 				setIdOfi(lstTmp.get(0).getCodOfi());
 				setIdOfi1(lstTmp.get(0).getCodOfi());
 			}
-
 		} else {
 			// Carga combo de Territorio
 			GenericDao<TiivsTerritorio, Object> terrDAO = (GenericDao<TiivsTerritorio, Object>) SpringInit
@@ -540,7 +522,7 @@ public class ReportesMB {
 			try {
 				combosMB.setLstTerritorio(terrDAO.buscarDinamico(filtroTerr));
 			} catch (Exception e1) {
-				logger.debug("Error al cargar el listado de territorios");
+				logger.error("Error al cargar el listado de territorios: ",e1);
 			}
 
 			// Cargar combos de oficina
@@ -553,7 +535,7 @@ public class ReportesMB {
 				combosMB.setLstOficina1(ofiDAO.buscarDinamico(filtroOfic));
 
 			} catch (Exception exp) {
-				logger.debug("No se pudo encontrar la oficina");
+				logger.error("No se pudo encontrar la oficina: ",exp);
 			}
 		}
 	}
@@ -564,15 +546,13 @@ public class ReportesMB {
 		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
-		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,
-				getIdOfi()));
+		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,getIdOfi()));
 
 		List<TiivsOficina1> lstTmp = new ArrayList<TiivsOficina1>();
-
 		try {
 			lstTmp = ofiDAO.buscarDinamico(filtroOfic);
 		} catch (Exception exp) {
-			logger.debug("No se pudo encontrar el nombre de la oficina");
+			logger.error("No se pudo encontrar el nombre de la oficina: ",exp);
 		}
 
 		if (lstTmp.size() > 0) {
@@ -588,15 +568,13 @@ public class ReportesMB {
 		GenericDao<TiivsOficina1, Object> ofiDAO = (GenericDao<TiivsOficina1, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroOfic = Busqueda.forClass(TiivsOficina1.class);
-		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,
-				codigo));
+		filtroOfic.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA,codigo));
 
 		List<TiivsOficina1> lstTmp = new ArrayList<TiivsOficina1>();
-
 		try {
 			lstTmp = ofiDAO.buscarDinamico(filtroOfic);
 		} catch (Exception exp) {
-			logger.debug("No se pudo encontrar el nombre de la oficina");
+			logger.error("No se pudo encontrar el nombre de la oficina: ",exp);
 		}
 
 		if (lstTmp.size() == 1) {
@@ -621,13 +599,12 @@ public class ReportesMB {
 		try {
 			lstTmp = tDAO.buscarDinamico(filtroT);
 		} catch (Exception exp) {
-			logger.error("No se pudo encontrar el nombre del territorio", exp);
+			logger.error("No se pudo encontrar el nombre del territorio: ", exp);
 		}
 
 		if (lstTmp.size() == 1) {
 			resultado = lstTmp.get(0).getDesTer();
 		}
-
 		return resultado;
 	}
 
@@ -645,7 +622,7 @@ public class ReportesMB {
 		try {
 			lstTmp = ofiDAO.buscarDinamico(filtroOfic);
 		} catch (Exception exp) {
-			logger.debug("No se pudo encontrar el codigo de la oficina");
+			logger.error("No se pudo encontrar el codigo de la oficina: ",exp);
 		}
 
 		if (lstTmp.size() == 1) {
@@ -694,7 +671,7 @@ public class ReportesMB {
 		try {
 			this.lstSolicitudesOficina = solicitudService.obtenerListarTotalSolicitudesxEstado(tmpSolicitud,territorio,fechaIni, fechaFin);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtenerListarTotalSolicitudesxEstado: ",e);
 		}
 
 		int iNuevoTotal = lstSolicitudesOficina.size() - 1;
@@ -826,7 +803,7 @@ public class ReportesMB {
 						tmpSolicitud,Utilitarios.validarCampoNull(getIdOpeBan()),cadTipoServ, cadEstudio, rangoImpG, rangoIni,rangoFin, fechaIni, fechaFin);
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 		}
 		else
@@ -853,14 +830,13 @@ public class ReportesMB {
 	@SuppressWarnings("unchecked")
 	public void buscarSolicitudesExtractor() 
 	{
-		logger.info("Buscando solicitudes RPT Extractor:");
+		logger.info("==== buscarSolicitudesExtractor- REPORTE =====");
 		
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
 
 		// Busqueda por fecha de Registro
 		if (getFechaInicio() != null && getFechaFin() != null) {
-			
 			try {
 					SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 					String fecIni = formatter.format(getFechaInicio());
@@ -869,27 +845,23 @@ public class ReportesMB {
 					Date maxDate = formatter.parse(fecFin);
 					Date rangoFin = new Date(maxDate.getTime() + TimeUnit.DAYS.toMillis(1));
 
-					logger.info("Fecha Inicio: " + minDate);
-					logger.info("Fecha Fin: " + rangoFin);
+					logger.info("[rptExtractor]-Filtro Fecha Inicio: " + minDate);
+					logger.info("[rptExtractor]-Filtro Fecha Fin: " + rangoFin);
 
 					filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_REGISTRO, minDate));
 					filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_REGISTRO, rangoFin));
 			} catch (ParseException e) {
-				logger.info("Hubo un error al convertir la fecha: ", e);
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al convertir la fecha: ", e);
 			}
 		}
 
 		// Busqueda por estado de la solicitud
 		if (lstEstadoSelected.size() > 0) {
 			int ind = 0;
-
 			for (; ind <= lstEstadoSelected.size() - 1; ind++) {
-				logger.info("Filtro por estado [" + ind + "]"
-						+ lstEstadoSelected.get(ind));
+				logger.info("[rptExtractor]-Filtro por estado [" + ind + "]  " + lstEstadoSelected.get(ind));
 			}
-
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,
-					lstEstadoSelected));
+			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,lstEstadoSelected));
 		}
 
 		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
@@ -897,9 +869,11 @@ public class ReportesMB {
 		// Buscar solicitudes de acuerdo a criterios seleccionados
 		try {
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
+			if(solicitudes!=null){
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"solicitudes RptExtractor es:"+solicitudes.size());
+			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.debug("Error al buscar las solicitudes: " + ex.getStackTrace());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al buscar las solicitudes: " , ex);
 		}
 
 		if (solicitudes.size() > 0) 
@@ -985,14 +959,13 @@ public class ReportesMB {
 				}
 			}
 		} catch (Exception exp) {
-			logger.debug("No se pudo encontrar el historial de la solicitud");
-			exp.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al encontrar el historial de la solicitud: ",exp);
 		}
-
 	}
 
 	private void actualizarDatosDeBusqueda() 
 	{
+		logger.debug("== actualizarDatosDeBusqueda() ==");
 		String cadena = "";
 
 		// Se obtiene y setea la descripcion del Estado en la grilla
@@ -1202,8 +1175,7 @@ public class ReportesMB {
 			HSSFWorkbook wb = new HSSFWorkbook();
 
 			// Creo la Hoja en Excel
-			Sheet sheet = wb
-					.createSheet(Utilitarios.obtenerFechaArchivoExcel());
+			Sheet sheet = wb.createSheet(Utilitarios.obtenerFechaArchivoExcel());
 
 			// quito las lineas del libro para darle un mejor acabado
 			sheet.setDisplayGridlines(false);
@@ -1216,8 +1188,7 @@ public class ReportesMB {
 					ConstantesVisado.TITULO_REPORTE_RPT_TIPO_SERV, 12);
 			sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 4));
 
-			// Se crea la leyenda de quien genero el archivo y la hora
-			// respectiva
+			// Se crea la leyenda de quien genero el archivo y la hora respectiva
 			// Row rowG = sheet.createRow((short) 1);
 
 			Utilitarios.crearCell(wb, trow, 6, CellStyle.ALIGN_LEFT,
@@ -1582,8 +1553,7 @@ public class ReportesMB {
 			}
 
 		} catch (Exception e) {
-			logger.error(
-					"Error al exportar datos a excel del Rpt SolicitudTipoServ",
+			logger.error("Error al exportar datos a excel del Rpt SolicitudTipoServ",
 					e);
 			// logger.info("Error al generar el archivo excel debido a: " +
 			// e.getStackTrace());
@@ -1603,8 +1573,7 @@ public class ReportesMB {
 			result = mDAO.buscarDinamico(filtroM);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.debug("Error el estudio asociado al abogado");
+			logger.error("Error el estudio asociado al abogado: ",ex);
 		}
 
 		if (result != null) {
@@ -3617,7 +3586,7 @@ public class ReportesMB {
 					OutputStream os = externalContext.getResponseOutputStream();
 					os.flush();
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"",e);
 				}
 
 				// FacesContext context = FacesContext.getCurrentInstance();
@@ -3697,12 +3666,13 @@ public class ReportesMB {
 				}
 			}
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " , e);
 		}
 	}
 
 	private void rptExtractor() 
 	{
+		logger.debug("== rptExtractor() ==");
 		try 
 		{
 			if (solicitudes.size() == 0) 
@@ -3988,7 +3958,10 @@ public class ReportesMB {
 					int fila = row.getRowNum();
 					int filaTmp = row.getRowNum();
 					List<AgrupacionSimpleDto> tmpListaAgrupaciones = buscarAgrupacionesxSolicitud(tmp.getCodSoli());
-
+					if(tmpListaAgrupaciones!=null){
+						logger.debug("rptExtractor:Size Agrupaciones: "+tmpListaAgrupaciones.size());
+					}
+					
 					for (AgrupacionSimpleDto tmpAgrup : tmpListaAgrupaciones) 
 					{
 						if (tmpAgrup.getId().getCodSoli().equals(tmp.getCodSoli())) 
@@ -4001,7 +3974,8 @@ public class ReportesMB {
 								Utilitarios.SetearEstiloCelda(wb, row, 10,tmpPersonaPod.getCodCen(), estilo);
 
 								// Columna Poderdante en Excel
-								Utilitarios.SetearEstiloCelda(wb, row, 11,tmpPersonaPod.getNombre()+ " " + tmpPersonaPod.getApePat() + " " + tmpPersonaPod.getApeMat(), estilo);
+								// [16-10] Se agrega validacion para las descripciones nulas
+								Utilitarios.SetearEstiloCelda(wb, row, 11,Utilitarios.validarCampoNull(tmpPersonaPod.getNombre())+ " " + Utilitarios.validarCampoNull(tmpPersonaPod.getApePat()) + " " + Utilitarios.validarCampoNull(tmpPersonaPod.getApeMat()), estilo);
 
 								// Columna Tipo DOI en Excel
 								Utilitarios.SetearEstiloCelda(wb,row,12,obtenerDescripcionDocumentos(tmpPersonaPod.getTipDoi().trim()),estilo);
@@ -4058,7 +4032,7 @@ public class ReportesMB {
 								// false,true,HSSFColor.DARK_BLUE.index);
 
 								// Columna Poderdante en Excel
-								Utilitarios.SetearEstiloCelda(wb,row,15,tmpPersonaApod.getNombre() + " " + tmpPersonaApod.getApePat() + " " + tmpPersonaApod.getApeMat(),estilo);
+								Utilitarios.SetearEstiloCelda(wb,row,15,Utilitarios.validarCampoNull(tmpPersonaApod.getNombre()) + " " + Utilitarios.validarCampoNull(tmpPersonaApod.getApePat()) + " " + Utilitarios.validarCampoNull(tmpPersonaApod.getApeMat()),estilo);
 								// Utilitarios.crearCell(wb, row, 13,
 								// HSSFCellStyle.ALIGN_LEFT,HSSFCellStyle.VERTICAL_CENTER,
 								// tmpPersonaApod.getNombre() + " " +
@@ -4111,7 +4085,6 @@ public class ReportesMB {
 								// true, false,true,HSSFColor.DARK_BLUE.index);
 
 								
-
 								row.setRowNum(filaTmp);
 							}
 							
@@ -4435,8 +4408,6 @@ public class ReportesMB {
 
 		} catch (Exception e) {
 			logger.error("Error al exportar datos a excel del Rpt Extractor", e);
-			// logger.info("Error al generar el archivo excel debido a: " +
-			// e.getStackTrace());
 		}
 	}
 	
@@ -4494,7 +4465,7 @@ public class ReportesMB {
 		try {
 			tmpLista = solicDAO.buscarDinamico(filtro);
 		} catch (Exception ex) {
-			logger.error("Error al buscar los tipos de comision: " + ex.getMessage());
+			logger.error("Error al buscar los tipos de comision: " ,ex);
 		}
 
 		if (tmpLista.size() > 0) {
@@ -4517,7 +4488,7 @@ public class ReportesMB {
 		try {
 			tmpLista = solicDAO.buscarDinamico(filtro);
 		} catch (Exception ex) {
-			logger.debug("Error al validar si la solicitud tiene reclamo: " + ex.getMessage());
+			logger.error("Error al validar si la solicitud tiene reclamo: " ,ex);
 		}
 
 		if (tmpLista.size() > 0) {
@@ -4542,7 +4513,7 @@ public class ReportesMB {
 		try {
 			tmpLista = solicDAO.buscarDinamico(filtro);
 		} catch (Exception ex) {
-			logger.debug("Error al validar si la solicitud tiene reclamo: " + ex.getMessage());
+			logger.error("Error al validar si la solicitud tiene reclamo: " ,ex);
 		}
 
 		if (tmpLista.size() > 0) {
@@ -4623,11 +4594,9 @@ public class ReportesMB {
 				Desktop.getDesktop().open(new File(rutaArchivoExcel));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-			logger.debug("Error al abrir archivo excel debido a: "
-					+ e.getMessage());
+			logger.error("Error al abrir archivo excel debido a: ",e);
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_ABRIR_ARCHIV_EXCEL+": ",e1);
 		}
 	}
 
@@ -4640,11 +4609,9 @@ public class ReportesMB {
 				Desktop.getDesktop().open(new File(rutaArchivoExcel));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-			logger.debug("Error al abrir archivo excel debido a: "
-					+ e.getMessage());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_ABRIR_ARCHIV_EXCEL+"(IO): ",e);
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_ABRIR_ARCHIV_EXCEL+": ",e1);
 		}
 	}
 
@@ -4657,11 +4624,9 @@ public class ReportesMB {
 				Desktop.getDesktop().open(new File(rutaArchivoExcel));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-			logger.debug("Error al abrir archivo excel debido a: "
-					+ e.getMessage());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_ABRIR_ARCHIV_EXCEL+"(IO): ",e);
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_ABRIR_ARCHIV_EXCEL+": ",e1);
 		}
 	}
 
@@ -4674,11 +4639,9 @@ public class ReportesMB {
 				Desktop.getDesktop().open(new File(rutaArchivoExcel));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-			logger.debug("Error al abrir archivo excel debido a: "
-					+ e.getMessage());
+			logger.error("Error al abrir archivo excel debido a: ",e);
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_ABRIR_ARCHIV_EXCEL+": ",e1);
 		}
 	}
 
@@ -4718,11 +4681,10 @@ public class ReportesMB {
 				try {
 					stream = new FileInputStream(rutaArchivoExcel);
 				}catch (NullPointerException e) {
-					logger.debug("Error de nullPointerException: "+ rutaArchivoExcel+" :::: "+ e.getMessage());
+					logger.error("Error de nullPointerException: "+ rutaArchivoExcel+" :::: ",e);
 					
 				} catch (FileNotFoundException e) {
-					logger.debug("Error al obtener archivo excel debido a: "
-							+ e.getMessage());
+					logger.error("Error al obtener archivo excel debido a: ",e);
 				}
 
 				if (stream != null) {
@@ -4931,7 +4893,7 @@ public class ReportesMB {
 		try {
 			lstHistorial = busqHisDAO.buscarDinamico(filtro);
 		} catch (Exception e) {
-			logger.debug("Error al buscar en historial de solicitudes");
+			logger.error("Error al buscar en historial de solicitudes: ",e);
 		}
 
 		lstSolicitudesSelected.clear();
@@ -4987,7 +4949,7 @@ public class ReportesMB {
 		try {
 			tmpLista = busDAO.buscarDinamico(filtro);
 		} catch (Exception e) {
-			logger.debug("Error al buscar codigos de estados");
+			logger.error("Error al buscar codigos de estados: ",e);
 		}
 		
 		if (tmpLista.size()>0)
@@ -5093,7 +5055,7 @@ public class ReportesMB {
 			try {
 				lstTmp = terrDAO.buscarDinamico(filtroTerr);
 			} catch (Exception exp) {
-				logger.debug("No se pudo encontrar el nombre del territorio");
+				logger.error("No se pudo encontrar el nombre del territorio: ",exp);
 			}
 
 			if (lstTmp.size() == 1) {
