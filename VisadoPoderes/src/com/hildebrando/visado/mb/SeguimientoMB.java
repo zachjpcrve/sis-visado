@@ -70,7 +70,7 @@ import com.hildebrando.visado.service.NivelService;
 @SessionScoped
 public class SeguimientoMB 
 {
-	List<TiivsOficina1> listaOficinasValidar ;//= new ArrayList<TiivsOficina1>();
+	/*List<TiivsOficina1> listaOficinasValidar ;//= new ArrayList<TiivsOficina1>();
 	
     public List<TiivsOficina1> getListaOficinasValidar() {
 		return this.listaOficinasValidar;
@@ -78,7 +78,7 @@ public class SeguimientoMB
 
 	public void setListaOficinasValidar(List<TiivsOficina1> listaOficinasValidar) {
 		this.listaOficinasValidar = listaOficinasValidar;
-	}
+	}*/
 
 	@ManagedProperty(value = "#{pdfViewerMB}")
 	private PDFViewerMB pdfViewerMB;
@@ -676,7 +676,7 @@ public class SeguimientoMB
 			//Carga las operaciones bancarias asociadas a una solicitud
 			cadena="";
 			
-			
+			// [16-10] Se agrega para mostrar las Operaciones Bancarias en la grilla, antes no se mostraba.
 			listarOperacionesBancarias();
 			
 			for (TiivsSolicitudOperban tmp: lstSolOperBan)
@@ -1728,12 +1728,12 @@ public class SeguimientoMB
 			{
 				if (getFechaFin().before(getFechaInicio()))
 				{
-					logger.debug("La fecha de inicio debe ser menor a la fecha de fin");
-					Utilitarios.mensajeInfo("", "La fecha de inicio debe ser menor a la fecha de fin");
+					logger.debug(ConstantesVisado.MENSAJE.FECHINICIO_DEBE_SER_MENOR_FECHFIN);
+					Utilitarios.mensajeInfo("", ConstantesVisado.MENSAJE.FECHINICIO_DEBE_SER_MENOR_FECHFIN);
 				}
 				else
 				{
-					logger.info("Filtrando por fecha de envio");
+					logger.info("[Seguimiento-busqSolicit]-FechaEnvio");
 					
 				 	try {
 						SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
@@ -1743,18 +1743,19 @@ public class SeguimientoMB
 						Date maxDate = formatter.parse(fecFin);
 						Date rangoFin = new Date(maxDate.getTime() + TimeUnit.DAYS.toMillis(1));
 						
-						logger.info("Fecha Inicio: " + minDate);
-						logger.info("Fecha Fin: " + rangoFin);
+						logger.info("[Seguimiento-busqSolicit]-FechaEnvio-Inicio: " + minDate);
+						logger.info("[Seguimiento-busqSolicit]-FechaEnvio-Fin: " + rangoFin);
 						
 						filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_ENVIO, minDate));
 						filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_ENVIO, rangoFin));
 						
+						////[21-10] [DC] Mejora: Se quita los filtros 'Estado' en el filtro 'Fecha Envio'
 						//Verificar que el campo estado no tenga espacios en blanco en BD
-						filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02));
-						filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
+						//filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_ESTADO,ConstantesVisado.ESTADOS.ESTADO_COD_ENVIADOSSJJ_T02));
+						//filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 						
 					} catch (ParseException e) {
-						logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al formatearFecha",e);
+						logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al parsear la Fecha Envio: ",e);
 					}
 				 	
 				 	filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
@@ -1764,12 +1765,12 @@ public class SeguimientoMB
 			{
 				if (getFechaFin().before(getFechaInicio()))
 				{
-					logger.debug("La fecha de inicio debe ser menor a la fecha de fin");
-					Utilitarios.mensajeInfo("", "La fecha de inicio debe ser menor a la fecha de fin");
+					logger.debug(ConstantesVisado.MENSAJE.FECHINICIO_DEBE_SER_MENOR_FECHFIN);
+					Utilitarios.mensajeInfo("", ConstantesVisado.MENSAJE.FECHINICIO_DEBE_SER_MENOR_FECHFIN);
 				}
 				else
 				{
-					logger.info("Filtrando por fecha de rpta");
+					logger.info("[Seguimiento-busqSolicit]-Fecha Respuesta");
 									
 					try {
 						SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
@@ -1779,22 +1780,23 @@ public class SeguimientoMB
 						Date maxDate = formatter.parse(fecFin);
 						Date rangoFin = new Date(maxDate.getTime() + TimeUnit.DAYS.toMillis(1));
 						
-						logger.info("Fecha Inicio: " + minDate);
-						logger.info("Fecha Fin: " + rangoFin);
+						logger.info("[FechaRpta]-Inicio: " + minDate);
+						logger.info("[FechaRpta]-Fin: " + rangoFin);
 						
 						filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_RPTA, minDate));
 						filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_RPTA, rangoFin));
 						
-						List<String> tmpEstados = new ArrayList<String>();
+						//[21-10] [DC] Mejora: Se quita los filtros 'Estado' en el filtro 'Fecha Rpta'
+						/*List<String> tmpEstados = new ArrayList<String>();
 						tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_ACEPTADO_T02);
 						tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_RECHAZADO_T02);
 						tmpEstados.add(ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02);
 						
 						//Verificar que el campo estado no tenga espacios en blanco en BD
-						filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,tmpEstados));
+						filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,tmpEstados));*/
 						
 					} catch (ParseException e) {
-						logger.info("Hubo un error al convertir la fecha: ",e);
+						logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al convertir la Fecha Rpta: ",e);
 					}
 	
 					filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
@@ -1840,9 +1842,9 @@ public class SeguimientoMB
 		// 8. Filtro por nombre de oficina (funciona)
 		if (!PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
 		{   
-			if(listaOficinasValidar!=null){
+			/*if(listaOficinasValidar!=null){
 				if(listaOficinasValidar.size()!=0){
-			// LISTA OFICINAS
+			// LISTA OFICINAS*/
 			if (getOficina() != null) 
 			{
 				if(getOficina().getDesOfi()!=null){
@@ -1852,6 +1854,7 @@ public class SeguimientoMB
 					filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
 				}			
 			}else{
+				// [09-10] Se agrega 'else'
 				if(sentenciaOficina!=null){
 					filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
 					String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + sentenciaOficina.concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
@@ -1859,7 +1862,7 @@ public class SeguimientoMB
 					sentenciaOficina = null;
 				}
 			}
-			
+			/*
 			}else{
 				
 				if(listaOficinasValidar.size()==0){
@@ -1870,7 +1873,7 @@ public class SeguimientoMB
 				
 				
 			}
-		  }
+		  }*/
 		}
 		// 11. Filtro por numero de documento de apoderado (funciona)
 		if (getNroDOIApoderado().compareTo("") != 0) 
@@ -1893,8 +1896,7 @@ public class SeguimientoMB
 				}	
 				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 			} catch (Exception e) {
-				logger.error("Error consultando doi de apoderado " + e );
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar por DOI Apoderado: " , e );
 			}
 		}
 
@@ -1938,8 +1940,7 @@ public class SeguimientoMB
 				}	
 				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 			} catch (Exception e) {
-				logger.error("Error consultando doi de poderdante " + e );
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar por DOI Poderdante: " , e );
 			}
 		}
 
@@ -2093,6 +2094,7 @@ public class SeguimientoMB
 		// 20. Filtrar solicitudes que se hayan Delegado (funciona)
 		if (getbDelegados()) 
 		{
+			logger.debug("[Filtro_Busq]-getbDelegados(): "+getbDelegados());
 			String codigoSolicVerA = /*buscarCodigoEstado(*/ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_A_T02;// CAMPO_ESTADO_VERIFICACION_A
 			String codigoSolicVerB = /*buscarCodigoEstado(*/ConstantesVisado.ESTADOS.ESTADO_COD_EN_VERIFICACION_B_T02;//CAMPO_ESTADO_VERIFICACION_B
 
@@ -2133,11 +2135,13 @@ public class SeguimientoMB
 						}
 					}
 				}*/
-				
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"historial-delegado es: "+lstHistorial.size());
 				for (TiivsHistSolicitud hist: lstHistorial)
 				{
 					lstSolicitudesSelected.add(hist.getId().getCodSoli());
+					
 				}
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstSolicitudesSelected-delegado es: "+lstSolicitudesSelected.size());
 				
 				if(lstSolicitudesSelected.size()==0){
 					filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
@@ -2163,7 +2167,7 @@ public class SeguimientoMB
 			try {
 				lstRev = busqSolAgrp.buscarDinamico(filtro);
 			} catch (Exception e) {
-				logger.info("Error al buscar en solicitud agrupacion",e);
+				logger.error("Error al buscar en solicitud agrupacion",e);
 			}
 			
 			lstSolicitudesSelected.clear();
@@ -2200,15 +2204,15 @@ public class SeguimientoMB
 		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 		
 		// Buscar solicitudes de acuerdo a criterios seleccionados
-		logger.debug("[Seguimiento-busqSolicit]-antes de hacer el query.");
+		logger.debug("[Seguimiento-busqSolicit]-Antes de hacer el query.");
 		try {
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
         } catch (Exception ex) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"las solicitudes en la Bandeja de Seguimiento: ",ex);
 		}
-		logger.debug("[Seguimiento-busqSolicit]-despues de hacer el query.");
+		//logger.debug("[Seguimiento-busqSolicit]-Despues de hacer el query.");
 		if(solicitudes!=null){
-			logger.debug("[Seguimiento-busqSolicit]-No es null");
+			logger.debug("[Seguimiento-busqSolicit]-Se han encontrado: [ "+solicitudes.size()+"] solicitud(es).");
 		}else{
 			logger.debug("[Seguimiento-busqSolicit]-Es null");
 		}
@@ -2826,7 +2830,7 @@ public class SeguimientoMB
 			}
 		}
 		
-	if(results.size()==0){
+	/*if(results.size()==0){
 		    FacesContext facesContext = FacesContext.getCurrentInstance();
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No es una oficina valida", "No es una oficina valida");  
 		    facesContext.addMessage(":frm:pnlBndSol:idMsmBndSolicitud", msg); 
@@ -2834,7 +2838,7 @@ public class SeguimientoMB
 		listaOficinasValidar.addAll(results);
 		
 		
-	}
+	}*/
 		return results;
 	}
 	
@@ -2851,7 +2855,7 @@ public class SeguimientoMB
 				}
 			}
 		}
-		
+		/*
 		if(results.size()==0){
 		 FacesContext facesContext = FacesContext.getCurrentInstance();
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No es una oficina valida", "No es una oficina valida");  
@@ -2860,7 +2864,7 @@ public class SeguimientoMB
 		
 		}
 		listaOficinasValidar=new ArrayList<TiivsOficina1>();
-		listaOficinasValidar.addAll(results);
+		listaOficinasValidar.addAll(results);*/
 		return results;
 	}
 	
