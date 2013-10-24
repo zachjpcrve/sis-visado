@@ -35,7 +35,6 @@ public class ClasificacionService {
 			parse = (List<E>) secuencial;
 			contador = parse.get(0).toString();
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("ClasificacionService : obtenerMaximo: "
 					+ ex.getLocalizedMessage());
 		}
@@ -85,7 +84,6 @@ public class ClasificacionService {
 			}
 			
 		} catch (Exception ex) {
-			//ex.printStackTrace();
 			logger.error("ClasificacionService : listarClasificaciones: " + ex.getLocalizedMessage());
 		}
 		return clasificaciones;
@@ -98,7 +96,6 @@ public class ClasificacionService {
 		try {
 			service.insertarMerge(clasificacion);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("ClasificacionService : registrar: " + ex.getLocalizedMessage());
 		}
 
@@ -118,7 +115,6 @@ public class ClasificacionService {
 					Restrictions.eq("id.codMult", codMultitabla)).add(
 					Restrictions.eq("id.codElem", codElemento)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("ClasificacionService : editarClasificacion: "
 					+ ex.getLocalizedMessage());
 		}

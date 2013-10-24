@@ -29,9 +29,7 @@ public class AbogadoService {
 		try {
 			estudios = service.buscarDinamico(filtro);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("AbogadoService : listarEstudios: "
-					+ ex.getLocalizedMessage());
+			logger.error("AbogadoService : listarEstudios: "+ ex.getLocalizedMessage());
 		}
 		return estudios;
 	}
@@ -76,9 +74,7 @@ public class AbogadoService {
 
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("AbogadoService : listarAbogados: "
-					+ ex.getLocalizedMessage());
+			logger.error("AbogadoService : listarAbogados: "+ ex.getLocalizedMessage());
 		}
 		return abogados;
 	}
@@ -97,9 +93,7 @@ public class AbogadoService {
 							ConstantesVisado.CODIGO_MULTITABLA_CRITERIO)));
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("AbogadoService : listarCriterios: "
-					+ ex.getLocalizedMessage());
+			logger.error("AbogadoService : listarCriterios: "+ ex.getLocalizedMessage());
 		}
 		return criterios;
 	}
@@ -116,9 +110,7 @@ public class AbogadoService {
 			grupos = service.buscarDinamico(filtro);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("AbogadoService : listarCriterios: "
-					+ ex.getLocalizedMessage());
+			logger.error("AbogadoService : listarCriterios: "+ ex.getLocalizedMessage());
 		}
 		return grupos;
 	}
@@ -184,7 +176,6 @@ public class AbogadoService {
 
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("AbogadoService : listarAbogados: "
 					+ ex.getLocalizedMessage());
 		}
@@ -202,7 +193,6 @@ public class AbogadoService {
 			abogado.setCriterio(criterioG);
 			service.insertarMerge(abogado);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("AbogadoService : : " + ex.getLocalizedMessage());
 		}
 
@@ -215,7 +205,6 @@ public class AbogadoService {
 		try {
 			service.insertarMerge(abogado);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("AbogadoService : : " + ex.getLocalizedMessage());
 		}
 
@@ -231,9 +220,7 @@ public class AbogadoService {
 			abogadoEditar = service.buscarDinamico(filtro.add(Restrictions.eq(
 					"codMiembro", codAbogado)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("AbogadoService : editarAbogado: "
-					+ ex.getLocalizedMessage());
+			logger.error("AbogadoService : editarAbogado: "+ ex.getLocalizedMessage());
 		}
 		return abogadoEditar;
 	}
@@ -257,7 +244,6 @@ public class AbogadoService {
 			contador = parse.get(0).toString();
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("AbogadoService : validarCodigo: "
 					+ ex.getLocalizedMessage());
 		}

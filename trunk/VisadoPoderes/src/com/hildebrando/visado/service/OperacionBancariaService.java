@@ -33,9 +33,7 @@ public class OperacionBancariaService {
 			parse = (List<E>) secuencial;
 			contador = parse.get(0).toString();
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : obtenerMaximo: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : obtenerMaximo: "+ ex.getLocalizedMessage());
 		}
 		return contador;
 	}
@@ -64,7 +62,6 @@ public class OperacionBancariaService {
 				}
 			}
 		} catch (Exception ex) {
-			//ex.printStackTrace();
 			logger.error("ClasificacionService : listarClasificaciones: " + ex.getLocalizedMessage());
 		}
 		return operaciones;
@@ -77,7 +74,6 @@ public class OperacionBancariaService {
 		try {
 			service.insertarMerge(operacion);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("OperacionBancariaService : registrar: " + ex.getLocalizedMessage());
 		}
 
@@ -95,7 +91,6 @@ public class OperacionBancariaService {
 			operacionEditar = service.buscarDinamico(filtro.add(
 					Restrictions.eq("codOperBan", codElemento)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("ClasificacionService : editarClasificacion: "
 					+ ex.getLocalizedMessage());
 		}

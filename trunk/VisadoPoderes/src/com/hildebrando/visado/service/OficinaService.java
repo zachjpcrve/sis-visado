@@ -50,7 +50,6 @@ public class OficinaService {
 
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("OficinaService : listarOficinas: "
 					+ ex.getLocalizedMessage());
 		}
@@ -70,7 +69,6 @@ public class OficinaService {
 			oficinaEditar = service.buscarDinamico(filtro.add(Restrictions.eq(
 					"codOfi", codOficina)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("OficinaService : editarOficina: "
 					+ ex.getLocalizedMessage());
 		}
@@ -90,7 +88,6 @@ public class OficinaService {
 			}
 			service.insertarMerge(oficina);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("OficinaService : cambiarEstado: "
 					+ ex.getLocalizedMessage());
 		}
@@ -108,7 +105,6 @@ public class OficinaService {
 			oficinas = service.buscarDinamico(filtro);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("OficinaService : cargarComboOficina: "
 					+ ex.getLocalizedMessage());
 		}
@@ -127,7 +123,6 @@ public class OficinaService {
 			territorios = service.buscarDinamico(filtro);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("OficinaService : cargarComboTerritorio: "
 					+ ex.getLocalizedMessage());
 		}
@@ -157,7 +152,6 @@ public class OficinaService {
 			}
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("OficinaService : cargarComboOficina: "
 					+ ex.getLocalizedMessage());
 		}
@@ -230,7 +224,6 @@ public class OficinaService {
 			}
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("OficinaService : cargarComboOficina: "
 					+ ex.getLocalizedMessage());
 		}

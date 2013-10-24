@@ -34,7 +34,6 @@ public class DocumentoTiivsService {
 			parse = (List<E>) secuencial;
 			contador = parse.get(0).toString();
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("DocumentoTiivsService : obtenerMaximo: "
 					+ ex.getLocalizedMessage());
 		}
@@ -64,7 +63,6 @@ public class DocumentoTiivsService {
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			logger.error("DocumentoTiivsService : listarDocumentos: "
 					+ ex.getLocalizedMessage());
 		}
@@ -83,9 +81,7 @@ public class DocumentoTiivsService {
 			documento.setCodBarra(documento.getCodBarra().toUpperCase());
 			service.insertarMerge(documento);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoTiivsService : registrar: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoTiivsService : registrar: "+ ex.getLocalizedMessage());
 		}
 	}
 
@@ -100,9 +96,7 @@ public class DocumentoTiivsService {
 			documentoEditar = service.buscarDinamico(filtro.add(
 					Restrictions.eq("codDocumento", codDocumento)));
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoTiivsService : editarDocumento: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoTiivsService : editarDocumento: "+ ex.getLocalizedMessage());
 		}
 		return documentoEditar;
 	}
@@ -131,9 +125,7 @@ public class DocumentoTiivsService {
 			}
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			logger.error("DocumentoService : obtenerMaximo: "
-					+ ex.getLocalizedMessage());
+			logger.error("DocumentoService : obtenerMaximo: "+ ex.getLocalizedMessage());
 		}
 
 		return validacion;
