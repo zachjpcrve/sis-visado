@@ -243,7 +243,6 @@ public class PDFViewerMB {
 			cliente.setDirectorio(carpetaRemota);
 			
 		} catch (IOException e1) {
-			e1.printStackTrace();
 			logger.error(e1);
 		} catch (Exception e){
 			logger.error(e);
@@ -299,7 +298,6 @@ public class PDFViewerMB {
 			cliente.setDirectorio(carpetaRemota);
 		} catch (IOException e1) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"IOException: "+e1);
-			e1.printStackTrace();
 		}catch(Exception e){
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+": "+e);
 		}
@@ -382,7 +380,7 @@ public class PDFViewerMB {
 		try {
 			cliente.setDirectorio(carpetaRemota);
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al setearDirectorio: ",e1);
 		}
 		
 		if (cliente!=null)
@@ -420,7 +418,7 @@ public class PDFViewerMB {
 			try {
 				listaTMP = cliente.listar();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al listarFicheros: ",e);
 			}
 			
 			if (listaTMP !=null)
@@ -505,7 +503,7 @@ public class PDFViewerMB {
 		try {
 			cliente.setDirectorio(carpetaRemota);
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al setDirectorio: ",e1);
 		}
 		
 		if (cliente!=null)
@@ -557,7 +555,7 @@ public class PDFViewerMB {
 		try {
 			cliente.setDirectorio(carpetaRemota);
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al setDirectorio: ",e1);
 		}
 		
 		if (cliente!=null)
