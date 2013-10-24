@@ -93,7 +93,6 @@ public class ClasificacionMB {
 		try {
 			clasificaciones = clasificacionService.listarClasificaciones();
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("ClasificacionMB :" + e.getLocalizedMessage());
 		}
 

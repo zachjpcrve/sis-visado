@@ -79,8 +79,7 @@ public class NivelMB {
 				 */
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("NivelMB : secuencial :" + e.getLocalizedMessage());
+			logger.error("NivelMB : secuencial :" ,e);
 		}
 	}
 
@@ -103,8 +102,7 @@ public class NivelMB {
 			descripcion = nivelesMant.get(0).getDesNiv().toUpperCase();
 			bEditar = true;
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("NivelMB : editarNivel: " + e.getLocalizedMessage());
+			logger.error("NivelMB : editarNivel: " ,e);
 		}
 	}
 
@@ -261,8 +259,7 @@ public class NivelMB {
 			bEditar = false;
 */  
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("ComisionMB : actualizar :" + e.getLocalizedMessage());
+			logger.error("ComisionMB : actualizar :",e);
 			Utilitarios.mensajeError("Error", "No se pudo actualizar");
 		}
 	}
@@ -304,9 +301,7 @@ public class NivelMB {
 		try {
 			compararDes = nivelService.compararDesNivel(desNivel);
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("NivelMB: compararDesNivel : "
-					+ e.getLocalizedMessage());
+			logger.error("NivelMB: compararDesNivel : ",e);
 		}
 		return compararDes;
 	}
