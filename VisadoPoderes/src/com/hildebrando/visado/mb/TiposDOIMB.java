@@ -67,8 +67,7 @@ public class TiposDOIMB {
 			logger.info("DocumentoMB : secuencial" + " " + secuencial);
 			documento.getId().setCodElem(secuencial);
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("DocumentoMB :" + e.getLocalizedMessage());
+			logger.error("DocumentoMB :" , e);
 		}
 	}
 
