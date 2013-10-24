@@ -145,7 +145,6 @@ public class FileTransferController {
 				logger.debug("+++ Termina de copiar archivo");
 			} catch (IOException e) {
 				logger.error("Error al descargar archivo: " + ubicacionLocal, e);
-				e.printStackTrace();
 			}
 		}
 
