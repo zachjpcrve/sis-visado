@@ -1687,7 +1687,12 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 				subTotales.setCosto(costo);
 				subTotales.setHonorarios(honorarios);
 				subTotales.setImpuesto(Utilitarios.redondear(imp));
-				subTotales.setgTotal(total);				
+				/*Redondeo del Total*/
+				/*** Samira 25/10/2013 ***/
+		    	  big = new BigDecimal(total);
+		          big = big.setScale(2, RoundingMode.HALF_UP);
+		    	 
+			    subTotales.setgTotal(big.doubleValue());				
 				
 				tmpLista.add(subTotales);
 				logger.info("[obtRepLiquid]-Tamanio Lista Final:" + tmpLista.size());
