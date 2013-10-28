@@ -153,7 +153,7 @@ public class JobsMB {
 			}
 			// FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al grabar el feriado: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al grabar el feriado: ",e);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage("No registro","No se registro el feriado desde el webservice"));
 		}
@@ -184,7 +184,7 @@ public class JobsMB {
 			try {
 				results = feriadoDAO.buscarDinamico(filtro);
 			} catch (Exception e) {
-				logger.debug(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"en la validacion feriados: "+e);
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"en la validacion feriados: "+e);
 			}
 
 			if (results.size() > 0) {
@@ -194,8 +194,8 @@ public class JobsMB {
 		return existe;
 	}
 	
-	public  void validarSolicitudesVencidas()
-	{logger.debug("******** validarSolicitudesVencidas **************");
+	public  void validarSolicitudesVencidas(){
+		logger.debug("====== validarSolicitudesVencidas ========");
 			int diasUtiles = 0;
 			
 			GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -207,11 +207,9 @@ public class JobsMB {
 			List<TiivsSolicitud> solicitudes = new ArrayList<TiivsSolicitud>();
 			
 			try {
-				solicitudes = solicDAO.buscarDinamico(filtroSol);
-				
+				solicitudes = solicDAO.buscarDinamico(filtroSol);				
 			} catch (Exception ex) {
-				ex.printStackTrace();
-				logger.debug("Error al buscar las solicitudes");
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"las solicitudes: ",ex);
 			}
 			
 			GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -221,7 +219,7 @@ public class JobsMB {
 			try {
 				lstMultitabla = multiDAO.buscarDinamico(filtroMultitabla);
 			} catch (Exception e1) {
-				e1.printStackTrace();
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la lstMultitabla: ",e1);
 			}
 			//Se obtiene los dias utiles de la Multitabla
 			for (TiivsMultitabla tmp : lstMultitabla) 
@@ -251,8 +249,7 @@ public class JobsMB {
 						try {
 							actualizarEstadoVencidoSolicitud(tmpSol);
 						} catch (Exception e) {
-							logger.info("No se pudo cambiar el estado de la solicitud: " + tmpSol.getCodSoli()	+ " a vencida");
-							logger.info(e.getStackTrace());
+							logger.error("No se pudo cambiar el estado de la solicitud: " + tmpSol.getCodSoli()	+ " a Vencida, por el siguiente motivo: "+e.getMessage());
 						}
 					} 
 					else 
@@ -274,40 +271,51 @@ public class JobsMB {
 		return nuevaFecha;
 	}
 	public  void actualizarEstadoVencidoSolicitud(TiivsSolicitud solicitud) throws Exception {
-		logger.info("*********************** actualizarEstadoVencidoSolicitud **************************");
+		logger.info("=========== actualizarEstadoVencidoSolicitud ===========");
 
 		solicitud.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_VENCIDO_T02);
 		solicitud.setFechaEstado(new Timestamp(new Date().getTime()));
 		solicitud.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_VENCIDO_T02);
 		GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		service.modificar(solicitud);
-
+		
 		registrarHistorial(solicitud);
 		//obtenerHistorialSolicitud();
 		//seguimientoMB.busquedaSolicitudes();
 	}
+	
 	public void registrarHistorial(TiivsSolicitud solicitud) throws Exception {
 		SolicitudDao<String, Object> serviceMaxMovi = (SolicitudDao<String, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
-		String numeroMovimiento = serviceMaxMovi.obtenerMaximoMovimiento(solicitud.getCodSoli());
-
-		int num = 0;
-		if (!numeroMovimiento.equals("")) {
-			num = Integer.parseInt(numeroMovimiento) + 1;
-		} else {
-			num = 1;
+		try{
+			String numeroMovimiento = serviceMaxMovi.obtenerMaximoMovimiento(solicitud.getCodSoli());
+			
+			int num = 0;
+			if (!numeroMovimiento.equals("")) {
+				num = Integer.parseInt(numeroMovimiento) + 1;
+			} else {
+				num = 1;
+			}
+			numeroMovimiento = num + "";
+			logger.info("[Job]-registrarHistorial-numMovimiento: "+numeroMovimiento);
+			TiivsHistSolicitud objHistorial = new TiivsHistSolicitud();
+			objHistorial.setId(new TiivsHistSolicitudId(solicitud.getCodSoli(),numeroMovimiento));
+			objHistorial.setEstado(solicitud.getEstado());
+			logger.info("[Job]-registrarHistorial-CodSolicitud: "+solicitud.getCodSoli());
+			//[24-10] Se setea vacio en vez de "SISTEMA" en el historial
+			objHistorial.setNomUsuario(ConstantesVisado.VACIO);
+			objHistorial.setObs(solicitud.getObs());
+			objHistorial.setFecha(new Timestamp(new Date().getTime()));
+			objHistorial.setRegUsuario(ConstantesVisado.VACIO);
+			
+			GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
+					.getApplicationContext().getBean("genericoDao");
+			
+			serviceHistorialSolicitud.insertar(objHistorial);
+			
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al registrarHistorial en el Job-SolVencidas: " , e);
 		}
-		numeroMovimiento = num + "";
-		TiivsHistSolicitud objHistorial = new TiivsHistSolicitud();
-		objHistorial.setId(new TiivsHistSolicitudId(solicitud.getCodSoli(),
-				numeroMovimiento));
-		objHistorial.setEstado(solicitud.getEstado());
-		objHistorial.setNomUsuario("SISTEMA");
-		objHistorial.setObs(solicitud.getObs());
-		objHistorial.setFecha(new Timestamp(new Date().getTime()));
-		objHistorial.setRegUsuario("SISTEMA");
-		GenericDao<TiivsHistSolicitud, Object> serviceHistorialSolicitud = (GenericDao<TiivsHistSolicitud, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
-		serviceHistorialSolicitud.insertar(objHistorial);
+		
 	}
 	public static TablaGeneral obtenerDatosWebService() {
 		TablaGeneral tbGeneralWS = null;
@@ -316,7 +324,9 @@ public class JobsMB {
 					.getApplicationContext().getBean("tablaGeneralServiceLocator");
 			tbGeneralWS = tablaGeneralServiceLocator.getTablaGeneral();
 		} catch (ServiceException e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al obtener datos del WebService: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"Service al obtener datos del WebService: ",e);
+		} catch(Exception e){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al obtener datos del WebService: ",e);
 		}
 		return tbGeneralWS;
 	}
