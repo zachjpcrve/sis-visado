@@ -127,11 +127,12 @@
 									<h:outputText value="#{seg.fecha}" style="font-size: 9px"/>  							 
 								</p:column>
 								
-								<p:column headerText="Usuario" width="165" exportable="false" style="font-size: 9px">
+								<!-- [28-10] Mejora: Se oculta columna del historial para perfil: 'Oficina' -->
+								<p:column headerText="Usuario" rendered="#{consultarSolicitudMB.mostrarUsuarioHist}"  width="165" exportable="false" style="font-size: 9px">
 									<h:outputText value="#{seg.regUsuario} #{seg.usuario}" style="font-size: 9px"/>  							 
 								</p:column>
 								
-								<p:column headerText="Obs" width="55" exportable="false" style="font-size: 9px">													
+								<p:column headerText="Observación" width="55" exportable="false" style="font-size: 9px">													
 									<p:commandButton id="downloadLink2" icon="ui-icon-search" 
 										onclick="window.location.href='#{root}main/download/pdfReportObsHistorial.htm?id=#{seg.codSoli};#{seg.movimiento}'" />
 								</p:column>		

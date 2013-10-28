@@ -244,7 +244,7 @@
 																paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 																rowsPerPageTemplate="5,10,15" editable="true">
 
-																<p:column headerText="Item">
+																<p:column headerText="Código">
 																	<h:outputText value="#{s.item}" />
 																</p:column>
 																<p:column headerText="Documento" style="width:400px;">
@@ -324,6 +324,7 @@
 				<tr>
 					<td> 
 						<p:commandButton value="VER DATOS VOUCHER" 
+									rendered="#{consultarSolicitudMB.mostrarVerDatosVoucher}" 
 									update=":formSolicitudConsulta:modalVerVoucher"
 									action="#{consultarSolicitudMB.consultarVoucherHost}"
 									oncomplete="dlgVerVoucher.show();" />
