@@ -2169,10 +2169,7 @@ public class ReportesMB {
 			}
 
 		} catch (Exception e) {
-			logger.error("Error al exportar datos a excel del Rpt Liquidacion",
-					e);
-			// logger.info("Error al generar el archivo excel debido a: " +
-			// e.getStackTrace());
+			logger.error("Error al exportar datos a excel del Rpt Liquidacion",e);
 		}
 	}
 
