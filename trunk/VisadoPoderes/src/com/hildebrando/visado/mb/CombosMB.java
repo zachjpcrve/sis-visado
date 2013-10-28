@@ -248,7 +248,8 @@ public class CombosMB{
 
 				
 			}
-
+			
+			/*
 			// Carga combo Tipos de documento
 			if (res.getId().getCodMult().equalsIgnoreCase(ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC) && res.getValor2().equals("1")) {
 				 tmpTipoDoc = new TipoDocumento();
@@ -262,11 +263,11 @@ public class CombosMB{
 					tmpTipoDoc.setDescripcion(res.getValor1().toUpperCase());
 					lstTipoDocumentosExtra2.add(tmpTipoDoc);
 				}
-			}
+			}*/
 		}
 		
-		if(lstTipoDocumentosExtra.size()!=0)
-			lstTipoDocumentos.add(lstTipoDocumentosExtra.get(0));
+		//if(lstTipoDocumentosExtra.size()!=0)
+		//	lstTipoDocumentos.add(lstTipoDocumentosExtra.get(0));
 		/*for (int i= 0 ; i< lstTipoDocumentosExtra2.size(); i++){
 			lstTipoDocumentos.add(lstTipoDocumentosExtra2.get(i));
 		}*/
@@ -291,11 +292,14 @@ public class CombosMB{
 			Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
 			filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC));
 			filtro.add(Restrictions.eq("valor2", "1"));
-			filtro.addOrder(Order.asc("valor1"));
+			//[28-10] Mejora: Se agrega ordenamiento por 'valor5', para mostrar en el 
+			//orden solicitado: 1° DNI, 2° Ruc, etc.
+			filtro.addOrder(Order.asc("valor5"));
+			//filtro.addOrder(Order.asc("valor1"));
 			
 			tmpLista=service.buscarDinamico(filtro);
 			if(tmpLista!=null){
-				logger.debug("Tamanio lista de tipo de documentos: " + tmpLista.size());
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"de Tipo Documentos es: " + tmpLista.size());
 			}
 		}catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de tipos de documento: ",e);
@@ -306,10 +310,9 @@ public class CombosMB{
 			TipoDocumento doc = new TipoDocumento();
 			doc.setCodTipoDoc(tmp.getId().getCodElem());
 			doc.setDescripcion(tmp.getValor1().toUpperCase());
-			
+			//logger.debug("-> "+doc.getCodTipoDoc() + "\t"+doc.getDescripcion());
 			lstTipoDocumentos.add(doc);
 		}
-		
 	}
 	
 	public void obtenerClasificacionPersona()
