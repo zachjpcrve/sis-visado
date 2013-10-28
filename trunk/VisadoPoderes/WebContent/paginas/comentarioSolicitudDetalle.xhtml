@@ -26,8 +26,12 @@
 						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"/>
 					<p:commandButton value="Enviar" id="btnEnviar3"  
 						icon="ui-icon-document" update=":formSolicitudRegistro" onclick="confirmation.show()"/>
+<!-- 					<p:commandButton value="Imprimir" id="btnImprimir3" -->
+<!-- 						icon="ui-icon-document" /> -->
+						
 					<p:commandButton value="Imprimir" id="btnImprimir3"
-						icon="ui-icon-document" />
+						onclick="window.location.href='../../main/download/pdfReportSolicitudVisado.htm'"
+						icon="ui-icon-document" />		
 						
 					<p:commandButton value="Salir" id="btnSalir3" onclick="cfdCerrarSesion.show()"
 						icon="ui-icon-document" />

@@ -408,13 +408,16 @@
 																		value="Escanear"
 																		onclick="return invocarEscaner('#{solicitudRegMB.cadenaEscanerFinal}');">
 																	</p:commandButton> <p:commandButton value="Actualizar"
-																		onclick="return appletActualizar ();" /> <h:panelGroup
+																		onclick="return appletActualizar ();" async="false" /> <h:panelGroup
 																		id="idVisorApplet">
 
 																		<script type="text/javascript" language="javascript">
 																			function actualizarDocumentos(
 																					documentosLeidos,
 																					documentosCargados) {
+																					//alert("documentosLeidos: " + documentosLeidos);
+																					//alert("documentosCargados: " + documentosCargados);
+																					
 																				this.document
 																						.getElementById('formSolicitudRegistro:idDocumentosLeidos').value = documentosLeidos;
 																				this.document
