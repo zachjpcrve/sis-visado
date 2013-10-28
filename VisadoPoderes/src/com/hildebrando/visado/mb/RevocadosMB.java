@@ -1009,7 +1009,11 @@ public class RevocadosMB {
 		  TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 		  objHistorial.setId(new TiivsHistSolicitudId(solicitudModificado.getCodSoli(),numeroMovimiento));
 		  objHistorial.setEstado(solicitudModificado.getEstado());
-		  objHistorial.setNomUsuario(usuario.getNombre());
+		  //[24-10] Se agrega nombreCompleto
+		  String nombreCompleto="".concat(usuario.getNombre()!=null?usuario.getNombre():"")
+					.concat(" ").concat(usuario.getApellido1()!=null?usuario.getApellido1():"")
+					.concat(" ").concat(usuario.getApellido2()!=null?usuario.getApellido2():"");
+		  objHistorial.setNomUsuario(nombreCompleto);
 		  objHistorial.setObs(solicitudModificado.getObs());
 		  objHistorial.setFecha(new Timestamp(new Date().getTime()));
 		  objHistorial.setRegUsuario(usuario.getUID());
@@ -1418,8 +1422,13 @@ public class RevocadosMB {
 		}
 	}
 	
+	/**
+	 * Metodo invocado al seleccionar el botón 'Nuevo' desde la 
+	 * bandeja de consultas de revocados. Se inicializan los objetos
+	 * para el registro de una combinación de revocados.
+	 * **/
 	public void editPendRevocadoNuevo() {
-		
+		logger.debug("== editPendRevocadoNuevo() ===");
 		objTiivsPersonaBusquedaDlg= new TiivsPersona();
 		objTiivsPersonaAgregar = new TiivsPersona();
 
@@ -2828,7 +2837,7 @@ public class RevocadosMB {
 					if(contador.compareTo(listaMultiTabla.size())==0){
 						poderdante += multitabla.getValor1();	
 					}else{
-						poderdante += multitabla.getValor1() + " - ";
+						poderdante += multitabla.getValor1() + " / ";
 					}
 				}
 			}
@@ -2852,7 +2861,7 @@ public class RevocadosMB {
 					if(contador.compareTo(listaMultiTabla.size())==0){
 						apoderdante += multitabla.getValor1();	
 					}else{
-						apoderdante += multitabla.getValor1() + " - ";
+						apoderdante += multitabla.getValor1() + " / ";
 					}
 				}
 			}
