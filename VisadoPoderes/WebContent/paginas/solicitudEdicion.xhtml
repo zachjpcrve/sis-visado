@@ -781,7 +781,7 @@
 		
 <h:form id="formBusqueda">
 	<p:outputPanel id="pnlBusqueda">
-		<p:dialog id="modalBusqueda" header="Busqueda Cliente/No Cliente" visible="#{consultarSolicitudMB.bBooleanPopup}"
+		<p:dialog id="modalBusqueda" header="Búsqueda Cliente/No Cliente" visible="#{consultarSolicitudMB.bBooleanPopup}"
 			widgetVar="dlgModalBusqueda" modal="true" height="300" >
 
 			<p:dataTable var="s" rows="20" 
@@ -833,7 +833,7 @@
 			<h:inputHidden id="inputHidden" value="#{consultarSolicitudMB.patter}"></h:inputHidden>
 			<p:panel header="Búsqueda">
 				<h:panelGrid columns="12" id="gridApodPodEd" cellspacing="0" cellpadding="2">
-						<h:outputText id="outTipoDoi" value="T DOI/C Central * :  " style="color:red" />
+						<h:outputText id="outTipoDoi" value="TIPO DOI* :  " style="color:red" />
 						<p:selectOneMenu id="cboTipoDoi"
 							value="#{consultarSolicitudMB.objTiivsPersonaBusqueda.tipDoi}"
 							valueChangeListener="#{consultarSolicitudMB.cambiarRazonSocial}"
