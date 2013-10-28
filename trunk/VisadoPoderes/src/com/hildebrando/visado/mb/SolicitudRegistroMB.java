@@ -237,7 +237,6 @@ public class SolicitudRegistroMB {
 		lstOperaciones = new ArrayList<OperacionBancariaDTO>();
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		this.instanciarSolicitudRegistro();
-
 		
 		aliasFilesToDelete = new ArrayList<String>();
 		
@@ -252,9 +251,6 @@ public class SolicitudRegistroMB {
 		ancho_Popup_Poder=(String) Utilitarios.getObjectInSession("ANCHO_POPUP_PODER");
 		ancho_Revoc_Poder=(String) Utilitarios.getObjectInSession("ANCHO_REVOC_PODER");
 		
-		//logger.debug("Ancho Fieldset Datos Generales: " + ancho_FieldSet);
-		//logger.debug("Ancho Fieldset Datos Poderdantes: " + ancho_FieldSet_Poder);
-		
 		String sPerfilUsu=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		
 		if (sPerfilUsu.equals(ConstantesVisado.SSJJ))
@@ -268,20 +264,17 @@ public class SolicitudRegistroMB {
 	public List<TiivsOficina1> completeNomOficina(String query) 
 	{	
 		List<TiivsOficina1> results = new ArrayList<TiivsOficina1>();
+		for (TiivsOficina1 oficina : combosMB.getLstOficina1()) {
+			if (oficina.getCodOfi() != null) {
+				String texto = oficina.getCodOfi().concat(" ").
+						concat(oficina.getDesOfi()!=null?oficina.getDesOfi().toUpperCase():"");
+				//String texto = oficina.getDesOfi();
 
-		for (TiivsOficina1 oficina : combosMB.getLstOficina1()) 
-		{
-			if (oficina.getCodOfi() != null) 
-			{
-				String texto = oficina.getDesOfi();
-
-				if (texto.contains(query.toUpperCase())) 
-				{
+				if (texto.contains(query.toUpperCase())){
 					results.add(oficina);
 				}
 			}
 		}
-
 		return results;
 	}
 	
@@ -482,7 +475,10 @@ public class SolicitudRegistroMB {
 		filtroTipoSolcDoc.add(Restrictions.eq("activo",'1'));
 		filtroTipoSolcDoc.addOrder(Order.desc("obligatorio"));
 		try {
-			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
+			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);			
+			lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstDocumentosXTipoSolTemp).clone();
+
+			/*lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
 			List<TiivsTipoSolicDocumento> lstTipoSolicitudDocumentos2=new ArrayList<TiivsTipoSolicDocumento>();
 										  lstTipoSolicitudDocumentos2.addAll(lstDocumentosXTipoSolTemp);
 			
@@ -493,6 +489,7 @@ public class SolicitudRegistroMB {
 			
 			lstDocumentosXTipoSolTemp = genTipoSolcDocumDAO.buscarDinamico(filtroTipoSolcDoc);
 			lstTipoSolicitudDocumentos = (ArrayList<TiivsTipoSolicDocumento>) ((ArrayList) lstTipoSolicitudDocumentos2).clone();
+			*/
 			
 			logger.info("lstDocumentosXTipoSolTemp.size()" + lstDocumentosXTipoSolTemp.size());
 			logger.info("lstTipoSolicitudDocumentos.size()" + lstTipoSolicitudDocumentos.size());
@@ -1027,7 +1024,7 @@ public class SolicitudRegistroMB {
 						this.tiivsAgrupacionPersonaCapturado.setTipPartic(objTiivsPersonaResultado.getTipPartic());
 						this.tiivsAgrupacionPersonaCapturado.setCodPer(objTiivsPersonaResultado.getCodPer());
 					}
-															
+														
 					flagUpdatePersona = false;
 				}
 				logger.info("[AgregPersona]-Tamanio lista lstTiivsPersona:" +lstTiivsPersona.size());
@@ -1777,6 +1774,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		if (usuario!=null)
 		{
 			logger.debug("[instSolReg]-Usuario Sesion:" + usuario.getNombre());
+			logger.debug("[instSolReg]-Usuario Apepat:" + usuario.getApellido1()!=null?usuario.getApellido1():"");
+			logger.debug("[instSolReg]-Usuario Apemat:" + usuario.getApellido2()!=null?usuario.getApellido2():"");
 			logger.debug("[instSolReg]-CodOficina: " + usuario.getBancoOficina().getCodigo().trim());
 			logger.debug("[instSolReg]-Oficina: "+ usuario.getBancoOficina().getDescripcion().trim());
 		}
@@ -2051,7 +2050,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	 * invocado desde el applet
 	 * */
 	public void actualizarDocumentosXTipoSolicitud(ActionEvent ae){		
-		logger.info("====== actualizarDocumentosXTipoSolicitud =====");
+		logger.info("====== actualizarDocumentosXTipoSolicitud:INICIO =====");
 		
 		//logger.info("documentos Leidos: " + documentosLeidos);		
 		logger.info("[Applet-Actualizar]-Documentos LEIDOS: " + visadoDocumentosMB.getDocumentosLeidos());
@@ -2087,7 +2086,6 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 							objAnexo.setAliasTemporal(doc.getAliasTemporal());
 							
 							logger.debug("==> doc.getAlias():"+doc.getAlias() + "\tdoc.getAliasTemporal():"+doc.getAliasTemporal());
-							
 							
 							lstAnexoSolicitud.add(objAnexo);
 													
@@ -3013,7 +3011,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 				  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),1+""));
 				  objHistorial.setEstado(this.solicitudRegistrarT.getEstado());
-				  objHistorial.setNomUsuario(usuario.getNombre());
+				  //[24-10] Se agrega el nombreCompleto del usuario para su registro en el historial
+				  String nombreCompleto="".concat(usuario.getNombre()!=null?usuario.getNombre():"")
+							.concat(" ").concat(usuario.getApellido1()!=null?usuario.getApellido1():"")
+							.concat(" ").concat(usuario.getApellido2()!=null?usuario.getApellido2():"");
+				  objHistorial.setNomUsuario(nombreCompleto);
+				  // objHistorial.setNomUsuario(usuario.getNombre());
+				  
 				  objHistorial.setObs(this.solicitudRegistrarT.getObs());
 				  objHistorial.setFecha(new Timestamp(new Date().getTime()));
 				  objHistorial.setRegUsuario(usuario.getUID());
@@ -3868,7 +3872,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					if(contador.compareTo(listaMultiTabla.size())==0){
 						poderdante += multitabla.getValor1();	
 					}else{
-						poderdante += multitabla.getValor1() + " - ";
+						poderdante += multitabla.getValor1() + " / ";
 					}
 				}
 			}
@@ -3893,7 +3897,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					if(contador.compareTo(listaMultiTabla.size())==0){
 						apoderdante += multitabla.getValor1();	
 					}else{
-						apoderdante += multitabla.getValor1() + " - ";
+						apoderdante += multitabla.getValor1() + " / ";
 					}
 				}
 			}
