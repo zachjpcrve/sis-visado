@@ -8,7 +8,7 @@ public class ConstantesVisado {
 	public static final int NUMERO_DE_MONEDAS_POR_NIVEL = 3;
 	public static final String CODIGO_MULTITABLA_CLASIFICACION = "T13";
 	public static final String CODIGO_MULTITABLA_TIPO_REGISTRO = "T12";
-	
+	public static final String VACIO = " ";
 	
 	public static final String CODIGO_MULTITABLA_DOCUMENTO = "T04";
 	public static final String CODIGO_MULTITABLA_TIPO_DOCUMENTO = "T15";
@@ -44,7 +44,9 @@ public class ConstantesVisado {
 	public static final String ACTIVA_ADVERTENCIA = "0002";
 	public static final String ACTIVA_RESTRICTIVA = "0003";
 	
+	//[28-10] Mejoras
 	public static final String CODIGO_MULTITABLA_DICTAMEN_FLUJO = "T19";
+	public static final String CODIGO_MULTITABLA_VER_DATOS_VOUCHER = "T20";
 	
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
@@ -235,7 +237,7 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_FILTRO_BUS_COD_OFICINA="Código de Oficina";
 	public static final String ETIQUETA_FILTRO_BUS_DOI_APODERADO="DOI Representante";
 	public static final String ETIQUETA_FILTRO_BUS_REVISION="En Revisión";
-	public static final String ETIQUETA_FILTRO_BUS_NIVEL="Nivel";
+	public static final String ETIQUETA_FILTRO_BUS_NIVEL="Nivel de Autorización";
 	public static final String ETIQUETA_FILTRO_BUS_ESTADO_NIVEL="Estados de Nivel";
 	public static final String ETIQUETA_FILTRO_BUS_ESTADO="Estado";
 	public static final String ETIQUETA_FILTRO_BUS_FECHA_INICIO ="Fecha de Inicio";
@@ -266,7 +268,7 @@ public class ConstantesVisado {
 	public static final String ETIQUETA_COLUMNA_TIPO_SOL = "Tipo de Solicitud";
 	public static final String ETIQUETA_COLUMNA_TIPO_OPE = "Tipo de Operación";
 	public static final String ETIQUETA_COLUMNA_ESTUDIO = "Estudio";
-	public static final String ETIQUETA_COLUMNA_NIVEL = "Nivel";
+	public static final String ETIQUETA_COLUMNA_NIVEL = "Nivel de Autorización";
 	public static final String ETIQUETA_COLUMNA_FECHA_ENVIO = "Fecha de Envio";
 	public static final String ETIQUETA_COLUMNA_FECHA_RPTA = "Fecha de Respuesta";
 	public static final String ETIQUETA_COLUMNA_FECHA_ESTADO = "Fecha de Estado";
