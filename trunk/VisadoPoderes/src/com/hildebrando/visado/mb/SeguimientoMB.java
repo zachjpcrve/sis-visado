@@ -116,6 +116,7 @@ public class SeguimientoMB
 	private Boolean bDelegados=false;
 	private Boolean bRevocatoria=false;
 	private Boolean mostrarEstudio;
+	private Boolean mostrarUsuario;
 	private Date fechaInicio;
 	private Date fechaFin;
 	private TiivsOficina1 oficina;
@@ -342,6 +343,16 @@ public class SeguimientoMB
 				setMostrarEstudio(false);
 				setMostrarFechaEstado(false);
 			}
+			
+			//[28-10] Mejora: Ocultar columnas en seguimiento historial
+			if(PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
+				//logger.debug("== MEJORA: No se mostrara 'Usuario' porque es: "+PERFIL_USUARIO);
+				setMostrarUsuario(false);
+			}else{
+				//logger.debug("== MEJORA: Se mostrara 'Usuario' porque es: "+PERFIL_USUARIO);
+				setMostrarUsuario(true);
+			}
+			
 		}		
 	}	
 	
@@ -479,7 +490,12 @@ public class SeguimientoMB
 		objHistorial.setId(new TiivsHistSolicitudId(solicitud.getCodSoli(),
 				numeroMovimiento));
 		objHistorial.setEstado(solicitud.getEstado());
-		objHistorial.setNomUsuario(usuario.getNombre());
+		//[24-10] Se agrega el nombreCompleto del usuario para su registro en el historial
+		  String nombreCompleto="".concat(usuario.getNombre()!=null?usuario.getNombre():"")
+					.concat(" ").concat(usuario.getApellido1()!=null?usuario.getApellido1():"")
+					.concat(" ").concat(usuario.getApellido2()!=null?usuario.getApellido2():"");
+		objHistorial.setNomUsuario(nombreCompleto);
+		
 		objHistorial.setObs(solicitud.getObs());
 		objHistorial.setFecha(new Timestamp(new Date().getTime()));
 		objHistorial.setRegUsuario(usuario.getUID());
@@ -2848,7 +2864,9 @@ public class SeguimientoMB
 		List<TiivsOficina1> results = new ArrayList<TiivsOficina1>();
 		for (TiivsOficina1 oficina : combosMB.getLstOficina1()) {
 			if (oficina.getCodOfi() != null) {
-				String texto = oficina.getDesOfi();				
+				//String texto = oficina.getDesOfi();		
+				String texto = oficina.getCodOfi().concat(" ").
+						concat(oficina.getDesOfi()!=null?oficina.getDesOfi().toUpperCase():"");
 				if (texto.contains(query.toUpperCase())) {
 					oficina.setNombreDetallado(oficina.getCodOfi()+"-"+oficina.getDesOfi());
 					results.add(oficina);
@@ -3339,6 +3357,14 @@ public class SeguimientoMB
 
 	public void setMostrarEstudio(Boolean mostrarEstudio) {
 		this.mostrarEstudio = mostrarEstudio;
+	}
+
+	public Boolean getMostrarUsuario() {
+		return mostrarUsuario;
+	}
+
+	public void setMostrarUsuario(Boolean mostrarUsuario) {
+		this.mostrarUsuario = mostrarUsuario;
 	}
 
 	public List<String> getLstSolicitudesxOpeBan() {
