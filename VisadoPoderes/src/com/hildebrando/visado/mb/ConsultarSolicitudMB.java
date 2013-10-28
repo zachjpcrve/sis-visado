@@ -172,7 +172,9 @@ public class ConsultarSolicitudMB {
 	private int indexUpdatePersona = 0;
 	private UploadedFile file;
 	private int numGrupoUpdatePoderdanteApoderado=0;
-
+	private Boolean mostrarUsuarioHist;
+	private Boolean mostrarVerDatosVoucher;
+	
 	int icontSoles = 0, icontDolares = 0, icontEuros = 0;
 	double valorSoles_C = 0, valorSolesD = 0, valorSolesE = 0, valorEuro = 0,
 			valorDolar = 0, valorFinal = 0;
@@ -682,7 +684,7 @@ public class ConsultarSolicitudMB {
 					if(contador.compareTo(listaMultiTabla.size())==0){
 						poderdante += multitabla.getValor1();	
 					}else{
-						poderdante += multitabla.getValor1() + " - ";
+						poderdante += multitabla.getValor1() + " / ";
 					}
 				}
 			}
@@ -706,7 +708,7 @@ public class ConsultarSolicitudMB {
 					if(contador.compareTo(listaMultiTabla.size())==0){
 						apoderdante += multitabla.getValor1();	
 					}else{
-						apoderdante += multitabla.getValor1() + " - ";
+						apoderdante += multitabla.getValor1() + " / ";
 					}
 				}
 			}
@@ -860,6 +862,11 @@ public class ConsultarSolicitudMB {
 		  
 			this.actualizarEstadoReservadoSolicitud();
 			this.obtenerHistorialSolicitud();
+			
+			//[28-10] Mejora: Setear campos a mostrar en historial por perfil
+			this.setearHistorialPorPerfil();
+			//[28-10] Habilitar boton 'Ver Datos Voucher'
+			this.habilitarVerDatosVoucher();
 			
 			//Estudio Abogado
 			if (solicitudRegistrarT.getTiivsEstudio() == null) {
@@ -1161,6 +1168,8 @@ public class ConsultarSolicitudMB {
 				this.bMostrarReImprimirCartaAtencion = false;
 			}
 		} else if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02)) {
+			logger.debug("[ActEstReservadSol]-[EstReserv]-ESTADO_COD_RESERVADO_T02");
+			logger.debug("[ActEstReservadSol]-[EstReserv]-PERFIL:"+PERFIL_USUARIO);
 			if (PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO)) 
 			{	
 				this.bMostrarSolicitudVisado = true;
@@ -1176,25 +1185,24 @@ public class ConsultarSolicitudMB {
 				this.bMostrarGenerarRevision = false;
 				this.bMostrarReImprimirCartaAtencion = false;				
 				IILDPeUsuario usuarioRPTA = obtenerOrigenEstadoReservado(solicitudRegistrarT);
+				logger.debug("[ActEstReservadSol]-[EstReserv]-Usuario quien reservo:"+usuarioRPTA.getUID());
 				
-				logger.debug("Usuario quien reservo: " + usuarioRPTA.getUID());
-				
-				if (usuarioRPTA.getUID().compareTo(usuario.getUID())==0)
-				{
+				if (usuarioRPTA.getUID().compareTo(usuario.getUID())==0){
 					this.bMostrarMSGEstado_Reservado=false;
-					logger.debug("Usuarios con Ids iguales no se mostrará mensaje de estado reservado");
+					logger.debug("[ActEstReservadSol]-[EstReserv]-bMostrarMSGEstado_Reservado-F: "+this.bMostrarMSGEstado_Reservado);
+					logger.debug("[ActEstReservadSol]-[EstReserv]-Usuarios con Ids iguales no se mostrará mensaje de estado reservado:");
 				}
-				else
-				{
-					logger.debug("Usuarios con Ids diferentes se mostrará mensaje de estado reservado");
-					
+				else{
+					logger.debug("[ActEstReservadSol]-[EstReserv]-Usuarios con Ids diferentes se mostrará mensaje de estado reservado");
 					this.bMostrarMSGEstado_Reservado=true;
+					logger.debug("[ActEstReservadSol]-[EstReserv]-bMostrarMSGEstado_Reservado-T: "+this.bMostrarMSGEstado_Reservado);
 					
 					if (usuarioRPTA!=null)
 					{	
 						if (usuarioRPTA.getUID()!=null)
 						{
 							setsTextoEstadoReservado(ConstantesVisado.TEXTO_MSG_ESTADO_RESERVADO + usuarioRPTA.getUID() + " - " + usuarioRPTA.getNombre());
+							logger.debug("ADVERTENCIA ==> "+getsTextoEstadoReservado());
 						}
 					}
 				}				
@@ -1214,15 +1222,27 @@ public class ConsultarSolicitudMB {
 				this.bMostrarGenerarRevision = false;
 				this.bMostrarMSGEstado_Reservado=false;
 				this.bMostrarReImprimirCartaAtencion = false;
-				/*IILDPeUsuario usuarioRPTA = obtenerOrigenEstadoReservado(solicitudRegistrarT);
+				
+				//[28-10] Mejora: Mostrar mensaje que la solicitud esta reservada para SSJJ.
+				
+				IILDPeUsuario usuarioRPTA = obtenerOrigenEstadoReservado(solicitudRegistrarT);
+				logger.debug("SSJJ-[ActEstReservadSol]-[EstReserv]-Usuario quien reservo:"+usuarioRPTA.getUID());
+				if (usuarioRPTA.getUID().compareTo(usuario.getUID())==0){
+					logger.debug("SSJJ-Ids iguales no se mostrar mensaje");
+					this.bMostrarMSGEstado_Reservado=false;
+				}else{
+					this.bMostrarMSGEstado_Reservado=true;
+					logger.debug("SSJJ-Ids DIFERENTES, se mostrara mensaje de advertencia.");
+				}
 				
 				if (usuarioRPTA!=null)
 				{	
 					if (usuarioRPTA.getUID()!=null)
 					{
-						setsTextoEstadoReservado("La solicitud está reservada por el usuario: " + usuarioRPTA.getUID() + " - " + usuarioRPTA.getNombre());
+						setsTextoEstadoReservado("La solicitud está reservada por el usuario: " + usuarioRPTA.getUID() + " - " + usuarioRPTA.getNombre()+" .");
+						logger.debug("SSJJ-ADVERTENCIA: TAMBIEN HABILITAR PARA SSJJ EL MENSAJE DE RESERVADO ");
 					}
-				}*/
+				}
 
 			} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
 				
@@ -2144,7 +2164,12 @@ public class ConsultarSolicitudMB {
 		TiivsHistSolicitud objHistorial = new TiivsHistSolicitud();
 		objHistorial.setId(new TiivsHistSolicitudId(solicitud.getCodSoli(),numeroMovimiento));
 		objHistorial.setEstado(solicitud.getEstado());
-		objHistorial.setNomUsuario(usuario.getNombre());
+		//[24-10] Se agrega nombreCompleto
+		String nombreCompleto="".concat(usuario.getNombre()!=null?usuario.getNombre():"")
+				.concat(" ").concat(usuario.getApellido1()!=null?usuario.getApellido1():"")
+				.concat(" ").concat(usuario.getApellido2()!=null?usuario.getApellido2():"");
+		
+		objHistorial.setNomUsuario(nombreCompleto);
 		objHistorial.setObs(solicitud.getObs());
 		objHistorial.setFecha(new Timestamp(new Date().getTime()));
 		objHistorial.setRegUsuario(usuario.getUID());
@@ -2258,6 +2283,26 @@ public class ConsultarSolicitudMB {
 				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"el Voucher de Host:" , e);
 			}
 		}
+	}
+	
+	public void setearHistorialPorPerfil(){
+		logger.debug("=== setearHistorialPorPerfil() ===");
+		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
+			setMostrarUsuarioHist(false);
+		}else{
+			setMostrarUsuarioHist(true);
+		}
+	}
+	
+	public void habilitarVerDatosVoucher(){
+		logger.debug("==== habilitarVerDatosVoucher() == ");
+		String rptaHabilitar = habilitarVerDatosVoucherMultit();
+		if(rptaHabilitar.equalsIgnoreCase(ConstantesVisado.VALOR2_ESTADO_ACTIVO)){
+			setMostrarVerDatosVoucher(true);
+		}else{
+			setMostrarVerDatosVoucher(false);
+		}
+		logger.debug("getMostrarVerDatosVoucher: "+getMostrarVerDatosVoucher());
 	}
 
 	public void obtenerHistorialSolicitud() {
@@ -5870,7 +5915,6 @@ public class ConsultarSolicitudMB {
 		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_DICTAMEN_FLUJO));
 		
 		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
-		Integer contador = 0;
 		String resultado="0";
 		try {
 			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
@@ -5878,9 +5922,29 @@ public class ConsultarSolicitudMB {
 				resultado = listaMultiTabla.get(0).getValor2();
 			}
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " , e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas-T19: " , e);
 		}
 		logger.debug("[habDictamAbog]-resultado: "+resultado);
+		return resultado;
+	}
+	
+	private String habilitarVerDatosVoucherMultit(){
+		logger.debug("=== habilitarVerDatosVoucherMultit() ===");
+		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_VER_DATOS_VOUCHER));
+		
+		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+		String resultado="0";
+		try {
+			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+			if(listaMultiTabla.size()>0){
+				resultado = listaMultiTabla.get(0).getValor2();
+			}
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas-T20: " , e);
+		}
+		logger.debug("[habilitarVerDatosVoucherMultit]-resultado: "+resultado);
 		return resultado;
 	}
 	
@@ -6601,6 +6665,23 @@ public class ConsultarSolicitudMB {
 
 	public void setObjVoucher(TiivsHostVoucher objVoucher) {
 		this.objVoucher = objVoucher;
+	}
+
+	public Boolean getMostrarUsuarioHist() {
+		return mostrarUsuarioHist;
+	}
+
+	public void setMostrarUsuarioHist(Boolean mostrarUsuarioHist) {
+		this.mostrarUsuarioHist = mostrarUsuarioHist;
+	}
+
+
+	public Boolean getMostrarVerDatosVoucher() {
+		return mostrarVerDatosVoucher;
+	}
+
+	public void setMostrarVerDatosVoucher(Boolean mostrarVerDatosVoucher) {
+		this.mostrarVerDatosVoucher = mostrarVerDatosVoucher;
 	}
 	
 }
