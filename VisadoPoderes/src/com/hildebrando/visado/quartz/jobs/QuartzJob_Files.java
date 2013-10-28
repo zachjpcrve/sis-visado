@@ -64,7 +64,7 @@ public class QuartzJob_Files implements Job  {
 	@SuppressWarnings("unchecked")
 	private void limpiarDirectorio(File directory) {	
 		logger.debug("== limpiarDirectorio():INICIO ==");
-		int diferenciaEnDias = 1;
+		int diferenciaEnDias = Integer.parseInt(Utilitarios.getPropiedad("nroDiasLimpFiles")); //1;
 		Date fechaActual = Calendar.getInstance().getTime();
 		long tiempoActual = fechaActual.getTime();
 		long unDia = diferenciaEnDias * 24 * 60 * 60 * 1000;
