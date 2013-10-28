@@ -525,8 +525,8 @@
 																	</p:selectOneMenu></td>
 																<td><p:fileUpload value="#{solicitudRegMB.fileUpload}"
 																		id="idfileUpload" mode="simple" update="idfileUpload"
-																		auto="false" sizeLimit="100000"
-																		allowTypes="/(\.|\/)(pdf)$/" /></td>
+																		auto="false" sizeLimit="1000000" 
+																		allowTypes="/(\.|\/)(pdf|PDF)$/" /></td>
 
 																<td><p:commandButton id="btnAceptar"
 																		value="Aceptar"
@@ -550,7 +550,7 @@
 																		paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 																		rowsPerPageTemplate="5,10,15" editable="true">
 
-																		<p:column headerText="Item">
+																		<p:column headerText="Código">
 																			<h:outputText value="#{s.item}" />
 																		</p:column>
 																		<p:column headerText="Documento" style="width:400px;">
@@ -896,7 +896,7 @@
 					<h:inputHidden id="inputHidden" value="#{solicitudRegMB.patter}"></h:inputHidden>
 					<p:panel header="Búsqueda">
 						<h:panelGrid columns="12" id="gridApodPodEd" cellspacing="0" cellpadding="2">
-								<h:outputText id="outTipoDoi" value="T. DOI/C Central*:  " style="color:red" />
+								<h:outputText id="outTipoDoi" value="TIPO DOI*:  " style="color:red" />
 								<p:selectOneMenu id="cboTipoDoi"
 									value="#{solicitudRegMB.objTiivsPersonaBusqueda.tipDoi}"
 									valueChangeListener="#{solicitudRegMB.cambiarRazonSocial}"																	
@@ -935,7 +935,7 @@
 				
 						<h:panelGrid columns="8" id="gridApodPodEd2" cellspacing="0" cellpadding="2">
 						
-							<h:outputText id="outTipoDoi2" value="T. DOI/C *:" style="color:red"/>
+							<h:outputText id="outTipoDoi2" value="TIPO DOI*:" style="color:red"/>
 							<p:selectOneMenu id="cboTipoDoi2"
 								value="#{solicitudRegMB.objTiivsPersonaResultado.tipDoi}"
 								valueChangeListener="#{solicitudRegMB.cambiarRazonSocial}"

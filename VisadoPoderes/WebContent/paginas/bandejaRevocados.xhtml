@@ -44,7 +44,7 @@
 										itemValue="#{t.id.codElem}" itemLabel="#{t.valor1}" />
 								</p:selectOneMenu>
 
-								<h:outputLabel value="T.DOI/ C.Central: " />
+								<h:outputLabel value="Tipo DOI:" />
 								<p:selectOneMenu id="cboTipoDoi"
 									value="#{revocadosMB.objTiivsPersonaBusqueda.tipDoi}"
 									style="width: 120px">
@@ -268,7 +268,7 @@
 				<p:panel header="Búsqueda">
 					<h:panelGrid columns="12" id="gridApodPodEd">
 
-						<h:outputLabel value="T.DOI/ C.Central*: " style="color:red" />
+						<h:outputLabel value="TIPO DOI*: " style="color:red" />
 						<p:selectOneMenu id="cboTipoDoi"
 							value="#{revocadosMB.objTiivsPersonaBusquedaDlg.tipDoi}"
 							valueChangeListener="#{revocadosMB.cambiarRazonSocial}"	
@@ -298,7 +298,7 @@
 				<p:panel header="Nuevo Registro" id="pnlNuevo">
 				
 					<h:panelGrid columns="6" id="gridApodPodEd2">
-						<h:outputLabel value="T.DOI/ C.Central*: " style="color:red"/>
+						<h:outputLabel value="TIPO DOI*: " style="color:red"/>
 						<p:selectOneMenu id="cboTipoDoi2"
 							value="#{revocadosMB.objTiivsPersonaAgregar.tipDoi}"
 							valueChangeListener="#{revocadosMB.cambiarRazonSocial}"	

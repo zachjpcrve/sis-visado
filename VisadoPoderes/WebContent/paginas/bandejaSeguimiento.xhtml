@@ -296,9 +296,9 @@
 												<h:outputText value="#{tbl.tiivsEstudio.desEstudio}" style="font-size: 9px"/>	
 											</p:column>
 											
-											<p:column width="80">
+											<p:column width="87">
 												<f:facet name="header">  
-											         <h:outputText value="Nivel" style="font-size: 9px"/>  
+											         <h:outputText value="Nivel de Autorización" style="font-size: 9px"/>  
 											    </f:facet>
 												<h:outputText value="#{tbl.txtNivel}" style="font-size: 9px"/>	
 											</p:column>
@@ -391,8 +391,8 @@
 								<p:column headerText="Fecha" width="55" exportable="false" style="font-size: 9px">
 									<h:outputText value="#{seg.fecha}" style="font-size: 9px"/>  							 
 								</p:column>
-								
-								<p:column headerText="Usuario" width="165" exportable="false" style="font-size: 9px">
+								<!-- [28-10] Mejora: Se oculta columna para perfil: 'Oficina' -->
+								<p:column headerText="Usuario" rendered="#{seguimientoMB.mostrarUsuario}" width="165" exportable="false" style="font-size: 9px">
 									<h:outputText value="#{seg.regUsuario} #{seg.usuario}" style="font-size: 9px"/>  							 
 								</p:column>
 								
