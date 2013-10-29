@@ -543,7 +543,7 @@ public class SeguimientoMB
 		
 		// Se obtiene y setea la descripcion del Estado en la grilla
 		if(solicitudes!=null){
-			logger.debug("[ActDatosGrilla]-Hay  "+solicitudes.size() +" solicitudes como resultado.");
+			logger.debug("[ActDatosGrilla]-Hay  "+solicitudes.size() +" solicitud(es) como resultado.");
 		}
 		for (TiivsSolicitud tmpSol : solicitudes) 
 		{
