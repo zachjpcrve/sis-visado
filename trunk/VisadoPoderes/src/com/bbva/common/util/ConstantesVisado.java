@@ -47,6 +47,7 @@ public class ConstantesVisado {
 	//[28-10] Mejoras
 	public static final String CODIGO_MULTITABLA_DICTAMEN_FLUJO = "T19";
 	public static final String CODIGO_MULTITABLA_VER_DATOS_VOUCHER = "T20";
+	public static final String CODIGO_MULTITABLA_SERV_WEB = "T21";
 	
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
