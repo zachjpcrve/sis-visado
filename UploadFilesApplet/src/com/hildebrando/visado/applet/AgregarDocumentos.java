@@ -135,24 +135,20 @@ public class AgregarDocumentos extends JApplet {
         }
         System.out.println("==== sendToFTP():Fin ====");  
     }
-    
+  
     public String subirFTP(List<File> files){     
     	Utiles.escribirEnLog(Constantes.INFO, "==== subirFTP():INICIO =====","");
     	//if(ficherosLeidos!=null){
     	if(files!=null){
-    		Utiles.escribirEnLog(Constantes.INFO, "[SubirFTP]-Cantidad de ficheros a subir: " + ficherosLeidos.size(),"");
-        	 String host = getParameter("host");
-             String user = getParameter("user");
-             String pass = getParameter("pass");
-             String urlTemporal = getParameter("urlTemporal");
-             
-             Utiles.escribirEnLog(Constantes.INFO, "[SubirFTP]-Host:" + host + " \tDatos:"+user+"/"+pass, "");
-             Utiles.escribirEnLog(Constantes.INFO, "[SubirFTP]-RutaTemp:" + urlTemporal, "");
-             
-             try {
-            	 clienteFTP = new ClienteFTP(host, user, pass, urlTemporal);
-                 //clienteFTP.setDirectorio(urlTemporal);	
-                 //return clienteFTP.uploadFiles(ficherosLeidos);
+    		//Utiles.escribirEnLog(Constantes.INFO, "[SubirFTP]-Cantidad de ficheros a subir: " + ficherosLeidos.size(),"");
+    		String host = getParameter("host");
+            String user = getParameter("user");
+            String pass = getParameter("pass");
+            String urlTemporal = getParameter("urlTemporal");
+            try {
+            	 Utiles.escribirEnLog(Constantes.INFO, "[SubirFTP]-Host:" + host + " \tDatos:"+user+"/"+pass, "");
+                 Utiles.escribirEnLog(Constantes.INFO, "[SubirFTP]-RutaTemp:" + urlTemporal, "");
+                 clienteFTP = new ClienteFTP(host, user, pass, urlTemporal);
             	 return clienteFTP.uploadFiles(files);
 			} catch (Exception e) {
 				Utiles.escribirEnLog(Constantes.ERROR, Constantes.MSJ_OCURRE_ERROR+"al conectar via FTP " + e,"");
@@ -211,7 +207,7 @@ public class AgregarDocumentos extends JApplet {
         
         Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-[SIEMPRE]-sDocumentosLeer: " + sDocumentosLeer, "");
         
-        Integer contador = 0;
+//        Integer contador = 0;
         String sDocumentosCargados = "";
         Archivo archivo = new Archivo();                
         if(archivo.obtenerListaFiles(sPathCliente, sDocumentosLeer) == 1){
@@ -227,38 +223,46 @@ public class AgregarDocumentos extends JApplet {
            
             
             //Se valida que haya lstFicherosLeidos para enviar por FTP && lstFicherosLeidos.size()>0
-            /*if(lstFicherosLeidos!=null ){            	 
-            	sDocumentosCargados = subirFTP();
+            if(lstFicherosLeidos!=null ){            	 
+            	sDocumentosCargados = subirFTP(lstFicherosLeidos);
             	Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-Archivos subidos por FTP: " + sDocumentosCargados, "");
-            	String[] archivosLeidos = documentosLeidos.split(Constantes.SEPARADOR);
-            	String[] archivosCargados = sDocumentosCargados.split(Constantes.SEPARADOR);
+            	/*String[] archivosLeidos = documentosLeidos.split(Constantes.SEPARADOR);
+            	String[] archivosCargados = sDocumentosCargados.split(Constantes.SEPARADOR);*/
             	
-            	for(int i=0; i<ficherosLeidos.size(); i++){
+            	/*for(int i=0; i<ficherosLeidos.size(); i++){
             		Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-archivoLeido:" + archivosLeidos[i], null);
             		Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-archivoCargado:" + archivosCargados[i], null);
             		ejecutarFuncion("actualizarDocumentos", archivosLeidos[i], archivosCargados[i]);//ojo modificar javascript
-            	}
-                //ejecutarFuncion("actualizarDocumentos", documentosLeidos,sDocumentosCargados);//ojo modificar javascript
+            	}*/
+                ejecutarFuncion("actualizarDocumentos", documentosLeidos,sDocumentosCargados);//ojo modificar javascript
             }else{
             	Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-Es nulo o no hay ficheros:", "");
-            }*/
-            if(lstFicherosLeidos!=null){
-            	String[] archivosLeidos = sNombreDocLeidos.split(Constantes.SEPARADOR);
-            	for(File file:lstFicherosLeidos){
-            		sDocumentosCargados = subirFTP(obtenerFiles(file));
-            		if(sDocumentosCargados!=null && sDocumentosCargados.compareTo("")!=0){
-            			ejecutarFuncion("actualizarDocumentos", archivosLeidos[contador], sDocumentosCargados);
-            			contador++;
-            			try {
-            				Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-Esperamos 5 segundos: ", "");
-							Thread.sleep(5000);
-						} catch (InterruptedException e) {
-							Utiles.escribirEnLog(Constantes.ERROR, Constantes.MSJ_OCURRE_EXCEPCION+"al esperar ejecución javascript:"+e, "");
-							e.printStackTrace();
-						}
-            		}
-            	}
             }
+            
+            /*if(lstFicherosLeidos!=null){
+            	String[] archivosLeidos = sNombreDocLeidos.split(Constantes.SEPARADOR);
+            	Utiles.escribirEnLog(Constantes.INFO, "[SubirFTP]-Cantidad de ficheros a subir: " + ficherosLeidos.size(),"");
+            	
+				for (File file : lstFicherosLeidos) {
+					sDocumentosCargados = subirFTP(obtenerFiles(file));
+					Utiles.escribirEnLog(Constantes.INFO, "[actualizarFTP line 247]-Documentos cargados: " + sDocumentosCargados, "");
+					if (sDocumentosCargados != null
+							&& sDocumentosCargados.compareTo("") != 0) {
+						ejecutarFuncion("actualizarDocumentos",
+								archivosLeidos[contador], sDocumentosCargados);
+						contador++;
+						/*
+						 * try { Utiles.escribirEnLog(Constantes.INFO,
+						 * "[actualizarFTP]-Esperamos 5 segundos: ", "");
+						 * Thread.sleep(5000); } catch (InterruptedException e)
+						 * { Utiles.escribirEnLog(Constantes.ERROR,
+						 * Constantes.MSJ_OCURRE_EXCEPCION
+						 * +"al esperar ejecución javascript:"+e, "");
+						 * e.printStackTrace(); }
+						 */
+				/*	}
+				}
+            }*/
         }else{
         	 Utiles.escribirEnLog(Constantes.INFO,"===== actualizarFTP()-es CERO =====", "");
         }
@@ -462,9 +466,9 @@ public class AgregarDocumentos extends JApplet {
     
     
     
-    private void ejecutarFuncion(String funcion, Object... parametros) {        
+    private synchronized void ejecutarFuncion(String funcion, Object... parametros) {        
         try {
-        	Utiles.escribirEnLog(Constantes.DEBUG,"[ejecutarFuncion]-nombre:"+funcion, "");
+        	Utiles.escribirEnLog(Constantes.DEBUG,"[ejecutarFuncion]-nombre:" + funcion, "");
         	StringBuilder builder = new StringBuilder(Constantes.URL_JAVA_SCRIPT);
             builder.append(funcion).append("(");
             int i=0;

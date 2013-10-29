@@ -7,6 +7,7 @@ package com.hildebrando.visado.ftp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -96,65 +97,76 @@ public class ClienteFTP {
         }
         Utiles.escribirEnLog(Constantes.INFO,"== upLoadFiles(f,s):Fin ==", "");
     }
+   
     
   //Metodo que se agrega para subir archivos por FTP
     public String uploadFiles(List<File> listaFile){
-    	Utiles.escribirEnLog(Constantes.INFO,"\t===== uploadFiles(l):Inicio =====", "");
+    	Utiles.escribirEnLog(Constantes.INFO,"\t===== uploadFiles(l) synchronize:Inicio =====", "");
     	String archivosSubidos = "";
     	Integer contador = 0;
     	String nombreTemporal = null;
     	try {
-            ftpCliente.connect(this.host);
-            this.login = ftpCliente.login(this.username, this.password);
-            if (this.login) {
-            	//Utiles.escribirEnLog(Constantes.DEBUG,"\t[uploadFiles]-Login exitoso.", "");
-            	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-directorio: "+directorio, "");
-                //04-10-2013 
-            	//TEST: El directorio es: '/files/'
-            	//PROD: El directorio es: '/documentos/files/'
-            	
-                boolean resCambDirect = ftpCliente.changeWorkingDirectory(directorio);
-                Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-resultado setDirectorio: "+resCambDirect, "");
-                Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-ftpCliente.printWorkingDirectory: "+ftpCliente.printWorkingDirectory(), "");
-                if(listaFile!=null){
-                	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-Tamanhio listaArchivos:"+listaFile.size(), "");
+    		
+    		if(listaFile.size()>0){
+    			Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-directorio: "+directorio, "");
+    			for(File file:listaFile){
+    				ftpCliente.connect(this.host);
+    	            this.login = ftpCliente.login(this.username, this.password);
+    	            if (this.login) {
+    	            	//Utiles.escribirEnLog(Constantes.DEBUG,"\t[uploadFiles]-Login exitoso.", "");
+    	            	
+    	            	boolean resCambDirect = ftpCliente.changeWorkingDirectory(directorio);
+    	                Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-resultado setDirectorio: "+resCambDirect, "");
+    	                Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-ftpCliente.printWorkingDirectory: "+ftpCliente.printWorkingDirectory(), "");
+    	                if(listaFile!=null){
+    	                	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-Tamanhio listaArchivos:"+listaFile.size(), "");
+    	                }
+    	            
+    	                contador++;
+                    	FileInputStream fis = new FileInputStream(file);
+                    	ftpCliente.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
+                    	ftpCliente.setFileTransferMode(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
+                    	ftpCliente.setBufferSize(Constantes.BUFFERED_SIZE);
+                    	nombreTemporal= createNameFile(file);
+                    	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-nombreTemporal:" + nombreTemporal, "");
+                    	
+                    	//boolean res = ftpCliente.storeFile(nombreTemporal, fis ); /////
+                    	
+                    	OutputStream outputStream = ftpCliente.storeFileStream(nombreTemporal);
+                    	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-outputStream:" + outputStream, "");
+                    	
+                    	byte[] buffer = new byte[Constantes.BUFFERED_SIZE];
+                        int bytesRead = -1;
+                        
+                    	while ((bytesRead = fis.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, bytesRead);
+                        }
+                    	outputStream.close();
+                    	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-termina de escribir archivo de salida:" , ""); /////
+                    	//Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-resultado:" + res, ""); /////
+                    	fis.close();
+                    	
+                    	if(contador<listaFile.size()){
+                    		archivosSubidos = archivosSubidos + nombreTemporal + Constantes.SEPARADOR;
+                    	}else{
+                    		archivosSubidos = archivosSubidos + nombreTemporal;
+                    	}
+    	                
+    	            } else {
+    	            	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-"+Constantes.MSJ_OCURRE_EXCEPCION+"al intentar conectarse al FTP", "");
+    	            }
                 }
-                for(File file:listaFile){
-                	contador++;
-                	FileInputStream fis = new FileInputStream(file);
-                	ftpCliente.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-                	nombreTemporal= createNameFile(file);
-                	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-nombreTemporal:" + nombreTemporal, "");
-                	boolean res = ftpCliente.storeFile(nombreTemporal, fis );
-                	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-resultado:" + res, "");
-                	fis.close();
-                	
-                	if(contador<listaFile.size()){
-                		archivosSubidos = archivosSubidos + nombreTemporal + Constantes.SEPARADOR;
-                	}else{
-                		archivosSubidos = archivosSubidos + nombreTemporal;
-                	}
-                }
-            } else {
-            	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-"+Constantes.MSJ_OCURRE_EXCEPCION+"al intentar conectarse al FTP", "");
-            }
+    		}
+    		
+            
         } catch (IOException e) {
         	Utiles.escribirEnLog(Constantes.ERROR,"\t[uploadFiles]-"+Constantes.MSJ_OCURRE_EXCEPCION+"IO al conectarse al FTP debido a: " + e, "");
         } catch (Exception ex) {
         	Utiles.escribirEnLog(Constantes.ERROR,"\t[uploadFiles]-"+Constantes.MSJ_OCURRE_EXCEPCION+"general al conectarse al FTP debido a: " + ex, "");
-        } 
-    	finally{
-        	try {
-        		if(ftpCliente!=null){
-        			ftpCliente.logout();
-    				ftpCliente.disconnect();	
-        		}
-			} catch (IOException e) {
-				Utiles.escribirEnLog(Constantes.ERROR,"\t[uploadFiles]-Fallo al desconectar FTP (IO):"+e, "");
-			} catch(Exception e){
-				Utiles.escribirEnLog(Constantes.ERROR,"\t[uploadFiles]-Fallo al desconectar FTP:"+e, "");
-			}
+        } finally{
+        	disconnect();
         }
+    	
     	Utiles.escribirEnLog(Constantes.INFO,"\t===== uploadFiles(l):Fin =====", "");
     	return archivosSubidos;
     }
