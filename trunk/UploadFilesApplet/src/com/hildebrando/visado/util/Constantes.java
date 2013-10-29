@@ -32,5 +32,9 @@ public class Constantes {
 	public static final String MSJ_OCURRE_EXCEPCION = "Ha ocurrido una excepcion ";
 	public static final String MSJ_OCURRE_ERROR = "Ha ocurrido un error ";
 	public static final String MSJ_LISTA_ARCHIVOS = "El listado de archivos ";
-    
+ 
+	
+	//28-10 Constantes para el FTP
+	public static final int BUFFERED_SIZE = 4096;
+	
 }
