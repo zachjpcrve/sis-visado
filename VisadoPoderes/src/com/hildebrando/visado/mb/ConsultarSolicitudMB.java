@@ -352,7 +352,7 @@ public class ConsultarSolicitudMB {
 					lstClasificacionPersona.add(t);
 				}
 				
-				logger.debug("tamanio lista clasificacion: "+lstClasificacionPersona.size());
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"de Clasificacion es: "+lstClasificacionPersona.size());
 			}
 		}
 	}
@@ -642,13 +642,13 @@ public class ConsultarSolicitudMB {
 	
 	public String redirectDetalleSolicitud(String codigoSolicitud) {
 		logger.info(" ===== redirectDetalleSolicitud(s) ====");
-		logger.debug("[redirectDetallSol]-codigoSolicitud:"+codigoSolicitud);
+		logger.debug("[redirectDetallSol]-codigoSolicitud: "+codigoSolicitud);
 		obtenerSolicitud(codigoSolicitud);		
 		return getRedirectDetalleSolicitud();
 	}
 	
 	private String getRedirectDetalleSolicitud(){
-		logger.info("[getRedirecDetSol]-Estado de la solicitud :: " +this.solicitudRegistrarT.getEstado());
+		logger.info("[getRedirecDetSol]-Estado de Solicitud: " +this.solicitudRegistrarT.getEstado());
 		String redirect = "";		
 		if (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_REGISTRADO_T02)) {
 			redirect = "/faces/paginas/solicitudEdicion.xhtml";
@@ -755,7 +755,7 @@ public class ConsultarSolicitudMB {
 			listaTemporalSolicitudAgrupacionesBorradores=new ArrayList<TiivsSolicitudAgrupacion>();
 			
 			TiivsSolicitud solicitud;
-			logger.info("[obtenerSolic]-codSol: " + codigoSolicitud);
+			logger.info("[obtenerSolic]-codigoSolicitud: " + codigoSolicitud);
 			solicitud = new TiivsSolicitud();
 			solicitud.setCodSoli(codigoSolicitud);
 			
@@ -772,7 +772,7 @@ public class ConsultarSolicitudMB {
 						
 			if(lstSolicBancariasCopia!=null)
 			{
-				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstSolicBancariasCopia es: ["+lstSolicBancariasCopia.size()+"].");	
+				logger.debug("[obtenerSolic]-"+ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstSolicBancariasCopia es: ["+lstSolicBancariasCopia.size()+"].");	
 			}
 			//Exonera comision
 			if(solicitudRegistrarT.getExoneraComision()!=null
@@ -787,7 +787,7 @@ public class ConsultarSolicitudMB {
 			//Operacion bancaria - Solicitud
 			for (TiivsSolicitudOperban f : lstSolicBancarias) 
 			{ 
-				logger.info("SolOperBanc-Moneda: " +f.getId().getMoneda());
+				logger.info("[obtenerSolic]-SolOperBanc-Moneda: " +f.getId().getMoneda());
 				if (f.getId().getMoneda() != null) 
 				{
 					y++;
@@ -2286,7 +2286,7 @@ public class ConsultarSolicitudMB {
 	}
 	
 	public void setearHistorialPorPerfil(){
-		logger.debug("=== setearHistorialPorPerfil() ===");
+		//logger.debug("=== setearHistorialPorPerfil() ===");
 		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)){
 			setMostrarUsuarioHist(false);
 		}else{
@@ -2295,14 +2295,14 @@ public class ConsultarSolicitudMB {
 	}
 	
 	public void habilitarVerDatosVoucher(){
-		logger.debug("==== habilitarVerDatosVoucher() == ");
+		//logger.debug("==== habilitarVerDatosVoucher() == ");
 		String rptaHabilitar = habilitarVerDatosVoucherMultit();
 		if(rptaHabilitar.equalsIgnoreCase(ConstantesVisado.VALOR2_ESTADO_ACTIVO)){
 			setMostrarVerDatosVoucher(true);
 		}else{
 			setMostrarVerDatosVoucher(false);
 		}
-		logger.debug("getMostrarVerDatosVoucher: "+getMostrarVerDatosVoucher());
+		//logger.debug("getMostrarVerDatosVoucher: "+getMostrarVerDatosVoucher());
 	}
 
 	public void obtenerHistorialSolicitud() {
@@ -2420,9 +2420,9 @@ public class ConsultarSolicitudMB {
 		
 		sUbicacionFinal = Utilitarios.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER) + File.separator;
 		
-		logger.debug("[Ubicacion Temporal]:" + sUbicacionTemporal);
+		logger.debug("\t[Ubicacion Temporal]:" + sUbicacionTemporal);
 		if(lstAnexoSolicitud!=null){
-			logger.info("[FileServer]-Cantidad Anexos:" + this.lstAnexoSolicitud.size());	
+			logger.info("\t[FileServer]-Cantidad Anexos:" + this.lstAnexoSolicitud.size());	
 		}
 		
 		File srcFile = null;
@@ -2431,7 +2431,7 @@ public class ConsultarSolicitudMB {
 		
 		for (TiivsAnexoSolicitud a : this.lstAnexoSolicitud)
 		{
-			logger.debug("---------------------- Recuperando archivo ---------------------------------------------");
+			logger.debug("-------- Recuperando archivo ----------");
 			fichTemp = new File(sUbicacionTemporal	+ a.getAliasTemporal());
 			if (!fichTemp.exists()) 
 			{
@@ -2446,13 +2446,13 @@ public class ConsultarSolicitudMB {
 
 					//Crea archivo temporal
 					String fileName = a.getId().getCodSoli() + "_" + a.getAliasArchivo();
-					logger.debug("[Anexo-Solicitud]-nombreArchivo:"+fileName);
+					logger.debug("\t[Anexo-Solicitud]-nombreArchivo:"+fileName);
 					String extension = fileName.substring(fileName.lastIndexOf("."));
 					String sNombreTemporal = "";
 					String sNombrePrefijo = a.getAliasArchivo().substring(0, a.getAliasArchivo().lastIndexOf(".")) + "_";
 					fichTemp = File.createTempFile(sNombrePrefijo, extension, new File(sUbicacionTemporal));
 					sNombreTemporal = fichTemp.getName().substring(1 + fichTemp.getName().lastIndexOf(File.separator));
-					logger.debug("[Anexo]-sNombreTemporal: " + sNombreTemporal);
+					logger.debug("\t[Anexo]-sNombreTemporal: " + sNombreTemporal);
 
 					srcFile = new File(sUbicacionFinal + a.getId().getCodSoli() +  "_" + a.getAliasArchivo());
 					
@@ -2463,7 +2463,7 @@ public class ConsultarSolicitudMB {
 						a.setAliasTemporal(sNombreTemporal);
 					} else {
 						a.setAliasTemporal("");
-						logger.debug("El archivo que se intenta consultar no existe en el FileServer");
+						logger.debug("\tEl archivo que se intenta consultar no existe en el FileServer");
 					}
 					
 					bSaved = true;
@@ -2498,11 +2498,11 @@ public class ConsultarSolicitudMB {
 					}
 					iRet = iRet && true;
 				} else {
-					logger.error("Error no se actualizara anexo");
+					logger.error("\tError no se actualizara anexo");
 					iRet = iRet && false;
 				}
 			} else {
-				logger.info("Archivo ya existe en ubicacion temporal ");
+				logger.debug("\tArchivo ya existe en ubicacion temporal ");
 			}
 		}
 		logger.info("====== SALIENDO de descargarAnexosFileServer() ======");
@@ -2510,7 +2510,7 @@ public class ConsultarSolicitudMB {
 	}
 
 	public void seterComentario() {
-		logger.info("************************** Setear Comentario **************************");
+		//logger.info("************************** Setear Comentario **************************");
 		logger.info("Comentario : " + this.solicitudRegistrarT.getObs());
 	}
 
@@ -5066,7 +5066,7 @@ public class ConsultarSolicitudMB {
 	
 	public void obtenerImporteTotalxSolicitud(List<TiivsSolicitudOperban> lstOperBan)
 	{
-		logger.info(" ===== obtenerImporteTotalxSolicitud() ===  ");
+		//logger.info(" ===== obtenerImporteTotalxSolicitud() ===  ");
 
 		for (TiivsSolicitudOperban x : lstOperBan) 
 		{
@@ -5929,7 +5929,7 @@ public class ConsultarSolicitudMB {
 	}
 	
 	private String habilitarVerDatosVoucherMultit(){
-		logger.debug("=== habilitarVerDatosVoucherMultit() ===");
+		//logger.debug("=== habilitarVerDatosVoucherMultit() ===");
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
 		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_VER_DATOS_VOUCHER));
