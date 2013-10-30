@@ -387,11 +387,11 @@
 						update=":frmPendEdit:pnlRegistrarPendEdit"
 						ajax="true" />
 						
-					<p:spacer width="10" height="20" />
-
+					<p:spacer width="250" height="20" />
+					
 					<p:fileUpload id="idfileUpload" mode="advanced"  
 									value="#{revocadosMB.fileUpload}"
-									update=":frmPendEdit:gridApodPod4"
+									update=":frmPendEdit:gridApodPod4" 
 									showButtons="false"
 									auto="true"
 									label="Examinar"  
@@ -459,17 +459,14 @@
 																			}
 																			
 																			function appletDeleteFilesAndRedirect(){																																								 
-																				redirect = this.document.getElementById('formRegistroToolBar:idResultRegistro').value;																																							
-																				//Si redirect no esta vacio entonces se realizó el registro de forma correcta
-																				if(redirect.length>0){
-																					applet = this.document.getElementById('appletVisor');																					
-																					try{
-																						applet.eliminarDocumentosConPermisos();
-																					}
-																					catch(err){}																					
-																					document.getElementById('frmPendEdit:btnRedirecionar').click()
-																				} 
+																				applet = this.document.getElementById('appletVisor');																					
+																				try{
+																					applet.eliminarDocumentosConPermisos();
+																				}
+																				catch(err){}																					
+																				document.getElementById('frmPendEdit:btnRedirecionar').click()
 																			}
+																			
 																		</script>
 
 
@@ -859,7 +856,7 @@
 				<p:commandButton value="Sí" process=":frmPendEdit:dtClientes"
 					actionListener="#{revocadosMB.guardarApodPod}" ajax="true"
 					update=":frmPendEdit:dtClientes, :frmConsRev:pnlTablaRevocados :frmCliente:idDlgCliente 
-							:frmConsRev:msmGrowlPopup" oncomplete="cfdGuardar.hide();dlgApoPodPendEdit.hide();">
+							:frmConsRev:msmGrowlPopup" oncomplete="cfdGuardar.hide();dlgApoPodPendEdit.hide();appletDeleteFilesAndRedirect()">
 				</p:commandButton>
 
 				<p:commandButton value="No" onclick="cfdGuardar.hide();">

@@ -1563,9 +1563,11 @@ public class RevocadosMB {
 		
 		objTiivsPersonaBusquedaDlg= new TiivsPersona();
 		objTiivsPersonaAgregar = new TiivsPersona();
-		fileUpload = null;
+		
+		//Se comenta 3 lineas de abajo 29/10/2013
+		/*fileUpload = null;
 		aliasCortoDocumento = null;
-		sAliasTemporal = null;
+		sAliasTemporal = null;*/
 		
 		//objTiivsPersonaBusquedaDlg.setTipDoi("");
 		//objTiivsPersonaBusquedaDlg.setNumDoi("");

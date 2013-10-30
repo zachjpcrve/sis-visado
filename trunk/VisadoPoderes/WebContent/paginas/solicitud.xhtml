@@ -408,7 +408,7 @@
 																		value="Escanear"
 																		onclick="return invocarEscaner('#{solicitudRegMB.cadenaEscanerFinal}');">
 																	</p:commandButton> <p:commandButton value="Actualizar"
-																		onclick="return appletActualizar ();" async="false" /> <h:panelGroup
+																		onclick="return appletActualizar ();" /> <h:panelGroup
 																		id="idVisorApplet">
 
 																		<script type="text/javascript" language="javascript">
@@ -496,7 +496,7 @@
 																	<h:inputHidden id="idCodigoDocumentoSelected"
 																		value="#{solicitudRegMB.selectedDocumentoDTO.nombreCorto}" />
 																	<p:remoteCommand name="actDocumentos" update=":formSolicitudRegistro:pnlSolicitudRegistro,:formSolicitudRegistro:idVisorApplet"
-																		process="@form"
+																		process="@form" 
 																		actionListener="#{solicitudRegMB.actualizarDocumentosXTipoSolicitud}" />
 																</td>
 

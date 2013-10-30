@@ -15,14 +15,12 @@ import org.apache.log4j.Logger;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
-import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.SeguridadDao;
 import com.bbva.persistencia.generica.util.Sesion;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.conexion.__Conexion2;
 import com.grupobbva.bc.per.tele.seguridad.ServiciosSeguridadBbva;
 import com.hildebrando.visado.dto.MiembroDto;
-import com.hildebrando.visado.modelo.Ldapperu2;
 
 /**
  * Clase que se encarga de manejar la seguridad de la aplicacion, 
@@ -68,7 +66,7 @@ public class SeguridadMB {
 	String explorador="";
 	logger.info("===== entrando a iniciarSession() ====");				
 	ServiciosSeguridadBbva objSeguridad;
-	//IILDPeUsuario usuarioIILD = null;
+//	IILDPeUsuario usuarioIILD = null;
 	com.grupobbva.seguridad.client.domain.Usuario usuarioIILD=null;
 	//Ldapperu2 usuarioIILD = new Ldapperu2();;
     request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -224,7 +222,7 @@ public class SeguridadMB {
 				logger.info("miembroService - No Nullo");
 			}
 			
-			 List<MiembroDto> ListaMiembros= miembroService.buscarMiembroSql(usuarioIILD);
+			List<MiembroDto> ListaMiembros= miembroService.buscarMiembroSql(usuarioIILD);
 				
 			 logger.info(" ***************** ListaMiembros **************");
 			 if(ListaMiembros!=null){
@@ -273,8 +271,6 @@ public class SeguridadMB {
             		 request.getSession(true).setAttribute("PERFIL_USUARIO", ConstantesVisado.SSJJ);
         		 }
         	}
-        	
-        	
         	
         	if(ListaMiembros.size()>0){
         		logger.debug(ConstantesVisado.SEGURIDAD.USER_ACCESO_OK);
