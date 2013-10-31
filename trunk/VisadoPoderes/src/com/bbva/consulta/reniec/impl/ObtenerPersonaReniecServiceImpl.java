@@ -1,19 +1,29 @@
 package com.bbva.consulta.reniec.impl;
 
-import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.Properties;
+
+import javax.xml.rpc.ServiceException;
+
 import org.apache.log4j.Logger;
 
 import com.bbva.consulta.reniec.ObtenerPersonaReniecService;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Constantes;
 import com.bbva.consulta.reniec.util.Persona;
-
+import com.grupobbva.pe.SIR.ents.body.consultaPorDNI.DatosDomicilio;
+import com.grupobbva.pe.SIR.ents.body.consultaPorDNI.DatosNacimiento;
+import com.grupobbva.pe.SIR.ents.body.consultaPorDNI.DatosPersona;
+import com.grupobbva.pe.SIR.ents.header.RequestHeader;
+import com.grupobbva.pe.SIR.service.message.ConsultaPorDNIRequest;
+import com.grupobbva.pe.SIR.service.message.ConsultaPorDNIResponse;
+import com.grupobbva.pe.SIR.service.message.WS_PersonaReniec_ServiceLocator;
+import com.hildebrando.visado.dto.ParametrosReniec;
 import com.ibm.www.BBVA_RENIEC_WSDLPortType;
 import com.ibm.www.BBVA_RENIEC_WSDLSOAP_HTTP_ServiceLocator;
+import com.ibm.www.Cabecera;
 import com.ibm.www.RENIEC_7_REPLY_Type;
 import com.ibm.www.RENIEC_7_REQUEST_Type;
-import com.ibm.www.Cabecera;
 import com.ibm.www.SubTramaConsulta7;
 
 
@@ -226,6 +236,75 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 	
 	public void setProperties(Properties properties) {
 		this.properties = properties;
+	}
+
+	@Override
+	public BResult devolverPersonaReniecDNI(ParametrosReniec parametrosReniec,
+			String dni) throws ServiceException {
+		
+		Persona persona = null;
+		BResult result = new BResult();
+		
+		if(parametrosReniec!=null){
+			RequestHeader refRequestHeader = new RequestHeader();
+			refRequestHeader.setCanal(parametrosReniec.getCanal());
+			refRequestHeader.setCodigoAplicacion(parametrosReniec.getCodigoAplicacion());
+			refRequestHeader.setCodigoInterfaz(parametrosReniec.getCodigoInterfaz());
+			refRequestHeader.setFechaHoraEnvio("01/01/2010 10:20:10");
+			refRequestHeader.setIdEmpresa(parametrosReniec.getEmpresa());
+			refRequestHeader.setIdTransaccion(parametrosReniec.getTransaccion());		
+			refRequestHeader.setUsuario(parametrosReniec.getUsuario());
+			
+			com.grupobbva.pe.SIR.ents.body.consultaPorDNI.ConsultaPorDNIRequest refConsultaPorDNIRequest = new com.grupobbva.pe.SIR.ents.body.consultaPorDNI.ConsultaPorDNIRequest();
+			refConsultaPorDNIRequest.setCentroCostos(parametrosReniec.getCentroCosto());
+			refConsultaPorDNIRequest.setFormatoFirma(parametrosReniec.getFormatoFirma());
+			refConsultaPorDNIRequest.setHostSolicitante(parametrosReniec.getHostSolicitante());
+			refConsultaPorDNIRequest.setIndConsultaDatos(parametrosReniec.getConsultaDatos());
+			refConsultaPorDNIRequest.setIndConsultaFirma(parametrosReniec.getConsultaFirma());
+			refConsultaPorDNIRequest.setIndConsultaFoto(parametrosReniec.getConsultaFoto());
+			refConsultaPorDNIRequest.setNumeroDNIConsultado(dni);
+			refConsultaPorDNIRequest.setNumeroDNISolicitante(parametrosReniec.getDniSolicitante());
+			refConsultaPorDNIRequest.setRegistroCodUsuario(parametrosReniec.getRegistroUsuario());
+			refConsultaPorDNIRequest.setTipoAplicacion(parametrosReniec.getTipoAplicacion());
+			
+			ConsultaPorDNIRequest consulta = new ConsultaPorDNIRequest(refRequestHeader, refConsultaPorDNIRequest);
+			ConsultaPorDNIResponse rpta = null;
+			
+			WS_PersonaReniec_ServiceLocator proxy = new  WS_PersonaReniec_ServiceLocator();
+			proxy.setWS_PersonaReniecEndpointAddress(parametrosReniec.getRutaServicio());
+			
+			try {
+				rpta = proxy.getWS_PersonaReniec().consultaPorDNI(consulta);
+				
+				com.grupobbva.pe.SIR.ents.body.consultaPorDNI.ConsultaPorDNIResponse response = rpta.getRefConsultaPorDNIResponse();
+				
+				DatosPersona datosPersona = response.getRespuestaDatos().getDatosPersona();
+				DatosDomicilio datosDomicilio = response.getRespuestaDatos().getDatosDomicilio();
+				DatosNacimiento datosNacimiento = response.getRespuestaDatos().getDatosNacimiento();
+				
+				persona = new Persona();
+				persona.setNombre(datosPersona.getNombres().trim());
+				persona.setApellidoPaterno(datosPersona.getApellidoPaterno().trim());
+				persona.setApellidoMaterno(datosPersona.getApellidoMaterno().trim());
+				persona.setNombreCompleto(datosPersona.getNombres().trim());
+				persona.setDireccion(datosDomicilio.getDireccion().trim());
+				persona.setNumerodocIdentidad(datosPersona.getNumeroDNIConsultado().trim());
+				persona.setFechaNac(datosNacimiento.getFecha());
+				
+				result.setMessage(Constantes.VACIO);
+				result.setCode(Constantes.EXITO);
+				result.setObject(persona);			
+				
+			} catch (RemoteException e) {
+				result.setMessage(Constantes.RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA);
+				result.setCode(Constantes.ERROR_GENERAL);
+				log.error(Constantes.RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA + e);
+			}
+		}else{
+			result.setMessage(Constantes.RENIEC_NO_EXISTE_PARAMETRO);
+			result.setCode(Integer.parseInt(Constantes.RENIEC_NO_EXISTE_PARAMETRO_MENSAJE));
+		}		
+		return result;
 	}
 
 }
