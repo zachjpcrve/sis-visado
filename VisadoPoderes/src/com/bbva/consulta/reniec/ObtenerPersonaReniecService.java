@@ -3,6 +3,7 @@ package com.bbva.consulta.reniec;
 import javax.xml.rpc.ServiceException;
 
 import com.bbva.consulta.reniec.util.BResult;
+import com.hildebrando.visado.dto.ParametrosReniec;
 
 /**
  * Interface que obtiene datos de una persona registrada en la RENIEC.
@@ -20,4 +21,6 @@ public interface ObtenerPersonaReniecService {
 	 * 		código de &eacute;xito o error.
 	 */
 	public abstract BResult devolverPersonaReniecDNI(String usuario, String oficina,String dni) throws ServiceException;
+	
+	public abstract BResult devolverPersonaReniecDNI(ParametrosReniec parametrosReniec,String dni) throws ServiceException;
 }

@@ -43,4 +43,9 @@ public class Constantes {
     //public static final String RENIEC_NO_EXISTE_CLIENTE = "La persona no figura en la Reniec";
     public static final String RENIEC_NO_EXISTE_CLIENTE = "";
     public static final String ERROR_SERVICIO_WEB = "No se ha podido realizar la conexi\u00F3n al servicio web del banco para autentificar el usuario.";
+    
+    //[31-10]
+    public static final String RENIEC_NO_EXISTE_PARAMETRO = "";
+    public static final String RENIEC_NO_EXISTE_PARAMETRO_MENSAJE = "No se encuentran registrados los parámetros de entrada del servicio web";
+    
 }

@@ -91,6 +91,30 @@ public class ConstantesVisado {
 	//Se agregan 2 lineas de abajo
 	public static final java.lang.String DOCUMENTOS="documentos";
 	public static final java.lang.String VISADO="visado";
+	public static final String CODIGO_MULTITABLA_HABILITA_SERVICIOS = "T22";
+	public static final String CODIGO_SERVICIO_PEA = "0001";
+	public static final String CODIGO_SERVICIO_RENIEC = "0002";
+	public static final String CODIGO_SERVICIO_RENIEC_DUMMY = "0003";
+	
+	//[31-10]Se agregan parametros del servicio web de reniec
+	static public class PARAMETROS_RENIEC{
+		public static final String CANAL="0001";
+		public static final String CODIGO_APLICACION="0002";
+		public static final String CODIGO_INTERFAZ="0003";
+		public static final String EMPRESA="0004";
+		public static final String TRANSACCION="0005";
+		public static final String USUARIO="0006";
+		public static final String CENTRO_COSTO="0007";
+		public static final String FORMATO_FIRMA="0008";
+		public static final String HOST_SOLICITANTE="0009";
+		public static final String CONSULTA_DATOS="0010";
+		public static final String CONSULTA_FIRMA="0011";
+		public static final String CONSULTA_FOTO="0012";
+		public static final String DNI_SOLICITANTE="0013";
+		public static final String REGISTRO_USUARIO="0014";
+		public static final String TIPO_APLICACION="0015";
+		public static final String RUTA_SERVICIO="0016";	
+	}
 	
 	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_RESPONSABLE="R";
 	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_DELEGADO="D";

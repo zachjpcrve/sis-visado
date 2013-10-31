@@ -58,6 +58,7 @@ import com.hildebrando.visado.dto.ApoderadoDTO;
 import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
 import com.hildebrando.visado.dto.OperacionBancariaDTO;
+import com.hildebrando.visado.dto.ParametrosReniec;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.Solicitud;
 import com.hildebrando.visado.dto.TipoDocumento;
@@ -639,13 +640,34 @@ public class SolicitudRegistroMB {
 		objTiivsPersonaResultado.setNumCel("");
 	}
 	
+	private String habilitarServicio(String codigoServicio){
+		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_HABILITA_SERVICIOS));
+		filtro.add(Restrictions.eq("id.codElem", codigoServicio));
+		filtro.add(Restrictions.eq("valor2", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
+		
+		try {
+			List<TiivsMultitabla> datosMultitabla = service.buscarDinamico(filtro);
+			if(datosMultitabla.size()>0){
+				return datosMultitabla.get(0).getValor3();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
 	public List<TiivsPersona> buscarPersonaHost() throws Exception {
 		logger.debug("==== inicia buscarPersonaHost() ==== ");
 		List<TiivsPersona> lstTiivsPers = new ArrayList<TiivsPersona>();
 		try{
-			String enableServicio = Utilitarios.getPropiedad("enableServPEA");
+//			String enableServicio = Utilitarios.getPropiedad("enableServPEA");
+			String enableServicio = habilitarServicio(ConstantesVisado.CODIGO_SERVICIO_PEA);
+			
 			//Se valida la habilitacion de la consulta al servicio PEA - HOST
-			if(enableServicio.equalsIgnoreCase("true")){
+//			if(enableServicio.equalsIgnoreCase("true")){
+			if(enableServicio.compareTo(ConstantesVisado.TRUE)==0){
 				logger.debug("= La consulta al servicio PEA-HOST esta habilitado.");
 				BResult resultado = null;
 				TiivsPersona objPersonaHost = null;
@@ -735,28 +757,35 @@ public class SolicitudRegistroMB {
 		logger.debug("==== inicia buscarPersonaReniec() ==== ");
 		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
 		try{
-			String enableServReniec = Utilitarios.getPropiedad("enableServReniec");
+			//String enableServReniec = Utilitarios.getPropiedad("enableServReniec");
+			String enableServReniec = habilitarServicio(ConstantesVisado.CODIGO_SERVICIO_RENIEC);
 			//Se valida la habilitacion de la consulta al servicio RENIEC
-			if(enableServReniec.equalsIgnoreCase("true")){
+			//if(enableServReniec.equalsIgnoreCase("true")){
+			if(enableServReniec.compareTo(ConstantesVisado.TRUE)==0){
 				BResult resultado = null;
 				TiivsPersona objPersona = null;
 				Persona persona = null;
 				if (objTiivsPersonaBusqueda.getNumDoi() != null) {
 					logger.info("[RENIEC]-DNI:"+ objTiivsPersonaBusqueda.getNumDoi());
 					//Leyendo parametros desde el properties
-					String busqServReniecDummy = Utilitarios.getPropiedad("busqServReniecDummy");
-					String usuConsReniec = Utilitarios.getPropiedad("usuConsReniec");
-					String centroConsulta =Utilitarios.getPropiedad("centroConsulta");
+					//String busqServReniecDummy = Utilitarios.getPropiedad("busqServReniecDummy");
+					String busqServReniecDummy = habilitarServicio(ConstantesVisado.CODIGO_SERVICIO_RENIEC_DUMMY);
 					logger.debug("[RENIEC]-busqServReniecDummy:"+busqServReniecDummy);
-					logger.debug("[RENIEC]-usuConsulta:"+usuConsReniec);
-					logger.debug("[RENIEC]-centroConsulta:"+centroConsulta);
 					
+					/*String usuConsReniec = Utilitarios.getPropiedad("usuConsReniec");
+					String centroConsulta =Utilitarios.getPropiedad("centroConsulta");
+					logger.debug("[RENIEC]-usuConsulta:"+usuConsReniec);
+					logger.debug("[RENIEC]-centroConsulta:"+centroConsulta);*/
+					//Obtenemos los parametros de entrada del servicio de reniec
+					ParametrosReniec parametrosReniec = obtenerParametrosReniec();
 					if(busqServReniecDummy.equalsIgnoreCase("true")){
 						ObtenerPersonaReniecDUMMY reniecServiceDummy = new ObtenerPersonaReniecDUMMY();
-						resultado = reniecServiceDummy.devolverPersonaReniecDNI(usuConsReniec, centroConsulta,objTiivsPersonaBusqueda.getNumDoi());
+//						resultado = reniecServiceDummy.devolverPersonaReniecDNI(usuConsReniec, centroConsulta,objTiivsPersonaBusqueda.getNumDoi());
+						resultado = reniecServiceDummy.devolverPersonaReniecDNI(parametrosReniec, objTiivsPersonaBusqueda.getNumDoi());
 					}else{
 						ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
-						resultado = reniecService.devolverPersonaReniecDNI(usuConsReniec, centroConsulta,objTiivsPersonaBusqueda.getNumDoi());
+//						resultado = reniecService.devolverPersonaReniecDNI(usuConsReniec, centroConsulta,objTiivsPersonaBusqueda.getNumDoi());
+						resultado = reniecService.devolverPersonaReniecDNI(parametrosReniec,objTiivsPersonaBusqueda.getNumDoi());
 					}
 					logger.debug("[RENIEC]-resultado: "+resultado.getCode());
 					
@@ -786,6 +815,59 @@ public class SolicitudRegistroMB {
 		}
 		return lstTiivsPersona;
 		
+	}
+	
+	private ParametrosReniec obtenerParametrosReniec(){
+		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_SERV_WEB));
+		filtro.add(Restrictions.eq("valor2", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
+		ParametrosReniec parametrosReniec = null;
+		try {
+			List<TiivsMultitabla> datosMultitabla = service.buscarDinamico(filtro);
+			if(datosMultitabla.size()>0){
+				parametrosReniec = new ParametrosReniec();
+				for(TiivsMultitabla parametroMultitabla:datosMultitabla){
+					if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CANAL)==0){
+						parametrosReniec.setCanal(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CODIGO_APLICACION)==0){
+						parametrosReniec.setCodigoAplicacion(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CODIGO_INTERFAZ)==0){
+						parametrosReniec.setCodigoInterfaz(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.EMPRESA)==0){
+						parametrosReniec.setEmpresa(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.TRANSACCION)==0){
+						parametrosReniec.setTransaccion(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.USUARIO)==0){
+						parametrosReniec.setUsuario(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CENTRO_COSTO)==0){
+						parametrosReniec.setCentroCosto(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.FORMATO_FIRMA)==0){
+						parametrosReniec.setFormatoFirma(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.HOST_SOLICITANTE)==0){
+						parametrosReniec.setHostSolicitante(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CONSULTA_DATOS)==0){
+						parametrosReniec.setConsultaDatos(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CONSULTA_FIRMA)==0){
+						parametrosReniec.setConsultaFirma(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CONSULTA_FOTO)==0){
+						parametrosReniec.setConsultaFoto(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.DNI_SOLICITANTE)==0){
+						parametrosReniec.setDniSolicitante(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.REGISTRO_USUARIO)==0){
+						parametrosReniec.setRegistroUsuario(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.TIPO_APLICACION)==0){
+						parametrosReniec.setTipoAplicacion(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.RUTA_SERVICIO)==0){
+						parametrosReniec.setRutaServicio(parametroMultitabla.getValor3());
+					}
+				}
+			}	
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar datos del multitabla : ",e);
+		}
+		
+		return parametrosReniec;
 	}
 	
 	/**
