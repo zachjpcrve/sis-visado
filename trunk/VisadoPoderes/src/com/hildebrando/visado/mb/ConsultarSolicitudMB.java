@@ -746,11 +746,18 @@ public class ConsultarSolicitudMB {
 		}
 	}
 
+	private void limpiarMsjReservado(){
+		logger.debug("Se limpiarMsjReservado - OK");
+		sTextoEstadoReservado="";
+		bMostrarMSGEstado_Reservado = false;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void obtenerSolicitud(String codigoSolicitud)
 	{
 		try {
 			logger.debug("==== obtenerSolicitud(s):INICIO ==== ");
+			
 			lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 			listaTemporalSolicitudAgrupacionesBorradores=new ArrayList<TiivsSolicitudAgrupacion>();
 			
@@ -860,7 +867,10 @@ public class ConsultarSolicitudMB {
 			   logger.info("Size lstAgrupacionSimpleDto: " + lstAgrupacionSimpleDto.size());
 		   }
 		  
-			this.actualizarEstadoReservadoSolicitud();
+		   //[30-10] Se limpia mensaje Reservado
+		   limpiarMsjReservado();
+			
+		   this.actualizarEstadoReservadoSolicitud();
 			this.obtenerHistorialSolicitud();
 			
 			//[28-10] Mejora: Setear campos a mostrar en historial por perfil
@@ -1108,7 +1118,8 @@ public class ConsultarSolicitudMB {
 		
 		//Adecuar para Incidencia 34
 		modificarTextoVentanaCartaAtencion();
-		
+		logger.debug("[ActEstReservadSol][LIMPIAR]-Verificando sTextoEstadoReservado: "+sTextoEstadoReservado);
+		logger.debug("[ActEstReservadSol][LIMPIAR]-Verificando bMostrarMSGEstado_Reservado: "+bMostrarMSGEstado_Reservado);
 		//Adecuado, verificar 02/03/13
 		// mostrarCartaAtencion();		
 		// ocultarCartas();

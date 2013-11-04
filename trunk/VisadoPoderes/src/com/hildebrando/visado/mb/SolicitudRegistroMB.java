@@ -58,6 +58,7 @@ import com.hildebrando.visado.dto.ApoderadoDTO;
 import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.DocumentoTipoSolicitudDTO;
 import com.hildebrando.visado.dto.OperacionBancariaDTO;
+import com.hildebrando.visado.dto.ParametrosHost;
 import com.hildebrando.visado.dto.ParametrosReniec;
 import com.hildebrando.visado.dto.SeguimientoDTO;
 import com.hildebrando.visado.dto.Solicitud;
@@ -664,7 +665,7 @@ public class SolicitudRegistroMB {
 		try{
 //			String enableServicio = Utilitarios.getPropiedad("enableServPEA");
 			String enableServicio = habilitarServicio(ConstantesVisado.CODIGO_SERVICIO_PEA);
-			
+			logger.debug("enableServicioHOST: "+enableServicio);
 			//Se valida la habilitacion de la consulta al servicio PEA - HOST
 //			if(enableServicio.equalsIgnoreCase("true")){
 			if(enableServicio.compareTo(ConstantesVisado.TRUE)==0){
@@ -677,18 +678,24 @@ public class SolicitudRegistroMB {
 					logger.debug("[HOST]-NumeroDOI:"+ objTiivsPersonaBusqueda.getNumDoi());
 					logger.debug("[HOST]-TipoDoi:"+objTiivsPersonaBusqueda.getTipDoi());
 					//Leyendo parametros desde el properties
-					String busqServDummy = Utilitarios.getPropiedad("busqServDummy");
+					/*String busqServDummy = Utilitarios.getPropiedad("busqServDummy");
 					String usuConsHost = Utilitarios.getPropiedad("usuConsHost");
 					String urlServicio = Utilitarios.getPropiedad("urlServHost");
 					logger.debug("[HOST]-URL:"+urlServicio);				
-					logger.debug("Realizar la consulta en el servicio DUMMY: "+busqServDummy);
+					logger.debug("Realizar la consulta en el servicio DUMMY: "+busqServDummy);*/
+					
+					ParametrosHost paramPea = obtenerParametrosPEAHost();
+					logger.debug("[HOST]-URL ServicioPEA: "+paramPea.getRutaServicio());
+					logger.debug("[HOST]-UsuarioConsulta: "+paramPea.getUsuarioConsulta());
+					logger.debug("[HOST]-flagDummyPEA: "+paramPea.getFlagDummy());
+					
 					//Validando si se consultara el servicio DUMMY
-					if(busqServDummy.equalsIgnoreCase("true")){
+					if(paramPea.getFlagDummy().equalsIgnoreCase("1")){
 						ObtenerDatosPersonaPEAService hostServiceDummy = new ObtenerDatosPersonaPEAServiceDummy();
-						resultado = hostServiceDummy.obtenerDatosGeneralesPEA1(usuConsHost, objTiivsPersonaBusqueda.getTipDoi(), objTiivsPersonaBusqueda.getNumDoi(), urlServicio);
+						resultado = hostServiceDummy.obtenerDatosGeneralesPEA1(paramPea.getUsuarioConsulta(), objTiivsPersonaBusqueda.getTipDoi(), objTiivsPersonaBusqueda.getNumDoi(), paramPea.getRutaServicio());
 					}else{
 						ObtenerDatosPersonaPEAService hostService = new ObtenerDatosPersonaPEAServiceImpl();
-						resultado = hostService.obtenerDatosGeneralesPEA1(usuConsHost, objTiivsPersonaBusqueda.getTipDoi(), objTiivsPersonaBusqueda.getNumDoi(), urlServicio);
+						resultado = hostService.obtenerDatosGeneralesPEA1(paramPea.getUsuarioConsulta(), objTiivsPersonaBusqueda.getTipDoi(), objTiivsPersonaBusqueda.getNumDoi(), paramPea.getRutaServicio());
 					}
 					//resultado = hostServiceDummy.obtenerDatosGeneralesPEA1(usuConsulta, objTiivsPersonaBusqueda.getTipDoi(), objTiivsPersonaBusqueda.getNumDoi(), urlServicio);
 					if(resultado!=null){
@@ -753,15 +760,24 @@ public class SolicitudRegistroMB {
 		}
 		return lstTiivsPers;
 	}
+	
+	/**
+	 * Metodo encargado de realizar la consulta al servicio de Reniec, primero
+	 * se verifica si está habilitada la consulta, después se verifica si consultaremos
+	 * al servicio Dummy o al nuevo servicio de Reniec
+	 * @return lstTiivsPersona Una lista de {@link TiivsPersona}
+	 * */
 	public List<TiivsPersona> buscarPersonaReniec() throws Exception {
 		logger.debug("==== inicia buscarPersonaReniec() ==== ");
 		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
 		try{
 			//String enableServReniec = Utilitarios.getPropiedad("enableServReniec");
 			String enableServReniec = habilitarServicio(ConstantesVisado.CODIGO_SERVICIO_RENIEC);
+			logger.debug("[RENIEC]-enableServReniec:"+enableServReniec);
 			//Se valida la habilitacion de la consulta al servicio RENIEC
 			//if(enableServReniec.equalsIgnoreCase("true")){
 			if(enableServReniec.compareTo(ConstantesVisado.TRUE)==0){
+				logger.debug("--LA CONSULTA AL SERVICIO RENIEC ESTA HABILITADO --");
 				BResult resultado = null;
 				TiivsPersona objPersona = null;
 				Persona persona = null;
@@ -770,7 +786,7 @@ public class SolicitudRegistroMB {
 					//Leyendo parametros desde el properties
 					//String busqServReniecDummy = Utilitarios.getPropiedad("busqServReniecDummy");
 					String busqServReniecDummy = habilitarServicio(ConstantesVisado.CODIGO_SERVICIO_RENIEC_DUMMY);
-					logger.debug("[RENIEC]-busqServReniecDummy:"+busqServReniecDummy);
+					logger.debug("[RENIEC]-busqServReniecDummy: "+busqServReniecDummy);
 					
 					/*String usuConsReniec = Utilitarios.getPropiedad("usuConsReniec");
 					String centroConsulta =Utilitarios.getPropiedad("centroConsulta");
@@ -778,34 +794,52 @@ public class SolicitudRegistroMB {
 					logger.debug("[RENIEC]-centroConsulta:"+centroConsulta);*/
 					//Obtenemos los parametros de entrada del servicio de reniec
 					ParametrosReniec parametrosReniec = obtenerParametrosReniec();
-					if(busqServReniecDummy.equalsIgnoreCase("true")){
+					logger.debug("\t--parametrosReniec-BD --");
+					logger.debug("\tparametrosReniec.getUsuario(): "+parametrosReniec.getUsuario());
+					logger.debug("\tparametrosReniec.getCentroCosto(): "+parametrosReniec.getCentroCosto());
+					logger.debug("\tparametrosReniec.getRegistroUsuario(): "+parametrosReniec.getRegistroUsuario());
+					logger.debug("\tparametrosReniec.getRutaServicio(): "+parametrosReniec.getRutaServicio());
+					
+					if(busqServReniecDummy.equalsIgnoreCase(ConstantesVisado.TRUE)){
+						logger.debug("--LA CONSULTA AL SERVICIO DUMMY RENIEC ESTA HABILITADO --");
 						ObtenerPersonaReniecDUMMY reniecServiceDummy = new ObtenerPersonaReniecDUMMY();
-//						resultado = reniecServiceDummy.devolverPersonaReniecDNI(usuConsReniec, centroConsulta,objTiivsPersonaBusqueda.getNumDoi());
+						//resultado = reniecServiceDummy.devolverPersonaReniecDNI(usuConsReniec, centroConsulta,objTiivsPersonaBusqueda.getNumDoi());
 						resultado = reniecServiceDummy.devolverPersonaReniecDNI(parametrosReniec, objTiivsPersonaBusqueda.getNumDoi());
 					}else{
+						String busqServReniecAnterior = habilitarServicio(ConstantesVisado.CODIGO_SERVICIO_RENIEC_ANTERIOR);
+						logger.debug("[RENIEC]-busqServReniecAnterior: "+busqServReniecAnterior);
 						ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
-//						resultado = reniecService.devolverPersonaReniecDNI(usuConsReniec, centroConsulta,objTiivsPersonaBusqueda.getNumDoi());
-						resultado = reniecService.devolverPersonaReniecDNI(parametrosReniec,objTiivsPersonaBusqueda.getNumDoi());
-					}
-					logger.debug("[RENIEC]-resultado: "+resultado.getCode());
-					
-					if (resultado.getCode() == 0) {
-						if(resultado.getObject()!=null){
-							persona = (Persona) resultado.getObject();
-							logger.info("[RENIEC -RPTA]-Nombre Completo:" + persona.getNombreCompleto());
-							logger.info("[RENIEC -RPTA]-NumeroDocIdentidad:" + persona.getNumerodocIdentidad());
-									
-							objPersona = new TiivsPersona();
-							objPersona.setNumDoi(persona.getNumerodocIdentidad());
-							objPersona.setNombre(persona.getNombre());
-							objPersona.setApePat(persona.getApellidoPaterno());
-							objPersona.setApeMat(persona.getApellidoMaterno());
-							objPersona.setTipDoi(objTiivsPersonaBusqueda.getTipDoi());
-							objPersona.setCodCen(objTiivsPersonaBusqueda.getCodCen());
-							
-							lstTiivsPersona.add(objPersona);
+						if(busqServReniecAnterior.equalsIgnoreCase(ConstantesVisado.TRUE)){
+							logger.debug("--ANTIGUO SERVICIO RENIEC HABILITADO--");
+							//ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
+							resultado = reniecService.devolverPersonaReniecDNI(parametrosReniec.getUsuario(), parametrosReniec.getCentroCosto(),objTiivsPersonaBusqueda.getNumDoi());
+						}else{
+							logger.debug("--NUEVO SERVICIO RENIEC HABILITADO --");
+							//resultado = reniecService.devolverPersonaReniecDNI(parametrosReniec,objTiivsPersonaBusqueda.getNumDoi());
 						}
 					}
+					
+					if(resultado!=null){
+						logger.debug("[RENIEC]-resultado: "+resultado.getCode());
+						if (resultado.getCode() == 0) {
+							if(resultado.getObject()!=null){
+								persona = (Persona) resultado.getObject();
+								logger.info("[RENIEC -RPTA]-Nombre Completo:" + persona.getNombreCompleto());
+								logger.info("[RENIEC -RPTA]-NumeroDocIdentidad:" + persona.getNumerodocIdentidad());
+										
+								objPersona = new TiivsPersona();
+								objPersona.setNumDoi(persona.getNumerodocIdentidad());
+								objPersona.setNombre(persona.getNombre());
+								objPersona.setApePat(persona.getApellidoPaterno());
+								objPersona.setApeMat(persona.getApellidoMaterno());
+								objPersona.setTipDoi(objTiivsPersonaBusqueda.getTipDoi());
+								objPersona.setCodCen(objTiivsPersonaBusqueda.getCodCen());
+								
+								lstTiivsPersona.add(objPersona);
+							}
+						}
+					}	
+					
 				}
 				logger.debug("==== saliendo de buscarPersonaReniec() ==== ");
 			}
@@ -817,15 +851,45 @@ public class SolicitudRegistroMB {
 		
 	}
 	
+	private ParametrosHost obtenerParametrosPEAHost(){
+		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_SERV_WEB));
+		filtro.add(Restrictions.eq("valor2", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
+		filtro.add(Restrictions.eq("valor4", ConstantesVisado.PARAMETROS_PEA_HOST.FLAG_IDENTIFICADOR));
+		ParametrosHost paramHost = null;
+		try {
+			List<TiivsMultitabla> datosMultitabla = service.buscarDinamico(filtro);
+			if(datosMultitabla.size()>0){
+				logger.debug("=== SE OBTIENE PARAMETRIA DE MULTITABLA PEA ==");
+				paramHost = new ParametrosHost();
+				for(TiivsMultitabla parametroMultitabla:datosMultitabla){
+					if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_PEA_HOST.USUARIO_CONSULTA)==0){
+						paramHost.setUsuarioConsulta(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_PEA_HOST.RUTA_SERVICIO_PEA)==0){
+						paramHost.setRutaServicio(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_PEA_HOST.FLAG_DUMMY_PEA)==0){
+						paramHost.setFlagDummy(parametroMultitabla.getValor3());
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar datos del multitabla : ",e);
+		}	
+		return paramHost;
+	}
+	
 	private ParametrosReniec obtenerParametrosReniec(){
 		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
 		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_SERV_WEB));
 		filtro.add(Restrictions.eq("valor2", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
+		filtro.add(Restrictions.eq("valor4", "R"));
 		ParametrosReniec parametrosReniec = null;
 		try {
 			List<TiivsMultitabla> datosMultitabla = service.buscarDinamico(filtro);
 			if(datosMultitabla.size()>0){
+				logger.debug("=== SE OBTIENE PARAMETRIA DE MULTITABLA -RENIEC ==");
 				parametrosReniec = new ParametrosReniec();
 				for(TiivsMultitabla parametroMultitabla:datosMultitabla){
 					if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CANAL)==0){
