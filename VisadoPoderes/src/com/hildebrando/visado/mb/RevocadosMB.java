@@ -890,11 +890,30 @@ public class RevocadosMB {
 		filtroTiivsRevocado.add(Restrictions.eq("codAgrup", Integer.parseInt(revocadoEdit.getCodAgrupacion())));
 		listaTiivsRevocado=serviceTiivsRevocado.buscarDinamico(filtroTiivsRevocado);
 		logger.info("Tamanio de listaTiivsRevocado " +listaTiivsRevocado.size());
-		for (TiivsRevocado yy : listaTiivsRevocado) {
-			yy.setEstado(ConstantesVisado.ESTADOS.ESTADO_ACTIVO_REVOCADO);
-			serviceTiivsRevocado.modificar(yy);
+		
+		if(listaTiivsRevocado.size()>0){
+			//[04-11] Eliminamos el archivo de sustento de revocacion
+			eliminarArchivoRevocado(listaTiivsRevocado.get(0).getAliasArchivo());
+			for (TiivsRevocado yy : listaTiivsRevocado) {
+				yy.setEstado(ConstantesVisado.ESTADOS.ESTADO_ACTIVO_REVOCADO);
+				yy.setAliasArchivo(aliasCortoDocumento);
+				serviceTiivsRevocado.modificar(yy);
+			}	
 		}
 	}
+	
+	private void eliminarArchivoRevocado(String archivo){
+		logger.debug("============ eliminarArchivoRevocado() =================");
+		String sUbicacionTemporal = "";
+		sUbicacionTemporal = Utilitarios
+				.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
+				+ File.separator;
+		String archivoEliminar = sUbicacionTemporal + archivo; 
+		File file = new File(archivoEliminar);
+		file.delete();
+		logger.debug("============ Fin de eliminarArchivoRevocado() =================");
+	}
+	
 	//@Samira 09/03/2012
 	public void actualizarEstadoA_Revocado_SolicitudAgrupacion(List<TiivsSolicitudAgrupacionId> listaTiivsSolicitudAgrupacionId) throws Exception{
 		
