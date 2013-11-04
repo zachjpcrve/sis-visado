@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="542" pageHeight="795" columnWidth="472" leftMargin="50" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="113"/>
+	<property name="ireport.y" value="162"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<field name="numeroSolicitud" class="java.lang.String"/>
@@ -64,7 +64,7 @@
 				</textElement>
 				<text><![CDATA[De nuestra consideración:
 
-Mediante la presente le informamos que su solicitud es RECHAZADA, por las siguientes razones:]]></text>
+Mediante la presente le informamos que su solicitud no ha sido aprobada, por las siguientes razones:]]></text>
 			</staticText>
 			<line>
 				<reportElement x="8" y="125" width="447" height="1"/>
@@ -110,8 +110,7 @@ Mediante la presente le informamos que su solicitud es RECHAZADA, por las siguie
 			<staticText>
 				<reportElement x="8" y="0" width="447" height="86"/>
 				<textElement/>
-				<text><![CDATA[En caso deseara una nueva revisión, las observaciones antes indicadas deberán haber sido superadas. Esta nueva revisión deberá ser presentada como una nueva solicitud, adjuntando los requisitos establecidos por el Banco para tal efecto.
-
+				<text><![CDATA[Si usted desea realizar la operación bancaria, deberá presentar su solicitud de servicios nuevamente previo pago de la comisión y habiendo superado las observaciones antes detalladas.
 
 Atentamente,                        ]]></text>
 			</staticText>
