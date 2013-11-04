@@ -196,7 +196,16 @@
 														         </div>
 															    </c:forEach>
 															</td>
-															<td><h:outputText value="#{s.sEstado}"/></td>
+															
+															<td>
+																<c:if test="#{s.sEstado == 'Revocado'}">
+																	<b><h:outputText value="#{s.sEstado}" style="color:red" /></b>
+																</c:if>
+																<c:if test="#{s.sEstado != 'Revocado'}">
+																	<h:outputText value="#{s.sEstado}"/>
+																</c:if>
+															</td>
+															
 															<td align="center">
 																<p:commandButton icon="ui-icon-search" 
 																				 update=":formSolicitudConsulta:modalVerPersona,:formSolicitudConsulta:idMsmSolicitudRegistro" 
