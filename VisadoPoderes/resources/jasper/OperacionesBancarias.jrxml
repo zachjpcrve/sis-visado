@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OperacionesBancarias" pageWidth="555" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
-	<property name="ireport.x" value="16"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<field name="item" class="java.lang.String"/>
@@ -67,21 +67,21 @@
 	</columnHeader>
 	<detail>
 		<band height="27" splitType="Stretch">
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="2" y="3" width="49" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{item} + " "]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="55" y="3" width="179" height="20"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{descripcion} + " "]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="315" y="3" width="72" height="20"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
@@ -89,7 +89,7 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{importe}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="389" y="3" width="92" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font size="9"/>
@@ -97,7 +97,7 @@
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{tipoCambio}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="483" y="3" width="57" height="20"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
@@ -105,7 +105,7 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{soles}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="236" y="3" width="78" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="9"/>
