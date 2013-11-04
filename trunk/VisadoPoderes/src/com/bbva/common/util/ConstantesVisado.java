@@ -95,6 +95,7 @@ public class ConstantesVisado {
 	public static final String CODIGO_SERVICIO_PEA = "0001";
 	public static final String CODIGO_SERVICIO_RENIEC = "0002";
 	public static final String CODIGO_SERVICIO_RENIEC_DUMMY = "0003";
+	public static final String CODIGO_SERVICIO_RENIEC_ANTERIOR = "0004";
 	
 	//[31-10]Se agregan parametros del servicio web de reniec
 	static public class PARAMETROS_RENIEC{
@@ -114,6 +115,12 @@ public class ConstantesVisado {
 		public static final String REGISTRO_USUARIO="0014";
 		public static final String TIPO_APLICACION="0015";
 		public static final String RUTA_SERVICIO="0016";	
+	}
+	static public class PARAMETROS_PEA_HOST{
+		public static final String FLAG_IDENTIFICADOR="H";
+		public static final String USUARIO_CONSULTA="0017";	
+		public static final String RUTA_SERVICIO_PEA="0018";
+		public static final String FLAG_DUMMY_PEA="0019";
 	}
 	
 	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_RESPONSABLE="R";
