@@ -246,6 +246,8 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 		BResult result = new BResult();
 		
 		if(parametrosReniec!=null){
+			logger.debug("[ws]-usuarioConsulta: "+parametrosReniec.getUsuario());
+			logger.debug("[ws]-RutaNuevoServicio: "+parametrosReniec.getRutaServicio());
 			RequestHeader refRequestHeader = new RequestHeader();
 			refRequestHeader.setCanal(parametrosReniec.getCanal());
 			refRequestHeader.setCodigoAplicacion(parametrosReniec.getCodigoAplicacion());
@@ -283,13 +285,46 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 				DatosNacimiento datosNacimiento = response.getRespuestaDatos().getDatosNacimiento();
 				
 				persona = new Persona();
-				persona.setNombre(datosPersona.getNombres().trim());
-				persona.setApellidoPaterno(datosPersona.getApellidoPaterno().trim());
-				persona.setApellidoMaterno(datosPersona.getApellidoMaterno().trim());
-				persona.setNombreCompleto(datosPersona.getNombres().trim());
-				persona.setDireccion(datosDomicilio.getDireccion().trim());
-				persona.setNumerodocIdentidad(datosPersona.getNumeroDNIConsultado().trim());
-				persona.setFechaNac(datosNacimiento.getFecha());
+				if(datosPersona.getNombres()!=null){
+					logger.debug("[ReniecNew]-Nombre: "+datosPersona.getNombres());
+					persona.setNombre(datosPersona.getNombres().trim());
+				}else{
+					persona.setNombre("");
+				}
+				if(datosPersona.getApellidoPaterno()!=null){
+					logger.debug("[ReniecNew]-Apepat: "+datosPersona.getApellidoPaterno());
+					persona.setApellidoPaterno(datosPersona.getApellidoPaterno().trim());
+				}else{
+					persona.setApellidoPaterno("");
+				}
+				if(datosPersona.getApellidoMaterno()!=null){
+					logger.debug("[ReniecNew]-Apepat: "+datosPersona.getApellidoMaterno());
+					persona.setApellidoMaterno(datosPersona.getApellidoMaterno().trim());
+				}else{
+					persona.setApellidoMaterno("");
+				}
+				if(datosPersona.getApellidoCasada()!=null){
+					logger.debug("[ReniecNew]-Ap.Casada: "+datosPersona.getApellidoCasada());
+					persona.setApellidoMaterno(persona.getApellidoMaterno()+ " " +datosPersona.getApellidoCasada().trim() );
+				}
+				
+				persona.setNombreCompleto(persona.getNombre()+" "+
+						persona.getApellidoPaterno()+" "+persona.getApellidoMaterno());
+				if(datosDomicilio.getDireccion()!=null){
+					persona.setDireccion(datosDomicilio.getDireccion().trim());	
+				}else{
+					persona.setDireccion("");
+				}
+				if(datosPersona.getNumeroDNIConsultado()!=null){
+					persona.setNumerodocIdentidad(datosPersona.getNumeroDNIConsultado().trim());	
+				}else{
+					persona.setNumerodocIdentidad(dni);
+				}
+				if(datosNacimiento.getFecha()!=null){
+					persona.setFechaNac(datosNacimiento.getFecha().trim());	
+				}else{
+					persona.setFechaNac("");
+				}
 				
 				result.setMessage(Constantes.VACIO);
 				result.setCode(Constantes.EXITO);
