@@ -27,7 +27,6 @@ public class ObtenerPersonaReniecDUMMY implements ObtenerPersonaReniecService {
 		BResult result = new BResult();		
 		Persona p = null;
 		
-		//TODO Agregar mas personas DUMMY si se desea.
 		if(dni.equalsIgnoreCase("11111111")){
 			p = new Persona();
 			p.setNombre("DIEGO");
@@ -80,4 +79,5 @@ public class ObtenerPersonaReniecDUMMY implements ObtenerPersonaReniecService {
 		result.setObject(p);
 		return result;
 	}
+
 }
