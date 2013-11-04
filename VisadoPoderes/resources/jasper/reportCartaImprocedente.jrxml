@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCartaAtencion" pageWidth="542" pageHeight="795" columnWidth="502" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.3636363636363635"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="33"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="240"/>
+	<property name="ireport.y" value="229"/>
 	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
 	<parameter name="IMG_CABECERA" class="java.lang.String"/>
 	<field name="numeroSolicitud" class="java.lang.String"/>
@@ -48,15 +48,14 @@
 				<reportElement x="22" y="139" width="453" height="1" forecolor="#666666"/>
 			</line>
 			<staticText>
-				<reportElement x="22" y="145" width="453" height="55"/>
+				<reportElement x="22" y="141" width="454" height="61"/>
 				<textElement textAlignment="Justified">
 					<font size="10"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[De nuestra consideración:
 
-Mediante la presente le informamos que su solicitud es IMPROCEDENTE, por las siguientes
-razones:]]></text>
+Mediante la presente le reiteramos que su solicitud de revisión no ha sido aprobada, por las siguientes razones:]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -97,14 +96,19 @@ razones:]]></text>
 	<summary>
 		<band height="92">
 			<staticText>
-				<reportElement positionType="Float" x="22" y="6" width="443" height="84"/>
+				<reportElement positionType="Float" x="23" y="8" width="443" height="84"/>
 				<textElement textAlignment="Justified">
 					<font isItalic="false"/>
 				</textElement>
-				<text><![CDATA[En caso deseara una nueva revisión, las observaciones antes indicadas deberán haber sido superadas. Esta nueva revisión deberá ser presentada como una nueva solicitud, adjuntando los requisitos establecidos por el Banco para tal efecto.
+				<text><![CDATA[Si usted desea realizar la operación bancaria, deberá  presentar su solicitud de servicios nuevamente previo pago de la comisión y habiendo superado las observaciones antes detalladas.
 
-Atentamente,]]></text>
+
+
+Solicitante]]></text>
 			</staticText>
+			<line>
+				<reportElement x="23" y="61" width="111" height="1" forecolor="#666666"/>
+			</line>
 		</band>
 	</summary>
 </jasperReport>
