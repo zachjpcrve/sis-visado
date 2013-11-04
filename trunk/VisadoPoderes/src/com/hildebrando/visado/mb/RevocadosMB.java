@@ -55,7 +55,6 @@ import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.Estado;
 import com.hildebrando.visado.dto.Revocado;
 import com.hildebrando.visado.dto.TipoDocumento;
-import com.hildebrando.visado.ftp.ClienteFTP;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
 import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
@@ -3012,6 +3011,15 @@ public class RevocadosMB {
 		
 	 } 
 	  
+	 public void quitarDocumentoRevocado(){
+		 logger.info("=== quitarDocumentoRevocado() === ");
+		 fileUpload = null;
+		 sAliasTemporal = null;
+		 flagLinkRevocados = 0;
+		 aliasCortoDocumento = null;
+		 logger.info("=== fin de quitarDocumentoRevocado() === ");
+	 }
+	 
 	 public void actualizarArchivo(){
 		logger.info("=== actualizarArchivo() === ");
 		aliasCortoDocumento = null;

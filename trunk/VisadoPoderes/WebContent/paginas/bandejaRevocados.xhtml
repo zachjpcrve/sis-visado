@@ -404,13 +404,23 @@
 						
 					<p:spacer width="10" height="20" />
 					
-					<h:panelGrid columns="1" id="gridApodPod4">
+					<h:panelGrid columns="3" id="gridApodPod4">
 						<c:if test="#{revocadosMB.flagLinkRevocados==0}">
 							<p:outputLabel id="lblFile" value="#{revocadosMB.sAliasTemporal}" />
 						</c:if>
 						<c:if test="#{revocadosMB.flagLinkRevocados==1}">
 					       <a href="#" onclick="exportarRevocado('#{revocadosMB.aliasCortoDocumento}', '0');">#{revocadosMB.sAliasTemporal}</a>
 					    </c:if>
+					    <p:spacer width="10" height="20" />
+					    <c:if test="#{revocadosMB.sAliasTemporal.isEmpty()==false}">
+						    <p:commandButton 
+								action="#{revocadosMB.quitarDocumentoRevocado}"
+								update=":frmPendEdit:gridApodPod4"
+								ajax="true" async="true" id="iconOnly"
+								icon="ui-icon-circle-close"
+								oncomplete="return appletEliminarDocumento();">
+							</p:commandButton>
+						</c:if>
 					</h:panelGrid>
 					
 					
