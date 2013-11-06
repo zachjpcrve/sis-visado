@@ -121,6 +121,11 @@ public class ConstantesVisado {
 		public static final String USUARIO_CONSULTA="0017";	
 		public static final String RUTA_SERVICIO_PEA="0018";
 		public static final String FLAG_DUMMY_PEA="0019";
+		public static final String TIPODOC_CODCENTRAL = "C";
+		public static final String COD_RPTA_HEAD_EXITO = "0000";
+		public static final String COD_RPTA_BODY_EXITO = "1";
+		public static final String COD_RPTA_BODY_ERROR = "0";	
+		public static final String ESTADO_ACTIVO="1";
 	}
 	
 	public static final java.lang.String CODIGO_CAMPO_TIPO_ROL_RESPONSABLE="R";
@@ -611,11 +616,13 @@ public class ConstantesVisado {
 		public static final java.lang.String CODIGO_REPRESENTADO  = "0001"; //titular
 		public static final java.lang.String CODIGO_HEREDERO  = "0003"; //heredero
 		
-		/*public static final java.lang.String REPRESENTANTE="Representante";
+		/*public static final java.lang.String REPRESENTANTE="Representante"; 
 		public static final java.lang.String REPRESENTADO="Representado";*/
 		
 		public static final java.lang.String REPRESENTANTE="Apoderado";
 		public static final java.lang.String REPRESENTADO="Titular";
 		public static final java.lang.String HEREDERO="Heredero";
 	}
+	
+	
 }
