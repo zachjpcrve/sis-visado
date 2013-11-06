@@ -29,7 +29,7 @@ public class ObtenerDatosPersonaPEAServiceDummy implements ObtenerDatosPersonaPE
 			persona.setApellidoMaterno("CABALLERO");
 			persona.setNumerodocIdentidad("03160115");
 			persona.setTelefono("997712648");//4182666233
-			
+			persona.setTipoDoi("L");
 			logger.debug("[DUMMY-HOST]-Nombre:"+persona.getNombre());
 			logger.debug("[DUMMY-HOST]-ApPaterno:"+persona.getApellidoPaterno());
 			
@@ -54,7 +54,25 @@ public class ObtenerDatosPersonaPEAServiceDummy implements ObtenerDatosPersonaPE
 			res.setObject(persona);
 			res.setCode(Constantes.EXITO);
 			res.setMessage("Respuesta satisfactoria");
+		}if(numDoc.equalsIgnoreCase("05080401")){	
+			persona = new Persona();
+			persona.setCodCentral("05080401");
+			persona.setNombre("REPRESENTACIONES NEXUS SAC");
+			persona.setApellidoPaterno("");
+			persona.setApellidoMaterno("");
+			persona.setNumerodocIdentidad("10443895995");
+			persona.setTelefono("3594157");
+			persona.setTipoDoi("R");
+			logger.debug("[DUMMY-HOST]-Nombre:"+persona.getNombre());
+			logger.debug("[DUMMY-HOST]-ApPaterno:"+persona.getApellidoPaterno());
+			
+			res.setObject(persona);
+			res.setCode(Constantes.EXITO);
+			res.setMessage("Respuesta satisfactoria");
 		}
+		
+		
+		
 		logger.debug("[DUMMY-HOST]-"+res.getCode());
 		logger.debug("[DUMMY-HOST]-"+res.getMessage());
 		return res;
