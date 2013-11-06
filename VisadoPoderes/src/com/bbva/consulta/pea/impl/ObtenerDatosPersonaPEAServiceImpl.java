@@ -55,7 +55,7 @@ public class ObtenerDatosPersonaPEAServiceImpl implements ObtenerDatosPersonaPEA
 		try {
 			stub = starEndPointService(urlServicio);
 			Persona persona= new Persona();
-			logger.debug("[HOST]-Stub :"+stub);
+			//logger.debug("[HOST]-Stub :"+stub);
 			ObtenerDatosXPersonaResponseDocument rpta = null;
 			if (stub != null) {
 				rpta =  buscarDatosPersonaHost(stub, usuConsulta, tipDoc, numDoc);
@@ -63,41 +63,68 @@ public class ObtenerDatosPersonaPEAServiceImpl implements ObtenerDatosPersonaPEA
 				logger.debug("[HOST]-El stub es nulo ..");
 			}
 			if (rpta != null) {
-				logger.debug("[HOST]-CodigoHead Rpta:"+rpta.getObtenerDatosXPersonaResponse().getHead().getCodigo());
-				logger.debug("[HOST]-ResultadoBody Rpta:"+rpta.getObtenerDatosXPersonaResponse().getBody().getResultado());
+				logger.debug("[HostRpta]-[Head]-Codigo: "+rpta.getObtenerDatosXPersonaResponse().getHead().getCodigo());
+				logger.debug("[HostRpta]-[Body]-Resultado: "+rpta.getObtenerDatosXPersonaResponse().getBody().getResultado());
 	        
-				if (("0000".equals(rpta.getObtenerDatosXPersonaResponse().getHead().getCodigo())) && ("1".equals(rpta.getObtenerDatosXPersonaResponse().getBody().getResultado())))
+				if ((ConstantesVisado.PARAMETROS_PEA_HOST.COD_RPTA_HEAD_EXITO.equals(rpta.getObtenerDatosXPersonaResponse().getHead().getCodigo())) 
+						&& (ConstantesVisado.PARAMETROS_PEA_HOST.COD_RPTA_BODY_EXITO.equals(rpta.getObtenerDatosXPersonaResponse().getBody().getResultado())))
 				{
 					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getNombres()))
 					{
 						persona.setNombre(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getNombres()));
-						logger.debug("persona.getNombre(): "+persona.getNombre());
+						logger.debug("\t[HostRpta]-persona.getNombre(): "+persona.getNombre());
 					}
 					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getApellidoPaterno()))
 					{
 						persona.setApellidoPaterno(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getApellidoPaterno()));
-						logger.debug("persona.getApepat(): "+persona.getApellidoPaterno());
+						logger.debug("\t[HostRpta]-persona.getApepat(): "+persona.getApellidoPaterno());
 					}
 					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getApellidoMaterno()))
 					{
 						persona.setApellidoMaterno(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getApellidoMaterno()));
-						logger.debug("persona.getApemat(): "+persona.getApellidoMaterno());
+						logger.debug("\t[HostRpta]-persona.getApemat(): "+persona.getApellidoMaterno());
 					}
-					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getTelefono()))
+					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getDoi().getTipo()))
 					{
-						persona.setTelefono(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getTelefono()));
-						logger.debug("persona.getTelefono(): "+persona.getTelefono());
+						persona.setTipoDoi(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getDoi().getTipo()));
+						logger.debug("\t[HostRpta][DOI]-persona.getTipoDoi(): "+persona.getTipoDoi());
 					}
 					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getDoi().getNumero()))
 					{
 						persona.setNumerodocIdentidad(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getDoi().getNumero()));
-						logger.debug("persona.getNumerodocIdentidad(): "+persona.getNumerodocIdentidad());
+						logger.debug("\t[HostRpta][DOI]-persona.getNumerodocIdentidad(): "+persona.getNumerodocIdentidad());
+					}
+					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getDoi().getVigencia()))
+					{
+						persona.setVigenciaDoi(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getDoi().getVigencia()));
+						logger.debug("\t[HostRpta][DOI]-persona.getVigenciaDoi(): "+persona.getVigenciaDoi());
 					}
 					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getCodigoCentral()))
 					{
 						persona.setCodCentral(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getCodigoCentral()));
-						logger.debug("persona.getCodCentral(): "+persona.getCodCentral());
+						logger.debug("\t[HostRpta]-persona.getCodCentral(): "+persona.getCodCentral());
 					}
+					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getTipoPersona()))
+					{
+						persona.setTipoPersona(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getTipoPersona()));
+						logger.debug("\t[HostRpta]-persona.getTipoPersona(): "+persona.getTipoPersona());
+					}
+					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getEsCliente()))
+					{
+						persona.setEsCliente(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getEsCliente()));
+						logger.debug("\t[HostRpta]-persona.getEsCliente(): "+persona.getEsCliente());
+					}
+					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getTelefono()))
+					{
+						persona.setTelefono(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getTelefono()));
+						logger.debug("\t[HostRpta]-persona.getTelefono(): "+persona.getTelefono());
+					}
+					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getCorreo()))
+					{
+						persona.setEmail((StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getCorreo())));
+						logger.debug("\t[HostRpta]-persona.getEmail(): "+persona.getEmail());
+					}
+					
 					res.setObject(persona);
 					res.setCode(Constantes.EXITO);
 					res.setMessage(rpta.getObtenerDatosXPersonaResponse().getHead().getDescripcion());
@@ -132,11 +159,11 @@ public class ObtenerDatosPersonaPEAServiceImpl implements ObtenerDatosPersonaPEA
 	 * @return Retorna un stub del tipo {@link HarecServiceStub}
 	 * **/
 	private HarecServiceStub starEndPointService(Object object) {
-		logger.debug("=== inicia starEndPointService() ===");
+		//logger.debug("=== inicia starEndPointService() ===");
 		HarecServiceStub proxy = null;
 		try {
 			proxy = new HarecServiceStub(object.toString());
-			logger.debug("proxy: "+proxy);
+			//logger.debug("proxy: "+proxy);
 		} catch (AxisFault e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"del tipo AxisFault: ",e);
 			return null;
@@ -146,7 +173,7 @@ public class ObtenerDatosPersonaPEAServiceImpl implements ObtenerDatosPersonaPEA
 		}
 		//Setear el timeOut del servicio Web	
 		// proxy._getServiceClient().getOptions().setTimeOutInMilliSeconds(Long.parseLong("50"));
-		logger.debug("=== saliendo de starEndPointService() ===");
+		//logger.debug("=== saliendo de starEndPointService() ===");
 		return proxy;
 	}
 
@@ -167,27 +194,26 @@ public class ObtenerDatosPersonaPEAServiceImpl implements ObtenerDatosPersonaPEA
 	    BodyRq bodyRq = BodyRq.Factory.newInstance();
 	    datosGeneralesXPersonaRq.setHead(headRq);
 	    datosGeneralesXPersonaRq.setBody(bodyRq);
-	    logger.debug("====== ANTES DE CONSULTAR A HOST ====");
-	    logger.debug("usuarioConsulta:"+usuaCons);
-	    logger.debug("tipoDoi:"+tipoDoi);
-	    logger.debug("numeroDoi:"+numDoi);
+	    logger.debug("=== buscarDatosPersonaHost() ====");
+	    logger.debug("[buscarPEAHost]-usuarioConsulta: "+usuaCons);
+	    logger.debug("[buscarPEAHost]-tipoDOI: "+tipoDoi + "   numeroDOI:"+numDoi);
 	    String tipoDoiCons = Utilitarios.asignarEquivTipoDoi(tipoDoi);
-	    logger.debug("nuevo tipoDoiCons:"+tipoDoiCons);
+	    logger.debug("[buscarPEAHost]-Codigo TipoDOI: "+tipoDoiCons);
 	    
 	    ObtenerDatosXPersonaDocument obtenerDatosXPersona = ObtenerDatosXPersonaDocument.Factory.newInstance();
 	    obtenerDatosXPersona.setObtenerDatosXPersona(datosGeneralesXPersonaRq);
 	    obtenerDatosXPersona.getObtenerDatosXPersona().getHead().setUsuario(usuaCons);
-	    if(tipoDoiCons.equalsIgnoreCase("C")){
-	    	logger.debug("->Se buscara solo por CodigoCentral");
+	    if(tipoDoiCons.equalsIgnoreCase(ConstantesVisado.PARAMETROS_PEA_HOST.TIPODOC_CODCENTRAL)){
+	    	logger.debug("-- SE CONSULTA SOLO POR CODIGO CENTRAL --");
 	    	obtenerDatosXPersona.getObtenerDatosXPersona().getBody().setCodigoCentral(numDoi);
 	    }else{
-	    	logger.debug("->Se buscara por Tipo y NroDoi");
+	    	logger.debug("-- SE CONSULTA POR TIPO Y NRO_DOI --");
 	    	obtenerDatosXPersona.getObtenerDatosXPersona().getBody().setTipoDOI(tipoDoiCons);
 		    obtenerDatosXPersona.getObtenerDatosXPersona().getBody().setNroDOI(numDoi);
 		}
 	    
 	    try {
-	    	logger.debug("Se consulta al servicioHost: ObtenerDatosXPersona");
+	    	//logger.debug("Se consulta al servicioHost: ObtenerDatosXPersona");
 	    	return proxy.ObtenerDatosXPersona(obtenerDatosXPersona);
 	    } catch (RemoteException e) {
 	    	logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al buscarDatosPersonaHost(): ",e);
