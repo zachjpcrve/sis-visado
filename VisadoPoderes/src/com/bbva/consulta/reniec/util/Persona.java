@@ -18,6 +18,10 @@ public class Persona {
 	private String telefono;
 	private String email;
 	private String codCentral;
+	private String tipoDoi;
+	private String tipoPersona;
+	private String vigenciaDoi;
+	private String esCliente;
 
 	/**
 	 * @return the id
@@ -172,5 +176,38 @@ public class Persona {
 	public void setCodCentral(String codCentral) {
 		this.codCentral = codCentral;
 	}
+
+	public String getTipoDoi() {
+		return tipoDoi;
+	}
+
+	public void setTipoDoi(String tipoDoi) {
+		this.tipoDoi = tipoDoi;
+	}
+
+	public String getTipoPersona() {
+		return tipoPersona;
+	}
+
+	public void setTipoPersona(String tipoPersona) {
+		this.tipoPersona = tipoPersona;
+	}
+
+	public String getVigenciaDoi() {
+		return vigenciaDoi;
+	}
+
+	public void setVigenciaDoi(String vigenciaDoi) {
+		this.vigenciaDoi = vigenciaDoi;
+	}
+
+	public String getEsCliente() {
+		return esCliente;
+	}
+
+	public void setEsCliente(String esCliente) {
+		this.esCliente = esCliente;
+	}
+	
 	
 }

@@ -946,6 +946,25 @@ public class Utilitarios {
 			}
 			return tdFin;
 	  }
+	  public static String obtenerCodDocDesc (String cod){
+		  String tdFin="";	
+		  if(cod.equalsIgnoreCase("C")){	  tdFin="0001"; }
+		  if(cod.equalsIgnoreCase("E")){	  tdFin="0002";	}
+		  if(cod.equalsIgnoreCase("R")){	  tdFin="0003";	}
+		  if(cod.equalsIgnoreCase("P")){	  tdFin="0004";	}
+		  if(cod.equalsIgnoreCase("M")){	  tdFin="0007";	}
+		  if(cod.equalsIgnoreCase("X")){	  tdFin="0008";	}
+		  if(cod.equalsIgnoreCase("N")){	  tdFin="0009";	}
+		  if(cod.equalsIgnoreCase("Z")){	  tdFin="0010";	}
+		  if(cod.equalsIgnoreCase("O")){	  tdFin="0011";	}
+		  if(cod.equalsIgnoreCase("T")){	  tdFin="0012";	}
+		  if(cod.equalsIgnoreCase("A")){	  tdFin="0013";	}
+		  if(cod.equalsIgnoreCase("U")){	  tdFin="0014";	}
+		  if(cod.equalsIgnoreCase("F")){	  tdFin="0015";	}
+		  if(cod.equalsIgnoreCase("L")){	  tdFin="0016";	}
+		  if(cod.equalsIgnoreCase("D")){	  tdFin="0017";	}
+		  return tdFin;
+	  }
 	  
 	  public static String validarCampoNull(String campo)
 		{
