@@ -690,7 +690,7 @@ public class SolicitudRegistroMB {
 					logger.debug("[HOST]-flagDummyPEA: "+paramPea.getFlagDummy());
 					
 					//Validando si se consultara el servicio DUMMY
-					if(paramPea.getFlagDummy().equalsIgnoreCase("1")){
+					if(paramPea.getFlagDummy().equalsIgnoreCase(ConstantesVisado.PARAMETROS_PEA_HOST.ESTADO_ACTIVO)){
 						ObtenerDatosPersonaPEAService hostServiceDummy = new ObtenerDatosPersonaPEAServiceDummy();
 						resultado = hostServiceDummy.obtenerDatosGeneralesPEA1(paramPea.getUsuarioConsulta(), objTiivsPersonaBusqueda.getTipDoi(), objTiivsPersonaBusqueda.getNumDoi(), paramPea.getRutaServicio());
 					}else{
@@ -706,6 +706,33 @@ public class SolicitudRegistroMB {
 								logger.debug("== Se recupera la persona de Host ==");
 								pers = (Persona) resultado.getObject();
 								objPersonaHost= new TiivsPersona();
+								
+								objPersonaHost.setCodCen(objTiivsPersonaBusqueda.getCodCen());
+								
+								
+								if(pers.getCodCentral()!=null){
+									objPersonaHost.setCodCen(pers.getCodCentral());
+									logger.debug("[HOST RPTA]-CodCentral:"+objPersonaHost.getCodCen());
+								}
+								//DOI
+								String codDoc="";
+								if(pers.getTipoDoi()!=null){
+									logger.debug("[HOST RPTA]-TipoDoi-Letra: "+pers.getTipoDoi());
+									codDoc = Utilitarios.obtenerCodDocDesc(pers.getTipoDoi());
+									logger.debug("[HOST RPTA]-TipoDoi-Cod: " + codDoc);
+									objPersonaHost.setTipDoi(codDoc);
+									logger.debug("[HOST RPTA]-TipoDoi:"+objPersonaHost.getTipDoi());
+								}else{
+									objPersonaHost.setTipDoi(objTiivsPersonaBusqueda.getTipDoi());
+								}
+								
+								if(pers.getNumerodocIdentidad()!=null){
+									objPersonaHost.setNumDoi(pers.getNumerodocIdentidad());
+									logger.debug("[HOST RPTA]-DocIdentidad:"+objPersonaHost.getNumDoi());
+								}else{
+									objPersonaHost.setNumDoi(objTiivsPersonaBusqueda.getNumDoi());
+								}
+								//Datos Persona
 								if(pers.getNombre()!=null){
 									objPersonaHost.setNombre(pers.getNombre());
 									logger.debug("[HOST RPTA]-Nombre:"+objPersonaHost.getNombre());
@@ -718,25 +745,12 @@ public class SolicitudRegistroMB {
 									objPersonaHost.setApeMat(pers.getApellidoMaterno());
 									logger.debug("[HOST RPTA]-Apemat:"+objPersonaHost.getApeMat());
 								}
-								if(pers.getNumerodocIdentidad()!=null){
-									objPersonaHost.setNumDoi(pers.getNumerodocIdentidad());
-									logger.debug("[HOST RPTA]-DocIdentidad:"+objPersonaHost.getNumDoi());
-								}else{
-									objPersonaHost.setNumDoi(objTiivsPersonaBusqueda.getNumDoi());
-								}
 								if(pers.getTelefono()!=null){
 									objPersonaHost.setNumCel(pers.getTelefono());
 									logger.debug("[HOST RPTA]-Telefono:"+objPersonaHost.getNumCel());
 								}else{
 									objPersonaHost.setNumCel("");
 								}
-								if(pers.getCodCentral()!=null){
-									objPersonaHost.setCodCen(pers.getCodCentral());
-									logger.debug("[HOST RPTA]-CodCentral:"+objPersonaHost.getCodCen());
-								}
-								
-								objPersonaHost.setTipDoi(objTiivsPersonaBusqueda.getTipDoi());
-								objPersonaHost.setCodCen(objTiivsPersonaBusqueda.getCodCen());
 								
 								lstTiivsPers.add(objPersonaHost);
 								
