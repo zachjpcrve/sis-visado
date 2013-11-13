@@ -3876,10 +3876,12 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	
 	public void cambiarRazonSocial(ValueChangeEvent e){
 		String codTipoDocumento = (String) e.getNewValue();
-		if (codTipoDocumento!=null && codTipoDocumento.equals(this.codigoRazonSocial)) {//CODIGO RAZONSOCIAL
+		//if (codTipoDocumento!=null && codTipoDocumento.equals(this.codigoRazonSocial)) {//CODIGO RAZONSOCIAL
+		if(esJuridico(codTipoDocumento)){
 			logger.info("==== cambiarRazonSocial()=====");
 			this.mostrarRazonSocial = true;
-			objTiivsPersonaResultado.setTipDoi(this.codigoRazonSocial);
+//			objTiivsPersonaResultado.setTipDoi(this.codigoRazonSocial);
+			objTiivsPersonaResultado.setTipDoi(codTipoDocumento);
 			objTiivsPersonaResultado.setApeMat("");
 			objTiivsPersonaResultado.setNombre("");
 		} else {
@@ -3891,6 +3893,19 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			this.obterPatterDelTipoDocumento(codTipoDocumento);
 		}
 		
+	}
+	
+	private boolean esJuridico(String codTipoDocumento){
+		String[] tipoJuridico = {ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC, 
+								ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC_ANTIGUO, ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUS};
+		if(tipoJuridico.length>0){
+			for(String tipoDOI:tipoJuridico){
+				if(codTipoDocumento.compareTo(tipoDOI)==0){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	@SuppressWarnings("unchecked")

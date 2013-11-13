@@ -81,6 +81,9 @@ public class ConstantesVisado {
 	public static final java.lang.String CODIGO_CAMPO_FALLECIDO_MAYORA = "0003"; //COMISION
 	public static final java.lang.String CODIGO_CAMPO_FALLECIDO_MENORA = "0004"; //COMISION
 	public static final java.lang.String CODIGO_CAMPO_TIPODOI_RUC = "0003"; //COMISION
+	public static final java.lang.String CODIGO_CAMPO_TIPODOI_RUC_ANTIGUO = "0009"; //COMISION
+	public static final java.lang.String CODIGO_CAMPO_TIPODOI_RUS = "0014"; //COMISION
+	
 	public static final java.lang.String CODIGO_CAMPO_IMPUESTO = "0006"; //COMISION
 	public static final java.lang.String TIPO_DOCUMENTO_RUC = "RUC"; //COMISION
 	public static final java.lang.String TIPO_CLASIFICACION_FALLECIDO="Fallecido";//COMISION
