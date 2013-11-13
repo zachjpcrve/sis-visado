@@ -382,7 +382,10 @@ public class RegistroUtilesMB {
 				TiivsMultitabla multi = getRowFromMultitabla(
 						ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC,persona.getTipDoi());
 				if (multi != null) {
-					if (multi.getId().getCodElem().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC)) {
+					//if (multi.getId().getCodElem().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC)) {
+					if (multi.getId().getCodElem().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC)
+							|| multi.getId().getCodElem().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC_ANTIGUO)
+							|| multi.getId().getCodElem().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUS)) {
 						cont++;
 					}
 				}
