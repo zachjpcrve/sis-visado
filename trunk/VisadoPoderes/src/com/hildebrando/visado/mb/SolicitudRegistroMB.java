@@ -829,7 +829,7 @@ public class SolicitudRegistroMB {
 							resultado = reniecService.devolverPersonaReniecDNI(parametrosReniec.getUsuario(), parametrosReniec.getCentroCosto(),objTiivsPersonaBusqueda.getNumDoi());
 						}else{
 							logger.debug("--NUEVO SERVICIO RENIEC HABILITADO --");
-							//resultado = reniecService.devolverPersonaReniecDNI(parametrosReniec,objTiivsPersonaBusqueda.getNumDoi());
+							resultado = reniecService.devolverPersonaReniecDNI(parametrosReniec,objTiivsPersonaBusqueda.getNumDoi());
 						}
 					}
 					
@@ -3069,7 +3069,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		establecerTipoSolicitud();
 		
-		logger.info(" =========== registrarSolicitud [v3] ===========");
+		logger.info(" =========== registrarSolicitud [v1 - Mejoras] ===========");
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
         GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
