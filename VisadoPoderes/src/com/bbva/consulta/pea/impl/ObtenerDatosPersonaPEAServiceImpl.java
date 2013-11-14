@@ -71,7 +71,7 @@ public class ObtenerDatosPersonaPEAServiceImpl implements ObtenerDatosPersonaPEA
 				{
 					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getNombres()))
 					{
-						if(esJuridico(tipDoc)){
+						if(esJuridico(rpta.getObtenerDatosXPersonaResponse().getBody().getDoi().getTipo())){
 							persona.setApellidoPaterno(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getNombres()));
 						}else{
 							persona.setNombre(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getNombres()));	
@@ -80,14 +80,14 @@ public class ObtenerDatosPersonaPEAServiceImpl implements ObtenerDatosPersonaPEA
 					}
 					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getApellidoPaterno()))
 					{
-						if(!esJuridico(tipDoc)){
+						if(!esJuridico(rpta.getObtenerDatosXPersonaResponse().getBody().getDoi().getTipo())){
 							persona.setApellidoPaterno(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getApellidoPaterno()));	
 						}
 						logger.debug("\t[HostRpta]-persona.getApepat(): "+persona.getApellidoPaterno());
 					}
 					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getApellidoMaterno()))
 					{
-						if(!esJuridico(tipDoc)){
+						if(!esJuridico(rpta.getObtenerDatosXPersonaResponse().getBody().getDoi().getTipo())){
 							persona.setApellidoMaterno(StringUtils.trimToEmpty(rpta.getObtenerDatosXPersonaResponse().getBody().getApellidoMaterno()));	
 						}
 						logger.debug("\t[HostRpta]-persona.getApemat(): "+persona.getApellidoMaterno());
@@ -164,6 +164,8 @@ public class ObtenerDatosPersonaPEAServiceImpl implements ObtenerDatosPersonaPEA
 	private boolean esJuridico(String codTipoDocumento){
 		String[] tipoJuridico = {ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC, 
 								ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC_ANTIGUO, ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUS};
+		
+		codTipoDocumento = Utilitarios.obtenerCodDocDesc(codTipoDocumento);
 		if(tipoJuridico.length>0){
 			for(String tipoDOI:tipoJuridico){
 				if(codTipoDocumento.compareTo(tipoDOI)==0){

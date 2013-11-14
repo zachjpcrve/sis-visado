@@ -3877,7 +3877,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	public void cambiarRazonSocial(ValueChangeEvent e){
 		String codTipoDocumento = (String) e.getNewValue();
 		//if (codTipoDocumento!=null && codTipoDocumento.equals(this.codigoRazonSocial)) {//CODIGO RAZONSOCIAL
-		if(esJuridico(codTipoDocumento)){
+		if(codTipoDocumento!=null && esJuridico(codTipoDocumento)){
 			logger.info("==== cambiarRazonSocial()=====");
 			this.mostrarRazonSocial = true;
 //			objTiivsPersonaResultado.setTipDoi(this.codigoRazonSocial);
@@ -3898,10 +3898,12 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	private boolean esJuridico(String codTipoDocumento){
 		String[] tipoJuridico = {ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC, 
 								ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC_ANTIGUO, ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUS};
-		if(tipoJuridico.length>0){
-			for(String tipoDOI:tipoJuridico){
-				if(codTipoDocumento.compareTo(tipoDOI)==0){
-					return true;
+		if(codTipoDocumento!=null){
+			if(tipoJuridico.length>0){
+				for(String tipoDOI:tipoJuridico){
+					if(codTipoDocumento.compareTo(tipoDOI)==0){
+						return true;
+					}
 				}
 			}
 		}
