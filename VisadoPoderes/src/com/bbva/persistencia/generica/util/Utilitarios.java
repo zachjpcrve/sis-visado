@@ -921,6 +921,13 @@ public class Utilitarios {
 		  fechaActual = sdf.format(date);		  
 		  return fechaActual;
 	  }
+	  public static String obtenerFechaHoraSegMilTx(){
+		  String fechaActualTx="";
+		  java.util.Date date = new java.util.Date();
+		  java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSSSSS");
+		  fechaActualTx = sdf.format(date);		  
+		  return fechaActualTx;
+	  }
 	  
 	  public static Date getDateWithoutTime(Date date) {
 		    Calendar cal = Calendar.getInstance();
