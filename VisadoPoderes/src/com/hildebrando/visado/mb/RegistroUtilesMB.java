@@ -383,6 +383,7 @@ public class RegistroUtilesMB {
 						ConstantesVisado.CODIGO_MULTITABLA_TIPO_DOC,persona.getTipDoi());
 				if (multi != null) {
 					//if (multi.getId().getCodElem().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC)) {
+					//13-11 Se agrega validacion para RUC, RUS y RUC antiguo.
 					if (multi.getId().getCodElem().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC)
 							|| multi.getId().getCodElem().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUC_ANTIGUO)
 							|| multi.getId().getCodElem().equalsIgnoreCase(ConstantesVisado.CODIGO_CAMPO_TIPODOI_RUS)) {
