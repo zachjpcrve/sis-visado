@@ -257,7 +257,9 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 			//Formato: 2013-11-08-12.24.01.123456
 			cabecera.setFechaHoraEnvio(Utilitarios.obtenerFechaHoraSegMil());
 			cabecera.setIdEmpresa(parametrosReniec.getEmpresa());
-			cabecera.setIdTransaccion(parametrosReniec.getTransaccion());		
+			//Formato: 20131108122401123456VISADOP007734
+			cabecera.setIdTransaccion(Utilitarios.obtenerFechaHoraSegMilTx() 
+					+ cabecera.getCodigoAplicacion()+cabecera.getUsuario());		
 			cabecera.setUsuario(parametrosReniec.getUsuario());
 			logger.debug("======== [cabecera]==========");
 			logger.debug("[WSReniec][cabecera]-canal: "+cabecera.getCanal());
@@ -267,8 +269,6 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 			logger.debug("[WSReniec][cabecera]-fechHoraEnvio: "+cabecera.getFechaHoraEnvio());
 			logger.debug("[WSReniec][cabecera]-IdTransaccion: "+cabecera.getIdTransaccion());
 			logger.debug("[WSReniec][cabecera]-CodInterfaz: "+cabecera.getCodigoInterfaz());
-			logger.debug("[WSReniec][cabecera]-TxNueva: "+cabecera.getIdTransaccion()
-					+cabecera.getCodigoAplicacion()+cabecera.getUsuario());
 			
 			com.grupobbva.pe.SIR.ents.body.consultaPorDNI.ConsultaPorDNIRequest refConsultaPorDNIRequest = new com.grupobbva.pe.SIR.ents.body.consultaPorDNI.ConsultaPorDNIRequest();
 			refConsultaPorDNIRequest.setCentroCostos(parametrosReniec.getCentroCosto());
