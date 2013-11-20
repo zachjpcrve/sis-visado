@@ -4924,10 +4924,11 @@ public class ConsultarSolicitudMB {
 					if(tiivsSolicitudAgrupacionCapturado!=null){
 						agruPersona.setCodSoli(tiivsSolicitudAgrupacionCapturado.getId().getCodSoli());
 						agruPersona.setNumGrupo(tiivsSolicitudAgrupacionCapturado.getId().getNumGrupo());
-						agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);						
+						agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);		
+						this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().add(agruPersona);
 					}
 										
-					this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().add(agruPersona);
+					
 					lstTiivsPersona.add(objTiivsPersonaResultado);
 				} else {
 					// update
