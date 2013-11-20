@@ -33,6 +33,7 @@ public class TiivsPersona implements java.io.Serializable {
 	private String sDescclasifPer;
 	private String sDesctipDoi;
 	private Integer idAgrupacion;
+	//20-11 [SB] Agregado
 	private Integer idAgrupacionGrupo;
 	private String nombreCompletoMayuscula;
 
