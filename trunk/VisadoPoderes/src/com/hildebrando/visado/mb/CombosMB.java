@@ -399,39 +399,28 @@ public class CombosMB{
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static Map sortByComparator(Map unsortMap) 
-	{	 
-		List list = new LinkedList(unsortMap.entrySet());
- 
-		// sort list based on comparator
-		Collections.sort(list, new Comparator() 
-		{
-			public int compare(Object o1, Object o2) 
-			{
+	private static Map sortByComparator(Map unsortMap) {	 
+		List list = new LinkedList(unsortMap.entrySet());		
+		Collections.sort(list, new Comparator() {
+			public int compare(Object o1, Object o2) {
 				return ((Comparable) ((Map.Entry) (o1)).getKey()).compareTo(((Map.Entry) (o2)).getKey());
 			}
 		});
- 
-		//Put sorted list into map again
-        //LinkedHashMap make sure order in which keys were inserted
-		
-		Map sortedMap = new LinkedHashMap();
-		for (Iterator it = list.iterator(); it.hasNext();) 
-		{
+ 		Map sortedMap = new LinkedHashMap();
+		for (Iterator it = list.iterator(); it.hasNext();) {
 			Map.Entry entry = (Map.Entry) it.next();
 			sortedMap.put(entry.getKey(), entry.getValue());
 		}
-		
 		return sortedMap;
 	}
 		
 	@SuppressWarnings("unchecked")
 	public void cargarCombosNoMultitabla(){
 		try {
-		GenericDao<TiivsMiembro, Object> serviceMiembro = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroMiembro = Busqueda.forClass(TiivsMiembro.class);
-		filtroMiembro.add(Restrictions.eq("tiivsGrupo.codGrupo", ConstantesVisado.CODIGO_GRUPO_ABOGADOS));
-		lstAbogados=serviceMiembro.buscarDinamico(filtroMiembro);
+			GenericDao<TiivsMiembro, Object> serviceMiembro = (GenericDao<TiivsMiembro, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtroMiembro = Busqueda.forClass(TiivsMiembro.class);
+			filtroMiembro.add(Restrictions.eq("tiivsGrupo.codGrupo", ConstantesVisado.CODIGO_GRUPO_ABOGADOS));
+			lstAbogados=serviceMiembro.buscarDinamico(filtroMiembro);
 		}catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de abogados - miembro: ",e);
 		}
