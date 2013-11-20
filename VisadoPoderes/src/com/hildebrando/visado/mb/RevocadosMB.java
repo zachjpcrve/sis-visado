@@ -43,7 +43,9 @@ import org.primefaces.model.UploadedFile;
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.common.util.EstilosNavegador;
+import com.bbva.consulta.reniec.ObtenerPersonaReniecService;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
+import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecServiceImpl;
 import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
@@ -53,6 +55,7 @@ import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.converter.PersonaDataModal;
 import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.Estado;
+import com.hildebrando.visado.dto.ParametrosReniec;
 import com.hildebrando.visado.dto.Revocado;
 import com.hildebrando.visado.dto.TipoDocumento;
 import com.hildebrando.visado.modelo.TiivsAgrupacionPersona;
@@ -734,9 +737,10 @@ public class RevocadosMB {
 	//@Samira 09/03/2012
 	public void revocarApodPod() 
 	{
+		logger.debug("========== revocarApodPod() ============= ");
 		int tamanioApod = revocadoEdit.getApoderados().size();
 		int tamanioPoder = revocadoEdit.getPoderdantes().size();
-		logger.debug("====revocarApodPod() == ");
+		
 		logger.debug("tamanioApod:"+tamanioApod);
 		logger.debug("tamanioPoder:"+tamanioPoder);
 		if (tamanioApod>0 && tamanioPoder>0)
@@ -2386,20 +2390,89 @@ public class RevocadosMB {
 		return lstTiivsPersona;
 	}
 	
+	/**
+	 * Metodo encargado de realizar la validacion y consulta al servicio de Reniec. Se toma
+	 * en cuenta la parametria agregada en la multitabla, para usar el servicio Dummy, el 
+	 * Servicio anterior o el nuevo servicio. Retorna una <code>TiivsPersona</code>.
+	 * **/
 	public List<TiivsPersona> buscarPersonaReniec() throws Exception {
 		logger.debug("==== inicia buscarPersonaReniec() ==== ");
 		List<TiivsPersona> lstTiivsPersona = new ArrayList<TiivsPersona>();
-		BResult resultado = null;
-		TiivsPersona objPersona = null;
-		com.bbva.consulta.reniec.util.Persona persona = null;
-		if (objTiivsPersonaBusquedaDlg.getNumDoi() != null) {
+		//Se verifica el flag de habilitacion al servicio: true / false
+		String flagHabilitaServReniec = habilitarServicio(ConstantesVisado.CODIGO_SERVICIO_RENIEC);
+		logger.debug("[REVOCAD][RENIEC]-flagHabilitaServReniec: "+flagHabilitaServReniec);
+		
+		if(flagHabilitaServReniec.compareTo(ConstantesVisado.TRUE)==0){
+			logger.debug("[REVOCAD]--LA CONSULTA AL SERVICIO RENIEC ESTA HABILITADO --");
+			
+			if (objTiivsPersonaBusquedaDlg.getNumDoi() != null) {
+				BResult resultado = null;
+				TiivsPersona objPersona = null;
+				com.bbva.consulta.reniec.util.Persona persona = null;
+				
+				String flagBusqEnDummy = habilitarServicio(ConstantesVisado.CODIGO_SERVICIO_RENIEC_DUMMY);
+				logger.debug("[REVOCAD][RENIEC]-flagBusqEnDummy: "+flagBusqEnDummy);
+				
+				ParametrosReniec parametrosReniec = obtenerParametrosReniec();
+				logger.debug("\tparametrosReniec.getUsuario(): "+parametrosReniec.getUsuario());
+				logger.debug("\tparametrosReniec.getCentroCosto(): "+parametrosReniec.getCentroCosto());
+				logger.debug("\tparametrosReniec.getRegistroUsuario(): "+parametrosReniec.getRegistroUsuario());
+				logger.debug("\tparametrosReniec.getRutaServicio(): "+parametrosReniec.getRutaServicio());
+				
+				if(flagBusqEnDummy.equalsIgnoreCase(ConstantesVisado.TRUE)){
+					logger.debug("[REVOCAD]--LA CONSULTA AL SERVICIO DUMMY RENIEC ESTA HABILITADO --");
+					ObtenerPersonaReniecDUMMY reniecServiceDummy = new ObtenerPersonaReniecDUMMY();
+					//resultado = reniecServiceDummy.devolverPersonaReniecDNI(usuConsReniec, centroConsulta,objTiivsPersonaBusqueda.getNumDoi());
+					resultado = reniecServiceDummy.devolverPersonaReniecDNI(parametrosReniec, objTiivsPersonaBusquedaDlg.getNumDoi());
+				}else{
+					//Se valida si se consulta al servicio Anterior  Antiguo o Nuevo.
+					String flagConsultaServReniecAnterior = habilitarServicio(ConstantesVisado.CODIGO_SERVICIO_RENIEC_ANTERIOR);
+					logger.debug("[REVOCAD][RENIEC]-flagConsultaServReniecAnterior: "+flagConsultaServReniecAnterior);
+					ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
+					if(flagConsultaServReniecAnterior.equalsIgnoreCase(ConstantesVisado.TRUE)){
+						logger.debug("[REVOCAD]--ANTIGUO SERVICIO RENIEC HABILITADO--");
+						//ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
+						resultado = reniecService.devolverPersonaReniecDNI(parametrosReniec.getUsuario(), parametrosReniec.getCentroCosto(),objTiivsPersonaBusquedaDlg.getNumDoi());
+					}else{
+						logger.debug("[REVOCAD]--NUEVO SERVICIO RENIEC HABILITADO --");
+						resultado = reniecService.devolverPersonaReniecDNI(parametrosReniec,objTiivsPersonaBusquedaDlg.getNumDoi());
+					}
+				}
+				//Se verifica el resultado del servicio. ( Exito = 0 )
+				if(resultado!=null){
+					logger.debug("[REVOCAD][RENIEC]-resultado: "+resultado);
+					if (resultado.getCode() == 0) {
+						if(resultado.getObject()!=null){
+							persona = (com.bbva.consulta.reniec.util.Persona) resultado.getObject();
+							logger.info("[REVOCAD][RENIEC -RPTA]-Nombre Completo:" + persona.getNombreCompleto());
+							logger.info("[REVOCAD][RENIEC -RPTA]-NumeroDocIdentidad:" + persona.getNumerodocIdentidad());
+							
+							objPersona = new TiivsPersona();
+							objPersona.setNumDoi(persona.getNumerodocIdentidad());
+							objPersona.setNombre(persona.getNombre());
+							objPersona.setApePat(persona.getApellidoPaterno());
+							objPersona.setApeMat(persona.getApellidoMaterno());
+							objPersona.setTipDoi(objTiivsPersonaBusquedaDlg.getTipDoi());
+							objPersona.setCodCen(objTiivsPersonaBusquedaDlg.getCodCen());
+							
+							lstTiivsPersona.add(objPersona);
+						}
+					}
+				}
+			}
+			
+		}
+		
+		/*if (objTiivsPersonaBusquedaDlg.getNumDoi() != null) {
 			logger.info("[RENIEC]-Dni:"+ objTiivsPersonaBusquedaDlg.getNumDoi());
 
 			//ObtenerPersonaReniecService reniecService = new ObtenerPersonaReniecServiceImpl();
 			//logger.debug("reniecService="+reniecService);
 			ObtenerPersonaReniecDUMMY reniecService = new ObtenerPersonaReniecDUMMY();
 			resultado = reniecService.devolverPersonaReniecDNI("P013371", "0553",objTiivsPersonaBusquedaDlg.getNumDoi());
-			logger.debug("[RENIEC]-resultado: "+resultado);
+			if(resultado!=null){
+				logger.debug("[RENIEC]-resultado: "+resultado);
+			}
 			
 			if (resultado.getCode() == 0) {
 				
@@ -2413,13 +2486,99 @@ public class RevocadosMB {
 				objPersona.setApeMat(persona.getApellidoMaterno());
 				objPersona.setTipDoi(objTiivsPersonaBusquedaDlg.getTipDoi());
 				objPersona.setCodCen(objTiivsPersonaBusquedaDlg.getCodCen());
+				
 				lstTiivsPersona.add(objPersona);
 			}
-		}
+		}*/
 		
 		logger.debug("==== saliendo de buscarPersonaReniec() ==== ");
 		return lstTiivsPersona;
 	}
+	
+	/**
+	 * Metodo encargado de consultar la multitabla para obtener el flag de 
+	 * activacion de los servicios en la aplicación.
+	 * @return rpta Representa la respuesta: <code>datosMultitabla.get(0).getValor3()</code>
+	 * **/
+	private String habilitarServicio(String codigoServicio){
+		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_HABILITA_SERVICIOS));
+		filtro.add(Restrictions.eq("id.codElem", codigoServicio));
+		filtro.add(Restrictions.eq("valor2", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
+		
+		try {
+			List<TiivsMultitabla> datosMultitabla = service.buscarDinamico(filtro);
+			if(datosMultitabla.size()>0){
+				return datosMultitabla.get(0).getValor3();
+			}
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la parametria de servicios: ",e);
+		}
+		return "";
+	}
+	
+	/**
+	 * Metodo encargado de obtener la parametria de la multitabla necesario para armar 
+	 * la trama que será el 'input' para la consulta al nuevo servicio de reniec. 
+	 * @return parametroReniec del tipo {@link ParametrosReniec}
+	 * **/
+	private ParametrosReniec obtenerParametrosReniec(){
+		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_SERV_WEB));
+		filtro.add(Restrictions.eq("valor2", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
+		filtro.add(Restrictions.eq("valor4", "R"));
+		ParametrosReniec parametrosReniec = null;
+		try {
+			List<TiivsMultitabla> datosMultitabla = service.buscarDinamico(filtro);
+			if(datosMultitabla.size()>0){
+				logger.debug("=== SE OBTIENE PARAMETRIA DE MULTITABLA -RENIEC ==");
+				parametrosReniec = new ParametrosReniec();
+				for(TiivsMultitabla parametroMultitabla:datosMultitabla){
+					if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CANAL)==0){
+						parametrosReniec.setCanal(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CODIGO_APLICACION)==0){
+						parametrosReniec.setCodigoAplicacion(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CODIGO_INTERFAZ)==0){
+						parametrosReniec.setCodigoInterfaz(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.EMPRESA)==0){
+						parametrosReniec.setEmpresa(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.TRANSACCION)==0){
+						parametrosReniec.setTransaccion(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.USUARIO)==0){
+						parametrosReniec.setUsuario(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CENTRO_COSTO)==0){
+						parametrosReniec.setCentroCosto(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.FORMATO_FIRMA)==0){
+						parametrosReniec.setFormatoFirma(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.HOST_SOLICITANTE)==0){
+						parametrosReniec.setHostSolicitante(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CONSULTA_DATOS)==0){
+						parametrosReniec.setConsultaDatos(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CONSULTA_FIRMA)==0){
+						parametrosReniec.setConsultaFirma(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.CONSULTA_FOTO)==0){
+						parametrosReniec.setConsultaFoto(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.DNI_SOLICITANTE)==0){
+						parametrosReniec.setDniSolicitante(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.REGISTRO_USUARIO)==0){
+						parametrosReniec.setRegistroUsuario(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.TIPO_APLICACION)==0){
+						parametrosReniec.setTipoAplicacion(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_RENIEC.RUTA_SERVICIO)==0){
+						parametrosReniec.setRutaServicio(parametroMultitabla.getValor3());
+					}
+				}
+			}	
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar datos del multitabla : ",e);
+		}
+		
+		return parametrosReniec;
+	}
+	
+	
 	public void inactivarCombinacion(ActionEvent actionEvent) {
 		logger.info( " ==== inactivarCombinacion() ====");
 		List<TiivsMultitabla> tiivsMultitablas2 = new ArrayList<TiivsMultitabla>();
@@ -2456,6 +2615,12 @@ public class RevocadosMB {
 		buscarRevocado();
 	}
 	
+	/**
+	 * Metodo que consulta la lista de personas existentes, para ser mostrado
+	 * en un filtro autocompletable.
+	 * @param query Valor ingresado para buscar una coincidencia
+	 * @return Lista de {@link TiivsPersona}
+	 * */
 	public List<TiivsPersona> completePersona(String query) 
 	{
 		List<TiivsPersona> lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
@@ -2469,8 +2634,7 @@ public class RevocadosMB {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"las Personas: ",e);
 		}
 
-		for (TiivsPersona pers : lstTiivsPersonaBusqueda) 
-		{
+		for (TiivsPersona pers : lstTiivsPersonaBusqueda) {
 			if(pers!= null)
 			{	
 //				if (pers.getApePat()!=null && pers.getApeMat()!=null)
@@ -2481,28 +2645,18 @@ public class RevocadosMB {
 					
 //					if (nombre != "" && apePat != "" && apeMat != "") 
 //					{
-						
 						String nombreCompletoMayuscula = nombre+ " " + apePat + " " + apeMat;
-
 						if(nombreCompletoMayuscula.trim() != ""){
-
 							String nombreCompletoMayusculaBusqueda = apePat + " " + apePat + " " + nombre;
-
 							if (nombreCompletoMayusculaBusqueda.trim().contains(query.toUpperCase())) {
-
 								pers.setNombreCompletoMayuscula(nombreCompletoMayuscula);
-
 								lstTiivsPersonaResultado.add(pers);
 							}
-							
 						}
-						
 //					}
 //				}
-				
 			}
 		}
-
 		return lstTiivsPersonaResultado;
 	}
 	
@@ -2534,8 +2688,7 @@ public class RevocadosMB {
 			filtro.add(Restrictions.eq("persona.numDoi", objTiivsPersonaBusqueda.getNumDoi()));
 		}
 		
-		if(objTiivsPersonaBusquedaNombre != null){
-			
+		if(objTiivsPersonaBusquedaNombre != null){			
 			if(objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().compareTo("")!=0){
 //				filtro.add(Restrictions.eq("persona.nombre", objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().split(" ")[0]));
 //				filtro.add(Restrictions.eq("persona.apePat", objTiivsPersonaBusquedaNombre.getNombreCompletoMayuscula().split(" ")[1]));
@@ -2546,9 +2699,7 @@ public class RevocadosMB {
 					filtro.add(Restrictions.eq("persona.apePat", objTiivsPersonaBusquedaNombre.getApePat()));
 				if(objTiivsPersonaBusquedaNombre.getApeMat()!=null)
 					filtro.add(Restrictions.eq("persona.apeMat", objTiivsPersonaBusquedaNombre.getApeMat()));
-				
 			}
-			
 		}
 		
 		if(estadoRevocado.compareTo("S")!=0){

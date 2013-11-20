@@ -756,13 +756,13 @@ public class ConsultarSolicitudMB {
 	public void obtenerSolicitud(String codigoSolicitud)
 	{
 		try {
-			logger.debug("==== obtenerSolicitud(s):INICIO ==== ");
+			logger.debug("============== obtenerSolicitud(s):INICIO ============= ");
 			
 			lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
 			listaTemporalSolicitudAgrupacionesBorradores=new ArrayList<TiivsSolicitudAgrupacion>();
 			
 			TiivsSolicitud solicitud;
-			logger.info("[obtenerSolic]-codigoSolicitud: " + codigoSolicitud);
+			logger.info("\t[obtenerSolic]-codigoSolicitud: " + codigoSolicitud);
 			solicitud = new TiivsSolicitud();
 			solicitud.setCodSoli(codigoSolicitud);
 			
@@ -779,7 +779,7 @@ public class ConsultarSolicitudMB {
 						
 			if(lstSolicBancariasCopia!=null)
 			{
-				logger.debug("[obtenerSolic]-"+ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstSolicBancariasCopia es: ["+lstSolicBancariasCopia.size()+"].");	
+				logger.debug("\t[obtenerSolic]-"+ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstSolicBancariasCopia es: ["+lstSolicBancariasCopia.size()+"].");	
 			}
 			//Exonera comision
 			if(solicitudRegistrarT.getExoneraComision()!=null
@@ -789,12 +789,11 @@ public class ConsultarSolicitudMB {
 				this.setbFlagComision(false);
 			}
 			
-			//FIN  BY SAMIRA 
 			int y = 0;
 			//Operacion bancaria - Solicitud
 			for (TiivsSolicitudOperban f : lstSolicBancarias) 
 			{ 
-				logger.info("[obtenerSolic]-SolOperBanc-Moneda: " +f.getId().getMoneda());
+				logger.info("\t[obtenerSolic]-SolOperBanc-Moneda: " +f.getId().getMoneda());
 				if (f.getId().getMoneda() != null) 
 				{
 					y++;
@@ -861,17 +860,17 @@ public class ConsultarSolicitudMB {
 		   solicitudRegistrarT.setLstAgrupacionSimpleDto(lstAgrupacionSimpleDto); //reporte
 		   
 		   if(solicitudRegistrarT.getTiivsSolicitudAgrupacions()!=null){
-			   logger.info("Obtener solicitud agrupaciones: " + solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
+			   logger.info("\tObtener solicitud agrupaciones: " + solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
 		   }
 		   if(lstAgrupacionSimpleDto!=null){
-			   logger.info("Size lstAgrupacionSimpleDto: " + lstAgrupacionSimpleDto.size());
+			   logger.info("\tSize lstAgrupacionSimpleDto: " + lstAgrupacionSimpleDto.size());
 		   }
 		  
 		   //[30-10] Se limpia mensaje Reservado
 		   limpiarMsjReservado();
 			
 		   this.actualizarEstadoReservadoSolicitud();
-			this.obtenerHistorialSolicitud();
+		   this.obtenerHistorialSolicitud();
 			
 			//[28-10] Mejora: Setear campos a mostrar en historial por perfil
 			this.setearHistorialPorPerfil();
@@ -906,7 +905,7 @@ public class ConsultarSolicitudMB {
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION +"al recuperar el Detalle Solicitud: ",e);
 		}
-		logger.debug("==== obtenerSolicitud(s):FIN ==== ");
+		logger.debug("============== obtenerSolicitud(s):FIN =============== ");
 	}
 	
 	private void armaAgrupacionSimple() {
@@ -932,6 +931,8 @@ public class ConsultarSolicitudMB {
 				    if(d.getIdAgrupacionGrupo()!=null){
 				    	d.getTiivsPersona().setIdAgrupacionGrupo(d.getIdAgrupacionGrupo());
 				    }
+				    //if(d.getIdAgrupacion()!=null){
+			    	//d.getTiivsPersona().setIdAgrupacion(d.getIdAgrupacion());
 				    
 				    lstPersonas.add(d.getTiivsPersona());
 				   
@@ -2948,7 +2949,7 @@ public class ConsultarSolicitudMB {
 		redirect = "";
 		boolean actualizarBandeja=false;
 		
-		logger.info("*********************** registrarSolicitud ************************");
+		logger.info("======== registrarSolicitud() =======");
 		
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit
 				.getApplicationContext().getBean("genericoDao");
@@ -2960,19 +2961,19 @@ public class ConsultarSolicitudMB {
 		TiivsAgrupacionPersona objAgruPer = new TiivsAgrupacionPersona();
 		
 		try {
-			logger.info("this.solicitudRegistrarT.importe : " + this.solicitudRegistrarT.getMoneda());
+			logger.info("\t[REG_SOLIC_BORR]-Solicitud Importe: " + this.solicitudRegistrarT.getMoneda());
 			this.solicitudRegistrarT.setFecha(new Date());
 			this.solicitudRegistrarT.setEstado(this.solicitudRegistrarT.getEstado().trim());
 			this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 
-			logger.info("usuario.getUID() " + usuario.getUID());
+			logger.info("\t[REG_SOLIC_BORR]-usuario: " + usuario.getUID());
 			this.solicitudRegistrarT.setRegUsuario(usuario.getUID());
 			this.solicitudRegistrarT.setNomUsuario(usuario.getNombre());
-			logger.info("tiivsOficina1.codOfi ::::::: "	+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+			logger.info("\t[REG_SOLIC_BORR]-CodOficina: "+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
 			
 			if (flagMostrarACOficina)
 			{
-				logger.info("tiivsOficina1.codOfi ::::::: "+ oficina.getCodOfi());
+				logger.info("\t[REG_SOLIC_BORR]-CodOficina: "+ oficina.getCodOfi());
 				for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
 					if (tiivsOficina1.getCodOfi().equals(oficina.getCodOfi())) {
 						this.solicitudRegistrarT.setTiivsOficina1(oficina);
@@ -2982,7 +2983,7 @@ public class ConsultarSolicitudMB {
 			}
 			else
 			{
-				logger.info("tiivsOficina1.codOfi ::::::: "+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
+				logger.info("\t[REG_SOLIC_BORR]-CodOficina: "+ this.solicitudRegistrarT.getTiivsOficina1().getCodOfi());
 				for (TiivsOficina1 tiivsOficina1 : combosMB.getLstOficina()) {
 					if (tiivsOficina1.getCodOfi().equals(this.solicitudRegistrarT.getTiivsOficina1().getCodOfi())) {
 						this.solicitudRegistrarT.setTiivsOficina1(tiivsOficina1);
@@ -2994,14 +2995,14 @@ public class ConsultarSolicitudMB {
 			
 			this.limpiarAgrupacionesVacias();
 			
-			logger.info("solicitudRegistrarT.getTiivsSolicitudAgrupacions() : " + solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
+			logger.info("\t[REG_SOLIC_BORR]-Agrupaciones size: " + solicitudRegistrarT.getTiivsSolicitudAgrupacions().size());
 			
 			for(TiivsSolicitudAgrupacion agrusol : solicitudRegistrarT.getTiivsSolicitudAgrupacions()){
-				logger.info("agrusol.getTiivsAgrupacionPersonas() " + agrusol.getId().getCodSoli() + "_" + agrusol.getId().getNumGrupo() + " :" + agrusol.getTiivsAgrupacionPersonas().size());
+				logger.info("\t[REG_SOLIC_BORR]-Agrupacion Persona: " + agrusol.getId().getCodSoli() + "_" + agrusol.getId().getNumGrupo() + " :" + agrusol.getTiivsAgrupacionPersonas().size());
 			}
 		
 			
-			logger.info("this.sEstadoSolicitud " + this.sEstadoSolicitud);
+			logger.info("\t[REG_SOLIC_BORR]-Estado Solicitud: " + this.sEstadoSolicitud);
 			
 			boolean esValido = false;
 			if(!this.sEstadoSolicitud.equals("BORRADOR")){ 	//Validacion para envio de solicitud a SSJJ
@@ -3016,11 +3017,11 @@ public class ConsultarSolicitudMB {
 				{
 					/*** REALIZAR VALIDACION DE COBRO DE COMISIONES ***/
 					if(validarCobroComisiones()){
-						logger.info("[REGISTR_SOLIC]-Solicitud con validacion de cobro de comisiones restrictiva");
+						logger.info("\t[REG_SOLIC_BORR]-Solicitud con validacion de cobro de comisiones restrictiva");
 						return;
 					}
 					this.enviarSolicitudSSJJ();
-					logger.info("ESTUDIOOOO : " +solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
+					logger.info("\t[REG_SOLIC_BORR]-Estudio: " +solicitudRegistrarT.getTiivsEstudio().getCodEstudio());
 					actualizarBandeja=true;
 				}else{
 					//borrador
@@ -3028,7 +3029,7 @@ public class ConsultarSolicitudMB {
 				}
 								
 				Set<TiivsSolicitudAgrupacion> listaTMP = this.solicitudRegistrarT.getTiivsSolicitudAgrupacions();
-				logger.info("listaTMP listaTMP "+listaTMP.size());
+				logger.info("\t[REG_SOLIC_BORR]-listaTMP: "+listaTMP.size());
 																						
 				//Guardar datos de solicitud
 				TiivsSolicitud objResultado = service.guardarModificar(this.solicitudRegistrarT);	
@@ -3045,28 +3046,28 @@ public class ConsultarSolicitudMB {
 //				logger.info("Resultado de carga de archivos al FTP:" + bRet);
 				 //Carga ficheros al File Server
 				boolean bRet = cargarArchivosFileServer();
-				logger.info("[REGISTR_SOLIC]-Resultado de carga de archivos al FileServer:" + bRet);
+				logger.info("\t[REG_SOLIC_BORR]-Resultado de carga de archivos al FileServer:" + bRet);
 				// Elimina archivos temporales
 				eliminarArchivosTemporales();
              
 				//Eliminar tabla de anexos anteriores menos el listado: lstAnexoSolicitud
 				eliminaAnexosAnterioresMenos(solicitudRegistrarT,lstAnexoSolicitud);
 				
-				logger.info("Numero de anexos a insertar: " + this.lstAnexoSolicitud.size());
+				logger.info("\t[REG_SOLIC_BORR]-Numero de anexos a insertar: " + this.lstAnexoSolicitud.size());
 				for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) 
 				{				
-					logger.info("insertar anexo: " + n.getId().getCodSoli() + "_" + n.getId().getCodDoc());
+					logger.info("\t[REG_SOLIC_BORR]-insertar anexo: " + n.getId().getCodSoli() + "_" + n.getId().getCodDoc());
 					serviceAnexos.insertarMerge(n);
 				}	
 				
 
-				 logger.info("Tamanio Lista original que se trajo de base : "+lstSolicBancariasCopia.size());
-				 logger.info("Tamanio Lista Temporal a Eliminar  : "+this.listaTemporalEliminarOperacionesBancarias.size());
-				 logger.info("Tamanio Lista que se tiene en memoria : "+lstSolicBancarias.size());
+				 logger.info("\t[REG_SOLIC_BORR]-Tamanio Lista original que se trajo de base : "+lstSolicBancariasCopia.size());
+				 logger.info("\t[REG_SOLIC_BORR]-Tamanio Lista Temporal a Eliminar  : "+this.listaTemporalEliminarOperacionesBancarias.size());
+				 logger.info("\t[REG_SOLIC_BORR]-Tamanio Lista que se tiene en memoria : "+lstSolicBancarias.size());
 				 
 				 /** Validar si realmente se ah hecho algun cambio para ir a bd, si no no hace nada */
 				 if(!lstSolicBancariasCopia.equals(lstSolicBancarias)){
-					 logger.info(" Las listas de las Operaciones Bancarias no son iguales, iran a base");
+					 logger.info("\t[REG_SOLIC_BORR]-Las listas de las Operaciones Bancarias no son iguales, iran a base");
 				 /** Eliminar la lista de Operaciones Bancarias */ 
 				for (TiivsSolicitudOperban b : this.listaTemporalEliminarOperacionesBancarias) {
 					serviceSoli.eliminar(b);
@@ -3076,13 +3077,13 @@ public class ConsultarSolicitudMB {
 				/** Insertar, actualizar la lista de Operaciones Bancarias */ 
 				for (TiivsSolicitudOperban a : this.lstSolicBancarias) 
 				{
-					logger.info("a.getId().getCodOperBan() **** " + a.getId().getCodOperBan());
+					logger.info("\t[REG_SOLIC_BORR]-a.getId().getCodOperBan() **** " + a.getId().getCodOperBan());
 					a.getId().setCodSoli(this.solicitudRegistrarT.getCodSoli());
-					logger.info("a.getId().getCodSoli() **** " + a.getId().getCodSoli());
+					logger.info("\t[REG_SOLIC_BORR]-a.getId().getCodSoli() **** " + a.getId().getCodSoli());
 					serviceSoli.insertarMerge(a);
 				}
 				 }else{
-					logger.info(" Las listas de las Operaciones Bancarias son iguales, no ira a base");
+					logger.info("\t[REG_SOLIC_BORR]-Las listas de las Operaciones Bancarias son iguales, no ira a base");
 				 }
 				 
 				 /** Fin  Validar si realmente se ah hecho algun cambio para ir a bd, si no no hace nada */
@@ -3106,7 +3107,7 @@ public class ConsultarSolicitudMB {
 					}
 					
 					redirect = this.redirectDetalleSolicitud(objResultado.getCodSoli());
-					logger.info("redirect:" + redirect);
+					logger.info("\t[REG_SOLIC_BORR]-redirect:" + redirect);
 
 				} 
 				else 
@@ -3115,8 +3116,8 @@ public class ConsultarSolicitudMB {
 					Utilitarios.mensajeInfo("INFO", mensaje);
 				}
 
-				logger.info("objResultado.getCodSoli(); " + objResultado.getCodSoli());
-				logger.info("this.solicitudRegistrarT.importe : " + this.solicitudRegistrarT.getImporte());
+				logger.info("\t[REG_SOLIC_BORR]-objResultado.getCodSoli(); " + objResultado.getCodSoli());
+				logger.info("\t[REG_SOLIC_BORR]-this.solicitudRegistrarT.importe : " + this.solicitudRegistrarT.getImporte());
 				
 				if (actualizarBandeja)
 				{
@@ -3126,7 +3127,7 @@ public class ConsultarSolicitudMB {
 			}
 			bBooleanPopup=false;
 		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION,e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION, e);
 			Utilitarios.mensajeError("ERROR", "Ha ocurrido un error al grabar la Solicitud");
 		}catch(Throwable t){
 			logger.error("Throwable ::: "+ConstantesVisado.MENSAJE.OCURRE_EXCEPCION,t);
@@ -4548,6 +4549,7 @@ public class ConsultarSolicitudMB {
 		this.objTiivsPersonaResultado.setEmail(this.objTiivsPersonaCapturado.getEmail());
 		this.objTiivsPersonaResultado.setNumCel(this.objTiivsPersonaCapturado.getNumCel());
 		this.objTiivsPersonaResultado.setCodPer(this.objTiivsPersonaCapturado.getCodPer());
+		//this.objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
 		this.objTiivsPersonaResultado.setIdAgrupacionGrupo(tiivsAgrupacionPersonaCapturado.getIdAgrupacionGrupo());
 		this.flagUpdatePersona = true;
 		
@@ -4924,6 +4926,8 @@ public class ConsultarSolicitudMB {
 					if(tiivsSolicitudAgrupacionCapturado!=null){
 						agruPersona.setCodSoli(tiivsSolicitudAgrupacionCapturado.getId().getCodSoli());
 						agruPersona.setNumGrupo(tiivsSolicitudAgrupacionCapturado.getId().getNumGrupo());
+						// [20.10] SB: Se modifica 
+						//agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);
 						agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);		
 						this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().add(agruPersona);
 					}
@@ -4939,6 +4943,7 @@ public class ConsultarSolicitudMB {
 					this.lstTiivsPersona.set(indexUpdatePersona,objTiivsPersonaResultado);
 					
 					if(tiivsAgrupacionPersonaCapturado!=null){
+						//objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
 						objTiivsPersonaResultado.setIdAgrupacionGrupo(tiivsAgrupacionPersonaCapturado.getIdAgrupacionGrupo());
 						this.tiivsAgrupacionPersonaCapturado.setTiivsPersona(objTiivsPersonaResultado);
 						this.tiivsAgrupacionPersonaCapturado.setClasifPer(objTiivsPersonaResultado.getClasifPer());
@@ -4968,7 +4973,8 @@ public class ConsultarSolicitudMB {
 		logger.info("********actualizarPersona******************");
 		TiivsPersona personaRetorno = new TiivsPersona();
 		
-		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit
+		.getApplicationContext().getBean("genericoDao");
 		
 		try {
 			persona.setUsuarioRegistro(this.usuario.getUID());
@@ -4994,7 +5000,7 @@ public class ConsultarSolicitudMB {
 	}
 
 	public void buscarPersona() {
-		logger.info("******************** buscarPersona **********************");
+		logger.info("================ buscarPersona ============");
 		logger.info("***objTiivsPersonaBusqueda.getCodCen() "
 				+ objTiivsPersonaBusqueda.getCodCen());
 		logger.info("***objTiivsPersonaBusqueda.getTipDoi() "
@@ -5040,7 +5046,7 @@ public class ConsultarSolicitudMB {
 
 	public void editarOperacionBancaria() {
 		int y = 0;
-		logger.info("**************************** editarOperacionBancaria ****************************");
+		logger.info("============ editarOperacionBancaria() =========");
 
 		for (int i = 0; i < this.lstSolicBancarias.size(); i++) {
 			if (objSolicitudOperacionCapturado.equals(this.lstSolicBancarias
@@ -5050,7 +5056,7 @@ public class ConsultarSolicitudMB {
 			}
 		}
 		y = y + 1;
-		logger.info("yyyyyyy : " + y);
+		logger.info("[editOperBanc]-y: " + y);
 		// Map<String, TiivsSolicitudOperban> mapSolicitudes=new HashMap<String, TiivsSolicitudOperban>();
 		mapSolicitudes.put(y, objSolicitudOperacionCapturado);
 
@@ -5138,7 +5144,7 @@ public class ConsultarSolicitudMB {
 		}
 		if (icontDolares > 0 && icontEuros == 0 && icontSoles == 0) 
 		{
-			// ONLI DOLARES
+			// SOLO DOLARES
 			for (TiivsSolicitudOperban x : lstSolicBancarias) 
 			{
 				valorFinal = valorFinal + x.getImporte();
@@ -5175,7 +5181,7 @@ public class ConsultarSolicitudMB {
 		}
 		if (icontDolares == 0 && icontEuros > 0 && icontSoles == 0) 
 		{
-			// ONLI EUROS
+			// SOLO EUROS
 			for (TiivsSolicitudOperban x : lstSolicBancarias) 
 			{
 				valorFinal = valorFinal + x.getImporte();
@@ -5259,7 +5265,7 @@ public class ConsultarSolicitudMB {
 	}
 	// METODO SAMIRA
 	public void agregarOperacionBancaria() {
-		logger.info(" ************************** agrearOperacionBancaria  ****************************** ");
+		logger.info(" ======== agregarOperacionBancaria  ======= ");
 		
 		if (this.validarOperacionBancaria()) {
 			for (TiivsOperacionBancaria n : combosMB.getLstOpeBancaria()) {

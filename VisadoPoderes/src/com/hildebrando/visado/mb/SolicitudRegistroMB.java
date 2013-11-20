@@ -294,6 +294,7 @@ public class SolicitudRegistroMB {
 		for(TiivsAgrupacionPersona aPer : tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas()){
 			if(aPer.getCodPer() == objTiivsPersonaCapturado.getCodPer() && aPer.getTipPartic() == objTiivsPersonaCapturado.getTipPartic()){
 				agruPersonaRemove = aPer;
+				//20.11 [SB] Agregado
 				break;
 			}
 		}
@@ -655,7 +656,7 @@ public class SolicitudRegistroMB {
 				return datosMultitabla.get(0).getValor3();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la parametria de servicios: ",e);
 		}
 		return "";
 	}
@@ -1163,10 +1164,12 @@ public class SolicitudRegistroMB {
 					
 					agruPersona.setNumGrupo(tiivsSolicitudAgrupacionCapturado.getId().getNumGrupo()); 
 					agruPersona.setCodSoli(tiivsSolicitudAgrupacionCapturado.getId().getCodSoli()); 
+					//[20-11] SB: Modificacion agrupacion
 					agruPersona.setIdAgrupacionGrupo(tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size()+1);
 					//agruPersona.setIdAgrupacion(tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size()+1); 
 					
 					agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);					
+					//[20-11] SB: Modificacion agrupacion
 					//objTiivsPersonaResultado.setIdAgrupacion(agruPersona.getIdAgrupacion());
 					objTiivsPersonaResultado.setIdAgrupacionGrupo(agruPersona.getIdAgrupacionGrupo());	
 					this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().add(agruPersona);					
@@ -1180,6 +1183,7 @@ public class SolicitudRegistroMB {
 					this.lstTiivsPersona.set(indexUpdatePersona,objTiivsPersonaResultado);
 					
 					if(tiivsAgrupacionPersonaCapturado!=null){
+						//objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
 						objTiivsPersonaResultado.setIdAgrupacionGrupo(tiivsAgrupacionPersonaCapturado.getIdAgrupacionGrupo());
 						this.tiivsAgrupacionPersonaCapturado.setTiivsPersona(objTiivsPersonaResultado);
 						this.tiivsAgrupacionPersonaCapturado.setClasifPer(objTiivsPersonaResultado.getClasifPer());
@@ -1334,7 +1338,7 @@ public class SolicitudRegistroMB {
 		//Captura agrupacion persona
 		for(TiivsAgrupacionPersona agruPersona: this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas()){
 			//Si Personacapturado es igual a algun elemento de  this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas		
-			
+			//if(agruPersona.getIdAgrupacion().equals(objTiivsPersonaCapturado.getIdAgrupacion())){
 			if(agruPersona.getIdAgrupacionGrupo().equals(objTiivsPersonaCapturado.getIdAgrupacionGrupo())){
 				tiivsAgrupacionPersonaCapturado = agruPersona;
 				break;
@@ -1355,6 +1359,7 @@ public class SolicitudRegistroMB {
 		this.objTiivsPersonaResultado.setEmail(this.objTiivsPersonaCapturado.getEmail());
 		this.objTiivsPersonaResultado.setNumCel(this.objTiivsPersonaCapturado.getNumCel());
 		this.objTiivsPersonaResultado.setCodPer(this.objTiivsPersonaCapturado.getCodPer());
+		//this.objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
 		this.objTiivsPersonaResultado.setIdAgrupacionGrupo(tiivsAgrupacionPersonaCapturado.getIdAgrupacionGrupo());
 		this.flagUpdatePersona = true;
 		
@@ -1849,6 +1854,9 @@ public class SolicitudRegistroMB {
 				    d.getTiivsPersona().setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
 				    d.getTiivsPersona().setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getClasifPer().trim()));
 				    d.getTiivsPersona().setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
+				    //20.11 [SB] Modificacion
+				    //if(d.getIdAgrupacion()!=null){
+				    //	d.getTiivsPersona().setIdAgrupacion(d.getIdAgrupacion());
 				    if(d.getIdAgrupacionGrupo()!=null){
 				    	d.getTiivsPersona().setIdAgrupacionGrupo(d.getIdAgrupacionGrupo());
 				    }
@@ -2180,6 +2188,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			}
 
 			// Para el llenado del listado (listBox)
+			// [20.11] SB Agregado
 			//int i = 0;
 			for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
 				if (s.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {				
@@ -3059,7 +3068,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		establecerTipoSolicitud();
 		
-		logger.info(" =========== registrarSolicitud [v1 - Mejoras] ===========");
+		logger.info("============================= registrarSolicitud [v1 - Mejoras] ==================================");
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
         GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -3139,12 +3148,13 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					}
 					this.enviarSolicitudSSJJ();
 				}
-				
+				logger.debug("======= REGISTRANDO SOLICITUD - (GENERANDO ID) ======");
 				SolicitudDao<TiivsPersona, Object> servicePK = (SolicitudDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 				String sCodigoSol = servicePK.obtenerPKNuevaSolicitud();
 				logger.debug("[REGISTR_SOLIC]-sCodigoSolicitud:" + sCodigoSol);
 				this.solicitudRegistrarT.setCodSoli(sCodigoSol);
 		
+				logger.debug("======= REGISTRANDO AGRUPACION PERSONA ======");
 				//Registrando las Agrupaciones
 				for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 					  //x.setTiivsSolicitud(this.solicitudRegistrarT);
@@ -3152,11 +3162,12 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					  for (TiivsAgrupacionPersona a : x.getTiivsAgrupacionPersonas()) {
 						a.setCodSoli(x.getId().getCodSoli());
 						a.setNumGrupo(x.getId().getNumGrupo());
+						//[20.11] SB. Agregado
 						//a.setIdAgrupacion(null);//Para que la BD asigne IdAgrupacion
 						logger.debug("[REGISTR_SOLIC]-Agrupacion-CodSol:"+a.getCodSoli() +"   NroGrupo:"+ a.getNumGrupo());
 					}
 				}
-				logger.debug("[REGISTR_SOLIC]-Antes de registrar el historial");
+				logger.debug("======= REGISTRANDO HISTORIAL ======");
 				//Registrando el Historial de la Solicitud
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT); //INSERTA LA SOLICITUD
 				TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
@@ -3175,18 +3186,19 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				  objHistorial.setRegUsuario(usuario.getUID());
 				  logger.debug("[REGISTR_SOLIC]-Historial-regUsuario: "+objHistorial.getRegUsuario());
 				  serviceHistorialSolicitud.insertar(objHistorial);
-				logger.debug("[REGISTR_SOLIC]-Despues de insertar el historial");
 				
 				//Registrando la lista de Documentos (Anexos)
 				if(this.lstAnexoSolicitud!=null){
 					logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+" de Anexos es:"+this.lstAnexoSolicitud.size());
 				}
+				logger.debug("========= REGISTRANDO ANEXOS  =========");
 				for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
 					  n.getId().setCodSoli(solicitudRegistrarT.getCodSoli());
 					  logger.debug("[REGISTR_SOLIC][Anexo]-Id:"+n.getId().getCodDoc() + "  Alias:"+n.getAliasArchivo()+"  AliasTemp:"+n.getAliasTemporal() + "  Hora:"+new Date());
 					  serviceAnexos.insertar(n);
 				}
-				 
+				
+				logger.debug("========= REGISTRANDO OPERACIONES BANCARIAS  =========");
 				//Registrando las Operaciones Bancarias
 				for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
 					logger.info("[REGISTR_SOLIC]-OperacionBancaria-codOper:"+ a.getId().getCodOperBan() + "   nombreOper:"+a.getTiivsOperacionBancaria().getDesOperBan());
@@ -3194,12 +3206,14 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					serviceSoli.insertar(a);
 				}
 				
-				 //Carga ficheros al File Server
+				logger.debug("========= MOVIENDO ARCHIVOS SOLICITUD =========");
+				//Carga ficheros al File Server
 				boolean bRet = cargarArchivosFileServer();
 				logger.info("[REGISTR_SOLIC]-Resultado de carga de archivos al FileServer:" + bRet);
 				//Elimina archivos temporales
 				eliminarArchivosTemporales();
 				
+				logger.debug("========= REDIRECCIONANDO SOLICITUD =========");
 				//Verificado el resultado y haciendo el redirect correcto.
 				logger.info("[REGISTR_SOLIC]-sEstadoSolicitud: "+this.sEstadoSolicitud);
 				if (objResultado.getCodSoli() != "" || objResultado != null) {
@@ -3226,6 +3240,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				logger.info("[REGISTR_SOLIC]-objResultado.SolAgrupaciones: "+ objResultado.getTiivsSolicitudAgrupacions().size());
 				logger.info("[REGISTR_SOLIC]-solicitudImprote: " +this.solicitudRegistrarT.getImporte());					
 				
+				logger.debug("========= CONSULTANDO SOLICITUD REGISTRADA =========");
 				if (actualizarBandeja)
 				{
 					logger.info("[REGISTR_SOLIC]-Se realiza la busquedaSolicitudxCodigo: "+objResultado.getCodSoli());
@@ -3564,7 +3579,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		String mensaje = "";
 		
 		//04-10 Validacion ingreso NroVoucher si check "Exonerado PagComis" no es marcado.
-		logger.debug("Valida[EnvioSolicitud]-getExoneraComision: "+solicitudRegistrarT.getExoneraComision());
+		//logger.debug("Valida[EnvioSolicitud]-getExoneraComision: "+solicitudRegistrarT.getExoneraComision());
 		
 		if(!isbFlagComision()){			
 			logger.debug("Valida[EnvioSolicitud]-Se valida que se ingrese Nro Voucher.");
