@@ -45,30 +45,33 @@ public class JobsMB {
 	public static Logger logger = Logger.getLogger(JobsMB.class);
 	
 	
-	
+	/**
+	 * Metodo encargado de realizar la carga de feriados a las tablas de VISPOD. Para 
+	 * esto se invoca al método: <code>obtenerDatosWebService().getFeriadoListado()</code>
+	 * del servicio de Tablas Generales
+	 * */
 	public static void cargarFeriados() {
 		try {
-
-			// 2 digitos: Departamento
-			// 2 digitos: Provincia
-			// 3 digitos: Distrito
-
+			logger.debug("===== cargarFeriados()() =====");
 			Timestamp tstInicio = new Timestamp(new java.util.Date().getTime());
-			logger.debug("==== INICIA PROCESO CARGA FERIADOS === Inicio: " + tstInicio);
+			logger.debug("[cargFeriado]-Hora Inicio: " + tstInicio);
 
 			Feriado[] resultado = obtenerDatosWebService().getFeriadoListado();
+			if(resultado!=null){
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"de feriados [WS-Tablas Generales] es: ["+resultado.length+"].");
+			}
 
 			Timestamp tsLatencia = new Timestamp(new java.util.Date().getTime());
 			double segundosUtilizadosLat = restarFechas(tstInicio, tsLatencia);
-			logger.debug("Tiempo demora obtenerDatosWebService: ["+ segundosUtilizadosLat + "] segundos.");
-
-			for (Feriado feriado : resultado) {		
+			logger.debug("[cargFeriado]-Tiempo demora : " + segundosUtilizadosLat + " segundos, al traer datos [WS-Tablas Generales].");
+			
+			for (Feriado feriado : resultado) {
 				
 				int anio = feriado.getFecha().get(Calendar.YEAR);				
 				int anioActual = Calendar.getInstance().get(Calendar.YEAR);
-				
+				//Para tomar en cuenta los feriados >= al año actual
 				if (anio >= anioActual) {
-					
+					//Si tiene Ubigeo es LOCAL, caso contrario es Feriado NACIONAL
 					if (feriado.getUbigeo() != null) {
 						if(logger.isDebugEnabled()){
 							logger.debug("------------------FERIADOS LOCALES------------------------");
@@ -89,16 +92,15 @@ public class JobsMB {
 					}
 
 					com.hildebrando.visado.modelo.TiivsFeriado ferid = new com.hildebrando.visado.modelo.TiivsFeriado();
-					
 					if (feriado.getIndicador().equals(ConstantesVisado.FERIADO.LOCAL)) {
 						ferid.setIndicador('L');
 					} else {
 						ferid.setIndicador('N');
 					}
-
 					ferid.setFecha(feriado.getFecha().getTime());					
 					ferid.setCodDist(feriado.getUbigeo());
-
+					ferid.setEstado('A');
+					
 //					if (!validarSiExiste("feriado", ferid)) {
 						grabarFeriado(ferid);						
 //					}
@@ -106,20 +108,19 @@ public class JobsMB {
 			}
 
 			Timestamp tstFin = new Timestamp(new java.util.Date().getTime());
-			logger.debug("=== TERMINA PROCESO CARGA FERIADOS === Fin: " + tstFin);
+			logger.debug("[cargFeriado]-Tiempo Fin: " + tstFin);
 
 			double segundosUtilizados = restarFechas(tstInicio, tstFin);
-			logger.debug("Proceso de carga de feriados finalizado en ["+ segundosUtilizados + "] segundos");
+			logger.debug("[cargFeriado]-Proceso de carga finalizado en ["+ segundosUtilizados + "] segundos.");
 
 		} catch (Exception e) {
-			logger.debug(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al cargar los feriados: "+e);
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al cargar los feriados: "+e);
 		}
 	}
 
 	@SuppressWarnings({ "unchecked" })
 	public static boolean validarSiExisteFeriado(String tabla, String campo,Object valor) {
 		boolean existe = false;
-
 		if (tabla.equals(ConstantesVisado.FERIADO.tablaferiado)) {
 			List<com.hildebrando.visado.modelo.TiivsFeriado> results = new ArrayList<com.hildebrando.visado.modelo.TiivsFeriado>();
 			GenericDaoImpl<com.hildebrando.visado.modelo.TiivsFeriado, Integer> feriadoDAO = (GenericDaoImpl<com.hildebrando.visado.modelo.TiivsFeriado, Integer>) SpringInit
@@ -149,7 +150,14 @@ public class JobsMB {
 				feriadoDAO.modificar(ferid);
 			} else {
 				feriadoDAO.insertar(ferid);
-				logger.debug(ConstantesVisado.MENSAJE.REGISTRO_OK+"el feriado -> Dist:"+ferid.getCodDist() + "  tipo: "+ferid.getIndicador());
+				logger.debug("===================================================");
+				logger.debug("\t[guardFeriado]-TipoFeriado: "+ferid.getIndicador());
+				logger.debug("\t[guardFeriado]-Fecha: "+ferid.getFecha().getTime());
+				if(ferid.getCodDist()!=null)
+					logger.debug("\t[guardFeriado]-Fecha: "+ferid.getCodDist());
+				logger.debug("\t[guardFeriado]-Estado: "+ferid.getEstado());
+				
+				logger.debug(ConstantesVisado.MENSAJE.REGISTRO_OK+"el feriado -> Distrito:"+ferid.getCodDist() + "  tipo: "+ferid.getIndicador());
 			}
 			// FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		} catch (Exception e) {
