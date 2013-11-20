@@ -929,8 +929,8 @@ public class ConsultarSolicitudMB {
 				    d.getTiivsPersona().setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
 				    d.getTiivsPersona().setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getClasifPer().trim()));
 				    d.getTiivsPersona().setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
-				    if(d.getIdAgrupacion()!=null){
-				    	d.getTiivsPersona().setIdAgrupacion(d.getIdAgrupacion());
+				    if(d.getIdAgrupacionGrupo()!=null){
+				    	d.getTiivsPersona().setIdAgrupacionGrupo(d.getIdAgrupacionGrupo());
 				    }
 				    
 				    lstPersonas.add(d.getTiivsPersona());
@@ -3608,7 +3608,7 @@ public class ConsultarSolicitudMB {
 			listaPersonasXAgrupacionXAgrupacion =new ArrayList<ComboDto>();
 		for (TiivsRevocado x : listaRevocadoDeDondeComparar) {
 			if(a.equals(x.getCodAgrup())){
-				logger.info("Codigo Agrupacion - 1 - ::::: " +a + " x.getCodPer()::: " +x.getTiivsPersona().getCodPer() +" x.getTipPartic() ::: " +x.getTipPartic() +" x.getNumGrupo():: " +x.getCodAgrup());
+				//logger.info("Codigo Agrupacion - 1 - ::::: " +a + " x.getCodPer()::: " +x.getTiivsPersona().getCodPer() +" x.getTipPartic() ::: " +x.getTipPartic() +" x.getNumGrupo():: " +x.getCodAgrup());
 				listaPersonasXAgrupacionXAgrupacion.add(new ComboDto(x.getTiivsPersona().getCodPer()+"",x.getTipPartic(),x.getCodAgrup()));
 			}
 		}
@@ -3617,8 +3617,8 @@ public class ConsultarSolicitudMB {
 			i = 0;
 			for (TiivsAgrupacionPersona an : lstTiivsAgrupacionPersonas) {
 				for (ComboDto bn : listaPersonasXAgrupacionXAgrupacion) {
-					logger.info("an.getCodPer() :: " +an.getCodPer() + " ::: an.getTipPartic()  "+an.getTipPartic());
-					logger.info("bn.getKey() :: " +bn.getKey() + " ::: bn.getDescripcion()  "+bn.getDescripcion());
+					//logger.info("an.getCodPer() :: " +an.getCodPer() + " ::: an.getTipPartic()  "+an.getTipPartic());
+					//logger.info("bn.getKey() :: " +bn.getKey() + " ::: bn.getDescripcion()  "+bn.getDescripcion());
 					if(an.getCodPer()==Integer.parseInt(bn.getKey()) && an.getTipPartic().trim().equals(bn.getDescripcion().trim()) ){
 						//logger.info("Una combinacion es igual " + an.getNumGrupo());
 						i++;
@@ -4548,7 +4548,7 @@ public class ConsultarSolicitudMB {
 		this.objTiivsPersonaResultado.setEmail(this.objTiivsPersonaCapturado.getEmail());
 		this.objTiivsPersonaResultado.setNumCel(this.objTiivsPersonaCapturado.getNumCel());
 		this.objTiivsPersonaResultado.setCodPer(this.objTiivsPersonaCapturado.getCodPer());
-		this.objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
+		this.objTiivsPersonaResultado.setIdAgrupacionGrupo(tiivsAgrupacionPersonaCapturado.getIdAgrupacionGrupo());
 		this.flagUpdatePersona = true;
 		
 		if(objTiivsPersonaCapturado.getTipDoi()!=null){ 
@@ -4938,7 +4938,7 @@ public class ConsultarSolicitudMB {
 					this.lstTiivsPersona.set(indexUpdatePersona,objTiivsPersonaResultado);
 					
 					if(tiivsAgrupacionPersonaCapturado!=null){
-						objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
+						objTiivsPersonaResultado.setIdAgrupacionGrupo(tiivsAgrupacionPersonaCapturado.getIdAgrupacionGrupo());
 						this.tiivsAgrupacionPersonaCapturado.setTiivsPersona(objTiivsPersonaResultado);
 						this.tiivsAgrupacionPersonaCapturado.setClasifPer(objTiivsPersonaResultado.getClasifPer());
 						this.tiivsAgrupacionPersonaCapturado.setTipPartic(objTiivsPersonaResultado.getTipPartic());
@@ -4967,8 +4967,7 @@ public class ConsultarSolicitudMB {
 		logger.info("********actualizarPersona******************");
 		TiivsPersona personaRetorno = new TiivsPersona();
 		
-		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit
-		.getApplicationContext().getBean("genericoDao");
+		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		
 		try {
 			persona.setUsuarioRegistro(this.usuario.getUID());

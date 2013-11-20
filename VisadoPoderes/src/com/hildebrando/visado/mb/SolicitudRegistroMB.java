@@ -294,6 +294,7 @@ public class SolicitudRegistroMB {
 		for(TiivsAgrupacionPersona aPer : tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas()){
 			if(aPer.getCodPer() == objTiivsPersonaCapturado.getCodPer() && aPer.getTipPartic() == objTiivsPersonaCapturado.getTipPartic()){
 				agruPersonaRemove = aPer;
+				break;
 			}
 		}
 		this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().remove(agruPersonaRemove);
@@ -1162,10 +1163,12 @@ public class SolicitudRegistroMB {
 					
 					agruPersona.setNumGrupo(tiivsSolicitudAgrupacionCapturado.getId().getNumGrupo()); 
 					agruPersona.setCodSoli(tiivsSolicitudAgrupacionCapturado.getId().getCodSoli()); 
-					agruPersona.setIdAgrupacion(tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size()+1); 
+					agruPersona.setIdAgrupacionGrupo(tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size()+1);
+					//agruPersona.setIdAgrupacion(tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().size()+1); 
 					
 					agruPersona.setTiivsSolicitudAgrupacion(tiivsSolicitudAgrupacionCapturado);					
-					objTiivsPersonaResultado.setIdAgrupacion(agruPersona.getIdAgrupacion());					
+					//objTiivsPersonaResultado.setIdAgrupacion(agruPersona.getIdAgrupacion());
+					objTiivsPersonaResultado.setIdAgrupacionGrupo(agruPersona.getIdAgrupacionGrupo());	
 					this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas().add(agruPersona);					
 					lstTiivsPersona.add(objTiivsPersonaResultado);
 				} else {
@@ -1177,7 +1180,7 @@ public class SolicitudRegistroMB {
 					this.lstTiivsPersona.set(indexUpdatePersona,objTiivsPersonaResultado);
 					
 					if(tiivsAgrupacionPersonaCapturado!=null){
-						objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
+						objTiivsPersonaResultado.setIdAgrupacionGrupo(tiivsAgrupacionPersonaCapturado.getIdAgrupacionGrupo());
 						this.tiivsAgrupacionPersonaCapturado.setTiivsPersona(objTiivsPersonaResultado);
 						this.tiivsAgrupacionPersonaCapturado.setClasifPer(objTiivsPersonaResultado.getClasifPer());
 						this.tiivsAgrupacionPersonaCapturado.setTipPartic(objTiivsPersonaResultado.getTipPartic());
@@ -1332,7 +1335,7 @@ public class SolicitudRegistroMB {
 		for(TiivsAgrupacionPersona agruPersona: this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas()){
 			//Si Personacapturado es igual a algun elemento de  this.tiivsSolicitudAgrupacionCapturado.getTiivsAgrupacionPersonas		
 			
-			if(agruPersona.getIdAgrupacion().equals(objTiivsPersonaCapturado.getIdAgrupacion())){
+			if(agruPersona.getIdAgrupacionGrupo().equals(objTiivsPersonaCapturado.getIdAgrupacionGrupo())){
 				tiivsAgrupacionPersonaCapturado = agruPersona;
 				break;
 			}
@@ -1352,7 +1355,7 @@ public class SolicitudRegistroMB {
 		this.objTiivsPersonaResultado.setEmail(this.objTiivsPersonaCapturado.getEmail());
 		this.objTiivsPersonaResultado.setNumCel(this.objTiivsPersonaCapturado.getNumCel());
 		this.objTiivsPersonaResultado.setCodPer(this.objTiivsPersonaCapturado.getCodPer());
-		this.objTiivsPersonaResultado.setIdAgrupacion(tiivsAgrupacionPersonaCapturado.getIdAgrupacion());
+		this.objTiivsPersonaResultado.setIdAgrupacionGrupo(tiivsAgrupacionPersonaCapturado.getIdAgrupacionGrupo());
 		this.flagUpdatePersona = true;
 		
 		if(objTiivsPersonaCapturado.getTipDoi()!=null){ 
@@ -1730,17 +1733,17 @@ public class SolicitudRegistroMB {
 			listaPersonasXAgrupacionXAgrupacion =new ArrayList<ComboDto>();
 		for (TiivsRevocado x : listaRevocadoDeDondeComparar) {
 			if(a.equals(x.getCodAgrup())){
-				logger.info("Codigo Agrupacion - 1 - ::::: " +a + " x.getCodPer()::: " +x.getTiivsPersona().getCodPer() +" x.getTipPartic() ::: " +x.getTipPartic() +" x.getNumGrupo():: " +x.getCodAgrup());
+				//logger.info("Codigo Agrupacion - 1 - ::::: " +a + " x.getCodPer()::: " +x.getTiivsPersona().getCodPer() +" x.getTipPartic() ::: " +x.getTipPartic() +" x.getNumGrupo():: " +x.getCodAgrup());
 				listaPersonasXAgrupacionXAgrupacion.add(new ComboDto(x.getTiivsPersona().getCodPer()+"",x.getTipPartic(),x.getCodAgrup()));
 			}
 		}
-		logger.info(" lstTiivsAgrupacionPersonas :: " +lstTiivsAgrupacionPersonas.size());
+		//logger.info(" lstTiivsAgrupacionPersonas :: " +lstTiivsAgrupacionPersonas.size());
 		if(listaPersonasXAgrupacionXAgrupacion.size()==lstTiivsAgrupacionPersonas.size()){
 			i = 0;
 			for (TiivsAgrupacionPersona an : lstTiivsAgrupacionPersonas) {
 				for (ComboDto bn : listaPersonasXAgrupacionXAgrupacion) {
-					logger.info("an.getCodPer() :: " +an.getCodPer() + " ::: an.getTipPartic()  "+an.getTipPartic());
-					logger.info("bn.getKey() :: " +bn.getKey() + " ::: bn.getDescripcion()  "+bn.getDescripcion());
+					/*logger.info("an.getCodPer() :: " +an.getCodPer() + " ::: an.getTipPartic()  "+an.getTipPartic());
+					logger.info("bn.getKey() :: " +bn.getKey() + " ::: bn.getDescripcion()  "+bn.getDescripcion());*/
 					if(an.getCodPer()==Integer.parseInt(bn.getKey()) && an.getTipPartic().trim().equals(bn.getDescripcion().trim()) ){
 						//logger.info("Una combinacion es igual " + an.getNumGrupo());
 						i++;
@@ -1846,8 +1849,8 @@ public class SolicitudRegistroMB {
 				    d.getTiivsPersona().setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
 				    d.getTiivsPersona().setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getClasifPer().trim()));
 				    d.getTiivsPersona().setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
-				    if(d.getIdAgrupacion()!=null){
-				    	d.getTiivsPersona().setIdAgrupacion(d.getIdAgrupacion());
+				    if(d.getIdAgrupacionGrupo()!=null){
+				    	d.getTiivsPersona().setIdAgrupacionGrupo(d.getIdAgrupacionGrupo());
 				    }
 				    
 				    lstPersonas.add(d.getTiivsPersona());
@@ -2177,14 +2180,14 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			}
 
 			// Para el llenado del listado (listBox)
-			int i = 0;
+			//int i = 0;
 			for (TiivsTipoSolicDocumento s : lstDocumentosXTipoSolTemp) {
 				if (s.getId().getCodDoc().equals(selectedDocumentoDTO.getItem())) {				
 					this.lstTipoSolicitudDocumentos.add(s);				
 					//this.lstTipoSolicitudDocumentos.add(i,s);											
 					break;
 				}
-				i++;
+				//i++;
 			}
 
 			// listado documentos
@@ -2461,14 +2464,6 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						valorFinal=valorFinal+x.getImporte();
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
-					//Double valorTemp = (double) (Math.round(valorFinal*100)/100);
-					
-					/*DecimalFormat formateador = new DecimalFormat("###,###.##");
-					Double monto=(double) Math.round(valorFinal*100)/100;
-					formateador.format(monto);
-					
-					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ monto);*/
-					
 					if (valorFinal % 1 == 0)
 					{
 						DecimalFormat formateador = new DecimalFormat("###,###");
@@ -2523,11 +2518,6 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						this.solicitudRegistrarT.setImporte(valorFinal);
 					}
 					
-					/*DecimalFormat formateador = new DecimalFormat("###,###.##");
-					Double monto=(double) Math.round(valorFinal*100)/100;
-					formateador.format(monto);
-					
-					this.solicitudRegistrarT.setsImporteMoneda(ConstantesVisado.MONEDAS.PREFIJO_SOLES+ monto);*/
 					
 					if (valorFinal % 1 == 0)
 					{
@@ -3162,7 +3152,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					  for (TiivsAgrupacionPersona a : x.getTiivsAgrupacionPersonas()) {
 						a.setCodSoli(x.getId().getCodSoli());
 						a.setNumGrupo(x.getId().getNumGrupo());
-						a.setIdAgrupacion(null);//Para que la BD asigne IdAgrupacion
+						//a.setIdAgrupacion(null);//Para que la BD asigne IdAgrupacion
 						logger.debug("[REGISTR_SOLIC]-Agrupacion-CodSol:"+a.getCodSoli() +"   NroGrupo:"+ a.getNumGrupo());
 					}
 				}
