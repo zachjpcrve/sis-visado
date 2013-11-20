@@ -46,13 +46,17 @@
 
 			<p:toolbar>
 		    	<p:toolbarGroup align="rigth">
-					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" 
-					
-					update=":formSolicitudRegistro, :formSolicitudRegistro:idMsmSolicitudRegistro"
-					    ajax="true"
-						icon="ui-icon-document" action="#{solicitudRegMB.registrarSolicitud}" actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"/>
+					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3"
+						update=":formSolicitudRegistro, :formSolicitudRegistro:idMsmSolicitudRegistro"
+					    	ajax="true"
+						icon="ui-icon-document" 
+						action="#{solicitudRegMB.registrarSolicitud}" 
+						actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"
+						oncomplete="appletDeleteFilesAndRedirect();" />
 					<p:commandButton value="Enviar" id="btnEnviar3"  
-						icon="ui-icon-document" update=":formSolicitudRegistro:idMsmSolicitudRegistro" onclick="confirmation.show()"/>					
+						icon="ui-icon-document" 
+						update=":formSolicitudRegistro:idMsmSolicitudRegistro" 
+						onclick="confirmation.show()"/>					
 						
 					<p:commandButton value="Salir" id="btnSalir3"
 						    onclick="window.location.href='./bienvenido.xhtml'"
