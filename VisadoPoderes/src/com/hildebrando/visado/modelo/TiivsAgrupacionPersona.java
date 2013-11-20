@@ -8,6 +8,7 @@ package com.hildebrando.visado.modelo;
 public class TiivsAgrupacionPersona implements java.io.Serializable {
 
 	private Integer idAgrupacion;
+	private Integer idAgrupacionGrupo;
 	private String codSoli;
 	private Integer numGrupo;
 	private Integer codPer;
@@ -101,15 +102,25 @@ public class TiivsAgrupacionPersona implements java.io.Serializable {
 		this.clasifPer = clasifPer;
 	}
 
+	public Integer getIdAgrupacionGrupo() {
+		return this.idAgrupacionGrupo;
+	}
+
+	public void setIdAgrupacionGrupo(Integer idAgrupacionGrupo) {
+		this.idAgrupacionGrupo = idAgrupacionGrupo;
+	}
+
 	@Override
 	public String toString() {
 		return "TiivsAgrupacionPersona [idAgrupacion=" + this.idAgrupacion
+				+ ", idAgrupacionGrupo=" + this.idAgrupacionGrupo
 				+ ", codSoli=" + this.codSoli + ", numGrupo=" + this.numGrupo
 				+ ", codPer=" + this.codPer + ", tipPartic=" + this.tipPartic
 				+ ", clasifPer=" + this.clasifPer
 				+ ", tiivsSolicitudAgrupacion=" + this.tiivsSolicitudAgrupacion
 				+ ", tiivsPersona=" + this.tiivsPersona + "]";
 	}
+
 	
 	
 	

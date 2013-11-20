@@ -33,7 +33,7 @@ public class TiivsPersona implements java.io.Serializable {
 	private String sDescclasifPer;
 	private String sDesctipDoi;
 	private Integer idAgrupacion;
-	
+	private Integer idAgrupacionGrupo;
 	private String nombreCompletoMayuscula;
 
 	private Set tiivsRevocados = new HashSet(0);
@@ -225,24 +225,6 @@ public class TiivsPersona implements java.io.Serializable {
 		this.tiivsRevocados = tiivsRevocados;
 	}
 
-	/*@Override
-	public String toString() {
-		return "TiivsPersona [codPer=" + this.codPer + ", codCen="
-				+ this.codCen + ", tipDoi=" + this.tipDoi + ", numDoi="
-				+ this.numDoi + ", nombre=" + this.nombre + ", apePat="
-				+ this.apePat + ", apeMat=" + this.apeMat + ", numCel="
-				+ this.numCel + ", email=" + this.email + ", usuarioRegistro="
-				+ this.usuarioRegistro + ", fechaRegistro="
-				+ this.fechaRegistro + ", tipPartic=" + this.tipPartic
-				+ ", clasifPer=" + this.clasifPer + ", clasifPerOtro="
-				+ this.clasifPerOtro + ", sDesctipPartic="
-				+ this.sDesctipPartic + ", sDescclasifPer="
-				+ this.sDescclasifPer + ", sDesctipDoi=" + this.sDesctipDoi
-				+ ", nombreCompletoMayuscula=" + this.nombreCompletoMayuscula
-				//+ ", tiivsRevocados=" + this.tiivsRevocados
-				+ ", tiivsAgrupacionPersonas=" + this.tiivsAgrupacionPersonas
-				+ "]";
-	}*/
 
 	public void setIdAgrupacion(Integer idAgrupacion) {
 		this.idAgrupacion = idAgrupacion;
@@ -251,6 +233,14 @@ public class TiivsPersona implements java.io.Serializable {
 
 	public Integer getIdAgrupacion() {
 		return idAgrupacion;
+	}
+
+	public Integer getIdAgrupacionGrupo() {
+		return this.idAgrupacionGrupo;
+	}
+
+	public void setIdAgrupacionGrupo(Integer idAgrupacionGrupo) {
+		this.idAgrupacionGrupo = idAgrupacionGrupo;
 	}
 	
 	
