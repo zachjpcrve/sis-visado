@@ -12,6 +12,7 @@ import com.bbva.consulta.reniec.util.BResult;
 import com.bbva.consulta.reniec.util.Constantes;
 import com.bbva.consulta.reniec.util.Persona;
 import com.bbva.persistencia.generica.util.Utilitarios;
+import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.grupobbva.pe.SIR.ents.body.consultaPorDNI.DatosDomicilio;
 import com.grupobbva.pe.SIR.ents.body.consultaPorDNI.DatosNacimiento;
 import com.grupobbva.pe.SIR.ents.body.consultaPorDNI.DatosPersona;
@@ -37,6 +38,7 @@ import com.ibm.www.SubTramaConsulta7;
 public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecService {
 	private Logger logger = Logger.getLogger(ObtenerPersonaReniecServiceImpl.class);
 	private static boolean initialized = false;
+	private IILDPeUsuario usuario;
 	
 	/**
 	 * Escribe los logs en un archivo externo seg&uacute;n la configuraci&oacute;n
@@ -247,8 +249,7 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 		BResult result = new BResult();
 		
 		if(parametrosReniec!=null){
-			logger.debug("[ws]-usuarioConsulta: "+parametrosReniec.getUsuario());
-			logger.debug("[ws]-RutaNuevoServicio: "+parametrosReniec.getRutaServicio());
+			logger.debug("[WSReniec]-URL Servicio: "+parametrosReniec.getRutaServicio());
 			
 			RequestHeader cabecera = new RequestHeader();
 			cabecera.setCanal(parametrosReniec.getCanal());
@@ -257,10 +258,16 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 			//Formato: 2013-11-08-12.24.01.123456
 			cabecera.setFechaHoraEnvio(Utilitarios.obtenerFechaHoraSegMil());
 			cabecera.setIdEmpresa(parametrosReniec.getEmpresa());
+			usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");	
+			//Para usar el usuario sesion o el configurado en la multitabla.
+			if(parametrosReniec.getUsuario().equalsIgnoreCase("P007734")){
+				cabecera.setUsuario(parametrosReniec.getUsuario());
+			}else{
+				cabecera.setUsuario(usuario.getUID());
+			}
 			//Formato: 20131108122401123456VISADOP007734
 			cabecera.setIdTransaccion(Utilitarios.obtenerFechaHoraSegMilTx() 
 					+ cabecera.getCodigoAplicacion()+cabecera.getUsuario());		
-			cabecera.setUsuario(parametrosReniec.getUsuario());
 			logger.debug("======== [cabecera]==========");
 			logger.debug("[WSReniec][cabecera]-canal: "+cabecera.getCanal());
 			logger.debug("[WSReniec][cabecera]-codAplicacion: "+cabecera.getCodigoAplicacion());
@@ -279,14 +286,21 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 			refConsultaPorDNIRequest.setIndConsultaFoto(parametrosReniec.getConsultaFoto());
 			refConsultaPorDNIRequest.setNumeroDNIConsultado(dni);
 			refConsultaPorDNIRequest.setNumeroDNISolicitante(parametrosReniec.getDniSolicitante());
-			refConsultaPorDNIRequest.setRegistroCodUsuario(parametrosReniec.getRegistroUsuario());
-			refConsultaPorDNIRequest.setTipoAplicacion(parametrosReniec.getTipoAplicacion());
+			
+			if(parametrosReniec.getRegistroUsuario().equalsIgnoreCase("P007734")){
+				logger.debug("UsuarioPrueba: "+parametrosReniec.getRegistroUsuario());
+				refConsultaPorDNIRequest.setRegistroCodUsuario(parametrosReniec.getRegistroUsuario());
+			}else{
+				logger.debug("UsuarioCorrecto: "+parametrosReniec.getRegistroUsuario());
+				refConsultaPorDNIRequest.setRegistroCodUsuario(usuario.getUID());
+			}
 			
 			logger.debug("======== [Body]==========");
 			logger.debug("[WSReniec][body]-CentroCosto: "+refConsultaPorDNIRequest.getCentroCostos());
 			logger.debug("[WSReniec][body]-HostSolicitante: "+refConsultaPorDNIRequest.getHostSolicitante());
 			logger.debug("[WSReniec][body]-tipoAplicacion: "+refConsultaPorDNIRequest.getTipoAplicacion());
 			logger.debug("[WSReniec][body]-DNISolicitante: "+refConsultaPorDNIRequest.getNumeroDNISolicitante());
+			logger.debug("[WSReniec][body]-RegistroCodUsuario: "+refConsultaPorDNIRequest.getRegistroCodUsuario());
 			logger.debug("[WSReniec][body]-DNIConsultado: "+refConsultaPorDNIRequest.getNumeroDNIConsultado());
 			logger.debug("[WSReniec][body]-IndicadorConsDatos: "+refConsultaPorDNIRequest.getIndConsultaDatos());
 			logger.debug("[WSReniec][body]-IndicadorConsFoto: "+refConsultaPorDNIRequest.getIndConsultaFoto());
@@ -373,6 +387,8 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 				log.error(Constantes.RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA + e);
 			}catch(Exception ex){
 				log.error(Constantes.RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA +" ->"+ ex);
+				result.setMessage(Constantes.RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA);
+				result.setCode(Constantes.ERROR_GENERAL);
 			}
 		}else{
 			result.setMessage(Constantes.RENIEC_NO_EXISTE_PARAMETRO);
