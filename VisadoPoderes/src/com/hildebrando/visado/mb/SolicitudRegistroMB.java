@@ -3188,22 +3188,29 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				  serviceHistorialSolicitud.insertar(objHistorial);
 				
 				//Registrando la lista de Documentos (Anexos)
-				if(this.lstAnexoSolicitud!=null){
+				if(this.lstAnexoSolicitud!=null && this.lstAnexoSolicitud.size()>0){
 					logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+" de Anexos es:"+this.lstAnexoSolicitud.size());
-				}
-				logger.debug("========= REGISTRANDO ANEXOS  =========");
-				for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
-					  n.getId().setCodSoli(solicitudRegistrarT.getCodSoli());
-					  logger.debug("[REGISTR_SOLIC][Anexo]-Id:"+n.getId().getCodDoc() + "  Alias:"+n.getAliasArchivo()+"  AliasTemp:"+n.getAliasTemporal() + "  Hora:"+new Date());
-					  serviceAnexos.insertar(n);
+					for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
+						  n.getId().setCodSoli(solicitudRegistrarT.getCodSoli());
+						  logger.debug("[REGISTR_SOLIC][Anexo]-Id:"+n.getId().getCodDoc() + "  Alias:"+n.getAliasArchivo()+"  AliasTemp:"+n.getAliasTemporal() + "  Hora:"+new Date());
+						  serviceAnexos.insertar(n);
+					}
+				}else{
+					mensaje = "Falta ingresar lista de documentos";
+					Utilitarios.mensajeInfo("INFO", mensaje);
 				}
 				
-				logger.debug("========= REGISTRANDO OPERACIONES BANCARIAS  =========");
-				//Registrando las Operaciones Bancarias
-				for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
-					logger.info("[REGISTR_SOLIC]-OperacionBancaria-codOper:"+ a.getId().getCodOperBan() + "   nombreOper:"+a.getTiivsOperacionBancaria().getDesOperBan());
-					a.getId().setCodSoli(this.solicitudRegistrarT.getCodSoli());
-					serviceSoli.insertar(a);
+				if(this.lstSolicBancarias!=null && this.lstSolicBancarias.size()>0){
+					logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+" de Operaciones Bancarias es:"+this.lstSolicBancarias.size());
+					//Registrando las Operaciones Bancarias
+					for (TiivsSolicitudOperban a : this.lstSolicBancarias) {
+						logger.info("[REGISTR_SOLIC]-OperacionBancaria-codOper:"+ a.getId().getCodOperBan() + "   nombreOper:"+a.getTiivsOperacionBancaria().getDesOperBan());
+						a.getId().setCodSoli(this.solicitudRegistrarT.getCodSoli());
+						serviceSoli.insertar(a);
+					}	
+				}else{
+					mensaje = "Falta ingresar lista de operaciones bancarias";
+					Utilitarios.mensajeInfo("INFO", mensaje);
 				}
 				
 				logger.debug("========= MOVIENDO ARCHIVOS SOLICITUD =========");
@@ -3865,14 +3872,19 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				.getPropiedad(ConstantesVisado.KEY_PATH_FILE_SERVER)
 				+ File.separator + ConstantesVisado.FILES + File.separator;
 		
-		for(String sfile : aliasFilesToDelete){
-			logger.debug("Borrar archivo: " + sUbicacionTemporal + sfile);
-			fileToDelete = new File(sUbicacionTemporal + sfile);
-			if(fileToDelete.delete()){
-				logger.debug("Se ha BORRADO el archivo temporal :" + sfile);
-			} else {
-				logger.debug("No se ha BORRADO el archivo temporal :" + sfile);
-			}
+		if(aliasFilesToDelete!=null && aliasFilesToDelete.size()>0){
+			for(String sfile : aliasFilesToDelete){
+				logger.debug("Borrar archivo: " + sUbicacionTemporal + sfile);
+				fileToDelete = new File(sUbicacionTemporal + sfile);
+				if(fileToDelete.delete()){
+					logger.debug("Se ha BORRADO el archivo temporal :" + sfile);
+				} else {
+					logger.debug("No se ha BORRADO el archivo temporal :" + sfile);
+				}
+			}	
+		}else{
+			String mensaje = "No se encontraron los archivos temporales";
+			Utilitarios.mensajeInfo("INFO", mensaje);
 		}
 		
 		fileToDelete = null;
