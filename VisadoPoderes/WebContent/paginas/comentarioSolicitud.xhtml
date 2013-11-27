@@ -47,7 +47,7 @@
 			<p:toolbar>
 		    	<p:toolbarGroup align="rigth">
 					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3"
-						update=":formSolicitudRegistro:idMsmSolicitudRegistro"
+						update=":formSolicitudRegistro:idResultRegistro, :formSolicitudRegistro:idMsmSolicitudRegistro"
 					    	ajax="true"
 						icon="ui-icon-document" 
 						action="#{solicitudRegMB.registrarSolicitud}" 
