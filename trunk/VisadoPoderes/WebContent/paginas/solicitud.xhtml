@@ -31,16 +31,17 @@
 
 					<h:form id="formRegistroToolBar">
 
-						<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3"
-							update=":formSolicitudRegistro:idMsmSolicitudRegistro,
+						<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" widgetVar="btnSaveBorrador3Var"
+							update=":formSolicitudRegistro:idMsmSolicitudRegistro, btnSaveBorrador3
 									:formSolicitudRegistro:idCodigoSolicitud,
 									:formRegistroToolBar:idResultRegistro"
-							icon="ui-icon-document"
-							action="#{solicitudRegMB.registrarSolicitud}"
+							icon="ui-icon-document" onclick="btnSaveBorrador3Var.disable()"
+							action="#{solicitudRegMB.registrarSolicitud}" 
 							actionListener="#{solicitudRegMB.registrarSolicitudBorrador}"
-							oncomplete="appletDeleteFilesAndRedirect();"
-							ajax="true">
+							oncomplete="appletDeleteFilesAndRedirect();" 
+							ajax="true"   disabled="#{solicitudRegMB.esRegistroValido}" >
 						</p:commandButton>
+						
 
 						<h:inputHidden id="idResultRegistro" value="#{solicitudRegMB.redirect}" />	
 						

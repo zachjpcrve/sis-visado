@@ -27,15 +27,15 @@
 			<p:toolbar>
 				<p:toolbarGroup align="rigth">
 				<h:form id="formRegistroToolBar"> 
-				                <p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" ajax="true"
-				                	update=":formSolicitudRegistro:idMsmSolicitudEdicion,
+				                <p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" ajax="true" widgetVar="btnSaveBorrador3Var"
+				               update=":formSolicitudRegistro:idMsmSolicitudEdicion, btnSaveBorrador3,
 				                			:formSolicitudRegistro:idCodigoSolicitud,
 				                			:formRegistroToolBar:idResultRegistro"
-									icon="ui-icon-document" 
+						icon="ui-icon-document"  disabled="#{consultarSolicitudMB.esRegistroValido}" 
 									action="#{consultarSolicitudMB.registrarSolicitud}" 
 									actionListener="#{consultarSolicitudMB.registrarSolicitudBorrador}"
-									oncomplete="appletDeleteFilesAndRedirect();"
-									/>
+									oncomplete="appletDeleteFilesAndRedirect();" 
+									onclick="btnSaveBorrador3Var.disable()"/>
 					
 					<h:inputHidden id="idResultRegistro" value="#{consultarSolicitudMB.redirect}" />
 					
