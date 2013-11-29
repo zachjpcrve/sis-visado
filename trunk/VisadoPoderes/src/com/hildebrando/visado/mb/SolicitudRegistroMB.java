@@ -120,7 +120,7 @@ public class SolicitudRegistroMB {
 	private boolean bFlagComision;
 	private String descripcionComision;
 	private String glosaComision;
-	
+	private boolean esRegistroValido=false;
 	private TiivsSolicitudOperban objSolicBancaria;
 	private List<TiivsSolicitudOperban> lstSolicBancarias;
 	private TiivsSolicitud solicitudRegistrarT;
@@ -1923,6 +1923,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	public String instanciarSolicitudRegistro() {
 		logger.info("========= instanciarSolicitudRegistro ==========");
 		sEstadoSolicitud = "BORRADOR";
+		esRegistroValido=false;
 		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
 		lstTiivsSolicitudAgrupacion = new HashSet<TiivsSolicitudAgrupacion>();
 		solicitudRegistrarT = new TiivsSolicitud();
@@ -3129,6 +3130,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			logger.debug("[REGISTR_SOLIC]-this.sEstadoSolicitud: "+this.sEstadoSolicitud);
 			if(!this.sEstadoSolicitud.equals("BORRADOR")){ 	//Validacion para envio de solicitud a SSJJ
 				esValido = this.validarEnvioSolicitud();
+				
 			} else { 	//Validacion para registro de solicitud (Borrador)
 				esValido = this.validarRegistroSolicitud();
 			}
@@ -3255,6 +3257,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				}
 				
 			}
+			esRegistroValido=esValido;
 		} catch (Exception e) {
 			this.redirect="";
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al registrar la solicitud: ",e);
@@ -4668,5 +4671,15 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	public void setFileDownload(StreamedContent fileDownload) {
 		this.fileDownload = fileDownload;
 	}
+
+	public boolean isEsRegistroValido() {
+		return this.esRegistroValido;
+	}
+
+	public void setEsRegistroValido(boolean esRegistroValido) {
+		this.esRegistroValido = esRegistroValido;
+	}
+	
+	
 	
 }

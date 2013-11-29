@@ -174,6 +174,7 @@ public class ConsultarSolicitudMB {
 	private int numGrupoUpdatePoderdanteApoderado=0;
 	private Boolean mostrarUsuarioHist;
 	private Boolean mostrarVerDatosVoucher;
+	private boolean esRegistroValido;
 	
 	int icontSoles = 0, icontDolares = 0, icontEuros = 0;
 	double valorSoles_C = 0, valorSolesD = 0, valorSolesE = 0, valorEuro = 0,
@@ -3126,6 +3127,7 @@ public class ConsultarSolicitudMB {
 				
 			}
 			bBooleanPopup=false;
+			esRegistroValido=esValido;
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION, e);
 			Utilitarios.mensajeError("ERROR", "Ha ocurrido un error al grabar la Solicitud");
@@ -6700,5 +6702,16 @@ public class ConsultarSolicitudMB {
 	public void setMostrarVerDatosVoucher(Boolean mostrarVerDatosVoucher) {
 		this.mostrarVerDatosVoucher = mostrarVerDatosVoucher;
 	}
+
+
+	public boolean isEsRegistroValido() {
+		return this.esRegistroValido;
+	}
+
+
+	public void setEsRegistroValido(boolean esRegistroValido) {
+		this.esRegistroValido = esRegistroValido;
+	}
+	
 	
 }
