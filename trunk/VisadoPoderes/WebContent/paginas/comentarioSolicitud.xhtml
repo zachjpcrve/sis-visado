@@ -46,7 +46,7 @@
 
 			<p:toolbar>
 		    	<p:toolbarGroup align="rigth">
-					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" widgetVar="btnSaveBorrador3Var"
+					<p:commandButton value="Guardar Borrador" id="btnSaveBorrador3" widgetVar="btnSaveBorrador3Var" 
 						update=":formSolicitudRegistro:idResultRegistro, btnSaveBorrador3 , :formSolicitudRegistro:idMsmSolicitudRegistro "
 					    	ajax="true" disabled="#{solicitudRegMB.esRegistroValido}" 
 						icon="ui-icon-document" onclick="btnSaveBorrador3Var.disable()"
