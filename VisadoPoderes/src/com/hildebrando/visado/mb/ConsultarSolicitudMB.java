@@ -519,7 +519,7 @@ public class ConsultarSolicitudMB {
 
 	public void inicializarContructor() {
 		solicitudRegistrarT = new TiivsSolicitud();
-
+		esRegistroValido=false;
 		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
 //		lstAnexosSolicitudes = new ArrayList<TiivsAnexoSolicitud>();
 		//lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
@@ -3128,6 +3128,9 @@ public class ConsultarSolicitudMB {
 			}
 			bBooleanPopup=false;
 			esRegistroValido=esValido;
+			if(esValido){
+				esRegistroValido=false;
+			}
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION, e);
 			Utilitarios.mensajeError("ERROR", "Ha ocurrido un error al grabar la Solicitud");
