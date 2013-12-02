@@ -245,13 +245,12 @@ public class ConsultarSolicitudMB {
 	 * Metodo que actualiza los listados de los Combos
 	 * */
 	public void actualizarListas(){
-		logger.debug("*************actualizarListas************");
+		logger.debug("==== actualizarListas() ===");
 		combosMB = new CombosMB();	
 	}
 	
 	public void modificarTextoVentanaCartaAtencion() {
 		PERFIL_USUARIO = (String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
-
 		if (PERFIL_USUARIO.equals(ConstantesVisado.SSJJ)) {
 			setTextoMensajeCartaAtencion(ConstantesVisado.MENSAJE_CARTA_ATENCION.MENSA_SSJJ);
 		} else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)) {
@@ -305,8 +304,7 @@ public class ConsultarSolicitudMB {
 				{
 					lstTmpMult=serviceClas.buscarDinamico(filtroTipoClas);
 				}
-				catch (Exception e) 
-				{
+				catch (Exception e) {
 					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+" de datos de Clasificacion de personas: ",e);
 				}
 				
@@ -542,8 +540,7 @@ public class ConsultarSolicitudMB {
 		objTiivsPersonaBusqueda = new TiivsPersona();
 		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
 		
-		listaTemporalEliminarOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();				
-			
+		listaTemporalEliminarOperacionesBancarias=new ArrayList<TiivsSolicitudOperban>();			
 	}
 
 	/**
@@ -3127,6 +3124,7 @@ public class ConsultarSolicitudMB {
 				
 			}
 			bBooleanPopup=false;
+			//02-12 SB: Se agrega validacion ..
 			esRegistroValido=esValido;
 			if(esValido){
 				esRegistroValido=false;
@@ -4473,7 +4471,7 @@ public class ConsultarSolicitudMB {
 	}
 
 	public boolean validarRegistroDuplicado() {
-		logger.info("******************************* validarRegistroDuplicado ******************************* "
+		logger.info("===== validarRegistroDuplicado ===== "
 				+ objTiivsPersonaResultado.getNumDoi());
 		boolean bResult = true;
 		String sMensaje = "";
@@ -4504,7 +4502,7 @@ public class ConsultarSolicitudMB {
 
 	public void limpiarCriteriosBusqueda() {
 		
-		logger.info("***************************** limpiar ************************************ ");
+		logger.info("===== limpiarCriteriosBusqueda ====== ");
 		objTiivsPersonaBusqueda.setCodCen("");
 		objTiivsPersonaBusqueda.setTipDoi("");
 		objTiivsPersonaBusqueda.setNumDoi("");
@@ -4522,7 +4520,7 @@ public class ConsultarSolicitudMB {
 	}
 
 	public void editarPersona() {
-		logger.info("***************************** editarPersona ************************************ ");
+		logger.info("===== editarPersona() ==== ");
 		for (int i = 0; i < this.lstTiivsPersona.size(); i++) {
 			if (objTiivsPersonaCapturado.equals(this.lstTiivsPersona.get(i))) {
 				indexUpdatePersona = i;
@@ -4568,7 +4566,7 @@ public class ConsultarSolicitudMB {
 	}
 
 	public void eliminarPersona() {
-		logger.info("**************************** eliminarPersona ****************************");
+		logger.info("======= eliminarPersona() ===========");
 		logger.info("Codigo de la persona capturada a Eliminar " +objTiivsPersonaCapturado.getCodPer());
 		//logger.info(" Lista de las Personas Original de base " +lstTiivsPersonaCopia.size());
 		logger.info(" Lista de las Personas Antes de Remover " +lstTiivsPersona.size());
@@ -4719,7 +4717,7 @@ public class ConsultarSolicitudMB {
 		return retorno;
 	}
 	public boolean validarPersona() {
-		logger.info("******************************* validarPersona ******************************* "
+		logger.info("====== validarPersona() ===== "
 				+ objTiivsPersonaResultado.getTipPartic());
 		boolean bResult = true;
 		String sMensaje = "";
@@ -4858,7 +4856,7 @@ public class ConsultarSolicitudMB {
 		return retorno;
 	}
 	public boolean 	validarTipoDocumentos() {
-		logger.info("***************** validarTipoDocumentos ********************* ");
+		logger.info("====== validarTipoDocumentos ====== ");
 		boolean bResult = true;
 		String sMensaje = "";
 		if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CODIGO_CENTRAL)) {
@@ -4904,7 +4902,7 @@ public class ConsultarSolicitudMB {
 	}
 
 	public void agregarPersona() {
-		logger.info("****************** agregarPersona ********************");
+		logger.info("==== agregarPersona() ===");
 		if (validarPersona()) {
 			if (validarRegistroDuplicado()) {
 				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
@@ -4975,7 +4973,7 @@ public class ConsultarSolicitudMB {
 
 
 	private TiivsPersona actualizarPersona(TiivsPersona persona) {
-		logger.info("********actualizarPersona******************");
+		logger.info("==== actualizarPersona() =====");
 		TiivsPersona personaRetorno = new TiivsPersona();
 		
 		GenericDao<TiivsPersona, Object> servicePers = (GenericDao<TiivsPersona, Object>) SpringInit
@@ -5662,7 +5660,7 @@ public class ConsultarSolicitudMB {
 	}
 
 	public void actualizarListaDocumentosXTipo(TiivsAnexoSolicitud objAnexo) {
-		logger.info("****************************** actualizarListaDocumentosXTipo *********************************");
+		logger.info("===== actualizarListaDocumentosXTipo() ======");
 		if (objAnexo.getId().getCodDoc()
 				.contains(ConstantesVisado.PREFIJO_OTROS)) {
 			String sAlias = objAnexo.getAliasArchivo();
@@ -5782,7 +5780,7 @@ public class ConsultarSolicitudMB {
 	}
 
 	public void limpiarComentario() {
-		logger.info("**************************** limpiar Comentario ****************************");
+		logger.debug("===== limpiar Comentario ====");
 		 this.solicitudRegistrarT.setObs(null);
 	}
 	
@@ -5798,9 +5796,11 @@ public class ConsultarSolicitudMB {
 			this.mostrarRazonSocial = false;
 			objTiivsPersonaResultado.setTipDoi("");
 		}	
-		
-		this.obterPatterDelTipoDocumento(codTipoDocumento);
+		if(codTipoDocumento!=null){
+			this.obterPatterDelTipoDocumento(codTipoDocumento);	
+		}
 	}
+	
 	@SuppressWarnings("unchecked")
 	private void obterPatterDelTipoDocumento(String codTipoDocumento){
 		logger.debug("=== obterPatterDelTipoDocumento() ===");
@@ -5851,30 +5851,22 @@ public class ConsultarSolicitudMB {
 		String outputFileName = rutaDocumento;
 		
 		File outputPDF = new File(outputFileName);
-
-		// Get ready to return pdf to user
 		BufferedInputStream input = null;
 		BufferedOutputStream output = null;
 		try {
-			// Open file.
 			input = new BufferedInputStream(new FileInputStream(outputPDF),10240);
-
-			// Return PDF to user
-			// Init servlet response.
 			response.reset();
 			response.setHeader("Content-Type", "application/pdf");
 			response.setHeader("Content-Length",String.valueOf(outputPDF.length()));
 			response.setHeader("Content-Disposition", "attachment; filename=\""+ nombreDocumento + "\"");
 			output = new BufferedOutputStream(response.getOutputStream(), 10240);
 
-			// Write file contents to response.
 			byte[] buffer = new byte[10240];
 			int length;
 			while ((length = input.read(buffer)) > 0) {
 				output.write(buffer, 0, length);
 			}
 			logger.debug("finalizando OK");
-			// Finalize task.
 			output.flush();
 		} catch (IOException e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 1 al descargarDocumento:",e);
@@ -5893,8 +5885,7 @@ public class ConsultarSolicitudMB {
 				logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+ "IOException 3 al descargarDocumento:",e);
 			}
 		}
-		FacesContext.getCurrentInstance().responseComplete();
-		
+		FacesContext.getCurrentInstance().responseComplete();		
 		logger.debug("=== saliendo de descargarDocumento() ====");
 		
 		return "";		
@@ -5924,7 +5915,7 @@ public class ConsultarSolicitudMB {
 					}
 				}
 			} catch (Exception e1) {
-				logger.error("+++ Falló al buscar operacion", e1);
+				logger.error("+++ Falló al buscar operacion bancaria: ", e1);
 			}
 		}
 	}

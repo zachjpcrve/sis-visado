@@ -260,7 +260,7 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 			cabecera.setIdEmpresa(parametrosReniec.getEmpresa());
 			usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");	
 			//Para usar el usuario sesion o el configurado en la multitabla.
-			if(parametrosReniec.getUsuario().equalsIgnoreCase("P007734")){
+			if(parametrosReniec.getUsuario().equalsIgnoreCase(Utilitarios.getPropiedad("usuConsPruebaRen"))){
 				cabecera.setUsuario(parametrosReniec.getUsuario());
 			}else{
 				cabecera.setUsuario(usuario.getUID());
@@ -287,11 +287,9 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 			refConsultaPorDNIRequest.setNumeroDNIConsultado(dni);
 			refConsultaPorDNIRequest.setNumeroDNISolicitante(parametrosReniec.getDniSolicitante());
 			
-			if(parametrosReniec.getRegistroUsuario().equalsIgnoreCase("P007734")){
-				logger.debug("UsuarioPrueba: "+parametrosReniec.getRegistroUsuario());
+			if(parametrosReniec.getRegistroUsuario().equalsIgnoreCase(Utilitarios.getPropiedad("usuConsPruebaRen"))){
 				refConsultaPorDNIRequest.setRegistroCodUsuario(parametrosReniec.getRegistroUsuario());
 			}else{
-				logger.debug("UsuarioCorrecto: "+parametrosReniec.getRegistroUsuario());
 				refConsultaPorDNIRequest.setRegistroCodUsuario(usuario.getUID());
 			}
 			

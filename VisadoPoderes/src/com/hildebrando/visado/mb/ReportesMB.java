@@ -370,6 +370,7 @@ public class ReportesMB {
 	public void buscarLiquidacion() 
 	{
 		if(validarReporteLiquidacion()!=false){
+			logger.debug("=== buscarLiquidacion() ===");
 			SolicitudDao<TiivsSolicitud, Object> solicitudService = (SolicitudDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("solicitudEspDao");
 			// Busqueda por estudio
 			String cadEstudio = "";

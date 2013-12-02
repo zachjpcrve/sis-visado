@@ -1490,7 +1490,7 @@ public class SolicitudRegistroMB {
 	
 	
 	public boolean 	validarTipoDocumentos() {
-		logger.info("***************** validarTipoDocumentos ********************* ");
+		logger.info("===== validarTipoDocumentos() ===== ");
 		boolean bResult = true;
 		String sMensaje = "";
 		if (objTiivsPersonaResultado.getTipDoi().equals(ConstantesVisado.TIPOS_DOCUMENTOS_DOI.COD_CODIGO_CENTRAL)) {
@@ -1536,32 +1536,32 @@ public class SolicitudRegistroMB {
 	}
 
 	public void agregarActionListenerAgrupacion(){
-		  logger.info("********************** agregarActionListenerAgrupacion ********************* " );
-		  lstTiivsPersona=new ArrayList<TiivsPersona>();
-		  objTiivsPersonaBusqueda=new TiivsPersona();
-		  objTiivsPersonaResultado=new TiivsPersona();
-		  flagUpdatePoderdanteApoderados=false;
-		  combosMB=new CombosMB();
-		  lstClasificacionPersona=combosMB.getLstClasificacionPersona();
-		  logger.info("tamanioo actual **** " +combosMB.getLstClasificacionPersona().size());
-		 listaTemporalAgrupacionesPersonaBorradores=new ArrayList<TiivsAgrupacionPersona>();
-		 listaTemporalPersonasBorradores=new ArrayList<TiivsPersona>();
-		 lstTiivsPersonaCopia=new ArrayList<TiivsPersona>();
-		 int NumeroGrupoMax=0;
-		 if(lstAgrupacionSimpleDto.size()!=0){
+		logger.info("======= agregarActionListenerAgrupacion() ======= " );
+		lstTiivsPersona=new ArrayList<TiivsPersona>();
+		objTiivsPersonaBusqueda=new TiivsPersona();
+		objTiivsPersonaResultado=new TiivsPersona();
+		flagUpdatePoderdanteApoderados=false;
+		combosMB=new CombosMB();
+		lstClasificacionPersona=combosMB.getLstClasificacionPersona();
+		logger.info("[agregListenerAgrup]-Lista Clasificacion tamanhio: " +combosMB.getLstClasificacionPersona().size());
+		listaTemporalAgrupacionesPersonaBorradores=new ArrayList<TiivsAgrupacionPersona>();
+		listaTemporalPersonasBorradores=new ArrayList<TiivsPersona>();
+		lstTiivsPersonaCopia=new ArrayList<TiivsPersona>();
+		int NumeroGrupoMax=0;
+		
+		if(lstAgrupacionSimpleDto.size()!=0){
 			 NumeroGrupoMax= lstAgrupacionSimpleDto.get(0).getId().getNumGrupo();
-		 }
-		 
-		 for (int i = 0; i < lstAgrupacionSimpleDto.size(); i++) {
-			 logger.info("lstAgrupacionSimpleDto.get(i).getId().getNumGrupo() :: " +lstAgrupacionSimpleDto.get(i).getId().getNumGrupo());
+		}
+		
+		for (int i = 0; i < lstAgrupacionSimpleDto.size(); i++) {
+			 logger.info("[agregListenerAgrup]-lstAgrupacionSimpleDto.get(i).getId().getNumGrupo() :: " +lstAgrupacionSimpleDto.get(i).getId().getNumGrupo());
 			 if(lstAgrupacionSimpleDto.get(i).getId().getNumGrupo()>=NumeroGrupoMax) {
 				 NumeroGrupoMax=lstAgrupacionSimpleDto.get(i).getId().getNumGrupo();
 			 }
 		}
-		 
 		 		 
 		numGrupo=NumeroGrupoMax;
-		logger.info("El maximo numero de Grupo :: " +numGrupo);
+		logger.info("[agregListenerAgrup]-El maximo Nro de Grupo: " +numGrupo);
 		
 		TiivsSolicitudAgrupacion tiivsSolicitudAgrupacion = new TiivsSolicitudAgrupacion();
 		TiivsSolicitudAgrupacionId tiivsSolicitudAgrupacionId = new TiivsSolicitudAgrupacionId();
@@ -1716,60 +1716,60 @@ public class SolicitudRegistroMB {
 }
 	public boolean validarSiAgrupacionEstaRevocada(){
 		boolean retorno =false;
-		logger.info("***************************** validarSiAgrupacionEstaRevocada ***************************************");
+		logger.info("====== validarSiAgrupacionEstaRevocada =====");
 		try {
-		List<TiivsRevocado> listaRevocadoDeDondeComparar=new ArrayList<TiivsRevocado>();
-		GenericDao<TiivsRevocado, Object> serviceSolicitud = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
-		filtro.add(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_ACTIVO_REVOCADO));
-		filtro.addOrder(Order.asc("codAgrup"));
-		listaRevocadoDeDondeComparar = serviceSolicitud.buscarDinamico(filtro);
-		logger.info("**** listaRevocadoDeDondeComparar **** "+listaRevocadoDeDondeComparar.size());
-		List<ComboDto> listaPersonasXAgrupacionXAgrupacion=null;
-		int i;
-		List<Integer> listaCodAgrupaciones = new ArrayList<Integer>();
-		for (TiivsRevocado e : listaRevocadoDeDondeComparar) {
-			listaCodAgrupaciones.add(e.getCodAgrup());
-		}
-		List<Integer> listaCodAgrupacionesAcomparar = new ArrayList<Integer>();
-		listaCodAgrupacionesAcomparar=existe(listaCodAgrupaciones);
-		
-		for (Integer a : listaCodAgrupacionesAcomparar) {
-			listaPersonasXAgrupacionXAgrupacion =new ArrayList<ComboDto>();
-		for (TiivsRevocado x : listaRevocadoDeDondeComparar) {
-			if(a.equals(x.getCodAgrup())){
-				//logger.info("Codigo Agrupacion - 1 - ::::: " +a + " x.getCodPer()::: " +x.getTiivsPersona().getCodPer() +" x.getTipPartic() ::: " +x.getTipPartic() +" x.getNumGrupo():: " +x.getCodAgrup());
-				listaPersonasXAgrupacionXAgrupacion.add(new ComboDto(x.getTiivsPersona().getCodPer()+"",x.getTipPartic(),x.getCodAgrup()));
+			List<TiivsRevocado> listaRevocadoDeDondeComparar=new ArrayList<TiivsRevocado>();
+			GenericDao<TiivsRevocado, Object> serviceSolicitud = (GenericDao<TiivsRevocado, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			Busqueda filtro = Busqueda.forClass(TiivsRevocado.class);
+			filtro.add(Restrictions.eq("estado", ConstantesVisado.ESTADOS.ESTADO_ACTIVO_REVOCADO));
+			filtro.addOrder(Order.asc("codAgrup"));
+			listaRevocadoDeDondeComparar = serviceSolicitud.buscarDinamico(filtro);
+			logger.info("[validaSiAGrupEsRevoc]-lista: "+listaRevocadoDeDondeComparar.size());
+			List<ComboDto> listaPersonasXAgrupacionXAgrupacion=null;
+			int i;
+			List<Integer> listaCodAgrupaciones = new ArrayList<Integer>();
+			for (TiivsRevocado e : listaRevocadoDeDondeComparar) {
+				listaCodAgrupaciones.add(e.getCodAgrup());
 			}
-		}
-		//logger.info(" lstTiivsAgrupacionPersonas :: " +lstTiivsAgrupacionPersonas.size());
-		if(listaPersonasXAgrupacionXAgrupacion.size()==lstTiivsAgrupacionPersonas.size()){
-			i = 0;
-			for (TiivsAgrupacionPersona an : lstTiivsAgrupacionPersonas) {
-				for (ComboDto bn : listaPersonasXAgrupacionXAgrupacion) {
-					/*logger.info("an.getCodPer() :: " +an.getCodPer() + " ::: an.getTipPartic()  "+an.getTipPartic());
-					logger.info("bn.getKey() :: " +bn.getKey() + " ::: bn.getDescripcion()  "+bn.getDescripcion());*/
-					if(an.getCodPer()==Integer.parseInt(bn.getKey()) && an.getTipPartic().trim().equals(bn.getDescripcion().trim()) ){
-						//logger.info("Una combinacion es igual " + an.getNumGrupo());
-						i++;
+			List<Integer> listaCodAgrupacionesAcomparar = new ArrayList<Integer>();
+			listaCodAgrupacionesAcomparar=existe(listaCodAgrupaciones);
+			
+			for (Integer a : listaCodAgrupacionesAcomparar) {
+				listaPersonasXAgrupacionXAgrupacion =new ArrayList<ComboDto>();
+				for (TiivsRevocado x : listaRevocadoDeDondeComparar) {
+					if(a.equals(x.getCodAgrup())){
+						//logger.info("Codigo Agrupacion - 1 - ::::: " +a + " x.getCodPer()::: " +x.getTiivsPersona().getCodPer() +" x.getTipPartic() ::: " +x.getTipPartic() +" x.getNumGrupo():: " +x.getCodAgrup());
+						listaPersonasXAgrupacionXAgrupacion.add(new ComboDto(x.getTiivsPersona().getCodPer()+"",x.getTipPartic(),x.getCodAgrup()));
 					}
 				}
+				if(listaPersonasXAgrupacionXAgrupacion.size()==lstTiivsAgrupacionPersonas.size()){
+					i = 0;
+					for (TiivsAgrupacionPersona an : lstTiivsAgrupacionPersonas) {
+						for (ComboDto bn : listaPersonasXAgrupacionXAgrupacion) {
+							/*logger.info("an.getCodPer() :: " +an.getCodPer() + " ::: an.getTipPartic()  "+an.getTipPartic());
+							logger.info("bn.getKey() :: " +bn.getKey() + " ::: bn.getDescripcion()  "+bn.getDescripcion());*/
+							if(an.getCodPer()==Integer.parseInt(bn.getKey()) && an.getTipPartic().trim().equals(bn.getDescripcion().trim()) ){
+								//logger.info("Una combinacion es igual " + an.getNumGrupo());
+								i++;
+							}
+						}
+					}
+					if(i==listaPersonasXAgrupacionXAgrupacion.size()){
+						logger.info("Toda la combinación es igual a la de Revocado Num Grupo : " +a);
+						Utilitarios.mensajeInfo("INFO ", "La combinación fue Revocada" );
+						retorno =true;
+						break;
+						
+					}
+				}
+			
 			}
-			if(i==listaPersonasXAgrupacionXAgrupacion.size()){
-				logger.info("Toda la combinación es igual a la de Revocado Num Grupo : " +a);
-				Utilitarios.mensajeInfo("INFO ", "La combinación fue Revocada" );
-				retorno =true;
-				break;
-				
-			}
-		}
-		
-		}
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"en validarSiAgrupacionEstaRevocada(): ",e);
 		}
 		return retorno;
 	}
+	
 	/**
 	 * Metodo encargado de agregar las agrupaciones de personas desde el popup
 	 * de busqueda cliente/no cliente, hacia la grilla de apoderado/poderdante.
@@ -3189,6 +3189,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				  logger.debug("[REGISTR_SOLIC]-Historial-regUsuario: "+objHistorial.getRegUsuario());
 				  serviceHistorialSolicitud.insertar(objHistorial);
 				
+				logger.debug("========= REGISTRANDO ANEXOS  =========");
 				//Registrando la lista de Documentos (Anexos)
 				if(this.lstAnexoSolicitud!=null && this.lstAnexoSolicitud.size()>0){
 					logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+" de Anexos es:"+this.lstAnexoSolicitud.size());
@@ -3202,6 +3203,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					Utilitarios.mensajeInfo("INFO", mensaje);
 				}
 				
+				logger.debug("========= REGISTRANDO OPERACIONES BANCARIAS  =========");
 				if(this.lstSolicBancarias!=null && this.lstSolicBancarias.size()>0){
 					logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+" de Operaciones Bancarias es:"+this.lstSolicBancarias.size());
 					//Registrando las Operaciones Bancarias
@@ -3270,8 +3272,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}
 	
 	public void setearComision(){
-		logger.info("================================== setearComision ==================================");
-		logger.debug("exonera comision: " + bFlagComision);
+		logger.info("=========== setearComision ===========");
+		logger.debug("Exonera comision: " + bFlagComision);
 		if(solicitudRegistrarT!=null){
 			if(bFlagComision){
 				solicitudRegistrarT.setExoneraComision(ConstantesVisado.VALOR2_ESTADO_ACTIVO);
@@ -3867,7 +3869,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		if(aliasFilesToDelete!=null){
 			logger.info("==== eliminarArchivosTemporales() ====");
-			logger.info("Archivos a eliminar:" + aliasFilesToDelete.size()); 
+			logger.info("[eliminArchTemp]-Archivos a eliminar:" + aliasFilesToDelete.size()); 
 		}	
 		File fileToDelete = null;
 		
@@ -3877,7 +3879,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		if(aliasFilesToDelete!=null && aliasFilesToDelete.size()>0){
 			for(String sfile : aliasFilesToDelete){
-				logger.debug("Borrar archivo: " + sUbicacionTemporal + sfile);
+				logger.debug("[eliminArchTemp]-Borrar archivo: " + sUbicacionTemporal + sfile);
 				fileToDelete = new File(sUbicacionTemporal + sfile);
 				if(fileToDelete.delete()){
 					logger.debug("Se ha BORRADO el archivo temporal :" + sfile);
@@ -3886,8 +3888,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				}
 			}	
 		}else{
-			String mensaje = "No se encontraron los archivos temporales";
-			Utilitarios.mensajeInfo("INFO", mensaje);
+			//22-11 VM Se agrega mensaje validacion
+			logger.debug("[eliminArchTemp]-No se encontraron los archivos temporales");
+			//String mensaje = "No se encontraron los archivos temporales";
+			//Utilitarios.mensajeInfo("INFO", mensaje);
 		}
 		
 		fileToDelete = null;
