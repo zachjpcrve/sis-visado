@@ -267,7 +267,8 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 			}
 			//Formato: 20131108122401123456VISADOP007734
 			cabecera.setIdTransaccion(Utilitarios.obtenerFechaHoraSegMilTx() 
-					+ cabecera.getCodigoAplicacion()+cabecera.getUsuario());		
+					+ cabecera.getCodigoAplicacion()+cabecera.getUsuario());
+			
 			logger.debug("======== [cabecera]==========");
 			logger.debug("[WSReniec][cabecera]-canal: "+cabecera.getCanal());
 			logger.debug("[WSReniec][cabecera]-codAplicacion: "+cabecera.getCodigoAplicacion());
@@ -279,19 +280,19 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 			
 			com.grupobbva.pe.SIR.ents.body.consultaPorDNI.ConsultaPorDNIRequest refConsultaPorDNIRequest = new com.grupobbva.pe.SIR.ents.body.consultaPorDNI.ConsultaPorDNIRequest();
 			refConsultaPorDNIRequest.setCentroCostos(parametrosReniec.getCentroCosto());
-			refConsultaPorDNIRequest.setFormatoFirma(parametrosReniec.getFormatoFirma());
 			refConsultaPorDNIRequest.setHostSolicitante(parametrosReniec.getHostSolicitante());
-			refConsultaPorDNIRequest.setIndConsultaDatos(parametrosReniec.getConsultaDatos());
-			refConsultaPorDNIRequest.setIndConsultaFirma(parametrosReniec.getConsultaFirma());
-			refConsultaPorDNIRequest.setIndConsultaFoto(parametrosReniec.getConsultaFoto());
-			refConsultaPorDNIRequest.setNumeroDNIConsultado(dni);
+			refConsultaPorDNIRequest.setTipoAplicacion(parametrosReniec.getTipoAplicacion());
 			refConsultaPorDNIRequest.setNumeroDNISolicitante(parametrosReniec.getDniSolicitante());
-			
 			if(parametrosReniec.getRegistroUsuario().equalsIgnoreCase(Utilitarios.getPropiedad("usuConsPruebaRen"))){
 				refConsultaPorDNIRequest.setRegistroCodUsuario(parametrosReniec.getRegistroUsuario());
 			}else{
 				refConsultaPorDNIRequest.setRegistroCodUsuario(usuario.getUID());
 			}
+			refConsultaPorDNIRequest.setNumeroDNIConsultado(dni);	
+			refConsultaPorDNIRequest.setIndConsultaDatos(parametrosReniec.getConsultaDatos());
+			refConsultaPorDNIRequest.setIndConsultaFirma(parametrosReniec.getConsultaFirma());
+			refConsultaPorDNIRequest.setIndConsultaFoto(parametrosReniec.getConsultaFoto());
+			refConsultaPorDNIRequest.setFormatoFirma(parametrosReniec.getFormatoFirma());
 			
 			logger.debug("======== [Body]==========");
 			logger.debug("[WSReniec][body]-CentroCosto: "+refConsultaPorDNIRequest.getCentroCostos());
@@ -301,8 +302,8 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 			logger.debug("[WSReniec][body]-RegistroCodUsuario: "+refConsultaPorDNIRequest.getRegistroCodUsuario());
 			logger.debug("[WSReniec][body]-DNIConsultado: "+refConsultaPorDNIRequest.getNumeroDNIConsultado());
 			logger.debug("[WSReniec][body]-IndicadorConsDatos: "+refConsultaPorDNIRequest.getIndConsultaDatos());
-			logger.debug("[WSReniec][body]-IndicadorConsFoto: "+refConsultaPorDNIRequest.getIndConsultaFoto());
 			logger.debug("[WSReniec][body]-IndicadorConsFirma: "+refConsultaPorDNIRequest.getIndConsultaFirma());
+			logger.debug("[WSReniec][body]-IndicadorConsFoto: "+refConsultaPorDNIRequest.getIndConsultaFoto());
 			logger.debug("[WSReniec][body]-FormatoFirma: "+refConsultaPorDNIRequest.getFormatoFirma());
 			
 			ConsultaPorDNIRequest consulta = new ConsultaPorDNIRequest(cabecera, refConsultaPorDNIRequest);
@@ -318,6 +319,7 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 					logger.debug("[WSReniec][RPTA]-CodRespuesta: "+rpta.getRefResponseHeader().getCodigoRespuesta());
 					
 					if(rpta.getRefResponseHeader().getCodigoRespuesta().equalsIgnoreCase(Constantes.RENIEC_EXITO)){
+						logger.debug("\t[WSReniec][RPTA]-msj: "+rpta.getRefResponseHeader().getMensajeRespuesta());
 						
 						com.grupobbva.pe.SIR.ents.body.consultaPorDNI.ConsultaPorDNIResponse response = rpta.getRefConsultaPorDNIResponse();
 						
@@ -377,16 +379,21 @@ public class ObtenerPersonaReniecServiceImpl implements ObtenerPersonaReniecServ
 						result.setCode(Constantes.EXITO);
 						result.setObject(persona);	
 					}
+				}else{
+					logger.debug("La respuesta es NULL");
 				}	
 				
 			} catch (RemoteException e) {
 				result.setMessage(Constantes.RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA);
 				result.setCode(Constantes.ERROR_GENERAL);
-				log.error(Constantes.RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA + e);
+				log.error(Constantes.RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA , e);
+				e.printStackTrace();
+				
 			}catch(Exception ex){
-				log.error(Constantes.RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA +" ->"+ ex);
+				log.error(Constantes.RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA +"-> ",ex);
 				result.setMessage(Constantes.RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA);
 				result.setCode(Constantes.ERROR_GENERAL);
+				ex.printStackTrace();
 			}
 		}else{
 			result.setMessage(Constantes.RENIEC_NO_EXISTE_PARAMETRO);
