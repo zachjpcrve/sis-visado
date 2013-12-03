@@ -39,7 +39,7 @@ public class Constantes {
     public static final String RENIEC_COD_INST_SOLICITANTE  = "LD2019"; //Antes: LDD019
     public static final String RENIEC_COD_SERVIDOR_RENIEC   = "RENIEC001";
     public static final String RENIEC_HOST_INST_SOLICITANTE = "BBVA";
-    public static final String RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA = "Error al procesar trama de respuesta";
+    public static final String RENIEC_ERROR_PROCESAR_TRAMA_RESPUESTA = "Error al procesar trama de respuesta ";
     //public static final String RENIEC_NO_EXISTE_CLIENTE = "La persona no figura en la Reniec";
     public static final String RENIEC_NO_EXISTE_CLIENTE = "";
     public static final String ERROR_SERVICIO_WEB = "No se ha podido realizar la conexi\u00F3n al servicio web del banco para autentificar el usuario.";
