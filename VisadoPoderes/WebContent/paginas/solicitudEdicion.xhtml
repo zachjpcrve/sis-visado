@@ -411,11 +411,15 @@
 																                    actDocumentos();															                    
 																                }  
 																            
-																	            function appletActualizar(){	
-																                	applet = this.document.getElementById('appletVisor');
-																                	//applet.actualizar();
-																                	applet.actualizarConPermisos();
-																                	return false;
+																	            function appletActualizar(){
+																                	applet = this.document
+																							.getElementById('appletVisor');
+																					//applet.actualizar();
+																					/*applet
+																							.actualizarConPermisos();*/
+																					   applet.		
+																						     actualizarConPermisosFTP();
+																					return false;
 																                }
 																	            
 																	            function appletEliminarDocumento(){
@@ -458,7 +462,15 @@
 																                 <param name="carpeta_cliente_log"
 																                       value="#{visadoDocumentosMB.carpetaClienteLog}" />    
 																                 <param name="url_server"
-																                       value="#{visadoDocumentosMB.urlCarga}" />         
+																                       value="#{visadoDocumentosMB.urlCarga}" />   
+																                 <param name="urlTemporal"
+																					value="#{visadoDocumentosMB.urlTemporal}" />
+																				<param name="host"
+																					value="#{visadoDocumentosMB.host}" />
+																				<param name="user"
+																					value="#{visadoDocumentosMB.user}" />
+																				<param name="pass"
+																					value="#{visadoDocumentosMB.pass}" />      
 																            </applet>            
 																        </h:panelGroup>
 																    
