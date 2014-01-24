@@ -69,6 +69,13 @@ public class ObtenerDatosPersonaPEAServiceImpl implements ObtenerDatosPersonaPEA
 				if ((ConstantesVisado.PARAMETROS_PEA_HOST.COD_RPTA_HEAD_EXITO.equals(rpta.getObtenerDatosXPersonaResponse().getHead().getCodigo())) 
 						&& (ConstantesVisado.PARAMETROS_PEA_HOST.COD_RPTA_BODY_EXITO.equals(rpta.getObtenerDatosXPersonaResponse().getBody().getResultado())))
 				{
+					//VALIDACION PARA OBTENER RESULTADOS
+					if(rpta.getObtenerDatosXPersonaResponse().getBody().getNombres()!=null){
+						logger.debug("SI HAY RESULTADO EXITOSO: "+rpta.getObtenerDatosXPersonaResponse().getBody().getNombres());
+					}else{
+						logger.debug("NO HAY RESULTADO EXITOSO");
+					}
+					
 					if (StringUtils.isNotBlank(rpta.getObtenerDatosXPersonaResponse().getBody().getNombres()))
 					{
 						if(esJuridico(rpta.getObtenerDatosXPersonaResponse().getBody().getDoi().getTipo())){
