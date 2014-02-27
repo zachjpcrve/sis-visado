@@ -1328,7 +1328,7 @@ public class SolicitudRegistroMB {
 	}
 
 	public void editarPersona() {
-		logger.info("***************************** editarPersona ************************************ ");
+		logger.info("===== editarPersona() ==== ");
 		for (int i = 0; i < this.lstTiivsPersona.size(); i++) {
 			if (objTiivsPersonaCapturado.equals(this.lstTiivsPersona.get(i))) {
 				indexUpdatePersona = i;
@@ -1488,7 +1488,10 @@ public class SolicitudRegistroMB {
 
 	}
 	
-	
+	/** Metodo encargado de validar la longitud de los tipos de documentos 
+	 * seleccionados en el formulario de consulta cliente /no cliente.
+	 * @return bResult Flag de validacion: <code>true</code> o <code>false</code> 
+	 * **/
 	public boolean 	validarTipoDocumentos() {
 		logger.info("===== validarTipoDocumentos() ===== ");
 		boolean bResult = true;
@@ -3069,7 +3072,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		establecerTipoSolicitud();
 		
-		logger.info("============================= registrarSolicitud [v1 - Mejoras] ==================================");
+		logger.info("============================= registrarSolicitud [Mejoras-2013] ==================================");
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
         GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -3200,7 +3203,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					}
 				}else{
 					mensaje = "Falta ingresar lista de documentos";
-					Utilitarios.mensajeInfo("INFO", mensaje);
+					//Utilitarios.mensajeInfo("INFO", mensaje);
+					logger.debug(mensaje);
 				}
 				
 				logger.debug("========= REGISTRANDO OPERACIONES BANCARIAS  =========");
@@ -3214,7 +3218,8 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					}	
 				}else{
 					mensaje = "Falta ingresar lista de operaciones bancarias";
-					Utilitarios.mensajeInfo("INFO", mensaje);
+					//Utilitarios.mensajeInfo("INFO", mensaje);
+					logger.debug(mensaje);
 				}
 				
 				logger.debug("========= MOVIENDO ARCHIVOS SOLICITUD =========");
@@ -3268,7 +3273,6 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}
 		logger.info("RedirecT FINAL:" + this.redirect);
 //		return this.redirect;
-
 	}
 	
 	public void setearComision(){

@@ -79,7 +79,23 @@
 			<value>
                 hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
                 hibernate.show_sql=false  
-                hibernate.default_schema=VISPOD           
+                hibernate.default_schema=VISPOD    
+                
+                <!-- =============================================================== -->
+                hibernate.connection.pool_size=100
+<!--                 hibernate.connection.release_mode=after_transaction -->
+                use_jdbc_metadata_defaults=true
+                hibernate.format_sql=false
+                hibernate.use_sql_comments=false
+                
+                <!-- =============================================================== -->
+				<!--    VMORE: CONFIGURACION DEL POOL DE CONEXIONES CON C3PO   -->
+				<!-- =============================================================== -->
+				hibernate.c3p0.min_size=30
+				hibernate.c3p0.max_size=60
+				hibernate.c3p0.timeout=600
+<!-- 				hibernate.c3p0.max_statements=50 -->
+				       
             </value>
 		</property>
 	</bean>
@@ -137,7 +153,7 @@
 		<property name="configLocation" value="classpath:properties/quartz.properties" />
 		<property name="applicationContextSchedulerContextKey" value="applicationContext" />
 		<property name="waitForJobsToCompleteOnShutdown" value="true" />
-		<property name="autoStartup" value="false" />
+		<property name="autoStartup" value="true" />
 		<property name="quartzProperties">
 			<props>
 			<prop key="org.quartz.jobStore.selectWithLockSQL">SELECT * FROM {0}LOCKS UPDLOCK WHERE LOCK_NAME = ?

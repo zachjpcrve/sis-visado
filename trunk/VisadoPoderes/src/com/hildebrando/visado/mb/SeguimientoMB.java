@@ -144,6 +144,7 @@ public class SeguimientoMB
 	
 	public SeguimientoMB()
 	{
+		logger.debug("====================== SeguimientoMB ======================");
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");	
 		PERFIL_USUARIO=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
 		solicitudes = new ArrayList<TiivsSolicitud>();
@@ -173,7 +174,12 @@ public class SeguimientoMB
 		this.txtNomPoderdante="";
 		
 		combosMB= new CombosMB();
-		combosMB.cargarMultitabla();
+		
+		/*combosMB.cargarMultitabla();
+		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES);
+		combosMB.cargarCombosNoMultitabla();*/
+		
+		/*
 		// Carga combo Rango Importes
 		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES);
 		// Carga combo Estados
@@ -186,7 +192,9 @@ public class SeguimientoMB
 		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_MONEDA);
 		// Carga lista de tipos de persona
 		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
-		combosMB.cargarCombosNoMultitabla();
+		*/
+		
+		
 		cargarSolicitudes();
 		
 		if (solicitudes.size() == 0) 
@@ -384,7 +392,13 @@ public class SeguimientoMB
 		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 		
 		try {
+			long inicio = System.currentTimeMillis();
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
+			logger.debug("===========================================================================================================");
+			logger.debug("Tiempo de respuesta de consulta de solicitudes: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
+			logger.debug("Cantidad de registros: " + (solicitudes!=null?solicitudes.size():0));
+			logger.debug("===========================================================================================================");
+			
 			if(solicitudes!=null){
 				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"de solicitudes es:"+solicitudes.size());
 			}
@@ -537,6 +551,7 @@ public class SeguimientoMB
 	
 	private void actualizarDatosGrilla() 
 	{	
+		long inicio = System.currentTimeMillis();
 		String cadena="";
 		
 		// Se obtiene y setea la descripcion del Estado en la grilla
@@ -867,7 +882,7 @@ public class SeguimientoMB
 				logger.debug("No se pudo obtener los rangos de los niveles para la solicitud. Verificar base de datos!!");
 			}*/
 		}
-		
+		logger.debug("Tiempo de respuesta actualizando grilla de solicitudes: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
 	}
 	
 	public String obtenerGenerador()
@@ -1655,6 +1670,7 @@ public class SeguimientoMB
 		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
 
+		long inicio = System.currentTimeMillis();
 		// solicitudes = new ArrayList<TiivsSolicitud>();
 
 		// 1. Filtro por codigo de solicitud (funciona)
@@ -2233,6 +2249,7 @@ public class SeguimientoMB
 			actualizarDatosGrilla();
 			setNoHabilitarExportar(false);
 		}
+		logger.debug("Tiempo de respuesta en Búsqueda Solicituds: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
 	}
 	List<TiivsSolicitudOperban> lstSolOperBan;
 	
