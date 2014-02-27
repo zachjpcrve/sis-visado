@@ -80,7 +80,7 @@ public abstract class GenericDaoImpl<K, T extends Serializable>
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public  List<K> buscarDinamico(final Busqueda filtro) throws Exception{
+	public  List<K> buscarDinamico(final Busqueda filtro) throws Exception{ 
 		   return (List<K>)this.getHibernateTemplate().execute(new HibernateCallback() {
 	           
 	            public Object  doInHibernate(Session session) throws HibernateException, SQLException {

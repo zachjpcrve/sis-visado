@@ -43,10 +43,14 @@ import org.primefaces.model.UploadedFile;
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.common.util.EstilosNavegador;
+import com.bbva.consulta.pea.ObtenerDatosPersonaPEAService;
+import com.bbva.consulta.pea.impl.ObtenerDatosPersonaPEAServiceDummy;
+import com.bbva.consulta.pea.impl.ObtenerDatosPersonaPEAServiceImpl;
 import com.bbva.consulta.reniec.ObtenerPersonaReniecService;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecDUMMY;
 import com.bbva.consulta.reniec.impl.ObtenerPersonaReniecServiceImpl;
 import com.bbva.consulta.reniec.util.BResult;
+import com.bbva.consulta.reniec.util.Persona;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
@@ -55,6 +59,7 @@ import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.converter.PersonaDataModal;
 import com.hildebrando.visado.dto.ComboDto;
 import com.hildebrando.visado.dto.Estado;
+import com.hildebrando.visado.dto.ParametrosHost;
 import com.hildebrando.visado.dto.ParametrosReniec;
 import com.hildebrando.visado.dto.Revocado;
 import com.hildebrando.visado.dto.TipoDocumento;
@@ -69,6 +74,15 @@ import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.service.TiposDoiService;
+
+
+/**
+ * Clase encargada del manejo del modulo de revocados. Se maneja ciertas opciones
+ * para registrar una revocacion, activar y desactivarla. También se pueden
+ * adjuntar un archivo opcional para su posterior visualización.
+ * @author hildebrando
+ * @version 1.0
+ * **/
 
 @ManagedBean(name = "revocadosMB")
 @SessionScoped
@@ -101,14 +115,11 @@ public class RevocadosMB {
 	private TiivsPersona objTiivsPersonaBusquedaDlg;
 	//el resultado de la busqueda y se utilizara para agregarlo
 	
-	private TiivsPersona objTiivsPersonaAgregar;
-	
+	private TiivsPersona objTiivsPersonaAgregar;	
 //	private TiivsRevocado objTiivsPersonaAgregar;
 	
-	private IILDPeUsuario usuario;
-	
+	private IILDPeUsuario usuario;	
 	boolean bBooleanPopup = false;
-	
 	
 //	private TiivsPersona deletePersonaEdit;
 	private TiivsRevocado deletePersonaEdit;
@@ -121,8 +132,7 @@ public class RevocadosMB {
 	
 	private TiivsPersona objTiivsPersonaSeleccionado;
 	
-	private PersonaDataModal personaDataModal;
-	
+	private PersonaDataModal personaDataModal;	
 	
 	private TiivsPersona selectPersonaBusqueda;
 	private TiivsPersona selectPersonaPendEdit;
@@ -211,7 +221,7 @@ public class RevocadosMB {
 		cargarCombos();
 		revocados = new ArrayList<Revocado>();
 		cargarCombinacionesRevocadas();
-		//Se agrega
+		//[Mejoras]: Se agregaron metodos para obtener etiquetas de BD.
 		obtenCodRazonSocial();
 		obtenerTipoRegistro();
 		obtenerEtiquetasTipoRegistro();
@@ -401,8 +411,12 @@ public class RevocadosMB {
 		}
 	}
 	
+	/**
+	 * Metodo que consulta la parametria necesaria de base de datos
+	 * para lanzar el interfaz de escaneo web (APINAE)
+	 * @return sCadena URL del servicio web (Visado)
+	 * */
 	public String prepararURLEscaneo() {			
-		logger.info("***********prepararURLEscaneo***************");
 		String sCadena = "";		
 		try{				
 			pdfViewerMB = new PDFViewerMB();	
@@ -413,24 +427,24 @@ public class RevocadosMB {
 		return sCadena;
 	}
 	
-	public String obtenerGenerador()
-	{
+	/**
+	 * Metodo encargado de armar los datos completos del usuario de sesion
+	 * que son concatenados para ser mostrado en el reporte excel
+	 * @return resultado Nombre completo del usuario
+	 * */
+	public String obtenerGenerador(){
 		String resultado="";
-		
-		if (usuario != null)
-		{
+		if (usuario != null){
 			resultado = usuario.getUID() + ConstantesVisado.GUION + usuario.getNombre() +  ConstantesVisado.ESPACIO_BLANCO + 
 						usuario.getApellido1() + ConstantesVisado.ESPACIO_BLANCO + usuario.getApellido2();
 		}
-		else
-		{
+		else{
 			logger.debug("Error al obtener datos del usuario de session para mostrar en el excel");
 		}
 		return resultado;
 	}
 	
-	public void descargarArchivoRecaudacion()
-	{
+	public void descargarArchivoRecaudacion(){
 		exportarExcelRevocados();
 		InputStream stream=null;
 		try {
@@ -447,14 +461,11 @@ public class RevocadosMB {
 		}
 	}
 	
-	public void exportarExcelRevocados()
-	{
+	public void exportarExcelRevocados(){
 		rptRevocados();
 	}
 	
-	
-	public void rptRevocados() { 
-		
+	public void rptRevocados() { 		
 		try 
 		{
 			// Defino el Libro de Excel
@@ -1303,9 +1314,12 @@ public class RevocadosMB {
 		
 	}*/
 	
+	/**
+	 * Metodo que se encarga de cargar las listas principales usados en el 
+	 * modulo de revocados, que serán mostrados en combobox. Algunas listas
+	 * cargadas son: Grupos, Tipos de Documento, Estados de solicitud, etc
+	 * **/
 	public void cargarCombos(){
-		
-		
 		
 		GenericDao<TiivsAgrupacionPersona, Object> serviceAgrupPers = (GenericDao<TiivsAgrupacionPersona, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtro_ = Busqueda.forClass(TiivsAgrupacionPersona.class).setProjection(Projections.distinct(Projections.property("numGrupo")));
@@ -1396,19 +1410,18 @@ public class RevocadosMB {
 				}
 			}
 		}
-		
-		
 	}
-
 	
-	
+	/**
+	 * Metodo encargado de mostrar el registro de revocacion 
+	 * seleccionado para su visualizacion. Se muestra el link del 
+	 * documento de sustento de revocacion si lo tiene asociado.
+	 * */
 	public void verRevocado() {
-
 		personaClientesVer = new ArrayList<Revocado>();
 		personaClientesVer.add(revocadoVer);
 		sAliasTemporal = null;
-		aliasCortoDocumento = null;
-		
+		aliasCortoDocumento = null;		
 		// Se agrega condición para mostrar link de descarga de archivo de revocados
 		if(revocadoVer.getAliasArchivo()!=null){
 			flagLinkRevocados = 1;
@@ -1418,8 +1431,13 @@ public class RevocadosMB {
 		}
 	}
 	
+	/**
+	 * Metodo encargado de mostrar el registro de revocacion seleccionado 
+	 * en la grilla de resultados para su edición. También se muestra el
+	 * link del documento de sustento de revocacion si tuviera.
+	 * */
 	public void editPendRevocado() {
-		logger.info("******************** editPendRevocado ************" );
+		logger.info("=====  editPendRevocado =====" );
 		
 		objTiivsPersonaBusquedaDlg= new TiivsPersona();
 		objTiivsPersonaAgregar = new TiivsPersona();
@@ -1496,49 +1514,62 @@ public class RevocadosMB {
 		this.objTiivsPersonaAgregar = this.objTiivsPersonaSeleccionado;
 	}
 	
-	
-	public void  buscarPersona() {
-		
+
+	/**
+	 * Metodo encargado de realizar la busqueda de clientes/no clientes en diferentes 
+	 * fuentes para su registro en el modulo de revocados. Se consulta a la BD Local, 
+	 * si no hubieran resultados se consulta a Reniec.
+	 * **/
+	public void  buscarPersona() {		
+		logger.debug("== buscarPersona()===");
 		List<TiivsPersona> lstTiivsPersonaNuevo = new ArrayList<TiivsPersona>();
 		personaDataModal = new PersonaDataModal(lstTiivsPersonaNuevo);
 		
 		try {
 			List<TiivsPersona> lstTiivsPersonaLocal = new ArrayList<TiivsPersona>();
+			//List<TiivsPersona> lstTiivsPersonaHost = new ArrayList<TiivsPersona>();
+			//Se realiza la busqueda en BD Local
 			lstTiivsPersonaLocal = this.buscarPersonaLocal();
 			logger.info("lstTiivsPersonaLocal  "+ lstTiivsPersonaLocal.size());
 			
 			List<TiivsPersona> lstTiivsPersonaReniec = new ArrayList<TiivsPersona>();
 			
-			if (lstTiivsPersonaLocal.size() == 0) {
+			if (lstTiivsPersonaLocal.size() == 0) {	
+				//Se realizara la busqueda mediante el servicio PEA (HOST)
+				//lstTiivsPersonaHost = this.buscarPersonaHost();				
 				
-				lstTiivsPersonaReniec = this.buscarPersonaReniec();
-				
-				if (lstTiivsPersonaReniec.size() == 0) {
+				//if(lstTiivsPersonaHost.size()==0){
+				//Se realiza la busqueda mediente servicio de RENIEC				
+					lstTiivsPersonaReniec = this.buscarPersonaReniec();				
+					if (lstTiivsPersonaReniec.size() == 0) {					
+						objTiivsPersonaAgregar = new TiivsPersona();
+						this.bBooleanPopup = false;
+						if ((objTiivsPersonaBusquedaDlg.getTipDoi() == null 
+								  || objTiivsPersonaBusquedaDlg.getTipDoi().equals("")) 
+								 || (objTiivsPersonaBusquedaDlg.getNumDoi() == null
+								  || objTiivsPersonaBusquedaDlg.getNumDoi().equals(""))) {
+						}else{
+							Utilitarios.mensajeInfo("INFO","No se encontro resultados para la busqueda.");
+						}					
+					} else if (lstTiivsPersonaReniec.size() == 1) {
+						this.bBooleanPopup = false;
+						objTiivsPersonaAgregar = lstTiivsPersonaReniec.get(0);					
+					} else if (lstTiivsPersonaReniec.size() > 1) {
+						this.bBooleanPopup = true;
+						personaDataModal = new PersonaDataModal(lstTiivsPersonaReniec);
+					}	
 					
-					objTiivsPersonaAgregar = new TiivsPersona();
-					this.bBooleanPopup = false;
-					if ((objTiivsPersonaBusquedaDlg.getTipDoi() == null 
-							  || objTiivsPersonaBusquedaDlg.getTipDoi().equals("")) 
-							 || (objTiivsPersonaBusquedaDlg.getNumDoi() == null
-							  || objTiivsPersonaBusquedaDlg.getNumDoi().equals(""))) {
-					}else{
-						Utilitarios.mensajeInfo("INFO","No se encontro resultados para la busqueda.");
-					}
-					
-					
-				} else if (lstTiivsPersonaReniec.size() == 1) {
-					this.bBooleanPopup = false;
-					objTiivsPersonaAgregar = lstTiivsPersonaReniec.get(0);
-					
-				} else if (lstTiivsPersonaReniec.size() > 1) {
-					this.bBooleanPopup = true;
-					personaDataModal = new PersonaDataModal(lstTiivsPersonaReniec);
-				}
+				/*}else if(lstTiivsPersonaHost.size()==1){
+					objTiivsPersonaAgregar = lstTiivsPersonaHost.get(0);
+					bBooleanPopup = false;
+				}else if(lstTiivsPersonaHost.size()>1){
+					objTiivsPersonaAgregar = (TiivsPersona) lstTiivsPersonaHost;
+					bBooleanPopup = true;
+				}*/
 				
 			} else if (lstTiivsPersonaLocal.size() == 1) {
 				this.bBooleanPopup = false;
-				objTiivsPersonaAgregar = lstTiivsPersonaLocal.get(0);
-				
+				objTiivsPersonaAgregar = lstTiivsPersonaLocal.get(0);				
 			} else if (lstTiivsPersonaLocal.size() > 1) {
 				this.bBooleanPopup = true;
 				personaDataModal = new PersonaDataModal(lstTiivsPersonaLocal);
@@ -1551,8 +1582,145 @@ public class RevocadosMB {
 		}
 	}
 	
+	public List<TiivsPersona> buscarPersonaHost() throws Exception {
+		logger.debug("==== inicia buscarPersonaHost() ==== ");
+		List<TiivsPersona> lstTiivsPers = new ArrayList<TiivsPersona>();
+		try{
+			String enableServicio = habilitarServicio(ConstantesVisado.CODIGO_SERVICIO_PEA);
+			logger.debug("enableServicioHOST: "+enableServicio);
+			//Se valida la habilitacion de la consulta al servicio PEA - HOST
+//			if(enableServicio.equalsIgnoreCase("true")){
+			if(enableServicio.compareTo(ConstantesVisado.TRUE)==0){
+				logger.debug("= La consulta al servicio PEA-HOST esta habilitado.");
+				BResult resultado = null;
+				TiivsPersona objPersonaHost = null;
+				Persona pers = null;
+				
+				if (objTiivsPersonaBusqueda.getNumDoi() != null) {
+					logger.debug("[HOST]-NumeroDOI:"+ objTiivsPersonaBusqueda.getNumDoi());
+					logger.debug("[HOST]-TipoDoi:"+objTiivsPersonaBusqueda.getTipDoi());
+					
+					ParametrosHost paramPea = obtenerParametrosPEAHost();
+					logger.debug("[HOST]-URL ServicioPEA: "+paramPea.getRutaServicio());
+					logger.debug("[HOST]-UsuarioConsulta: "+paramPea.getUsuarioConsulta());
+					logger.debug("[HOST]-flagDummyPEA: "+paramPea.getFlagDummy());
+					
+					//Validando si se consultara el servicio DUMMY
+					if(paramPea.getFlagDummy().equalsIgnoreCase(ConstantesVisado.PARAMETROS_PEA_HOST.ESTADO_ACTIVO)){
+						ObtenerDatosPersonaPEAService hostServiceDummy = new ObtenerDatosPersonaPEAServiceDummy();
+						resultado = hostServiceDummy.obtenerDatosGeneralesPEA1(paramPea.getUsuarioConsulta(), objTiivsPersonaBusqueda.getTipDoi(), objTiivsPersonaBusqueda.getNumDoi(), paramPea.getRutaServicio());
+					}else{
+						ObtenerDatosPersonaPEAService hostService = new ObtenerDatosPersonaPEAServiceImpl();
+						resultado = hostService.obtenerDatosGeneralesPEA1(paramPea.getUsuarioConsulta(), objTiivsPersonaBusqueda.getTipDoi(), objTiivsPersonaBusqueda.getNumDoi(), paramPea.getRutaServicio());
+					}
+					//resultado = hostServiceDummy.obtenerDatosGeneralesPEA1(usuConsulta, objTiivsPersonaBusqueda.getTipDoi(), objTiivsPersonaBusqueda.getNumDoi(), urlServicio);
+					if(resultado!=null){
+						logger.debug("[HOST RPTA]-code:"+resultado.getCode());
+						//Se valida la respuesta: EXITO
+						if(resultado.getCode()== 0 ){
+							if(resultado.getObject()!=null){
+								logger.debug("== Se recupera la persona de Host ==");
+								pers = (Persona) resultado.getObject();
+								objPersonaHost= new TiivsPersona();
+								
+								objPersonaHost.setCodCen(objTiivsPersonaBusqueda.getCodCen());
+								
+								if(pers.getCodCentral()!=null){
+									objPersonaHost.setCodCen(pers.getCodCentral());
+									logger.debug("[HOST RPTA]-CodCentral:"+objPersonaHost.getCodCen());
+								}
+								//DOI
+								String codDoc="";
+								if(pers.getTipoDoi()!=null){
+									logger.debug("[HOST RPTA]-TipoDoi-Letra: "+pers.getTipoDoi());
+									codDoc = Utilitarios.obtenerCodDocDesc(pers.getTipoDoi());
+									logger.debug("[HOST RPTA]-TipoDoi-Cod: " + codDoc);
+									objPersonaHost.setTipDoi(codDoc);
+									logger.debug("[HOST RPTA]-TipoDoi:"+objPersonaHost.getTipDoi());
+								}else{
+									objPersonaHost.setTipDoi(objTiivsPersonaBusqueda.getTipDoi());
+								}
+								
+								if(pers.getNumerodocIdentidad()!=null){
+									objPersonaHost.setNumDoi(pers.getNumerodocIdentidad());
+									logger.debug("[HOST RPTA]-DocIdentidad:"+objPersonaHost.getNumDoi());
+								}else{
+									objPersonaHost.setNumDoi(objTiivsPersonaBusqueda.getNumDoi());
+								}
+								//Datos Persona
+								if(pers.getNombre()!=null){
+									objPersonaHost.setNombre(pers.getNombre());
+									logger.debug("[HOST RPTA]-Nombre:"+objPersonaHost.getNombre());
+								}
+								if(pers.getApellidoPaterno()!=null){
+									objPersonaHost.setApePat(pers.getApellidoPaterno());
+									logger.debug("[HOST RPTA]-Apepat:"+objPersonaHost.getApePat());
+								}
+								if(pers.getApellidoMaterno()!=null){
+									objPersonaHost.setApeMat(pers.getApellidoMaterno());
+									logger.debug("[HOST RPTA]-Apemat:"+objPersonaHost.getApeMat());
+								}
+								if(pers.getTelefono()!=null){
+									objPersonaHost.setNumCel(pers.getTelefono());
+									logger.debug("[HOST RPTA]-Telefono:"+objPersonaHost.getNumCel());
+								}else{
+									objPersonaHost.setNumCel("");
+								}
+								
+								lstTiivsPers.add(objPersonaHost);
+								
+								logger.debug("== despues de poblar el objeto Persona ==");
+							}
+							
+						}else if(resultado.getCode() == 900){
+							logger.debug("[900]-No hay resultados para esta consulta en HOST");
+						}else{
+							logger.debug("[GENERICO]-No hay resultados para esta consulta en HOST");
+						}
+					}else{
+						logger.debug("El resultado HOST es nulo");
+					}				
+				}
+				logger.debug("==== saliendo de buscarPersonaHOST() ==== ");
+			}
+			
+		}catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_EXCEPCION+"al buscarPersonaHOST: ",e);
+		}
+		return lstTiivsPers;
+	}
+	
+	private ParametrosHost obtenerParametrosPEAHost(){
+		GenericDao<TiivsMultitabla, Object> service = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_SERV_WEB));
+		filtro.add(Restrictions.eq("valor2", ConstantesVisado.ESTADOS.ESTADO_COD_ACTIVO));
+		filtro.add(Restrictions.eq("valor4", ConstantesVisado.PARAMETROS_PEA_HOST.FLAG_IDENTIFICADOR));
+		ParametrosHost paramHost = null;
+		try {
+			List<TiivsMultitabla> datosMultitabla = service.buscarDinamico(filtro);
+			if(datosMultitabla.size()>0){
+				logger.debug("=== SE OBTIENE PARAMETRIA DE MULTITABLA PEA ==");
+				paramHost = new ParametrosHost();
+				for(TiivsMultitabla parametroMultitabla:datosMultitabla){
+					if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_PEA_HOST.USUARIO_CONSULTA)==0){
+						paramHost.setUsuarioConsulta(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_PEA_HOST.RUTA_SERVICIO_PEA)==0){
+						paramHost.setRutaServicio(parametroMultitabla.getValor3());
+					}else if(parametroMultitabla.getId().getCodElem().compareTo(ConstantesVisado.PARAMETROS_PEA_HOST.FLAG_DUMMY_PEA)==0){
+						paramHost.setFlagDummy(parametroMultitabla.getValor3());
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar datos del multitabla : ",e);
+		}	
+		return paramHost;
+	}
+	
+	
 	public void deleteCombinacion(ActionEvent event){		
-		logger.info("********************** deleteCombinacion *********************************** ");
+		logger.info("==== deleteCombinacion ===== ");
 		List<TiivsRevocado> tiivsrevocados= new ArrayList<TiivsRevocado>();
 		List<TiivsRevocado> tiivsrevocados2= new ArrayList<TiivsRevocado>();
 		
@@ -1569,8 +1737,7 @@ public class RevocadosMB {
 			}			
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al deleteCombinacion():",  e);
-		}
-		
+		}		
 		buscarRevocado();
 	}
 	
@@ -1604,19 +1771,17 @@ public class RevocadosMB {
 	}
 	
 	
-	public void agregarRevocado() {
-		
+	
+	public void agregarRevocado() {		
 		if (!validarRevocado()) {
 			return;
-		}
-		
+		}		
 		if(!validarRegistroDuplicado()){
 			return;
-		}
-		
+		}		
 		if(isFlagRevocar()==true)
 		{
-			logger.info("****************** agregarRevocado ********************");
+			logger.info("====== agregarRevocado =======");
 
 			for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
 				if (objTiivsPersonaAgregar.getTipDoi().equals(p.getCodTipoDoc())) {
@@ -2270,7 +2435,7 @@ public class RevocadosMB {
 
 	
 	public boolean validarRevocado() {
-		logger.info("******************************* validarRevocado ******************************* "	+ objTiivsPersonaAgregar.getTipPartic());
+		logger.info("===== validarRevocado ======== "	+ objTiivsPersonaAgregar.getTipPartic());
 		boolean bResult = true;
 		String sMensaje = "";
 		
@@ -3206,9 +3371,9 @@ public class RevocadosMB {
 		logger.info("=== fin de actualizarArchivo() === ");
 	 }
 	 
-	 /*
-	  * Metodo que actualiza la lista de documentos, este método es indirectamente
-	  * invocado desde el applet
+	 /**
+	  * Metodo que actualiza la lista de documentos, este método 
+	  * es indirectamente invocado desde el applet
 	  * */
 	 public void actualizarDocumentosRevocados(ActionEvent ae){
 		logger.info("====== actualizarDocumentosRevocados =====");
@@ -3354,8 +3519,7 @@ public class RevocadosMB {
 		String outputFileName = rutaDocumento;
 		
 		File outputPDF = new File(outputFileName);
-
-		// Get ready to return pdf to user
+		
 		BufferedInputStream input = null;
 		BufferedOutputStream output = null;
 		try {
@@ -3393,8 +3557,7 @@ public class RevocadosMB {
 		}
 		FacesContext.getCurrentInstance().responseComplete();
 		
-		logger.debug("=== saliendo de descargarDocumento() ====");
-		
+		logger.debug("=== saliendo de descargarDocumento() ====");		
 		return "";		
 	}
 	
@@ -3405,7 +3568,6 @@ public class RevocadosMB {
 				.getCurrentInstance().getExternalContext().getResponse();
 		
 //		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		
 //		String nombreDocumento = params.get("nombreArchivo");
 //		logger.debug("[DESCARG_DOC]-nombreDocumento: "+nombreDocumento);
 		logger.debug("[DESCARG_DOC]-nombreDocumento: "+ aliasCortoDocumento);

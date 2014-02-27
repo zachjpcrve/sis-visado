@@ -134,7 +134,9 @@ public class CombosMB{
 		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
 
 		try {
+			long inicio = System.currentTimeMillis();
 			lstMultitabla = multiDAO.buscarDinamico(filtroMultitabla);
+			logger.debug("Tiempo de respuesta al cargar multitabla: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
 		} catch (Exception e) {
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de multitablas: ",e);
 		}

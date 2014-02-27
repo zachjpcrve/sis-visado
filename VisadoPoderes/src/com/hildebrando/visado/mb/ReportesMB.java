@@ -804,7 +804,7 @@ public class ReportesMB {
 						tmpSolicitud,Utilitarios.validarCampoNull(getIdOpeBan()),cadTipoServ, cadEstudio, rangoImpG, rangoIni,rangoFin, fechaIni, fechaFin);
 				
 			} catch (Exception e) {
-				logger.error(e);
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtenerSolicitudesxTipoServicio: ",e);
 			}
 		}
 		else
@@ -823,11 +823,11 @@ public class ReportesMB {
 		}
 	}
 
-	// Descripcion: Metodo que se encarga de buscar las solicitudes de acuerdo a
-	// los filtros seleccionados.
-	// @Autor: Cesar La Rosa
-	// @Version: 1.0
-	// @param: -
+	/*** Metodo encargado de buscar las solicitudes de acuerdo a
+	 * los filtros seleccionados para el reporte extractor
+	 * @autor Cesar La Rosa
+	 * @version 1.0
+	 **/
 	@SuppressWarnings("unchecked")
 	public void buscarSolicitudesExtractor() 
 	{
@@ -893,8 +893,8 @@ public class ReportesMB {
 
 	public void obtenerHistorialSolicitud(String codSoli) 
 	{
-		logger.info("Obteniendo Historial ");
-		logger.info("Codigo de solicitud : " + codSoli);
+		logger.info("=== obtenerHistorialSolicitud() ===");
+		logger.info("Cod Solicitud: " + codSoli);
 
 		try 
 		{
@@ -4585,8 +4585,7 @@ public class ReportesMB {
 
 	public void abrirExcelLiquidacion() {
 		try {
-			exportarExcelLiquidacion();
-			// Abrir archivo excel
+			exportarExcelLiquidacion();			
 
 			if (rutaArchivoExcel != null && rutaArchivoExcel.length() > 0) {
 				Desktop.getDesktop().open(new File(rutaArchivoExcel));
@@ -4600,8 +4599,7 @@ public class ReportesMB {
 
 	public void abrirExcelRecaudacion() {
 		try {
-			exportarExcelRecaudacion();
-			// Abrir archivo excel
+			exportarExcelRecaudacion();			
 
 			if (rutaArchivoExcel != null && rutaArchivoExcel.length() > 0) {
 				Desktop.getDesktop().open(new File(rutaArchivoExcel));
@@ -4616,8 +4614,7 @@ public class ReportesMB {
 	public void abrirExcelSolicitudesxTpoServ() {
 		try {
 			exportarExcelSolicitudTipoServ();
-			// Abrir archivo excel
-
+			
 			if (rutaArchivoExcel != null && rutaArchivoExcel.length() > 0) {
 				Desktop.getDesktop().open(new File(rutaArchivoExcel));
 			}
@@ -4631,8 +4628,6 @@ public class ReportesMB {
 	public void abrirExcelExtractor() {
 		try {
 			exportarExcelExtractor();
-			// Abrir archivo excel
-
 			if (rutaArchivoExcel != null && rutaArchivoExcel.length() > 0) {
 				Desktop.getDesktop().open(new File(rutaArchivoExcel));
 			}
@@ -4644,8 +4639,6 @@ public class ReportesMB {
 	}
 
 	public void descargarArchivoExtractor() {
-
-		
 		if (getFechaInicio()==null || getFechaFin()==null)
 		{
 			buscarSolicitudesExtractor();
@@ -4654,8 +4647,9 @@ public class ReportesMB {
 			try {
 				stream = new FileInputStream(rutaArchivoExcel);
 			} catch (FileNotFoundException e) {
-				logger.debug("Error al obtener archivo excel debido a: "
-						+ e.getMessage());
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener el archivo Excel: "+ e.getMessage());
+			} catch(Exception ex){
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar archivo archivo Excel: "+ ex);
 			}
 
 			if (stream != null) {
@@ -4682,7 +4676,9 @@ public class ReportesMB {
 					logger.error("Error de nullPointerException: "+ rutaArchivoExcel+" :::: ",e);
 					
 				} catch (FileNotFoundException e) {
-					logger.error("Error al obtener archivo excel debido a: ",e);
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener el archivo Excel: "+ e.getMessage());
+				} catch(Exception ex){
+					logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar archivo archivo Excel: "+ ex);
 				}
 
 				if (stream != null) {
@@ -4693,7 +4689,11 @@ public class ReportesMB {
 		}
 		
 	}
-
+	
+	/**
+	 * Se encarga de exportar el contenido del reporte Estado 
+	 * de solicitudes y mostrarlo en un archivo excel (.xls)
+	 * **/
 	public void descargarArchivoEstadoSolicitud() {
 		exportarExcelEstadoSolicitud();
 		InputStream stream = null;
@@ -4701,18 +4701,21 @@ public class ReportesMB {
 			stream = new FileInputStream(rutaArchivoExcel);
 		}catch (NullPointerException e) {
 			logger.debug("Error de nullPointerException: "+ rutaArchivoExcel+" :::: "+ e.getMessage());
-			
 		} catch (FileNotFoundException e) {
-			logger.debug("Error al obtener archivo excel debido a: "
-					+ e.getMessage());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener el archivo Excel: "+ e.getMessage());
+		} catch(Exception ex){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar archivo archivo Excel: "+ ex);
 		}
-
 		if (stream != null) {
 			file = new DefaultStreamedContent(stream, "application/excel",
 					nombreEstadoSolicitud + ConstantesVisado.EXTENSION_XLS);
 		}
 	}
-
+	
+	/**
+	 * Se encarga de exportar el contenido del reporte Liquidacion 
+	 * mensual y mostrarlo en un archivo excel (.xls)
+	 * **/
 	public void descargarArchivoLiquidacion() {
 		logger.debug("descargarArchivoLiquidacion");
 		exportarExcelLiquidacion();
@@ -4721,14 +4724,13 @@ public class ReportesMB {
 			stream = new FileInputStream(rutaArchivoExcel);
 		}catch (NullPointerException e) {
 			logger.debug("Error de nullPointerException: "+ rutaArchivoExcel+" :::: "+ e.getMessage());
-		
 		} catch (FileNotFoundException e) {
-			logger.error("Error al obtener archivo excel debido a: "
-					+ e.getMessage());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener el archivo Excel: "+ e.getMessage());
+		} catch(Exception ex){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar archivo archivo Excel: "+ ex);
 		}
 
 		if (stream != null) {
-			logger.debug("if (stream != null) {");
 			try {
 				file = new DefaultStreamedContent(stream, "application/excel",
 						nombreLiquidacion + ConstantesVisado.EXTENSION_XLS);
@@ -4737,7 +4739,11 @@ public class ReportesMB {
 			}
 		}
 	}
-
+	
+	/**
+	 * Se encarga de exportar el contenido del reporte Solicitudes 
+	 * por Tipo de Servicio y mostrarlo en un archivo excel (.xls)
+	 * **/
 	public void descargarArchivoSolicitudesxTpoServ() {
 		exportarExcelSolicitudTipoServ();
 		InputStream stream = null;
@@ -4745,10 +4751,10 @@ public class ReportesMB {
 			stream = new FileInputStream(rutaArchivoExcel);
 		}catch (NullPointerException e) {
 			logger.debug("Error de nullPointerException: "+ rutaArchivoExcel+" :::: "+ e.getMessage());
-		
 		} catch (FileNotFoundException e) {
-			logger.debug("Error al obtener archivo excel debido a: "
-					+ e.getMessage());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener el archivo Excel: "+ e.getMessage());
+		} catch(Exception ex){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar archivo archivo Excel: "+ ex);
 		}
 
 		if (stream != null) {
@@ -4757,18 +4763,22 @@ public class ReportesMB {
 		}
 	}
 
+	/**
+	 * Se encarga de exportar el contenido del reporte 
+	 * de Recaudacion y mostrarlo en un archivo excel (.xls)
+	 * **/
 	public void descargarArchivoRecaudacion() {
 		exportarExcelRecaudacion();
 		InputStream stream = null;
 		try {
 			stream = new FileInputStream(rutaArchivoExcel);
 		} catch (FileNotFoundException e) {
-			logger.error("Error al obtener archivo excel debido a: "
-					+ e.getMessage());
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener el archivo Excel: "+ e.getMessage());
+		} catch(Exception ex){
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al generar archivo archivo Excel: "+ ex);
 		}
 
 		if (stream != null) {
-			logger.debug("if (stream != null) {");
 			file = new DefaultStreamedContent(stream, "application/excel",
 					nombreRecaudacion + ConstantesVisado.EXTENSION_XLS);
 		}
@@ -4776,7 +4786,6 @@ public class ReportesMB {
 
 	public String obtenerRutaExcel() {
 		String res = "";
-
 		TiivsParametros tmp = pdfViewerMB.getParametros();
 		res = tmp.getRutaArchivoExcel();
 		
@@ -4794,7 +4803,6 @@ public class ReportesMB {
 			logger.debug("Parametro ruta encontrada para el usuario: "
 					+ usuario.getUID() + " es: " + res);
 		}
-
 		return res;
 	}
 
