@@ -38,7 +38,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private String tipoComision;
 	private Double comision;
 	private String nroVoucher;
-	private Set tiivsSolicitudNivels = new HashSet(0);
+	private Set<TiivsSolicitudNivel> tiivsSolicitudNivels = new HashSet<TiivsSolicitudNivel>(); //new HashSet(0);
 	private Set<TiivsSolicitudAgrupacion> tiivsSolicitudAgrupacions = new HashSet<TiivsSolicitudAgrupacion>();
 	private String txtEstado;
 	private String txtImporte;
@@ -49,6 +49,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 	private Boolean bLiberado;
 	private String exoneraComision;
 	
+	private Set<TiivsSolicitudOperban> tiivsSolicitudOperBanc = new HashSet<TiivsSolicitudOperban>(); //new HashSet(0);
 	private List<TiivsSolicitudOperban> lstSolicBancarias; ///Solo para el reporte
 	private List<ComboDto> listaPersonasXAgrupacionXSolicitud; ///Para comparar revocados
 	
@@ -89,7 +90,8 @@ public class TiivsSolicitud implements java.io.Serializable {
 			Timestamp fechaEnvio, Timestamp fechaEstado, String moneda,
 			Timestamp fechaRespuesta, Double comision,
 			String nroVoucher, Set tiivsSolicitudNivels,
-			Set tiivsSolicitudAgrupacions) {
+			Set tiivsSolicitudAgrupacions,
+			Set tiivsSolicitudOperBanc) {
 		this.codSoli = codSoli;
 		this.tiivsEstudio = tiivsEstudio;
 		this.tiivsTipoSolicitud = tiivsTipoSolicitud;
@@ -109,6 +111,7 @@ public class TiivsSolicitud implements java.io.Serializable {
 		this.nroVoucher = nroVoucher;
 		this.tiivsSolicitudNivels = tiivsSolicitudNivels;
 		this.tiivsSolicitudAgrupacions = tiivsSolicitudAgrupacions;
+		this.tiivsSolicitudOperBanc = tiivsSolicitudOperBanc;
 	}
 
 	public TiivsSolicitud(String codSoli) {
@@ -401,6 +404,15 @@ public class TiivsSolicitud implements java.io.Serializable {
 
 	public void setFlagReimprimir(String flagReimprimir) {
 		this.flagReimprimir = flagReimprimir;
+	}
+
+	public Set<TiivsSolicitudOperban> getTiivsSolicitudOperBanc() {
+		return tiivsSolicitudOperBanc;
+	}
+
+	public void setTiivsSolicitudOperBanc(
+			Set<TiivsSolicitudOperban> tiivsSolicitudOperBanc) {
+		this.tiivsSolicitudOperBanc = tiivsSolicitudOperBanc;
 	}
 
 	

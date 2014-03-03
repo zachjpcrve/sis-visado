@@ -74,17 +74,26 @@
             <column name="FLAG_REIMPRIMIR" length="1"  />
         </property>
         
-        <set name="tiivsSolicitudNivels" table="TIIVS_SOLICITUD_NIVEL"  inverse="false" cascade="all" lazy="false" fetch="select" >
-            <key>
-                <column name="COD_SOLI" length="7" not-null="true" />
-            </key>
-            <one-to-many class="com.hildebrando.visado.modelo.TiivsSolicitudNivel" />
-        </set>
-        <set name="tiivsSolicitudAgrupacions" table="TIIVS_SOLICITUD_AGRUPACION"  cascade="delete-orphan,save-update" inverse="true" lazy="false"   fetch="select"  >
+<!--         <set name="tiivsSolicitudNivels" table="TIIVS_SOLICITUD_NIVEL"  inverse="true" cascade="all" lazy="true" fetch="select" > -->
+<!-- 		<set name="tiivsSolicitudNivels" table="TIIVS_SOLICITUD_NIVEL"  inverse="true" lazy="false" fetch="select" > -->
+<!--             <key> -->
+<!--                 <column name="COD_SOLI" length="7" not-null="true" /> -->
+<!--             </key> -->
+<!--             <one-to-many class="com.hildebrando.visado.modelo.TiivsSolicitudNivel" /> -->
+<!--         </set> -->
+<!--         <set name="tiivsSolicitudAgrupacions" table="TIIVS_SOLICITUD_AGRUPACION"  cascade="delete-orphan,save-update" inverse="true" lazy="true"   fetch="select"  > -->
+		<set name="tiivsSolicitudAgrupacions" table="TIIVS_SOLICITUD_AGRUPACION" cascade="delete-orphan,save-update"  inverse="true" lazy="true"   fetch="join" >
             <key> 
                 <column name="COD_SOLI" length="7" not-null="true" />
             </key>
             <one-to-many class="com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion" />
         </set>
+        
+<!--         <set name="tiivsSolicitudOperBanc" table="TIIVS_SOLICITUD_OPERBAN" inverse="true" lazy="true"   fetch="join"  > -->
+<!--             <key>  -->
+<!--                 <column name="COD_SOLI" length="7" not-null="true" /> -->
+<!--             </key> -->
+<!--             <one-to-many class="com.hildebrando.visado.modelo.TiivsSolicitudOperban" /> -->
+<!--         </set> -->
     </class>
 </hibernate-mapping>
