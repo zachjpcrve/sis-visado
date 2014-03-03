@@ -194,7 +194,9 @@ public class NivelService {
 		filtro.add(Restrictions.eq("codNiv", codigo));
 		
 		try{
+			long inicio = System.currentTimeMillis();
 			lista = service.buscarDinamico(filtro);
+			logger.debug("Tiempo de respuesta de consulta de niveles por codigo: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
 		}catch(Exception ex){
 			logger.error("NivelService : buscarNivelxCodigo: "+ ex.getLocalizedMessage());
 		}
@@ -210,6 +212,29 @@ public class NivelService {
 		//logger.info("Resultado obtenido: " + nivel);
 		
 		return nivel;
+	}
+	
+	public List<TiivsNivel> buscarNiveles()
+	{
+		String nivel="";
+		
+		//logger.info("Buscando nivel por codigo: " + codigo);
+		
+		List<TiivsNivel> lista = new ArrayList<TiivsNivel>();
+		GenericDao<TiivsNivel, Object> service = (GenericDao<TiivsNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtro = Busqueda.forClass(TiivsNivel.class);
+		
+		try{
+			long inicio = System.currentTimeMillis();
+			lista = service.buscarDinamico(filtro);
+			logger.debug("Tiempo de respuesta de consulta de niveles: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
+		}catch(Exception ex){
+			logger.error("NivelService : buscarNivel: "+ ex.getLocalizedMessage());
+		}
+		
+		//logger.info("Resultado obtenido: " + nivel);
+		
+		return lista;
 	}
 	
 	public String buscarNivelxDescrip(String desNivel)

@@ -52,6 +52,7 @@ import com.hildebrando.visado.modelo.TiivsHistSolicitud;
 import com.hildebrando.visado.modelo.TiivsHistSolicitudId;
 import com.hildebrando.visado.modelo.TiivsMiembro;
 import com.hildebrando.visado.modelo.TiivsMultitabla;
+import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
 import com.hildebrando.visado.modelo.TiivsParametros;
@@ -553,11 +554,21 @@ public class SeguimientoMB
 	{	
 		long inicio = System.currentTimeMillis();
 		String cadena="";
+		List<TiivsNivel> listaNiveles = null;
+		List<TiivsSolicitudNivel> listaSolicitudNiveles = null;
+		List<TiivsSolicitudAgrupacion> listaSolicitudAgrupacion = null;
 		
 		// Se obtiene y setea la descripcion del Estado en la grilla
 		if(solicitudes!=null){
 			logger.debug("[ActDatosGrilla]-Hay  "+solicitudes.size() +" solicitud(es) como resultado.");
+			listarOperacionesBancarias();
+			listaNiveles = nivelService.buscarNiveles();
+			listaSolicitudNiveles = listarSolicitudNiveles();
+			listaSolicitudAgrupacion = listarSolicitudAgrupacion();
+		}else{
+			return;
 		}
+		
 		for (TiivsSolicitud tmpSol : solicitudes) 
 		{
 			if (tmpSol.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
@@ -623,47 +634,51 @@ public class SeguimientoMB
 		    lstPoderdantes = new ArrayList<TiivsPersona>();
 		    lstApoderdantes = new ArrayList<TiivsPersona>();
 		   
-		    for (TiivsSolicitudAgrupacion x : tmpSol.getTiivsSolicitudAgrupacions()) 
-		    {
-			   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) 
-			   {
-				    if (tmpSol.getCodSoli().equals(d.getCodSoli()) && tmpSol.getCodSoli().equals(x.getId().getCodSoli()))
-				    {
-				    	//logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
-				    	lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
-					    objPersona=new TiivsPersona();
-					    objPersona=d.getTiivsPersona();
-					    objPersona.setTipPartic(d.getTipPartic());
-					    objPersona.setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
-					    objPersona.setClasifPer(d.getClasifPer());
-					    objPersona.setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getClasifPer().trim()));
-					    objPersona.setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
-					    lstPersonas.add(objPersona);
-						  
-					    if(d.getTipPartic().trim().equals(ConstantesVisado.PODERDANTE))
+		    
+		    if(listaSolicitudAgrupacion!=null && !listaSolicitudAgrupacion.isEmpty()){
+		    	//for (TiivsSolicitudAgrupacion x : tmpSol.getTiivsSolicitudAgrupacions()) 
+		    	for (TiivsSolicitudAgrupacion x : listaSolicitudAgrupacion)
+			    {
+				   for (TiivsAgrupacionPersona d : x.getTiivsAgrupacionPersonas()) 
+				   {
+					    if (tmpSol.getCodSoli().equals(d.getCodSoli()) && tmpSol.getCodSoli().equals(x.getId().getCodSoli()))
 					    {
-							lstPoderdantes.add(d.getTiivsPersona());
+					    	//logger.info("d.getTiivsPersona() "+d.getTiivsPersona().getTipDoi());
+					    	lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
+						    objPersona=new TiivsPersona();
+						    objPersona=d.getTiivsPersona();
+						    objPersona.setTipPartic(d.getTipPartic());
+						    objPersona.setsDesctipPartic(this.obtenerDescripcionTipoRegistro(d.getTipPartic().trim()));
+						    objPersona.setClasifPer(d.getClasifPer());
+						    objPersona.setsDescclasifPer(this.obtenerDescripcionClasificacion(d.getClasifPer().trim()));
+						    objPersona.setsDesctipDoi(this.obtenerDescripcionDocumentos(d.getTiivsPersona().getTipDoi().trim()));
+						    lstPersonas.add(objPersona);
+							  
+						    if(d.getTipPartic().trim().equals(ConstantesVisado.PODERDANTE))
+						    {
+								lstPoderdantes.add(d.getTiivsPersona());
+						    }
+							else if(d.getTipPartic().trim().equals(ConstantesVisado.APODERADO))
+							{
+								lstApoderdantes.add(d.getTiivsPersona());
+							}else if(d.getTipPartic().trim().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO))
+							{
+								lstApoderdantes.add(d.getTiivsPersona());
+							}
+						    
+						    agrupacionSimpleDto = new AgrupacionSimpleDto();
+							agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(
+									tmpSol.getCodSoli(), x.getId()
+											.getNumGrupo()));
+							agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
+							agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
+							agrupacionSimpleDto.setsEstado(Utilitarios
+									.obternerDescripcionEstado(x.getEstado().trim()));
+							agrupacionSimpleDto.setLstPersonas(lstPersonas);
+							lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
 					    }
-						else if(d.getTipPartic().trim().equals(ConstantesVisado.APODERADO))
-						{
-							lstApoderdantes.add(d.getTiivsPersona());
-						}else if(d.getTipPartic().trim().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO))
-						{
-							lstApoderdantes.add(d.getTiivsPersona());
-						}
-					    
-					    agrupacionSimpleDto = new AgrupacionSimpleDto();
-						agrupacionSimpleDto.setId(new TiivsSolicitudAgrupacionId(
-								tmpSol.getCodSoli(), x.getId()
-										.getNumGrupo()));
-						agrupacionSimpleDto.setLstPoderdantes(lstPoderdantes);
-						agrupacionSimpleDto.setLstApoderdantes(lstApoderdantes);
-						agrupacionSimpleDto.setsEstado(Utilitarios
-								.obternerDescripcionEstado(x.getEstado().trim()));
-						agrupacionSimpleDto.setLstPersonas(lstPersonas);
-						lstAgrupacionSimpleDto.add(agrupacionSimpleDto);
-				    }
-			   }
+				   }
+			    }
 		    }
 		    
 		    cadena="";
@@ -706,16 +721,23 @@ public class SeguimientoMB
 			cadena="";
 			
 			// [16-10] Se agrega para mostrar las Operaciones Bancarias en la grilla, antes no se mostraba.
-			listarOperacionesBancarias();
+			//listarOperacionesBancarias();
 			
-			for (TiivsSolicitudOperban tmp: lstSolOperBan)
-			{
-				if (tmp.getId().getCodSoli().equals(tmpSol.getCodSoli()))
+			
+//			long inicioOper = System.currentTimeMillis();
+//			if(tmpSol.getLstSolicBancarias()!=null){
+			if(lstSolOperBan!=null && !lstSolOperBan.isEmpty()){
+				for (TiivsSolicitudOperban tmp: lstSolOperBan)
+//				for (TiivsSolicitudOperban tmp: tmpSol.getLstSolicBancarias())
 				{
-					cadena +=  devolverDesOperBan(tmp.getId().getCodOperBan())  + ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
-				}
+					if (tmp.getId().getCodSoli().equals(tmpSol.getCodSoli()))
+					{
+						cadena +=  devolverDesOperBan(tmp.getId().getCodOperBan())  + ConstantesVisado.SLASH + ConstantesVisado.SALTO_LINEA;
+					}
+				}				
 			}
 			tmpSol.setTxtOpeBan(cadena);
+//			logger.debug("Tiempo de respuesta seteando operaciones bancarias: " + (System.currentTimeMillis()-inicioOper)/1000 + " segundos");
 			//logger.debug("[ActDatosGrilla]-TxtOpeBan:"+tmpSol.getTxtOpeBan());
 			
 			//Ordenar niveles
@@ -742,16 +764,29 @@ public class SeguimientoMB
 				}
 			}*/
 			
+			
 			//Generar lista de niveles string
+//			long inicioNivel = System.currentTimeMillis();
 			List<String> tmpLista = new ArrayList<String>();
 			
-			for (Iterator iterator = tmpSol.getTiivsSolicitudNivels().iterator(); iterator.hasNext();) 
+			/*for (Iterator iterator = tmpSol.getTiivsSolicitudNivels().iterator(); iterator.hasNext();) 
 			{
 				TiivsSolicitudNivel tmp = (TiivsSolicitudNivel) iterator.next();
 				
-				String nivel = nivelService.buscarNivelxCodigo(tmp.getCodNiv());
+				//String nivel = nivelService.buscarNivelxCodigo(tmp.getCodNiv()); ////////////////
+				String nivel = buscarDescripcionXNivel(tmp.getCodNiv(), listaNiveles);
 				
 				tmpLista.add(nivel);
+			}*/
+			
+			if(listaSolicitudNiveles!=null && !listaSolicitudNiveles.isEmpty()){
+				for(TiivsSolicitudNivel solNivel:listaSolicitudNiveles){
+					if(solNivel.getTiivsSolicitud()!=null && 
+							solNivel.getTiivsSolicitud().getCodSoli().compareTo(tmpSol.getCodSoli())==0){
+						String nivel = buscarDescripcionXNivel(solNivel.getCodNiv(), listaNiveles);
+						tmpLista.add(nivel);
+					}
+				}
 			}
 			
 			Collection<String> unsorted = tmpLista;
@@ -782,6 +817,8 @@ public class SeguimientoMB
 			//logger.info("Niveles encontrados:" + cadNiveles);
 			
 			tmpSol.setTxtNivel(cadNiveles);
+//			logger.debug("Tiempo de respuesta seteando niveles: " + (System.currentTimeMillis()-inicioNivel)/1000 + " segundos");
+			
 			//Proceso para obtener los niveles de cada solicitud
 		/*	if (tmpSol.getImporte() != 0) 
 			{
@@ -883,6 +920,17 @@ public class SeguimientoMB
 			}*/
 		}
 		logger.debug("Tiempo de respuesta actualizando grilla de solicitudes: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
+	}
+	
+	private String buscarDescripcionXNivel(String codigo, List<TiivsNivel> listaNiveles){
+		if(listaNiveles!=null && !listaNiveles.isEmpty()){
+			for(TiivsNivel nivel:listaNiveles){
+				if(codigo!=null && codigo.compareTo(nivel.getCodNiv())==0){
+					return nivel.getDesNiv();
+				}
+			}
+		}
+		return null;
 	}
 	
 	public String obtenerGenerador()
@@ -2221,6 +2269,7 @@ public class SeguimientoMB
 		// Buscar solicitudes de acuerdo a criterios seleccionados
 		logger.debug("[Seguimiento-busqSolicit]-Antes de hacer el query.");
 		try {
+			solicitudes = null;
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
         } catch (Exception ex) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"las solicitudes en la Bandeja de Seguimiento: ",ex);
@@ -2271,11 +2320,47 @@ public class SeguimientoMB
 			lstSolOperBan =new ArrayList<TiivsSolicitudOperban>();
 			
 			try {
+				long inicio = System.currentTimeMillis();
 				 lstSolOperBan = operBanDAO.buscarDinamico(filtroOperBan);
+				 logger.debug("Tiempo respuesta de consulta de Operaciones Bancarias: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
 			} catch (Exception e) {
-				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de tipos de persona: ",e);
+				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de operaciones bancarias: ",e);
 			}
 			return lstSolOperBan;
+	}
+	
+	private List<TiivsSolicitudNivel> listarSolicitudNiveles(){
+		GenericDao<TiivsSolicitudNivel, Object> operBanDAO = (GenericDao<TiivsSolicitudNivel, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroOperBan = Busqueda.forClass(TiivsSolicitudNivel.class);
+		
+		
+		List<TiivsSolicitudNivel> lstSolNiveles =new ArrayList<TiivsSolicitudNivel>();
+		
+		try {
+			long inicio = System.currentTimeMillis();
+			lstSolNiveles = operBanDAO.buscarDinamico(filtroOperBan);
+			 logger.debug("Tiempo respuesta de consulta Solicitudes Niveles: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de solicitudes de niveles: ",e);
+		}
+		return lstSolNiveles;
+	}
+	
+	private List<TiivsSolicitudAgrupacion> listarSolicitudAgrupacion(){
+		GenericDao<TiivsSolicitudAgrupacion, Object> operBanDAO = (GenericDao<TiivsSolicitudAgrupacion, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroOperBan = Busqueda.forClass(TiivsSolicitudAgrupacion.class);
+		
+		
+		List<TiivsSolicitudAgrupacion> lstSolAgrupacion =new ArrayList<TiivsSolicitudAgrupacion>();
+		
+		try {
+			long inicio = System.currentTimeMillis();
+			lstSolAgrupacion = operBanDAO.buscarDinamico(filtroOperBan);
+			 logger.debug("Tiempo respuesta de consulta Solicitudes agrupaciones: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
+		} catch (Exception e) {
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CARGA_LISTA+"de solicitudes agrupaciones: ",e);
+		}
+		return lstSolAgrupacion;
 	}
 	
 	public List<String> obtenerSolicitudesxFiltroPersonas(TiivsPersona filtroPer, String tipo)
