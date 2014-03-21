@@ -17,24 +17,26 @@
 		</jar>
 		
 		
-		<echo>Firmando el archivo jar</echo>
 		
+		
+		<echo>Generando key</echo>
 		<!--
-		
 		<genkey alias="bbva-applet" storepass="javajava" 
 				keystore="javajava" validity="9999">
 			<dname>
 				<param name="CN" value="BBVA" />
 				<param name="OU" value="VISPOD" />
 				<param name="O" value="BBVA" />
+				<param name="L" value="Lima" />
+				<param name="S" value="Lima" />
 				<param name="C" value="PE" />
 			</dname>
-		</genkey>
-		-->
-		
+		</genkey>-->
+	
+	<!--	<echo>Firmando el archivo jar</echo>
 		<signjar jar="dist/uploadFilesApplet.jar" alias="bbva-applet" 
 				storepass="javajava" keystore="javajava"/>
-		<echo>Fin</echo>
+		<echo>Fin</echo>-->
 		
 	</target>
 </project>
