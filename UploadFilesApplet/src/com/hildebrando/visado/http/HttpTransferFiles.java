@@ -33,7 +33,7 @@ public class HttpTransferFiles {
 	}
 	
 	public void sendFiles(List<File> ficherosLeidos) {	
-		System.out.println("=== sendFiles():Inicio ===");
+		System.out.println("=== sendFiles():Inicio -  ===");
 		try {
 			System.out.println("[Send]-Url:"+url);			
 			HttpClient client = new DefaultHttpClient();

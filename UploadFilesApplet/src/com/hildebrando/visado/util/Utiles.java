@@ -61,7 +61,7 @@ public class Utiles {
 				String descMensaje = sdfHora.format(objCalendar.getTime())
 						+ " - " + tipoMsj.toUpperCase() + " : "
 						+ mensaje;
-				System.out.println("descMensaje: "+descMensaje);
+				//System.out.println("descMensaje: "+descMensaje);
 				objPrintWriter.println(descMensaje);
 
 			} else {
