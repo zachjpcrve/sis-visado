@@ -101,7 +101,7 @@ public class ClienteFTP {
     
   //Metodo que se agrega para subir archivos por FTP
     public String uploadFiles(List<File> listaFile){
-    	Utiles.escribirEnLog(Constantes.INFO,"\t===== uploadFiles(l) synchronize:Inicio =====", "");
+    	Utiles.escribirEnLog(Constantes.INFO,"\t===== uploadFiles(PROD) synchronize:Inicio =====", "");
     	String archivosSubidos = "";
     	Integer contador = 0;
     	String nombreTemporal = null;
@@ -113,9 +113,11 @@ public class ClienteFTP {
     				ftpCliente.connect(this.host);
     	            this.login = ftpCliente.login(this.username, this.password);
     	            if (this.login) {
-    	            	//Utiles.escribirEnLog(Constantes.DEBUG,"\t[uploadFiles]-Login exitoso.", "");
+    	            	//PRODUCCION
+    	            	boolean resCambDirect = ftpCliente.changeWorkingDirectory("documentos"+directorio);
+    	            	//TEST
+    	            	//boolean resCambDirect = ftpCliente.changeWorkingDirectory(directorio);
     	            	
-    	            	boolean resCambDirect = ftpCliente.changeWorkingDirectory(directorio);
     	                Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-resultado setDirectorio: "+resCambDirect, "");
     	                Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-ftpCliente.printWorkingDirectory: "+ftpCliente.printWorkingDirectory(), "");
     	                if(listaFile!=null){
@@ -141,6 +143,9 @@ public class ClienteFTP {
                     	while ((bytesRead = fis.read(buffer)) != -1) {
                             outputStream.write(buffer, 0, bytesRead);
                         }
+                    	
+                    	
+                    	
                     	outputStream.close();
                     	Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-termina de escribir archivo de salida:" , ""); /////
                     	//Utiles.escribirEnLog(Constantes.INFO,"\t[uploadFiles]-resultado:" + res, ""); /////
