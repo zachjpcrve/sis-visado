@@ -1689,10 +1689,12 @@ public class ConsultarSolicitudMB {
 				this.bMostrarSolicitudVisado = true;
 				this.bMostrarReImprimirCartaAtencion = false;
 				/*Modificado 24/09/2013. Cuando SSJJ ejecuta la opción de ReImprimir, para oficina se activa nuevamente el link*/
-				if(this.solicitudRegistrarT.getFlagReimprimir().equals(ConstantesVisado.ACTIVO_FLAG_REIMPRIMIR)){
+				if(this.solicitudRegistrarT.getFlagReimprimir()==(null)&&!(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02))){//EDY SACRAMENTO 26/05/2014
 					this.bMostrarCartaAtencion = true;
 			    /*Modificado 24/09/2013. Para la oficina si es la primera vez debera aparecer la Carta de Atención (Flujo Actual)*/
-				}else if(this.solicitudRegistrarT.getFlagReimprimir().equals(null)){
+				}else if(this.solicitudRegistrarT.getFlagReimprimir()==(null)&&(this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02))){
+					this.bMostrarCartaAtencion = false;
+				}else if(this.solicitudRegistrarT.getFlagReimprimir().equals(ConstantesVisado.ACTIVO_FLAG_REIMPRIMIR)){
 					this.bMostrarCartaAtencion = true;
 				/*Modificado 24/09/2013. Si luego de que oficina vuelva a reimprimir, se le desactivara la opción 
 				 * Hasta que SSJJ vuelva a activar la Reimpresión*/
@@ -2204,21 +2206,24 @@ public class ConsultarSolicitudMB {
 			this.solicitudRegistrarT.setEstado(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02);
 			this.solicitudRegistrarT.setFechaEstado(new Timestamp(new Date().getTime()));
 			this.solicitudRegistrarT.setDescEstado(ConstantesVisado.ESTADOS.ESTADO_EJECUTADO_T02);
-
-			GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+			
+			//[GD INCIDENCIAS]
+			/*********ESCH INI ***********/
+			/*GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 			service.modificar(solicitudRegistrarT);
 
 			this.registrarHistorial(solicitudRegistrarT);
 			this.obtenerHistorialSolicitud();
 			this.seguimientoMB.busquedaSolicitudes();
 			
-			this.actualizarEstadoReservadoSolicitud();
+			this.actualizarEstadoReservadoSolicitud();*/
+			/*********ESCH INI ***********/
 		}
 		
 		/*Modificado 24/09/2013. Cuando la oficina vuelve a Ejecutar la Carta, se desactiva le flag de Reimprimir
 		  Hasta que SSJJ vuelva a ejecutar la opcion de ReImprimir*/
 		if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA)
-				&& (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02))){
+				&& (this.solicitudRegistrarT.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_EJECUTADO_T02))){//Edy Sacramento 26/05/2014
 		
 			this.solicitudRegistrarT.setFlagReimprimir(ConstantesVisado.DESACTIVO_FLAG_REIMPRIMIR);
 			GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -2649,11 +2654,12 @@ public class ConsultarSolicitudMB {
 		}
 
 		logger.info("lstAnexoSolicitud.size()" + this.lstAnexoSolicitud.size());
-		if (this.lstAnexoSolicitud.size() == 0) {
+		//[GD INCIDENCIAS]:
+                /*if (this.lstAnexoSolicitud.size() == 0) {
 			mensaje = "Ingrese los documentos Obligatorios";
 			retorno = false;
 			Utilitarios.mensajeInfo("INFO", mensaje);
-		}
+		}*/ //Comentado por Edy Sacramento 08/05/2014
 		
 		if (this.lstSolicBancarias.size() == 0) {
 

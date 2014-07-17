@@ -396,8 +396,8 @@ public class SeguimientoMB
 			long inicio = System.currentTimeMillis();
 			solicitudes = solicDAO.buscarDinamico(filtroSol);
 			logger.debug("===========================================================================================================");
-			logger.debug("Tiempo de respuesta de consulta de solicitudes: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
-			logger.debug("Cantidad de registros: " + (solicitudes!=null?solicitudes.size():0));
+			logger.debug("[GSI]-Tiempo de respuesta de consulta de solicitudes: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
+			logger.debug("[GSI]-Cantidad de registros: " + (solicitudes!=null?solicitudes.size():0));
 			logger.debug("===========================================================================================================");
 			
 			if(solicitudes!=null){
