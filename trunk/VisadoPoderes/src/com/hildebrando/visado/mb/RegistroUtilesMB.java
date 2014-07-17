@@ -230,9 +230,9 @@ public class RegistroUtilesMB {
 	public Date obtenerFechaRespuesta(){
 		logger.debug("=== obtenerFechaRespuesta():INICIO ===");
 		Date fechaRetorno;
-		String sHoraCorte = getHoraCorte();  //Para obtener hora de corte (parámetro de sistema)		
+		String sHoraCorte = getHoraCorte();  //Para obtener hora de corte (parámetro de sistema)	 	
 		logger.debug("[obtFechRpta]-sHoraCorte:"+sHoraCorte);
-		String []aHora = null;		
+		String []aHora = null;	
 		try{			
 			aHora = sHoraCorte.split(":");
 		}catch(Exception e){
@@ -243,7 +243,19 @@ public class RegistroUtilesMB {
 		//Hora actual
 		Calendar fechaActual = Calendar.getInstance();	
 		int iHoraActual = Integer.valueOf(String.valueOf(fechaActual.get(Calendar.HOUR_OF_DAY))
-				+ String.valueOf(fechaActual.get(Calendar.MINUTE)));		
+				+ String.valueOf(fechaActual.get(Calendar.MINUTE)));
+		
+		// [GD-INCIDENCIAS]: Obtener minuto de la fecha actual.
+		String minutoActual = String.valueOf(fechaActual.get(Calendar.MINUTE));
+		if (minutoActual.length() == 1) {
+			//extraemos hora actua formato hh
+			String hora =  String.valueOf(fechaActual.get(Calendar.HOUR_OF_DAY));
+			logger.info("[obtFechRpta]-Concatenar 0 para completar el formato de minuto. Rango de minutos esta entre [00 - 09] ");
+			//extraemos minutos formato mm
+			String minutoModificado = ConstantesVisado.COMPLETAR_FORMATO_MINUTO +  minutoActual;
+			//concatenamos hora y minutoModifcado
+			iHoraActual = Integer.parseInt(hora + minutoModificado);
+		} 
 		
 		logger.info("[obtFechRpta]-Compara fecha:"+iHoraActual+"<"+iHoraCorte);
 		if(iHoraActual <= iHoraCorte ){ //Si hora actual es menor igual a la hora de corte	

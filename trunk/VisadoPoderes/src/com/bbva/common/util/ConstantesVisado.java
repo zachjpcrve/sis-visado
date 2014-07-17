@@ -100,6 +100,9 @@ public class ConstantesVisado {
 	public static final String CODIGO_SERVICIO_RENIEC_DUMMY = "0003";
 	public static final String CODIGO_SERVICIO_RENIEC_ANTERIOR = "0004";
 	
+	//[GD INCIDENCIAS]: [08-05 -2014] Mejoras 
+	public static final String COMPLETAR_FORMATO_MINUTO = "0";
+	
 	//[31-10]Se agregan parametros del servicio web de reniec
 	static public class PARAMETROS_RENIEC{
 		public static final String CANAL="0001";
@@ -477,7 +480,7 @@ public class ConstantesVisado {
 	
 	static public class ESTADOS {
 		
-		
+		//MODIFICADO
 		public static final String ESTADO_ACTIVO_REVOCADO="0018";
 		public static final String ESTADO_INACTIVO_REVOCADO="0019";
 		public static final String ESTADO_PENDIENTE_REVOCADO="0020";

@@ -64,6 +64,12 @@
 
 				}
 			}
+ 			/**************JTCH 02/07/2014************************/
+			function submit_reporte(){		
+				document.getElementById('formSolicitudSeguimiento').submit();
+				window.location.href='../../main/download/pdfReportCartaAtencion.htm';				
+			}
+			/**************JTCH 02/07/2014************************/
 			function ActivarAutoGuardar() {
 				flagGuardado = false;
 			}
@@ -258,7 +264,7 @@
 			
 								<!-- /c:if -->
 								<c:if test="#{consultarSolicitudMB.bMostrarCartaAtencion}">
-									<a href="#" onclick="confirmation2.show()">						
+									<a href="#" onclick="confirmation2.show()" id="hrCartaAtencion" >						
 										<font color="blue">
 											<u>Carta de atención</u>
 										</font>
@@ -314,8 +320,7 @@
 	                
 	            <center>
 		       	<p:commandButton id="confirm" value="Si" 
-		        			onclick="window.location.href='../../main/download/pdfReportCartaAtencion.htm'" 
-		        			oncomplete="confirmation2.hide()" update=":formSolicitudSeguimiento" 
+		        			oncomplete="confirmation2.hide(); submit_reporte();" update=":formSolicitudSeguimiento"
 		                    action="#{consultarSolicitudMB.actualizarEstadoEjecutadoSolicitud}"	                    
 		                     />	
 		                    	                    
@@ -323,6 +328,8 @@
 		       	</center>  
 	                  
 	    </p:confirmDialog>
+	    
+	    
 	    
 	    <p:confirmDialog id="confirmDialogRevision" message="¿Está seguro de generar una  revisión?"  
 	              header="Revisión" severity="alert" widgetVar="confirmation3" visible="true">  
@@ -335,6 +342,8 @@
 		        </center>  
 	                  
 	    </p:confirmDialog>
+	    
+	    
 	    
 	    <!-- Pregunta Evaluación por nivel -->
 	    <p:confirmDialog id="confirmDialogDictamenNivel" message="¿Está seguro de pasar a estado #{consultarSolicitudMB.descValorDictamen} la solicitud de visado?"  

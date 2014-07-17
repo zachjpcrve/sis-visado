@@ -216,6 +216,7 @@ public class SolicitudRegistroMB {
     }  
 
 	public SolicitudRegistroMB() {
+		long inicio = System.currentTimeMillis();
 		solicitudRegistrar = new Solicitud();
 		lstTiivsPersona = new ArrayList<TiivsPersona>();
 		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
@@ -1925,6 +1926,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 }
 	public String instanciarSolicitudRegistro() {
 		logger.info("========= instanciarSolicitudRegistro ==========");
+		long inicio = System.currentTimeMillis();
 		sEstadoSolicitud = "BORRADOR";
 		esRegistroValido=false;
 		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
@@ -2003,6 +2005,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		obtenerTipoRegistro();
 		obtenerEtiquetasTipoRegistro();
 		obtenerPagoComision();
+		logger.debug("Tiempo de respuesta METODO instanciarSolicitudRegistro: " + (System.currentTimeMillis()-inicio)/1000.0 + " segundos ------------- instanciarSolicitudRegistroEDY");
 
 		return "/faces/paginas/solicitud.xhtml";
 	}	
@@ -3072,7 +3075,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		establecerTipoSolicitud();
 		
-		logger.info("============================= registrarSolicitud [Mejoras-2013] ==================================");
+		logger.info("============================= registrarSolicitud [Mejoras-2014] ==================================");
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
         GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -3172,9 +3175,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						logger.debug("[REGISTR_SOLIC]-Agrupacion-CodSol:"+a.getCodSoli() +"   NroGrupo:"+ a.getNumGrupo());
 					}
 				}
+				
+				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT); //INSERTA LA SOLICITUD
+				
 				logger.debug("======= REGISTRANDO HISTORIAL ======");
 				//Registrando el Historial de la Solicitud
-				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT); //INSERTA LA SOLICITUD
 				TiivsHistSolicitud objHistorial=new TiivsHistSolicitud();
 				  objHistorial.setId(new TiivsHistSolicitudId(this.solicitudRegistrarT.getCodSoli(),1+""));
 				  objHistorial.setEstado(this.solicitudRegistrarT.getEstado());
@@ -3192,21 +3197,6 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				  logger.debug("[REGISTR_SOLIC]-Historial-regUsuario: "+objHistorial.getRegUsuario());
 				  serviceHistorialSolicitud.insertar(objHistorial);
 				
-				logger.debug("========= REGISTRANDO ANEXOS  =========");
-				//Registrando la lista de Documentos (Anexos)
-				if(this.lstAnexoSolicitud!=null && this.lstAnexoSolicitud.size()>0){
-					logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+" de Anexos es:"+this.lstAnexoSolicitud.size());
-					for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
-						  n.getId().setCodSoli(solicitudRegistrarT.getCodSoli());
-						  logger.debug("[REGISTR_SOLIC][Anexo]-Id:"+n.getId().getCodDoc() + "  Alias:"+n.getAliasArchivo()+"  AliasTemp:"+n.getAliasTemporal() + "  Hora:"+new Date());
-						  serviceAnexos.insertar(n);
-					}
-				}else{
-					mensaje = "Falta ingresar lista de documentos";
-					//Utilitarios.mensajeInfo("INFO", mensaje);
-					logger.debug(mensaje);
-				}
-				
 				logger.debug("========= REGISTRANDO OPERACIONES BANCARIAS  =========");
 				if(this.lstSolicBancarias!=null && this.lstSolicBancarias.size()>0){
 					logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+" de Operaciones Bancarias es:"+this.lstSolicBancarias.size());
@@ -3218,6 +3208,23 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 					}	
 				}else{
 					mensaje = "Falta ingresar lista de operaciones bancarias";
+					//Utilitarios.mensajeInfo("INFO", mensaje);
+					logger.debug(mensaje);
+				}
+				
+				logger.debug("========= REGISTRANDO ANEXOS  =========");
+				//Registrando la lista de Documentos (Anexos)
+				if(this.lstAnexoSolicitud!=null && this.lstAnexoSolicitud.size()>0){
+					logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+" de Anexos es:"+this.lstAnexoSolicitud.size());
+					lstAnexoSolicitud=depurarListaAnexo();//ESCH 19/06/2014
+					logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+" de Anexos Depurado es:"+this.lstAnexoSolicitud.size());//ESCH 19/06/2014
+					for (TiivsAnexoSolicitud n : this.lstAnexoSolicitud) {
+						  n.getId().setCodSoli(solicitudRegistrarT.getCodSoli());
+						  logger.debug("[REGISTR_SOLIC][Anexo]-Id:"+n.getId().getCodDoc() + "  Alias:"+n.getAliasArchivo()+"  AliasTemp:"+n.getAliasTemporal() + "  Hora:"+new Date());
+						  serviceAnexos.insertar(n);
+					}
+				}else{
+					mensaje = "Falta ingresar lista de documentos";
 					//Utilitarios.mensajeInfo("INFO", mensaje);
 					logger.debug(mensaje);
 				}
@@ -4122,6 +4129,37 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		obtenerPonderdante();
 		obtenerAponderdante();
 	}
+
+	/*****************ESCH INI 19/06/2014*************/
+	//[02.07] Cambio en la lista de depuracion (GD-Incidencias)
+	public boolean buscarAnexo(String id,String aliasTemporal,String aliasAarchivo,List<TiivsAnexoSolicitud> listaAnexos){
+		boolean valor=true;
+		
+		for (TiivsAnexoSolicitud tiivsAnexoSolicitud : listaAnexos) {
+			if(tiivsAnexoSolicitud.getId().getCodDoc().equals(id)||tiivsAnexoSolicitud.getAliasTemporal().equals(aliasTemporal)||tiivsAnexoSolicitud.getAliasArchivo().equals(aliasAarchivo))
+				return false;
+		}
+		return valor;
+	}
+	
+	public List<TiivsAnexoSolicitud> depurarListaAnexo(){
+		logger.info("====== iniciando depuracion =====");
+		List<TiivsAnexoSolicitud> listaNuevaAnexos=new ArrayList<TiivsAnexoSolicitud>();
+		logger.info("tamanio inicial lstAnexoSolicitud: "+lstAnexoSolicitud.size());
+		for (TiivsAnexoSolicitud tiivsAnexoSolicitud : lstAnexoSolicitud) {
+			if(buscarAnexo(tiivsAnexoSolicitud.getId().getCodDoc(),tiivsAnexoSolicitud.getAliasTemporal(),tiivsAnexoSolicitud.getAliasArchivo(),listaNuevaAnexos)){
+				listaNuevaAnexos.add(tiivsAnexoSolicitud);
+			}
+			else
+				logger.info("elemento(s) repetido: "+tiivsAnexoSolicitud.getAliasTemporal());
+		}
+		logger.info("tamanio final lstAnexoSolicitud: "+listaNuevaAnexos.size());
+		logger.info("====== fin depuracion =====");
+		return listaNuevaAnexos;
+	}
+	
+
+	/*****************ESCH FIN 19/06/2014*************/
 
 	public List<TiivsMultitabla> getLstMultitabla() {
 		return lstMultitabla;
