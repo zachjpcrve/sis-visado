@@ -1084,4 +1084,55 @@ public class Utilitarios {
 		}
 		return value;
 	}
+	
+	//[GD INCIDENCIAS]: Estilo 1  ==> (tru, false, true)
+	public static CellStyle definirEstiloCelda1(Workbook wb, short halign, short valign, Short color) 
+	{
+		CellStyle cellStyle = wb.createCellStyle();
+		cellStyle.setAlignment(halign);
+		cellStyle.setVerticalAlignment(valign);
+		
+		//booBorde
+		cellStyle.setBorderBottom(HSSFCellStyle.BORDER_DOTTED);
+		cellStyle.setBottomBorderColor((short) 8);
+		cellStyle.setBorderLeft(HSSFCellStyle.BORDER_DOTTED);
+		cellStyle.setLeftBorderColor((short) 8);
+		cellStyle.setBorderRight(HSSFCellStyle.BORDER_DOTTED);
+		cellStyle.setRightBorderColor((short) 8);
+		cellStyle.setBorderTop(HSSFCellStyle.BORDER_DOTTED);
+		cellStyle.setTopBorderColor((short) 8);
+		
+		//booFiltrosBus
+		cellStyle.setBorderBottom(HSSFCellStyle.BORDER_MEDIUM);
+		cellStyle.setBottomBorderColor((short) 8);
+		cellStyle.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
+		cellStyle.setLeftBorderColor((short) 8);
+		cellStyle.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
+		cellStyle.setRightBorderColor((short) 8);
+		cellStyle.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
+		cellStyle.setTopBorderColor((short) 8);
+			
+		return cellStyle;
+		
+	}
+	
+	//estilo 2 ==> (false, false,false)
+	public static CellStyle definirEstiloCelda2(Workbook wb, short halign, short valign, Short color) 
+	{
+		CellStyle cellStyle = wb.createCellStyle();
+		cellStyle.setAlignment(halign);
+		cellStyle.setVerticalAlignment(valign);
+		
+		return cellStyle;
+		
+	}
+	
+	public static void crearCellModificado(Workbook wb, Row row, int column, short halign, short valign, String strContenido, boolean booBorde,
+			boolean booCabecera, boolean booFiltrosBus, Short color, CellStyle estilo) 
+	{
+		CreationHelper ch = wb.getCreationHelper();
+		Cell cell = row.createCell(column);
+		cell.setCellValue(ch.createRichTextString(strContenido));
+		cell.setCellStyle(estilo);
+	}
 }
