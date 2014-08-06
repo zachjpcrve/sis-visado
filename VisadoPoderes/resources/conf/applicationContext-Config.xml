@@ -64,7 +64,8 @@
 		</property>
 	</bean>
 
-	<tx:annotation-driven transaction-manager="transacctionManager"/> 
+<!-- 	transacctionManager -->
+	<tx:annotation-driven transaction-manager="transactionManager"/> 
 
 	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
@@ -100,12 +101,16 @@
 		</property>
 	</bean>
 	
-	<bean id="jndiDataSource" class="org.springframework.jndi.JndiObjectFactoryBean" >
-		<property name="jndiName" value="${jdbc.jndi.visadopoderes}"></property>
-		<property name="lookupOnStartup" value="false"></property>
-		<property name="cache" value="true"></property>
-		<property name="proxyInterface" value="javax.sql.DataSource"></property>
-	</bean>
+<!-- 	<bean id="jndiDataSource" class="org.springframework.jndi.JndiObjectFactoryBean" > -->
+<!-- 		<property name="jndiName" value="${jdbc.jndi.visadopoderes}"></property> -->
+	<!-- 		<property name="resourceRef" value="true" /> se agrega  (estaba comentado)-->
+<!-- 		<property name="lookupOnStartup" value="false"></property> -->
+<!-- 		<property name="cache" value="true"></property> -->
+<!-- 		<property name="proxyInterface" value="javax.sql.DataSource"></property> -->
+<!-- 	</bean> -->
+	
+	
+	<jee:jndi-lookup id="jndiDataSource" jndi-name="${jdbc.jndi.visadopoderes}" lookup-on-startup="false" cache="true" proxy-interface="javax.sql.DataSource" />
 	
 	<!-- <bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="jobFactory">
