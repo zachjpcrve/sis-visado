@@ -19,6 +19,7 @@ public class Constantes {
 	public static final String FORMATO_FECHA = "dd_MM_yyyy";
 	public static final String FORMATO_HORA = "HH:mm:ss";
 	public static final String FORMATO_RUTA_SISTEMA = "D:\\VisadoPoderes\\";
+	//public static final String FORMATO_RUTA_SISTEMA = "C:\\VisadoPoderes\\";
 	public static final String FORMATO_RUTA_LOG = "Log\\";
 	public static final String FORMATO_ARCHIVO_GENERAR_LOG = "log"; //txt
 	public static final String FORMATO_NOMBRE_ARCHIVO_LOG = "log_Visado";
@@ -33,6 +34,10 @@ public class Constantes {
 	public static final String MSJ_OCURRE_ERROR = "Ha ocurrido un error ";
 	public static final String MSJ_LISTA_ARCHIVOS = "El listado de archivos ";
  
+	/*ECH INI 06/06/2014*/
+	public static final String SEPARADOR_ARCHIVOSSUBIDOS = ";";
+	public static final double DIVIDIR_BYTES = 1024.0;
+	/*ECH FIN 06/06/2014*/
 	
 	//28-10 Constantes para el FTP
 	public static final int BUFFERED_SIZE = 4096;
