@@ -38,10 +38,18 @@ public class ClasificacionMB {
 		bValidacion = false;
 		listarClasificaciones();
 		obtenerMaximo();
-		combosMB= new CombosMB();
-		combosMB.cargarMultitabla();
+		/**
+		 * CAMBIO HVB 23/07/2014
+		 * SE COMENTA DICHOS ELEMENTOS PARA OPTIMIZAR LOS TIEMPOS
+		 */
+//		combosMB= new CombosMB();
+//		combosMB.cargarMultitabla();
 		// Carga lista de tipos de persona
-		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
+		/**
+		 * CAMBIO HVB 23/07/2014
+		 * SE COMENTA DICHOS ELEMENTOS PARA OPTIMIZAR LOS TIEMPOS
+		 */
+//		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA);
 	}
 
 	public void obtenerMaximo() 

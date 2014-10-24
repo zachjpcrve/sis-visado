@@ -1,5 +1,6 @@
 package com.hildebrando.visado.mb;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,11 +17,13 @@ import org.apache.log4j.Logger;
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.SeguridadDao;
+import com.bbva.persistencia.generica.dao.impl.ConsultasJDBCDaoImpl;
 import com.bbva.persistencia.generica.util.Sesion;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.conexion.__Conexion2;
 import com.grupobbva.bc.per.tele.seguridad.ServiciosSeguridadBbva;
 import com.hildebrando.visado.dto.MiembroDto;
+import com.hildebrando.visado.modelo.TiivsOficina1;
 
 /**
  * Clase que se encarga de manejar la seguridad de la aplicacion, 
@@ -291,6 +294,21 @@ public class SeguridadMB {
 
 	}
 	
+	/*public void cargarListasSession(){
+		ConsultasJDBCDaoImpl daoJDBC = new ConsultasJDBCDaoImpl();  
+		ArrayList lstOficina = new ArrayList<TiivsOficina1>();
+		
+		try {
+			lstOficina = (ArrayList) daoJDBC.obtenerOficinas(5000);
+			if(lstOficina!=null){
+				request.getSession(true).setAttribute("lstOficina", lstOficina);
+				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"Oficinas es: [" +lstOficina.size()+"].");
+			}
+			
+		} catch (Exception e) {
+			 logger.error("Error a cargarListasSession ",e);
+		}
+	}*/
 	
 	public String cerrarSesion() {
 		logger.info(" === cerrarSesion() ==> " +idSesion);
