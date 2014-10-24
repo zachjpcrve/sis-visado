@@ -73,7 +73,18 @@
         <property name="flagReimprimir" type="string">
             <column name="FLAG_REIMPRIMIR" length="1"  />
         </property>
-        
+        <!-- CAMBIO 22/07/2014 HVB -->
+        <!-- ***SE AGREGAN COLUMNAS A LA TABLA SOLICITUD PARA OBTENER INFORMACION CONCATENADA (TITULAR,APODERADO,DOCUMENTO,NIVELES)-->
+        <property name="txtPoderdante" type="string">
+            <column name="CADENA_TITULARES" length="4000"  />
+        </property>
+        <property name="txtApoderado" type="string">
+            <column name="CADENA_APODERADOS_HEREDEROS" length="4000"  />
+        </property>
+        <property name="txtOpeBan" type="string">
+            <column name="CADENA_OPERACIONES" length="4000"  />
+        </property>
+ 
 <!--         <set name="tiivsSolicitudNivels" table="TIIVS_SOLICITUD_NIVEL"  inverse="true" cascade="all" lazy="true" fetch="select" > -->
 <!-- 		<set name="tiivsSolicitudNivels" table="TIIVS_SOLICITUD_NIVEL"  inverse="true" lazy="false" fetch="select" > -->
 <!--             <key> -->
