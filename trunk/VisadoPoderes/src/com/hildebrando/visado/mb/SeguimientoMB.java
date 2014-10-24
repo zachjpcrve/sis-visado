@@ -11,12 +11,11 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
@@ -32,6 +31,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.StreamedContent;
 import org.springframework.beans.BeansException;
 
@@ -40,6 +40,7 @@ import com.bbva.common.util.ConstantesVisado;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
+import com.bbva.persistencia.generica.dao.impl.ConsultasJDBCDaoImpl;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
@@ -59,7 +60,6 @@ import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
 import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacion;
-import com.hildebrando.visado.modelo.TiivsSolicitudAgrupacionId;
 import com.hildebrando.visado.modelo.TiivsSolicitudNivel;
 import com.hildebrando.visado.modelo.TiivsSolicitudOperban;
 import com.hildebrando.visado.modelo.TiivsTerritorio;
@@ -79,6 +79,19 @@ public class SeguimientoMB
 		this.listaOficinasValidar = listaOficinasValidar;
 	}*/
 
+	/*CAMBIO HVB 23/07/2014
+	 *SE MAPEA LA PROPIEDAD DE INFODEPLOY PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+	 */
+	@ManagedProperty(value="#{infoDeployMB}")
+	private InfoDeployMB infoDeployMB;
+	
+	public InfoDeployMB getInfoDeployMB() {
+		return infoDeployMB;
+	}
+
+	public void setInfoDeployMB(InfoDeployMB infoDeployMB) {
+		this.infoDeployMB = infoDeployMB;
+	}
 	@ManagedProperty(value = "#{pdfViewerMB}")
 	private PDFViewerMB pdfViewerMB;
 	private List<TiivsSolicitud> solicitudes;
@@ -142,13 +155,25 @@ public class SeguimientoMB
 	private String apoderdante;
 	private String sentenciaOficina = null;
 	
+	private LazyDataModel<TiivsSolicitud> solicitudesPag;
+	private String solicitudService="solicitudService";
+	
+
+	//**********CAMBIO HVB 18/07/2014*******
+	//**********Se borran variables y metodos del constructor no necesarios en especial cargasolicitudes()*******
+
+
 	
 	public SeguimientoMB()
 	{
+		//**********CAMBIO HVB 21/07/2014*******
+		//**********medicion de tiempo*******
+		long inicio = System.currentTimeMillis();
+		
 		logger.debug("====================== SeguimientoMB ======================");
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");	
 		PERFIL_USUARIO=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
-		solicitudes = new ArrayList<TiivsSolicitud>();
+//		solicitudes = new ArrayList<TiivsSolicitud>();
 		lstAgrupPer= new ArrayList<TiivsAgrupacionPersona>();
 		lstNivelSelected = new ArrayList<String>();
 		lstEstudioSelected = new ArrayList<String>();
@@ -160,7 +185,6 @@ public class SeguimientoMB
 		oficina= new TiivsOficina1();
 		lstSolicitudesSelected = new ArrayList<String>();
 		lstHistorial = new ArrayList<TiivsHistSolicitud>();
-				
 		this.lstTipoSolicitudSelected = new ArrayList<String>();
 		this.lstEstadoNivelSelected = new ArrayList<String>();
 		this.lstEstadoSelected = new ArrayList<String>();
@@ -174,7 +198,7 @@ public class SeguimientoMB
 		this.nroDOIPoderdante="";
 		this.txtNomPoderdante="";
 		
-		combosMB= new CombosMB();
+//		combosMB= new CombosMB();
 		
 		/*combosMB.cargarMultitabla();
 		combosMB.cargarCombosMultitabla(ConstantesVisado.CODIGO_MULTITABLA_IMPORTES);
@@ -196,8 +220,57 @@ public class SeguimientoMB
 		*/
 		
 		
-		cargarSolicitudes();
+//		cargarSolicitudes();
 		
+//		if (solicitudes.size() == 0) 
+//		{
+//			setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_SIN_REGISTROS,solicitudes.size());
+//			setNoHabilitarExportar(true);
+//		} 
+//		else  
+//		{
+//			setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + solicitudes.size() + ConstantesVisado.MSG_REGISTROS,solicitudes.size());
+//			setNoHabilitarExportar(false);
+//		}
+		
+		//setearCamposxPerfil();	//[14.08]GD-Incidencias: Se comenta linea	
+		generarNombreArchivo();
+		
+		//Carga estado del flujo
+		//combosMB.traerEstadosFlujoSolicitud();
+		//setNoMostrarFechas(true);
+
+		//Se agrega abajo
+//		obtenerTipoRegistro(); -- SE AGREGA EN EL POSCONSTRUCTOR 24/07/2014 HVB
+		obtenerEtiquetasTipoRegistro();
+		//**********CAMBIO HVB 21/07/2014*******
+		//**********medicion de tiempo*******
+		logger.debug("Tiempo de respuesta METODO seguimientoMB: " + (System.currentTimeMillis()-inicio)/1000.0 + " segundos ------------- seguimientoMB()");
+	}
+	
+	/*
+	 * CAMBIO HVB 24/07/2014 
+	 * SE CREA EL METODO POSCONSTRUCTOR PARA QUE SE PUEDAN USAR LOS ATRIBUTOS DE OTROS MANAGED BEANS
+	 */
+	@PostConstruct
+	public void posConstructor()
+	{
+		long inicio = System.currentTimeMillis();
+		obtenerTipoRegistro();
+		setearCamposxPerfil(); //[14.08]GD-Incidencias: Se agrega linea
+		logger.debug("Tiempo de respuesta METODO seguimientoMB: " + (System.currentTimeMillis()-inicio)/1000.0 + " segundos ------------- posConstructor()");
+	}
+	
+	//**********CAMBIO HVB 18/07/2014*******
+	//**********Se agrega metodo actualizarListas() para alinearlo con el procedimiento de consultas*******
+
+	public String actualizarListas(){
+		
+		logger.debug("==== actualizarListas() ===");
+		
+		solicitudes = new ArrayList<TiivsSolicitud>();
+		
+		cargarSolicitudes();
 		if (solicitudes.size() == 0) 
 		{
 			setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_SIN_REGISTROS,solicitudes.size());
@@ -208,44 +281,65 @@ public class SeguimientoMB
 			setearTextoTotalResultados(ConstantesVisado.MSG_TOTAL_REGISTROS + solicitudes.size() + ConstantesVisado.MSG_REGISTROS,solicitudes.size());
 			setNoHabilitarExportar(false);
 		}
-		
-		setearCamposxPerfil();		
-		generarNombreArchivo();
-		
-		//Carga estado del flujo
-		//combosMB.traerEstadosFlujoSolicitud();
-		//setNoMostrarFechas(true);
-
-		//Se agrega abajo
-		obtenerTipoRegistro();
-		obtenerEtiquetasTipoRegistro();
+		//---- DEBERIA IR EL METODO PARA ACTUALIZAR LOS COMBOS DINAMICOS HVB 18/07/2014
+		//combosMB = new CombosMB();	
+		return "/faces/paginas/bandejaSeguimiento.xhtml";
 	}
 	
 	//SE AGREGA METODO PARA OBTENER EL TIPO DE REGISTRO POR BD
+	/*
+	 * CAMBIO HVB 24/07/2014 
+	 * SE OPTIMIZA EL METODO EVITANDO LLAMAR A LA MULTITABLA A LA BD
+	 * SE UTILIZA LA LISTA CARGADA AL INICIAR EL APLICATIVO
+	 * SE CONCATENA LOS TEXTOS CON SB EN VEZ DE STRING (TIEMPO)
+	 */
 	private void obtenerTipoRegistro() {
-		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
-				.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
-		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
-		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
 		Integer contador = 0;
-		try {
-			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+		try 
+		{
 			tipoRegistro = "";
-			if (listaMultiTabla.size() > 0) {
-				for (TiivsMultitabla multitabla : listaMultiTabla) {
+		StringBuilder registroPersonasBuilder = new StringBuilder();
+		
+			for (ComboDto registroPersona : infoDeployMB.getLstTipoRegistroPersona()) {
 					contador++;
-					if (contador.compareTo(listaMultiTabla.size()) == 0) {
-						tipoRegistro += multitabla.getValor1();
+				if (contador.compareTo(infoDeployMB.getLstTipoRegistroPersona().size()) == 0) {
+					registroPersonasBuilder.append(registroPersona.getDescripcion());
 					} else {
-						tipoRegistro += multitabla.getValor1() + " / ";
+					registroPersonasBuilder.append(registroPersona.getDescripcion());
+					registroPersonasBuilder.append(" ");
+					registroPersonasBuilder.append(ConstantesVisado.SLASH);
+					registroPersonasBuilder.append(" ");
 					}
 				}
+			tipoRegistro = registroPersonasBuilder.toString();
 			}
-
-		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: ",e);
+		catch (Exception e) 
+		{
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "Tipo de Registros Personas: ",e);
 		}
+//		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit
+//				.getApplicationContext().getBean("genericoDao");
+//		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+//		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
+//		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+//		Integer contador = 0;
+//		try {
+//			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+//			tipoRegistro = "";
+//			if (listaMultiTabla.size() > 0) {
+//				for (TiivsMultitabla multitabla : listaMultiTabla) {
+//					contador++;
+//					if (contador.compareTo(listaMultiTabla.size()) == 0) {
+//						tipoRegistro += multitabla.getValor1();
+//					} else {
+//						tipoRegistro += multitabla.getValor1() + " / ";
+//					}
+//				}
+//			}
+//
+//		} catch (Exception e) {
+//			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: ",e);
+//		}
 	}
 	
 	//METODO PARA OBTENER ETIQUETAS DE TIPO DE REGISTRO DESDE BD Y MOSTRARLO EN GRILLA
@@ -254,6 +348,10 @@ public class SeguimientoMB
 		obtenerAponderdante();
 	}
 	
+	/*
+	 * CAMBIO HVB 24/07/2014 
+	 * SE OPTIMIZA EL METODO HACIENDO USO DE LOS STRINGBUILDER PARA CONCATENAR EN VEZ DEL MISMO STRING
+	 */
 	private void obtenerPonderdante(){
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
@@ -263,20 +361,33 @@ public class SeguimientoMB
 		try {
 			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
 			poderdante = "";
+			StringBuilder sbPoderdante = new StringBuilder();
 			if(listaMultiTabla.size()>0){
 				for(TiivsMultitabla multitabla:listaMultiTabla){
 					contador++;
 					if(contador.compareTo(listaMultiTabla.size())==0){
-						poderdante += multitabla.getValor1();	
-					}else{
-						poderdante += multitabla.getValor1() + " / ";
+						sbPoderdante.append(multitabla.getValor1());
+//						poderdante += multitabla.getValor1();	
+					}else
+					{
+						sbPoderdante.append(multitabla.getValor1());
+						sbPoderdante.append(" ");
+						sbPoderdante.append(ConstantesVisado.SLASH);
+						sbPoderdante.append(" ");
+//						poderdante += multitabla.getValor1() + " / ";
 					}
 				}
+				poderdante = sbPoderdante.toString();
 			}
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: ",e);
 		}
 	}
+	
+	/*
+	 * CAMBIO HVB 24/07/2014 
+	 * SE OPTIMIZA EL METODO HACIENDO USO DE LOS STRINGBUILDER PARA CONCATENAR EN VEZ DEL MISMO STRING
+	 */
 	
 	private void obtenerAponderdante(){
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -287,15 +398,24 @@ public class SeguimientoMB
 		try {
 			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
 			apoderdante = "";
+			StringBuilder sbApoderdante = new StringBuilder();
 			if(listaMultiTabla.size()>0){
 				for(TiivsMultitabla multitabla:listaMultiTabla){
 					contador++;
-					if(contador.compareTo(listaMultiTabla.size())==0){
-						apoderdante += multitabla.getValor1();	
-					}else{
-						apoderdante += multitabla.getValor1() + " / ";
+					if(contador.compareTo(listaMultiTabla.size())==0)
+					{
+//						apoderdante += multitabla.getValor1();
+						sbApoderdante.append(multitabla.getValor1());
+					}else
+					{
+						sbApoderdante.append(multitabla.getValor1());
+						sbApoderdante.append(" ");
+						sbApoderdante.append(ConstantesVisado.SLASH);
+						sbApoderdante.append(" ");
+//						apoderdante += multitabla.getValor1() + " / ";
 					}
 				}
+				apoderdante = sbApoderdante.toString();
 			}
 		} catch (Exception e) {
 			logger.debug(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " + e);
@@ -368,33 +488,45 @@ public class SeguimientoMB
 	 * @author  Cesar La Rosa
 	 * @version: 1.0
 	**/
+	/*
+	 * CAMBIO 25/07/2014 HVB
+	 * SE CAMBIA LA FORMA DE CONSULTA DE SOLICITUDES DE HIBERNATE A JDBC
+	 */
 	public void cargarSolicitudes() 
 	{
-		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
-		filtroSol.setMaxResults(1000);
+//		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+//		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
+//		filtroSol.setMaxResults(1000);
+		StringBuilder sbFiltro = new StringBuilder();
 						
 		if (PERFIL_USUARIO!=null)
 		{
 			if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) )
 			{
-				filtroSol.createAlias(ConstantesVisado.NOM_TBL_ESTUDIO,	ConstantesVisado.ALIAS_TBL_ESTUDIO);
-				filtroSol.add(Restrictions.eq(ConstantesVisado.ALIAS_COD_ESTUDIO, buscarEstudioxAbogado()));
+//				filtroSol.createAlias(ConstantesVisado.NOM_TBL_ESTUDIO,	ConstantesVisado.ALIAS_TBL_ESTUDIO);
+//				filtroSol.add(Restrictions.eq(ConstantesVisado.ALIAS_COD_ESTUDIO, buscarEstudioxAbogado()));
+				sbFiltro.append("S.COD_ESTUDIO = ");
+				sbFiltro.append(buscarEstudioxAbogado());
 			}
 			else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
 			{
-				filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
+				sbFiltro.append("S.COD_OFI = ");
+				sbFiltro.append(usuario.getBancoOficina().getCodigo().trim());
+//				filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
 				setBloquearOficina(true);
 				setMostrarColumna(false);
-				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, usuario.getBancoOficina().getCodigo().trim()));
+//				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS, usuario.getBancoOficina().getCodigo().trim()));
 			}
 		}
 				
-		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
+//		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 		
 		try {
 			long inicio = System.currentTimeMillis();
-			solicitudes = solicDAO.buscarDinamico(filtroSol);
+//			solicitudes = solicDAO.buscarDinamico(filtroSol);	
+			ConsultasJDBCDaoImpl jdbcDAO = new ConsultasJDBCDaoImpl();
+			
+			solicitudes = jdbcDAO.consultarSolicitud(infoDeployMB.getPmaxResultadosConsulta(),sbFiltro.toString());
 			logger.debug("===========================================================================================================");
 			logger.debug("[GSI]-Tiempo de respuesta de consulta de solicitudes: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
 			logger.debug("[GSI]-Cantidad de registros: " + (solicitudes!=null?solicitudes.size():0));
@@ -419,6 +551,7 @@ public class SeguimientoMB
 			}
 		}*/
 	}
+	
 	
 	public String buscarEstudioxAbogado()
 	{
@@ -529,23 +662,43 @@ public class SeguimientoMB
 
 	public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		String descripcion = "";
-		for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		for (ComboDto z : infoDeployMB.getLstTipoRegistroPersona()) {
 			if (z.getKey().trim().equals(idTipoTipoRegistro)) {
 				descripcion = z.getDescripcion();
 				break;
 			}
 		}
+		
+//		for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+//			if (z.getKey().trim().equals(idTipoTipoRegistro)) {
+//				descripcion = z.getDescripcion();
+//				break;
+//			}
+//		}
 		return descripcion;
 	}
 	
 	public String obtenerDescripcionDocumentos(String idTipoDocumentos) {
 		String descripcion = "";
-		for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		for (TipoDocumento z : infoDeployMB.getLstTipoDocumentos()) {
 			if (z.getCodTipoDoc().trim().equals(idTipoDocumentos)) {
 				descripcion = z.getDescripcion();
 				break;
 			}
 		}
+		
+//		for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
+//			if (z.getCodTipoDoc().trim().equals(idTipoDocumentos)) {
+//				descripcion = z.getDescripcion();
+//				break;
+//			}
+//		}
 		return descripcion;
 	}
 
@@ -554,6 +707,7 @@ public class SeguimientoMB
 	{	
 		long inicio = System.currentTimeMillis();
 		String cadena="";
+
 		List<TiivsNivel> listaNiveles = null;
 		List<TiivsSolicitudNivel> listaSolicitudNiveles = null;
 		List<TiivsSolicitudAgrupacion> listaSolicitudAgrupacion = null;
@@ -561,14 +715,22 @@ public class SeguimientoMB
 		// Se obtiene y setea la descripcion del Estado en la grilla
 		if(solicitudes!=null){
 			logger.debug("[ActDatosGrilla]-Hay  "+solicitudes.size() +" solicitud(es) como resultado.");
-			listarOperacionesBancarias();
-			listaNiveles = nivelService.buscarNiveles();
-			listaSolicitudNiveles = listarSolicitudNiveles();
-			listaSolicitudAgrupacion = listarSolicitudAgrupacion();
+			/*
+			 * CAMBIO 25/07/2014 HVB
+			 * SE COMENTA METODO DE OPERACIONES BANCARIAS PUESTO QUE SE OBTIENE LAS OPERACIONES CONCATENADAS DE SOLICITUD
+			 * SE COMENTA LISTANIVELES PUESTO QUE SE OBTIENE LOS NIVELES CONCATENADOS DE SOLICITUD
+			 * SE COMENTA LISTASOLICITUDNIVELES PUESTO QUE SE OBTIENE LOS NIVELES CONCATENADOS DE SOLICITUD
+			 * SE COMENTA LISTASOLICITUDAGRUPACION PUESTO QUE SE OBTIENE LOS HEREDEROS Y TITULARES CONCATENADOS DE SOLICITUD
+			 */
+//			listarOperacionesBancarias();
+//			listaNiveles = nivelService.buscarNiveles();
+//			listaSolicitudNiveles = listarSolicitudNiveles();
+//			listaSolicitudAgrupacion = listarSolicitudAgrupacion();
 		}else{
 			return;
 		}
 		
+		long inicioLOOP = System.currentTimeMillis();
 		for (TiivsSolicitud tmpSol : solicitudes) 
 		{
 			if (tmpSol.getEstado().trim().equals(ConstantesVisado.ESTADOS.ESTADO_COD_RESERVADO_T02))
@@ -608,6 +770,28 @@ public class SeguimientoMB
 				}
 			}
 			
+			/*
+			 * CAMBIO 31/07/2014 HVB
+			 * CONCATENACION DE NIVELES
+			 */
+			StringBuilder sbNiveles = new StringBuilder();
+			int nivelesEncontrados  = 0;
+			
+			for(TiivsSolicitudNivel solxNivel:combosMB.getLstSolNiveles())
+			{
+				if(solxNivel.getTiivsSolicitud().getCodSoli().equals(tmpSol.getCodSoli()))
+				{
+					if(nivelesEncontrados > 0)
+					sbNiveles.append(",");
+					
+					sbNiveles.append(buscarNivelxCodigo(solxNivel.getCodNiv()));
+					nivelesEncontrados++;
+				}
+				
+			}
+			
+			tmpSol.setTxtNivel(sbNiveles.toString());
+			
 			//Cargar data de poderdantes
 		/*	cadena="";
 			for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
@@ -634,7 +818,12 @@ public class SeguimientoMB
 		    lstPoderdantes = new ArrayList<TiivsPersona>();
 		    lstApoderdantes = new ArrayList<TiivsPersona>();
 		   
-		    
+		    /*
+			 * CAMBIO 25/07/2014 HVB **INICIO***
+			 * SE COMENTA BUCLE PARA OBTENER HEREDEROS_APODERADOS/TITULARES PUESTO QUE LA CONCATENACION 
+			 * SE TRAE DE LA TABLA SOLICITUD
+			 */
+		    /*
 		    if(listaSolicitudAgrupacion!=null && !listaSolicitudAgrupacion.isEmpty()){
 		    	//for (TiivsSolicitudAgrupacion x : tmpSol.getTiivsSolicitudAgrupacions()) 
 		    	for (TiivsSolicitudAgrupacion x : listaSolicitudAgrupacion)
@@ -680,7 +869,19 @@ public class SeguimientoMB
 				   }
 			    }
 		    }
+		    */
+		    /*
+			 * CAMBIO 25/07/2014 HVB ***FIN****
+			 */
 		    
+		    
+		    /*
+			 * CAMBIO 25/07/2014 HVB **INICIO***
+			 * SE COMENTA BUCLE PARA CONCATENAR LOS PODERDANTES PUESTO QUE SE TRAE LA CADENA DE 
+			 * TABLA SOLICITUD
+			 */
+		    
+		    /*
 		    cadena="";
 		    for (TiivsPersona tmpPoder: lstPoderdantes)
 		    {
@@ -691,10 +892,16 @@ public class SeguimientoMB
 		    }
 		    
 		    tmpSol.setTxtPoderdante(cadena);
+		    */
+		    
+		    /*
+			 * CAMBIO 25/07/2014 HVB **FIN***
+			 */
+		    
 		    //logger.debug("[ActDatosGrilla]-TxtPoderdante:"+tmpSol.getTxtPoderdante());
 			
 			// Cargar data de apoderados
-			cadena="";
+			//cadena=""; --CAMBIO 25/07/2014 HVB 
 			/*for (TiivsAgrupacionPersona tmp: combosMB.getLstTiposPersona())
 			{
 				if (tmp.getCodSoli().equals(tmpSol.getCodSoli()) && tmp.getClasifPer().equals(ConstantesVisado.APODERADO))
@@ -708,6 +915,12 @@ public class SeguimientoMB
 				}
 			}*/
 			
+		    /*
+			 * CAMBIO 25/07/2014 HVB **INICIO***
+			 * SE COMENTA BUCLE PARA CONCATENAR LOS APODERDANTES PUESTO QUE SE TRAE LA CADENA DE 
+			 * TABLA SOLICITUD
+			 */
+		    /*
 			for (TiivsPersona tmpApor: lstApoderdantes)
 		    {
 		    	cadena += devolverDesTipoDOI(tmpApor.getTipDoi()) + ConstantesVisado.DOS_PUNTOS + tmpApor.getNumDoi() +
@@ -716,9 +929,14 @@ public class SeguimientoMB
 		    }
 			
 			tmpSol.setTxtApoderado(cadena);
+			*/
+		    /*
+			 * CAMBIO 25/07/2014 HVB **FIN***
+			 */
+		    
 			//logger.debug("[ActDatosGrilla]-TxtApoderado:"+tmpSol.getTxtApoderado());
 			//Carga las operaciones bancarias asociadas a una solicitud
-			cadena="";
+//			cadena=""; --CAMBIO HVB 25/07/2014
 			
 			// [16-10] Se agrega para mostrar las Operaciones Bancarias en la grilla, antes no se mostraba.
 			//listarOperacionesBancarias();
@@ -726,6 +944,12 @@ public class SeguimientoMB
 			
 //			long inicioOper = System.currentTimeMillis();
 //			if(tmpSol.getLstSolicBancarias()!=null){
+		    /*
+			 * CAMBIO 25/07/2014 HVB **INICIO***
+			 * SE COMENTA BUCLE PARA CONCATENAR LAS OPERACIONES BANCARIAS PUESTO QUE SE TRAE LA CADENA DE
+			 * TABLA SOLICITUD
+			 */
+		    /*
 			if(lstSolOperBan!=null && !lstSolOperBan.isEmpty()){
 				for (TiivsSolicitudOperban tmp: lstSolOperBan)
 //				for (TiivsSolicitudOperban tmp: tmpSol.getLstSolicBancarias())
@@ -736,12 +960,18 @@ public class SeguimientoMB
 					}
 				}				
 			}
+			
 			tmpSol.setTxtOpeBan(cadena);
+			*/
+		    /*
+			 * CAMBIO 25/07/2014 HVB **FIN***
+			 */
+		    
 //			logger.debug("Tiempo de respuesta seteando operaciones bancarias: " + (System.currentTimeMillis()-inicioOper)/1000 + " segundos");
 			//logger.debug("[ActDatosGrilla]-TxtOpeBan:"+tmpSol.getTxtOpeBan());
 			
 			//Ordenar niveles
-			String cadNiveles = "";
+//			String cadNiveles = ""; --CAMBIO 25/07/2014 HVB
 			/*int codNivelTMP = 0;
 			String codNiv ="";
 			List<TiivsSolicitudNivel> tmpListaOrdenada = new ArrayList<TiivsSolicitudNivel>();
@@ -767,7 +997,7 @@ public class SeguimientoMB
 			
 			//Generar lista de niveles string
 //			long inicioNivel = System.currentTimeMillis();
-			List<String> tmpLista = new ArrayList<String>();
+//			List<String> tmpLista = new ArrayList<String>(); ---CAMBIO 25/07/2014 HVB
 			
 			/*for (Iterator iterator = tmpSol.getTiivsSolicitudNivels().iterator(); iterator.hasNext();) 
 			{
@@ -779,44 +1009,53 @@ public class SeguimientoMB
 				tmpLista.add(nivel);
 			}*/
 			
-			if(listaSolicitudNiveles!=null && !listaSolicitudNiveles.isEmpty()){
-				for(TiivsSolicitudNivel solNivel:listaSolicitudNiveles){
-					if(solNivel.getTiivsSolicitud()!=null && 
-							solNivel.getTiivsSolicitud().getCodSoli().compareTo(tmpSol.getCodSoli())==0){
-						String nivel = buscarDescripcionXNivel(solNivel.getCodNiv(), listaNiveles);
-						tmpLista.add(nivel);
-					}
-				}
-			}
+		    /*
+			 * CAMBIO 25/07/2014 HVB **INICIO***
+			 * SE COMENTA BUCLE PARA CONCATENAR LAS NIVELES PUESTO QUE SE TRAE DE LA			 
+			 * TABLA SOLICITUD LA CADEN
+			 */
 			
-			Collection<String> unsorted = tmpLista;
-			List<String> sorted = Utilitarios.ordenarLista(unsorted);
+//			if(listaSolicitudNiveles!=null && !listaSolicitudNiveles.isEmpty()){
+//				for(TiivsSolicitudNivel solNivel:listaSolicitudNiveles){
+//					if(solNivel.getTiivsSolicitud()!=null && 
+//							solNivel.getTiivsSolicitud().getCodSoli().compareTo(tmpSol.getCodSoli())==0){
+//						String nivel = buscarDescripcionXNivel(solNivel.getCodNiv(), listaNiveles);
+//						tmpLista.add(nivel);
+//					}
+//				}
+//			}
 			
-			
-			for (Iterator iterator = sorted.iterator(); iterator.hasNext();) 
-			{
+//			Collection<String> unsorted = tmpLista;
+//			List<String> sorted = Utilitarios.ordenarLista(unsorted);
+//			
+//			
+//			for (Iterator iterator = sorted.iterator(); iterator.hasNext();) 
+//			{
 				//TiivsSolicitudNivel tmp = (TiivsSolicitudNivel) iterator.next();
 				
 				///String nivel = nivelService.buscarNivelxCodigo(tmp.getCodNiv());
 								
-				if (cadNiveles.length()>0)
-				{
-					cadNiveles = cadNiveles.concat(",").concat(iterator.next().toString());
-				}
-				else
-				{
-					cadNiveles = cadNiveles.concat(iterator.next().toString());
-				}
-			}
-			
-			if (cadNiveles.endsWith(","))
-			{
-				cadNiveles = cadNiveles.substring(0,cadNiveles.length()-1);
-			}
+//				if (cadNiveles.length()>0)
+//				{
+//					cadNiveles = cadNiveles.concat(",").concat(iterator.next().toString());
+//				}
+//				else
+//				{
+//					cadNiveles = cadNiveles.concat(iterator.next().toString());
+//				}
+//			}
+//			
+//			if (cadNiveles.endsWith(","))
+//			{
+//				cadNiveles = cadNiveles.substring(0,cadNiveles.length()-1);
+//			}
 			
 			//logger.info("Niveles encontrados:" + cadNiveles);
 			
-			tmpSol.setTxtNivel(cadNiveles);
+//			tmpSol.setTxtNivel(cadNiveles);
+		    /*
+			 * CAMBIO 25/07/2014 HVB **FIN***
+			 */
 //			logger.debug("Tiempo de respuesta seteando niveles: " + (System.currentTimeMillis()-inicioNivel)/1000 + " segundos");
 			
 			//Proceso para obtener los niveles de cada solicitud
@@ -919,7 +1158,9 @@ public class SeguimientoMB
 				logger.debug("No se pudo obtener los rangos de los niveles para la solicitud. Verificar base de datos!!");
 			}*/
 		}
+		
 		logger.debug("Tiempo de respuesta actualizando grilla de solicitudes: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
+		logger.debug("Tiempo de respuesta loop: " + (System.currentTimeMillis()-inicioLOOP)/1000 + " segundos");
 	}
 	
 	private String buscarDescripcionXNivel(String codigo, List<TiivsNivel> listaNiveles){
@@ -1711,12 +1952,17 @@ public class SeguimientoMB
 	// @Version: 4.0
 	// @param: -
 	// Corregir: nivel, poder, apod, exportacion filtros de combos con mas de un valor
+	/*
+	 * CAMBIO 25/07/2014 HVB
+	 * SE CAMBIA LA CONSULTA DE HIBERNATE POR JDBC PARA OPTIMIZAR TIEMPO
+	 */
 	@SuppressWarnings("unchecked")
 	public void busquedaSolicitudes() 
 	{
 		logger.debug("===== busquedaSolicitudes() ===");
-		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
+//		GenericDao<TiivsSolicitud, Object> solicDAO = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+//		Busqueda filtroSol = Busqueda.forClass(TiivsSolicitud.class);
+		StringBuilder sbFiltros = new StringBuilder();
 
 		long inicio = System.currentTimeMillis();
 		// solicitudes = new ArrayList<TiivsSolicitud>();
@@ -1725,63 +1971,102 @@ public class SeguimientoMB
 		if (getCodSolicitud().compareTo("") != 0) 
 		{
 			logger.debug("[Seguimiento-busqSolicit]-CodSolicitud:"+getCodSolicitud());
-			String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getCodSolicitud().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
-			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_COD_SOLICITUD,"%"+filtroNuevo));
+			sbFiltros.append("COD_SOLI LIKE '");
+			sbFiltros.append(ConstantesVisado.SIMBOLO_PORCENTAJE);
+			sbFiltros.append(getCodSolicitud().concat(ConstantesVisado.SIMBOLO_PORCENTAJE).concat("'"));
+			//String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getCodSolicitud().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
+//			filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_COD_SOLICITUD,"%"+filtroNuevo));
 		}
 
 		// 2. Filtro por estado (si funciona, validar que campo estado en BD no tenga espacios en blanco)
 		if (lstEstadoSelected.size() > 0) 
 		{
 			int ind = 0;
+			if(sbFiltros.length() > 0)
+				sbFiltros.append(" AND ");
 
+			sbFiltros.append("ESTADO IN (");
 			for (; ind <= lstEstadoSelected.size() - 1; ind++) 
 			{
 				logger.info("Filtro por estados: " + lstEstadoSelected.get(ind));
-			}
+				if(ind != lstEstadoSelected.size() - 1)
+				sbFiltros.append(lstEstadoSelected.get(ind).concat(","));
 			
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,lstEstadoSelected));
+				else
+					sbFiltros.append(lstEstadoSelected.get(ind));	
+			}
+			sbFiltros.append(")");
+//			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_ESTADO,lstEstadoSelected));
 		}
 
 		// 3. Filtro por importe (funciona)
 		if (getIdImporte().compareTo("") != 0) 
 		{
+			if(sbFiltros.length() > 0)
+				sbFiltros.append(" AND ");
+			
+			sbFiltros.append("IMPORTE ");
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MENOR_CINCUENTA)) 
 			{
 				logger.debug("[Seguimiento-busqSolicit]-IdImporte:"+getIdImporte());
-				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_CINCUENTA)));
+				sbFiltros.append("<=");
+				sbFiltros.append(ConstantesVisado.VALOR_RANGO_CINCUENTA);
+//				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_CINCUENTA)));
 			}
 
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CINCUENTA_MENOR_CIENTO_VEINTE)) 
 			{
 				logger.debug("[Seguimiento-busqSolicit]-IdImporte:"+getIdImporte());
-				filtroSol.add(Restrictions.gt(ConstantesVisado.CAMPO_IMPORTE,ConstantesVisado.VALOR_RANGO_CINCUENTA));
-				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_IMPORTE,ConstantesVisado.VALOR_RANGO_CIENTO_VEINTE));
+				sbFiltros.append(">");
+				sbFiltros.append(ConstantesVisado.VALOR_RANGO_CINCUENTA);
+				sbFiltros.append(" AND IMPORTE ");
+				sbFiltros.append("<=");
+				sbFiltros.append(ConstantesVisado.VALOR_RANGO_CIENTO_VEINTE);
+//				filtroSol.add(Restrictions.gt(ConstantesVisado.CAMPO_IMPORTE,ConstantesVisado.VALOR_RANGO_CINCUENTA));
+//				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_IMPORTE,ConstantesVisado.VALOR_RANGO_CIENTO_VEINTE));
 			}
 
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_CIENTO_VEINTE_MENOR_DOSCIENTOS_CINCUENTA)) 
 			{
 				logger.debug("[Seguimiento-busqSolicit]-IdImporte:"+getIdImporte());
-				filtroSol.add(Restrictions.gt(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_CIENTO_VEINTE)));
-				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_DOSCIENTOS_CINCUENTA)));
+				sbFiltros.append(">");
+				sbFiltros.append(ConstantesVisado.VALOR_RANGO_CIENTO_VEINTE);
+				sbFiltros.append(" AND IMPORTE ");
+				sbFiltros.append("<=");
+				sbFiltros.append(ConstantesVisado.VALOR_RANGO_DOSCIENTOS_CINCUENTA);
+//				filtroSol.add(Restrictions.gt(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_CIENTO_VEINTE)));
+//				filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_DOSCIENTOS_CINCUENTA)));
 			}
 
 			if (getIdImporte().equals(ConstantesVisado.ID_RANGO_IMPORTE_MAYOR_DOSCIENTOS_CINCUENTA)) 
 			{
 				logger.debug("[Seguimiento-busqSolicit]-IdImporte:"+getIdImporte());
-				filtroSol.add(Restrictions.gt(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_DOSCIENTOS_CINCUENTA)));
+				sbFiltros.append(">");
+				sbFiltros.append(ConstantesVisado.VALOR_RANGO_DOSCIENTOS_CINCUENTA);
+//				filtroSol.add(Restrictions.gt(ConstantesVisado.CAMPO_IMPORTE,(ConstantesVisado.VALOR_RANGO_DOSCIENTOS_CINCUENTA)));
 			}
 		}
 
 		// 4. Filtro por tipo de solicitud (funciona)
 		if (lstTipoSolicitudSelected.size() > 0) {
 			int ind = 0;
+			if(sbFiltros.length() > 0)
+				sbFiltros.append(" AND ");
 
+			sbFiltros.append("COD_TIPO_SOLIC IN (");
 			for (; ind <= lstTipoSolicitudSelected.size() - 1; ind++) 
 			{
 				logger.info("Filtro por tipo de solicitud: " + lstTipoSolicitudSelected.get(ind));
+				
+				if(ind != lstTipoSolicitudSelected.size() - 1)
+					sbFiltros.append(lstTipoSolicitudSelected.get(ind).concat(","));
+					
+					else
+						sbFiltros.append(lstTipoSolicitudSelected.get(ind));
 			}
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_TIPO_SOLICITUD,	ConstantesVisado.ALIAS_TBL_TIPO_SOLICITUD);
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_TIPO_SOL_ALIAS,lstTipoSolicitudSelected));
+			sbFiltros.append(")");
+//			filtroSol.createAlias(ConstantesVisado.NOM_TBL_TIPO_SOLICITUD,	ConstantesVisado.ALIAS_TBL_TIPO_SOLICITUD);
+//			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_TIPO_SOL_ALIAS,lstTipoSolicitudSelected));
 		}
 
 		// 5. Filtro por tipo de fecha (no funciona)
@@ -1809,8 +2094,23 @@ public class SeguimientoMB
 						logger.info("[Seguimiento-busqSolicit]-FechaEnvio-Inicio: " + minDate);
 						logger.info("[Seguimiento-busqSolicit]-FechaEnvio-Fin: " + rangoFin);
 						
-						filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_ENVIO, minDate));
-						filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_ENVIO, rangoFin));
+						if(sbFiltros.length() > 0)
+							sbFiltros.append(" AND ");
+						
+						sbFiltros.append("FECHA_ENVIO BETWEEN TO_TIMESTAMP('");
+						sbFiltros.append(new Timestamp(minDate.getTime()));
+						sbFiltros.append("','YYYY-MM-DD HH24:MI:SS:FF')");
+						sbFiltros.append(" AND TO_TIMESTAMP('");
+						sbFiltros.append(new Timestamp(rangoFin.getTime()));
+						sbFiltros.append("','YYYY-MM-DD HH24:MI:SS:FF')");
+
+//						sbFiltros.append("FECHA_ENVIO BETWEEN '");
+//						sbFiltros.append(new Timestamp(minDate.getTime()));
+//						sbFiltros.append("' AND '");
+//						sbFiltros.append(new Timestamp(rangoFin.getTime()));
+//						sbFiltros.append("'");
+//						filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_ENVIO, minDate));
+//						filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_ENVIO, rangoFin));
 						
 						////[21-10] [DC] Mejora: Se quita los filtros 'Estado' en el filtro 'Fecha Envio'
 						//Verificar que el campo estado no tenga espacios en blanco en BD
@@ -1821,7 +2121,7 @@ public class SeguimientoMB
 						logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al parsear la Fecha Envio: ",e);
 					}
 				 	
-				 	filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
+//				 	filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 				}
 			}
 			if (getIdTiposFecha().equalsIgnoreCase(ConstantesVisado.TIPO_FECHA_RPTA)) // Sino es fecha de respuesta
@@ -1846,8 +2146,23 @@ public class SeguimientoMB
 						logger.info("[FechaRpta]-Inicio: " + minDate);
 						logger.info("[FechaRpta]-Fin: " + rangoFin);
 						
-						filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_RPTA, minDate));
-						filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_RPTA, rangoFin));
+						if(sbFiltros.length() > 0)
+							sbFiltros.append(" AND ");
+						
+						sbFiltros.append("FECHA_ENVIO BETWEEN TO_TIMESTAMP('");
+						sbFiltros.append(new Timestamp(minDate.getTime()));
+						sbFiltros.append("','YYYY-MM-DD HH24:MI:SS:FF')");
+						sbFiltros.append(" AND TO_TIMESTAMP('");
+						sbFiltros.append(new Timestamp(rangoFin.getTime()));
+						sbFiltros.append("','YYYY-MM-DD HH24:MI:SS:FF')");
+
+//						sbFiltros.append("FECHA_RESPUESTA BETWEEEN '");
+//						sbFiltros.append(minDate);
+//						sbFiltros.append("' AND '");
+//						sbFiltros.append(rangoFin);
+//						sbFiltros.append("'");
+//						filtroSol.add(Restrictions.ge(ConstantesVisado.CAMPO_FECHA_RPTA, minDate));
+//						filtroSol.add(Restrictions.le(ConstantesVisado.CAMPO_FECHA_RPTA, rangoFin));
 						
 						//[21-10] [DC] Mejora: Se quita los filtros 'Estado' en el filtro 'Fecha Rpta'
 						/*List<String> tmpEstados = new ArrayList<String>();
@@ -1862,7 +2177,7 @@ public class SeguimientoMB
 						logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al convertir la Fecha Rpta: ",e);
 					}
 	
-					filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
+//					filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 				}
 			}
 		}
@@ -1874,6 +2189,7 @@ public class SeguimientoMB
 		if (getIdOpeBan().compareTo("") != 0) 
 		{
 			lstSolicitudesxOpeBan.clear();
+			//logger.info("====> combosMB.getLstSolOperBan(): "+combosMB.getLstSolOperBan().size());
 			for (TiivsSolicitudOperban opeBanTMP: combosMB.getLstSolOperBan())
 			{
 				if (opeBanTMP.getId().getCodOperBan().equals(getIdOpeBan()))
@@ -1886,19 +2202,31 @@ public class SeguimientoMB
 			
 			if (lstSolicitudesxOpeBan.size()>0)
 			{
+				//logger.info("===> lstSolicitudesxOpeBan: "+lstSolicitudesxOpeBan.size());
+				
 				int ind = 0;
+				if(sbFiltros.length() > 0)
+					sbFiltros.append(" AND ");
 
+				sbFiltros.append("COD_SOLI IN (");
 				for (; ind <= lstSolicitudesxOpeBan.size() - 1; ind++) 
 				{
-					logger.info("Filtro operacion" + "[" + ind + "]" + lstSolicitudesxOpeBan.get(ind));
-				}
+					logger.info("Filtro operacion " + "[" + ind + "]   codSolicitud:" + lstSolicitudesxOpeBan.get(ind));
 				
-				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudesxOpeBan));
+					if(ind != lstSolicitudesxOpeBan.size() - 1)
+						sbFiltros.append(lstSolicitudesxOpeBan.get(ind).concat(","));
+						
+						else
+							sbFiltros.append(lstSolicitudesxOpeBan.get(ind));
+				}
+				sbFiltros.append(")");
+//				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudesxOpeBan));
 			}
 			else
 			{
 				logger.info("No se selecciono ninguna operacion bancaria");
-				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
+				sbFiltros.append(" AND COD_SOLI = ''");
+//				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
 			}			
 		}
 
@@ -1912,16 +2240,26 @@ public class SeguimientoMB
 			{
 				if(getOficina().getDesOfi()!=null){
 					logger.info("Filtro Oficina: " + getOficina().getCodOfi());		
-					filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
-					String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getOficina().getDesOfi().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
-					filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
+						if(sbFiltros.length() > 0)
+						sbFiltros.append(" AND ");
+					sbFiltros.append("DES_OFI LIKE '");
+					sbFiltros.append(ConstantesVisado.SIMBOLO_PORCENTAJE);
+					sbFiltros.append(getOficina().getDesOfi().concat(ConstantesVisado.SIMBOLO_PORCENTAJE).concat("'"));
+//					filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
+//					String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + getOficina().getDesOfi().concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
+//					filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
 				}			
 			}else{
 				// [09-10] Se agrega 'else'
 				if(sentenciaOficina!=null){
-					filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
-					String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + sentenciaOficina.concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
-					filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
+						if(sbFiltros.length() > 0)
+						sbFiltros.append(" AND ");
+					sbFiltros.append("DES_OFI LIKE '");
+					sbFiltros.append(ConstantesVisado.SIMBOLO_PORCENTAJE);
+					sbFiltros.append(sentenciaOficina.concat(ConstantesVisado.SIMBOLO_PORCENTAJE).concat("'"));
+//					filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA,	ConstantesVisado.ALIAS_TBL_OFICINA);
+//					String filtroNuevo = ConstantesVisado.SIMBOLO_PORCENTAJE + sentenciaOficina.concat(ConstantesVisado.SIMBOLO_PORCENTAJE);
+//					filtroSol.add(Restrictions.like(ConstantesVisado.CAMPO_NOM_OFICINA_ALIAS, filtroNuevo));
 					sentenciaOficina = null;
 				}
 			}
@@ -1952,12 +2290,29 @@ public class SeguimientoMB
 			filtro.add(Restrictions.in("tipPartic", tipPartic));
 			try {
 				List<TiivsAgrupacionPersona> agrupacionesPersona = agrupacDAO.buscarDinamico(filtro);
-				if(agrupacionesPersona.size()>0){
-					for (TiivsAgrupacionPersona tmp: agrupacionesPersona){
-						lstSolicitudes.add(tmp.getCodSoli());
+				if(agrupacionesPersona.size()>0)
+					{
+						if(sbFiltros.length() > 0)
+						sbFiltros.append(" AND ");
+						sbFiltros.append("COD_SOLI IN (");
+						int index = 0;
+						
+						for (TiivsAgrupacionPersona tmp: agrupacionesPersona)
+						{
+//							lstSolicitudes.add(tmp.getCodSoli());
+							
+							if(index != agrupacionesPersona.size() - 1)
+								sbFiltros.append(tmp.getCodSoli().concat(","));
+								
+								else
+									sbFiltros.append(tmp.getCodSoli());	
+							
+							index++;
 					}
+						
+						sbFiltros.append(")");
 				}	
-				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
+//				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 			} catch (Exception e) {
 				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar por DOI Apoderado: " , e );
 			}
@@ -1972,13 +2327,26 @@ public class SeguimientoMB
 			lstSolicitudes = obtenerSolicitudesxFiltroPersonas(objTiivsPersonaBusquedaNomApod,ConstantesVisado.CAMPO_APODERADO);
 			
 			if(lstSolicitudes.size()>0){
+				if(sbFiltros.length() > 0)
+					sbFiltros.append(" AND ");	
+				sbFiltros.append("COD_SOLI IN (");
 				for (; ind <= lstSolicitudes.size() - 1; ind++) 
 				{
 					logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
+					
+					if(ind != lstSolicitudes.size() - 1)
+						sbFiltros.append(lstSolicitudes.get(ind).concat(","));
+						
+						else
+							sbFiltros.append(lstSolicitudes.get(ind));	
 				}
-				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudes));	
+				sbFiltros.append(")");
+//				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudes));	
 			}else{
-				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, null));
+				if(sbFiltros.length() > 0)
+					sbFiltros.append(" AND ");
+				sbFiltros.append("COD_SOLI = NULL");
+//				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, null));
 			}
 		}
 		
@@ -1996,12 +2364,26 @@ public class SeguimientoMB
 			filtro.add(Restrictions.in("tipPartic", tipPartic));
 			try {
 				List<TiivsAgrupacionPersona> agrupacionesPersona = agrupacDAO.buscarDinamico(filtro);
-				if(agrupacionesPersona.size()>0){
-					for (TiivsAgrupacionPersona tmp: agrupacionesPersona){
-						lstSolicitudes.add(tmp.getCodSoli());
+				if(agrupacionesPersona.size()>0)
+				{
+						if(sbFiltros.length() > 0)
+						sbFiltros.append(" AND ");
+					sbFiltros.append("COD_SOLI IN (");
+					int index = 0;
+					for (TiivsAgrupacionPersona tmp: agrupacionesPersona)
+					{
+//						lstSolicitudes.add(tmp.getCodSoli());
+						if(index != agrupacionesPersona.size() - 1)
+							sbFiltros.append(tmp.getCodSoli().concat(","));
+							
+							else
+								sbFiltros.append(tmp.getCodSoli());	
+						
+						index++;
 					}
+					sbFiltros.append(")");
 				}	
-				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
+//				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 			} catch (Exception e) {
 				logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al consultar por DOI Poderdante: " , e );
 			}
@@ -2016,12 +2398,27 @@ public class SeguimientoMB
 			lstSolicitudes = obtenerSolicitudesxFiltroPersonas(objTiivsPersonaBusquedaNomPoder,ConstantesVisado.CAMPO_PODERDANTE);
 			
 			if(lstSolicitudes.size()>0){
-				for (; ind <= lstSolicitudes.size() - 1; ind++){
+					if(sbFiltros.length() > 0)
+					sbFiltros.append(" AND ");
+				sbFiltros.append("COD_SOLI IN (");
+				
+				for (; ind <= lstSolicitudes.size() - 1; ind++)
+				{
 					logger.info("Solicitudes encontradas" + "[" + ind + "]" + lstSolicitudes.get(ind));
+					
+					if(ind != lstSolicitudes.size() - 1)
+						sbFiltros.append(lstSolicitudes.get(ind).concat(","));
+						
+						else
+							sbFiltros.append(lstSolicitudes.get(ind));	
 				}
-				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
+				sbFiltros.append(")");
+//				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,lstSolicitudes));
 			}else{
-				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, null));
+//				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD, null));
+				if(sbFiltros.length() > 0)
+					sbFiltros.append(" AND ");
+				sbFiltros.append("COD_SOLI = NULL");
 			}
 			
 		}
@@ -2048,10 +2445,8 @@ public class SeguimientoMB
 				logger.info("Filtro nivel" + "[" + ind + "]" + lstNivelSelected.get(ind));
 			}
 			*/
-			
 			int ind = 0;
 			List<String> lstCodNiv = new ArrayList<String>();
-			
 			for (; ind <= lstNivelSelected.size() - 1; ind++) 
 			{
 				logger.info("Filtro nivel" + "[" + ind + "]" + lstNivelSelected.get(ind));
@@ -2063,7 +2458,25 @@ public class SeguimientoMB
 				}
 			}
 						
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	obtenerSolicitudesxFiltroNivels(lstCodNiv)));
+			List<String>lstSolicitudesxNivel = obtenerSolicitudesxFiltroNivels(lstCodNiv);
+			
+			if(lstSolicitudesxNivel.size() > 0)
+			{
+				if(sbFiltros.length() > 0)
+					sbFiltros.append(" AND ");
+				sbFiltros.append("COD_SOLI IN (");
+				int index = 0;
+				for(;index <= lstSolicitudesxNivel.size()-1;index++)
+				{
+					if(ind != lstSolicitudesxNivel.size() - 1)
+						sbFiltros.append(lstSolicitudesxNivel.get(ind).concat(","));
+						
+						else
+							sbFiltros.append(lstSolicitudesxNivel.get(ind));	
+				}
+				sbFiltros.append(")");
+			}
+//			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	obtenerSolicitudesxFiltroNivels(lstCodNiv)));
 		}
 		
 		// 16. Filtro por estado nivel (funciona)
@@ -2093,14 +2506,25 @@ public class SeguimientoMB
 				lstSolicitudesSelected.add(sol.getTiivsSolicitud().getCodSoli());
 			}
 			
+			if(lstEstadoNivelSelected.size() > 0)
+			{
 			int ind = 0;
-
-			for (; ind <= lstEstadoNivelSelected.size() - 1; ind++) 
+				if(sbFiltros.length() > 0)
+					sbFiltros.append(" AND ");
+				sbFiltros.append("COD_SOLI IN (");
+				for (; ind <= lstSolicitudesSelected.size() - 1; ind++) 
 			{
 				logger.info("Filtro estado nivel" + "[" + ind + "]" + lstEstadoNivelSelected.get(ind));
-			}
 			
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
+					if(ind != lstSolicitudesSelected.size() - 1)
+						sbFiltros.append(lstSolicitudesSelected.get(ind).concat(","));
+						
+						else
+							sbFiltros.append(lstSolicitudesSelected.get(ind));	
+				}
+				sbFiltros.append(")");
+			}
+//			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
 		}
 		
 		// 17. Filtro por estudio (funciona)
@@ -2110,14 +2534,22 @@ public class SeguimientoMB
 			// getIdEstudio()));
 			
 			int ind = 0;
-
+			if(sbFiltros.length() > 0)
+				sbFiltros.append(" AND ");
+			sbFiltros.append("E.COD_ESTUDIO IN (");
 			for (; ind <= lstEstudioSelected.size() - 1; ind++) 
 			{
 				logger.info("Filtro estudio" + "[" + ind + "]" + lstEstudioSelected.get(ind));
-			}
 			
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_ESTUDIO,	ConstantesVisado.ALIAS_TBL_ESTUDIO);
-			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_ESTUDIO_ALIAS, lstEstudioSelected));
+				if(ind != lstEstudioSelected.size() - 1)
+					sbFiltros.append(lstEstudioSelected.get(ind).concat(","));
+					
+					else
+						sbFiltros.append(lstEstudioSelected.get(ind));	
+			}
+			sbFiltros.append(")");
+//			filtroSol.createAlias(ConstantesVisado.NOM_TBL_ESTUDIO,	ConstantesVisado.ALIAS_TBL_ESTUDIO);
+//			filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_ESTUDIO_ALIAS, lstEstudioSelected));
 		}
 
 		// 19. Filtrar solicitudes con Revision (funciona)
@@ -2145,12 +2577,29 @@ public class SeguimientoMB
 						
 			if (lstSolicitudesSelected.size() > 0) 
 			{
-				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudesSelected));
+				int index = 0;
+				if(sbFiltros.length() > 0)
+					sbFiltros.append(" AND ");
+				sbFiltros.append("COD_SOLI IN (");
+				
+				for(;index <= lstSolicitudesSelected.size()-1;index++)
+				{
+					if(index != lstSolicitudesSelected.size() - 1)
+						sbFiltros.append(lstSolicitudesSelected.get(index).concat(","));
+						
+						else
+							sbFiltros.append(lstSolicitudesSelected.get(index));	
+				}
+				sbFiltros.append(")");
+//				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudesSelected));
 			} 
 			else 
 			{
 				logger.info("No hay solicitudes en el historial con estado En Revision");
-				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
+				if(sbFiltros.length() > 0)
+					sbFiltros.append(" AND ");
+				sbFiltros.append("COD_SOLI = ''");
+//				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
 			}
 		}
 		
@@ -2207,15 +2656,36 @@ public class SeguimientoMB
 				logger.debug(ConstantesVisado.MENSAJE.TAMANHIO_LISTA+"lstSolicitudesSelected-delegado es: "+lstSolicitudesSelected.size());
 				
 				if(lstSolicitudesSelected.size()==0){
-					filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
-				}else{
-				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
+//					filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
+					if(sbFiltros.length() > 0)
+						sbFiltros.append(" AND ");
+					sbFiltros.append("COD_SOLI = ''");
+				}
+				else
+				{
+//					filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD,	lstSolicitudesSelected));
+					if(sbFiltros.length() > 0)
+						sbFiltros.append(" AND ");
+					sbFiltros.append("COD_SOLI IN (");
+					int index = 0;
+					for(;index <= lstSolicitudesSelected.size() -1 ;index++)
+					{
+						if(index != lstSolicitudesSelected.size() - 1)
+							sbFiltros.append(lstSolicitudesSelected.get(index).concat(","));
+							
+							else
+								sbFiltros.append(lstSolicitudesSelected.get(index));	
+					}
+					sbFiltros.append(")");
 				}
 			}
 			else
 			{
 				logger.info("No hay solicitudes en el historial con delegacion de niveles");
-				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
+				if(sbFiltros.length() > 0)
+					sbFiltros.append(" AND ");
+				sbFiltros.append("COD_SOLI = ''");
+//				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
 			}
 		}
 
@@ -2244,33 +2714,62 @@ public class SeguimientoMB
 			
 			if (lstRev.size()>0)
 			{
-				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudesSelected));
+//				filtroSol.add(Restrictions.in(ConstantesVisado.CAMPO_COD_SOLICITUD, lstSolicitudesSelected));
+				if(sbFiltros.length() > 0)
+					sbFiltros.append(" AND ");
+				sbFiltros.append("COD_SOLI IN (");
+				int index = 0;
+				for(;index <= lstSolicitudesSelected.size() -1 ; index++)
+				{
+					if(index != lstSolicitudesSelected.size() - 1)
+						sbFiltros.append(lstSolicitudesSelected.get(index).concat(","));
+						
+						else
+							sbFiltros.append(lstSolicitudesSelected.get(index));
+				}
+				sbFiltros.append(")");
 			}
 			else 
 			{
 				logger.info("No hay solicitudes con combinaciones revocadas");
-				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
+				if(sbFiltros.length() > 0)
+					sbFiltros.append(" AND ");
+				sbFiltros.append("COD_SOLI = ''");
+//				filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_SOLICITUD,""));
 			}
 		}
 		
 		if(PERFIL_USUARIO.equals(ConstantesVisado.ABOGADO) )
 		{
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_ESTUDIO,	ConstantesVisado.ALIAS_TBL_ESTUDIO);
-			filtroSol.add(Restrictions.eq(ConstantesVisado.ALIAS_COD_ESTUDIO, buscarEstudioxAbogado()));
+			if(sbFiltros.length() > 0)
+				sbFiltros.append(" AND ");
+			// CAMBIO 08/08/2014 HVB SE AGREGA EL PREFIJO S PARA CODIGO DE ESTUDIO
+			sbFiltros.append("S.COD_ESTUDIO = ");
+			sbFiltros.append(buscarEstudioxAbogado());
+//			filtroSol.createAlias(ConstantesVisado.NOM_TBL_ESTUDIO,	ConstantesVisado.ALIAS_TBL_ESTUDIO);
+//			filtroSol.add(Restrictions.eq(ConstantesVisado.ALIAS_COD_ESTUDIO, buscarEstudioxAbogado()));
 		}
 		else if (PERFIL_USUARIO.equals(ConstantesVisado.OFICINA))
 		{
-			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA, ConstantesVisado.ALIAS_TBL_OFICINA);
-			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS_FILTRO, usuario.getBancoOficina().getCodigo().trim()));
+			if(sbFiltros.length() > 0)
+				sbFiltros.append(" AND ");
+			// CAMBIO 08/08/2014 HVB SE AGREGA EL PREFIJO S PARA CODIGO DE OFICINA
+			sbFiltros.append("S.COD_OFI = ");
+			sbFiltros.append(usuario.getBancoOficina().getCodigo().trim());
+//			filtroSol.createAlias(ConstantesVisado.NOM_TBL_OFICINA, ConstantesVisado.ALIAS_TBL_OFICINA);
+//			filtroSol.add(Restrictions.eq(ConstantesVisado.CAMPO_COD_OFICINA_ALIAS_FILTRO, usuario.getBancoOficina().getCodigo().trim()));
 		}
 		
-		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
+//		filtroSol.addOrder(Order.asc(ConstantesVisado.CAMPO_COD_SOLICITUD));
 		
 		// Buscar solicitudes de acuerdo a criterios seleccionados
 		logger.debug("[Seguimiento-busqSolicit]-Antes de hacer el query.");
+		
 		try {
-			solicitudes = null;
-			solicitudes = solicDAO.buscarDinamico(filtroSol);
+//			solicitudes = null;
+			ConsultasJDBCDaoImpl jdbcDAO = new ConsultasJDBCDaoImpl();
+			// 31/07/2014 HVB SE LE COLOCA MENOS UNO CUANDO NO HAY UN MAXIMO DE REGISTROS A TRAER POR LA CONSULTA
+			solicitudes = jdbcDAO.consultarSolicitud(-1,sbFiltros.toString());
         } catch (Exception ex) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"las solicitudes en la Bandeja de Seguimiento: ",ex);
 		}
@@ -2300,6 +2799,8 @@ public class SeguimientoMB
 		}
 		logger.debug("Tiempo de respuesta en Búsqueda Solicituds: " + (System.currentTimeMillis()-inicio)/1000 + " segundos");
 	}
+	
+
 	List<TiivsSolicitudOperban> lstSolOperBan;
 	
 	public List<TiivsSolicitudOperban> getLstSolOperBan() {
@@ -2644,6 +3145,11 @@ public class SeguimientoMB
 		return resultado;
 	}
 	
+	/*
+	 * CAMBIO 25/07/2014 HVB
+	 * SE EVITA LLAMAR CONTINUAMENTE A LA BD, SE OBTIENE LOS ESTADOS
+	 * DEL LISTADO CARGADO DESDE INICIO DE APLICACION
+	 */
 	public String buscarEstadoxCodigo(String codigo) 
 	{
 		/*int i = 0;
@@ -2655,24 +3161,32 @@ public class SeguimientoMB
 			}
 		}
 		return res;*/
-		
 		String resultado="";
-		List<TiivsMultitabla> tmpLista = new ArrayList<TiivsMultitabla>();
-		GenericDao<TiivsMultitabla, Object> busDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
-		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
-		filtro.add(Restrictions.eq("id.codElem", codigo));
-		
-		try {
-			tmpLista = busDAO.buscarDinamico(filtro);
-		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la lista de Estados por codigo: ",e);
-		}
-		
-		if (tmpLista.size()>0)
+		for(TiivsMultitabla estadoSolicitud:infoDeployMB.getLstEstadosSolicitudes())
 		{
-			resultado = tmpLista.get(0).getValor1().toUpperCase();
+			if(estadoSolicitud.getId().getCodElem().equals(codigo))
+		{
+				resultado = estadoSolicitud.getValor1().toUpperCase();
+				break;
+			}
 		}
+//		String resultado="";
+//		List<TiivsMultitabla> tmpLista = new ArrayList<TiivsMultitabla>();
+//		GenericDao<TiivsMultitabla, Object> busDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+//		Busqueda filtro = Busqueda.forClass(TiivsMultitabla.class);
+//		filtro.add(Restrictions.eq("id.codMult", ConstantesVisado.CODIGO_MULTITABLA_ESTADOS));
+//		filtro.add(Restrictions.eq("id.codElem", codigo));
+//		
+//		try {
+//			tmpLista = busDAO.buscarDinamico(filtro);
+//		} catch (Exception e) {
+//			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+"la lista de Estados por codigo: ",e);
+//		}
+		
+//		if (tmpLista.size()>0)
+//		{
+//			resultado = tmpLista.get(0).getValor1().toUpperCase();
+//		}
 		
 		return resultado;
 	}
@@ -2759,12 +3273,22 @@ public class SeguimientoMB
 	{
 		int i = 0;
 		String res = "";
-		for (; i < combosMB.getLstTiposFecha().size(); i++) {
-			if (combosMB.getLstTiposFecha().get(i).getCodigoTipoFecha().equalsIgnoreCase(codigo)) {
-				res = combosMB.getLstTiposFecha().get(i).getDescripcion();
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		for (; i < infoDeployMB.getLstTiposFecha().size(); i++) {
+			if (infoDeployMB.getLstTiposFecha().get(i).getCodigoTipoFecha().equalsIgnoreCase(codigo)) {
+				res = infoDeployMB.getLstTiposFecha().get(i).getDescripcion();
 				break;
 			}
 		}
+		
+//		for (; i < combosMB.getLstTiposFecha().size(); i++) {
+//			if (combosMB.getLstTiposFecha().get(i).getCodigoTipoFecha().equalsIgnoreCase(codigo)) {
+//				res = combosMB.getLstTiposFecha().get(i).getDescripcion();
+//				break;
+//			}
+//		}
 		return res;
 	}
 	
@@ -2831,12 +3355,22 @@ public class SeguimientoMB
 	{
 		String resultado="";
 		if (codigo!= null) {
-			for (TipoDocumento tmp: combosMB.getLstTipoDocumentos()){
+			/*CAMBIO HVB 23/07/2014
+			 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+			 */
+			for (TipoDocumento tmp: infoDeployMB.getLstTipoDocumentos()){
 				if (codigo.equalsIgnoreCase(tmp.getCodTipoDoc())) {
 					resultado = tmp.getDescripcion();
 					break;
 				}
 			}
+			
+//			for (TipoDocumento tmp: combosMB.getLstTipoDocumentos()){
+//				if (codigo.equalsIgnoreCase(tmp.getCodTipoDoc())) {
+//					resultado = tmp.getDescripcion();
+//					break;
+//				}
+//			}
 		}
 		return resultado;
 	}
@@ -2865,41 +3399,76 @@ public class SeguimientoMB
 	
 	public String buscarDescripcionMoneda(String codMoneda) {
 		String descripcion = "";
-		for (Moneda tmpMoneda : combosMB.getLstMoneda()) {
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		for (Moneda tmpMoneda : infoDeployMB.getLstMoneda()) {
 			if (tmpMoneda.getCodMoneda().equalsIgnoreCase(codMoneda)) {
 				descripcion = tmpMoneda.getDesMoneda();
 				break;
 			}
 		}
+		
+//		for (Moneda tmpMoneda : combosMB.getLstMoneda()) {
+//			if (tmpMoneda.getCodMoneda().equalsIgnoreCase(codMoneda)) {
+//				descripcion = tmpMoneda.getDesMoneda();
+//				break;
+//			}
+//		}
 		return descripcion;
 	}
 	
 	public String buscarAbrevMoneda(String codigo) {
 		int i = 0;
 		String descripcion = "";
-
-		for (; i <= combosMB.getLstMoneda().size() - 1; i++) 
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		for (; i <= infoDeployMB.getLstMoneda().size() - 1; i++) 
 		{
-			if (combosMB.getLstMoneda().get(i).getCodMoneda().equalsIgnoreCase(codigo)) {
-				if (combosMB.getLstMoneda().get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_SOLES_TBL_MONEDA)) 
+			if (infoDeployMB.getLstMoneda().get(i).getCodMoneda().equalsIgnoreCase(codigo)) {
+				if (infoDeployMB.getLstMoneda().get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_SOLES_TBL_MONEDA)) 
 				{
 					descripcion = ConstantesVisado.CAMPO_ABREV_SOLES;
 				} 
-				else if (combosMB.getLstMoneda().get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_DOLARES_TBL_MONEDA)) 
+				else if (infoDeployMB.getLstMoneda().get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_DOLARES_TBL_MONEDA)) 
 				{
 					descripcion = ConstantesVisado.CAMPO_ABREV_DOLARES;
 				} 
-				else if (combosMB.getLstMoneda().get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_EUROS_TBL_MONEDA)) 
+				else if (infoDeployMB.getLstMoneda().get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_EUROS_TBL_MONEDA)) 
 				{
 					descripcion = ConstantesVisado.CAMPO_ABREV_EUROS;
 				} 
 				else 
 				{
-					descripcion = combosMB.getLstMoneda().get(i).getDesMoneda();
+					descripcion = infoDeployMB.getLstMoneda().get(i).getDesMoneda();
 				}
 				break;
 			}
 		}
+
+//		for (; i <= combosMB.getLstMoneda().size() - 1; i++) 
+//		{
+//			if (combosMB.getLstMoneda().get(i).getCodMoneda().equalsIgnoreCase(codigo)) {
+//				if (combosMB.getLstMoneda().get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_SOLES_TBL_MONEDA)) 
+//				{
+//					descripcion = ConstantesVisado.CAMPO_ABREV_SOLES;
+//				} 
+//				else if (combosMB.getLstMoneda().get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_DOLARES_TBL_MONEDA)) 
+//				{
+//					descripcion = ConstantesVisado.CAMPO_ABREV_DOLARES;
+//				} 
+//				else if (combosMB.getLstMoneda().get(i).getDesMoneda().equalsIgnoreCase(ConstantesVisado.CAMPO_EUROS_TBL_MONEDA)) 
+//				{
+//					descripcion = ConstantesVisado.CAMPO_ABREV_EUROS;
+//				} 
+//				else 
+//				{
+//					descripcion = combosMB.getLstMoneda().get(i).getDesMoneda();
+//				}
+//				break;
+//			}
+//		}
 
 		return descripcion;
 	}
@@ -3646,6 +4215,16 @@ public class SeguimientoMB
 
 	public void setApoderdante(String apoderdante) {
 		this.apoderdante = apoderdante;
+	}
+	
+	
+
+	public LazyDataModel<TiivsSolicitud> getSolicitudesPag() {
+		return solicitudesPag;
+	}
+
+	public void setSolicitudesPag(LazyDataModel<TiivsSolicitud> solicitudesPag) {
+		this.solicitudesPag = solicitudesPag;
 	}
 	
 }

@@ -97,6 +97,11 @@ import com.hildebrando.visado.service.TiposDoiService;
 @SessionScoped
 public class SolicitudRegistroMB {
 
+	/*CAMBIO HVB 23/07/2014
+	 *SE MAPEA LA PROPIEDAD DE INFODEPLOY PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+	 */
+	@ManagedProperty(value="#{infoDeployMB}")
+	private InfoDeployMB infoDeployMB;
 	@ManagedProperty(value = "#{combosMB}")
 	private CombosMB combosMB;
 	private List<ComboDto> lstClasificacionPersona;
@@ -215,51 +220,57 @@ public class SolicitudRegistroMB {
         this.fileUpload = fileUpload;  
     }  
 
-	public SolicitudRegistroMB() {
-		long inicio = System.currentTimeMillis();
-		solicitudRegistrar = new Solicitud();
-		lstTiivsPersona = new ArrayList<TiivsPersona>();
-		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
-		personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
-		objTiivsPersonaBusqueda = new TiivsPersona();
-		objTiivsPersonaResultado = new TiivsPersona();
-		objTiivsPersonaSeleccionado = new TiivsPersona();
-		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
-		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
-		lstTipoSolicitudDocumentos = new ArrayList<TiivsTipoSolicDocumento>();
-		oficina = new TiivsOficina1();
+	//**********CAMBIO HVB 18/07/2014*******
+	//**********Se borran variables y metodos del constructor no necesarios*******
 
-		lstDocumentosXTipoSolTemp = new ArrayList<TiivsTipoSolicDocumento>();
-		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
-		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
-		objSolicBancaria = new TiivsSolicitudOperban();
-		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
-		objSolicBancaria.setTiivsOperacionBancaria(new TiivsOperacionBancaria());
-		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
-		lstOperaciones = new ArrayList<OperacionBancariaDTO>();
+	public SolicitudRegistroMB() {
+//		long inicio = System.currentTimeMillis(); 
+//		solicitudRegistrar = new Solicitud();
+//		lstTiivsPersona = new ArrayList<TiivsPersona>();
+//		lstTiivsPersonaResultado = new ArrayList<TiivsPersona>();
+//		personaDataModal = new PersonaDataModal(lstTiivsPersonaResultado);
+//		objTiivsPersonaBusqueda = new TiivsPersona();
+//		objTiivsPersonaResultado = new TiivsPersona();
+//		objTiivsPersonaSeleccionado = new TiivsPersona();
+//		lstTiivsAgrupacionPersonas = new HashSet<TiivsAgrupacionPersona>();
+//		lstAgrupacionSimpleDto = new ArrayList<AgrupacionSimpleDto>();
+//		lstTipoSolicitudDocumentos = new ArrayList<TiivsTipoSolicDocumento>();
+//		oficina = new TiivsOficina1();
+
+//		lstDocumentosXTipoSolTemp = new ArrayList<TiivsTipoSolicDocumento>();
+//		lstAnexoSolicitud = new ArrayList<TiivsAnexoSolicitud>();
+//		lstdocumentos = new ArrayList<DocumentoTipoSolicitudDTO>();
+//		objSolicBancaria = new TiivsSolicitudOperban();
+//		objSolicBancaria.setId(new TiivsSolicitudOperbanId());
+//		objSolicBancaria.setTiivsOperacionBancaria(new TiivsOperacionBancaria());
+//		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
+//		lstOperaciones = new ArrayList<OperacionBancariaDTO>();
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
-		this.instanciarSolicitudRegistro();
+//		this.instanciarSolicitudRegistro();
 		
 		aliasFilesToDelete = new ArrayList<String>();
 		
 		selectedTipoDocumento = new TiivsTipoSolicDocumento();
 		//mapSolicitudes=new HashMap<Integer, TiivsSolicitudOperban>();
 		
-		this.cadenaEscanerFinal = this.prepararURLEscaneo();	
-		 estilosNavegador=new EstilosNavegador();
-		estilosNavegador.estilosNavegador();
-		ancho_FieldSet = (String) Utilitarios.getObjectInSession("ANCHO_FIELDSET");
-		ancho_FieldSet_Poder = (String) Utilitarios.getObjectInSession("ANCHO_FIELDSET_PODER");
-		ancho_Popup_Poder=(String) Utilitarios.getObjectInSession("ANCHO_POPUP_PODER");
-		ancho_Revoc_Poder=(String) Utilitarios.getObjectInSession("ANCHO_REVOC_PODER");
+		//**********CAMBIO HVB 21/07/2014*******
+		//**********Se pasan lineas de codigo al metodo instanciarSolicitud()*******
 		
-		String sPerfilUsu=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
-		
-		if (sPerfilUsu.equals(ConstantesVisado.SSJJ))
-		{
-			setFlagMostrarSOMOficina(false);
-			setFlagMostrarACOficina(true);
-		}
+//		this.cadenaEscanerFinal = this.prepararURLEscaneo();	
+//		 estilosNavegador=new EstilosNavegador();
+//		estilosNavegador.estilosNavegador();
+//		ancho_FieldSet = (String) Utilitarios.getObjectInSession("ANCHO_FIELDSET");
+//		ancho_FieldSet_Poder = (String) Utilitarios.getObjectInSession("ANCHO_FIELDSET_PODER");
+//		ancho_Popup_Poder=(String) Utilitarios.getObjectInSession("ANCHO_POPUP_PODER");
+//		ancho_Revoc_Poder=(String) Utilitarios.getObjectInSession("ANCHO_REVOC_PODER");
+//		
+//		String sPerfilUsu=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+//		
+//		if (sPerfilUsu.equals(ConstantesVisado.SSJJ))
+//		{
+//			setFlagMostrarSOMOficina(false);
+//			setFlagMostrarACOficina(true);
+//		}
 		//logger.info("desdefe feedfcdf " +this.solicitudRegistrarT.getTiivsOficina1().getDescripcionMostrar());
 	}	
 	
@@ -983,11 +994,20 @@ public class SolicitudRegistroMB {
 				lstTiivsPersona = service.buscarDinamico(filtro);
 				
 				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
-					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+					/*CAMBIO HVB 23/07/2014
+					 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+					 */
+					for (TipoDocumento p : infoDeployMB.getLstTipoDocumentos()) {
 						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
 							tiivsPersona.setsDesctipDoi(p.getDescripcion());
 						}
 					}
+					
+//					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+//						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+//							tiivsPersona.setsDesctipDoi(p.getDescripcion());
+//						}
+//					}
 				}
 			}else{
 				filtro.add(Restrictions.eq("tipDoi",objTiivsPersonaBusqueda.getTipDoi().trim()));
@@ -996,11 +1016,20 @@ public class SolicitudRegistroMB {
 				
                lstTiivsPersona = service.buscarDinamico(filtro);
 				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
-					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+					/*CAMBIO HVB 23/07/2014
+					 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+					 */
+					for (TipoDocumento p : infoDeployMB.getLstTipoDocumentos()) {
 						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
 							tiivsPersona.setsDesctipDoi(p.getDescripcion());
 						}
 					}
+					
+//					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+//						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+//							tiivsPersona.setsDesctipDoi(p.getDescripcion());
+//						}
+//					}
 				} 
 			}
 			
@@ -1068,11 +1097,20 @@ public class SolicitudRegistroMB {
 				}
 				
 				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
-					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+					/*CAMBIO HVB 23/07/2014
+					 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+					 */
+					for (TipoDocumento p : infoDeployMB.getLstTipoDocumentos()) {
 						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
 							retorno =true;
 						}
 					}
+					
+//					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+//						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+//							retorno =true;
+//						}
+//					}
 				}
 			}else{
 				filtro.add(Restrictions.eq("tipDoi",objTiivsPersonaResultado.getTipDoi().trim()));
@@ -1136,14 +1174,30 @@ public class SolicitudRegistroMB {
 		if (validarPersona()) {
 			if (validarRegistroDuplicado()) 
 			{
-				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) 
+				/*CAMBIO HVB 23/07/2014
+				 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+				 */
+				for (TipoDocumento p : infoDeployMB.getLstTipoDocumentos()) 
 				{
 					if (objTiivsPersonaResultado.getTipDoi().equals(p.getCodTipoDoc())) {objTiivsPersonaResultado.setsDesctipDoi(p.getDescripcion());}
 				}
-				for (ComboDto p : combosMB.getLstTipoRegistroPersona()) 
+				
+//				for (TipoDocumento p : combosMB.getLstTipoDocumentos()) 
+//				{
+//					if (objTiivsPersonaResultado.getTipDoi().equals(p.getCodTipoDoc())) {objTiivsPersonaResultado.setsDesctipDoi(p.getDescripcion());}
+//				}
+				/*CAMBIO HVB 23/07/2014
+				 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+				 */
+				for (ComboDto p : infoDeployMB.getLstTipoRegistroPersona()) 
 				{
 					if (objTiivsPersonaResultado.getTipPartic().equals(p.getKey())) {objTiivsPersonaResultado.setsDesctipPartic(p.getDescripcion());}
 				}
+				
+//				for (ComboDto p : combosMB.getLstTipoRegistroPersona()) 
+//				{
+//					if (objTiivsPersonaResultado.getTipPartic().equals(p.getKey())) {objTiivsPersonaResultado.setsDesctipPartic(p.getDescripcion());}
+//				}
 				for (ComboDto p : combosMB.getLstClasificacionPersona()) 
 				{
 					if (objTiivsPersonaResultado.getClasifPer().equals(p.getKey())) {objTiivsPersonaResultado.setsDescclasifPer(p.getDescripcion());}
@@ -1301,16 +1355,36 @@ public class SolicitudRegistroMB {
 		logger.debug("[validRegDuplic]-NumDoi:"+objTiivsPersonaResultado.getNumDoi());
 		boolean bResult = true;
 		String sMensaje = "";
-		for (TipoDocumento c : combosMB.getLstTipoDocumentos()) {
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		
+		for (TipoDocumento c : infoDeployMB.getLstTipoDocumentos()) {
 			if (objTiivsPersonaResultado.getTipDoi().equals(c.getCodTipoDoc())) {
 				objTiivsPersonaResultado.setsDesctipDoi(c.getDescripcion());
 			}
 		}
-		for (ComboDto c : combosMB.getLstTipoRegistroPersona()) {
+		
+//		for (TipoDocumento c : combosMB.getLstTipoDocumentos()) {
+//			if (objTiivsPersonaResultado.getTipDoi().equals(c.getCodTipoDoc())) {
+//				objTiivsPersonaResultado.setsDesctipDoi(c.getDescripcion());
+//			}
+//		}
+		
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		for (ComboDto c : infoDeployMB.getLstTipoRegistroPersona()) {
 			if (objTiivsPersonaResultado.getTipPartic().equals(c.getKey())) {
 				objTiivsPersonaResultado.setsDesctipPartic(c.getDescripcion());
 			}
 		}
+		
+//		for (ComboDto c : combosMB.getLstTipoRegistroPersona()) {
+//			if (objTiivsPersonaResultado.getTipPartic().equals(c.getKey())) {
+//				objTiivsPersonaResultado.setsDesctipPartic(c.getDescripcion());
+//			}
+//		}
 		if (!flagUpdatePersona) {
 			for (TiivsPersona p : lstTiivsPersona) {
 				if (objTiivsPersonaResultado.getNumDoi().equals(p.getNumDoi())) {
@@ -1539,13 +1613,17 @@ public class SolicitudRegistroMB {
 		return bResult;
 	}
 
+	/**
+	 * CAMBIO HVB 21/07/2014
+	 * SE BORRA LA CREACION DE COMBOMB YA QUE NO ES NECESARIO
+	 */
 	public void agregarActionListenerAgrupacion(){
 		logger.info("======= agregarActionListenerAgrupacion() ======= " );
 		lstTiivsPersona=new ArrayList<TiivsPersona>();
 		objTiivsPersonaBusqueda=new TiivsPersona();
 		objTiivsPersonaResultado=new TiivsPersona();
 		flagUpdatePoderdanteApoderados=false;
-		combosMB=new CombosMB();
+		//combosMB=new CombosMB();
 		lstClasificacionPersona=combosMB.getLstClasificacionPersona();
 		logger.info("[agregListenerAgrup]-Lista Clasificacion tamanhio: " +combosMB.getLstClasificacionPersona().size());
 		listaTemporalAgrupacionesPersonaBorradores=new ArrayList<TiivsAgrupacionPersona>();
@@ -1894,12 +1972,23 @@ public class SolicitudRegistroMB {
 	
 	public String obtenerDescripcionDocumentos(String idTipoDocumentos) {
 		String descripcion = "";
-		for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		
+		for (TipoDocumento z : infoDeployMB.getLstTipoDocumentos()) {
 			if (z.getCodTipoDoc().trim().equals(idTipoDocumentos)) {
 				descripcion = z.getDescripcion();
 				break;
 			}
 		}
+		
+//		for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
+//			if (z.getCodTipoDoc().trim().equals(idTipoDocumentos)) {
+//				descripcion = z.getDescripcion();
+//				break;
+//			}
+//		}
 		return descripcion;
 	}
 	
@@ -1916,14 +2005,28 @@ public class SolicitudRegistroMB {
 
 public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	String descripcion = "";
-	for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+	/*CAMBIO HVB 23/07/2014
+	 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+	 */
+	
+	for (ComboDto z : infoDeployMB.getLstTipoRegistroPersona()) {
 		if (z.getKey().trim().equals(idTipoTipoRegistro)) {
 			descripcion = z.getDescripcion();
 			break;
 		}
 	}
+	
+//	for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+//		if (z.getKey().trim().equals(idTipoTipoRegistro)) {
+//			descripcion = z.getDescripcion();
+//			break;
+//		}
+//	}
 	return descripcion;
 }
+//**********CAMBIO HVB 18/07/2014*******
+//**********Se borran variables y metodos del constructor no necesarios*******
+
 	public String instanciarSolicitudRegistro() {
 		logger.info("========= instanciarSolicitudRegistro ==========");
 		long inicio = System.currentTimeMillis();
@@ -1960,7 +2063,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		oficina.setCodOfi(usuario.getBancoOficina().getCodigo());
 
 		List<TiivsOficina1> lstOficinas1 = new ArrayList<TiivsOficina1>();
-		combosMB = new CombosMB();
+//		combosMB = new CombosMB();
 		lstOficinas1 = combosMB.getLstOficina();
 
 		if (lstOficinas1 != null && lstOficinas1.size() != 0) {
@@ -2000,6 +2103,25 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		iTipoSolicitud = "";
 		lstTiivsPersona = new ArrayList<TiivsPersona>();
 		oficina = new TiivsOficina1();
+		
+		//**********CAMBIO HVB 21/07/2014*******
+		//**********Se colocan lineas de codigo del contructor al metodo de inicializacion de pagina*******
+		this.cadenaEscanerFinal = this.prepararURLEscaneo();	
+		 estilosNavegador=new EstilosNavegador();
+		estilosNavegador.estilosNavegador();
+		ancho_FieldSet = (String) Utilitarios.getObjectInSession("ANCHO_FIELDSET");
+		ancho_FieldSet_Poder = (String) Utilitarios.getObjectInSession("ANCHO_FIELDSET_PODER");
+		ancho_Popup_Poder=(String) Utilitarios.getObjectInSession("ANCHO_POPUP_PODER");
+		ancho_Revoc_Poder=(String) Utilitarios.getObjectInSession("ANCHO_REVOC_PODER");
+		
+		String sPerfilUsu=(String) Utilitarios.getObjectInSession("PERFIL_USUARIO");
+		
+		if (sPerfilUsu.equals(ConstantesVisado.SSJJ))
+		{
+			setFlagMostrarSOMOficina(false);
+			setFlagMostrarACOficina(true);
+		}
+
 		
 		obtenCodRazonSocial(); 
 		obtenerTipoRegistro();
@@ -2894,6 +3016,11 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		logger.info("this.getNumGrupo  "+ this.objAgrupacionSimpleDtoCapturado.getId().getNumGrupo());
 		logger.info("this.getLstPersonas  "+ this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
 	}
+	
+	/**
+	 * CAMBIO HVB 21/07/2014
+	 * SE BORRA LA CREACION DE COMBOMB YA QUE NO ES NECESARIO
+	 */
 	public String verEditarAgrupacion(){
 		logger.info("********************** verEditarAgrupacion *********************************** ");
 		logger.info("this.getCodSoli  "+ this.objAgrupacionSimpleDtoCapturado.getId().getCodSoli());
@@ -2901,7 +3028,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		logger.info("this.getLstPersonas  "+ this.objAgrupacionSimpleDtoCapturado.getLstPersonas().size());
 		
 		
-		combosMB=new CombosMB();
+		//combosMB=new CombosMB();
 		lstClasificacionPersona=combosMB.getLstClasificacionPersona();
 		logger.info("tamanioo actual de la lista de Clasificacion **** " +lstClasificacionPersona.size());
 		
@@ -3075,7 +3202,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		
 		establecerTipoSolicitud();
 		
-		logger.info("============================= registrarSolicitud [Mejoras-2014] ==================================");
+		logger.info("============================= registrarSolicitud [Mejoras-08/2014] ==================================");
 		GenericDao<TiivsSolicitudOperban, Object> serviceSoli = (GenericDao<TiivsSolicitudOperban, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
         GenericDao<TiivsSolicitud, Object> service = (GenericDao<TiivsSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		GenericDao<TiivsAnexoSolicitud, Object> serviceAnexos = (GenericDao<TiivsAnexoSolicitud, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
@@ -3162,8 +3289,34 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				logger.debug("[REGISTR_SOLIC]-sCodigoSolicitud:" + sCodigoSol);
 				this.solicitudRegistrarT.setCodSoli(sCodigoSol);
 		
+				/*
+				 * CAMBIO 22/07/2014 HVB
+				 * CONCATENACION DE LOS CAMPOS DE OPERACIONES BANCARIAS
+				 */
+				logger.debug("======= CONCATENANDO OPERACIONES BANCARIAS======");
+				StringBuilder sOperaciones = new StringBuilder();
+				for (TiivsSolicitudOperban a : this.lstSolicBancarias) 
+				{
+					sOperaciones.append(a.getTiivsOperacionBancaria().getDesOperBan());
+					sOperaciones.append(ConstantesVisado.SLASH);
+					sOperaciones.append(ConstantesVisado.SALTO_LINEA);
+				}	
+				/*
+				 * CAMBIO 24/07/2014 HVB
+				 * ASIGNACION PARA GUARDAR LA CADENA DE OPERACIONES
+				 */
+				this.solicitudRegistrarT.setTxtOpeBan(sOperaciones.toString());
+				
+				
 				logger.debug("======= REGISTRANDO AGRUPACION PERSONA ======");
 				//Registrando las Agrupaciones
+				/*
+				 * CAMBIO 22/07/2014 HVB
+				 * CONCATENACION DE LOS CAMPOS DE TITULAR Y APODERADO/HEREDERO
+				 */
+				StringBuilder sTitulares = new StringBuilder();
+				StringBuilder sApoderados_Herederos = new StringBuilder();
+				
 				for (TiivsSolicitudAgrupacion x : this.solicitudRegistrarT.getTiivsSolicitudAgrupacions()) {
 					  //x.setTiivsSolicitud(this.solicitudRegistrarT);
 					  x.getId().setCodSoli(sCodigoSol);
@@ -3173,8 +3326,50 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 						//[20.11] SB. Agregado
 						//a.setIdAgrupacion(null);//Para que la BD asigne IdAgrupacion
 						logger.debug("[REGISTR_SOLIC]-Agrupacion-CodSol:"+a.getCodSoli() +"   NroGrupo:"+ a.getNumGrupo());
+						
+						/*
+						 * CAMBIO 22/07/2014 HVB
+						 * CONCATENACION DE LOS CAMPOS DE TITULAR Y APODERADO/HEREDERO
+						 */
+							if(a.getTipPartic().trim().equals(ConstantesVisado.PODERDANTE))
+							{
+								sTitulares.append(devolverDesTipoDOI(a.getTiivsPersona().getTipDoi()));
+								sTitulares.append(ConstantesVisado.DOS_PUNTOS);
+								sTitulares.append(a.getTiivsPersona().getNumDoi());
+								sTitulares.append(ConstantesVisado.GUION);
+								sTitulares.append((a.getTiivsPersona().getApePat()==null?"":a.getTiivsPersona().getApePat()));
+								sTitulares.append(" ");
+								sTitulares.append((a.getTiivsPersona().getApeMat()==null?"":a.getTiivsPersona().getApeMat()));
+								sTitulares.append(" ");
+								sTitulares.append((a.getTiivsPersona().getNombre()==null?"":a.getTiivsPersona().getNombre()) );
+								sTitulares.append(ConstantesVisado.SLASH);
+								sTitulares.append(ConstantesVisado.SALTO_LINEA);
+							}
+							
+							else if(a.getTipPartic().trim().equals(ConstantesVisado.APODERADO) || 
+									a.getTipPartic().trim().equals(ConstantesVisado.TIPO_PARTICIPACION.CODIGO_HEREDERO))
+							{
+								
+								sApoderados_Herederos.append(devolverDesTipoDOI(a.getTiivsPersona().getTipDoi()));
+								sApoderados_Herederos.append(ConstantesVisado.DOS_PUNTOS );
+								sApoderados_Herederos.append(a.getTiivsPersona().getNumDoi());
+								sApoderados_Herederos.append(ConstantesVisado.GUION );
+								sApoderados_Herederos.append((a.getTiivsPersona().getApePat()== null ?"":a.getTiivsPersona().getApePat()));
+								sApoderados_Herederos.append(" ");
+								sApoderados_Herederos.append((a.getTiivsPersona().getApeMat()==null?"":a.getTiivsPersona().getApeMat()) );
+								sApoderados_Herederos.append(" ");
+								sApoderados_Herederos.append((a.getTiivsPersona().getNombre()==null?"": a.getTiivsPersona().getNombre()));
+								sApoderados_Herederos.append(ConstantesVisado.SLASH);
+								sApoderados_Herederos.append(ConstantesVisado.SALTO_LINEA);
+							}
 					}
 				}
+				/*
+				 * CAMBIO 24/07/2014 HVB
+				 * ASIGNACION PARA GUARDAR LA CADENA DE TITULARES Y/O APODERADOS/HEREDEROS
+				 */
+				this.solicitudRegistrarT.setTxtPoderdante(sTitulares.toString());
+				this.solicitudRegistrarT.setTxtApoderado(sApoderados_Herederos.toString());
 				
 				TiivsSolicitud objResultado = service.insertar(this.solicitudRegistrarT); //INSERTA LA SOLICITUD
 				
@@ -3717,7 +3912,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		logger.info("== prepararURLEscaneo ==");		
 		String sCadena = "";		
 		try{				
-			pdfViewerMB = new PDFViewerMB();	
+			//**********CAMBIO HVB 21/07/2014*******
+			//**********Se borra constructor debido a que ya se inicializa al momento de llamar managedproperty*******
+			//pdfViewerMB = new PDFViewerMB();	
 			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID());			
 		}catch(Exception e){
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener parametros " +
@@ -4029,29 +4226,58 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}
 	
 	//SE AGREGA METODO PARA OBTENER EL TIPO DE REGISTRO POR BD
+	/*
+	 * CAMBIO HVB 24/07/2014 
+	 * SE OPTIMIZA EL METODO EVITANDO LLAMAR A LA MULTITABLA A LA BD
+	 * SE UTILIZA LA LISTA CARGADA AL INICIAR EL APLICATIVO
+	 * SE CONCATENA LOS TEXTOS CON SB EN VEZ DE STRING (TIEMPO)
+	 */
 	private void obtenerTipoRegistro(){
-		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
-		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
-		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
-		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
 		Integer contador = 0;
-		try {
-			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+		try 
+		{
 			tipoRegistro = "";
-			if(listaMultiTabla.size()>0){
-				for(TiivsMultitabla multitabla:listaMultiTabla){
+		StringBuilder registroPersonasBuilder = new StringBuilder();
+		
+			for (ComboDto registroPersona : infoDeployMB.getLstTipoRegistroPersona()) {
 					contador++;
-					if(contador.compareTo(listaMultiTabla.size())==0){
-						tipoRegistro += multitabla.getValor1();	
+				if (contador.compareTo(infoDeployMB.getLstTipoRegistroPersona().size()) == 0) {
+					registroPersonasBuilder.append(registroPersona.getDescripcion());
 					}else{
-						tipoRegistro += multitabla.getValor1() + " / ";
+					registroPersonasBuilder.append(registroPersona.getDescripcion());
+					registroPersonasBuilder.append(" ");
+					registroPersonasBuilder.append(ConstantesVisado.SLASH);
+					registroPersonasBuilder.append(" ");
 					}
 				}
+			tipoRegistro = registroPersonasBuilder.toString();
 			}
-			
-		} catch (Exception e) {
-			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " , e);
+		catch (Exception e) 
+		{
+			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "Tipo de Registros Personas: ",e);
 		}
+//		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+//		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
+//		filtroMultitabla.add(Restrictions.eq("id.codMult",ConstantesVisado.CODIGO_MULTITABLA_TIPO_REGISTRO_PERSONA));
+//		List<TiivsMultitabla> listaMultiTabla = new ArrayList<TiivsMultitabla>();
+//		Integer contador = 0;
+//		try {
+//			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
+//			tipoRegistro = "";
+//			if(listaMultiTabla.size()>0){
+//				for(TiivsMultitabla multitabla:listaMultiTabla){
+//					contador++;
+//					if(contador.compareTo(listaMultiTabla.size())==0){
+//						tipoRegistro += multitabla.getValor1();	
+//					}else{
+//						tipoRegistro += multitabla.getValor1() + " / ";
+//					}
+//				}
+//			}
+//			
+//		} catch (Exception e) {
+//			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " , e);
+//		}
 	}
 	
 	private void obtenerPagoComision(){
@@ -4075,6 +4301,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		}
 	}
 	
+	/*
+	 * CAMBIO HVB 24/07/2014 
+	 * SE OPTIMIZA EL METODO HACIENDO USO DE LOS STRINGBUILDER PARA CONCATENAR EN VEZ DEL MISMO STRING
+	 */
 	private void obtenerPonderdante(){
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
@@ -4084,22 +4314,32 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		try {
 			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
 			poderdante = "";
+			StringBuilder sbPoderdante = new StringBuilder();
 			if(listaMultiTabla.size()>0){
 				for(TiivsMultitabla multitabla:listaMultiTabla){
 					contador++;
 					if(contador.compareTo(listaMultiTabla.size())==0){
-						poderdante += multitabla.getValor1();	
+						sbPoderdante.append(multitabla.getValor1());
+//						poderdante += multitabla.getValor1();	
 					}else{
-						poderdante += multitabla.getValor1() + " / ";
+						sbPoderdante.append(multitabla.getValor1());
+						sbPoderdante.append(" ");
+						sbPoderdante.append(ConstantesVisado.SLASH);
+						sbPoderdante.append(" ");
+//						poderdante += multitabla.getValor1() + " / ";
 					}
 				}
+				poderdante = sbPoderdante.toString();
 			}
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " , e);
 		}
 	}
 	
-	
+	/*
+	 * CAMBIO HVB 24/07/2014 
+	 * SE OPTIMIZA EL METODO HACIENDO USO DE LOS STRINGBUILDER PARA CONCATENAR EN VEZ DEL MISMO STRING
+	 */
 	private void obtenerAponderdante(){
 		GenericDao<TiivsMultitabla, Object> multiDAO = (GenericDao<TiivsMultitabla, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
 		Busqueda filtroMultitabla = Busqueda.forClass(TiivsMultitabla.class);
@@ -4109,15 +4349,22 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		try {
 			listaMultiTabla = multiDAO.buscarDinamico(filtroMultitabla);
 			apoderdante = "";
+			StringBuilder sbApoderdante = new StringBuilder();
 			if(listaMultiTabla.size()>0){
 				for(TiivsMultitabla multitabla:listaMultiTabla){
 					contador++;
 					if(contador.compareTo(listaMultiTabla.size())==0){
-						apoderdante += multitabla.getValor1();	
+//						apoderdante += multitabla.getValor1();	
+						sbApoderdante.append(multitabla.getValor1());
 					}else{
-						apoderdante += multitabla.getValor1() + " / ";
+						sbApoderdante.append(multitabla.getValor1());
+						sbApoderdante.append(" ");
+						sbApoderdante.append(ConstantesVisado.SLASH);
+						sbApoderdante.append(" ");
+//						apoderdante += multitabla.getValor1() + " / ";
 					}
 				}
+				apoderdante = sbApoderdante.toString();
 			}
 		} catch (Exception e) {
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR_CONSULT+ "de multitablas: " , e);
@@ -4726,6 +4973,58 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		this.esRegistroValido = esRegistroValido;
 	}
 	
+	/*
+	 * CAMBIO 22/07/2014 HVB
+	 * METODO PARA OBTENER LA DESCRIPCION DEL DOCUMENTO DE LA PERSONA
+	 */
+	public String devolverDesTipoDOI(String codigo)
+	{
+		String resultado="";
+		if (codigo!= null) {
+			/*CAMBIO HVB 23/07/2014
+			 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+			 */
+			for (TipoDocumento tmp: infoDeployMB.getLstTipoDocumentos()){
+				if (codigo.equalsIgnoreCase(tmp.getCodTipoDoc())) {
+					resultado = tmp.getDescripcion();
+					break;
+				}
+			}
+			
+//			for (TipoDocumento tmp: combosMB.getLstTipoDocumentos()){
+//				if (codigo.equalsIgnoreCase(tmp.getCodTipoDoc())) {
+//					resultado = tmp.getDescripcion();
+//					break;
+//				}
+//			}
+		}
+		return resultado;
+	}
 	
+	/*
+	 * CAMBIO 22/07/2014
+	 * METODO PARA OBTENER LA DESCRIPCION DE LA OPERACION BANCARIA
+	 */
+	public String devolverDesOperBan(String codigo)
+	{
+		String resultado="";
+		if (codigo!= null) {
+			for (TiivsOperacionBancaria tmp: combosMB.getLstOpeBancaria()){
+				if (codigo.equalsIgnoreCase(tmp.getCodOperBan())) {
+					resultado = tmp.getDesOperBan();
+					break;
+				}
+			}
+		}
+		return resultado;
+	}
+	
+	public void setInfoDeployMB(InfoDeployMB infoDeployMB) {
+		this.infoDeployMB = infoDeployMB;
+	}
+
+	public InfoDeployMB getInfoDeployMB() {
+		return infoDeployMB;
+	}
 	
 }

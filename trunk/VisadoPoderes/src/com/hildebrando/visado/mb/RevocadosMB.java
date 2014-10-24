@@ -90,7 +90,11 @@ import com.hildebrando.visado.service.TiposDoiService;
 public class RevocadosMB {
 
 	public static Logger logger = Logger.getLogger(RevocadosMB.class);
-
+	/*CAMBIO HVB 23/07/2014
+	 *SE MAPEA LA PROPIEDAD DE INFODEPLOY PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+	 */
+	@ManagedProperty(value="#{infoDeployMB}")
+	private InfoDeployMB infoDeployMB;
 	private List<Revocado> revocados;
 	private Revocado revocadoDelete;
 	private Revocado revocadoVer;
@@ -196,7 +200,11 @@ public class RevocadosMB {
 	}
 
 	public RevocadosMB() {
-		combosMB = new CombosMB();
+		/**
+		 * CAMBIO HVB 23/07/2014
+		 * SE COMENTA DICHOS ELEMENTOS PARA OPTIMIZAR LOS TIEMPOS
+		 */
+//		combosMB = new CombosMB();
 		
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
 		
@@ -693,7 +701,10 @@ public class RevocadosMB {
 		}
 		else if (tipoBusqueda.equals("tipoDOI"))
 		{
-			for (TipoDocumento tmp: combosMB.getLstTipoDocumentos())
+			/*CAMBIO HVB 23/07/2014
+			 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+			 */
+			for (TipoDocumento tmp: infoDeployMB.getLstTipoDocumentos())
 			{
 				if (tmp.getCodTipoDoc().trim().equals(filtro))
 				{
@@ -701,6 +712,15 @@ public class RevocadosMB {
 					break;
 				}
 			}
+			
+//			for (TipoDocumento tmp: combosMB.getLstTipoDocumentos())
+//			{
+//				if (tmp.getCodTipoDoc().trim().equals(filtro))
+//				{
+//					resultado = tmp.getDescripcion();
+//					break;
+//				}
+//			}
 		}
 		else if (tipoBusqueda.equals("estado"))
 		{
@@ -1783,16 +1803,31 @@ public class RevocadosMB {
 		{
 			logger.info("====== agregarRevocado =======");
 
-			for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+			/*CAMBIO HVB 23/07/2014
+			 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+			 */
+			
+			for (TipoDocumento p : infoDeployMB.getLstTipoDocumentos()) {
 				if (objTiivsPersonaAgregar.getTipDoi().equals(p.getCodTipoDoc())) {
 					objTiivsPersonaAgregar.setsDesctipDoi(p.getDescripcion());
 				}
 			}
-			for (ComboDto p : combosMB.getLstTipoRegistroPersona()) {
+			for (ComboDto p : infoDeployMB.getLstTipoRegistroPersona()) {
 				if (objTiivsPersonaAgregar.getTipPartic().equals(p.getKey())) {
 					objTiivsPersonaAgregar.setsDesctipPartic(p.getDescripcion());
 				}
 			}
+			
+//			for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+//				if (objTiivsPersonaAgregar.getTipDoi().equals(p.getCodTipoDoc())) {
+//					objTiivsPersonaAgregar.setsDesctipDoi(p.getDescripcion());
+//				}
+//			}
+//			for (ComboDto p : combosMB.getLstTipoRegistroPersona()) {
+//				if (objTiivsPersonaAgregar.getTipPartic().equals(p.getKey())) {
+//					objTiivsPersonaAgregar.setsDesctipPartic(p.getDescripcion());
+//				}
+//			}
 			
 			List<TiivsRevocado> tiivsrevocados= new ArrayList<TiivsRevocado>();
 			
@@ -2375,18 +2410,35 @@ public class RevocadosMB {
 		logger.info("****validarRegistroDuplicado *********** "+ objTiivsPersonaAgregar.getNumDoi());
 		boolean bResult = true;
 		String sMensaje = "";
-		for (TipoDocumento c : combosMB.getLstTipoDocumentos()) {
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		
+		for (TipoDocumento c : infoDeployMB.getLstTipoDocumentos()) {
 			if (objTiivsPersonaAgregar.getTipDoi().equals(c.getCodTipoDoc())) {
 				objTiivsPersonaAgregar.setsDesctipDoi(c.getDescripcion());
 				break;
 			}
 		}
-		for (ComboDto c : combosMB.getLstTipoRegistroPersona()) {
+		for (ComboDto c : infoDeployMB.getLstTipoRegistroPersona()) {
 			if (objTiivsPersonaAgregar.getTipPartic().equals(c.getKey())) {
 				objTiivsPersonaAgregar.setsDesctipPartic(c.getDescripcion());
 				break;
 			}
 		}
+		
+//		for (TipoDocumento c : combosMB.getLstTipoDocumentos()) {
+//			if (objTiivsPersonaAgregar.getTipDoi().equals(c.getCodTipoDoc())) {
+//				objTiivsPersonaAgregar.setsDesctipDoi(c.getDescripcion());
+//				break;
+//			}
+//		}
+//		for (ComboDto c : combosMB.getLstTipoRegistroPersona()) {
+//			if (objTiivsPersonaAgregar.getTipPartic().equals(c.getKey())) {
+//				objTiivsPersonaAgregar.setsDesctipPartic(c.getDescripcion());
+//				break;
+//			}
+//		}
 		
 		
 		for (Revocado rev : personaClientesPendEdit) {
@@ -2526,11 +2578,20 @@ public class RevocadosMB {
 				lstTiivsPersona = service.buscarDinamico(filtro);
 				
 				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
-					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+					/*CAMBIO HVB 23/07/2014
+					 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+					 */
+					for (TipoDocumento p : infoDeployMB.getLstTipoDocumentos()) {
 						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
 							tiivsPersona.setsDesctipDoi(p.getDescripcion());
 						}
 					}
+					
+//					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+//						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+//							tiivsPersona.setsDesctipDoi(p.getDescripcion());
+//						}
+//					}
 				}
 			}else{
 				filtro.add(Restrictions.eq("tipDoi",objTiivsPersonaBusquedaDlg.getTipDoi().trim()));
@@ -2539,11 +2600,20 @@ public class RevocadosMB {
 				
                lstTiivsPersona = service.buscarDinamico(filtro);
 				for (TiivsPersona tiivsPersona : lstTiivsPersona) {
-					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+					/*CAMBIO HVB 23/07/2014
+					 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+					 */
+					for (TipoDocumento p : infoDeployMB.getLstTipoDocumentos()) {
 						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
 							tiivsPersona.setsDesctipDoi(p.getDescripcion());
 						}
 					}
+					
+//					for (TipoDocumento p : combosMB.getLstTipoDocumentos()) {
+//						if (tiivsPersona.getTipDoi().equals(p.getCodTipoDoc())) {
+//							tiivsPersona.setsDesctipDoi(p.getDescripcion());
+//						}
+//					}
 				} 
 			}
 			
@@ -4168,5 +4238,13 @@ public class RevocadosMB {
 
 	public void setVisadoDocumentosMB(VisadoDocumentosMB visadoDocumentosMB) {
 		this.visadoDocumentosMB = visadoDocumentosMB;
+	}
+
+	public void setInfoDeployMB(InfoDeployMB infoDeployMB) {
+		this.infoDeployMB = infoDeployMB;
+	}
+
+	public InfoDeployMB getInfoDeployMB() {
+		return infoDeployMB;
 	}
 }

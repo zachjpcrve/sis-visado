@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
@@ -71,7 +72,11 @@ import com.hildebrando.visado.service.NivelService;
 @ManagedBean(name = "reportesMB")
 @SessionScoped
 public class ReportesMB {
-	
+	/*CAMBIO HVB 23/07/2014
+	 *SE MAPEA LA PROPIEDAD DE INFODEPLOY PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+	 */
+	@ManagedProperty(value="#{infoDeployMB}")
+	private InfoDeployMB infoDeployMB;
 	@ManagedProperty(value = "#{pdfViewerMB}")
 	private PDFViewerMB pdfViewerMB;
 	@ManagedProperty(value = "#{combosMB}")
@@ -141,8 +146,12 @@ public class ReportesMB {
 		oficina = new TiivsOficina1();
 		pdfViewerMB = new PDFViewerMB();
 
-		combosMB = new CombosMB();
-		combosMB.cargarMultitabla();
+		/**
+		 * CAMBIO HVB 24/07/2014
+		 * SE COMENTA DICHOS ELEMENTOS PARA OPTIMIZAR LOS TIEMPOS
+		 */
+//		combosMB = new CombosMB();
+//		combosMB.cargarMultitabla();
 
 		inicializarCampos();
 
@@ -163,6 +172,17 @@ public class ReportesMB {
 			setNoHabilitarExportar(true);
 		}
 
+//		impuesto = obtenerImpuesto();
+	}
+
+	
+	/*
+	 * CAMBIO HVB 08/08/2014 
+	 * SE CREA EL METODO POSCONSTRUCTOR PARA QUE SE PUEDAN USAR LOS ATRIBUTOS DE OTROS MANAGED BEANS
+	 */
+	@PostConstruct
+	public void posConstructor()
+	{
 		impuesto = obtenerImpuesto();
 	}
 
@@ -241,36 +261,67 @@ public class ReportesMB {
 
 	public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 		String descripcion = "";
-		for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		
+		for (ComboDto z : infoDeployMB.getLstTipoRegistroPersona()) {
 			if (z.getKey().trim().equals(idTipoTipoRegistro)) {
 				descripcion = z.getDescripcion();
 				break;
 			}
 		}
+		
+//		for (ComboDto z : combosMB.getLstTipoRegistroPersona()) {
+//			if (z.getKey().trim().equals(idTipoTipoRegistro)) {
+//				descripcion = z.getDescripcion();
+//				break;
+//			}
+//		}
 		return descripcion;
 	}
 
 	public String devolverDesTipoDOI(String codigo) {
 		String resultado = "";
 		if (codigo != null) {
-			for (TipoDocumento tmp : combosMB.getLstTipoDocumentos()) {
+			/*CAMBIO HVB 23/07/2014
+			 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+			 */
+			for (TipoDocumento tmp : infoDeployMB.getLstTipoDocumentos()) {
 				if (codigo.equalsIgnoreCase(tmp.getCodTipoDoc())) {
 					resultado = tmp.getDescripcion();
 					break;
 				}
 			}
+			
+//			for (TipoDocumento tmp : combosMB.getLstTipoDocumentos()) {
+//				if (codigo.equalsIgnoreCase(tmp.getCodTipoDoc())) {
+//					resultado = tmp.getDescripcion();
+//					break;
+//				}
+//			}
 		}
 		return resultado;
 	}
 
 	public String obtenerDescripcionDocumentos(String idTipoDocumentos) {
 		String descripcion = "";
-		for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		for (TipoDocumento z : infoDeployMB.getLstTipoDocumentos()) {
 			if (z.getCodTipoDoc().trim().equals(idTipoDocumentos)) {
 				descripcion = z.getDescripcion();
 				break;
 			}
 		}
+		
+//		for (TipoDocumento z : combosMB.getLstTipoDocumentos()) {
+//			if (z.getCodTipoDoc().trim().equals(idTipoDocumentos)) {
+//				descripcion = z.getDescripcion();
+//				break;
+//			}
+//		}
 		return descripcion;
 	}
 
@@ -4647,24 +4698,28 @@ public class ReportesMB {
 		int i = 0;
 		String descripcion = "";
 
-		for (; i <= combosMB.getLstMoneda().size() - 1; i++) {
-			if (combosMB.getLstMoneda().get(i).getCodMoneda()
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		
+		for (; i <= infoDeployMB.getLstMoneda().size() - 1; i++) {
+			if (infoDeployMB.getLstMoneda().get(i).getCodMoneda()
 					.equalsIgnoreCase(codigo)) {
-				if (combosMB
+				if (infoDeployMB
 						.getLstMoneda()
 						.get(i)
 						.getDesMoneda()
 						.equalsIgnoreCase(
 								ConstantesVisado.CAMPO_SOLES_TBL_MONEDA)) {
 					descripcion = ConstantesVisado.CAMPO_ABREV_SOLES;
-				} else if (combosMB
+				} else if (infoDeployMB
 						.getLstMoneda()
 						.get(i)
 						.getDesMoneda()
 						.equalsIgnoreCase(
 								ConstantesVisado.CAMPO_DOLARES_TBL_MONEDA)) {
 					descripcion = ConstantesVisado.CAMPO_ABREV_DOLARES;
-				} else if (combosMB
+				} else if (infoDeployMB
 						.getLstMoneda()
 						.get(i)
 						.getDesMoneda()
@@ -4672,11 +4727,43 @@ public class ReportesMB {
 								ConstantesVisado.CAMPO_EUROS_TBL_MONEDA)) {
 					descripcion = ConstantesVisado.CAMPO_ABREV_EUROS;
 				} else {
-					descripcion = combosMB.getLstMoneda().get(i).getDesMoneda();
+					descripcion = infoDeployMB.getLstMoneda().get(i).getDesMoneda();
 				}
 				break;
 			}
 		}
+
+		
+//		for (; i <= combosMB.getLstMoneda().size() - 1; i++) {
+//			if (combosMB.getLstMoneda().get(i).getCodMoneda()
+//					.equalsIgnoreCase(codigo)) {
+//				if (combosMB
+//						.getLstMoneda()
+//						.get(i)
+//						.getDesMoneda()
+//						.equalsIgnoreCase(
+//								ConstantesVisado.CAMPO_SOLES_TBL_MONEDA)) {
+//					descripcion = ConstantesVisado.CAMPO_ABREV_SOLES;
+//				} else if (combosMB
+//						.getLstMoneda()
+//						.get(i)
+//						.getDesMoneda()
+//						.equalsIgnoreCase(
+//								ConstantesVisado.CAMPO_DOLARES_TBL_MONEDA)) {
+//					descripcion = ConstantesVisado.CAMPO_ABREV_DOLARES;
+//				} else if (combosMB
+//						.getLstMoneda()
+//						.get(i)
+//						.getDesMoneda()
+//						.equalsIgnoreCase(
+//								ConstantesVisado.CAMPO_EUROS_TBL_MONEDA)) {
+//					descripcion = ConstantesVisado.CAMPO_ABREV_EUROS;
+//				} else {
+//					descripcion = combosMB.getLstMoneda().get(i).getDesMoneda();
+//				}
+//				break;
+//			}
+//		}
 
 		return descripcion;
 	}
@@ -5137,13 +5224,25 @@ public class ReportesMB {
 	public String buscarTipoFechaxCodigo(String codigo) {
 		int i = 0;
 		String res = "";
-		for (; i < combosMB.getLstTiposFecha().size(); i++) {
-			if (combosMB.getLstTiposFecha().get(i).getCodigoTipoFecha()
+		/*CAMBIO HVB 23/07/2014
+		 *SE CAMBIA A LA VARIABLE INFODEPLOY POR COMBOSMB PARA OBTENER LA INFORMACION QUE SE CARGA/RESETEA EN LA APLICACION
+		 */
+		
+		for (; i < infoDeployMB.getLstTiposFecha().size(); i++) {
+			if (infoDeployMB.getLstTiposFecha().get(i).getCodigoTipoFecha()
 					.equalsIgnoreCase(codigo)) {
-				res = combosMB.getLstTiposFecha().get(i).getDescripcion();
+				res = infoDeployMB.getLstTiposFecha().get(i).getDescripcion();
 				break;
 			}
 		}
+		
+//		for (; i < combosMB.getLstTiposFecha().size(); i++) {
+//			if (combosMB.getLstTiposFecha().get(i).getCodigoTipoFecha()
+//					.equalsIgnoreCase(codigo)) {
+//				res = combosMB.getLstTiposFecha().get(i).getDescripcion();
+//				break;
+//			}
+//		}
 		return res;
 	}
 
@@ -5574,5 +5673,13 @@ public class ReportesMB {
 
 	public void setOficinaRPT(TiivsOficina1 oficinaRPT) {
 		this.oficinaRPT = oficinaRPT;
+	}
+
+	public void setInfoDeployMB(InfoDeployMB infoDeployMB) {
+		this.infoDeployMB = infoDeployMB;
+	}
+
+	public InfoDeployMB getInfoDeployMB() {
+		return infoDeployMB;
 	}
 }
