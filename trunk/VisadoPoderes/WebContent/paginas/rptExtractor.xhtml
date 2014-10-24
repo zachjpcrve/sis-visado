@@ -49,7 +49,8 @@
 								<td><p:selectCheckboxMenu id="scmEstados" label="--Todos--"
 										value="#{reportesMB.lstEstadoSelected}"
 										panelStyle="width:220px;" style="width:162px;">
-										<f:selectItems value="#{reportesMB.combosMB.estados}" />
+										<!-- CAMBIO 23/07/2014 HVB SE REEMPLAZA INFODEPLOY POR COMBOMB -->
+										<f:selectItems value="#{reportesMB.infoDeployMB.estados}" />
 									</p:selectCheckboxMenu></td>
 								<td><p:graphicImage value="/resources/images/pregunta.jpg"
 										id="tooltxtEstado" /></td>

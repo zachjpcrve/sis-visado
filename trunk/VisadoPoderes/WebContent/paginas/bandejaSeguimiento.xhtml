@@ -38,7 +38,8 @@
 											
 									<p:selectCheckboxMenu id="scmEstados" label="--TODOS--" value="#{seguimientoMB.lstEstadoSelected}" 
 													panelStyle="width:220px;" style="width:162px;" scrollHeight="250">  
-								     				<f:selectItems value="#{seguimientoMB.combosMB.estados}"/>  
+													<!-- CAMBIO 23/07/2014 HVB SE REEMPLAZA INFODEPLOY POR COMBOMB -->
+								     				<f:selectItems value="#{seguimientoMB.infoDeployMB.estados}"/>  
 								    </p:selectCheckboxMenu>  
 											
 									<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtEstado" />
@@ -94,7 +95,7 @@
 								<h:outputText styleClass="outputText" id="txtImporte" value="Importe:" />
 								<p:selectOneMenu value="#{seguimientoMB.idImporte}" id="somImporte" style="width:155px;">
 										<f:selectItem itemLabel="--TODOS--" itemValue="" />
-										<f:selectItems value="#{seguimientoMB.combosMB.lstRangosImporte}" var="imp"
+										<f:selectItems value="#{seguimientoMB.infoDeployMB.lstRangosImporte}" var="imp"
 												itemValue="#{imp.codigoRango}" itemLabel="#{imp.descripcion}" />
 								</p:selectOneMenu>
 									
@@ -105,7 +106,11 @@
 									
 								<p:selectCheckboxMenu id="scmTSolicitud" label="--TODOS--" value="#{seguimientoMB.lstTipoSolicitudSelected}" 
 											panelStyle="width:360px;" style="width:170px;" scrollHeight="250">  
-								      <f:selectItems value="#{seguimientoMB.combosMB.tiposSolicitud}" />  
+								      
+								      <!-- CAMBIO HVB 25/07/2014 SE UTILIZA EL LISTADO EN VEZ DEL MAP PLANTEADO -->
+								      <f:selectItems value="#{seguimientoMB.combosMB.lstTipoSolicitud}" var="tipo" itemValue="#{tipo.codTipSolic}"
+								      itemLabel="#{tipo.desTipServicio}"/>  
+								      
 								 </p:selectCheckboxMenu>
 									
 								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTSolicitud" />
@@ -126,7 +131,8 @@
 	 							<h:outputText styleClass="outputText" id="txtTipoFecha" value="Tipo Fecha:" />
 								<p:selectOneMenu value="#{seguimientoMB.idTiposFecha}" id="somTiposFecha" style="width:120px;">
 										<f:selectItem itemLabel="--SELECCIONE--" itemValue="" />
-										<f:selectItems value="#{seguimientoMB.combosMB.lstTiposFecha}" var="tipoFec"
+										<!-- CAMBIO 23/07/2014 SE REEMPLAZA COMBOMB POR INFODEPLOYMB -->
+										<f:selectItems value="#{seguimientoMB.infoDeployMB.lstTiposFecha}" var="tipoFec"
 												itemValue="#{tipoFec.codigoTipoFecha}" itemLabel="#{tipoFec.descripcion}" />
 								</p:selectOneMenu>
 								<p:graphicImage value="/resources/images/pregunta.jpg" id="tooltxtTFecha" />
@@ -161,21 +167,30 @@
 								<h:outputText styleClass="outputText" id="txtNivel" value="Nivel:" />
 								<p:selectCheckboxMenu id="scmNivel" label="--TODOS--" value="#{seguimientoMB.lstNivelSelected}" panelStyle="width:100px;"  
 											style="width:150px;" scrollHeight="165">  
-									        <f:selectItems value="#{seguimientoMB.combosMB.niveles}" />  
+											  <!-- CAMBIO HVB 25/07/2014 HVB
+											  	   SE CAMBIO EL ELEMENTO MAP POR EL LISTADO -->
+											  <f:selectItems value="#{seguimientoMB.combosMB.lstNivel}" var="nivel" itemValue="#{nivel.codNiv}"
+								      			itemLabel="#{nivel.desNiv}"/>    
+									        
 									    </p:selectCheckboxMenu>  
 								<p:graphicImage value="/resources/images/pregunta.jpg" id="toolNivel" />
 								<p:tooltip for="toolNivel" value="Nivel" showEffect="fade" hideEffect="fade" />	
 								<h:outputText styleClass="outputText" id="txtEstNivel" value="Estado del Nivel:" />
 								<p:selectCheckboxMenu id="scmEstadoNivel" label="--TODOS--" value="#{seguimientoMB.lstEstadoNivelSelected}" 
 												panelStyle="width:120px;" style="width:125px;">  
-									        <f:selectItems value="#{seguimientoMB.combosMB.estadosNivel}"/>  
+												<!-- CAMBIO 23/07/2014 HVB SE REEMPLAZA INFODEPLOY POR COMBOMB -->
+									        <f:selectItems value="#{seguimientoMB.infoDeployMB.estadosNivel}"/>  
 								</p:selectCheckboxMenu> 
 								<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstNivel"  />	
 								<p:tooltip for="toolEstNivel" value="Estados del Nivel" showEffect="fade" hideEffect="fade" />	
 								<h:outputText styleClass="outputText" id="txtEstudio" value="Estudio:" />
 								<p:selectCheckboxMenu id="scmEstudio" label="--TODOS--" value="#{seguimientoMB.lstEstudioSelected}" panelStyle="width:170px;" 
 											style="width:170px;" scrollHeight="100">  
-									        <f:selectItems value="#{consultarSolicitudMB.combosMB.estudios}" />  
+											 <!-- CAMBIO HVB 25/07/2014 HVB
+											  	   SE CAMBIO EL ELEMENTO MAP POR EL LISTADO -->
+											  <f:selectItems value="#{seguimientoMB.combosMB.lstEstudio}" var="estudio" itemValue="#{estudio.codEstudio}"
+								      			itemLabel="#{estudio.desEstudio}"/>   
+									       
 								</p:selectCheckboxMenu>  
 								<p:graphicImage value="/resources/images/pregunta.jpg" id="toolEstudio"/>
 									<p:tooltip for="toolEstudio" value="Estudio" showEffect="fade" hideEffect="fade"/>
@@ -232,6 +247,8 @@
 						<tbody>
 						<tr>	
 							<td>
+							
+							
 								<p:panel header="Resultados" id="panelRes" style="width: 1090px" >
 									<p:dataTable value="#{seguimientoMB.solicitudes}" var="tbl" rows="5" id="datosSol"
 											paginatorPosition="bottom" scrollable="true"

@@ -93,7 +93,8 @@
 						<td><h:outputText value="Tipo de Registro" /></td>
 						<td><p:selectOneMenu id="cboTipoReg" value="#{clasificacionMB.clasificacion.valor3}">
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-								<f:selectItems value="#{combosMB.lstTipoRegistroPersona}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" />
+								<!-- CAMBIO 23/07/2014 HVB SE REEMPLAZA INFODEPLOY POR COMBOMB -->
+								<f:selectItems value="#{infoDeployMB.lstTipoRegistroPersona}" var="lOf" itemValue="#{lOf.key}" itemLabel="#{lOf.descripcion}" />
 							</p:selectOneMenu>
 						</td>
 					</tr>

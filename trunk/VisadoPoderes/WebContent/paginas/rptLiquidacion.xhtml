@@ -36,7 +36,11 @@
 						<td>
 							<p:selectCheckboxMenu id="scmEstudio" label="--Todos--" value="#{reportesMB.lstEstudioSelected}" 
 								panelStyle="width:150px;" style="width:150px;">  
-						        <f:selectItems value="#{reportesMB.combosMB.estudios}" />  
+												<!-- CAMBIO HVB 25/07/2014 HVB
+											  	   SE CAMBIO EL ELEMENTO MAP POR EL LISTADO -->
+											  <f:selectItems value="#{reportesMB.combosMB.lstEstudio}" var="estudio" itemValue="#{estudio.codEstudio}"
+								      			itemLabel="#{estudio.desEstudio}"/>   
+						          
 						    </p:selectCheckboxMenu>  
 						</td>
 					</tr>
