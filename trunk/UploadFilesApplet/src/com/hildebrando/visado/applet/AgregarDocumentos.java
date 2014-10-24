@@ -223,6 +223,21 @@ public class AgregarDocumentos extends JApplet {
             //Se valida que haya lstFicherosLeidos para enviar por FTP && lstFicherosLeidos.size()>0
             if(lstFicherosLeidos!=null ){            	 
             	sDocumentosCargados = subirFTP(lstFicherosLeidos);
+            	
+            	Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-sDocumentosCargados General:" + sDocumentosCargados, "");
+            	
+            	/*ESCH AGREGADO INI 05/06/2014*/
+            	String cadenas[] = sDocumentosCargados.split(Constantes.SEPARADOR_ARCHIVOSSUBIDOS);
+            	
+            	if(cadenas.length>1){
+            		sDocumentosCargados=cadenas[0];
+            		documentosLeidos=cadenas[1];
+            	}else{
+            		sDocumentosCargados="";
+            		documentosLeidos="";
+            	}
+            	/*ESCH AGREGADO FIN 05/06/2014*/
+            	
             	Utiles.escribirEnLog(Constantes.INFO,"[actualizarFTP]-Archivos subidos por FTP: " + sDocumentosCargados, "");
             	/*String[] archivosLeidos = documentosLeidos.split(Constantes.SEPARADOR);
             	String[] archivosCargados = sDocumentosCargados.split(Constantes.SEPARADOR);*/
