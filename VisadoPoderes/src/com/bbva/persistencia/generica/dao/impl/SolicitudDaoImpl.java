@@ -1408,7 +1408,7 @@ public abstract class SolicitudDaoImpl<K, T extends Serializable> extends
 			    	} 
 			    	else 
 			    	{
-			    		objAgrp.setPlazo("Retrazo");
+			    		objAgrp.setPlazo("Retraso");
 			    	}					     				    
 				    
 				     String dia = row[2].toString();

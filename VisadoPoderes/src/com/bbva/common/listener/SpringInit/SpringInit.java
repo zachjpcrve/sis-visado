@@ -14,6 +14,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.hildebrando.visado.mb.InfoDeployMB;
 import com.hildebrando.visado.quartz.jobs.QuartzJob_SolicitudesVencidas;
 
 public class SpringInit implements ServletContextListener {
@@ -24,6 +25,11 @@ public class SpringInit implements ServletContextListener {
     
     public void contextInitialized(ServletContextEvent event) {
         springContext = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
+        /**
+    	 * CAMBIO 24/07/2014 HVB
+    	 * SE INICIALIZA EL BEAN INFODEPLOY PARA CARGAR LOS DATOS AL INICIO DE LA APLICACION
+    	 */
+        event.getServletContext().setAttribute("infoDeployMB",new InfoDeployMB());
         /*QuartzJob_SolicitudesVencidas job =new QuartzJob_SolicitudesVencidas();
         job.ejecutar();*/
     }
