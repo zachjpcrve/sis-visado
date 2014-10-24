@@ -117,7 +117,10 @@
 										label="--Todos--"
 										value="#{reportesMB.lstTipoSolicitudSelected}"
 										panelStyle="width:220px;" style="width:167px;">
-										<f:selectItems value="#{reportesMB.combosMB.tiposSolicitud}" />
+										<!-- CAMBIO HVB 25/07/2014 SE UTILIZA EL LISTADO EN VEZ DEL MAP PLANTEADO -->
+								      <f:selectItems value="#{seguimientoMB.combosMB.tiposSolicitud}" var="tipo" itemValue="#{tipo.codTipSolic}"
+								      itemLabel="#{tipo.desTipServicio}"/>  
+										
 									</p:selectCheckboxMenu></td>
 	
 								<td><h:outputText styleClass="outputText" id="txtTipoOpe"
@@ -137,7 +140,7 @@
 								<td><p:selectOneMenu value="#{reportesMB.idImporte}"
 										id="somImporte" style="width:155px;">
 										<f:selectItem itemLabel="--Todos--" itemValue="" />
-										<f:selectItems value="#{reportesMB.combosMB.lstRangosImporte}"
+										<f:selectItems value="#{reportesMB.infoDeployMB.lstRangosImporte}"
 											var="imp" itemValue="#{imp.codigoRango}"
 											itemLabel="#{imp.descripcion}" />
 									</p:selectOneMenu></td>
@@ -159,7 +162,11 @@
 								<td><p:selectCheckboxMenu id="scmEstudio" label="--Todos--"
 										value="#{reportesMB.lstEstudioSelected}"
 										panelStyle="width:250px;" style="width:160px;">
-										<f:selectItems value="#{reportesMB.combosMB.estudios}" />
+										<!-- CAMBIO HVB 25/07/2014 HVB
+											  	   SE CAMBIO EL ELEMENTO MAP POR EL LISTADO -->
+											  <f:selectItems value="#{reportesMB.combosMB.lstEstudio}" var="estudio" itemValue="#{estudio.codEstudio}"
+								      			itemLabel="#{estudio.desEstudio}"/>  
+										
 									</p:selectCheckboxMenu></td>
 	
 								<td><h:outputText styleClass="outputText"
@@ -179,7 +186,8 @@
 								<td><p:selectOneMenu value="#{reportesMB.idMoneda}"
 										id="somMoneda" style="width:155px;">
 										<f:selectItem itemLabel="--Todos--" itemValue="" />
-										<f:selectItems value="#{reportesMB.combosMB.lstMoneda}"
+										<!-- CAMBIO 23/07/2014 SE REEMPLAZA COMBOMB POR INFODEPLOYMB -->
+										<f:selectItems value="#{reportesMB.infoDeployMB.lstMoneda}"
 											var="mon" itemValue="#{mon.codMoneda}"
 											itemLabel="#{mon.desMoneda}" />
 									</p:selectOneMenu></td>

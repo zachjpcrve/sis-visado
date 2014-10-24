@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:ui="http://java.sun.com/jsf/facelets"
+ xmlns:h="http://java.sun.com/jsf/html"
+ xmlns:f="http://java.sun.com/jsf/core"
+ xmlns:p="http://primefaces.org/ui"
+ xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition>
+
+
+
+
+ <h:form id="frmMenu">
+ 	
+
+  
+  <p:tieredMenu style="width:140px; position:relative; z-index:1;"> 
+  
+  
+     <c:forEach items="${usuario.opciones}" var="opcion" varStatus="count">
+                               <!-- Registros / Solicitud Visado  -->
+	  	<c:if test="${opcion.value.nivel == 1 and opcion.value.tipoId==5}">
+	  	<p:submenu label="${opcion.value.nombre}" icon="ui-icon-pencil">
+	  	
+	  	<c:forEach items="${usuario.opciones}" var="opcion2" varStatus="count2">
+	  	<c:if test="${opcion.value.opcionId == opcion2.value.opcionPadreId and opcion2.value.opcionId==2}">
+	  	<p:menuitem value="${opcion2.value.nombre}"  onclick="document.getElementById('frmMenu:btnNuevo').click()" icon="ui-icon-pencil">
+	  	</p:menuitem>
+	  	</c:if>
+	  	<!-- Registro / Calculadora  -->
+	  	<c:if test="${opcion.value.opcionId == opcion2.value.opcionPadreId and opcion2.value.opcionId==3}">
+	  	<p:menuitem value="${opcion2.value.nombre}" onclick="limpiarCalculadora();"  url="${opcion2.value.url}" icon="ui-icon-pencil"
+      			>
+	  	</p:menuitem>
+	  	</c:if>
+	  	<c:if test="${opcion.value.opcionId == opcion2.value.opcionPadreId and opcion2.value.opcionId!=2 and opcion2.value.opcionId!=3 and opcion2.value.opcionId!=5}">
+	  	<p:menuitem value="${opcion2.value.nombre}" url="${opcion2.value.url}"  icon="ui-icon-pencil">
+	  	</p:menuitem>
+	  	</c:if>
+	  	<!-- Consultas / Solicitudes  -->
+	  	<c:if test="${opcion.value.opcionId == opcion2.value.opcionPadreId and opcion2.value.opcionId==5}">
+	  		  	<!--	CAMBIO 18/07/2014 HVB -->
+	  	<p:menuitem value="${opcion2.value.nombre}"  onclick="document.getElementById('frmMenu:btnConsultarSolicitud').click()" icon="ui-icon-pencil">
+	  	
+	  	</p:menuitem>
+	  	</c:if>
+	  	
+	  	</c:forEach>
+	  	
+	  	</p:submenu>
+	  	</c:if>
+	  	</c:forEach>
+	  	
+	  <!-- 	<p:submenu label="Jobs" icon="ui-icon-pencil">
+  			<p:menuitem icon="ui-icon-pencil" value="Jobs" url="/faces/paginas/AdmJobs.xhtml"/>
+  		</p:submenu> -->
+	  	
+  		<!-- <p:submenu label="Registros" icon="ui-icon-pencil">
+      		<p:menuitem icon="ui-icon-pencil" value="Solicitud Visado"  
+      			onclick="document.getElementById('frmMenu:btnNuevo').click();" 
+      			ajax="false" update=":formSolicitudRegistro" >      		
+      		  </p:menuitem>
+      		<p:menuitem icon="ui-icon-pencil" value="Calculadora" url="/faces/paginas/calculadoraComision.xhtml"></p:menuitem>
+  		</p:submenu>
+  		<p:submenu label="Consultas" icon="ui-icon-pencil">
+  			<p:menuitem icon="ui-icon-pencil" value="Solicitudes" url="/faces/paginas/bandejaSeguimiento.xhtml"
+  			onclick="actualizarListas();"></p:menuitem>
+	    	<p:menuitem icon="ui-icon-pencil" value="Revocados" url="/faces/paginas/bandejaRevocados.xhtml"></p:menuitem>
+  		</p:submenu>
+  		<p:submenu label="Mantenimiento" icon="ui-icon-pencil">
+  			 <p:menuitem icon="ui-icon-pencil" value="Tipos DOI" url="/faces/paginas/tiposDOI.xhtml"></p:menuitem> 		
+  			<p:menuitem icon="ui-icon-pencil" value="Tipos de Clasificación" url="/faces/paginas/clasificacion.xhtml"></p:menuitem> 
+  			<p:menuitem icon="ui-icon-pencil" value="Oficinas" url="/faces/paginas/oficina.xhtml"></p:menuitem> 
+  			<p:menuitem icon="ui-icon-pencil" value="Perfil-Usuario" url="/faces/paginas/abogado.xhtml"></p:menuitem> 
+  			<p:menuitem icon="ui-icon-pencil" value="Estudio de Abogados" url="/faces/paginas/estudio.xhtml"></p:menuitem>	
+  			<p:menuitem icon="ui-icon-pencil" value="Tipo de Comisión"	url="/faces/paginas/comision.xhtml"></p:menuitem>	
+  			<p:menuitem icon="ui-icon-pencil" value="Documento"	url="/faces/paginas/documentoTiivs.xhtml"></p:menuitem>		
+  			<p:menuitem icon="ui-icon-pencil" value="Solicitud Documento" url="/faces/paginas/documento.xhtml"></p:menuitem>
+  			<p:menuitem icon="ui-icon-pencil" value="Responsable Nivel Aprobación"        url="/faces/paginas/respNivel.xhtml"></p:menuitem>				
+  			<p:menuitem icon="ui-icon-pencil" value="Nivel Aprobación"        url="/faces/paginas/nivel.xhtml"></p:menuitem>	
+  			<p:menuitem icon="ui-icon-pencil" value="Delegación Nivel"        url="/faces/paginas/delegacion.xhtml"></p:menuitem>
+  		</p:submenu>	
+  		<p:submenu label="Reportes" icon="ui-icon-pencil">
+  			<p:menuitem icon="ui-icon-pencil" style="font-size: 9px" value="Liquidación Mensual" url="/faces/paginas/rptLiquidacion2.xhtml"></p:menuitem>  	
+  			<p:menuitem icon="ui-icon-pencil" style="font-size: 9px" value="Estado de Solicitud por Oficina" url="/faces/paginas/rptEstadoSolicitud.xhtml"></p:menuitem>  	
+  			<p:menuitem icon="ui-icon-pencil" style="font-size: 9px" value="Solicitudes atendidas por Tipo de Servicio" url="/faces/paginas/rptSolicitudxTipoServicio.xhtml"></p:menuitem>
+  			<p:menuitem icon="ui-icon-pencil" style="font-size: 9px" value="Recaudación" url="/faces/paginas/rptRecaudacion.xhtml"></p:menuitem>  			
+  			<p:menuitem icon="ui-icon-pencil" style="font-size: 9px" value="Extractor" url="/faces/paginas/rptExtractor.xhtml"></p:menuitem>  			
+  		</p:submenu>    	 -->    
+  </p:tieredMenu>
+  
+  <div style="visibility: hidden; " >
+  	<p:commandButton id="btnNuevo" style="width:0;height:0" ajax="false" value="" action="#{solicitudRegMB.instanciarSolicitudRegistro}" />
+  	<p:commandButton id="btnConsultarSolicitud" style="width:0;height:0" ajax="false" value="" action="#{seguimientoMB.actualizarListas}" />
+  </div>
+ 
+  
+  <p:remoteCommand name="limpiarCalculadora"
+  action="#{calculadoraMB.limpiar}" /> 
+
+  
+ </h:form>
+
+</ui:composition>
+</html>

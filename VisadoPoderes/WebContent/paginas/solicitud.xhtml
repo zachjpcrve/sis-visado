@@ -642,7 +642,8 @@
 																                	   	:formSolicitudRegistro:intTipoCambio,
 																                		:formSolicitudRegistro:txtImporteSoles" event="change"></p:ajax>
 																		<f:selectItem itemLabel="--Seleccione--" itemValue=""></f:selectItem>
-																		<f:selectItems value="#{combosMB.lstMoneda}" var="varo"
+																		<!-- CAMBIO 23/07/2014 SE REEMPLAZA COMBOMB POR INFODEPLOYMB -->
+																		<f:selectItems value="#{infoDeployMB.lstMoneda}" var="varo"
 																			itemValue="#{varo.codMoneda}"
 																			itemLabel="#{varo.desMoneda}" />
 	
@@ -905,8 +906,9 @@
 									style="width:180px;">										 
 									<p:ajax  update=":formRegistrar:pnlNuevo, :formRegistrar:inputHidden" event="change" />								
 									<f:selectItem itemLabel="-Seleccione-" itemValue="" />
+									<!-- CAMBIO 23/07/2014 HVB SE REEMPLAZA INFODEPLOY POR COMBOMB -->
 									<f:selectItems
-										value="#{solicitudRegMB.combosMB.lstTipoDocumentos}" var="lOf"
+										value="#{solicitudRegMB.infoDeployMB.lstTipoDocumentos}" var="lOf"
 										itemValue="#{lOf.codTipoDoc}" itemLabel="#{lOf.descripcion}" />
 								</p:selectOneMenu>
 								
@@ -944,7 +946,8 @@
 								style="width:180px;">
 								<p:ajax  update=":formRegistrar:pnlNuevo,:formRegistrar:inputHidden" event="change" />
 								<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-								<f:selectItems value="#{combosMB.lstTipoDocumentos}" var="lOf"
+								<!-- CAMBIO 23/07/2014 HVB SE REEMPLAZA INFODEPLOY POR COMBOMB -->
+								<f:selectItems value="#{infoDeployMB.lstTipoDocumentos}" var="lOf"
 									itemValue="#{lOf.codTipoDoc}" itemLabel="#{lOf.descripcion}" />
 							</p:selectOneMenu>
 							
@@ -1029,7 +1032,8 @@
 								<p:selectOneMenu id="cboTipoReg"
 									value="#{solicitudRegMB.objTiivsPersonaResultado.tipPartic}">
 									<f:selectItem itemLabel="-Seleccione-" itemValue="" />
-									<f:selectItems value="#{combosMB.lstTipoRegistroPersona}"
+									<!-- CAMBIO 23/07/2014 HVB SE REEMPLAZA INFODEPLOY POR COMBOMB -->
+									<f:selectItems value="#{infoDeployMB.lstTipoRegistroPersona}"
 										var="lOf" itemValue="#{lOf.key}"
 										itemLabel="#{lOf.descripcion}" />
 									<p:ajax event="change" update=":formRegistrar:cboClasificacion" listener="#{solicitudRegMB.actualizarClasificacion}"/>
