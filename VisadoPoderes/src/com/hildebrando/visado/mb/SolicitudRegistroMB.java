@@ -3915,7 +3915,10 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			//**********CAMBIO HVB 21/07/2014*******
 			//**********Se borra constructor debido a que ya se inicializa al momento de llamar managedproperty*******
 			//pdfViewerMB = new PDFViewerMB();	
-			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID());			
+			
+			if(solicitudRegistrarT.getCodSoli()!=null){
+				sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID(),solicitudRegistrarT.getCodSoli());	
+			}			
 		}catch(Exception e){
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener parametros " +
 					"de configuracion para el APINAE: ",e);
