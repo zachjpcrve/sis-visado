@@ -63,7 +63,6 @@ public class PDFViewerMB {
 		setMostrarPDF(true);
 		
 		cargarParametrosBD();
-		
 		setUrlAPPScan(prepararURLEscaneo(getCodUsuario()));
 		
 		setMostrarPDF(true);
@@ -83,7 +82,11 @@ public class PDFViewerMB {
 		return urlPDF;
 	}
 	
-	public String prepararURLEscaneo(String usuario)
+	public String prepararURLEscaneo(String usuario){
+		return prepararURLEscaneo(usuario,null);
+	}
+	
+	public String prepararURLEscaneo(String usuario,String nroSolicitud)
 	{
 		String cadFinal="";	
 		if(parametros!=null){
@@ -93,6 +96,9 @@ public class PDFViewerMB {
 			cadFinal = parametros.getUrlAPP() + "?" + "idEmpresa="
 					+ parametros.getIdEmpresa() + "&" + "idSistema="
 					+ parametros.getIdSistema() + "&" + "txLogin=" +usuario;
+			if(nroSolicitud!=null){
+				cadFinal+="&" + "nroSolicitud=" +nroSolicitud;
+			}
 		}	
 		logger.debug("URL: " + cadFinal);		
 		return cadFinal;
@@ -706,6 +712,6 @@ public class PDFViewerMB {
 	public void setParametros(TiivsParametros parametros) {
 		this.parametros = parametros;
 	}
-	
+
 	
 }
