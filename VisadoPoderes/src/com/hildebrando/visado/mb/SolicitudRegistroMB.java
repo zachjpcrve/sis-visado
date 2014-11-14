@@ -54,7 +54,6 @@ import com.bbva.persistencia.generica.dao.impl.ConsultasJDBCDaoImpl;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
 import com.grupobbva.seguridad.client.util.Constante;
-import com.grupobbva.seguridad.client.webservice.domain.Usuario;
 import com.hildebrando.visado.converter.PersonaDataModal;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.ApoderadoDTO;
@@ -3475,7 +3474,6 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				}
 				
 			}
-			daoJDBC.registrarDocumentosAPINAE(getLstdocumentos());
 			esRegistroValido=esValido;
 		} catch (Exception e) {
 			this.redirect="";
