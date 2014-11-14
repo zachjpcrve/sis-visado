@@ -83,10 +83,10 @@ public class PDFViewerMB {
 	}
 	
 	public String prepararURLEscaneo(String usuario){
-		return prepararURLEscaneo(usuario,null);
+		return prepararURLEscaneo(usuario,null,null);
 	}
 	
-	public String prepararURLEscaneo(String usuario,String nroSolicitud)
+	public String prepararURLEscaneo(String usuario,String nroSolicitud,String codOficina)
 	{
 		String cadFinal="";	
 		if(parametros!=null){
@@ -98,6 +98,7 @@ public class PDFViewerMB {
 					+ parametros.getIdSistema() + "&" + "txLogin=" +usuario;
 			if(nroSolicitud!=null){
 				cadFinal+="&" + "nroSolicitud=" +nroSolicitud;
+				cadFinal+="&" + "codOficina=" +codOficina;
 			}
 		}	
 		logger.debug("URL: " + cadFinal);		
