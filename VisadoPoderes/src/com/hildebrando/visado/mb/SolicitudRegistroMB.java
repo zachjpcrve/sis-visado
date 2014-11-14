@@ -50,8 +50,11 @@ import com.bbva.consulta.reniec.util.Persona;
 import com.bbva.persistencia.generica.dao.Busqueda;
 import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
+import com.bbva.persistencia.generica.dao.impl.ConsultasJDBCDaoImpl;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
+import com.grupobbva.seguridad.client.util.Constante;
+import com.grupobbva.seguridad.client.webservice.domain.Usuario;
 import com.hildebrando.visado.converter.PersonaDataModal;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.ApoderadoDTO;
@@ -210,6 +213,9 @@ public class SolicitudRegistroMB {
 	*/
 	private boolean mostrarRazonSocial = false;
 	private String codigoRazonSocial = "0000";
+	private String codigoOficina		="";
+	
+	ConsultasJDBCDaoImpl daoJDBC = new ConsultasJDBCDaoImpl(); 
 	
 	
     public UploadedFile getFileUpload() {  
@@ -246,6 +252,9 @@ public class SolicitudRegistroMB {
 //		lstSolicBancarias = new ArrayList<TiivsSolicitudOperban>();
 //		lstOperaciones = new ArrayList<OperacionBancariaDTO>();
 		usuario = (IILDPeUsuario) Utilitarios.getObjectInSession("USUARIO_SESION");
+		
+		codigoOficina=((com.grupobbva.seguridad.client.domain.Usuario)Utilitarios.getObjectInSession(Constante.SESSION_USUARIO)).getOficinaId();
+		
 //		this.instanciarSolicitudRegistro();
 		
 		aliasFilesToDelete = new ArrayList<String>();
@@ -3466,6 +3475,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 				}
 				
 			}
+			daoJDBC.registrarDocumentosAPINAE(getLstdocumentos());
 			esRegistroValido=esValido;
 		} catch (Exception e) {
 			this.redirect="";
@@ -3917,7 +3927,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			//pdfViewerMB = new PDFViewerMB();	
 			
 			if(solicitudRegistrarT.getCodSoli()!=null){
-				sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID(),solicitudRegistrarT.getCodSoli());	
+				sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID(),solicitudRegistrarT.getCodSoli(),codigoOficina);	
 			}			
 		}catch(Exception e){
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener parametros " +
