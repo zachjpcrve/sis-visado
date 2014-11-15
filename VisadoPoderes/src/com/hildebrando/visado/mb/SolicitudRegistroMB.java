@@ -3481,6 +3481,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			Utilitarios.mensajeError("ERROR", "Ha ocurrido un error al grabar la Solicitud");
 
 		}
+		this.cadenaEscanerFinal = this.prepararURLEscaneo();
 		logger.info("RedirecT FINAL:" + this.redirect);
 //		return this.redirect;
 	}
@@ -4715,6 +4716,7 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 	}
 
 	public String getCadenaEscanerFinal() {
+		this.cadenaEscanerFinal = this.prepararURLEscaneo();
 		return cadenaEscanerFinal;
 	}
 
