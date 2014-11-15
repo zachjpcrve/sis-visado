@@ -49,6 +49,7 @@ import com.bbva.persistencia.generica.dao.GenericDao;
 import com.bbva.persistencia.generica.dao.SolicitudDao;
 import com.bbva.persistencia.generica.util.Utilitarios;
 import com.grupobbva.bc.per.tele.ldap.serializable.IILDPeUsuario;
+import com.grupobbva.seguridad.client.util.Constante;
 import com.hildebrando.visado.converter.PersonaDataModal;
 import com.hildebrando.visado.dto.AgrupacionSimpleDto;
 import com.hildebrando.visado.dto.ComboDto;
@@ -221,6 +222,7 @@ public class ConsultarSolicitudMB {
 	
 	private String mesajeValidacionHost = "";
 	private TiivsHostVoucher objVoucher;
+	private String codigoOficina		="";
 	
 	public ConsultarSolicitudMB() {		
 	
@@ -261,7 +263,7 @@ public class ConsultarSolicitudMB {
 //		obtenerTipoRegistro();  -- SE AGREGA EN EL POSCONSTRUCTOR 24/07/2014 HVB
 		obtenerEtiquetasTipoRegistro();
 		obtenerPagoComision();
-		
+		codigoOficina=((com.grupobbva.seguridad.client.domain.Usuario)Utilitarios.getObjectInSession(Constante.SESSION_USUARIO)).getOficinaId();
 	}
 	
 	/*
@@ -4032,7 +4034,7 @@ public class ConsultarSolicitudMB {
 			//**********Se borra constructor debido a que ya se inicializa al momento de llamar managedproperty*******
 			//pdfViewerMB = new PDFViewerMB();	
 			logger.info("usuario.getUID() ******************** " +usuario.getUID());
-			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID());			
+			sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID(),solicitudRegistrarT.getCodSoli(),codigoOficina);			
 		}catch(Exception e){
 			logger.error("Error al obtener parámetros de APPLET: ",e);
 		}
