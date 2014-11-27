@@ -96,10 +96,10 @@ public class PDFViewerMB {
 			cadFinal = parametros.getUrlAPP() + "?" + "idEmpresa="
 					+ parametros.getIdEmpresa() + "&" + "idSistema="
 					+ parametros.getIdSistema() + "&" + "txLogin=" +usuario;
-			if(nroSolicitud!=null){
+//			if(nroSolicitud!=null){
 				cadFinal+="&" + "nroSolicitud=" +nroSolicitud;
 				cadFinal+="&" + "codOficina=" +codOficina;
-			}
+//			}
 		}	
 		logger.debug("URL: " + cadFinal);		
 		return cadFinal;
