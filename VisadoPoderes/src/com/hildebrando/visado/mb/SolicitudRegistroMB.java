@@ -3925,9 +3925,9 @@ public String obtenerDescripcionTipoRegistro(String idTipoTipoRegistro) {
 			//**********Se borra constructor debido a que ya se inicializa al momento de llamar managedproperty*******
 			//pdfViewerMB = new PDFViewerMB();	
 			
-			if(solicitudRegistrarT.getCodSoli()!=null){
+//			if(solicitudRegistrarT.getCodSoli()!=null){
 				sCadena = pdfViewerMB.prepararURLEscaneo(usuario.getUID(),solicitudRegistrarT.getCodSoli(),codigoOficina);	
-			}			
+//			}			
 		}catch(Exception e){
 			logger.error(ConstantesVisado.MENSAJE.OCURRE_ERROR+"al obtener parametros " +
 					"de configuracion para el APINAE: ",e);
