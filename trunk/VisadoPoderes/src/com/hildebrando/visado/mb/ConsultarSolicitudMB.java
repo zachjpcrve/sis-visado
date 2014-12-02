@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -35,6 +36,11 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.primefaces.model.UploadedFile;
 import org.springframework.transaction.annotation.Transactional;
+
+import pe.bbva.escaner.common.dto.HistorialDocDTO;
+import pe.bbva.escaner.negocio.ws.ActualizarHistorialDocDocument;
+import pe.bbva.escaner.negocio.ws.ActualizarHistorialDocDocument.ActualizarHistorialDoc;
+import pe.bbva.escaner.negocio.ws.WSVisadoServiceStub;
 
 import com.bbva.common.listener.SpringInit.SpringInit;
 import com.bbva.common.util.ConstantesVisado;
@@ -69,6 +75,7 @@ import com.hildebrando.visado.modelo.TiivsMultitabla;
 import com.hildebrando.visado.modelo.TiivsNivel;
 import com.hildebrando.visado.modelo.TiivsOficina1;
 import com.hildebrando.visado.modelo.TiivsOperacionBancaria;
+import com.hildebrando.visado.modelo.TiivsParametros;
 import com.hildebrando.visado.modelo.TiivsPersona;
 import com.hildebrando.visado.modelo.TiivsRevocado;
 import com.hildebrando.visado.modelo.TiivsSolicitud;
@@ -185,6 +192,7 @@ public class ConsultarSolicitudMB {
 	private Boolean mostrarUsuarioHist;
 	private Boolean mostrarVerDatosVoucher;
 	private boolean esRegistroValido;
+	private TiivsParametros parametros;
 	
 	int icontSoles = 0, icontDolares = 0, icontEuros = 0;
 	double valorSoles_C = 0, valorSolesD = 0, valorSolesE = 0, valorEuro = 0,
@@ -2668,9 +2676,40 @@ public class ConsultarSolicitudMB {
 	public void registrarSolicitudBorrador() {
 		sEstadoSolicitud = "BORRADOR";
 	}
-
+	public void cargarrutawsBD(){
+		GenericDao<TiivsParametros, Object> paramDAO = (GenericDao<TiivsParametros, Object>) SpringInit.getApplicationContext().getBean("genericoDao");
+		Busqueda filtroParam = Busqueda.forClass(TiivsParametros.class);
+				
+		try {
+			List<TiivsParametros> lstParametros = paramDAO.buscarDinamico(filtroParam);
+			if(lstParametros.size()>0){
+				parametros = lstParametros.get(0);
+				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	public void registrarSolicitudEnviado() {
 		sEstadoSolicitud = "ENVIADO";
+		cargarrutawsBD();
+		try {
+			String [] url =parametros.getUrlAPP().split("pages");
+		WSVisadoServiceStub ws = new WSVisadoServiceStub(null,url[0]+"services/WSVisado");
+		ActualizarHistorialDocDocument ahdD = ActualizarHistorialDocDocument.Factory.newInstance();
+		ActualizarHistorialDoc ahd = ActualizarHistorialDoc.Factory.newInstance();
+		HistorialDocDTO historial = HistorialDocDTO.Factory.newInstance();
+		historial.setNroSolicitud(solicitudRegistrarT.getCodSoli());
+		ahd.setHistorial(historial);		
+		ahdD.setActualizarHistorialDoc(ahd);
+		
+			ws.actualizarHistorialDoc(ahdD);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private boolean validarRegistroSolicitud() throws Exception {
