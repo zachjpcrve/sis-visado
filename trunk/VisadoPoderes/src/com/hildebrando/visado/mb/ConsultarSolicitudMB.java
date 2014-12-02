@@ -2694,22 +2694,6 @@ public class ConsultarSolicitudMB {
 	}
 	public void registrarSolicitudEnviado() {
 		sEstadoSolicitud = "ENVIADO";
-		cargarrutawsBD();
-		try {
-			String [] url =parametros.getUrlAPP().split("pages");
-		WSVisadoServiceStub ws = new WSVisadoServiceStub(null,url[0]+"services/WSVisado");
-		ActualizarHistorialDocDocument ahdD = ActualizarHistorialDocDocument.Factory.newInstance();
-		ActualizarHistorialDoc ahd = ActualizarHistorialDoc.Factory.newInstance();
-		HistorialDocDTO historial = HistorialDocDTO.Factory.newInstance();
-		historial.setNroSolicitud(solicitudRegistrarT.getCodSoli());
-		ahd.setHistorial(historial);		
-		ahdD.setActualizarHistorialDoc(ahd);
-		
-			ws.actualizarHistorialDoc(ahdD);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	private boolean validarRegistroSolicitud() throws Exception {
@@ -3291,7 +3275,24 @@ public class ConsultarSolicitudMB {
 					{
 						mesajeConfirmacion = "Se envió a SSJJ correctamente la Solicitud con codigo : "+ 
 								objResultado.getCodSoli() + "\n" + mesajeValidacionHost;
-						actualizarBandeja=true;						
+						actualizarBandeja=true;	
+						
+						cargarrutawsBD();
+						try {
+							String [] url =parametros.getUrlAPP().split("pages");
+						WSVisadoServiceStub ws = new WSVisadoServiceStub(null,url[0]+"services/WSVisado");
+						ActualizarHistorialDocDocument ahdD = ActualizarHistorialDocDocument.Factory.newInstance();
+						ActualizarHistorialDoc ahd = ActualizarHistorialDoc.Factory.newInstance();
+						HistorialDocDTO historial = HistorialDocDTO.Factory.newInstance();
+						historial.setNroSolicitud(solicitudRegistrarT.getCodSoli());
+						ahd.setHistorial(historial);		
+						ahdD.setActualizarHistorialDoc(ahd);
+						
+							ws.actualizarHistorialDoc(ahdD);
+						} catch (RemoteException e) {
+							logger.info("Error al lanzar el WS de apinae" + e);
+							e.printStackTrace();
+						}
 					}
 					
 					redirect = this.redirectDetalleSolicitud(objResultado.getCodSoli());
