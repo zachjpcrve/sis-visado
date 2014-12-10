@@ -3268,6 +3268,22 @@ public class ConsultarSolicitudMB {
 						mesajeConfirmacion = "Se registró correctamente la Solicitud con codigo : " + objResultado.getCodSoli() + " en Borrador";		
 						aliasFilesToDelete = new ArrayList<String>();
 						actualizarBandeja=true;
+						cargarrutawsBD();
+						try {
+							String [] url =parametros.getUrlAPP().split("pages");
+						WSVisadoServiceStub ws = new WSVisadoServiceStub(null,url[0]+"services/WSVisado");
+						ActualizarHistorialDocDocument ahdD = ActualizarHistorialDocDocument.Factory.newInstance();
+						ActualizarHistorialDoc ahd = ActualizarHistorialDoc.Factory.newInstance();
+						HistorialDocDTO historial = HistorialDocDTO.Factory.newInstance();
+						historial.setNroSolicitud(solicitudRegistrarT.getCodSoli());
+						ahd.setHistorial(historial);		
+						ahdD.setActualizarHistorialDoc(ahd);
+						
+							ws.actualizarHistorialDoc(ahdD);
+						} catch (RemoteException e) {
+							logger.info("Error al lanzar el WS de apinae" + e);
+							e.printStackTrace();
+						}
 						//[16-10][SB] Se agrega, para mostrar mensaje al guardar 'Borrador'
 						Utilitarios.mensajeInfo("INFO", mesajeConfirmacion);
 					} 
