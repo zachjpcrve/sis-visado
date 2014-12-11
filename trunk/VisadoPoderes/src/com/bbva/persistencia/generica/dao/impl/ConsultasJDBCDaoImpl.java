@@ -46,7 +46,7 @@ public class ConsultasJDBCDaoImpl implements ConsultasJDBCDao{
 		try 
 		{
 			initialContext = new InitialContext();
-			//DataSource datasource = (DataSource)initialContext.lookup("java:comp/env/jdbc/VISPOD");
+//			DataSource datasource = (DataSource)initialContext.lookup("java:comp/env/jdbc/VISPOD");
 			DataSource datasource = (DataSource)initialContext.lookup("jdbc/VISPOD");
 			con = datasource.getConnection();
 			if(con != null)
