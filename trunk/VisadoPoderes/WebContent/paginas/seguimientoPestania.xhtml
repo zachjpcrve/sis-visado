@@ -215,7 +215,7 @@
 										requiredMessage="Seleccione una acción"
 										style="font-size:0.98em; width:150px">	
 										<p:ajax event="change" update=":formSolicitudSeguimiento:confirmDialogDictamenNivel"></p:ajax>							
-										<f:selectItems  value="#{combosMB.lstEstadoNivel}" var="estNivel" itemValue="#{estNivel.codigoEstadoNivel}" itemLabel="#{estNivel.descripcion}" />								
+										<f:selectItems  value="#{infoDeployMB.estadosNivel}" var="estNivel" itemValue="#{estNivel.codigoEstadoNivel}" itemLabel="#{estNivel.descripcion}" />								
 									</p:selectOneMenu>
 									<p:spacer width="15" />
 									<h:outputText value="Nivel: #{consultarSolicitudMB.sNivelSolicitud}" styleClass="outputText" />
